@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -27,7 +27,6 @@ function hwlSetAllowedFiletypes($filetypes = array()) {
 
     return $filetypes;
 }
-
 add_filter('upload_mimes', 'hwlSetAllowedFiletypes');
 
 /**
@@ -41,11 +40,6 @@ function hwlCreateMenu()
         'manage_options',
         'optimize-webfonts',
         'hwlSettingsPage'
-    );
-
-    add_action(
-        'admin_init',
-        'registerHwlSettings'
     );
 }
 
@@ -94,10 +88,6 @@ function hwlSettingsPage()
  */
 function hwlMediaUploadInit() {
     wp_enqueue_media();
-
-    update_option('upload_path',WP_CONTENT_DIR . '/local-fonts');
-    update_option('upload_url_path',content_url() . '/local-fonts');
-    update_option('uploads_use_yearmonth_folders', false);
     ?>
     <table>
         <tbody>
@@ -127,25 +117,78 @@ function hwlMediaUploadInit() {
     <script type="text/javascript">
         var media_uploader = null;
 
+        /**
+         * Get the Media Uploader and prepare the uploaded fonts for generating the style sheet.
+         */
         function hwlFontUploader()
         {
             media_uploader = wp.media({
-                frame:    "post",
-                state:    "insert",
-                multiple: true
-            }).open();
+                    frame: "post",
+                    state: "insert",
+                    multiple: true
+                }).open();
 
-            media_uploader.on("insert", function(){
-                var length = media_uploader.state().get("selection").length;
-                var fonts = media_uploader.state().get("selection").models;
+            hwlSetUploadDir();
 
-                for(var iii = 0; iii < length; iii++)
-                {
-                    var font_url = fonts[iii].changed.url;
-                    var font_name = fonts[iii].changed.title;
-                    var font_type = fonts[iii].changed.subtype;
+            media_uploader.on(
+                "close",
+                function() {
+                    hwlResetUploadDir();
+                }
+            ).on(
+                "insert",
+                function() {
+                    hwlGenerateOutput();
+                }
+            );
+        }
 
-                    var uploadedFont = `<tr valign="top">
+        /**
+         * Call the media-upload script or logs an error to the console.
+         */
+        function hwlSetUploadDir()
+        {
+            jQuery.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'hwlAjaxSetUploadDir'
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        }
+
+        /**
+         *  AJAX call to reset upload directory.
+         */
+        function hwlResetUploadDir()
+        {
+            jQuery.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'hwlAjaxResetUploadDir'
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        }
+
+        /**
+         * Generate the output after upload/insert
+         */
+        function hwlGenerateOutput()
+        {
+            var length = media_uploader.state().get("selection").length;
+            var fonts = media_uploader.state().get("selection").models;
+            for (var iii = 0; iii < length; iii++) {
+                var font_url = fonts[iii].changed.url;
+                var font_name = fonts[iii].changed.title;
+                var font_type = fonts[iii].changed.subtype;
+                var uploadedFont = `<tr valign="top">
                                             <td>
                                                 <input type="text" name="hwl_uploaded_font][${font_name}]"
                                                        id="hwl_uploaded_font][${font_name}]"
@@ -172,10 +215,13 @@ function hwlMediaUploadInit() {
                                                        value="${font_url}" readonly />
                                             </td>
                                         </tr>`;
-                    jQuery('#hwl_uploaded_fonts').append(uploadedFont);
-                }
-            });
+                jQuery('#hwl_uploaded_fonts').append(uploadedFont);
+            }
         }
+
+        /**
+         * Call the generate-stylesheet script and reset the upload dir to the default setting.
+         */
         function hwlGenerateStylesheet() {
             var hwlData = hwlSerializeArray($('#hwl-options-form'));
 
@@ -187,7 +233,6 @@ function hwlMediaUploadInit() {
                     uploaded_fonts: hwlData
                 },
                 success: function(response) {
-                    console.log(response);
                     jQuery('#hwl-admin-notices').append(
                         `<div class="updated settings-error notice is-dismissible">
                             <p>${response}</p>
@@ -208,6 +253,10 @@ function hwlMediaUploadInit() {
                 }
             });
         }
+
+        /**
+         * Serialize form data to a multi-dimensional array.
+         */
         function hwlSerializeArray(data) {
             var result = [];
             data.each(function() {
@@ -224,6 +273,40 @@ function hwlMediaUploadInit() {
 <?php
 }
 
+/**
+ * Before each upload we temporarily set our custom upload-directory.
+ */
+function hwlAjaxSetUploadDir() {
+    try {
+	    update_option('upload_path',WP_CONTENT_DIR . '/local-fonts');
+	    update_option('upload_url_path',content_url() . '/local-fonts');
+	    update_option('uploads_use_yearmonth_folders', false);
+	    wp_die();
+    } catch (\Exception $e) {
+        wp_die($e);
+    }
+}
+add_action('wp_ajax_hwlAjaxSetUploadDir', 'hwlAjaxSetUploadDir');
+
+
+/**
+ * After we're done uploading we need to reset the upload-directory.
+ */
+function hwlAjaxResetUploadDir() {
+    try {
+	    update_option('upload_path',null);
+	    update_option('upload_url_path',null);
+	    update_option('uploads_use_yearmonth_folders', true);
+	    wp_die();
+    } catch (\Exception $e) {
+        wp_die($e);
+    }
+}
+add_action('wp_ajax_hwlAjaxResetUploadDir', 'hwlAjaxResetUploadDir');
+
+/**
+ * The function for generating the stylesheet and resetting the upload dir to the default.
+ */
 function hwlAjaxGenerateStyles() {
     require_once('includes/generate-stylesheet.php');
 }
@@ -240,5 +323,4 @@ function hwlEnqueueStylesheet()
 	    wp_enqueue_style('hwl-style');
     }
 }
-
 add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet' );
