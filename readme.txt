@@ -4,7 +4,7 @@ Donate link: https://dev.daanvandenbergh.com/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/host-webforms-local` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/host-webfonts-local` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Use the Settings -> Optimize Webfonts screen to configure the plugin
 
@@ -33,6 +33,9 @@ Yes, please! [Click here to buy me a beer](http://dev.daanvandenbergh.com/donate
 N/A
 
 == Changelog ==
+
+= 1.1.0 =
+Fixed bug where the plugin would sometimes permanently change your upload-director to /local-fonts.
 
 = 1.0.1 =
 Changed to Github.
