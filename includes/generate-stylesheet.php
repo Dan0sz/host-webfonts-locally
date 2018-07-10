@@ -54,15 +54,8 @@ function hwlReturnFontUrl($font, $requestedType) {
             return implode($url);
         }
     }
-}
 
-/**
- * After we're done uploading we need to reset the upload-directory.
- */
-function hwlResetUploadDir() {
-	update_option('upload_path',null);
-	update_option('upload_url_path',null);
-	update_option('uploads_use_yearmonth_folders', true);
+    return null;
 }
 
 /**
@@ -101,7 +94,6 @@ try {
 	$stylesheet = fopen($file, 'w') or die ("Cannot create file {$file}");
 	fwrite ($stylesheet, $fonts);
 	fclose ($stylesheet);
-	hwlResetUploadDir();
 	wp_die(_e('Stylesheet was successfully generated and added to your theme\'s header.'));
 } catch (Exception $e) {
 	wp_die($e);
