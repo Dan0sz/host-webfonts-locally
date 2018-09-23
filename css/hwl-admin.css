@@ -1,0 +1,28 @@
+/**
+CAOS for Webfonts Stylesheet
+@author: Daan van den Bergh
+@package: host-webfonts-local
+ */
+
+.spinner {
+    visibility: visible !important;
+    float: none;
+}
+
+#hwl-results {
+    position: relative;
+}
+
+tr.loading td {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.5)
+}
+
+.hwl-remove {
+    cursor: pointer;
+}

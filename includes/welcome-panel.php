@@ -10,18 +10,18 @@
 	<div class="welcome-panel-content">
 		<h2>Thank you for using CAOS for Webfonts!</h2>
 		<p class="about-description">
-			CAOS for Webfonts automagically saves the fonts you want to use inside your content-folder, generates a stylesheet for them and enqueues it in your theme's header.
+			CAOS for Webfonts automagically downloads and saves the fonts you want to use inside Wordpress' content-folder, generates a stylesheet for them and enqueues it in your theme's header.
             This will decrease your pageload times, leverage your browser cache, minimize external requests and effectively bring you a perfect score on Pagespeed Insights and Pingdom.
 		</p>
 		<div class="welcome-panel-column-container">
 			<div class="welcome-panel-column">
 				<h3>Quickstart</h3>
 				<ul>
-					<li class="welcome-icon dashicons-before dashicons-editor-bold">Download fonts from <a href="https://fonts.google.com/" target="_blank">Google Fonts</a></li>
-					<li class="welcome-icon dashicons-before dashicons-admin-tools">Convert them using <a href="https://www.fontsquirrel.com/tools/webfont-generator" target="_blank">FontSquirrel's Webfont Generator</a></li>
-					<li class="welcome-icon dashicons-before dashicons-cloud">Upload/Add them using the 'Select Fonts' button</li>
+					<li class="welcome-icon dashicons-before dashicons-editor-bold">For all available fonts, check out <a href="https://fonts.google.com/" target="_blank">Google Fonts</a></li>
+					<li class="welcome-icon dashicons-before dashicons-cloud">Search for your fonts by entering the name in the searchbar</li>
+					<li class="welcome-icon dashicons-before dashicons-admin-tools">Modify the list by removing the fonts you don't need/want</li>
 					<li class="welcome-icon dashicons-before dashicons-art">Click 'Generate Stylesheet'</li>
-					<li class="welcome-icon dashicons-before dashicons-media-text">Stylesheet is added to template and ready for use.</li>
+					<li class="welcome-icon dashicons-before dashicons-media-text">Fonts are being downloaded and stylesheet is generated</li>
 					<li class="welcome-icon dashicons-before dashicons-smiley">Done!</li>
 				</ul>
                 <p><a target="_blank" href="https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally/">Click here</a> for a more comprehensive guide.</p>
@@ -35,12 +35,13 @@
                 <p>Still running into issues? Visit the <a href="https://wordpress.org/plugins/host-webfonts-local/#description">FAQ</a> and <a href="https://wordpress.org/plugins/host-webfonts-local">Support Forum</a> to see if your question has already been answered.</p>
                 <p>If not, ask a question or <a href="https://dev.daanvandenbergh.com/contact" target="_blank">contact me</a>.</p>
 			</div>
-			<div class="welcome-panel-column welcome-panel-last">
-				<h3>Did I make you happy?</h3>
-				<p>I create simple, but useful solutions that easily optimize your website for Pagespeed Insights and Pingdom.</p>
-				<p>I believe these solutions should be free, but if you appreciate my work, let's have a beer together!</p>
-				<a target="_blank" class="button button-primary button-hero" href="https://dev.daanvandenbergh.com/donate/"><span class="dashicons-before dashicons-heart"> Sure. This round's on me!</span></a>
-			</div>
+            <div class="welcome-panel-column welcome-panel-last">
+                <h3>Support CAOS!</h3>
+                <p>I create simple, but useful solutions that easily optimize your website for Pagespeed Insights and Pingdom.</p>
+                <p>I believe these solutions should be free, but if you appreciate my work, please considering donating!</p>
+                <a target="_blank" class="button button-primary button-hero" href="https://dev.daanvandenbergh.com/donate/"><span class="dashicons-before dashicons-heart"> Donate</span></a>
+                <a target="_blank" class="button button-primary button-hero" style="background-color: #00aced; box-shadow: 0 2px 0 #0084b4; border-color: #0084b4 #0084b4 #0084b4;" href="https://twitter.com/Dan0sz"><span class="dashicons-before dashicons-twitter"> Follow me!</span></a>
+            </div>
 		</div>
 	</div>
 </div>
