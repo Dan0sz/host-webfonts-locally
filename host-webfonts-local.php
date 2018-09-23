@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.2.5
+ * Version: 1.2.6
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -51,7 +51,6 @@ function hwlCreateMenu()
         'hwlSettingsPage'
     );
 }
-
 add_action('admin_menu', 'hwlCreateMenu');
 
 /**
@@ -173,37 +172,6 @@ function hwlCreateCacheDir()
 	}
 }
 register_activation_hook(__FILE__, 'hwlCreateCacheDir' );
-
-/**
- * Before each upload we temporarily set our custom upload-directory.
- */
-function hwlAjaxSetUploadDir() {
-    try {
-	    update_option('upload_path'                  , CAOS_WEBFONTS_UPLOAD_DIR);
-	    update_option('upload_url_path'              , CAOS_WEBFONTS_UPLOAD_URL);
-	    update_option('uploads_use_yearmonth_folders', false);
-	    wp_die();
-    } catch (\Exception $e) {
-        wp_die($e);
-    }
-}
-add_action('wp_ajax_hwlAjaxSetUploadDir', 'hwlAjaxSetUploadDir');
-
-
-/**
- * After we're done uploading we need to reset the upload-directory.
- */
-function hwlAjaxResetUploadDir() {
-    try {
-	    update_option('upload_path',null);
-	    update_option('upload_url_path',null);
-	    update_option('uploads_use_yearmonth_folders', true);
-	    wp_die();
-    } catch (\Exception $e) {
-        wp_die($e);
-    }
-}
-add_action('wp_ajax_hwlAjaxResetUploadDir', 'hwlAjaxResetUploadDir');
 
 /**
  * The function for generating the stylesheet and resetting the upload dir to the default.

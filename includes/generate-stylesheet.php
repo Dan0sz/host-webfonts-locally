@@ -26,6 +26,14 @@ if (!current_user_can('manage_options'))
 }
 
 /**
+ * If cache directory doesn't exist, we should create it.
+ */
+$uploadDir = CAOS_WEBFONTS_UPLOAD_DIR;
+if (!file_exists($uploadDir)) {
+	wp_mkdir_p($uploadDir);
+}
+
+/**
  * Get the POST data.
  */
 $selectedFonts = $_POST['selected_fonts'][0]['hwl-rendered-fonts'];
