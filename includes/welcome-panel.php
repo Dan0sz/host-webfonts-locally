@@ -24,7 +24,7 @@
 					<li class="welcome-icon dashicons-before dashicons-media-text">Fonts are being downloaded and stylesheet is generated</li>
 					<li class="welcome-icon dashicons-before dashicons-smiley">Done!</li>
 				</ul>
-                <p><a target="_blank" href="https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally/">Click here</a> for a more comprehensive guide.</p>
+                <p><a target="_blank" href="https://dev.daanvandenbergh.com/wordpress/host-google-fonts-locally/">Click here</a> for a more comprehensive guide.</p>
 			</div>
 			<div class="welcome-panel-column">
 				<h3>Get a Perfect Score on Pagespeed & Pingdom!</h3>
