@@ -1,6 +1,8 @@
 /**
+ * @package: CAOS for Webfonts
  * @author: Daan van den Bergh
- * @package: host-webfonts-local
+ * @copyright: (c) 2018 Daan van den Bergh
+ * @url: https://dev.daanvandenbergh.com
  */
 
 var typingTimer;
@@ -64,7 +66,7 @@ function hwlGenerateResults(results)
         var font = fontFamily.replace(/\s+/g, '-').toLowerCase() + '-' + variants[ iii ].id;
         var fontWeight = variants[ iii ].fontWeight;
         var fontStyle = variants[ iii ].fontStyle;
-        renderedFonts[ iii ] = `<tr id="row-${fontId}" valign="top">
+        renderedFonts[ iii ] = `<tr id="row-${font}" valign="top">
                                     <td>
                                         <input readonly type="text" value="${fontFamily}" name="hwl-rendered-fonts][${font}][font-family]" />
                                     </td>
@@ -79,7 +81,7 @@ function hwlGenerateResults(results)
                                         <input type="hidden" value="${variants[ iii ].woff2}" name="hwl-rendered-fonts][${font}][url][woff2]" />
                                         <input type="hidden" value="${variants[ iii ].eot}" name="hwl-rendered-fonts][${font}][url][eot]" />
                                         <div class="hwl-remove">
-                                            <a onclick="hwlRemoveRow('row-${fontId}')"><small>remove</small></a>
+                                            <a onclick="hwlRemoveRow('row-${font}')"><small>remove</small></a>
                                         </div>
                                     </td>
                                  </tr>`;

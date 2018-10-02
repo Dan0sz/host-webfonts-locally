@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.2.7
+ * Version: 1.2.8
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -11,24 +11,6 @@
 
 // Exit if accessed directly
 if (!defined('ABSPATH')) exit;
-
-/**
- * Extend WP default Allowed Filetypes
- *
- * @param array $filetypes
- * @return array
- */
-function hwlSetAllowedFiletypes($filetypes = array()) {
-	$filetypes['woff']  = 'application/x-font-woff';
-	$filetypes['woff2'] = "application/font-woff2";
-	$filetypes['otf']   = 'application/x-font-otf';
-	$filetypes['ttf']   = 'application/x-font-ttf';
-	$filetypes['svg']   = 'image/svg+xml';
-	$filetypes['eot']   = 'application/vnd.ms-fontobject';
-
-	return $filetypes;
-}
-add_filter('upload_mimes', 'hwlSetAllowedFiletypes');
 
 /**
  * Define constants.
@@ -82,7 +64,7 @@ function hwlSettingsPage()
 			/**
 			 * Render the upload-functions.
 			 */
-			hwlMediaUploadInit();
+			hwlSearchForm();
 
 			do_action('hwl_after_form_settings');
 			?>
@@ -94,8 +76,7 @@ function hwlSettingsPage()
 /**
  * Set custom upload-fields and render upload buttons.
  */
-function hwlMediaUploadInit() {
-	wp_enqueue_media();
+function hwlSearchForm() {
 	?>
     <table>
         <tbody>

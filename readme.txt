@@ -4,7 +4,7 @@ Donate link: https://dev.daanvandenbergh.com/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 1.2.7
+Stable tag: 1.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,9 @@ Yes, please! [Click here to buy me a beer](https://dev.daanvandenbergh.com/donat
 N/A
 
 == Changelog ==
+
+= 1.2.8 =
+Fixed bug where 'remove' would sometimes remove two rows.
 
 = 1.2.5 =
 Complete overhaul of the plugin. Fonts are now searched using the Google Fonts Helper API and
