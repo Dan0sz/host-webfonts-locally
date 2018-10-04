@@ -5,6 +5,9 @@
  * @copyright: (c) 2018 Daan van den Bergh
  * @url: https://dev.daanvandenbergh.com
  */
+
+// Exit if accessed directly
+if (!defined('ABSPATH')) exit;
 ?>
 <div id="welcome-panel" class="welcome-panel">
     <div class="welcome-panel-content">
