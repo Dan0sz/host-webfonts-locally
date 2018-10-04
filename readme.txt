@@ -4,15 +4,13 @@ Donate link: https://dev.daanvandenbergh.com/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 1.2.8
+Stable tag: 1.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 With only 2 clicks of a button, CAOS for Webfonts automagically downloads your Google Fonts you want to WordPress' content-folder, generates a stylesheet for it and enqueues it in your theme's header.
 
 == Description ==
-
-Another cool plugin created by [Daan van den Bergh](https://dev.daanvandenbergh.com "Click here to visit my Wordpress Development Blog") that automagically saves the fonts you want to use inside your content-folder, generates a stylesheet for them and enqueues it in your theme's header.
 
 CAOS for Webfonts is written with performance in mind. Other plugins make repeated requests to your Blog's database to replace/remove requests to external Webfonts source (e.g. Google Fonts) on-the-fly. This might be user-friendly, but it's a performance killer, because locally hosting your Google Webfonts should be a set-and-forget feature. The source of your webfonts should be replaced once and kept that way.
 
@@ -28,6 +26,12 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 
 == Frequently Asked Questions ==
 
+= How come my font isn't available in CAOS for Webfonts? =
+
+This could be for several reasons:
+1. Have you checked if your font is available on Google Fonts?
+1. Is your font listed as an open source font, or is it a premium font? For obvious reasons, CAOS for Webfonts only has access to open source fonts.
+
 = Can I buy you a beer? =
 
 Yes, please! [Click here to buy me a beer](https://dev.daanvandenbergh.com/donate/ "Let's do shots!")!
@@ -37,6 +41,9 @@ Yes, please! [Click here to buy me a beer](https://dev.daanvandenbergh.com/donat
 N/A
 
 == Changelog ==
+
+= 1.2.9 =
+Added security measures to prevent XSS.
 
 = 1.2.8 =
 Fixed bug where 'remove' would sometimes remove two rows.

@@ -136,7 +136,7 @@ function hwlSerializeArray(data)
     var result = [];
     data.each(function () {
         var fields = {};
-        jQuery.each($(this).serializeArray(), function () {
+        jQuery.each(jQuery(this).serializeArray(), function () {
             fields[ this.name ] = this.value;
         });
         result.push(fields);
