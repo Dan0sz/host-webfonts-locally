@@ -42,7 +42,7 @@ foreach ($selectedFonts as $id => $font) {
 	$remoteFiles = $font['url'];
 
 	foreach ($remoteFiles as $type => $url) {
-		$remoteFile = $url;
+		$remoteFile = esc_url_raw($url);
 		$filename   = basename($remoteFile);
 		$localFile  = CAOS_WEBFONTS_UPLOAD_DIR . '/' . $filename;
 
@@ -78,10 +78,10 @@ foreach ($selectedFonts as $font) {
 	$fontStyle  = sanitize_text_field($font['font-style']);
 	$fontWeight = sanitize_text_field($font['font-weight']);
 
-	$fontUrlEot     = filter_var($font['url']['eot'],   FILTER_VALIDATE_URL);
-	$fontUrlWoffTwo = filter_var($font['url']['woff2'], FILTER_VALIDATE_URL);
-	$fontUrlWoff    = filter_var($font['url']['woff'],  FILTER_VALIDATE_URL);
-	$fontUrlTtf     = filter_var($font['url']['ttf'],   FILTER_VALIDATE_URL);
+	$fontUrlEot     = esc_url_raw($font['url']['eot']);
+	$fontUrlWoffTwo = esc_url_raw($font['url']['woff2']);
+	$fontUrlWoff    = esc_url_raw($font['url']['woff']);
+	$fontUrlTtf     = esc_url_raw($font['url']['ttf']);
 
 	$fonts[] =
 		"@font-face {
