@@ -1,4 +1,4 @@
-=== CAOS for Webfonts - Host Google Fonts Locally! ===
+=== CAOS for Webfonts | Host Google Fonts Locally ===
 Contributors: DaanvandenBergh
 Donate link: https://dev.daanvandenbergh.com/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
