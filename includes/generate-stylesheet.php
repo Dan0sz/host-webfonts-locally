@@ -88,10 +88,10 @@ foreach ($selectedFonts as $font) {
             font-family: '$fontFamily';
             font-style: $fontStyle;
             font-weight: $fontWeight;
-            src: url('$fontUrlEot'), /* IE9 Compatible */
-                 url('$fontUrlWoffTwo') format('woff2'), /* Super Modern Browsers */
+            src: url('$fontUrlWoffTwo') format('woff2'), /* Super Modern Browsers */
                  url('$fontUrlWoff') format('woff'), /* Modern Browsers */
-                 url('$fontUrlTtf') format('truetype'); /* Safari, Android, iOS */
+                 url('$fontUrlTtf') format('truetype'), /* Safari, Android, iOS */
+                 url('$fontUrlEot'); /* IE9 Compatible */
         }";
 }
 
