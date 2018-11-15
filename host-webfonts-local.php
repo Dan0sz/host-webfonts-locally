@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.3.2
+ * Version: 1.3.5
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -192,9 +192,23 @@ function hwlEnqueueStylesheet()
 }
 add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet' );
 
+/**
+ * Stylesheet and Javascript needed in Admin
+ */
 function hwlEnqueueAdminJs()
 {
 	wp_enqueue_script('hwl-admin-js', plugin_dir_url(__FILE__) . 'js/hwl-admin.js', array('jquery'), null, true);
 	wp_enqueue_style('hwl-admin.css', plugin_dir_url(__FILE__) . 'css/hwl-admin.css');
 }
 add_action('admin_enqueue_scripts', 'hwlEnqueueAdminJs');
+
+/**
+ * When plugin is deactivated. Remove all CSS and JS.
+ */
+function hwlDequeueJsCss()
+{
+    wp_dequeue_script('hwl-admin-js');
+	wp_dequeue_style('hwl-admin.css');
+	wp_dequeue_style('hwl-style');
+}
+register_deactivation_hook(__FILE__, 'hwlDequeueJsCss');

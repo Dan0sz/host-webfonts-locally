@@ -23,7 +23,8 @@ $input.on('keydown', function () {
 // user is "finished typing," do something
 function doneTyping()
 {
-    query = $input.val().replace(' ', '-').toLowerCase();
+    query = $input.val().replace(/\s/g, '-').toLowerCase();
+    console.log(query);
     hwlSearchGoogleFonts(query);
 }
 
@@ -49,7 +50,11 @@ function hwlSearchGoogleFonts($data)
         },
         complete: function (response) {
             jQuery('#hwl-results .loading').hide();
-            hwlGenerateResults(response);
+            if (response[ 'responseText'] !== "Not found") {
+                hwlGenerateResults(response);
+            } else {
+                console.log("Search did not return any results");
+            }
         }
     });
 }
