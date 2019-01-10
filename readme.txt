@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Donate link: https://dev.daanvandenbergh.com/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
-Tested up to: 5.0
+Tested up to: 4.9
 Stable tag: 1.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
