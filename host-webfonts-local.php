@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.3.7
+ * Version: 1.3.8
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -16,19 +16,9 @@ if (!defined('ABSPATH')) exit;
  * Define constants.
  */
 define('CAOS_WEBFONTS_FILENAME'  , 'fonts.css');
-define('CAOS_WEBFONTS_CACHE_DIR' , esc_attr(get_option('caos_webfonts_cache_dir')) ? esc_attr(get_option('caos_webfonts_cache_dir')) : '/cache/caos-webfonts/');
+define('CAOS_WEBFONTS_CACHE_DIR' , '/cache/caos-webfonts');
 define('CAOS_WEBFONTS_UPLOAD_DIR', WP_CONTENT_DIR . CAOS_WEBFONTS_CACHE_DIR);
 define('CAOS_WEBFONTS_UPLOAD_URL', content_url() . CAOS_WEBFONTS_CACHE_DIR);
-
-/**
- * Register Settings
- */
-function hwlRegisterSettings()
-{
-    register_setting('caos-webfonts-basic-settings',
-        'caos_webfonts_cache_dir'
-    );
-}
 
 /**
  * Create the Admin menu-item
@@ -80,30 +70,20 @@ function hwlSettingsPage()
 
 		<?php require_once(plugin_dir_path(__FILE__) . 'includes/welcome-panel.php'); ?>
 
-        <form method="post" action="options.php">
+        <form id="hwl-options-form" name="hwl-options-form">
 			<?php
-			settings_fields('caos-webfonts-basic-settings'
+			settings_fields('host-webfonts-local-basic-settings'
 			);
-			do_settings_sections('caos-webfonts-basic-settings'
+			do_settings_sections('host-webfonts-local-basic-settings'
 			);
 
 			/**
-			 * Render Plugin Settings.
+			 * Render the upload-functions.
 			 */
-			hwlSettingsForm();
+			hwlSearchForm();
 
 			do_action('hwl_after_form_settings');
-
-			submit_button();
 			?>
-        </form>
-        <form id="hwl-options-form" name="hwl-options-form">
-            <?php
-            /**
-             * Render the upload-functions.
-             */
-            hwlSearchForm();
-            ?>
         </form>
     </div>
 	<?php
@@ -161,31 +141,7 @@ function hwlSearchForm() {
 	<?php
 }
 
-function hwlSettingsForm()
-{
-    ?>
-    <table>
-        <tbody>
-        <tr valign="top">
-            <th scope="row">
-                <label for="caos_webfonts_cache_dir">
-                    <?php _e( 'Webfonts Cache-folder', 'host-webfonts-local' ); ?>
-                </label>
-            </th>
-            <td>
-                <input type="text" name="caos_webfonts_cache_dir" value="<?php echo CAOS_WEBFONTS_CACHE_DIR; ?>" />
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <?php
-}
-
-/**
- * Generates search request to API
- */
-function hwlAjaxSearchGoogleFonts()
-{
+function hwlAjaxSearchGoogleFonts() {
 	try {
 		$request     = curl_init();
 		$searchQuery = sanitize_text_field($_POST['search_query']);
@@ -251,7 +207,7 @@ add_action('admin_enqueue_scripts', 'hwlEnqueueAdminJs');
  */
 function hwlDequeueJsCss()
 {
-    wp_dequeue_script('hwl-admin-js');
+	wp_dequeue_script('hwl-admin-js');
 	wp_dequeue_style('hwl-admin.css');
 	wp_dequeue_style('hwl-style');
 }
