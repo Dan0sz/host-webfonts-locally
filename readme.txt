@@ -32,7 +32,16 @@ This could be for several reasons:
 1. Have you checked if your font is available on Google Fonts?
 1. Is your font listed as an open source font, or is it a premium font? For obvious reasons, CAOS for Webfonts only has access to open source fonts.
 
+= Does this plugin edit template files? =
+
+No, it does not. It creates a CSS Stylesheet which should be added to your theme's header.
+
+= The stylesheet isn't loaded? What's going on? =
+
+CAOS for Webfonts enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function into it's header section.
+
 = Can I buy you a beer? =
+
 
 Yes, please! [Click here to buy me a beer](https://dev.daanvandenbergh.com/donate/ "Let's do shots!")!
 
