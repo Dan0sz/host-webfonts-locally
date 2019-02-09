@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.4.0
+ * Version: 1.4.1
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -15,16 +15,20 @@ if (!defined('ABSPATH')) exit;
 /**
  * Define constants.
  */
-define('CAOS_WEBFONTS_FILENAME'  , 'fonts.css');
-define('CAOS_WEBFONTS_CACHE_DIR' , esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/caos-webfonts');
+define('CAOS_WEBFONTS_FILENAME'        , 'fonts.css');
+define('CAOS_WEBFONTS_CACHE_DIR'       , esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/caos-webfonts');
 define('CAOS_WEBFONTS_CURRENT_BLOG_ID' , get_current_blog_id());
-define('CAOS_WEBFONTS_UPLOAD_DIR', WP_CONTENT_DIR . CAOS_WEBFONTS_CACHE_DIR);
-define('CAOS_WEBFONTS_UPLOAD_URL', get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR));
+define('CAOS_WEBFONTS_UPLOAD_DIR'      , WP_CONTENT_DIR . CAOS_WEBFONTS_CACHE_DIR);
+define('CAOS_WEBFONTS_UPLOAD_URL'      , get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR));
+define('CAOS_WEBFONTS_DISPLAY_OPTION'  , esc_attr(get_option('caos_webfonts_display_option')) ?: 'auto');
 
 function hwlRegisterSettings()
 {
     register_setting('caos-webfonts-basic-settings',
         'caos_webfonts_cache_dir'
+    );
+    register_setting('caos-webfonts-basic-settings',
+        'caos_webfonts_display_option'
     );
 }
 
@@ -212,6 +216,22 @@ function hwlCreateCacheDir()
 	}
 }
 register_activation_hook(__FILE__, 'hwlCreateCacheDir' );
+
+/**
+ * @return array
+ */
+function hwlFontDisplayOptions()
+{
+	$fontDisplay = array(
+            'Auto (default)' => 'auto',
+            'Block'          => 'block',
+            'Swap'           => 'swap',
+            'Fallback'       => 'fallback',
+            'Optional'       => 'optional'
+	);
+
+	return $fontDisplay;
+}
 
 /**
  * The function for generating the stylesheet and saving it to the upload-dir.

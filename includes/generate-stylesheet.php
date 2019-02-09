@@ -69,14 +69,15 @@ $fonts[] = "
   * @copyright: (c) 2019 Daan van den Bergh
   * @url: https://dev.daanvandenbergh.com 
   */";
+$fontDisplay = CAOS_WEBFONTS_DISPLAY_OPTION;
 
 /**
  * Let's generate the stylesheet.
  */
 foreach ($selectedFonts as $font) {
-	$fontFamily = sanitize_text_field($font['font-family']);
-	$fontStyle  = sanitize_text_field($font['font-style']);
-	$fontWeight = sanitize_text_field($font['font-weight']);
+	$fontFamily  = sanitize_text_field($font['font-family']);
+	$fontStyle   = sanitize_text_field($font['font-style']);
+	$fontWeight  = sanitize_text_field($font['font-weight']);
 
 	$fontUrlEot     = esc_url_raw($font['url']['eot']);
 	$fontUrlWoffTwo = esc_url_raw($font['url']['woff2']);
@@ -86,6 +87,7 @@ foreach ($selectedFonts as $font) {
 	$fonts[] =
 		"@font-face {
             font-family: '$fontFamily';
+            font-display: $fontDisplay;
             font-style: $fontStyle;
             font-weight: $fontWeight;
             src: url('$fontUrlWoffTwo') format('woff2'), /* Super Modern Browsers */
