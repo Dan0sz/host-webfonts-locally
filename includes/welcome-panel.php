@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) exit;
                 <h3>Quickstart</h3>
                 <ul>
                     <li class="welcome-icon dashicons-before dashicons-editor-bold">For all available fonts, check out <a href="https://fonts.google.com/" target="_blank">Google Fonts</a></li>
-                    <li class="welcome-icon dashicons-before dashicons-cloud">Search for your fonts by entering the name in the searchbar</li>
+                    <li class="welcome-icon dashicons-before dashicons-cloud">Search for your fonts by entering the name in the searchbar and repeat this process for as many fonts you like!</li>
                     <li class="welcome-icon dashicons-before dashicons-admin-tools">Modify the list by removing the fonts you don't need/want</li>
                     <li class="welcome-icon dashicons-before dashicons-art">Click 'Generate Stylesheet'</li>
                     <li class="welcome-icon dashicons-before dashicons-media-text">Fonts are being downloaded and stylesheet is generated</li>

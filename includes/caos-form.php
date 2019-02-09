@@ -13,5 +13,23 @@
 				</p>
 			</td>
 		</tr>
+        <tr valign="top">
+            <th scope="row"><?php _e('Font-display option', 'host-webfonts-local'); ?></th>
+            <td>
+                <?php $fontDisplay = hwlFontDisplayOptions(); ?>
+                    <label>
+                        <select name="caos_webfonts_display_option">
+	                        <?php foreach ($fontDisplay as $label => $value): ?>
+                            <option value="<?php echo $value; ?>" <?php echo $value == CAOS_WEBFONTS_DISPLAY_OPTION ? 'selected' : ''; ?>><?php _e($label, 'host-webfonts-local'); ?></option>
+	                        <?php endforeach; ?>
+                        </select>
+                    </label>
+                    <br/>
+                <p class="description">
+		            <?php _e('Select which font-display strategy to use. Defaults to \'Auto\'.', 'host-webfonts-local'); ?>
+                    <a target="_blank" href="https://developers.google.com/web/updates/2016/02/font-display"><?php _e('Read more', 'host-webfonts-local'); ?></a>
+                </p>
+            </td>
+        </tr>
 	</table>
 </div>
