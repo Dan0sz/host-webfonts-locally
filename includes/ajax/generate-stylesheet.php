@@ -39,59 +39,6 @@ $tableName = $wpdb->prefix . 'caos_webfonts';
 $selectedFonts = $wpdb->get_results("SELECT * FROM $tableName");
 
 /**
- * Download the fonts.
- */
-foreach ($selectedFonts as $id => $font) {
-	// If font is marked as downloaded. Skip it.
-	if ($font->downloaded) {
-		continue;
-	}
-
-	$urls['url_ttf']   = $font->url_ttf;
-	$urls['url_woff']  = $font->url_woff;
-	$urls['url_woff2'] = $font->url_woff2;
-	$urls['url_eot']   = $font->url_eot;
-
-	foreach ($urls as $type => $url) {
-		$remoteFile = esc_url_raw($url);
-		$filename   = basename($remoteFile);
-		$localFile  = CAOS_WEBFONTS_UPLOAD_DIR . '/' . $filename;
-
-		$fileWritten = file_put_contents($localFile, file_get_contents($remoteFile));
-
-		/**
-		 * If file is written, change the external URL to the local URL in the POST data.
-		 * If it fails, we can still fall back to the external URL and nothing breaks.
-		 */
-		if($fileWritten) {
-			$localFileUrl = CAOS_WEBFONTS_UPLOAD_URL . '/' . $filename;
-			$wpdb->update(
-				$tableName,
-				array(
-					$type => $localFileUrl
-				),
-				array(
-					'font_id' => $font->font_id
-				)
-			);
-		}
-	}
-
-	/**
-	 * After all files are downloaded, set the 'downloaded'-field to 1.
-	 */
-	$wpdb->update(
-		$tableName,
-		array(
-			'downloaded' => 1
-		),
-		array(
-			'font_id' => $font->font_id
-		)
-	);
-}
-
-/**
  * Insert promotional material :)
  */
 $fonts[] = "
@@ -102,6 +49,11 @@ $fonts[] = "
   * @url: https://dev.daanvandenbergh.com 
   */";
 $fontDisplay = CAOS_WEBFONTS_DISPLAY_OPTION;
+
+/**
+ * Reload the fonts.
+ */
+$selectedFonts = $wpdb->get_results("SELECT * FROM $tableName");
 
 /**
  * Let's generate the stylesheet.

@@ -60,6 +60,11 @@ function hwlSearchGoogleFonts ($data)
     });
 }
 
+/**
+ * Displays the search results
+ *
+ * @param results
+ */
 function hwlGenerateResults (results)
 {
     var response = JSON.parse(results[ 'responseText' ]);
@@ -118,6 +123,8 @@ function hwlGenerateStylesheet ()
                     <p>${response}</p>
                 </div>`
             );
+            hwlScrollTop();
+            
         },
         error: function (response) {
             jQuery('#hwl-admin-notices').append(
@@ -125,6 +132,7 @@ function hwlGenerateStylesheet ()
                     <p>The stylesheet could not be created: ${response}</p>
                 </div>`
             );
+            hwlScrollTop();
         }
     });
 }
@@ -148,6 +156,7 @@ function hwlSaveWebfontsToDb()
                     <p>${response}</p>
                 </div>`
             );
+            hwlScrollTop();
         }
     });
 }
@@ -159,6 +168,13 @@ function hwlRegenerateStylesheet()
 {
     hwlSaveWebfontsToDb();
     hwlGenerateStylesheet();
+}
+
+function hwlScrollTop()
+{
+    jQuery('html, body').animate({
+        scrollTop: 0
+    }, 1000);
 }
 
 /**
