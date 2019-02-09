@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.3.10
+ * Version: 1.4.0
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -16,10 +16,17 @@ if (!defined('ABSPATH')) exit;
  * Define constants.
  */
 define('CAOS_WEBFONTS_FILENAME'  , 'fonts.css');
-define('CAOS_WEBFONTS_CACHE_DIR' , '/cache/caos-webfonts');
+define('CAOS_WEBFONTS_CACHE_DIR' , esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/caos-webfonts');
 define('CAOS_WEBFONTS_CURRENT_BLOG_ID' , get_current_blog_id());
 define('CAOS_WEBFONTS_UPLOAD_DIR', WP_CONTENT_DIR . CAOS_WEBFONTS_CACHE_DIR);
-define('CAOS_WEBFONTS_UPLOAD_URL', get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, getContentDirName() . CAOS_WEBFONTS_CACHE_DIR));
+define('CAOS_WEBFONTS_UPLOAD_URL', get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR));
+
+function hwlRegisterSettings()
+{
+    register_setting('caos-webfonts-basic-settings',
+        'caos_webfonts_cache_dir'
+    );
+}
 
 /**
  * Create the Admin menu-item
@@ -33,6 +40,9 @@ function hwlCreateMenu()
 		'optimize-webfonts',
 		'hwlSettingsPage'
 	);
+	add_action('admin_init',
+		'hwlRegisterSettings'
+	);
 }
 add_action('admin_menu', 'hwlCreateMenu');
 
@@ -41,13 +51,18 @@ add_action('admin_menu', 'hwlCreateMenu');
  *
  * @return mixed
  */
-function getContentDirName()
+function hwlGetContentDirName()
 {
     preg_match('/[^\/]+$/u', WP_CONTENT_DIR, $match);
 
     return $match[0];
 }
 
+/**
+ * @param $links
+ *
+ * @return mixed
+ */
 function hwlSettingsLink($links)
 {
 	$adminUrl     = admin_url() . 'options-general.php?page=optimize-webfonts';
@@ -83,20 +98,31 @@ function hwlSettingsPage()
 
 		<?php require_once(plugin_dir_path(__FILE__) . 'includes/welcome-panel.php'); ?>
 
-        <form id="hwl-options-form" name="hwl-options-form">
-			<?php
-			settings_fields('host-webfonts-local-basic-settings'
-			);
-			do_settings_sections('host-webfonts-local-basic-settings'
-			);
+        <form id="hwl-options-form" name="hwl-options-form" style="float: left; width: 49.5%;">
+            <div class="">
+                <h3><?php _e('Generate Stylesheet'); ?></h3>
+	            <?php
+	            /**
+	             * Render the upload-functions.
+	             */
+	            hwlSearchForm();
+	            ?>
+            </div>
+        </form>
 
-			/**
-			 * Render the upload-functions.
-			 */
-			hwlSearchForm();
+        <form id="hwl-settings-form" name="hwl-settings-form" method="post" action="options.php" style="float: left; width: 49.5%;">
+            <?php
+            settings_fields('caos-webfonts-basic-settings'
+            );
+            do_settings_sections('caos-webfonts-basic-settings'
+            );
 
-			do_action('hwl_after_form_settings');
-			?>
+            include(plugin_dir_path(__FILE__) . 'includes/caos-form.php');
+
+            do_action('hwl_after_form_settings');
+
+            submit_button();
+            ?>
         </form>
     </div>
 	<?php
@@ -154,6 +180,9 @@ function hwlSearchForm() {
 	<?php
 }
 
+/**
+ * Search Fonts in Google Webfonts Helper
+ */
 function hwlAjaxSearchGoogleFonts() {
 	try {
 		$request     = curl_init();
@@ -185,7 +214,7 @@ function hwlCreateCacheDir()
 register_activation_hook(__FILE__, 'hwlCreateCacheDir' );
 
 /**
- * The function for generating the stylesheet and resetting the upload dir to the default.
+ * The function for generating the stylesheet and saving it to the upload-dir.
  */
 function hwlAjaxGenerateStyles() {
 	require_once(plugin_dir_path(__FILE__) . 'includes/generate-stylesheet.php');

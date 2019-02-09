@@ -8,20 +8,18 @@
 var typingTimer;
 var doneTypingInterval = 300;
 var $input = jQuery('#search-field');
-
 // on keyup, start the countdown
 $input.on('keyup', function () {
     clearTimeout(typingTimer);
     typingTimer = setTimeout(doneTyping, doneTypingInterval);
 });
-
 // on keydown, clear the countdown
 $input.on('keydown', function () {
     clearTimeout(typingTimer);
 });
 
 // user is "finished typing," do something
-function doneTyping()
+function doneTyping ()
 {
     query = $input.val().replace(/\s/g, '-').toLowerCase();
     console.log(query);
@@ -32,8 +30,10 @@ function doneTyping()
  * Triggers the AJAX-request to Google Webfont Helper.
  * @param $data
  */
-function hwlSearchGoogleFonts($data)
+function hwlSearchGoogleFonts ($data)
 {
+    var loadingDiv = jQuery('#hwl-results .loading');
+    var errorDiv = jQuery('#hwl-results .error');
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -43,26 +43,27 @@ function hwlSearchGoogleFonts($data)
         },
         datatype: 'json',
         beforeSend: function () {
-            jQuery('#hwl-results .loading').show();
+            loadingDiv.show();
         },
-        error: function() {
-            jQuery('#hwl-results .error').show();
+        error: function () {
+            errorDiv.show();
         },
         complete: function (response) {
-            jQuery('#hwl-results .loading').hide();
-            if (response[ 'responseText'] !== "Not found") {
+            loadingDiv.hide();
+            errorDiv.hide();
+            if (response[ 'responseText' ] !== 'Not found') {
                 hwlGenerateResults(response);
             } else {
-                console.log("Search did not return any results");
+                errorDiv.show();
             }
         }
     });
 }
 
-function hwlGenerateResults(results)
+function hwlGenerateResults (results)
 {
-    var response = JSON.parse(results['responseText']);
-    var variants = response['variants'];
+    var response = JSON.parse(results[ 'responseText' ]);
+    var variants = response[ 'variants' ];
     var length = variants.length;
     var renderedFonts = [];
     for (var iii = 0; iii < length; iii++) {
@@ -97,7 +98,7 @@ function hwlGenerateResults(results)
 /**
  * Call the generate-stylesheet script and reset the upload dir to the default setting.
  */
-function hwlGenerateStylesheet()
+function hwlGenerateStylesheet ()
 {
     var hwlData = hwlSerializeArray(jQuery('#hwl-options-form'));
     jQuery.ajax({
@@ -107,10 +108,9 @@ function hwlGenerateStylesheet()
             action: 'hwlAjaxGenerateStyles',
             selected_fonts: hwlData
         },
-        beforeSend: function() {
-        
+        beforeSend: function () {
         },
-        success: function(response) {
+        success: function (response) {
             jQuery('#hwl-admin-notices').append(
                 `<div class="updated settings-error notice is-dismissible">
                     <p>${response}</p>
@@ -123,7 +123,7 @@ function hwlGenerateStylesheet()
             });
             jQuery('#hwl-results').html('Stylesheet generated.');
         },
-        error: function(response) {
+        error: function (response) {
             jQuery('#hwl-admin-notices').append(
                 `<div class="notice notice-error is-dismissible">
                     <p>The stylesheet could not be created: ${response}</p>
@@ -136,7 +136,7 @@ function hwlGenerateStylesheet()
 /**
  * Serialize form data to a multi-dimensional array.
  */
-function hwlSerializeArray(data)
+function hwlSerializeArray (data)
 {
     var result = [];
     data.each(function () {
@@ -154,7 +154,7 @@ function hwlSerializeArray(data)
  *
  * @param rowId
  */
-function hwlRemoveRow(rowId)
+function hwlRemoveRow (rowId)
 {
     jQuery('#' + rowId).remove();
 }

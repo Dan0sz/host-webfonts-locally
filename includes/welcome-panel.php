@@ -35,13 +35,13 @@ if (!defined('ABSPATH')) exit;
                 <p><a target="_blank" href="https://wordpress.org/plugins/host-analyticsjs-local">Download now</a></p>
                 <h3>Need help?</h3>
                 <p>First make sure you read the manual thoroughly.</p>
-                <p>Still running into issues? Visit the <a href="https://wordpress.org/plugins/host-webfonts-local/#description">FAQ</a> and <a href="https://wordpress.org/plugins/host-webfonts-local">Support Forum</a> to see if your question has already been answered.</p>
+                <p>Still running into issues? Visit the <a href="https://wordpress.org/plugins/host-webfonts-local/#description">FAQ</a> and <a href="https://wordpress.org/support/plugin/host-webfonts-local/">Support Forum</a> to see if your question has already been answered.</p>
                 <p>If not, ask a question or <a href="https://dev.daanvandenbergh.com/contact" target="_blank">contact me</a>.</p>
             </div>
             <div class="welcome-panel-column welcome-panel-last">
                 <h3>Support CAOS!</h3>
-                <p>I create simple, but useful solutions that easily optimize your website for Pagespeed Insights and Pingdom.</p>
-                <p>I believe these solutions should be free, but if you appreciate my work, please considering donating!</p>
+                <p>I create solutions that easily optimize your website for Pagespeed Insights and Pingdom.</p>
+                <p>I believe these solutions should be free, but if you appreciate my work, please consider donating!</p>
                 <a target="_blank" class="button button-primary button-hero" href="https://dev.daanvandenbergh.com/donate/"><span class="dashicons-before dashicons-heart"> Donate</span></a>
                 <a target="_blank" class="button button-primary button-hero" style="background-color: #00aced; box-shadow: 0 2px 0 #0084b4; border-color: #0084b4 #0084b4 #0084b4;" href="https://twitter.com/Dan0sz"><span class="dashicons-before dashicons-twitter"> Follow me!</span></a>
             </div>
