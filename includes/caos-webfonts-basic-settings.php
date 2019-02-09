@@ -1,5 +1,13 @@
 <?php
+/**
+ * @package: CAOS for Webfonts
+ * @author: Daan van den Bergh
+ * @copyright: (c) 2019 Daan van den Bergh
+ * @url: https://dev.daanvandenbergh.com
+ */
 
+// Exit if accessed directly
+if (!defined( 'ABSPATH')) exit;
 ?>
 <div class="">
 	<h3><?php _e('Basic Settings'); ?></h3>

@@ -2,7 +2,7 @@
 /**
  * @package: CAOS for Webfonts
  * @author: Daan van den Bergh
- * @copyright: (c) 2018 Daan van den Bergh
+ * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://dev.daanvandenbergh.com
  */
 
@@ -30,18 +30,29 @@ if (!file_exists($uploadDir)) {
 	wp_mkdir_p($uploadDir);
 }
 
+global $wpdb;
+$tableName = $wpdb->prefix . 'caos_webfonts';
+
 /**
  * Get the POST data.
  */
-$selectedFonts = $_POST['selected_fonts'][0]['hwl-rendered-fonts'];
+$selectedFonts = $wpdb->get_results("SELECT * FROM $tableName");
 
 /**
  * Download the fonts.
  */
 foreach ($selectedFonts as $id => $font) {
-	$remoteFiles = $font['url'];
+	// If font is marked as downloaded. Skip it.
+	if ($font->downloaded) {
+		continue;
+	}
 
-	foreach ($remoteFiles as $type => $url) {
+	$urls['url_ttf']   = $font->url_ttf;
+	$urls['url_woff']  = $font->url_woff;
+	$urls['url_woff2'] = $font->url_woff2;
+	$urls['url_eot']   = $font->url_eot;
+
+	foreach ($urls as $type => $url) {
 		$remoteFile = esc_url_raw($url);
 		$filename   = basename($remoteFile);
 		$localFile  = CAOS_WEBFONTS_UPLOAD_DIR . '/' . $filename;
@@ -54,9 +65,30 @@ foreach ($selectedFonts as $id => $font) {
 		 */
 		if($fileWritten) {
 			$localFileUrl = CAOS_WEBFONTS_UPLOAD_URL . '/' . $filename;
-			$selectedFonts[$id]['url'][$type] = $localFileUrl;
+			$wpdb->update(
+				$tableName,
+				array(
+					$type => $localFileUrl
+				),
+				array(
+					'font_id' => $font->font_id
+				)
+			);
 		}
 	}
+
+	/**
+	 * After all files are downloaded, set the 'downloaded'-field to 1.
+	 */
+	$wpdb->update(
+		$tableName,
+		array(
+			'downloaded' => 1
+		),
+		array(
+			'font_id' => $font->font_id
+		)
+	);
 }
 
 /**
@@ -75,14 +107,13 @@ $fontDisplay = CAOS_WEBFONTS_DISPLAY_OPTION;
  * Let's generate the stylesheet.
  */
 foreach ($selectedFonts as $font) {
-	$fontFamily  = sanitize_text_field($font['font-family']);
-	$fontStyle   = sanitize_text_field($font['font-style']);
-	$fontWeight  = sanitize_text_field($font['font-weight']);
-
-	$fontUrlEot     = esc_url_raw($font['url']['eot']);
-	$fontUrlWoffTwo = esc_url_raw($font['url']['woff2']);
-	$fontUrlWoff    = esc_url_raw($font['url']['woff']);
-	$fontUrlTtf     = esc_url_raw($font['url']['ttf']);
+	$fontFamily     = sanitize_text_field($font->font_family);
+	$fontStyle      = sanitize_text_field($font->font_style);
+	$fontWeight     = sanitize_text_field($font->font_weight);
+	$fontUrlEot     = esc_url_raw($font->url_eot);
+	$fontUrlWoffTwo = esc_url_raw($font->url_woff2);
+	$fontUrlWoff    = esc_url_raw($font->url_woff);
+	$fontUrlTtf     = esc_url_raw($font->url_ttf);
 
 	$fonts[] =
 		"@font-face {
