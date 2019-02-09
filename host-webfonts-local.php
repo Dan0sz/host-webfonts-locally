@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.4.1
+ * Version: 1.5.0
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -15,6 +15,7 @@ if (!defined('ABSPATH')) exit;
 /**
  * Define constants.
  */
+define('CAOS_WEBFONTS_DB_VERSION'     , '1.5.0');
 define('CAOS_WEBFONTS_FILENAME'        , 'fonts.css');
 define('CAOS_WEBFONTS_CACHE_DIR'       , esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/caos-webfonts');
 define('CAOS_WEBFONTS_CURRENT_BLOG_ID' , get_current_blog_id());
@@ -63,6 +64,49 @@ function hwlGetContentDirName()
 }
 
 /**
+ * Create table to store downloaded fonts in.
+ */
+function hwlCreateTable()
+{
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'caos_webfonts';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name (
+            font_id varchar(191) NOT NULL,
+            font_family varchar(191) NOT NULL,
+            font_weight mediumint(5) NOT NULL,
+            font_style varchar(191) NOT NULL,
+            downloaded tinyint(1) DEFAULT 0,
+            url_ttf varchar(191) NULL,
+            url_woff varchar(191) NULL,
+            url_woff2 varchar(191) NULL,
+            url_eot varchar(191) NULL,
+            UNIQUE KEY (font_id)
+            ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+
+    add_option('caos_webfonts_db_version', CAOS_WEBFONTS_DB_VERSION);
+}
+
+/**
+ * Check current version and execute required db updates.
+ */
+function hwlRunDbUpdates()
+{
+    $currentVersion = get_site_option('caos_webfonts_db_version');
+    if(version_compare($currentVersion, CAOS_WEBFONTS_DB_VERSION) < 0) {
+        hwlCreateTable();
+    }
+
+    // We can trigger update scripts in the future here.
+}
+add_action('plugins_loaded', 'hwlRunDbUpdates');
+
+/**
  * @param $links
  *
  * @return mixed
@@ -75,7 +119,6 @@ function hwlSettingsLink($links)
 
 	return $links;
 }
-
 $caosLink = plugin_basename( __FILE__ );
 
 add_filter("plugin_action_links_$caosLink", 'hwlSettingsLink');
@@ -102,28 +145,25 @@ function hwlSettingsPage()
 
 		<?php require_once(plugin_dir_path(__FILE__) . 'includes/welcome-panel.php'); ?>
 
-        <form id="hwl-options-form" name="hwl-options-form" style="float: left; width: 49.5%;">
+        <form id="hwl-options-form" name="hwl-options-form" method="post" action="options.php" style="float: left; width: 60%;">
             <div class="">
                 <h3><?php _e('Generate Stylesheet'); ?></h3>
-	            <?php
-	            /**
-	             * Render the upload-functions.
-	             */
-	            hwlSearchForm();
+                <?php
+
+	            include(plugin_dir_path(__FILE__) . 'includes/caos-webfonts-style-generation.php');
+
 	            ?>
             </div>
         </form>
 
-        <form id="hwl-settings-form" name="hwl-settings-form" method="post" action="options.php" style="float: left; width: 49.5%;">
+        <form id="hwl-settings-form" name="hwl-settings-form" method="post" action="options.php" style="float: left; width: 39%;">
             <?php
-            settings_fields('caos-webfonts-basic-settings'
-            );
-            do_settings_sections('caos-webfonts-basic-settings'
-            );
+            settings_fields('caos-webfonts-basic-settings');
+            do_settings_sections('caos-webfonts-basic-settings');
 
-            include(plugin_dir_path(__FILE__) . 'includes/caos-form.php');
+            include(plugin_dir_path(__FILE__) . 'includes/caos-webfonts-basic-settings.php');
 
-            do_action('hwl_after_form_settings');
+            do_action('hwl_after_settings_form_settings');
 
             submit_button();
             ?>
@@ -133,55 +173,16 @@ function hwlSettingsPage()
 }
 
 /**
- * Set custom upload-fields and render upload buttons.
+ * Retrieves all saved fonts from database
+ *
+ * @return \stdClass
  */
-function hwlSearchForm() {
-	?>
-    <table>
-        <tbody>
-        <tr valign="top">
-            <td colspan="2">
-                <input type="text" name="search-field"
-                       id="search-field" class="form-input-tip ui-autocomplete-input" placeholder="Search fonts..." />
-            </td>
-        </tr>
-        </tbody>
-        <tr valign="top">
-            <th>
-                font-family
-            </th>
-            <th>
-                font-style
-            </th>
-            <th>
-                remove
-            </th>
-        </tr>
-        <tbody id="hwl-results">
-        <tr class="loading" style="display: none;">
-            <td colspan="3" align="center">
-                <span class="spinner"></span>
-            </td>
-        </tr>
-        <tr class="error" style="display: none;">
-            <td colspan="3" align="center">No fonts available.</td>
-        </tr>
-        </tbody>
-    </table>
+function hwlGetSavedFonts()
+{
+    global $wpdb;
+    $tableName = $wpdb->prefix . 'caos_webfonts';
 
-    <table>
-        <tbody>
-        <tr valign="bottom">
-            <td>
-                <input type="button" onclick="hwlGenerateStylesheet()" name="generate-btn"
-                       id="generate-btn" class="button-primary" value="Generate Stylesheet" />
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <script type="text/javascript">
-    </script>
-	<?php
+	return $wpdb->get_results("SELECT * FROM $tableName");
 }
 
 /**
@@ -237,9 +238,17 @@ function hwlFontDisplayOptions()
  * The function for generating the stylesheet and saving it to the upload-dir.
  */
 function hwlAjaxGenerateStyles() {
-	require_once(plugin_dir_path(__FILE__) . 'includes/generate-stylesheet.php');
+	require_once(plugin_dir_path(__FILE__) . 'includes/ajax/generate-stylesheet.php');
 }
 add_action('wp_ajax_hwlAjaxGenerateStyles', 'hwlAjaxGenerateStyles');
+
+/**
+ * Saves the chosen webfonts to the database for further processing.
+ */
+function hwlAjaxSaveWebfontsToDb() {
+    require_once(plugin_dir_path(__FILE__) . 'includes/ajax/save-webfonts-to-db.php');
+}
+add_action('wp_ajax_hwlAjaxSaveWebfontsToDb', 'hwlAjaxSaveWebfontsToDb');
 
 /**
  * Once the stylesheet is generated. We can enqueue it.

@@ -1,7 +1,7 @@
 /**
  * @package: CAOS for Webfonts
  * @author: Daan van den Bergh
- * @copyright: (c) 2018 Daan van den Bergh
+ * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://dev.daanvandenbergh.com
  */
 
@@ -74,18 +74,20 @@ function hwlGenerateResults (results)
         var fontStyle = variants[ iii ].fontStyle;
         renderedFonts[ iii ] = `<tr id="row-${font}" valign="top">
                                     <td>
-                                        <input readonly type="text" value="${fontFamily}" name="hwl-rendered-fonts][${font}][font-family]" />
+                                        <input readonly type="text" value="${fontFamily}" name="caos_webfonts_array][${font}][font-family]" />
                                     </td>
                                     <td>
-                                        <input readonly type="text" value="${fontId}" name="hwl-rendered-fonts][${font}][id]" />
+                                        <input readonly type="text" value="${fontStyle}" name="caos_webfonts_array][${font}][font-style]" />
                                     </td>
                                     <td>
-                                        <input type="hidden" value="${fontWeight}" name="hwl-rendered-fonts][${font}][font-weight]" />
-                                        <input type="hidden" value="${fontStyle}" name="hwl-rendered-fonts][${font}][font-style]" />
-                                        <input type="hidden" value="${variants[ iii ].ttf}" name="hwl-rendered-fonts][${font}][url][ttf]" />
-                                        <input type="hidden" value="${variants[ iii ].woff}" name="hwl-rendered-fonts][${font}][url][woff]" />
-                                        <input type="hidden" value="${variants[ iii ].woff2}" name="hwl-rendered-fonts][${font}][url][woff2]" />
-                                        <input type="hidden" value="${variants[ iii ].eot}" name="hwl-rendered-fonts][${font}][url][eot]" />
+                                        <input readonly type="text" value="${fontWeight}" name="caos_webfonts_array][${font}][font-weight]" />
+                                    </td>
+                                    <td>
+                                        <input type="hidden" value="${fontId}" name="caos_webfonts_array][${font}][id]" />
+                                        <input type="hidden" value="${variants[ iii ].ttf}" name="caos_webfonts_array][${font}][url][ttf]" />
+                                        <input type="hidden" value="${variants[ iii ].woff}" name="caos_webfonts_array][${font}][url][woff]" />
+                                        <input type="hidden" value="${variants[ iii ].woff2}" name="caos_webfonts_array][${font}][url][woff2]" />
+                                        <input type="hidden" value="${variants[ iii ].eot}" name="caos_webfonts_array][${font}][url][eot]" />
                                         <div class="hwl-remove">
                                             <a onclick="hwlRemoveRow('row-${font}')"><small>remove</small></a>
                                         </div>
@@ -96,7 +98,7 @@ function hwlGenerateResults (results)
 }
 
 /**
- * Call the generate-stylesheet script and reset the upload dir to the default setting.
+ * Call the generate-stylesheet script.
  */
 function hwlGenerateStylesheet ()
 {
@@ -112,16 +114,10 @@ function hwlGenerateStylesheet ()
         },
         success: function (response) {
             jQuery('#hwl-admin-notices').append(
-                `<div class="updated settings-error notice is-dismissible">
+                `<div class="updated settings-success notice is-dismissible">
                     <p>${response}</p>
                 </div>`
             );
-            jQuery('#hwl-results tr').each(function () {
-                jQuery(this).fadeOut(700, function () {
-                    jQuery(this).remove();
-                });
-            });
-            jQuery('#hwl-results').html('Stylesheet generated.');
         },
         error: function (response) {
             jQuery('#hwl-admin-notices').append(
@@ -131,6 +127,38 @@ function hwlGenerateStylesheet ()
             );
         }
     });
+}
+
+/**
+ * Triggered when 'Save Webfonts' is clicked.
+ */
+function hwlSaveWebfontsToDb()
+{
+    var hwlData = hwlSerializeArray(jQuery('#hwl-options-form'));
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'hwlAjaxSaveWebfontsToDb',
+            selected_fonts: hwlData
+        },
+        success: function (response) {
+            jQuery('#hwl-admin-notices').append(
+                `<div class="notice notice-success is-dismissible">
+                    <p>${response}</p>
+                </div>`
+            );
+        }
+    });
+}
+
+/**
+ * After settings have changed, trigger this.
+ */
+function hwlRegenerateStylesheet()
+{
+    hwlSaveWebfontsToDb();
+    hwlGenerateStylesheet();
 }
 
 /**

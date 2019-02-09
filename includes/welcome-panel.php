@@ -2,7 +2,7 @@
 /**
  * @package: CAOS for Webfonts
  * @author: Daan van den Bergh
- * @copyright: (c) 2018 Daan van den Bergh
+ * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://dev.daanvandenbergh.com
  */
 
@@ -21,11 +21,13 @@ if (!defined('ABSPATH')) exit;
                 <h3>Quickstart</h3>
                 <ul>
                     <li class="welcome-icon dashicons-before dashicons-editor-bold">For all available fonts, check out <a href="https://fonts.google.com/" target="_blank">Google Fonts</a></li>
-                    <li class="welcome-icon dashicons-before dashicons-cloud">Search for your fonts by entering the name in the searchbar and repeat this process for as many fonts you like!</li>
+                    <li class="welcome-icon dashicons-before dashicons-cloud">Search for your fonts by entering the name in the searchbar and repeat this for as many fonts you like!</li>
                     <li class="welcome-icon dashicons-before dashicons-admin-tools">Modify the list by removing the fonts you don't need/want</li>
+                    <li class="welcome-icon dashicons-before dashicons-update">Click 'Save Fonts'</li>
                     <li class="welcome-icon dashicons-before dashicons-art">Click 'Generate Stylesheet'</li>
                     <li class="welcome-icon dashicons-before dashicons-media-text">Fonts are being downloaded and stylesheet is generated</li>
                     <li class="welcome-icon dashicons-before dashicons-smiley">Done!</li>
+                    <li class="welcome-icon dashicons-before dashicons-admin-settings">After changing settings use 'Save & Regenerate'</li>
                 </ul>
                 <p><a target="_blank" href="https://dev.daanvandenbergh.com/wordpress/host-google-fonts-locally/">Click here</a> for a more comprehensive guide.</p>
             </div>
@@ -39,6 +41,9 @@ if (!defined('ABSPATH')) exit;
                 <p>If not, ask a question or <a href="https://dev.daanvandenbergh.com/contact" target="_blank">contact me</a>.</p>
             </div>
             <div class="welcome-panel-column welcome-panel-last">
+                <h3>Want to Host other Files Locally?</h3>
+                <p>Unleash your site's true potential by locally hosting as many files as possible.</p>
+                <p><a target="_blank" href="https://dev.daanvandenbergh.com/how-to/host-locally-crontab/">Read more</a></p>
                 <h3>Support CAOS!</h3>
                 <p>I create solutions that easily optimize your website for Pagespeed Insights and Pingdom.</p>
                 <p>I believe these solutions should be free, but if you appreciate my work, please consider donating!</p>
