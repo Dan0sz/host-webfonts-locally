@@ -150,14 +150,14 @@ function hwlGenerateStylesheet ()
 /**
  * Triggered when 'Save Webfonts' is clicked.
  */
-function hwlSaveWebfontsToDb()
+function hwlDownloadFonts()
 {
     var hwlData = hwlSerializeArray(jQuery('#hwl-options-form'));
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'hwlAjaxSaveWebfontsToDb',
+            action: 'hwlAjaxDownloadFonts',
             selected_fonts: hwlData
         },
         success: function (response) {
@@ -212,6 +212,29 @@ function hwlGetTotalFonts()
 }
 
 /**
+ * Remove all files within the configured cache dir.
+ */
+function hwlEmptyDir()
+{
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'hwlAjaxEmptyDir'
+        },
+        success: function() {
+            jQuery('#hwl-admin-notices').append(
+                `<div class="notice notice-success is-dismissible">
+                    <p>Cache-dir emptied.</p>
+                </div>`
+            );
+            hwlCleanQueue();
+            hwlScrollTop()
+        }
+    })
+}
+
+/**
  * Trigger the DB clean-up and clean list.
  */
 function hwlCleanQueue()
@@ -233,7 +256,7 @@ function hwlCleanQueue()
  */
 function hwlRegenerateStylesheet()
 {
-    hwlSaveWebfontsToDb();
+    hwlDownloadFonts();
     hwlGenerateStylesheet();
 }
 

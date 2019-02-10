@@ -80,13 +80,10 @@ if (!defined( 'ABSPATH')) exit;
 
 <table>
 	<tbody>
-	<tr valign="center">
+	<tr valign="center" align="center">
         <td>
-            <input type="button" onclick="hwlSaveWebfontsToDb()" name="save-btn"
+            <input type="button" onclick="hwlDownloadFonts()" name="save-btn"
                    id="save-btn" class="button-primary" value="Download Fonts" />
-        </td>
-        <td>
-            <span class="caos-fonts-downloaded"><?php echo count(hwlGetDownloadedFonts()); ?></span> / <span class="caos-fonts-total"> <?php echo count(hwlGetTotalFonts()) ;?></span> downloaded
         </td>
 		<td>
 			<input type="button" onclick="hwlGenerateStylesheet()" name="generate-btn"
@@ -98,7 +95,16 @@ if (!defined( 'ABSPATH')) exit;
         </td>
         <td>
             <a onclick="hwlCleanQueue()" name="clean-btn"
-                   id="clean-btn" class="button-cancel">Clean Queue</a>
+               id="clean-btn" class="button-cancel">Clean Queue</a>
+        </td>
+        <td>
+            <a onclick="hwlEmptyDir()" name="empty-btn"
+               id="empty-btn" class="button-cancel">Empty Cache Directory</a>
+        </td>
+    </tr>
+    <tr valign="center" align="center">
+        <td>
+            <span class="caos-fonts-downloaded"><?php echo count(hwlGetDownloadedFonts()); ?></span> / <span class="caos-fonts-total"> <?php echo count(hwlGetTotalFonts()) ;?></span> downloaded
         </td>
 	</tr>
 	</tbody>

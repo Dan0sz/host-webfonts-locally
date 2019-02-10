@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.5.3
+ * Version: 1.5.5
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -18,7 +18,7 @@ global $wpdb;
  * Define constants.
  */
 define('CAOS_WEBFONTS_DB_VERSION'      , '1.5.0');
-define('CAOS_WEBFONTS_STATIC_VERSION'  , '1.5.3');
+define('CAOS_WEBFONTS_STATIC_VERSION'  , '1.5.5');
 define('CAOS_WEBFONTS_DB_TABLENAME'    , $wpdb->prefix . 'caos_webfonts');
 define('CAOS_WEBFONTS_DB_CHARSET'      , $wpdb->get_charset_collate());
 define('CAOS_WEBFONTS_FILENAME'        , 'fonts.css');
@@ -242,6 +242,17 @@ function hwlAjaxCleanQueue()
 add_action('wp_ajax_hwlAjaxCleanQueue', 'hwlAjaxCleanQueue');
 
 /**
+ * AJAX-wrapper for hwlEmptyDir()
+ *
+ * @return array
+ */
+function hwlAjaxEmptyDir()
+{
+    return array_map('unlink', array_filter((array) glob(CAOS_WEBFONTS_UPLOAD_DIR . '/*')));
+}
+add_action('wp_ajax_hwlAjaxEmptyDir', 'hwlAjaxEmptyDir');
+
+/**
  * Search Fonts in Google Webfonts Helper
  */
 function hwlAjaxSearchGoogleFonts() {
@@ -301,10 +312,10 @@ add_action('wp_ajax_hwlAjaxGenerateStyles', 'hwlAjaxGenerateStyles');
 /**
  * Saves the chosen webfonts to the database for further processing.
  */
-function hwlAjaxSaveWebfontsToDb() {
+function hwlAjaxDownloadFonts() {
     require_once(plugin_dir_path(__FILE__) . 'includes/ajax/download-fonts.php');
 }
-add_action('wp_ajax_hwlAjaxSaveWebfontsToDb', 'hwlAjaxSaveWebfontsToDb');
+add_action('wp_ajax_hwlAjaxDownloadFonts', 'hwlAjaxDownloadFonts' );
 
 /**
  * Once the stylesheet is generated. We can enqueue it.
