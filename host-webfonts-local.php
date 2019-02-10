@@ -18,6 +18,7 @@ global $wpdb;
  * Define constants.
  */
 define('CAOS_WEBFONTS_DB_VERSION'      , '1.5.0');
+define('CAOS_WEBFONTS_STATIC_VERSION'  , '1.5.3');
 define('CAOS_WEBFONTS_DB_TABLENAME'    , $wpdb->prefix . 'caos_webfonts');
 define('CAOS_WEBFONTS_DB_CHARSET'      , $wpdb->get_charset_collate());
 define('CAOS_WEBFONTS_FILENAME'        , 'fonts.css');
@@ -324,8 +325,8 @@ add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet' );
 function hwlEnqueueAdminJs($hook)
 {
     if ($hook == 'settings_page_optimize-webfonts') {
-	    wp_enqueue_script('hwl-admin-js', plugin_dir_url(__FILE__) . 'js/hwl-admin.js', array('jquery'), CAOS_WEBFONTS_DB_VERSION, true);
-	    wp_enqueue_style('hwl-admin.css', plugin_dir_url(__FILE__) . 'css/hwl-admin.css', array(), CAOS_WEBFONTS_DB_VERSION);
+	    wp_enqueue_script('hwl-admin-js', plugin_dir_url(__FILE__) . 'js/hwl-admin.js', array('jquery'), CAOS_WEBFONTS_STATIC_VERSION, true);
+	    wp_enqueue_style('hwl-admin.css', plugin_dir_url(__FILE__) . 'css/hwl-admin.css', array(), CAOS_WEBFONTS_STATIC_VERSION);
     }
 }
 add_action('admin_enqueue_scripts', 'hwlEnqueueAdminJs');
