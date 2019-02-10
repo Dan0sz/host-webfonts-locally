@@ -34,7 +34,7 @@ if (!defined( 'ABSPATH')) exit;
 	</tr>
 	<tbody id="hwl-results">
     <?php
-    $savedFonts = hwlGetSavedFonts();
+    $savedFonts = hwlGetTotalFonts();
     ?>
     <?php if ($savedFonts): ?>
     <?php foreach ($savedFonts as $font): ?>
@@ -65,23 +65,28 @@ if (!defined( 'ABSPATH')) exit;
         </tr>
     <?php endforeach; ?>
     <?php endif; ?>
-	<tr class="loading" style="display: none;">
-		<td colspan="3" align="center">
-			<span class="spinner"></span>
-		</td>
-	</tr>
-	<tr class="error" style="display: none;">
-		<td colspan="3" align="center">No fonts available.</td>
-	</tr>
 	</tbody>
+    <tbody id="hwl-warning">
+        <tr class="loading" style="display: none;">
+            <td colspan="3" align="center">
+                <span class="spinner"></span>
+            </td>
+        </tr>
+        <tr class="error" style="display: none;">
+            <td colspan="3" align="center">No fonts available.</td>
+        </tr>
+    </tbody>
 </table>
 
 <table>
 	<tbody>
-	<tr valign="bottom">
+	<tr valign="center">
         <td>
             <input type="button" onclick="hwlSaveWebfontsToDb()" name="save-btn"
-                   id="save-btn" class="button-primary" value="Save Fonts" />
+                   id="save-btn" class="button-primary" value="Download Fonts" />
+        </td>
+        <td>
+            <span class="caos-fonts-downloaded"><?php echo count(hwlGetDownloadedFonts()); ?></span> / <span class="caos-fonts-total"> <?php echo count(hwlGetTotalFonts()) ;?></span> downloaded
         </td>
 		<td>
 			<input type="button" onclick="hwlGenerateStylesheet()" name="generate-btn"
@@ -91,8 +96,10 @@ if (!defined( 'ABSPATH')) exit;
             <input type="button" onclick="hwlRegenerateStylesheet()" name="regenerate-btn"
                    id="regenerate-btn" class="button-secondary" value="Save & Regenerate" />
         </td>
+        <td>
+            <a onclick="hwlCleanQueue()" name="clean-btn"
+                   id="clean-btn" class="button-cancel">Clean Queue</a>
+        </td>
 	</tr>
 	</tbody>
 </table>
-<script type="text/javascript">
-</script>

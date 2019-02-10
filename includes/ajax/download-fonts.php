@@ -16,17 +16,16 @@ if (!current_user_can('manage_options'))
 {
 	wp_die(__("You're not cool enough to access this page."));
 }
-
 global $wpdb;
-
-$tableName = $wpdb->prefix . 'caos_webfonts';
 
 /**
  * To match the current queue of fonts. We need to truncate the table first.
  */
-$wpdb->query(
-	"TRUNCATE TABLE $tableName"
-);
+try {
+	hwlCleanQueue();
+} catch (\Exception $e) {
+	wp_die(__($e));
+}
 
 /**
  * Get the POST data.
@@ -35,7 +34,7 @@ $selectedFonts = $_POST['selected_fonts'][0]['caos_webfonts_array'];
 
 if (!$selectedFonts)
 {
-	wp_die(_e('No fonts found.', 'host-webfonts-local'));
+	wp_die(__('No fonts found.', 'host-webfonts-local'));
 }
 
 /**
@@ -44,7 +43,7 @@ if (!$selectedFonts)
 foreach ($selectedFonts as $id => $font)
 {
 	$wpdb->insert(
-		$tableName,
+		CAOS_WEBFONTS_DB_TABLENAME,
 		array(
 			'font_id'     => sanitize_text_field($id),
 			'font_family' => sanitize_text_field($font['font-family']),
@@ -62,7 +61,7 @@ foreach ($selectedFonts as $id => $font)
 /**
  * Loaded fonts from database
  */
-$selectedFonts = $wpdb->get_results("SELECT * FROM $tableName");
+$selectedFonts = hwlGetTotalFonts();
 
 /**
  * Download the fonts.
@@ -83,7 +82,11 @@ foreach ($selectedFonts as $id => $font) {
 		$filename   = basename($remoteFile);
 		$localFile  = CAOS_WEBFONTS_UPLOAD_DIR . '/' . $filename;
 
-		$fileWritten = file_put_contents($localFile, file_get_contents($remoteFile));
+		try {
+			$fileWritten = file_put_contents($localFile, file_get_contents($remoteFile));
+		} catch (\Exception $e) {
+			wp_die(__("File ($remoteFile) could not be downloaded: $e"));
+		}
 
 		/**
 		 * If file is written, change the external URL to the local URL in the POST data.
@@ -92,7 +95,7 @@ foreach ($selectedFonts as $id => $font) {
 		if($fileWritten) {
 			$localFileUrl = CAOS_WEBFONTS_UPLOAD_URL . '/' . $filename;
 			$wpdb->update(
-				$tableName,
+				CAOS_WEBFONTS_DB_TABLENAME,
 				array(
 					$type => $localFileUrl
 				),
@@ -107,7 +110,7 @@ foreach ($selectedFonts as $id => $font) {
 	 * After all files are downloaded, set the 'downloaded'-field to 1.
 	 */
 	$wpdb->update(
-		$tableName,
+		CAOS_WEBFONTS_DB_TABLENAME,
 		array(
 			'downloaded' => 1
 		),
@@ -117,4 +120,4 @@ foreach ($selectedFonts as $id => $font) {
 	);
 }
 
-wp_die(_e('Fonts saved. You can now generate the stylesheet.', 'host-webfonts-local'));
+wp_die(__('Fonts saved. You can now generate the stylesheet.', 'host-webfonts-local'));

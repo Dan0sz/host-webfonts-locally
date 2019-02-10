@@ -4,6 +4,8 @@
  * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://dev.daanvandenbergh.com
  */
+hwlGetDownloadedFonts();
+hwlGetTotalFonts();
 
 var typingTimer;
 var doneTypingInterval = 300;
@@ -32,8 +34,8 @@ function doneTyping ()
  */
 function hwlSearchGoogleFonts ($data)
 {
-    var loadingDiv = jQuery('#hwl-results .loading');
-    var errorDiv = jQuery('#hwl-results .error');
+    var loadingDiv = jQuery('#hwl-warning .loading');
+    var errorDiv = jQuery('#hwl-warning .error');
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -124,7 +126,6 @@ function hwlGenerateStylesheet ()
                 </div>`
             );
             hwlScrollTop();
-            
         },
         error: function (response) {
             jQuery('#hwl-admin-notices').append(
@@ -156,9 +157,63 @@ function hwlSaveWebfontsToDb()
                     <p>${response}</p>
                 </div>`
             );
-            hwlScrollTop();
+            hwlScrollTop()
         }
     });
+}
+
+/**
+ * Refreshes the download counter.
+ */
+function hwlGetDownloadedFonts()
+{
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'hwlAjaxGetDownloadedFonts'
+        },
+        success: function (response) {
+            jQuery('.caos-fonts-downloaded').html(response);
+            setTimeout(function() {
+                hwlGetDownloadedFonts()
+            }, 2000);
+        }
+    })
+}
+
+/**
+ * Refreshes the total counter.
+ */
+function hwlGetTotalFonts()
+{
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'hwlAjaxGetTotalFonts'
+        },
+        success: function (response) {
+            jQuery('.caos-fonts-total').html(response);
+            setTimeout(function () {
+                hwlGetTotalFonts()
+            }, 2000);
+        }
+    })
+}
+
+function hwlCleanQueue()
+{
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'hwlAjaxCleanQueue'
+        },
+        success: function () {
+            jQuery('#hwl-results').empty();
+        }
+    })
 }
 
 /**
