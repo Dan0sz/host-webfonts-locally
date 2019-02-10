@@ -30,14 +30,6 @@ if (!file_exists($uploadDir)) {
 	wp_mkdir_p($uploadDir);
 }
 
-global $wpdb;
-$tableName = $wpdb->prefix . 'caos_webfonts';
-
-/**
- * Get the POST data.
- */
-$selectedFonts = $wpdb->get_results("SELECT * FROM $tableName");
-
 /**
  * Insert promotional material :)
  */
@@ -53,7 +45,7 @@ $fontDisplay = CAOS_WEBFONTS_DISPLAY_OPTION;
 /**
  * Reload the fonts.
  */
-$selectedFonts = $wpdb->get_results("SELECT * FROM $tableName");
+$selectedFonts = hwlGetTotalFonts();
 
 /**
  * Let's generate the stylesheet.
@@ -90,7 +82,7 @@ try {
 	$stylesheet = fopen($file, 'w') or die ("Cannot create file {$file}");
 	fwrite ($stylesheet, $fonts);
 	fclose ($stylesheet);
-	wp_die(_e('Stylesheet was successfully generated and added to your theme\'s header.'));
+	wp_die(__('Stylesheet was successfully generated and added to your theme\'s header.'));
 } catch (Exception $e) {
-	wp_die($e);
+	wp_die(__("Stylesheet could not be generated: $e"));
 }

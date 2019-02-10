@@ -27,3 +27,21 @@ tr.loading td {
 .hwl-remove {
     cursor: pointer;
 }
+
+.button-cancel {
+    color: #a00;
+    text-decoration: none;
+    border-color: transparent;
+    box-shadow: none;
+    background: 0 0;
+    border-radius: 3px;
+    white-space: nowrap;
+    padding: 6px 10px !important;
+}
+
+.button-cancel:hover {
+    cursor: pointer;
+    background: #d54e21;
+    color: #fff;
+    border-color: #d54e21;
+}

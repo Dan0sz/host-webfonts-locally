@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.5.1
+ * Version: 1.5.2
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -12,10 +12,14 @@
 // Exit if accessed directly
 if (!defined('ABSPATH')) exit;
 
+global $wpdb;
+
 /**
  * Define constants.
  */
-define('CAOS_WEBFONTS_DB_VERSION'     , '1.5.0');
+define('CAOS_WEBFONTS_DB_VERSION'      , '1.5.0');
+define('CAOS_WEBFONTS_DB_TABLENAME'    , $wpdb->prefix . 'caos_webfonts');
+define('CAOS_WEBFONTS_DB_CHARSET'      , $wpdb->get_charset_collate());
 define('CAOS_WEBFONTS_FILENAME'        , 'fonts.css');
 define('CAOS_WEBFONTS_CACHE_DIR'       , esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/caos-webfonts');
 define('CAOS_WEBFONTS_CURRENT_BLOG_ID' , get_current_blog_id());
@@ -68,12 +72,7 @@ function hwlGetContentDirName()
  */
 function hwlCreateTable()
 {
-    global $wpdb;
-
-    $table_name = $wpdb->prefix . 'caos_webfonts';
-    $charset_collate = $wpdb->get_charset_collate();
-
-    $sql = "CREATE TABLE $table_name (
+    $sql = "CREATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . "(
             font_id varchar(191) NOT NULL,
             font_family varchar(191) NOT NULL,
             font_weight mediumint(5) NOT NULL,
@@ -84,7 +83,7 @@ function hwlCreateTable()
             url_woff2 varchar(191) NULL,
             url_eot varchar(191) NULL,
             UNIQUE KEY (font_id)
-            ) $charset_collate;";
+            ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
@@ -173,17 +172,73 @@ function hwlSettingsPage()
 }
 
 /**
- * Retrieves all saved fonts from database
- *
- * @return \stdClass
+ * @return array|\Exception
  */
-function hwlGetSavedFonts()
+function hwlGetTotalFonts()
 {
     global $wpdb;
-    $tableName = $wpdb->prefix . 'caos_webfonts';
 
-	return $wpdb->get_results("SELECT * FROM $tableName");
+    try {
+	    return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME);
+    } catch (\Exception $e) {
+        return $e;
+    }
 }
+
+/**
+ * @return array|\Exception
+ */
+function hwlGetDownloadedFonts()
+{
+    global $wpdb;
+
+    try {
+	    return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . " WHERE downloaded = 1");
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
+/**
+ * @return \Exception|false|int
+ */
+function hwlCleanQueue()
+{
+    global $wpdb;
+
+    try {
+        return $wpdb->query("TRUNCATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME);
+    } catch (\Exception $e) {
+        return $e;
+    }
+}
+
+/**
+ * AJAX-wrapper for hwlGetDownloadedFonts()
+ */
+function hwlAjaxGetDownloadedFonts()
+{
+    return wp_die(count(hwlGetDownloadedFonts()));
+}
+add_action('wp_ajax_hwlAjaxGetDownloadedFonts', 'hwlAjaxGetDownloadedFonts');
+
+/**
+ * AJAX-wrapper for hwlGetTotalFonts()
+ */
+function hwlAjaxGetTotalFonts()
+{
+    return wp_die(count(hwlGetTotalFonts()));
+}
+add_action('wp_ajax_hwlAjaxGetTotalFonts', 'hwlAjaxGetTotalFonts');
+
+/**
+ * AJAX-wrapper for hwlCleanQueue()
+ */
+function hwlAjaxCleanQueue()
+{
+    return wp_die(hwlCleanQueue());
+}
+add_action('wp_ajax_hwlAjaxCleanQueue', 'hwlAjaxCleanQueue');
 
 /**
  * Search Fonts in Google Webfonts Helper
@@ -246,7 +301,7 @@ add_action('wp_ajax_hwlAjaxGenerateStyles', 'hwlAjaxGenerateStyles');
  * Saves the chosen webfonts to the database for further processing.
  */
 function hwlAjaxSaveWebfontsToDb() {
-    require_once(plugin_dir_path(__FILE__) . 'includes/ajax/save-webfonts.php');
+    require_once(plugin_dir_path(__FILE__) . 'includes/ajax/download-fonts.php');
 }
 add_action('wp_ajax_hwlAjaxSaveWebfontsToDb', 'hwlAjaxSaveWebfontsToDb');
 
@@ -266,10 +321,12 @@ add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet' );
 /**
  * Stylesheet and Javascript needed in Admin
  */
-function hwlEnqueueAdminJs()
+function hwlEnqueueAdminJs($hook)
 {
-	wp_enqueue_script('hwl-admin-js', plugin_dir_url(__FILE__) . 'js/hwl-admin.js', array('jquery'), null, true);
-	wp_enqueue_style('hwl-admin.css', plugin_dir_url(__FILE__) . 'css/hwl-admin.css');
+    if ($hook == 'settings_page_optimize-webfonts') {
+	    wp_enqueue_script('hwl-admin-js', plugin_dir_url(__FILE__) . 'js/hwl-admin.js', array('jquery'), null, true);
+	    wp_enqueue_style('hwl-admin.css', plugin_dir_url(__FILE__) . 'css/hwl-admin.css');
+    }
 }
 add_action('admin_enqueue_scripts', 'hwlEnqueueAdminJs');
 
