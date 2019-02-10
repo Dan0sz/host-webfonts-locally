@@ -36,6 +36,10 @@ This could be for several reasons:
 
 No, it does not. It creates a CSS Stylesheet which should be added to your theme's header.
 
+= My fonts aren't being downloaded! What's going on? =
+
+First check your database if the table {prefix}_caos_webfonts exists. If you're using any caching plugins, such as Autoptimize, W3TC or WP Super Cache, empty their caches. After that empty your browser's cache and reload the page. Try again.
+
 = The stylesheet isn't loaded? What's going on? =
 
 CAOS for Webfonts enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function into it's header section.
