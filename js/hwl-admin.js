@@ -4,9 +4,16 @@
  * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://dev.daanvandenbergh.com
  */
+
+/**
+ * These get to run every 2 seconds if completed successfully.
+ */
 hwlGetDownloadedFonts();
 hwlGetTotalFonts();
 
+/**
+ * Timer which triggers search after waiting for user to finish typing.
+ */
 var typingTimer;
 var doneTypingInterval = 300;
 var $input = jQuery('#search-field');
@@ -20,7 +27,9 @@ $input.on('keydown', function () {
     clearTimeout(typingTimer);
 });
 
-// user is "finished typing," do something
+/**
+ * When user is done typing, trigger search.
+ */
 function doneTyping ()
 {
     query = $input.val().replace(/\s/g, '-').toLowerCase();
@@ -202,6 +211,9 @@ function hwlGetTotalFonts()
     })
 }
 
+/**
+ * Trigger the DB clean-up and clean list.
+ */
 function hwlCleanQueue()
 {
     jQuery.ajax({
@@ -225,6 +237,9 @@ function hwlRegenerateStylesheet()
     hwlGenerateStylesheet();
 }
 
+/**
+ * Scroll to top-effect.
+ */
 function hwlScrollTop()
 {
     jQuery('html, body').animate({
