@@ -4,7 +4,7 @@ Donate link: https://dev.daanvandenbergh.com/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.0
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ Yes, please! [Click here to buy me a beer](https://dev.daanvandenbergh.com/donat
 N/A
 
 == Changelog ==
+
+= 1.5.3 =
+Plugins admin-JS and -CSS is now updated by force after plugin update to prevent malfunction.
 
 = 1.5.2 =
 Added a download counter, clean queue-button and improved allround UX. Fixed a few minor bugs.
