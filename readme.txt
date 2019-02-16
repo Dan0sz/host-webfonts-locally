@@ -14,7 +14,7 @@ With only 2 clicks of a button, CAOS for Webfonts automagically downloads your G
 
 CAOS for Webfonts is written with performance in mind. Other plugins make repeated requests to your Blog's database to replace/remove requests to external Webfonts source (e.g. Google Fonts) on-the-fly. This might be user-friendly, but it's a performance killer, because locally hosting your Google Webfonts should be a set-and-forget feature. The source of your webfonts should be replaced once and kept that way.
 
-That's why I kept CAOS for Webfonts small and useful. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with plugins like Autoptimize or W3 Total Cache. After that, all you need to do is remove any mention of requests to external webfont sources (using e.g. a child theme) and you're done!
+That's why I kept CAOS for Webfonts small and useful. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with plugins like Autoptimize or W3 Total Cache. After that, all you need to do is remove any mention of requests to external webfont sources (using e.g. a child theme or a plugin such as Autoptimize) and you're done!
 
 This will *decrease your pageload times*, *leverage browser cache*, *minimize DNS requests* and effectively bring you a perfect score on *Pagespeed Insights* and *Pingdom*, without taking toll on the performance of your webserver.
 
@@ -24,7 +24,13 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Use the Settings -> Optimize Webfonts screen to configure the plugin
 
+For a more comprehensive guide for configuration, click [here](https://dev.daanvandenbergh.com/wordpress/host-google-fonts-locally/).
+
 == Frequently Asked Questions ==
+
+= I don't know what I'm doing! Can you help? =
+
+Of course :) But first calm down and read this [comprehensive guide on how to configure CAOS for Webfonts](https://dev.daanvandenbergh.com/wordpress/host-google-fonts-locally/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
 
 = How come my font isn't available in CAOS for Webfonts? =
 
@@ -57,6 +63,9 @@ Yes, please! [Click here to buy me a beer](https://dev.daanvandenbergh.com/donat
 N/A
 
 == Changelog ==
+
+= 1.5.6 =
+Optimized AJAX-requests for download-counter.
 
 = 1.5.5 =
 Added a clean-up button, which cleans the currently configured cache-dir.
