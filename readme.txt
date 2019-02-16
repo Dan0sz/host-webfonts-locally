@@ -4,7 +4,7 @@ Donate link: https://dev.daanvandenbergh.com/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.0
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,10 @@ For a more comprehensive guide for configuration, click [here](https://dev.daanv
 
 Of course :) But first calm down and read this [comprehensive guide on how to configure CAOS for Webfonts](https://dev.daanvandenbergh.com/wordpress/host-google-fonts-locally/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
 
+= I have another file I want to host locally. Could you make a plugin? =
+
+Maintaining two plugins besides my daily 9-to-5 job is a handful, so no. If you're looking for a way to host analytics.js locally; please install [CAOS for Analytics](https://wordpress.org/plugins/host-analyticsjs-local/). For anything else, please follow the steps in [this how-to](https://dev.daanvandenbergh.com/how-to/host-js-locally-crontab/).
+
 = How come my font isn't available in CAOS for Webfonts? =
 
 This could be for several reasons:
@@ -40,7 +44,7 @@ This could be for several reasons:
 
 = Does this plugin edit template files? =
 
-No, it does not. It creates a CSS Stylesheet which should be added to your theme's header.
+No, it does not. It creates a CSS Stylesheet which will be automatically added to your theme's header using a built-in WordPress queueing system.
 
 = My fonts aren't being downloaded! What's going on? =
 
