@@ -6,12 +6,6 @@
  */
 
 /**
- * These get to run every 2 seconds if completed successfully.
- */
-hwlGetDownloadedFonts();
-hwlGetTotalFonts();
-
-/**
  * Timer which triggers search after waiting for user to finish typing.
  */
 var typingTimer;
@@ -126,8 +120,6 @@ function hwlGenerateStylesheet ()
             action: 'hwlAjaxGenerateStyles',
             selected_fonts: hwlData
         },
-        beforeSend: function () {
-        },
         success: function (response) {
             jQuery('#hwl-admin-notices').append(
                 `<div class="updated settings-success notice is-dismissible">
@@ -152,6 +144,8 @@ function hwlGenerateStylesheet ()
  */
 function hwlDownloadFonts()
 {
+    hwlGetDownloadedFonts(true);
+    hwlGetTotalFonts(true);
     var hwlData = hwlSerializeArray(jQuery('#hwl-options-form'));
     jQuery.ajax({
         type: 'POST',
@@ -166,7 +160,9 @@ function hwlDownloadFonts()
                     <p>${response}</p>
                 </div>`
             );
-            hwlScrollTop()
+            hwlGetDownloadedFonts(false);
+            hwlGetTotalFonts(false);
+            hwlScrollTop();
         }
     });
 }
@@ -174,7 +170,7 @@ function hwlDownloadFonts()
 /**
  * Refreshes the download counter.
  */
-function hwlGetDownloadedFonts()
+function hwlGetDownloadedFonts(repeat)
 {
     jQuery.ajax({
         type: 'POST',
@@ -184,9 +180,11 @@ function hwlGetDownloadedFonts()
         },
         success: function (response) {
             jQuery('.caos-fonts-downloaded').html(response);
-            setTimeout(function() {
-                hwlGetDownloadedFonts()
-            }, 2000);
+            if (repeat) {
+                setTimeout(function() {
+                    hwlGetDownloadedFonts()
+                }, 1000);
+            }
         }
     })
 }
@@ -194,7 +192,7 @@ function hwlGetDownloadedFonts()
 /**
  * Refreshes the total counter.
  */
-function hwlGetTotalFonts()
+function hwlGetTotalFonts(repeat)
 {
     jQuery.ajax({
         type: 'POST',
@@ -204,9 +202,11 @@ function hwlGetTotalFonts()
         },
         success: function (response) {
             jQuery('.caos-fonts-total').html(response);
-            setTimeout(function () {
-                hwlGetTotalFonts()
-            }, 2000);
+            if (repeat) {
+                setTimeout(function () {
+                    hwlGetTotalFonts()
+                }, 1000);
+            }
         }
     })
 }
@@ -246,6 +246,7 @@ function hwlCleanQueue()
             action: 'hwlAjaxCleanQueue'
         },
         success: function () {
+            jQuery('.caos-fonts-total, .caos-fonts-downloaded').html(0);
             jQuery('#hwl-results').empty();
         }
     })
