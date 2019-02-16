@@ -4,7 +4,6 @@
  * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://dev.daanvandenbergh.com
  */
-
 /**
  * Timer which triggers search after waiting for user to finish typing.
  */
@@ -12,19 +11,19 @@ var typingTimer;
 var doneTypingInterval = 300;
 var $input = jQuery('#search-field');
 // on keyup, start the countdown
-$input.on('keyup', function () {
+$input.on('keyup', function() {
     clearTimeout(typingTimer);
     typingTimer = setTimeout(doneTyping, doneTypingInterval);
 });
 // on keydown, clear the countdown
-$input.on('keydown', function () {
+$input.on('keydown', function() {
     clearTimeout(typingTimer);
 });
 
 /**
  * When user is done typing, trigger search.
  */
-function doneTyping ()
+function doneTyping()
 {
     query = $input.val().replace(/\s/g, '-').toLowerCase();
     console.log(query);
@@ -35,7 +34,7 @@ function doneTyping ()
  * Triggers the AJAX-request to Google Webfont Helper.
  * @param $data
  */
-function hwlSearchGoogleFonts ($data)
+function hwlSearchGoogleFonts($data)
 {
     var loadingDiv = jQuery('#hwl-warning .loading');
     var errorDiv = jQuery('#hwl-warning .error');
@@ -46,17 +45,17 @@ function hwlSearchGoogleFonts ($data)
             action: 'hwlAjaxSearchGoogleFonts',
             search_query: $data
         },
-        datatype: 'json',
-        beforeSend: function () {
+        dataType: 'json',
+        beforeSend: function() {
             loadingDiv.show();
         },
-        error: function () {
+        error: function() {
             errorDiv.show();
         },
-        complete: function (response) {
+        complete: function(response) {
             loadingDiv.hide();
             errorDiv.hide();
-            if (response[ 'responseText' ] !== 'Not found') {
+            if(response[ 'responseText' ] !== 'Not found') {
                 hwlGenerateResults(response);
             } else {
                 errorDiv.show();
@@ -70,13 +69,13 @@ function hwlSearchGoogleFonts ($data)
  *
  * @param results
  */
-function hwlGenerateResults (results)
+function hwlGenerateResults(results)
 {
     var response = JSON.parse(results[ 'responseText' ]);
     var variants = response[ 'variants' ];
     var length = variants.length;
     var renderedFonts = [];
-    for (var iii = 0; iii < length; iii++) {
+    for(var iii = 0; iii < length; iii++) {
         var fontFamily = variants[ iii ].fontFamily.replace(/'/g, '');
         var fontId = variants[ iii ].id;
         var font = fontFamily.replace(/\s+/g, '-').toLowerCase() + '-' + variants[ iii ].id;
@@ -110,7 +109,7 @@ function hwlGenerateResults (results)
 /**
  * Call the generate-stylesheet script.
  */
-function hwlGenerateStylesheet ()
+function hwlGenerateStylesheet()
 {
     var hwlData = hwlSerializeArray(jQuery('#hwl-options-form'));
     jQuery.ajax({
@@ -120,7 +119,7 @@ function hwlGenerateStylesheet ()
             action: 'hwlAjaxGenerateStyles',
             selected_fonts: hwlData
         },
-        success: function (response) {
+        success: function(response) {
             jQuery('#hwl-admin-notices').append(
                 `<div class="updated settings-success notice is-dismissible">
                     <p>${response}</p>
@@ -128,7 +127,7 @@ function hwlGenerateStylesheet ()
             );
             hwlScrollTop();
         },
-        error: function (response) {
+        error: function(response) {
             jQuery('#hwl-admin-notices').append(
                 `<div class="notice notice-error is-dismissible">
                     <p>The stylesheet could not be created: ${response}</p>
@@ -154,7 +153,7 @@ function hwlDownloadFonts()
             action: 'hwlAjaxDownloadFonts',
             selected_fonts: hwlData
         },
-        success: function (response) {
+        success: function(response) {
             jQuery('#hwl-admin-notices').append(
                 `<div class="notice notice-success is-dismissible">
                     <p>${response}</p>
@@ -178,15 +177,15 @@ function hwlGetDownloadedFonts(repeat)
         data: {
             action: 'hwlAjaxGetDownloadedFonts'
         },
-        success: function (response) {
+        success: function(response) {
             jQuery('.caos-fonts-downloaded').html(response);
-            if (repeat) {
+            if(repeat) {
                 setTimeout(function() {
-                    hwlGetDownloadedFonts()
+                    hwlGetDownloadedFonts();
                 }, 1000);
             }
         }
-    })
+    });
 }
 
 /**
@@ -200,15 +199,15 @@ function hwlGetTotalFonts(repeat)
         data: {
             action: 'hwlAjaxGetTotalFonts'
         },
-        success: function (response) {
+        success: function(response) {
             jQuery('.caos-fonts-total').html(response);
-            if (repeat) {
-                setTimeout(function () {
-                    hwlGetTotalFonts()
+            if(repeat) {
+                setTimeout(function() {
+                    hwlGetTotalFonts();
                 }, 1000);
             }
         }
-    })
+    });
 }
 
 /**
@@ -229,9 +228,9 @@ function hwlEmptyDir()
                 </div>`
             );
             hwlCleanQueue();
-            hwlScrollTop()
+            hwlScrollTop();
         }
-    })
+    });
 }
 
 /**
@@ -245,11 +244,11 @@ function hwlCleanQueue()
         data: {
             action: 'hwlAjaxCleanQueue'
         },
-        success: function () {
+        success: function() {
             jQuery('.caos-fonts-total, .caos-fonts-downloaded').html(0);
             jQuery('#hwl-results').empty();
         }
-    })
+    });
 }
 
 /**
@@ -274,12 +273,12 @@ function hwlScrollTop()
 /**
  * Serialize form data to a multi-dimensional array.
  */
-function hwlSerializeArray (data)
+function hwlSerializeArray(data)
 {
     var result = [];
-    data.each(function () {
+    data.each(function() {
         var fields = {};
-        jQuery.each(jQuery(this).serializeArray(), function () {
+        jQuery.each(jQuery(this).serializeArray(), function() {
             fields[ this.name ] = this.value;
         });
         result.push(fields);
@@ -292,7 +291,7 @@ function hwlSerializeArray (data)
  *
  * @param rowId
  */
-function hwlRemoveRow (rowId)
+function hwlRemoveRow(rowId)
 {
     jQuery('#' + rowId).remove();
 }
