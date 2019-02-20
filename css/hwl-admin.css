@@ -45,3 +45,19 @@ tr.loading td {
     color: #fff;
     border-color: #d54e21;
 }
+
+.caos-status-total-bar {
+    height: 30px;
+    background-color: #eee;
+    border-radius: 7px;
+}
+
+#caos-status-progress-bar {
+    height: 30px;
+    color: #fff;
+    background-color: #0daadb;
+    border-radius: 7px;
+    white-space: nowrap;
+    line-height: 27px;
+    text-align: center;
+}
