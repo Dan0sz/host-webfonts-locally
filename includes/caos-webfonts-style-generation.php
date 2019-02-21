@@ -102,9 +102,18 @@ if (!defined( 'ABSPATH')) exit;
                id="empty-btn" class="button-cancel">Empty Cache Directory</a>
         </td>
     </tr>
-    <tr valign="center" align="center">
-        <td>
-            <span class="caos-fonts-downloaded"><?php echo count(hwlGetDownloadedFonts()); ?></span> / <span class="caos-fonts-total"> <?php echo count(hwlGetTotalFonts()) ;?></span> downloaded
+    <tr valign="center">
+        <?php
+        $downloaded = hwlGetDownloadStatus()['downloaded'];
+        $total      = hwlGetDownloadStatus()['total'];
+        $width      = $downloaded && $total ? (100 / $total) * $downloaded : 0;
+        ?>
+        <td colspan="5">
+            <div class="caos-status-total-bar" style="">
+                <div id="caos-status-progress-bar" style="width: <?php echo $width; ?>%;">
+                    <span class="caos-status-progress-percentage"><?php echo $width . '%'; ?></span>
+                </div>
+            </div>
         </td>
 	</tr>
 	</tbody>
