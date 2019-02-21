@@ -4,7 +4,7 @@
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a
  * stylesheet for them and enqueue it in your theme's header.
- * Version: 1.5.6
+ * Version: 1.5.7
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later

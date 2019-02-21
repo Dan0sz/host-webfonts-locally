@@ -143,7 +143,7 @@ function hwlGenerateStylesheet()
  */
 function hwlDownloadFonts()
 {
-    hwlGetDownloadStatus();
+    var downloadStatus = window.setInterval(hwlGetDownloadStatus, 1000);
     var hwlData  = hwlSerializeArray(jQuery('#hwl-options-form'));
     jQuery.ajax({
         type: 'POST',
@@ -158,7 +158,8 @@ function hwlDownloadFonts()
                     <p>${response}</p>
                 </div>`
             )
-            hwlScrollTop()
+            hwlScrollTop();
+            window.clearInterval(downloadStatus);
         }
     })
 }
@@ -181,7 +182,6 @@ function hwlGetDownloadStatus()
             progress = (100 / total) * downloaded;
             console.log("[" + progress + "] Downloaded " + downloaded + " of " + total + ".")
             hwlUpdateStatusBar(progress);
-            setTimeout(hwlGetDownloadStatus(), 1000);
         }
     })
 }
@@ -215,8 +215,8 @@ function hwlEmptyDir()
                     <p>Cache-dir emptied.</p>
                 </div>`
             )
-            hwlUpdateStatusBar(0)
             hwlCleanQueue()
+            hwlUpdateStatusBar(0)
             hwlScrollTop()
         }
     })
@@ -254,9 +254,11 @@ function hwlRegenerateStylesheet()
  */
 function hwlScrollTop()
 {
-    jQuery('html, body').animate({
-        scrollTop: 0
-    }, 1000)
+    setTimeout(function () {
+        jQuery('html, body').animate({
+            scrollTop: 0
+        }, 1500)
+    }, 1500)
 }
 
 /**
