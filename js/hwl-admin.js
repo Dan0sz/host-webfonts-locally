@@ -180,7 +180,6 @@ function hwlGetDownloadStatus()
             downloaded = response.downloaded;
             total = response.total;
             progress = (100 / total) * downloaded;
-            console.log("[" + progress + "] Downloaded " + downloaded + " of " + total + ".")
             hwlUpdateStatusBar(progress);
         }
     })

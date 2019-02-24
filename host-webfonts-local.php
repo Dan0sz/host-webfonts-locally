@@ -4,7 +4,7 @@
  * Plugin URI: https://dev.daanvandenbergh.com/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a
  * stylesheet for them and enqueue it in your theme's header.
- * Version: 1.5.7
+ * Version: 1.6.0
  * Author: Daan van den Bergh
  * Author URI: https://dev.daanvandenbergh.com
  * License: GPL2v2 or later
@@ -30,7 +30,11 @@ define('CAOS_WEBFONTS_CURRENT_BLOG_ID', get_current_blog_id());
 define('CAOS_WEBFONTS_UPLOAD_DIR', WP_CONTENT_DIR . CAOS_WEBFONTS_CACHE_DIR);
 define('CAOS_WEBFONTS_UPLOAD_URL', get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR));
 define('CAOS_WEBFONTS_DISPLAY_OPTION', esc_attr(get_option('caos_webfonts_display_option')) ?: 'auto');
+define('CAOS_WEBFONTS_PRELOAD', esc_attr(get_option('caos_webfonts_preload')));
 
+/**
+ * Register settings
+ */
 function hwlRegisterSettings() {
 	register_setting('caos-webfonts-basic-settings',
 		'caos_webfonts_cache_dir'
@@ -38,6 +42,9 @@ function hwlRegisterSettings() {
 	register_setting('caos-webfonts-basic-settings',
 		'caos_webfonts_display_option'
 	);
+	register_setting('caos-webfonts-basic-settings',
+        'caos_webfonts_preload'
+    );
 }
 
 /**
@@ -315,8 +322,7 @@ add_action('wp_ajax_hwlAjaxDownloadFonts', 'hwlAjaxDownloadFonts');
 function hwlEnqueueStylesheet() {
 	$stylesheet = CAOS_WEBFONTS_UPLOAD_DIR . '/' . CAOS_WEBFONTS_FILENAME;
 	if (file_exists($stylesheet)) {
-		wp_register_style('hwl-style', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME);
-		wp_enqueue_style('hwl-style');
+		wp_enqueue_style('hwl-style', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), CAOS_WEBFONTS_STATIC_VERSION);
 	}
 }
 add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet');
@@ -341,3 +347,23 @@ function hwlDequeueJsCss() {
 	wp_dequeue_style('hwl-style');
 }
 register_deactivation_hook(__FILE__, 'hwlDequeueJsCss');
+
+/**
+ * Prioritize the loading of fonts by adding a resource hint to the document head.
+ */
+function hwlAddLinkPreload() {
+    global $wp_styles;
+    
+    $handle = 'hwl-style';
+    $sstyle = $wp_styles->registered[$handle];
+	
+	$source = $sstyle->src . ($sstyle->ver ? "?ver={$sstyle->ver}" : "");
+	echo "<link rel='preload' href='{$source}' as='style' />\n";
+}
+
+function hwlIsPreloadEnabled() {
+    if (CAOS_WEBFONTS_PRELOAD == 'on') {
+	    add_action('wp_head', 'hwlAddLinkPreload', 1);
+    }
+}
+add_action('init', 'hwlIsPreloadEnabled');
