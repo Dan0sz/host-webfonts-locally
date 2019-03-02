@@ -3,7 +3,7 @@
  * @package: CAOS for Webfonts
  * @author: Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
- * @url: https://dev.daanvandenbergh.com
+ * @url: https://daan.dev
  */
 
 // Exit if accessed directly
@@ -29,25 +29,25 @@ if (!defined('ABSPATH')) exit;
                     <li class="welcome-icon dashicons-before dashicons-smiley">Done!</li>
                     <li class="welcome-icon dashicons-before dashicons-admin-settings">After changing settings use 'Save & Regenerate'</li>
                 </ul>
-                <p><a target="_blank" href="https://dev.daanvandenbergh.com/wordpress/host-google-fonts-locally/">Click here</a> for a more comprehensive guide.</p>
+                <p><a target="_blank" href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/wordpress/host-google-fonts-locally/">Click here</a> for a more comprehensive guide.</p>
             </div>
             <div class="welcome-panel-column">
                 <h3>Get a Perfect Score on Pagespeed & Pingdom!</h3>
-                <p><strong>Leverage your browser cache</strong> and <strong>lower pageload times</strong> by hosting analytics.js locally with <a href="https://dev.daanvandenbergh.com/wordpress-plugins/optimize-analytics-wordpress/" target="_blank">CAOS for Analytics</a>.</p>
+                <p><strong>Leverage your browser cache</strong> and <strong>lower pageload times</strong> by hosting analytics.js locally with <a href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/wordpress-plugins/optimize-analytics-wordpress/" target="_blank">CAOS for Analytics</a>.</p>
                 <p><a target="_blank" href="https://wordpress.org/plugins/host-analyticsjs-local">Download now</a></p>
                 <h3>Need help?</h3>
                 <p>First make sure you read the manual thoroughly.</p>
                 <p>Still running into issues? Visit the <a href="https://wordpress.org/plugins/host-webfonts-local/#description">FAQ</a> and <a href="https://wordpress.org/support/plugin/host-webfonts-local/">Support Forum</a> to see if your question has already been answered.</p>
-                <p>If not, ask a question or <a href="https://dev.daanvandenbergh.com/contact" target="_blank">contact me</a>.</p>
+                <p>If not, ask a question or <a href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/contact" target="_blank">contact me</a>.</p>
             </div>
             <div class="welcome-panel-column welcome-panel-last">
                 <h3>Want to Host other Files Locally?</h3>
                 <p>Unleash your site's true potential by locally hosting as many files as possible.</p>
-                <p><a target="_blank" href="https://dev.daanvandenbergh.com/how-to/host-locally-crontab/">Read more</a></p>
+                <p><a target="_blank" href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/how-to/host-locally-crontab/">Read more</a></p>
                 <h3>Support CAOS!</h3>
                 <p>I create solutions that easily optimize your website for Pagespeed Insights and Pingdom.</p>
                 <p>I believe these solutions should be free, but if you appreciate my work, please consider donating!</p>
-                <a target="_blank" class="button button-primary button-hero" href="https://dev.daanvandenbergh.com/donate/"><span class="dashicons-before dashicons-heart"> Donate</span></a>
+                <a target="_blank" class="button button-primary button-hero" href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/donate/"><span class="dashicons-before dashicons-heart"> Donate</span></a>
                 <a target="_blank" class="button button-primary button-hero" style="background-color: #00aced; box-shadow: 0 2px 0 #0084b4; border-color: #0084b4 #0084b4 #0084b4;" href="https://twitter.com/Dan0sz"><span class="dashicons-before dashicons-twitter"> Follow me!</span></a>
             </div>
         </div>

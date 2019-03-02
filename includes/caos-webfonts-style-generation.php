@@ -3,7 +3,7 @@
  * @package: CAOS for Webfonts
  * @author: Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
- * @url: https://dev.daanvandenbergh.com
+ * @url: https://daan.dev
  */
 
 // Exit if accessed directly
@@ -18,20 +18,40 @@ if (!defined( 'ABSPATH')) exit;
 		</td>
 	</tr>
 	</tbody>
-	<tr valign="top">
-		<th>
-			font-family
-		</th>
-		<th>
-			font-style
-		</th>
-        <th>
-            font-weight
-        </th>
-		<th>
-
-		</th>
-	</tr>
+</table>
+<table>
+    <tr id="row" valign="top">
+        <th align="left" colspan="3">Available subsets</th>
+    </tr>
+    <tbody id="hwl-subsets">
+    <?php
+    $subsetFonts = hwlGetSubsets();
+    ?>
+    <?php if ($subsetFonts): ?>
+    <?php foreach ($subsetFonts as $subsetFont): ?>
+        <?php
+        $availableSubsets = explode(',', $subsetFont->available_subsets);
+        $selectedSubsets  = explode(',', $subsetFont->selected_subsets);
+        ?>
+        <tr id="<?php echo $subsetFont->subset_font; ?>">
+            <th align="left">
+		        <?php echo $subsetFont->subset_font; ?>
+            </th>
+            <?php foreach ($availableSubsets as $availableSubset): ?>
+            <td>
+                <label>
+                    <?php $checked = in_array($availableSubset, $selectedSubsets) ? 'checked="checked"' : ''; ?>
+                    <input name="<?php echo $subsetFont->subset_font; ?>" value="<?php echo $availableSubset; ?>" type="checkbox" onclick="hwlGenerateSearchQuery(<?php echo $subsetFont->subset_font; ?>)" <?php echo $checked; ?>/>
+                    <?php echo $availableSubset; ?>
+                </label>
+            </td>
+            <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
+    <?php endif; ?>
+    </tbody>
+</table>
+<table align="left">
 	<tbody id="hwl-results">
     <?php
     $savedFonts = hwlGetTotalFonts();

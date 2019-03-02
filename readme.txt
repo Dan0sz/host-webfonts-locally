@@ -1,10 +1,10 @@
 === CAOS for Webfonts | Host Google Fonts Locally ===
 Contributors: DaanvandenBergh
-Donate link: https://dev.daanvandenbergh.com/donate/
+Donate link: https://daan.dev/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.1
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,17 +31,17 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Use the Settings -> Optimize Webfonts screen to configure the plugin
 
-For a more comprehensive guide for configuration, click [here](https://dev.daanvandenbergh.com/wordpress/host-google-fonts-locally/).
+For a more comprehensive guide for configuration, click [here](https://daan.dev/wordpress/host-google-fonts-locally/).
 
 == Frequently Asked Questions ==
 
 = I don't know what I'm doing! Can you help? =
 
-Of course :) But first calm down and read this [comprehensive guide on how to configure CAOS for Webfonts](https://dev.daanvandenbergh.com/wordpress/host-google-fonts-locally/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
+Of course :) But first calm down and read this [comprehensive guide on how to configure CAOS for Webfonts](https://daan.dev/wordpress/host-google-fonts-locally/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
 
 = I have another file I want to host locally. Could you make a plugin? =
 
-Maintaining two plugins besides my daily 9-to-5 job is a handful, so no. If you're looking for a way to host analytics.js locally; please install [CAOS for Analytics](https://wordpress.org/plugins/host-analyticsjs-local/). For anything else, please follow the steps in [this how-to](https://dev.daanvandenbergh.com/how-to/host-js-locally-crontab/).
+Maintaining two plugins besides my daily 9-to-5 job is a handful, so no. If you're looking for a way to host analytics.js locally; please install [CAOS for Analytics](https://wordpress.org/plugins/host-analyticsjs-local/). For anything else, please follow the steps in [this how-to](https://daan.dev/how-to/host-js-locally-crontab/).
 
 = How come my font isn't available in CAOS for Webfonts? =
 
@@ -67,13 +67,16 @@ Yes, it does!
 
 = Can I buy you a beer? =
 
-Yes, please! [Click here to buy me a beer](https://dev.daanvandenbergh.com/donate/ "Let's do shots!")!
+Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do shots!")!
 
 == Screenshots ==
 
 N/A
 
 == Changelog ==
+
+= 1.6.1 =
+Changed domains to new home: daan.dev
 
 = 1.6.0 =
 Added experimental option for preload resource hint.
