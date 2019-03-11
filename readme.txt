@@ -19,7 +19,7 @@ That's why I kept CAOS for Webfonts small and useful. It uses the Google Fonts H
 This will *decrease your pageload times*, *leverage browser cache*, *minimize DNS requests* and effectively bring you a perfect score on *Pagespeed Insights* and *Pingdom*, without taking toll on the performance of your webserver.
 
 = Features =
-- Easily find and download your fonts,
+- Easily find and download your fonts in multiple subsets,
 - Generate a stylesheet, which is automatically added to your header using WordPress' wp_head()-function,
 - Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
 - Control font performance by adding font-display property,
@@ -74,6 +74,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.7.0 =
+Added support for subsets to increase compatibility with other writing.
 
 = 1.6.1 =
 Changed domains to new home: daan.dev
