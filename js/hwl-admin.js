@@ -2,8 +2,9 @@
  * @package: CAOS for Webfonts
  * @author: Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
- * @url: https://dev.daanvandenbergh.com
+ * @url: https://daan.dev
  */
+
 /**
  * Timer which triggers search after waiting for user to finish typing.
  */
@@ -26,15 +27,73 @@ $input.on('keydown', function() {
 function doneTyping()
 {
     query = $input.val().replace(/\s/g, '-').toLowerCase()
-    console.log(query)
-    hwlSearchGoogleFonts(query)
+    hwlSearchFontSubsets(query)
+}
+
+/**
+ * Return available subsets for searched font.
+ *
+ * @param query
+ */
+function hwlSearchFontSubsets(query)
+{
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'hwlAjaxSearchFontSubsets',
+            search_query: query
+        },
+        dataType: 'json',
+        complete: function(response) {
+            hwlRenderAvailableSubsets(response);
+        }
+    })
+}
+
+/**
+ * Print available subsets
+ *
+ * @param response
+ */
+function hwlRenderAvailableSubsets(response)
+{
+    data = response['responseJSON'];
+    subsets = data['subsets']
+    family = data['family'];
+    id = data['id'];
+    length = subsets.length;
+    renderedSubsets = [];
+    for (iii = 0; iii < length; iii++) {
+        renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
+    }
+    jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
+    jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
+}
+
+/**
+ * Generate search query for selected subsets
+ *
+ * @param id
+ */
+function hwlGenerateSearchQuery(id)
+{
+    var subsets = [];
+    checked = jQuery("input[name='" + id + "']:checked");
+    jQuery.each(checked, function() {
+        subsets.push(jQuery(this).val());
+    });
+    subsets.join()
+    hwlSearchGoogleFonts(id, subsets);
 }
 
 /**
  * Triggers the AJAX-request to Google Webfont Helper.
- * @param $data
+ *
+ * @param id
+ * @param subsets
  */
-function hwlSearchGoogleFonts($data)
+function hwlSearchGoogleFonts(id, subsets)
 {
     var loadingDiv = jQuery('#hwl-warning .loading')
     var errorDiv = jQuery('#hwl-warning .error')
@@ -43,7 +102,8 @@ function hwlSearchGoogleFonts($data)
         url: ajaxurl,
         data: {
             action: 'hwlAjaxSearchGoogleFonts',
-            search_query: $data
+            search_query: id,
+            search_subsets: subsets
         },
         dataType: 'json',
         beforeSend: function() {
@@ -56,7 +116,7 @@ function hwlSearchGoogleFonts($data)
             loadingDiv.hide()
             errorDiv.hide()
             if(response['responseText'] !== 'Not found') {
-                hwlGenerateResults(response)
+                hwlRenderAvailableFonts(response)
             } else {
                 errorDiv.show()
             }
@@ -69,7 +129,7 @@ function hwlSearchGoogleFonts($data)
  *
  * @param results
  */
-function hwlGenerateResults(results)
+function hwlRenderAvailableFonts(results)
 {
     var response = JSON.parse(results['responseText'])
     var variants = response['variants']
@@ -103,7 +163,8 @@ function hwlGenerateResults(results)
                                     </td>
                                  </tr>`
     }
-    jQuery('#hwl-results').append(renderedFonts)
+    console.log(fontFamily.replace(/\s+/g, '-').toLowerCase());
+    jQuery('#hwl-section-' + fontFamily.replace(/\s+/g, '-').toLowerCase()).html(renderedFonts)
 }
 
 /**
@@ -111,13 +172,13 @@ function hwlGenerateResults(results)
  */
 function hwlGenerateStylesheet()
 {
-    var hwlData = hwlSerializeArray(jQuery('#hwl-options-form'))
+    var hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'))
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
         data: {
             action: 'hwlAjaxGenerateStyles',
-            selected_fonts: hwlData
+            selected_fonts: hwlFonts
         },
         success: function(response) {
             jQuery('#hwl-admin-notices').append(
@@ -139,18 +200,63 @@ function hwlGenerateStylesheet()
 }
 
 /**
+ * Gathers all information about the subsets
+ *
+ * @returns {{}}
+ */
+function hwlGatherSelectedSubsets()
+{
+    rows = jQuery('#hwl-subsets tr');
+    length = rows.length;
+    subsets = {};
+    jQuery(rows).each(function() {
+        id = this.id;
+        checkboxes = jQuery("input[name='" + id + "']");
+        checked = jQuery("input[name='" + id + "']:checked");
+        
+        selectedSubsets = [];
+        jQuery.each(checked, function() {
+            selectedSubsets.push(jQuery(this).val());
+        });
+        selectedSubsets.join()
+        
+        availableSubsets = [];
+        jQuery.each(checkboxes, function() {
+            availableSubsets.push(jQuery(this).val());
+        });
+        availableSubsets.join()
+        
+        family = jQuery(this).find('.hwl-subset-font-family').val();
+        
+        subsets[id] = {};
+        subsets[id]['family'] = {};
+        subsets[id]['family'] = family;
+        subsets[id]['selected'] = {};
+        subsets[id]['selected'] = selectedSubsets;
+        subsets[id]['available'] = {};
+        subsets[id]['available'] = availableSubsets;
+    })
+    
+    return subsets;
+}
+
+/**
  * Triggered when 'Save Webfonts' is clicked.
  */
 function hwlDownloadFonts()
 {
-    var downloadStatus = window.setInterval(hwlGetDownloadStatus, 1000);
-    var hwlData  = hwlSerializeArray(jQuery('#hwl-options-form'));
+    var hwlFonts  = hwlSerializeArray(jQuery('#hwl-options-form'));
+    var hwlSubsets = hwlGatherSelectedSubsets();
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
         data: {
             action: 'hwlAjaxDownloadFonts',
-            selected_fonts: hwlData
+            subsets: hwlSubsets,
+            fonts: hwlFonts,
+        },
+        beforeSend: function() {
+            downloadStatus = window.setInterval(hwlGetDownloadStatus, 1000);
         },
         success: function(response) {
             jQuery('#hwl-admin-notices').append(
@@ -234,7 +340,7 @@ function hwlCleanQueue()
         },
         success: function() {
             jQuery('.caos-status-progress-percentage').html('0%')
-            jQuery('#hwl-results').empty()
+            jQuery('#hwl-results, #hwl-subsets').empty()
         }
     })
 }

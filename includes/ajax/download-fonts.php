@@ -3,7 +3,7 @@
  * @package: CAOS for Webfonts
  * @author: Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
- * @url: https://dev.daanvandenbergh.com
+ * @url: https://daan.dev
  */
 
 // Exit if accessed directly
@@ -39,12 +39,33 @@ try {
 /**
  * Get the POST data.
  */
-$selectedFonts = $_POST['selected_fonts'][0]['caos_webfonts_array'];
+$selectedFonts = $_POST['fonts'][0]['caos_webfonts_array'];
+$subsets       = $_POST['subsets'];
 
-if (!$selectedFonts)
+if (!$selectedFonts || !$subsets)
 {
-	wp_die(__('No fonts found.', 'host-webfonts-local'));
+	wp_die(__('No fonts or subsets selected.', CAOS_ANALYTICS_TRANSLATE_DOMAIN));
 }
+
+/**
+ * Save used subsets to database for each font.
+ */
+foreach ($subsets as $id => $subset)
+{
+	$availableSubsets = implode($subset['available'], ',');
+	$selectedSubsets  = implode($subset['selected'], ',');
+	
+	$wpdb->insert(
+		CAOS_WEBFONTS_DB_TABLENAME . '_subsets',
+		array(
+			'subset_font'       => $id,
+			'subset_family'     => $subset['family'],
+			'available_subsets' => $availableSubsets,
+			'selected_subsets'  => $selectedSubsets,
+		)
+	);
+}
+
 
 /**
  * Save used fonts to database.
