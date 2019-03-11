@@ -214,23 +214,27 @@ function hwlGatherSelectedSubsets()
         checkboxes = jQuery("input[name='" + id + "']");
         checked = jQuery("input[name='" + id + "']:checked");
         
-        selected_subsets = [];
+        selectedSubsets = [];
         jQuery.each(checked, function() {
-            selected_subsets.push(jQuery(this).val());
+            selectedSubsets.push(jQuery(this).val());
         });
-        selected_subsets.join()
+        selectedSubsets.join()
         
-        available_subsets = [];
+        availableSubsets = [];
         jQuery.each(checkboxes, function() {
-            available_subsets.push(jQuery(this).val());
+            availableSubsets.push(jQuery(this).val());
         });
-        available_subsets.join()
+        availableSubsets.join()
+        
+        family = jQuery(this).children('th').text();
         
         subsets[id] = {};
+        subsets[id]['family'] = {};
+        subsets[id]['family'] = family;
         subsets[id]['selected'] = {};
-        subsets[id]['selected'] = selected_subsets;
+        subsets[id]['selected'] = selectedSubsets;
         subsets[id]['available'] = {};
-        subsets[id]['available'] = available_subsets;
+        subsets[id]['available'] = availableSubsets;
     })
     
     return subsets;

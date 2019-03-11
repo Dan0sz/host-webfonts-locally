@@ -81,7 +81,8 @@ function hwlGetContentDirName() {
  * Create table to store downloaded fonts in.
  */
 function hwlCreateTable() {
-	$sql = "CREATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . "(
+	global $wpdb;
+    $sql = "CREATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . " (
             font_id varchar(191) NOT NULL,
             font_family varchar(191) NOT NULL,
             font_weight mediumint(5) NOT NULL,
@@ -93,9 +94,7 @@ function hwlCreateTable() {
             url_eot varchar(191) NULL,
             UNIQUE KEY (font_id)
             ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
-	
-	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-	dbDelta($sql);
+	$wpdb->query($sql);
 	
 	add_option('caos_webfonts_db_version', CAOS_WEBFONTS_DB_VERSION);
 }
@@ -104,15 +103,15 @@ function hwlCreateTable() {
  * Create table to store selected subsets in.
  */
 function hwlCreateSubsetsTable() {
-    $sql = "CREATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . '_subsets' . "(
+    global $wpdb;
+    $sql = "CREATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . '_subsets' . " (
             subset_font varchar(32) NOT NULL,
+            subset_family varchar(191) NOT NULL,
             available_subsets varchar(191) NOT NULL,
             selected_subsets varchar(191) NOT NULL,
             UNIQUE KEY (subset_font)
             ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
-    
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($sql);
+    $wpdb->query($sql);
     
     update_option('caos_webfonts_db_version', CAOS_WEBFONTS_DB_VERSION);
 }
@@ -122,7 +121,7 @@ function hwlCreateSubsetsTable() {
  */
 function hwlRunDbUpdates() {
 	$currentVersion = get_site_option('caos_webfonts_db_version');
-	if (version_compare($currentVersion, CAOS_WEBFONTS_DB_VERSION) < 0) {
+	if (version_compare($currentVersion, '1.6.1') < 0) {
 		hwlCreateTable();
 	}
 	if (version_compare($currentVersion, CAOS_WEBFONTS_DB_VERSION) < 0) {
@@ -238,6 +237,16 @@ function hwlGetSubsets() {
     
     try {
         return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . "_subsets");
+    } catch(\Exception $e) {
+        return $e;
+    }
+}
+
+function hwlGetFontsByFamily($family) {
+    global $wpdb;
+    
+    try {
+        return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . " WHERE font_family = '$family'");
     } catch(\Exception $e) {
         return $e;
     }

@@ -59,6 +59,7 @@ foreach ($subsets as $id => $subset)
 		CAOS_WEBFONTS_DB_TABLENAME . '_subsets',
 		array(
 			'subset_font'       => $id,
+			'subset_family'     => $subset['family'],
 			'available_subsets' => $availableSubsets,
 			'selected_subsets'  => $selectedSubsets,
 		)

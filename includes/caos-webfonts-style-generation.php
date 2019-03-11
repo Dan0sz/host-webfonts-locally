@@ -35,13 +35,13 @@ if (!defined( 'ABSPATH')) exit;
         ?>
         <tr id="<?php echo $subsetFont->subset_font; ?>">
             <th align="left">
-		        <?php echo $subsetFont->subset_font; ?>
+		        <?php echo $subsetFont->subset_family; ?>
             </th>
             <?php foreach ($availableSubsets as $availableSubset): ?>
             <td>
                 <label>
                     <?php $checked = in_array($availableSubset, $selectedSubsets) ? 'checked="checked"' : ''; ?>
-                    <input name="<?php echo $subsetFont->subset_font; ?>" value="<?php echo $availableSubset; ?>" type="checkbox" onclick="hwlGenerateSearchQuery(<?php echo $subsetFont->subset_font; ?>)" <?php echo $checked; ?>/>
+                    <input name="<?php echo $subsetFont->subset_font; ?>" value="<?php echo $availableSubset; ?>" type="checkbox" onclick="hwlGenerateSearchQuery('<?php echo $subsetFont->subset_font; ?>')" <?php echo $checked; ?>/>
                     <?php echo $availableSubset; ?>
                 </label>
             </td>
@@ -51,15 +51,18 @@ if (!defined( 'ABSPATH')) exit;
     <?php endif; ?>
     </tbody>
 </table>
-<table align="left">
-	<tbody id="hwl-results">
+<table align="left" id="hwl-results">
     <?php
     $savedFonts = hwlGetTotalFonts();
     ?>
-    <?php if ($savedFonts): ?>
-    <?php foreach ($savedFonts as $font): ?>
+    <?php if ($savedFonts && $subsetFonts): ?>
+    <?php foreach ($subsetFonts as $subsetFont): ?>
+    <tbody id="hwl-section-<?php echo $subsetFont->subset_font; ?>">
         <?php
-        $fontId = $font->font_id;
+        $fonts      = hwlGetFontsByFamily($subsetFont->subset_family);
+        ?>
+        <?php foreach($fonts as $font):
+        $fontId    = $font->font_id;
         $arrayPath = "caos_webfonts_array][$fontId]";
         ?>
         <tr id="row-<?php echo $fontId; ?>" valign="top">
@@ -83,9 +86,10 @@ if (!defined( 'ABSPATH')) exit;
                 </div>
             </td>
         </tr>
+        <?php endforeach; ?>
+    </tbody>
     <?php endforeach; ?>
     <?php endif; ?>
-	</tbody>
     <tbody id="hwl-warning">
         <tr class="loading" style="display: none;">
             <td colspan="3" align="center">
