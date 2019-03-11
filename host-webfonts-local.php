@@ -259,7 +259,8 @@ function hwlCleanQueue() {
 	global $wpdb;
 	
 	try {
-		return $wpdb->query("TRUNCATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME);
+		$wpdb->query("TRUNCATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME);
+		$wpdb->query("TRUNCATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . "_subsets");
 	} catch (\Exception $e) {
 		return $e;
 	}

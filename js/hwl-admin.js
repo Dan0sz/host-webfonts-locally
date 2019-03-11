@@ -67,7 +67,7 @@ function hwlRenderAvailableSubsets(response)
     for (iii = 0; iii < length; iii++) {
         renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
     }
-    jQuery('#hwl-subsets').append('<tr id="' + id + '"><th align="left">' + family + '</th>' + renderedSubsets + '</tr>');
+    jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
     jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
 }
 
@@ -226,7 +226,7 @@ function hwlGatherSelectedSubsets()
         });
         availableSubsets.join()
         
-        family = jQuery(this).children('th').text();
+        family = jQuery(this).find('.hwl-subset-font-family').val();
         
         subsets[id] = {};
         subsets[id]['family'] = {};
@@ -340,7 +340,7 @@ function hwlCleanQueue()
         },
         success: function() {
             jQuery('.caos-status-progress-percentage').html('0%')
-            jQuery('#hwl-results').empty()
+            jQuery('#hwl-results, #hwl-subsets').empty()
         }
     })
 }

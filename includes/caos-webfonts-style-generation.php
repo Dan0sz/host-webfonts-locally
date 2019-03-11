@@ -33,10 +33,12 @@ if (!defined( 'ABSPATH')) exit;
         $availableSubsets = explode(',', $subsetFont->available_subsets);
         $selectedSubsets  = explode(',', $subsetFont->selected_subsets);
         ?>
-        <tr id="<?php echo $subsetFont->subset_font; ?>">
-            <th align="left">
-		        <?php echo $subsetFont->subset_family; ?>
-            </th>
+        <tr valign="top" id="<?php echo $subsetFont->subset_font; ?>">
+            <td>
+                <label>
+                    <input readonly type="text" class="hwl-subset-font-family" value="<?php echo $subsetFont->subset_family; ?>" />
+                </label>
+            </td>
             <?php foreach ($availableSubsets as $availableSubset): ?>
             <td>
                 <label>
@@ -51,6 +53,11 @@ if (!defined( 'ABSPATH')) exit;
     <?php endif; ?>
     </tbody>
 </table>
+<table>
+    <tr valign="top">
+        <th align="left" colspan="3">Available fonts</th>
+    </tr>
+</table>
 <table align="left" id="hwl-results">
     <?php
     $savedFonts = hwlGetTotalFonts();
@@ -59,7 +66,7 @@ if (!defined( 'ABSPATH')) exit;
     <?php foreach ($subsetFonts as $subsetFont): ?>
     <tbody id="hwl-section-<?php echo $subsetFont->subset_font; ?>">
         <?php
-        $fonts      = hwlGetFontsByFamily($subsetFont->subset_family);
+        $fonts = hwlGetFontsByFamily($subsetFont->subset_family);
         ?>
         <?php foreach($fonts as $font):
         $fontId    = $font->font_id;
