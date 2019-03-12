@@ -22,12 +22,12 @@ if (!defined('ABSPATH')) exit;
                 <ul>
                     <li class="welcome-icon dashicons-before dashicons-editor-bold">For all available fonts, check out <a href="https://fonts.google.com/" target="_blank">Google Fonts</a></li>
                     <li class="welcome-icon dashicons-before dashicons-cloud">Search for your fonts by entering the name in the searchbar and repeat this for as many fonts you like!</li>
+                    <li class="welcome-icon dashicons-before dashicons-admin-settings">Select the subsets you need</li>
                     <li class="welcome-icon dashicons-before dashicons-admin-tools">Modify the list by removing the fonts you don't need/want</li>
-                    <li class="welcome-icon dashicons-before dashicons-update">Click 'Save Fonts'</li>
-                    <li class="welcome-icon dashicons-before dashicons-art">Click 'Generate Stylesheet'</li>
-                    <li class="welcome-icon dashicons-before dashicons-media-text">Fonts are being downloaded and stylesheet is generated</li>
+                    <li class="welcome-icon dashicons-before dashicons-update">Click 'Download Fonts' and wait for the download to complete</li>
+                    <li class="welcome-icon dashicons-before dashicons-art">Click 'Generate Stylesheet' and wait for the process to complete</li>
+                    <li class="welcome-icon dashicons-before dashicons-media-text">The stylesheet is generated and added to your theme's header</li>
                     <li class="welcome-icon dashicons-before dashicons-smiley">Done!</li>
-                    <li class="welcome-icon dashicons-before dashicons-admin-settings">After changing settings use 'Save & Regenerate'</li>
                 </ul>
                 <p><a target="_blank" href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/wordpress/host-google-fonts-locally/">Click here</a> for a more comprehensive guide.</p>
             </div>

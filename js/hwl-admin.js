@@ -346,15 +346,6 @@ function hwlCleanQueue()
 }
 
 /**
- * After settings have changed, trigger this.
- */
-function hwlRegenerateStylesheet()
-{
-    hwlDownloadFonts()
-    hwlGenerateStylesheet()
-}
-
-/**
  * Scroll to top-effect.
  */
 function hwlScrollTop()

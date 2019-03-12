@@ -121,10 +121,6 @@ if (!defined( 'ABSPATH')) exit;
 			       id="generate-btn" class="button-secondary" value="Generate Stylesheet" />
 		</td>
         <td>
-            <input type="button" onclick="hwlRegenerateStylesheet()" name="regenerate-btn"
-                   id="regenerate-btn" class="button-secondary" value="Save & Regenerate" />
-        </td>
-        <td>
             <a onclick="hwlCleanQueue()" name="clean-btn"
                id="clean-btn" class="button-cancel">Clean Queue</a>
         </td>
@@ -132,6 +128,7 @@ if (!defined( 'ABSPATH')) exit;
             <a onclick="hwlEmptyDir()" name="empty-btn"
                id="empty-btn" class="button-cancel">Empty Cache Directory</a>
         </td>
+        <td width="20%"></td>
     </tr>
     <tr valign="center">
         <?php
