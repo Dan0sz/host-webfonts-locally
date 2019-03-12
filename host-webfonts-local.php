@@ -21,7 +21,7 @@ global $wpdb;
  * Define constants.
  */
 define('CAOS_WEBFONTS_DB_VERSION', '1.7.0');
-define('CAOS_WEBFONTS_STATIC_VERSION', '1.7.0');
+define('CAOS_WEBFONTS_STATIC_VERSION', '1.7.3');
 define('CAOS_WEBFONTS_SITE_URL', 'https://daan.dev');
 define('CAOS_WEBFONTS_DB_TABLENAME', $wpdb->prefix . 'caos_webfonts');
 define('CAOS_WEBFONTS_DB_CHARSET', $wpdb->get_charset_collate());
