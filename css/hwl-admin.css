@@ -5,6 +5,13 @@
  * @url: https://daan.dev
  */
 
+#search-field {
+    line-height: 38px;
+    width: 360px;
+    font-size: 20px;
+    padding: 3px 10px;
+}
+
 #hwl-results .spinner {
     visibility: visible !important;
     float: none;

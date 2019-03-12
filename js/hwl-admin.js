@@ -4,45 +4,29 @@
  * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://daan.dev
  */
-
-/**
- * Timer which triggers search after waiting for user to finish typing.
- */
-var typingTimer
-var doneTypingInterval = 300
-var $input = jQuery('#search-field')
-// on keyup, start the countdown
-$input.on('keyup', function() {
-    clearTimeout(typingTimer)
-    typingTimer = setTimeout(doneTyping, doneTypingInterval)
-})
-// on keydown, clear the countdown
-$input.on('keydown', function() {
-    clearTimeout(typingTimer)
-})
-
 /**
  * When user is done typing, trigger search.
  */
 function doneTyping()
 {
-    query = $input.val().replace(/\s/g, '-').toLowerCase()
-    hwlSearchFontSubsets(query)
+    let $input = jQuery('#search-field')
+    searchQuery = $input.val().replace(/\s/g, '-').toLowerCase()
+    hwlSearchFontSubsets(searchQuery)
 }
 
 /**
  * Return available subsets for searched font.
  *
- * @param query
+ * @param queriedFonts
  */
-function hwlSearchFontSubsets(query)
+function hwlSearchFontSubsets(queriedFonts)
 {
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
         data: {
             action: 'hwlAjaxSearchFontSubsets',
-            search_query: query
+            search_query: queriedFonts
         },
         dataType: 'json',
         complete: function(response) {
@@ -58,17 +42,23 @@ function hwlSearchFontSubsets(query)
  */
 function hwlRenderAvailableSubsets(response)
 {
-    data = response['responseJSON'];
-    subsets = data['subsets']
-    family = data['family'];
-    id = data['id'];
-    length = subsets.length;
-    renderedSubsets = [];
-    for (iii = 0; iii < length; iii++) {
-        renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
+    let data = response['responseJSON'];
+    dataLength = data.length;
+    
+    for (let ii = 0; ii < dataLength; ii++) {
+        subsets = data[ii]['subsets']
+        family = data[ii]['family'];
+        id = data[ii]['id'];
+        length = subsets.length;
+        renderedSubsets = [];
+        
+        for (let iii = 0; iii < length; iii++) {
+            renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
+        }
+        
+        jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
+        jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
     }
-    jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
-    jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
 }
 
 /**
@@ -78,7 +68,7 @@ function hwlRenderAvailableSubsets(response)
  */
 function hwlGenerateSearchQuery(id)
 {
-    var subsets = [];
+    let subsets = [];
     checked = jQuery("input[name='" + id + "']:checked");
     jQuery.each(checked, function() {
         subsets.push(jQuery(this).val());
@@ -95,8 +85,8 @@ function hwlGenerateSearchQuery(id)
  */
 function hwlSearchGoogleFonts(id, subsets)
 {
-    var loadingDiv = jQuery('#hwl-warning .loading')
-    var errorDiv = jQuery('#hwl-warning .error')
+    let loadingDiv = jQuery('#hwl-warning .loading')
+    let errorDiv = jQuery('#hwl-warning .error')
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -131,16 +121,16 @@ function hwlSearchGoogleFonts(id, subsets)
  */
 function hwlRenderAvailableFonts(results)
 {
-    var response = JSON.parse(results['responseText'])
-    var variants = response['variants']
-    var length = variants.length
-    var renderedFonts = []
-    for(var iii = 0; iii < length; iii++) {
-        var fontFamily = variants[iii].fontFamily.replace(/'/g, '')
-        var fontId = variants[iii].id
-        var font = fontFamily.replace(/\s+/g, '-').toLowerCase() + '-' + variants[iii].id
-        var fontWeight = variants[iii].fontWeight
-        var fontStyle = variants[iii].fontStyle
+    let response = JSON.parse(results['responseText'])
+    variants = response['variants']
+    length = variants.length
+    renderedFonts = []
+    for(iii = 0; iii < length; iii++) {
+        fontFamily = variants[iii].fontFamily.replace(/'/g, '')
+        fontId = variants[iii].id
+        font = fontFamily.replace(/\s+/g, '-').toLowerCase() + '-' + variants[iii].id
+        fontWeight = variants[iii].fontWeight
+        fontStyle = variants[iii].fontStyle
         renderedFonts[iii] = `<tr id="row-${font}" valign="top">
                                     <td>
                                         <input readonly type="text" value="${fontFamily}" name="caos_webfonts_array][${font}][font-family]" />
@@ -172,7 +162,7 @@ function hwlRenderAvailableFonts(results)
  */
 function hwlGenerateStylesheet()
 {
-    var hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'))
+    let hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'))
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -245,8 +235,8 @@ function hwlGatherSelectedSubsets()
  */
 function hwlDownloadFonts()
 {
-    var hwlFonts  = hwlSerializeArray(jQuery('#hwl-options-form'));
-    var hwlSubsets = hwlGatherSelectedSubsets();
+    let hwlFonts  = hwlSerializeArray(jQuery('#hwl-options-form'));
+    let hwlSubsets = hwlGatherSelectedSubsets();
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -256,7 +246,7 @@ function hwlDownloadFonts()
             fonts: hwlFonts,
         },
         beforeSend: function() {
-            downloadStatus = window.setInterval(hwlGetDownloadStatus, 1000);
+            downloadStatus = window.setInterval(hwlGetDownloadStatus, 2000);
         },
         success: function(response) {
             jQuery('#hwl-admin-notices').append(
@@ -362,9 +352,9 @@ function hwlScrollTop()
  */
 function hwlSerializeArray(data)
 {
-    var result = []
+    let result = []
     data.each(function() {
-        var fields = {}
+        fields = {}
         jQuery.each(jQuery(this).serializeArray(), function() {
             fields[this.name] = this.value
         })

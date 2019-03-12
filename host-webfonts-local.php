@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.7.2
+ * Version: 1.7.3
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -168,7 +168,6 @@ function hwlSettingsPage() {
 
         <form id="hwl-options-form" name="hwl-options-form" method="post" action="options.php" style="float: left; width: 60%;">
             <div class="">
-                <h3><?php _e('Generate Stylesheet'); ?></h3>
 				<?php
 				
 				include(plugin_dir_path(__FILE__) . 'includes/caos-webfonts-style-generation.php');
@@ -301,21 +300,22 @@ add_action('wp_ajax_hwlAjaxEmptyDir', 'hwlAjaxEmptyDir');
  */
 function hwlAjaxSearchFontSubsets() {
     try {
-        $request = curl_init();
-        $searchQuery = sanitize_text_field($_POST['search_query']);
+        $searchQueries = explode(',', sanitize_text_field($_POST['search_query']));
         
-        curl_setopt($request, CURLOPT_URL, CAOS_WEBFONTS_HELPER_URL . $searchQuery);
-        curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-        
-        $result = curl_exec($request);
-        
-        curl_close($request);
-        $result = json_decode($result);
-        $response = array(
-                'family'  => $result->family,
-                'id'      => $result->id,
-                'subsets' => $result->subsets
-        );
+        foreach ($searchQueries as $searchQuery) {
+            $request = curl_init();
+            curl_setopt($request, CURLOPT_URL, CAOS_WEBFONTS_HELPER_URL . $searchQuery);
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
+            $result = curl_exec($request);
+            curl_close($request);
+            
+            $result = json_decode($result);
+            $response[] = array(
+                    'family'  => $result->family,
+                    'id'      => $result->id,
+                    'subsets' => $result->subsets
+            );
+        }
         wp_die(json_encode($response));
     } catch (\Exception $e) {
         wp_die($e);
