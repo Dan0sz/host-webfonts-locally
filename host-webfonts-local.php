@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.7.1
+ * Version: 1.7.2
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -80,7 +80,7 @@ function hwlGetContentDirName() {
 /**
  * Create table to store downloaded fonts in.
  */
-function hwlCreateTable() {
+function hwlCreateWebfontsTable() {
 	global $wpdb;
     $sql = "CREATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . " (
             font_id varchar(191) NOT NULL,
@@ -96,7 +96,7 @@ function hwlCreateTable() {
             ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
 	$wpdb->query($sql);
 	
-	add_option('caos_webfonts_db_version', CAOS_WEBFONTS_DB_VERSION);
+	add_option('caos_webfonts_db_version', '1.6.1');
 }
 
 /**
@@ -113,16 +113,16 @@ function hwlCreateSubsetsTable() {
             ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
     $wpdb->query($sql);
     
-    update_option('caos_webfonts_db_version', CAOS_WEBFONTS_DB_VERSION);
+    update_option('caos_webfonts_db_version', '1.7.0');
 }
 
 /**
  * Check current version and execute required db updates.
  */
 function hwlRunDbUpdates() {
-	$currentVersion = get_site_option('caos_webfonts_db_version');
+	$currentVersion = get_site_option('caos_webfonts_db_version') ?: '1.0.0';
 	if (version_compare($currentVersion, '1.6.1') < 0) {
-		hwlCreateTable();
+		hwlCreateWebfontsTable();
 	}
 	if (version_compare($currentVersion, CAOS_WEBFONTS_DB_VERSION) < 0) {
 	    hwlCreateSubsetsTable();
@@ -185,9 +185,9 @@ function hwlSettingsPage() {
 			include(plugin_dir_path(__FILE__) . 'includes/caos-webfonts-basic-settings.php');
 			
 			do_action('hwl_after_settings_form_settings');
-			
-			submit_button();
-			?>
+			     
+            submit_button();
+            ?>
         </form>
     </div>
 	<?php
