@@ -301,21 +301,22 @@ add_action('wp_ajax_hwlAjaxEmptyDir', 'hwlAjaxEmptyDir');
  */
 function hwlAjaxSearchFontSubsets() {
     try {
-        $request = curl_init();
-        $searchQuery = sanitize_text_field($_POST['search_query']);
+        $searchQueries = explode(',', sanitize_text_field($_POST['search_query']));
         
-        curl_setopt($request, CURLOPT_URL, CAOS_WEBFONTS_HELPER_URL . $searchQuery);
-        curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-        
-        $result = curl_exec($request);
-        
-        curl_close($request);
-        $result = json_decode($result);
-        $response = array(
-                'family'  => $result->family,
-                'id'      => $result->id,
-                'subsets' => $result->subsets
-        );
+        foreach ($searchQueries as $searchQuery) {
+            $request = curl_init();
+            curl_setopt($request, CURLOPT_URL, CAOS_WEBFONTS_HELPER_URL . $searchQuery);
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
+            $result = curl_exec($request);
+            curl_close($request);
+            
+            $result = json_decode($result);
+            $response[] = array(
+                    'family'  => $result->family,
+                    'id'      => $result->id,
+                    'subsets' => $result->subsets
+            );
+        }
         wp_die(json_encode($response));
     } catch (\Exception $e) {
         wp_die($e);

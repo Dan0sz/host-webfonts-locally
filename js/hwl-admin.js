@@ -26,8 +26,8 @@ $input.on('keydown', function() {
  */
 function doneTyping()
 {
-    query = $input.val().replace(/\s/g, '-').toLowerCase()
-    hwlSearchFontSubsets(query)
+    searchQuery = $input.val().replace(/\s/g, '-').toLowerCase()
+    hwlSearchFontSubsets(searchQuery)
 }
 
 /**
@@ -35,14 +35,14 @@ function doneTyping()
  *
  * @param query
  */
-function hwlSearchFontSubsets(query)
+function hwlSearchFontSubsets(queriedFonts)
 {
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
         data: {
             action: 'hwlAjaxSearchFontSubsets',
-            search_query: query
+            search_query: queriedFonts
         },
         dataType: 'json',
         complete: function(response) {
@@ -59,16 +59,19 @@ function hwlSearchFontSubsets(query)
 function hwlRenderAvailableSubsets(response)
 {
     data = response['responseJSON'];
-    subsets = data['subsets']
-    family = data['family'];
-    id = data['id'];
-    length = subsets.length;
-    renderedSubsets = [];
-    for (iii = 0; iii < length; iii++) {
-        renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
+    dataLength = data.length;
+    for (ii = 0; ii <= dataLength; ii++) {
+        subsets = data[ii]['subsets']
+        family = data[ii]['family'];
+        id = data[ii]['id'];
+        length = subsets.length;
+        renderedSubsets = [];
+        for (iii = 0; iii < length; iii++) {
+            renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
+        }
+        jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
+        jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
     }
-    jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
-    jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
 }
 
 /**
