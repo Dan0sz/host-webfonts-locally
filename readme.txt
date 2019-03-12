@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.1
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.7.3 =
+Improved search by adding support for comma-separated lists. Fixed some 404s in welcome panel and minor JavaScript optimizations.
 
 = 1.7.2 =
 Minor usability updates.

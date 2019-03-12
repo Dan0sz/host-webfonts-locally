@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) exit;
                 <h3>Quickstart</h3>
                 <ul>
                     <li class="welcome-icon dashicons-before dashicons-editor-bold">For all available fonts, check out <a href="https://fonts.google.com/" target="_blank">Google Fonts</a></li>
-                    <li class="welcome-icon dashicons-before dashicons-cloud">Search for your fonts by entering the name in the searchbar and repeat this for as many fonts you like!</li>
+                    <li class="welcome-icon dashicons-before dashicons-cloud">Search for for your fonts</li>
                     <li class="welcome-icon dashicons-before dashicons-admin-settings">Select the subsets you need</li>
                     <li class="welcome-icon dashicons-before dashicons-admin-tools">Modify the list by removing the fonts you don't need/want</li>
                     <li class="welcome-icon dashicons-before dashicons-update">Click 'Download Fonts' and wait for the download to complete</li>
@@ -43,7 +43,7 @@ if (!defined('ABSPATH')) exit;
             <div class="welcome-panel-column welcome-panel-last">
                 <h3>Want to Host other Files Locally?</h3>
                 <p>Unleash your site's true potential by locally hosting as many files as possible.</p>
-                <p><a target="_blank" href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/how-to/host-locally-crontab/">Read more</a></p>
+                <p><a target="_blank" href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/how-to/host-js-locally-crontab/">Read more</a></p>
                 <h3>Support CAOS!</h3>
                 <p>I create solutions that easily optimize your website for Pagespeed Insights and Pingdom.</p>
                 <p>I believe these solutions should be free, but if you appreciate my work, please consider donating!</p>
