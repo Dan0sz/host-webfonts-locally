@@ -246,16 +246,18 @@ function hwlDownloadFonts()
             fonts: hwlFonts,
         },
         beforeSend: function() {
-            downloadStatus = window.setInterval(hwlGetDownloadStatus, 2000);
+            hwlGetDownloadStatus();
         },
         success: function(response) {
+            clearTimeout(downloadStatus);
+            hwlUpdateStatusBar(100);
+            
             jQuery('#hwl-admin-notices').append(
                 `<div class="notice notice-success is-dismissible">
                     <p>${response}</p>
                 </div>`
             )
             hwlScrollTop();
-            window.clearInterval(downloadStatus);
         }
     })
 }
@@ -276,7 +278,10 @@ function hwlGetDownloadStatus()
             downloaded = response.downloaded;
             total = response.total;
             progress = (100 / total) * downloaded;
+            
             hwlUpdateStatusBar(progress);
+            
+            downloadStatus = setTimeout(hwlGetDownloadStatus, 1000);
         }
     })
 }
