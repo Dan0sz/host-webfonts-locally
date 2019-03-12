@@ -4,13 +4,14 @@
  * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://daan.dev
  */
+
 /**
  * When user is done typing, trigger search.
  */
-function doneTyping()
+function hwlClickSearch()
 {
-    let $input = jQuery('#search-field')
-    searchQuery = $input.val().replace(/\s/g, '-').toLowerCase()
+    let input   = jQuery('#search-field')
+    searchQuery = input.val().replace(/\s/g, '-').toLowerCase()
     hwlSearchFontSubsets(searchQuery)
 }
 
@@ -21,6 +22,9 @@ function doneTyping()
  */
 function hwlSearchFontSubsets(queriedFonts)
 {
+    let searchField  = jQuery('#search-field');
+    let searchButton = jQuery('#search-btn');
+    
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -29,7 +33,14 @@ function hwlSearchFontSubsets(queriedFonts)
             search_query: queriedFonts
         },
         dataType: 'json',
+        beforeSend: function() {
+            searchButton.val('Searching...');
+            searchButton.css('padding', '0 20px');
+            searchField.val('');
+        },
         complete: function(response) {
+            searchButton.val('Search');
+            searchButton.css('padding', '0 36px');
             hwlRenderAvailableSubsets(response);
         }
     })
@@ -70,9 +81,11 @@ function hwlGenerateSearchQuery(id)
 {
     let subsets = [];
     checked = jQuery("input[name='" + id + "']:checked");
+    
     jQuery.each(checked, function() {
         subsets.push(jQuery(this).val());
     });
+    
     subsets.join()
     hwlSearchGoogleFonts(id, subsets);
 }
@@ -158,38 +171,6 @@ function hwlRenderAvailableFonts(results)
 }
 
 /**
- * Call the generate-stylesheet script.
- */
-function hwlGenerateStylesheet()
-{
-    let hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'))
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'hwlAjaxGenerateStyles',
-            selected_fonts: hwlFonts
-        },
-        success: function(response) {
-            jQuery('#hwl-admin-notices').append(
-                `<div class="updated settings-success notice is-dismissible">
-                    <p>${response}</p>
-                </div>`
-            )
-            hwlScrollTop()
-        },
-        error: function(response) {
-            jQuery('#hwl-admin-notices').append(
-                `<div class="notice notice-error is-dismissible">
-                    <p>The stylesheet could not be created: ${response}</p>
-                </div>`
-            )
-            hwlScrollTop()
-        }
-    })
-}
-
-/**
  * Gathers all information about the subsets
  *
  * @returns {{}}
@@ -237,6 +218,7 @@ function hwlDownloadFonts()
 {
     let hwlFonts  = hwlSerializeArray(jQuery('#hwl-options-form'));
     let hwlSubsets = hwlGatherSelectedSubsets();
+    let downloadButton = jQuery('#save-btn');
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -247,17 +229,20 @@ function hwlDownloadFonts()
         },
         beforeSend: function() {
             hwlGetDownloadStatus();
+            downloadButton.val('Downloading...');
+            downloadButton.css('padding', '0 14px 1px');
         },
         success: function(response) {
             clearTimeout(downloadStatus);
             hwlUpdateStatusBar(100);
-            
+            hwlScrollTop();
             jQuery('#hwl-admin-notices').append(
                 `<div class="notice notice-success is-dismissible">
                     <p>${response}</p>
                 </div>`
             )
-            hwlScrollTop();
+            downloadButton.val('Download Fonts');
+            downloadButton.css('padding', '0 10px 1px');
         }
     })
 }
@@ -296,6 +281,47 @@ function hwlUpdateStatusBar(progress)
     progress = Math.round(progress) + '%';
     jQuery('#caos-status-progress-bar').width(progress);
     jQuery('.caos-status-progress-percentage').html(progress);
+}
+
+/**
+ * Call the generate-stylesheet script.
+ */
+function hwlGenerateStylesheet()
+{
+    let hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'))
+    let generateButton = jQuery('#generate-btn');
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'hwlAjaxGenerateStyles',
+            selected_fonts: hwlFonts
+        },
+        beforeSend: function() {
+            generateButton.val('Generating...');
+            generateButton.css('padding', '0 32px 1px');
+        },
+        success: function(response) {
+            hwlScrollTop();
+            jQuery('#hwl-admin-notices').append(
+                `<div class="updated settings-success notice is-dismissible">
+                    <p>${response}</p>
+                </div>`
+            );
+            generateButton.val('Generate Stylesheet');
+            generateButton.css('padding', '0 10px 1px');
+        },
+        error: function(response) {
+            hwlScrollTop();
+            jQuery('#hwl-admin-notices').append(
+                `<div class="notice notice-error is-dismissible">
+                    <p>The stylesheet could not be created: ${response}</p>
+                </div>`
+            );
+            generateButton.val('Generate Stylesheet');
+            generateButton.css('padding', '0 10px 1px');
+        }
+    })
 }
 
 /**

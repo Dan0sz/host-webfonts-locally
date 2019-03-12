@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
     <div class="hwl-search-box">
         <input type="text" name="search-field"
                id="search-field" class="form-input-tip ui-autocomplete-input" placeholder="<?php _e('Search... (e.g. Roboto,Open Sans)', 'host-webfonts-local'); ?>"/>
-        <input type="button" onclick="doneTyping()" name="search-btn"
+        <input type="button" onclick="hwlClickSearch()" name="search-btn"
                id="search-btn" class="button button-primary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
     </div>
     <table>
