@@ -34,13 +34,11 @@ function hwlSearchFontSubsets(queriedFonts)
         },
         dataType: 'json',
         beforeSend: function() {
-            searchButton.val('Searching...');
-            searchButton.css('padding', '0 20px');
+            hwlUpdateInputValue(searchButton, 'Searching...', '0 20px');
             searchField.val('');
         },
         complete: function(response) {
-            searchButton.val('Search');
-            searchButton.css('padding', '0 36px');
+            hwlUpdateInputValue(searchButton, 'Search', '0 36px');
             hwlRenderAvailableSubsets(response);
         }
     })
@@ -228,21 +226,19 @@ function hwlDownloadFonts()
             fonts: hwlFonts,
         },
         beforeSend: function() {
+            hwlUpdateStatusBar(0);
             hwlGetDownloadStatus();
-            downloadButton.val('Downloading...');
-            downloadButton.css('padding', '0 14px 1px');
+            hwlUpdateInputValue(downloadButton, 'Downloading...', '0 14px 1px');
         },
-        success: function(response) {
+        success: function() {
             clearTimeout(downloadStatus);
+            
+            hwlUpdateInputValue(downloadButton, 'Done!', '0 41px 1px');
             hwlUpdateStatusBar(100);
-            hwlScrollTop();
-            jQuery('#hwl-admin-notices').append(
-                `<div class="notice notice-success is-dismissible">
-                    <p>${response}</p>
-                </div>`
-            )
-            downloadButton.val('Download Fonts');
-            downloadButton.css('padding', '0 10px 1px');
+            
+            setTimeout(function() {
+                hwlUpdateInputValue(downloadButton, 'Download Fonts');
+            }, 2500);
         }
     })
 }
@@ -265,10 +261,9 @@ function hwlGetDownloadStatus()
             progress = (100 / total) * downloaded;
             
             hwlUpdateStatusBar(progress);
-            
-            downloadStatus = setTimeout(hwlGetDownloadStatus, 1000);
         }
-    })
+    });
+    downloadStatus = setTimeout(hwlGetDownloadStatus, 1000);
 }
 
 /**
@@ -298,18 +293,13 @@ function hwlGenerateStylesheet()
             selected_fonts: hwlFonts
         },
         beforeSend: function() {
-            generateButton.val('Generating...');
-            generateButton.css('padding', '0 32px 1px');
+            hwlUpdateInputValue(generateButton, 'Generating...', '0 33px 1px');
         },
-        success: function(response) {
-            hwlScrollTop();
-            jQuery('#hwl-admin-notices').append(
-                `<div class="updated settings-success notice is-dismissible">
-                    <p>${response}</p>
-                </div>`
-            );
-            generateButton.val('Generate Stylesheet');
-            generateButton.css('padding', '0 10px 1px');
+        success: function() {
+            hwlUpdateInputValue(generateButton, 'Done!', '0 54px 1px');
+            setTimeout(function() {
+                hwlUpdateInputValue(generateButton, 'Generate Stylesheet');
+            }, 2500);
         },
         error: function(response) {
             hwlScrollTop();
@@ -318,10 +308,22 @@ function hwlGenerateStylesheet()
                     <p>The stylesheet could not be created: ${response}</p>
                 </div>`
             );
-            generateButton.val('Generate Stylesheet');
-            generateButton.css('padding', '0 10px 1px');
+            hwlUpdateInputValue(generateButton, 'Generate Stylesheet');
         }
     })
+}
+
+/**
+ * Updates the value of any input to show status updates
+ *
+ * @param input
+ * @param text
+ * @param padding
+ */
+function hwlUpdateInputValue(input, text, padding = '0 10px 1px')
+{
+    input.val(text);
+    input.css('padding', padding);
 }
 
 /**
@@ -336,14 +338,8 @@ function hwlEmptyDir()
             action: 'hwlAjaxEmptyDir'
         },
         success: function() {
-            jQuery('#hwl-admin-notices').append(
-                `<div class="notice notice-success is-dismissible">
-                    <p>Cache-dir emptied.</p>
-                </div>`
-            )
             hwlCleanQueue()
             hwlUpdateStatusBar(0)
-            hwlScrollTop()
         }
     })
 }
