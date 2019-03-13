@@ -4,13 +4,14 @@
  * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://daan.dev
  */
+
 /**
  * When user is done typing, trigger search.
  */
-function doneTyping()
+function hwlClickSearch()
 {
-    let $input = jQuery('#search-field')
-    searchQuery = $input.val().replace(/\s/g, '-').toLowerCase()
+    let input   = jQuery('#search-field')
+    searchQuery = input.val().replace(/\s/g, '-').toLowerCase()
     hwlSearchFontSubsets(searchQuery)
 }
 
@@ -21,6 +22,9 @@ function doneTyping()
  */
 function hwlSearchFontSubsets(queriedFonts)
 {
+    let searchField  = jQuery('#search-field');
+    let searchButton = jQuery('#search-btn');
+    
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -29,7 +33,12 @@ function hwlSearchFontSubsets(queriedFonts)
             search_query: queriedFonts
         },
         dataType: 'json',
+        beforeSend: function() {
+            hwlUpdateInputValue(searchButton, 'Searching...', '0 20px');
+            searchField.val('');
+        },
         complete: function(response) {
+            hwlUpdateInputValue(searchButton, 'Search', '0 36px');
             hwlRenderAvailableSubsets(response);
         }
     })
@@ -56,7 +65,7 @@ function hwlRenderAvailableSubsets(response)
             renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
         }
         
-        jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
+        jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input type="text" class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
         jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
     }
 }
@@ -70,9 +79,11 @@ function hwlGenerateSearchQuery(id)
 {
     let subsets = [];
     checked = jQuery("input[name='" + id + "']:checked");
+    
     jQuery.each(checked, function() {
         subsets.push(jQuery(this).val());
     });
+    
     subsets.join()
     hwlSearchGoogleFonts(id, subsets);
 }
@@ -158,38 +169,6 @@ function hwlRenderAvailableFonts(results)
 }
 
 /**
- * Call the generate-stylesheet script.
- */
-function hwlGenerateStylesheet()
-{
-    let hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'))
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'hwlAjaxGenerateStyles',
-            selected_fonts: hwlFonts
-        },
-        success: function(response) {
-            jQuery('#hwl-admin-notices').append(
-                `<div class="updated settings-success notice is-dismissible">
-                    <p>${response}</p>
-                </div>`
-            )
-            hwlScrollTop()
-        },
-        error: function(response) {
-            jQuery('#hwl-admin-notices').append(
-                `<div class="notice notice-error is-dismissible">
-                    <p>The stylesheet could not be created: ${response}</p>
-                </div>`
-            )
-            hwlScrollTop()
-        }
-    })
-}
-
-/**
  * Gathers all information about the subsets
  *
  * @returns {{}}
@@ -237,6 +216,7 @@ function hwlDownloadFonts()
 {
     let hwlFonts  = hwlSerializeArray(jQuery('#hwl-options-form'));
     let hwlSubsets = hwlGatherSelectedSubsets();
+    let downloadButton = jQuery('#save-btn');
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -246,16 +226,19 @@ function hwlDownloadFonts()
             fonts: hwlFonts,
         },
         beforeSend: function() {
-            downloadStatus = window.setInterval(hwlGetDownloadStatus, 2000);
+            hwlUpdateStatusBar(0);
+            hwlGetDownloadStatus();
+            hwlUpdateInputValue(downloadButton, 'Downloading...', '0 14px 1px');
         },
-        success: function(response) {
-            jQuery('#hwl-admin-notices').append(
-                `<div class="notice notice-success is-dismissible">
-                    <p>${response}</p>
-                </div>`
-            )
-            hwlScrollTop();
-            window.clearInterval(downloadStatus);
+        success: function() {
+            clearTimeout(downloadStatus);
+            
+            hwlUpdateInputValue(downloadButton, 'Done!', '0 41px 1px');
+            hwlUpdateStatusBar(100);
+            
+            setTimeout(function() {
+                hwlUpdateInputValue(downloadButton, 'Download Fonts');
+            }, 2500);
         }
     })
 }
@@ -276,9 +259,11 @@ function hwlGetDownloadStatus()
             downloaded = response.downloaded;
             total = response.total;
             progress = (100 / total) * downloaded;
+            
             hwlUpdateStatusBar(progress);
         }
-    })
+    });
+    downloadStatus = setTimeout(hwlGetDownloadStatus, 1000);
 }
 
 /**
@@ -294,6 +279,54 @@ function hwlUpdateStatusBar(progress)
 }
 
 /**
+ * Call the generate-stylesheet script.
+ */
+function hwlGenerateStylesheet()
+{
+    let hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'))
+    let generateButton = jQuery('#generate-btn');
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'hwlAjaxGenerateStyles',
+            selected_fonts: hwlFonts
+        },
+        beforeSend: function() {
+            hwlUpdateInputValue(generateButton, 'Generating...', '0 33px 1px');
+        },
+        success: function() {
+            hwlUpdateInputValue(generateButton, 'Done!', '0 54px 1px');
+            setTimeout(function() {
+                hwlUpdateInputValue(generateButton, 'Generate Stylesheet');
+            }, 2500);
+        },
+        error: function(response) {
+            hwlScrollTop();
+            jQuery('#hwl-admin-notices').append(
+                `<div class="notice notice-error is-dismissible">
+                    <p>The stylesheet could not be created: ${response}</p>
+                </div>`
+            );
+            hwlUpdateInputValue(generateButton, 'Generate Stylesheet');
+        }
+    })
+}
+
+/**
+ * Updates the value of any input to show status updates
+ *
+ * @param input
+ * @param text
+ * @param padding
+ */
+function hwlUpdateInputValue(input, text, padding = '0 10px 1px')
+{
+    input.val(text);
+    input.css('padding', padding);
+}
+
+/**
  * Remove all files within the configured cache dir.
  */
 function hwlEmptyDir()
@@ -305,14 +338,8 @@ function hwlEmptyDir()
             action: 'hwlAjaxEmptyDir'
         },
         success: function() {
-            jQuery('#hwl-admin-notices').append(
-                `<div class="notice notice-success is-dismissible">
-                    <p>Cache-dir emptied.</p>
-                </div>`
-            )
             hwlCleanQueue()
             hwlUpdateStatusBar(0)
-            hwlScrollTop()
         }
     })
 }
