@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.1
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,10 @@ This could be for several reasons:
 1. Have you checked if your font is available on Google Fonts?
 1. Is your font listed as an open source font, or is it a premium font? For obvious reasons, CAOS for Webfonts only has access to open source fonts.
 
+= Can I serve the fonts from my CDN? =
+
+Yes, you can. Enter the url of your CDN and re-download and re-generate the stylesheet. Then the fonts will be saved to and served from your CDN.
+
 = Does this plugin edit template files? =
 
 No, it does not. It creates a CSS Stylesheet which will be automatically added to your theme's header using a built-in WordPress queueing system.
@@ -74,6 +78,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.7.5 =
+Added CDN support.
 
 = 1.7.4 =
 Fluid progress bar now functions correctly and doesn't make any unnecessary Ajax-requests.

@@ -3,7 +3,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.7.4
+ * Version: 1.7.5
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -28,9 +28,10 @@ define('CAOS_WEBFONTS_DB_CHARSET', $wpdb->get_charset_collate());
 define('CAOS_WEBFONTS_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com/api/fonts/');
 define('CAOS_WEBFONTS_FILENAME', 'fonts.css');
 define('CAOS_WEBFONTS_CACHE_DIR', esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/caos-webfonts');
+define('CAOS_WEBFONTS_CDN_URL', esc_attr(get_option('caos_webfonts_cdn_url')));
 define('CAOS_WEBFONTS_CURRENT_BLOG_ID', get_current_blog_id());
 define('CAOS_WEBFONTS_UPLOAD_DIR', WP_CONTENT_DIR . CAOS_WEBFONTS_CACHE_DIR);
-define('CAOS_WEBFONTS_UPLOAD_URL', get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR));
+define('CAOS_WEBFONTS_UPLOAD_URL', hwlGetUploadUrl());
 define('CAOS_WEBFONTS_DISPLAY_OPTION', esc_attr(get_option('caos_webfonts_display_option')) ?: 'auto');
 define('CAOS_WEBFONTS_PRELOAD', esc_attr(get_option('caos_webfonts_preload')));
 
@@ -41,6 +42,9 @@ function hwlRegisterSettings() {
 	register_setting('caos-webfonts-basic-settings',
 		'caos_webfonts_cache_dir'
 	);
+	register_setting('caos-webfonts-basic-settings',
+        'caos_webfonts_cdn_url'
+    );
 	register_setting('caos-webfonts-basic-settings',
 		'caos_webfonts_display_option'
 	);
@@ -75,6 +79,16 @@ function hwlGetContentDirName() {
 	preg_match('/[^\/]+$/u', WP_CONTENT_DIR, $match);
 	
 	return $match[0];
+}
+
+function hwlGetUploadUrl() {
+    if (CAOS_WEBFONTS_CDN_URL) {
+        $uploadUrl = '//' . CAOS_WEBFONTS_CDN_URL . '/' . hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR;
+    } else {
+        $uploadUrl = get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR);
+    }
+    
+    return $uploadUrl;
 }
 
 /**
