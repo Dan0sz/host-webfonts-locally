@@ -1,9 +1,10 @@
 <?php
-/**@formatter:off
+/**
+ * @formatter:off
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.7.5
+ * Version: 1.7.6
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -21,7 +22,7 @@ global $wpdb;
  * Define constants.
  */
 define('CAOS_WEBFONTS_DB_VERSION', '1.7.0');
-define('CAOS_WEBFONTS_STATIC_VERSION', '1.7.4');
+define('CAOS_WEBFONTS_STATIC_VERSION', '1.7.6');
 define('CAOS_WEBFONTS_SITE_URL', 'https://daan.dev');
 define('CAOS_WEBFONTS_DB_TABLENAME', $wpdb->prefix . 'caos_webfonts');
 define('CAOS_WEBFONTS_DB_CHARSET', $wpdb->get_charset_collate());
@@ -81,6 +82,9 @@ function hwlGetContentDirName() {
 	return $match[0];
 }
 
+/**
+* @return string
+ */
 function hwlGetUploadUrl() {
     if (CAOS_WEBFONTS_CDN_URL) {
         $uploadUrl = '//' . CAOS_WEBFONTS_CDN_URL . '/' . hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR;
@@ -180,7 +184,7 @@ function hwlSettingsPage() {
 		
 		<?php require_once(plugin_dir_path(__FILE__) . 'includes/welcome-panel.php'); ?>
 
-        <form id="hwl-options-form" name="hwl-options-form" method="post" action="options.php" style="float: left; width: 60%;">
+        <form id="hwl-options-form" name="hwl-options-form" method="post" style="float: left; width: 60%;">
             <div class="">
 				<?php
 				
@@ -405,10 +409,7 @@ add_action('wp_ajax_hwlAjaxDownloadFonts', 'hwlAjaxDownloadFonts');
  * Once the stylesheet is generated. We can enqueue it.
  */
 function hwlEnqueueStylesheet() {
-	$stylesheet = CAOS_WEBFONTS_UPLOAD_DIR . '/' . CAOS_WEBFONTS_FILENAME;
-	if (file_exists($stylesheet)) {
-		wp_enqueue_style('hwl-style', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), CAOS_WEBFONTS_STATIC_VERSION);
-	}
+    wp_enqueue_style('hwl-style', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), CAOS_WEBFONTS_STATIC_VERSION);
 }
 add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet');
 
