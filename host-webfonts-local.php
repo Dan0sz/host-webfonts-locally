@@ -4,7 +4,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.7.6
+ * Version: 1.7.7
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -100,7 +100,7 @@ function hwlGetUploadUrl() {
  */
 function hwlCreateWebfontsTable() {
 	global $wpdb;
-    $sql = "CREATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . " (
+    $sql = "CREATE TABLE IF NOT EXISTS " . CAOS_WEBFONTS_DB_TABLENAME . " (
             font_id varchar(191) NOT NULL,
             font_family varchar(191) NOT NULL,
             font_weight mediumint(5) NOT NULL,
@@ -122,7 +122,7 @@ function hwlCreateWebfontsTable() {
  */
 function hwlCreateSubsetsTable() {
     global $wpdb;
-    $sql = "CREATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . '_subsets' . " (
+    $sql = "CREATE TABLE IF NOT EXISTS " . CAOS_WEBFONTS_DB_TABLENAME . '_subsets' . " (
             subset_font varchar(32) NOT NULL,
             subset_family varchar(191) NOT NULL,
             available_subsets varchar(191) NOT NULL,
