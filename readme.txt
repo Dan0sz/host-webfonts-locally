@@ -79,6 +79,9 @@ N/A
 
 == Changelog ==
 
+= 1.7.8 =
+Updated welcome panel.
+
 = 1.7.7 =
 Quick-fix for re-triggered SQL queries.
 
