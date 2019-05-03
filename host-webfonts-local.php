@@ -4,7 +4,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.7.8
+ * Version: 1.7.9
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -30,6 +30,7 @@ define('CAOS_WEBFONTS_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com
 define('CAOS_WEBFONTS_FILENAME', 'fonts.css');
 define('CAOS_WEBFONTS_CACHE_DIR', esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/caos-webfonts');
 define('CAOS_WEBFONTS_CDN_URL', esc_attr(get_option('caos_webfonts_cdn_url')));
+define('CAOS_WEBFONTS_REMOVE_VERSION', esc_attr(get_option('caos_webfonts_remove_version')));
 define('CAOS_WEBFONTS_CURRENT_BLOG_ID', get_current_blog_id());
 define('CAOS_WEBFONTS_UPLOAD_DIR', WP_CONTENT_DIR . CAOS_WEBFONTS_CACHE_DIR);
 define('CAOS_WEBFONTS_UPLOAD_URL', hwlGetUploadUrl());
@@ -45,6 +46,9 @@ function hwlRegisterSettings() {
 	);
 	register_setting('caos-webfonts-basic-settings',
         'caos_webfonts_cdn_url'
+    );
+    register_setting('caos-webfonts-basic-settings',
+        'caos_webfonts_remove_version'
     );
 	register_setting('caos-webfonts-basic-settings',
 		'caos_webfonts_display_option'
@@ -409,7 +413,7 @@ add_action('wp_ajax_hwlAjaxDownloadFonts', 'hwlAjaxDownloadFonts');
  * Once the stylesheet is generated. We can enqueue it.
  */
 function hwlEnqueueStylesheet() {
-    wp_enqueue_style('hwl-style', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), CAOS_WEBFONTS_STATIC_VERSION);
+    wp_enqueue_style('hwl-style', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), (CAOS_WEBFONTS_REMOVE_VERSION) ? null : CAOS_WEBFONTS_STATIC_VERSION);
 }
 add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet');
 

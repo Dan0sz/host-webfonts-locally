@@ -15,7 +15,7 @@ if (!defined( 'ABSPATH')) exit;
         <?php _e('Do not forget to re-generate the stylesheet after changing settings.', 'host-webfonts-local'); ?>
     </p>
     <p class="description">
-        <?php _e('* Re-download and re-generate required.', 'host-webfonts-local'); ?>
+        <?php _e('* Empty Cache Directory, Download Fonts and Generate Stylesheet after changing this setting.', 'host-webfonts-local'); ?>
     </p>
 	<table class="form-table">
 		<tr valign="top">
@@ -41,6 +41,19 @@ if (!defined( 'ABSPATH')) exit;
                 <input id="caos_webfonts_cdn_url" class="caos_webfonts_cdn_url" type="text" name="caos_webfonts_cdn_url" placeholder="e.g. cdn.mydomain.com" value="<?= CAOS_WEBFONTS_CDN_URL; ?>" />
                 <p class="description">
                     <?php _e("Are you using a CDN? Then enter the URL here.*", 'host-webfonts-local'); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
+                <label for="caos_webfonts_remove_version">
+                    <?php _e('Remove version parameter?', 'host-webfonts-local'); ?>
+                </label>
+            </th>
+            <td>
+                <input id="caos_webfonts_remove_version" class="caos_webfonts_remove_version" type="checkbox" name="caos_webfonts_remove_version" <?= CAOS_WEBFONTS_REMOVE_VERSION ? "checked = 'checked'" : ""; ?> />
+                <p class="description">
+                    <?php _e('This removes the <code>?ver=x.x.x</code> parameter from the Stylesheet\'s (<code>fonts.css</code>) request.', 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>

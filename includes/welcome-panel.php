@@ -27,6 +27,7 @@ if (!defined('ABSPATH')) exit;
                     <li class="welcome-icon dashicons-before dashicons-update">Click 'Download Fonts' and wait for the download to complete</li>
                     <li class="welcome-icon dashicons-before dashicons-art">Click 'Generate Stylesheet' and wait for the process to complete</li>
                     <li class="welcome-icon dashicons-before dashicons-media-text">The stylesheet is generated and added to your theme's header</li>
+                    <li class="welcome-icon dashicons-before dashicons-editor-removeformatting">To <i>remove externally hosted Google Fonts</i>, read <a target="_blank" href="<?= CAOS_WEBFONTS_SITE_URL; ?>/how-to/remove-google-fonts-wordpress">this</a>.</li>
                     <li class="welcome-icon dashicons-before dashicons-smiley">Done!</li>
                 </ul>
                 <p><a target="_blank" href="<?= CAOS_WEBFONTS_SITE_URL; ?>/wordpress/host-google-fonts-locally/">Click here</a> for a more comprehensive guide.</p>
