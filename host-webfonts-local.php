@@ -4,7 +4,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.7.9
+ * Version: 1.8.0
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -82,7 +82,7 @@ add_action('admin_menu', 'hwlCreateMenu');
  */
 function hwlGetContentDirName() {
 	preg_match('/[^\/]+$/u', WP_CONTENT_DIR, $match);
-	
+
 	return $match[0];
 }
 
@@ -95,7 +95,7 @@ function hwlGetUploadUrl() {
     } else {
         $uploadUrl = get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR);
     }
-    
+
     return $uploadUrl;
 }
 
@@ -117,7 +117,7 @@ function hwlCreateWebfontsTable() {
             UNIQUE KEY (font_id)
             ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
 	$wpdb->query($sql);
-	
+
 	add_option('caos_webfonts_db_version', '1.6.1');
 }
 
@@ -134,7 +134,7 @@ function hwlCreateSubsetsTable() {
             UNIQUE KEY (subset_font)
             ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
     $wpdb->query($sql);
-    
+
     update_option('caos_webfonts_db_version', '1.7.0');
 }
 
@@ -161,7 +161,7 @@ function hwlSettingsLink($links) {
 	$adminUrl     = admin_url() . 'options-general.php?page=optimize-webfonts';
 	$settingsLink = "<a href='$adminUrl'>" . __('Settings') . "</a>";
 	array_push($links, $settingsLink);
-	
+
 	return $links;
 }
 $caosLink = plugin_basename(__FILE__);
@@ -185,15 +185,15 @@ function hwlSettingsPage() {
         </p>
 
         <div id="hwl-admin-notices"></div>
-		
+
 		<?php require_once(plugin_dir_path(__FILE__) . 'includes/welcome-panel.php'); ?>
 
         <form id="hwl-options-form" name="hwl-options-form" method="post" style="float: left; width: 60%;">
             <div class="">
 				<?php
-				
+
 				include(plugin_dir_path(__FILE__) . 'includes/caos-webfonts-style-generation.php');
-				
+
 				?>
             </div>
         </form>
@@ -202,11 +202,11 @@ function hwlSettingsPage() {
 			<?php
 			settings_fields('caos-webfonts-basic-settings');
 			do_settings_sections('caos-webfonts-basic-settings');
-			
+
 			include(plugin_dir_path(__FILE__) . 'includes/caos-webfonts-basic-settings.php');
-			
+
 			do_action('hwl_after_settings_form_settings');
-			     
+
             submit_button();
             ?>
         </form>
@@ -219,7 +219,7 @@ function hwlSettingsPage() {
  */
 function hwlGetTotalFonts() {
 	global $wpdb;
-	
+
 	try {
 		return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME);
 	} catch (\Exception $e) {
@@ -232,7 +232,7 @@ function hwlGetTotalFonts() {
  */
 function hwlGetDownloadedFonts() {
 	global $wpdb;
-	
+
 	try {
 		return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . " WHERE downloaded = 1");
 	} catch (\Exception $e) {
@@ -255,7 +255,7 @@ function hwlGetDownloadStatus() {
  */
 function hwlGetSubsets() {
     global $wpdb;
-    
+
     try {
         return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . "_subsets");
     } catch(\Exception $e) {
@@ -265,7 +265,7 @@ function hwlGetSubsets() {
 
 function hwlGetFontsByFamily($family) {
     global $wpdb;
-    
+
     try {
         return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . " WHERE font_family = '$family'");
     } catch(\Exception $e) {
@@ -278,7 +278,7 @@ function hwlGetFontsByFamily($family) {
  */
 function hwlCleanQueue() {
 	global $wpdb;
-	
+
 	try {
 		$wpdb->query("TRUNCATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME);
 		$wpdb->query("TRUNCATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . "_subsets");
@@ -323,14 +323,14 @@ add_action('wp_ajax_hwlAjaxEmptyDir', 'hwlAjaxEmptyDir');
 function hwlAjaxSearchFontSubsets() {
     try {
         $searchQueries = explode(',', sanitize_text_field($_POST['search_query']));
-        
+
         foreach ($searchQueries as $searchQuery) {
             $request = curl_init();
             curl_setopt($request, CURLOPT_URL, CAOS_WEBFONTS_HELPER_URL . $searchQuery);
             curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
             $result = curl_exec($request);
             curl_close($request);
-            
+
             $result = json_decode($result);
             $response[] = array(
                     'family'  => $result->family,
@@ -353,12 +353,12 @@ function hwlAjaxSearchGoogleFonts() {
 		$request     = curl_init();
 		$searchQuery = sanitize_text_field($_POST['search_query']);
 		$subsets     = implode($_POST['search_subsets'], ',');
-		
+
 		curl_setopt($request, CURLOPT_URL, CAOS_WEBFONTS_HELPER_URL . $searchQuery . '?subsets=' . $subsets);
 		curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-		
+
 		$result = curl_exec($request);
-		
+
 		curl_close($request);
 		wp_die($result);
 	} catch (\Exception $e) {
@@ -389,7 +389,7 @@ function hwlFontDisplayOptions() {
 		'Fallback'       => 'fallback',
 		'Optional'       => 'optional'
 	);
-	
+
 	return $fontDisplay;
 }
 
@@ -443,10 +443,10 @@ register_deactivation_hook(__FILE__, 'hwlDequeueJsCss');
  */
 function hwlAddLinkPreload() {
 	global $wp_styles;
-	
+
 	$handle = 'hwl-style';
 	$sstyle = $wp_styles->registered[$handle];
-	
+
 	$source = $sstyle->src . ($sstyle->ver ? "?ver={$sstyle->ver}" : "");
 	echo "<link rel='preload' href='{$source}' as='style' />\n";
 }
