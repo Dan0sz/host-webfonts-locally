@@ -50,6 +50,8 @@ foreach ($selectedFonts as $font) {
 	$fontUrlWoffTwo = esc_url_raw($font->url_woff2);
 	$fontUrlWoff    = esc_url_raw($font->url_woff);
 	$fontUrlTtf     = esc_url_raw($font->url_ttf);
+	$fontLocal      = $fontFamily . ' ' . ucfirst($fontStyle);
+	$fontLocalDash  = str_replace(' ', '', $fontFamily) . '-' . ucfirst($fontStyle);
 
 	$fonts[] =
 		"@font-face {
@@ -57,7 +59,8 @@ foreach ($selectedFonts as $font) {
             font-display: $fontDisplay;
             font-style: $fontStyle;
             font-weight: $fontWeight;
-            src: url('$fontUrlEot'), /* IE9 Compatible */
+            src: url('$fontUrlEot'); /* IE9 Compatible */
+            src: local('$fontLocal'), local('$fontLocalDash'),
                  url('$fontUrlWoffTwo') format('woff2'), /* Super Modern Browsers */
                  url('$fontUrlWoff') format('woff'), /* Modern Browsers */
                  url('$fontUrlTtf') format('truetype'); /* Safari, Android, iOS */

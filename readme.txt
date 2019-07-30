@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.2
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,6 +23,7 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 - Generate a stylesheet, which is automatically added to your header using WordPress' wp_head()-function,
 - Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
 - Control font performance by adding font-display property,
+- Auto-generates the local source for webfonts,
 - Prioritize fonts with rel='preload'.
 
 == Installation ==
@@ -78,6 +79,10 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.8.2 =
+Correct support for Legacy IE browsers (EOT).
+Added 'local'-attribute to stylesheet.
 
 = 1.8.1 =
 Load EOT-files first in stylesheet.
