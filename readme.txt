@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.2
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,7 +60,9 @@ No, it does not. It creates a CSS Stylesheet which will be automatically added t
 
 = My fonts aren't being downloaded! What's going on? =
 
-First check your database if the table {prefix}_caos_webfonts exists. If you're using any caching plugins, such as Autoptimize, W3TC or WP Super Cache, empty their caches. After that empty your browser's cache and reload the page. Try again.
+First check your database if the table {prefix}_caos_webfonts exists. If it doesn't, remove the `caos_webfonts_db_version` from the `wp_options` table and reload the page. The table should be created and the issue should be resolved.
+
+If the issue still persists and you're using any caching plugins, such as Autoptimize, W3TC or WP Super Cache? Empty their caches. After that empty your browser's cache and reload the page. Try again.
 
 = The stylesheet isn't loaded? What's going on? =
 
@@ -79,6 +81,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.8.3 =
+Extended support for local source attribute.
 
 = 1.8.2 =
 Correct support for Legacy IE browsers (EOT).

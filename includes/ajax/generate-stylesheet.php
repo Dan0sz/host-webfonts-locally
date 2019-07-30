@@ -50,8 +50,9 @@ foreach ($selectedFonts as $font) {
 	$fontUrlWoffTwo = esc_url_raw($font->url_woff2);
 	$fontUrlWoff    = esc_url_raw($font->url_woff);
 	$fontUrlTtf     = esc_url_raw($font->url_ttf);
-	$fontLocal      = $fontFamily . ' ' . ucfirst($fontStyle);
-	$fontLocalDash  = str_replace(' ', '', $fontFamily) . '-' . ucfirst($fontStyle);
+	$locals         = explode(',', sanitize_text_field($font->local));
+	$fontLocal      = isset($locals[0]) ? $locals[0] : $fontFamily . " " . ucfirst($fontStyle);
+	$fontLocalDash  = isset($locals[1]) ? $locals[1] : $fontFamily . "-" . ucfirst($fontStyle);
 
 	$fonts[] =
 		"@font-face {

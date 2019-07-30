@@ -54,7 +54,7 @@ foreach ($subsets as $id => $subset)
 {
 	$availableSubsets = implode($subset['available'], ',');
 	$selectedSubsets  = implode($subset['selected'], ',');
-	
+
 	$wpdb->insert(
 		CAOS_WEBFONTS_DB_TABLENAME . '_subsets',
 		array(
@@ -79,6 +79,7 @@ foreach ($selectedFonts as $id => $font)
 			'font_family' => sanitize_text_field($font['font-family']),
 			'font_weight' => sanitize_text_field($font['font-weight']),
 			'font_style'  => sanitize_text_field($font['font-style']),
+			'local'       => sanitize_text_field($font['local']),
 			'downloaded'  => 0,
 			'url_ttf'     => esc_url_raw($font['url']['ttf']),
 			'url_woff'    => esc_url_raw($font['url']['woff']),

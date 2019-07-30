@@ -4,7 +4,7 @@
  * Plugin Name: CAOS for Webfonts
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.8.2
+ * Version: 1.8.3
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -21,7 +21,7 @@ global $wpdb;
 /**
  * Define constants.
  */
-define('CAOS_WEBFONTS_DB_VERSION', '1.7.0');
+define('CAOS_WEBFONTS_DB_VERSION', '1.8.3');
 define('CAOS_WEBFONTS_STATIC_VERSION', '1.7.6');
 define('CAOS_WEBFONTS_SITE_URL', 'https://daan.dev');
 define('CAOS_WEBFONTS_DB_TABLENAME', $wpdb->prefix . 'caos_webfonts');
@@ -100,7 +100,7 @@ function hwlGetUploadUrl() {
 }
 
 /**
- * Create table to store downloaded fonts in.
+ * Create table to store downloaded fonts in version 1.6.1.
  */
 function hwlCreateWebfontsTable() {
 	global $wpdb;
@@ -122,7 +122,7 @@ function hwlCreateWebfontsTable() {
 }
 
 /**
- * Create table to store selected subsets in.
+ * Create table to store selected subsets in version 1.7.0.
  */
 function hwlCreateSubsetsTable() {
     global $wpdb;
@@ -139,6 +139,19 @@ function hwlCreateSubsetsTable() {
 }
 
 /**
+ * Adds the 'local' column in version 1.8.3
+ */
+function hwlAddLocalColumn() {
+    global $wpdb;
+
+    $sql = "ALTER TABLE " . CAOS_WEBFONTS_DB_TABLENAME . " " .
+           "ADD COLUMN local varchar(128) AFTER font_style;";
+    $wpdb->query($sql);
+
+    update_option('caos_webfonts_db_version', '1.8.3');
+}
+
+/**
  * Check current version and execute required db updates.
  */
 function hwlRunDbUpdates() {
@@ -146,8 +159,11 @@ function hwlRunDbUpdates() {
 	if (version_compare($currentVersion, '1.6.1') < 0) {
 		hwlCreateWebfontsTable();
 	}
-	if (version_compare($currentVersion, CAOS_WEBFONTS_DB_VERSION) < 0) {
+	if (version_compare($currentVersion, '1.7.0') < 0) {
 	    hwlCreateSubsetsTable();
+    }
+	if (version_compare($currentVersion, CAOS_WEBFONTS_DB_VERSION) < 0) {
+        hwlAddLocalColumn();
     }
 }
 add_action('plugins_loaded', 'hwlRunDbUpdates');

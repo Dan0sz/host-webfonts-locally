@@ -142,6 +142,7 @@ function hwlRenderAvailableFonts(results)
         font = fontFamily.replace(/\s+/g, '-').toLowerCase() + '-' + variants[iii].id
         fontWeight = variants[iii].fontWeight
         fontStyle = variants[iii].fontStyle
+        fontLocal = variants[iii].local
         renderedFonts[iii] = `<tr id="row-${font}" valign="top">
                                     <td>
                                         <input readonly type="text" value="${fontFamily}" name="caos_webfonts_array][${font}][font-family]" />
@@ -154,6 +155,7 @@ function hwlRenderAvailableFonts(results)
                                     </td>
                                     <td>
                                         <input type="hidden" value="${fontId}" name="caos_webfonts_array][${font}][id]" />
+                                        <input type="hidden" value="${fontLocal}" name="caos_webfonts_array][${font}][local]" />
                                         <input type="hidden" value="${variants[iii].ttf}" name="caos_webfonts_array][${font}][url][ttf]" />
                                         <input type="hidden" value="${variants[iii].woff}" name="caos_webfonts_array][${font}][url][woff]" />
                                         <input type="hidden" value="${variants[iii].woff2}" name="caos_webfonts_array][${font}][url][woff2]" />

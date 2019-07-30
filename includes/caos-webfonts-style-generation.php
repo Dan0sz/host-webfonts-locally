@@ -36,18 +36,18 @@ if (!defined('ABSPATH')) {
                 $availableSubsets = explode(',', $subsetFont->available_subsets);
                 $selectedSubsets  = explode(',', $subsetFont->selected_subsets);
                 ?>
-                <tr valign="top" id="<?php echo $subsetFont->subset_font; ?>">
+                <tr valign="top" id="<?= $subsetFont->subset_font; ?>">
                     <td>
                         <label>
-                            <input readonly type="text" class="hwl-subset-font-family" value="<?php echo $subsetFont->subset_family; ?>"/>
+                            <input readonly type="text" class="hwl-subset-font-family" value="<?= $subsetFont->subset_family; ?>"/>
                         </label>
                     </td>
                     <?php foreach ($availableSubsets as $availableSubset): ?>
                         <td>
                             <label>
                                 <?php $checked = in_array($availableSubset, $selectedSubsets) ? 'checked="checked"' : ''; ?>
-                                <input name="<?php echo $subsetFont->subset_font; ?>" value="<?php echo $availableSubset; ?>" type="checkbox" onclick="hwlGenerateSearchQuery('<?php echo $subsetFont->subset_font; ?>')" <?php echo $checked; ?>/>
-                                <?php echo $availableSubset; ?>
+                                <input name="<?= $subsetFont->subset_font; ?>" value="<?= $availableSubset; ?>" type="checkbox" onclick="hwlGenerateSearchQuery('<?= $subsetFont->subset_font; ?>')" <?= $checked; ?>/>
+                                <?= $availableSubset; ?>
                             </label>
                         </td>
                     <?php endforeach; ?>
@@ -67,7 +67,7 @@ if (!defined('ABSPATH')) {
         ?>
         <?php if ($savedFonts && $subsetFonts): ?>
             <?php foreach ($subsetFonts as $subsetFont): ?>
-                <tbody id="hwl-section-<?php echo $subsetFont->subset_font; ?>">
+                <tbody id="hwl-section-<?= $subsetFont->subset_font; ?>">
                 <?php
                 $fonts = hwlGetFontsByFamily($subsetFont->subset_family);
                 ?>
@@ -75,24 +75,25 @@ if (!defined('ABSPATH')) {
                     $fontId = $font->font_id;
                     $arrayPath = "caos_webfonts_array][$fontId]";
                     ?>
-                    <tr id="row-<?php echo $fontId; ?>" valign="top">
+                    <tr id="row-<?= $fontId; ?>" valign="top">
                         <td>
-                            <input readonly type="text" value="<?php echo $font->font_family; ?>" name="<?php echo $arrayPath; ?>[font-family]"/>
+                            <input readonly type="text" value="<?= $font->font_family; ?>" name="<?= $arrayPath; ?>[font-family]"/>
                         </td>
                         <td>
-                            <input readonly type="text" value="<?php echo $font->font_style; ?>" name="<?php echo $arrayPath; ?>[font-style]"/>
+                            <input readonly type="text" value="<?= $font->font_style; ?>" name="<?= $arrayPath; ?>[font-style]"/>
                         </td>
                         <td>
-                            <input readonly type="text" value="<?php echo $font->font_weight; ?>" name="<?php echo $arrayPath; ?>[font-weight]"/>
+                            <input readonly type="text" value="<?= $font->font_weight; ?>" name="<?= $arrayPath; ?>[font-weight]"/>
                         </td>
                         <td>
-                            <input type="hidden" value="<?php echo $fontId; ?>" name="<?php echo $arrayPath; ?>[id]"/>
-                            <input type="hidden" value="<?php echo $font->url_ttf; ?>" name="<?php echo $arrayPath; ?>[url][ttf]"/>
-                            <input type="hidden" value="<?php echo $font->url_woff; ?>" name="<?php echo $arrayPath; ?>[url][woff]"/>
-                            <input type="hidden" value="<?php echo $font->url_woff2; ?>" name="<?php echo $arrayPath; ?>[url][woff2]"/>
-                            <input type="hidden" value="<?php echo $font->url_eot; ?>" name="<?php echo $arrayPath; ?>[url][eot]"/>
+                            <input type="hidden" value="<?= $fontId; ?>" name="<?= $arrayPath; ?>[id]"/>
+                            <input type="hidden" value="<?= $font->local; ?>" name="<?= $arrayPath; ?>[local]"/>
+                            <input type="hidden" value="<?= $font->url_ttf; ?>" name="<?= $arrayPath; ?>[url][ttf]"/>
+                            <input type="hidden" value="<?= $font->url_woff; ?>" name="<?= $arrayPath; ?>[url][woff]"/>
+                            <input type="hidden" value="<?= $font->url_woff2; ?>" name="<?= $arrayPath; ?>[url][woff2]"/>
+                            <input type="hidden" value="<?= $font->url_eot; ?>" name="<?= $arrayPath; ?>[url][eot]"/>
                             <div class="hwl-remove">
-                                <a onclick="hwlRemoveRow('row-<?php echo $fontId; ?>')">
+                                <a onclick="hwlRemoveRow('row-<?= $fontId; ?>')">
                                     <small>remove</small>
                                 </a>
                             </div>
@@ -143,8 +144,8 @@ if (!defined('ABSPATH')) {
             ?>
             <td colspan="5">
                 <div class="caos-status-total-bar" style="">
-                    <div id="caos-status-progress-bar" style="width: <?php echo $width; ?>%;">
-                        <span class="caos-status-progress-percentage"><?php echo $width . '%'; ?></span>
+                    <div id="caos-status-progress-bar" style="width: <?= $width; ?>%;">
+                        <span class="caos-status-progress-percentage"><?= $width . '%'; ?></span>
                     </div>
                 </div>
             </td>
