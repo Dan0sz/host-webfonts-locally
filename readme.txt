@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.2
-Stable tag: 1.8.3
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,11 @@ With only 2 clicks of a button, CAOS for Webfonts automagically downloads your G
 
 == Description ==
 
-CAOS for Webfonts is written with performance in mind. Other plugins make repeated requests to your Blog's database to replace/remove requests to external Webfonts source (e.g. Google Fonts) on-the-fly. This might be user-friendly, but it's a performance killer, because locally hosting your Google Webfonts should be a set-and-forget feature. The source of your webfonts should be replaced once and kept that way.
+CAOS for Webfonts is written with performance and user-friendliness in mind, without killing performance.
 
-That's why I kept CAOS for Webfonts small and useful. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with plugins like Autoptimize or W3 Total Cache. After that, all you need to do is remove any mention of requests to external webfont sources (using e.g. a child theme or a plugin such as Autoptimize) and you're done!
+It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with plugins like Autoptimize or W3 Total Cache. After that, all that needs to be done is remove any requests to external Google Fonts sources (e.g. fonts.gstatic.com or fonts.googleapis.com). This can be achieved using the integrated option, a child theme or a plugin such as Autoptimize.
+
+That's it. You're done!
 
 This will *decrease your pageload times*, *leverage browser cache*, *minimize DNS requests* and effectively bring you a perfect score on *Pagespeed Insights* and *Pingdom*, without taking toll on the performance of your webserver.
 
@@ -24,6 +26,7 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 - Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
 - Control font performance by adding font-display property,
 - Auto-generates the local source for webfonts,
+- Automatically remove any fonts loaded from fonts.gstatic.com or fonts.googleapis.com,
 - Prioritize fonts with rel='preload'.
 
 == Installation ==
@@ -54,6 +57,10 @@ This could be for several reasons:
 
 Yes, you can. Enter the url of your CDN and re-download and re-generate the stylesheet. Then the fonts will be saved to and served from your CDN.
 
+= I'm getting a 'Load resources from a consistent URL' after installing and configuring this plugin. What's going on? =
+
+This must be, because you're still loading the externally hosted Google Fonts, besides the fonts you downloaded using CAOS for Webfonts. Try checking the option 'Remove Google Fonts' and see if that helps. If it doesn't consider using a child theme to 'dequeue' any external requests. If you don't know how to do that, consider using a plugin such as Autoptimize to optimize your CSS and remove the fonts.
+
 = Does this plugin edit template files? =
 
 No, it does not. It creates a CSS Stylesheet which will be automatically added to your theme's header using a built-in WordPress queueing system.
@@ -81,6 +88,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.9.0 =
+New feature! CAOS for Webfonts can now remove fonts from fonts.googleapis.com or fonts.gstatic.com automatically.
 
 = 1.8.3 =
 Extended support for local source attribute.
