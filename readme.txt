@@ -1,18 +1,18 @@
-=== CAOS for Webfonts | Host Google Fonts Locally ===
+=== OMGF | Host Google Fonts Locally ===
 Contributors: DaanvandenBergh
 Donate link: https://daan.dev/donate/
 Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.2
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-With only 2 clicks of a button, CAOS for Webfonts automagically downloads your Google Fonts you want to WordPress' content-folder, generates a stylesheet for it and enqueues it in your theme's header.
+With only 2 clicks of a button, OMGF automagically downloads your Google Fonts you want to WordPress' content-folder, generates a stylesheet for it and enqueues it in your theme's header.
 
 == Description ==
 
-CAOS for Webfonts is written with performance and user-friendliness in mind, without killing performance.
+OMGF (Optimize My Google Fonts) is written with performance and user-friendliness in mind, without killing performance.
 
 It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with plugins like Autoptimize or W3 Total Cache. After that, all that needs to be done is remove any requests to external Google Fonts sources (e.g. fonts.gstatic.com or fonts.googleapis.com). This can be achieved using the integrated option, a child theme or a plugin such as Autoptimize.
 
@@ -41,17 +41,17 @@ For a more comprehensive guide for configuration, click [here](https://daan.dev/
 
 = I don't know what I'm doing! Can you help? =
 
-Of course :) But first calm down and read this [comprehensive guide on how to configure CAOS for Webfonts](https://daan.dev/wordpress/host-google-fonts-locally/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
+Of course :) But first calm down and read this [comprehensive guide on how to configure OMGF](https://daan.dev/wordpress/host-google-fonts-locally/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
 
 = I have another file I want to host locally. Could you make a plugin? =
 
-Maintaining two plugins besides my daily 9-to-5 job is a handful, so no. If you're looking for a way to host analytics.js locally; please install [CAOS for Analytics](https://wordpress.org/plugins/host-analyticsjs-local/). For anything else, please follow the steps in [this how-to](https://daan.dev/how-to/host-js-locally-crontab/).
+Maintaining two plugins besides my daily 9-to-5 job is a handful, so no. If you're looking for a way to host analytics.js locally; please install [CAOS](https://wordpress.org/plugins/host-analyticsjs-local/). For anything else, please follow the steps in [this how-to](https://daan.dev/how-to/host-js-locally-crontab/).
 
-= How come my font isn't available in CAOS for Webfonts? =
+= How come my font isn't available in OMGF? =
 
 This could be for several reasons:
 1. Have you checked if your font is available on Google Fonts?
-1. Is your font listed as an open source font, or is it a premium font? For obvious reasons, CAOS for Webfonts only has access to open source fonts.
+1. Is your font listed as an open source font, or is it a premium font? For obvious reasons, OMGF only has access to open source fonts.
 
 = Can I serve the fonts from my CDN? =
 
@@ -59,7 +59,7 @@ Yes, you can. Enter the url of your CDN and re-download and re-generate the styl
 
 = I'm getting a 'Load resources from a consistent URL' after installing and configuring this plugin. What's going on? =
 
-This must be, because you're still loading the externally hosted Google Fonts, besides the fonts you downloaded using CAOS for Webfonts. Try checking the option 'Remove Google Fonts' and see if that helps. If it doesn't consider using a child theme to 'dequeue' any external requests. If you don't know how to do that, consider using a plugin such as Autoptimize to optimize your CSS and remove the fonts.
+This must be, because you're still loading the externally hosted Google Fonts, besides the fonts you downloaded using OMGF. Try checking the option 'Remove Google Fonts' and see if that helps. If it doesn't consider using a child theme to 'dequeue' any external requests. If you don't know how to do that, consider using a plugin such as Autoptimize to optimize your CSS and remove the fonts.
 
 = Does this plugin edit template files? =
 
@@ -73,7 +73,7 @@ If the issue still persists and you're using any caching plugins, such as Autopt
 
 = The stylesheet isn't loaded? What's going on? =
 
-CAOS for Webfonts enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function into it's header section.
+OMGF enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function into it's header section.
 
 = Does this plugin support Multi Site? =
 
@@ -89,8 +89,11 @@ N/A
 
 == Changelog ==
 
+= 1.9.1 =
+Changed name to OMGF, because it's hilarious?
+
 = 1.9.0 =
-New feature! CAOS for Webfonts can now remove fonts from fonts.googleapis.com or fonts.gstatic.com automatically.
+New feature! OMGF can now remove fonts from fonts.googleapis.com or fonts.gstatic.com automatically.
 
 = 1.8.3 =
 Extended support for local source attribute.
@@ -160,7 +163,7 @@ Added a download counter, clean queue-button and improved allround UX. Fixed a f
 Fixed a bug where sometimes the fonts weren't downloaded yet when the stylesheet was generated.
 
 = 1.5.0 =
-CAOS for Webfonts now remembers which fonts you use, to make it easier to edit your stylesheet.
+OMGF now remembers which fonts you use, to make it easier to edit your stylesheet.
 
 = 1.4.1 =
 Added option to change font-display strategy.

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package: CAOS for Webfonts
+ * @package: OMGF
  * @author: Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
  * @url: https://daan.dev
@@ -11,9 +11,9 @@ if (!defined('ABSPATH')) exit;
 ?>
 <div id="welcome-panel" class="welcome-panel">
     <div class="welcome-panel-content">
-        <h2>Thank you for using CAOS for Webfonts!</h2>
+        <h2>Thank you for using OMGF!</h2>
         <p class="about-description">
-            CAOS for Webfonts automagically downloads and saves the fonts you want to use inside Wordpress' content-folder, generates a stylesheet for them and enqueues it in your theme's header.
+            OMGF automagically downloads and saves the fonts you want to use inside Wordpress' content-folder, generates a stylesheet for them and enqueues it in your theme's header.
             This will decrease your pageload times, leverage your browser cache, minimize external requests and effectively bring you a perfect score on Pagespeed Insights and Pingdom.
         </p>
         <div class="welcome-panel-column-container">
@@ -34,7 +34,7 @@ if (!defined('ABSPATH')) exit;
             </div>
             <div class="welcome-panel-column" style="width: 32%;">
                 <h3>Get a Perfect Score on Pagespeed & Pingdom!</h3>
-                <p><strong>Leverage your browser cache</strong> and <strong>lower pageload times</strong> by hosting analytics.js locally with <a href="<?= CAOS_WEBFONTS_SITE_URL; ?>/wordpress-plugins/optimize-analytics-wordpress/" target="_blank">CAOS for Analytics</a>.</p>
+                <p><strong>Leverage your browser cache</strong> and <strong>lower pageload times</strong> by hosting analytics.js locally with <a href="<?= CAOS_WEBFONTS_SITE_URL; ?>/wordpress-plugins/optimize-analytics-wordpress/" target="_blank">CAOS</a>.</p>
                 <p><a target="_blank" href="https://wordpress.org/plugins/host-analyticsjs-local">Download now</a></p>
                 <h3>Want to Host other Files Locally?</h3>
                 <p>Unleash your site's true potential by locally hosting as many files as possible.</p>
@@ -45,7 +45,7 @@ if (!defined('ABSPATH')) exit;
                     <?php _e('Need Help?', 'host-webfonts-local'); ?>
                 </h3>
                 <p>
-                    <?php _e('Thank you for using CAOS for Webfonts.', 'host-webfonts-local'); ?>
+                    <?php _e('Thank you for using OMGF.', 'host-webfonts-local'); ?>
                 </p>
                 <p>
                     <?php _e('I am convinced that knowledge should be free. That\'s why I will never charge you for the plugins I create and I will help you to succeed in your projects through the <a href="' . CAOS_WEBFONTS_SITE_URL . '/how-to/" target="_blank">tutorials</a> on my blog.', 'host-webfonts-local'); ?>

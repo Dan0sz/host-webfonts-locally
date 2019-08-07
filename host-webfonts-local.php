@@ -1,10 +1,10 @@
 <?php
 /**
  * @formatter:off
- * Plugin Name: CAOS for Webfonts
+ * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.9.0
+ * Version: 1.9.1
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -28,7 +28,7 @@ define('CAOS_WEBFONTS_DB_TABLENAME', $wpdb->prefix . 'caos_webfonts');
 define('CAOS_WEBFONTS_DB_CHARSET', $wpdb->get_charset_collate());
 define('CAOS_WEBFONTS_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com/api/fonts/');
 define('CAOS_WEBFONTS_FILENAME', 'fonts.css');
-define('CAOS_WEBFONTS_CACHE_DIR', esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/caos-webfonts');
+define('CAOS_WEBFONTS_CACHE_DIR', esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/omgf-webfonts');
 define('CAOS_WEBFONTS_CDN_URL', esc_attr(get_option('caos_webfonts_cdn_url')));
 define('CAOS_WEBFONTS_REMOVE_VERSION', esc_attr(get_option('caos_webfonts_remove_version')));
 define('CAOS_WEBFONTS_CURRENT_BLOG_ID', get_current_blog_id());
@@ -69,7 +69,7 @@ function hwlRegisterSettings()
 function hwlCreateMenu()
 {
     add_options_page(
-        'CAOS for Webfonts',
+        'OMGF',
         'Optimize Webfonts',
         'manage_options',
         'optimize-webfonts',
@@ -207,7 +207,7 @@ function hwlSettingsPage()
     }
     ?>
     <div class="wrap">
-        <h1><?php _e('CAOS for Webfonts', 'host-webfonts-local'); ?></h1>
+        <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
         <p>
             <?php _e('Developed by: ', 'host-webfonts-local'); ?>
             <a title="Buy me a beer!" href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/donate/">
