@@ -2,9 +2,9 @@
 Contributors: DaanvandenBergh
 Donate link: https://daan.dev/donate/
 Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
-Requires at least: 4.5
+Requires at least: 4.6
 Tested up to: 5.2
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
