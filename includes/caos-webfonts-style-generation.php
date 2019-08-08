@@ -58,7 +58,7 @@ if (!defined('ABSPATH')) {
     </table>
     <table>
         <tr valign="top">
-            <th align="left" colspan="3">Available fonts</th>
+            <th align="left" colspan="3"><?php _e('Available fonts', 'host-webfonts-local'); ?></th>
         </tr>
     </table>
     <table align="left" id="hwl-results">
@@ -94,7 +94,7 @@ if (!defined('ABSPATH')) {
                             <input type="hidden" value="<?= $font->url_eot; ?>" name="<?= $arrayPath; ?>[url][eot]"/>
                             <div class="hwl-remove">
                                 <a onclick="hwlRemoveRow('row-<?= $fontId; ?>')">
-                                    <small>remove</small>
+                                    <small><?php _e('remove', 'host-webfonts-local'); ?></small>
                                 </a>
                             </div>
                         </td>
@@ -110,7 +110,7 @@ if (!defined('ABSPATH')) {
             </td>
         </tr>
         <tr class="error" style="display: none;">
-            <td colspan="3" align="center">No fonts available.</td>
+            <td colspan="3" align="center"><?php _e('No fonts available.', 'host-webfonts-local'); ?></td>
         </tr>
         </tbody>
     </table>
@@ -120,19 +120,19 @@ if (!defined('ABSPATH')) {
         <tr valign="center" align="center">
             <td>
                 <input type="button" onclick="hwlDownloadFonts()" name="save-btn"
-                       id="save-btn" class="button-primary" value="Download Fonts"/>
+                       id="save-btn" class="button-primary" value="<?php _e('Download Fonts', 'host-webfonts-local'); ?>"/>
             </td>
             <td>
                 <input type="button" onclick="hwlGenerateStylesheet()" name="generate-btn"
-                       id="generate-btn" class="button-secondary" value="Generate Stylesheet"/>
+                       id="generate-btn" class="button-secondary" value="<?php _e('Generate Stylesheet', 'host-webfonts-local'); ?>"/>
             </td>
             <td>
                 <a onclick="hwlCleanQueue()" name="clean-btn"
-                   id="clean-btn" class="button-cancel">Clean Queue</a>
+                   id="clean-btn" class="button-cancel"><?php _e('Clean Queue', 'host-webfots-local'); ?></a>
             </td>
             <td>
                 <a onclick="hwlEmptyDir()" name="empty-btn"
-                   id="empty-btn" class="button-cancel">Empty Cache Directory</a>
+                   id="empty-btn" class="button-cancel"><?php _e('Empty Cache Directory', 'host-webfonts-local'); ?></a>
             </td>
             <td width="20%"></td>
         </tr>

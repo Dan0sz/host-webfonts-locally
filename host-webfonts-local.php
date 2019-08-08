@@ -4,7 +4,7 @@
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.9.1
+ * Version: 1.9.2
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -426,11 +426,11 @@ register_activation_hook(__FILE__, 'hwlCreateCacheDir');
 function hwlFontDisplayOptions()
 {
     $fontDisplay = array(
-        'Auto (default)' => 'auto',
-        'Block'          => 'block',
-        'Swap'           => 'swap',
-        'Fallback'       => 'fallback',
-        'Optional'       => 'optional'
+        __('Auto (default)', 'host-webfonts-local') => 'auto',
+        __('Block', 'host-webfonts-local')          => 'block',
+        __('Swap', 'host-webfonts-local')           => 'swap',
+        __('Fallback', 'host-webfonts-local')       => 'fallback',
+        __('Optional', 'host-webfonts-local')       => 'optional'
     );
 
     return $fontDisplay;
@@ -494,9 +494,9 @@ function hwlAddLinkPreload()
     global $wp_styles;
 
     $handle = 'hwl-style';
-    $sstyle = $wp_styles->registered[$handle];
+    $style = $wp_styles->registered[$handle];
 
-    $source = $sstyle->src . ($sstyle->ver ? "?ver={$sstyle->ver}" : "");
+    $source = $style->src . ($style->ver ? "?ver={$style->ver}" : "");
     echo "<link rel='preload' href='{$source}' as='style' />\n";
 }
 

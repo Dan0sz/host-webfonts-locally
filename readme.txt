@@ -1,10 +1,10 @@
 === OMGF | Host Google Fonts Locally ===
 Contributors: DaanvandenBergh
 Donate link: https://daan.dev/donate/
-Tags: update, host, save, local, locally, google, fonts, webfonts, minimize, external, requests, leverage, browser, cache
+Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.5
 Tested up to: 5.2
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ With only 2 clicks of a button, OMGF automagically downloads your Google Fonts y
 
 == Description ==
 
-OMGF (Optimize My Google Fonts) is written with performance and user-friendliness in mind, without killing performance.
+OMGF (Optimize My Google Fonts, formerly known as CAOS for Webfonts) is written with performance and user-friendliness in mind, without killing performance.
 
 It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with plugins like Autoptimize or W3 Total Cache. After that, all that needs to be done is remove any requests to external Google Fonts sources (e.g. fonts.gstatic.com or fonts.googleapis.com). This can be achieved using the integrated option, a child theme or a plugin such as Autoptimize.
 
@@ -88,6 +88,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.9.2 =
+Made all strings translatable.
 
 = 1.9.1 =
 Changed name to OMGF, because it's hilarious?

@@ -86,7 +86,7 @@ if (!defined( 'ABSPATH')) exit;
             <td>
                 <input class="caos_webfonts_remove_gfonts" id="caos_webfonts_remove_gfonts" type="checkbox" name="caos_webfonts_remove_gfonts" <?= CAOS_WEBFONTS_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
-                    <?php _e('Enabling this option will remove any externally hosted Google Fonts-stylesheets from your WordPress-blog.', 'host-webfonts-local'); ?>
+                    <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, click %shere%s for a more comprehensive guide.', 'host-webfonts-local'), '<a target="_blank" href="' . CAOS_WEBFONTS_SITE_URL . '/how-to/remove-google-fonts-wordpress">', '</a>'); ?>
                 </p>
             </td>
         </tr>
