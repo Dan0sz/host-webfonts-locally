@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.2
-Stable tag: 1.9.6
+Stable tag: 1.9.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,9 @@ With only 2 clicks of a button, OMGF automagically downloads your Google Fonts y
 
 == Description ==
 
-OMGF (Optimize My Google Fonts, formerly known as CAOS for Webfonts) is written with performance and user-friendliness in mind, without killing performance.
+Leverage Browser Cache and Minimize DNS requests with OMGF (Optimize My Google Fonts, formerly known as CAOS for Webfonts).
 
-It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with plugins like Autoptimize or W3 Total Cache. After that, all that needs to be done is remove any requests to external Google Fonts sources (e.g. fonts.gstatic.com or fonts.googleapis.com). This can be achieved using the integrated option, a child theme or a plugin such as Autoptimize.
+OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with CSS and JS optimizing/minification plugins like Autoptimize or W3 Total Cache. OMGF can efficiently remove any requests to external Google Fonts (loaded from fonts.gstatic.com or fonts.googleapies.com).
 
 That's it. You're done!
 
@@ -28,6 +28,8 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 - Auto-generates the local source for webfonts,
 - Automatically remove any fonts loaded from fonts.gstatic.com or fonts.googleapis.com,
 - Prioritize fonts with rel='preload'.
+
+Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration and optimization of your WordPress blog. Or feel free to [contact me](https://daan.dev/contact/) for a quote.
 
 == Installation ==
 
@@ -77,7 +79,7 @@ OMGF enqueues the stylesheet into WordPress' head. If the stylesheet isn't loade
 
 = Does this plugin support Multi Site? =
 
-Yes, it does!
+No, not yet. I'm working on it, though.
 
 = Can I buy you a beer? =
 
@@ -88,6 +90,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.9.7 =
+Updated documentation.
 
 = 1.9.6 =
 Fixed bug where preload would cause issues.
