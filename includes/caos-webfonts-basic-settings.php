@@ -99,7 +99,7 @@ if (!defined( 'ABSPATH')) exit;
             <td>
                 <input class="caos_webfonts_preload" id="caos_webfonts_preload" type="checkbox" name="caos_webfonts_preload" <?= CAOS_WEBFONTS_PRELOAD == 'on' ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
-                    <?php _e('If you\'re using a plugin (such as Autoptimize) to load stylesheets in the footer, enable this to preload the fonts.', 'host-webfonts-local'); ?> <a target="_blank" href="https://developers.google.com/web/fundamentals/performance/resource-prioritization#preload"><?php _e('Read more', 'host-webfonts-local'); ?></a>
+                    <?php _e('Leave this disabled if you\'re using a CSS minification plugin, such as Autoptimize or W3 Total Cache.', 'host-webfonts-local'); ?> <a target="_blank" href="https://developers.google.com/web/fundamentals/performance/resource-prioritization#preload"><?php _e('Read more', 'host-webfonts-local'); ?></a>
                 </p>
             </td>
         </tr>

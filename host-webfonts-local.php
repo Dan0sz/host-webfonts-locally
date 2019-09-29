@@ -4,7 +4,7 @@
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Automagically save the fonts you want to use inside your content-folder, generate a stylesheet for them and enqueue it in your theme's header.
- * Version: 1.9.5
+ * Version: 1.9.6
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -460,7 +460,7 @@ add_action('wp_ajax_hwlAjaxDownloadFonts', 'hwlAjaxDownloadFonts');
  */
 function hwlEnqueueStylesheet()
 {
-    wp_enqueue_style('omgf-fonts', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), (CAOS_WEBFONTS_REMOVE_VERSION) ? null : CAOS_WEBFONTS_STATIC_VERSION);
+    wp_enqueue_style('-fontsomgf', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), (CAOS_WEBFONTS_REMOVE_VERSION) ? null : CAOS_WEBFONTS_STATIC_VERSION);
 }
 add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet');
 
@@ -483,7 +483,7 @@ function hwlDequeueJsCss()
 {
     wp_dequeue_script('hwl-admin-js');
     wp_dequeue_style('hwl-admin-css');
-    wp_dequeue_style('hwl-style');
+    wp_dequeue_style('omgf-fonts');
 }
 register_deactivation_hook(__FILE__, 'hwlDequeueJsCss');
 
@@ -494,7 +494,7 @@ function hwlAddLinkPreload()
 {
     global $wp_styles;
 
-    $handle = 'hwl-style';
+    $handle = 'omgf-fonts';
     $style = $wp_styles->registered[$handle];
 
     $source = $style->src . ($style->ver ? "?ver={$style->ver}" : "");
