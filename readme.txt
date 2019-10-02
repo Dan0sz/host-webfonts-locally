@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.2
-Stable tag: 1.9.7
+Stable tag: 1.9.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,7 +23,7 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 = Features =
 - Easily find and download your fonts in multiple subsets,
 - Generate a stylesheet, which is automatically added to your header using WordPress' wp_head()-function,
-- Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
+- Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Multisite environments and Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
 - Control font performance by adding font-display property,
 - Auto-generates the local source for webfonts,
 - Automatically remove any fonts loaded from fonts.gstatic.com or fonts.googleapis.com,
@@ -77,9 +77,18 @@ If the issue still persists and you're using any caching plugins, such as Autopt
 
 OMGF enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function into it's header section.
 
-= Does this plugin support Multi Site? =
+= Does this plugin support Multi Site? I'm getting CORS errors! =
 
-No, not yet. I'm working on it, though.
+Yes, it does. When using subdomains, however, you might run into CORS related issues. To get around this, you should configure each site separately. Do the following:
+
+- Go to the site's own dashboard,
+- Change OMGF's cache directory (*Save webfonts to...*) to something unique, e.g. `/cache/site1/omgf`,
+- Click 'Save Changes',
+- If you haven't already, find the fonts you want to use,
+- Click 'Download Fonts' and wait for the process to finish,
+- Click 'Generate stylesheet'.
+
+Repeat this for every site you want to use with OMGF. A new stylesheet, using the corresponding site's Home-URL and cache directory for each font, has been generated. Bypassing any Cross-Origin Resource Sharing (CORS) issues you might run into.
 
 = Can I buy you a beer? =
 
@@ -90,6 +99,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.9.8 =
+Updated Multisite documentation.
 
 = 1.9.7 =
 Updated documentation.

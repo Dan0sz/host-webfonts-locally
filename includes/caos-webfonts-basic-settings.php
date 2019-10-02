@@ -27,7 +27,7 @@ if (!defined( 'ABSPATH')) exit;
 			<td>
 				<input id="caos_webfonts_cache_dir" class="caos_webfonts_cache_dir" type="text" name="caos_webfonts_cache_dir" placeholder="e.g. /cache/omgf-webfonts" value="<?= CAOS_WEBFONTS_CACHE_DIR; ?>" />
 				<p class="description">
-					<?php _e("Changes the path where webfonts are cached inside WordPress' content directory (usually <code>wp-content</code>). Defaults to <code>/cache/caos-webfonts</code>.*", 'host-webfonts-local'); ?>
+					<?php _e("Changes the path where webfonts are cached inside WordPress' content directory (usually <code>wp-content</code>). If you're using Multisite, give each site a unique cache directory path. Defaults to <code>/cache/caos-webfonts</code>.*", 'host-webfonts-local'); ?>
 				</p>
 			</td>
 		</tr>
