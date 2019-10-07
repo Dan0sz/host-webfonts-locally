@@ -4,7 +4,7 @@
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Minimize DNS requests and leverage browser cache by easily saving Google Fonts to your server and removing the external Google Fonts.
- * Version: 1.9.8
+ * Version: 1.9.9
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -168,7 +168,7 @@ function hwlAddLocalColumn()
  */
 function hwlRunDbUpdates()
 {
-    $currentVersion = get_site_option('caos_webfonts_db_version') ?: '1.0.0';
+    $currentVersion = get_option('caos_webfonts_db_version') ?: '1.0.0';
     if (version_compare($currentVersion, '1.6.1') < 0) {
         hwlCreateWebfontsTable();
     }
@@ -460,7 +460,7 @@ add_action('wp_ajax_hwlAjaxDownloadFonts', 'hwlAjaxDownloadFonts');
  */
 function hwlEnqueueStylesheet()
 {
-    wp_enqueue_style('-fontsomgf', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), (CAOS_WEBFONTS_REMOVE_VERSION) ? null : CAOS_WEBFONTS_STATIC_VERSION);
+    wp_enqueue_style('omgf-fonts', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), (CAOS_WEBFONTS_REMOVE_VERSION) ? null : CAOS_WEBFONTS_STATIC_VERSION);
 }
 add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet');
 
@@ -497,8 +497,11 @@ function hwlAddLinkPreload()
     $handle = 'omgf-fonts';
     $style = $wp_styles->registered[$handle];
 
-    $source = $style->src . ($style->ver ? "?ver={$style->ver}" : "");
-    echo "<link rel='preload' href='{$source}' as='style' />\n";
+    /** Do not add 'preload' if Minification plugins are enabled. */
+    if ($style) {
+        $source = $style->src . ($style->ver ? "?ver={$style->ver}" : "");
+        echo "<link rel='preload' href='{$source}' as='style' />\n";
+    }
 }
 
 function hwlIsPreloadEnabled()
