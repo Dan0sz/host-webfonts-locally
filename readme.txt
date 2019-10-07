@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.2
-Stable tag: 1.9.9
+Stable tag: 1.9.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 1.9.10 =
+[Urgent] Errors in some translation strings.
 
 = 1.9.9 =
 Fixed 'duplicate column'-error when WP_DEBUG was enabled. Fixed bug which broke preload. Preload is now automatically skipped if you have any CSS optimization plugins enabled.

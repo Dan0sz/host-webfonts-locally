@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
                     <li class="welcome-icon dashicons-before dashicons-editor-bold"><?= sprintf(__('For all available fonts, check out %sGoogle Fonts%s', 'host-webfonts-local'), '<a href="https://fonts.google.com/" target="_blank">','</a>'); ?></li>
                     <li class="welcome-icon dashicons-before dashicons-cloud"><?php _e('Search for for your fonts', 'host-webfonts-local'); ?></li>
                     <li class="welcome-icon dashicons-before dashicons-admin-settings"><?php _e('Select the subsets you need', 'host-webfonts-local'); ?></li>
-                    <li class="welcome-icon dashicons-before dashicons-admin-tools"><?php _e('Modify the list by removing the fonts you don\'t use'); ?></li>
+                    <li class="welcome-icon dashicons-before dashicons-admin-tools"><?php _e('Modify the list by removing the fonts you don\'t use', 'host-webfonts-local'); ?></li>
                     <li class="welcome-icon dashicons-before dashicons-update"><?php _e('Click \'Download Fonts\' and wait for the download to complete', 'host-webfonts-local'); ?></li>
                     <li class="welcome-icon dashicons-before dashicons-art"><?php _e('Click \'Generate Stylesheet\' and wait for the process to complete', 'host-webfonts-local'); ?></li>
                     <li class="welcome-icon dashicons-before dashicons-media-text"><?php _e('The stylesheet is generated and added to your theme\'s header', 'host-webfonts-local'); ?></li>

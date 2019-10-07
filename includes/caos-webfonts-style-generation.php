@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 }
 ?>
 <div class="">
-    <h3><?php _e('Generate Stylesheet'); ?></h3>
+    <h3><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></h3>
     <p class="description">
         <?php _e('Search for fonts using a comma-separated list (e.g. Open Sans,Roboto,Poppins) and click \'Search\'.', 'host-webfonts-local'); ?>
     </p>
@@ -128,7 +128,7 @@ if (!defined('ABSPATH')) {
             </td>
             <td>
                 <a onclick="hwlCleanQueue()" name="clean-btn"
-                   id="clean-btn" class="button-cancel"><?php _e('Clean Queue', 'host-webfots-local'); ?></a>
+                   id="clean-btn" class="button-cancel"><?php _e('Clean Queue', 'host-webfonts-local'); ?></a>
             </td>
             <td>
                 <a onclick="hwlEmptyDir()" name="empty-btn"
