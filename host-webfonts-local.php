@@ -4,7 +4,7 @@
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Minimize DNS requests and leverage browser cache by easily saving Google Fonts to your server and removing the external Google Fonts.
- * Version: 1.9.10
+ * Version: 1.9.11
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -23,7 +23,7 @@ global $wpdb;
  * Define constants.
  */
 define('CAOS_WEBFONTS_DB_VERSION', '1.8.3');
-define('CAOS_WEBFONTS_STATIC_VERSION', '1.7.6');
+define('CAOS_WEBFONTS_STATIC_VERSION', '1.9.11');
 define('CAOS_WEBFONTS_SITE_URL', 'https://daan.dev');
 define('CAOS_WEBFONTS_DB_TABLENAME', $wpdb->prefix . 'caos_webfonts');
 define('CAOS_WEBFONTS_DB_CHARSET', $wpdb->get_charset_collate());
@@ -217,24 +217,24 @@ function hwlSettingsPage()
 
         <div id="hwl-admin-notices"></div>
 
-        <?php require_once(plugin_dir_path(__FILE__) . 'includes/welcome-panel.php'); ?>
+        <?php require_once(dirname(__FILE__) . '/includes/templates/settings-welcome.php'); ?>
 
-        <form id="hwl-options-form" name="hwl-options-form" method="post" style="float: left; width: 60%;">
+        <form id="hwl-options-form" class="settings-column left" name="hwl-options-form" method="post">
             <div class="">
                 <?php
 
-                include(plugin_dir_path(__FILE__) . 'includes/caos-webfonts-style-generation.php');
+                require_once(dirname(__FILE__) . '/includes/templates/settings-generate-stylesheet.php');
 
                 ?>
             </div>
         </form>
 
-        <form id="hwl-settings-form" name="hwl-settings-form" method="post" action="options.php" style="float: left; width: 39%;">
+        <form id="hwl-settings-form" class="settings-column right" name="hwl-settings-form" method="post" action="options.php">
             <?php
             settings_fields('caos-webfonts-basic-settings');
             do_settings_sections('caos-webfonts-basic-settings');
 
-            include(plugin_dir_path(__FILE__) . 'includes/caos-webfonts-basic-settings.php');
+            require_once(dirname(__FILE__) . '/includes/templates/settings-basic-settings.php');
 
             do_action('hwl_after_settings_form_settings');
 

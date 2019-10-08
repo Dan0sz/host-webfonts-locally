@@ -5,6 +5,38 @@
  * @url: https://daan.dev
  */
 
+/**
+ * Responsiveness
+ */
+
+.settings-column {
+    float: left;
+}
+
+.settings-column.left {
+    width: 60%;
+}
+
+.settings-column.right {
+    width: 39%
+}
+
+@media only screen and (max-width: 940px) {
+    .settings-column {
+        display: block;
+        float: none;
+    }
+
+    .settings-column.left,
+    .settings-column.right {
+        width: 100%;
+    }
+}
+
+/**
+ * Generate Stylesheet-form
+ */
+
 #search-field {
     line-height: 38px;
     width: 360px;
