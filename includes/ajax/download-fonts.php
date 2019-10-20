@@ -20,7 +20,7 @@ if (!current_user_can('manage_options'))
 /**
  * If cache directory doesn't exist, we should create it.
  */
-$uploadDir = CAOS_WEBFONTS_UPLOAD_DIR;
+$uploadDir = OMGF_UPLOAD_DIR;
 if (!file_exists($uploadDir)) {
 	wp_mkdir_p($uploadDir);
 }
@@ -44,7 +44,7 @@ $subsets       = $_POST['subsets'];
 
 if (!$selectedFonts || !$subsets)
 {
-	wp_die(__('No fonts or subsets selected.', CAOS_ANALYTICS_TRANSLATE_DOMAIN));
+	wp_die(__('No fonts or subsets selected.', 'host-webfonts-local'));
 }
 
 /**
@@ -56,7 +56,7 @@ foreach ($subsets as $id => $subset)
 	$selectedSubsets  = implode($subset['selected'], ',');
 
 	$wpdb->insert(
-		CAOS_WEBFONTS_DB_TABLENAME . '_subsets',
+        OMGF_DB_TABLENAME . '_subsets',
 		array(
 			'subset_font'       => $id,
 			'subset_family'     => $subset['family'],
@@ -73,7 +73,7 @@ foreach ($subsets as $id => $subset)
 foreach ($selectedFonts as $id => $font)
 {
 	$wpdb->insert(
-		CAOS_WEBFONTS_DB_TABLENAME,
+		OMGF_DB_TABLENAME,
 		array(
 			'font_id'     => sanitize_text_field($id),
 			'font_family' => sanitize_text_field($font['font-family']),
@@ -111,7 +111,7 @@ foreach ($selectedFonts as $id => $font) {
 	foreach ($urls as $type => $url) {
 		$remoteFile = esc_url_raw($url);
 		$filename   = basename($remoteFile);
-		$localFile  = CAOS_WEBFONTS_UPLOAD_DIR . '/' . $filename;
+		$localFile  = OMGF_UPLOAD_DIR . '/' . $filename;
 
 		try {
 			$fileWritten = file_put_contents($localFile, file_get_contents($remoteFile));
@@ -124,9 +124,9 @@ foreach ($selectedFonts as $id => $font) {
 		 * If it fails, we can still fall back to the external URL and nothing breaks.
 		 */
 		if($fileWritten) {
-			$localFileUrl = CAOS_WEBFONTS_UPLOAD_URL . '/' . $filename;
+			$localFileUrl = OMGF_UPLOAD_URL . '/' . $filename;
 			$wpdb->update(
-				CAOS_WEBFONTS_DB_TABLENAME,
+				OMGF_DB_TABLENAME,
 				array(
 					$type => $localFileUrl
 				),
@@ -141,7 +141,7 @@ foreach ($selectedFonts as $id => $font) {
 	 * After all files are downloaded, set the 'downloaded'-field to 1.
 	 */
 	$wpdb->update(
-		CAOS_WEBFONTS_DB_TABLENAME,
+		OMGF_DB_TABLENAME,
 		array(
 			'downloaded' => 1
 		),

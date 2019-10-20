@@ -30,9 +30,9 @@ $fonts[] = "
   *
   * @author: Daan van den Bergh
   * @copyright: (c) 2019 Daan van den Bergh
-  * @url: " . CAOS_WEBFONTS_SITE_URL . "
+  * @url: " . OMGF_SITE_URL . "
   */";
-$fontDisplay = CAOS_WEBFONTS_DISPLAY_OPTION;
+$fontDisplay = OMGF_DISPLAY_OPTION;
 
 /**
  * Reload the fonts.
@@ -69,7 +69,7 @@ foreach ($selectedFonts as $font) {
 }
 
 $fonts = implode("\n", $fonts);
-$file  = CAOS_WEBFONTS_UPLOAD_DIR . '/' . CAOS_WEBFONTS_FILENAME;
+$file  = OMGF_UPLOAD_DIR . '/' . OMGF_FILENAME;
 
 /**
  * If the file can be created and uploaded. Let's try to write it.

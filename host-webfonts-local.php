@@ -4,7 +4,7 @@
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Minimize DNS requests and leverage browser cache by easily saving Google Fonts to your server and removing the external Google Fonts.
- * Version: 1.9.11
+ * Version: 2.0.0
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -22,44 +22,56 @@ global $wpdb;
 /**
  * Define constants.
  */
-define('CAOS_WEBFONTS_DB_VERSION', '1.8.3');
-define('CAOS_WEBFONTS_STATIC_VERSION', '1.9.11');
-define('CAOS_WEBFONTS_SITE_URL', 'https://daan.dev');
-define('CAOS_WEBFONTS_DB_TABLENAME', $wpdb->prefix . 'caos_webfonts');
-define('CAOS_WEBFONTS_DB_CHARSET', $wpdb->get_charset_collate());
-define('CAOS_WEBFONTS_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com/api/fonts/');
-define('CAOS_WEBFONTS_FILENAME', 'fonts.css');
-define('CAOS_WEBFONTS_CACHE_DIR', esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/omgf-webfonts');
-define('CAOS_WEBFONTS_CDN_URL', esc_attr(get_option('caos_webfonts_cdn_url')));
-define('CAOS_WEBFONTS_REMOVE_VERSION', esc_attr(get_option('caos_webfonts_remove_version')));
-define('CAOS_WEBFONTS_CURRENT_BLOG_ID', get_current_blog_id());
-define('CAOS_WEBFONTS_UPLOAD_DIR', WP_CONTENT_DIR . CAOS_WEBFONTS_CACHE_DIR);
-define('CAOS_WEBFONTS_UPLOAD_URL', hwlGetUploadUrl());
-define('CAOS_WEBFONTS_DISPLAY_OPTION', esc_attr(get_option('caos_webfonts_display_option')) ?: 'auto');
-define('CAOS_WEBFONTS_REMOVE_GFONTS', esc_attr(get_option('caos_webfonts_remove_gfonts')));
-define('CAOS_WEBFONTS_PRELOAD', esc_attr(get_option('caos_webfonts_preload')));
+define('OMGF_DB_VERSION', '1.8.3');
+define('OMGF_STATIC_VERSION', '1.9.11');
+define('OMGF_WEB_FONT_LOADER_VERSION', '1.6.26');
+define('OMGF_SITE_URL', 'https://daan.dev');
+define('OMGF_DB_TABLENAME', $wpdb->prefix . 'caos_webfonts');
+define('OMGF_DB_CHARSET', $wpdb->get_charset_collate());
+define('OMGF_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com/api/fonts/');
+define('OMGF_FILENAME', 'fonts.css');
+define('OMGF_CACHE_DIR', esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/omgf-webfonts');
+define('OMGF_CDN_URL', esc_attr(get_option('caos_webfonts_cdn_url')));
+define('OMGF_WEB_FONT_LOADER', esc_attr(get_option('omgf_web_font_loader')));
+define('OMGF_REMOVE_VERSION', esc_attr(get_option('caos_webfonts_remove_version')));
+define('OMGF_CURRENT_BLOG_ID', get_current_blog_id());
+define('OMGF_UPLOAD_DIR', WP_CONTENT_DIR . OMGF_CACHE_DIR);
+define('OMGF_UPLOAD_URL', hwlGetUploadUrl());
+define('OMGF_DISPLAY_OPTION', esc_attr(get_option('caos_webfonts_display_option')) ?: 'auto');
+define('OMGF_REMOVE_GFONTS', esc_attr(get_option('caos_webfonts_remove_gfonts')));
+define('OMGF_PRELOAD', esc_attr(get_option('caos_webfonts_preload')));
 
 /**
  * Register settings
  */
 function hwlRegisterSettings()
 {
-    register_setting('caos-webfonts-basic-settings',
+    register_setting(
+        'caos-webfonts-basic-settings',
         'caos_webfonts_cache_dir'
     );
-    register_setting('caos-webfonts-basic-settings',
+    register_setting(
+        'caos-webfonts-basic-settings',
         'caos_webfonts_cdn_url'
     );
-    register_setting('caos-webfonts-basic-settings',
+    register_setting(
+        'caos-webfonts-basic-settings',
+        'omgf_web_font_loader'
+    );
+    register_setting(
+        'caos-webfonts-basic-settings',
         'caos_webfonts_remove_version'
     );
-    register_setting('caos-webfonts-basic-settings',
+    register_setting(
+        'caos-webfonts-basic-settings',
         'caos_webfonts_display_option'
     );
-    register_setting('caos-webfonts-basic-settings',
+    register_setting(
+        'caos-webfonts-basic-settings',
         'caos_webfonts_remove_gfonts'
     );
-    register_setting('caos-webfonts-basic-settings',
+    register_setting(
+        'caos-webfonts-basic-settings',
         'caos_webfonts_preload'
     );
 }
@@ -76,10 +88,12 @@ function hwlCreateMenu()
         'optimize-webfonts',
         'hwlSettingsPage'
     );
-    add_action('admin_init',
+    add_action(
+        'admin_init',
         'hwlRegisterSettings'
     );
 }
+
 add_action('admin_menu', 'hwlCreateMenu');
 
 /**
@@ -99,10 +113,10 @@ function hwlGetContentDirName()
  */
 function hwlGetUploadUrl()
 {
-    if (CAOS_WEBFONTS_CDN_URL) {
-        $uploadUrl = '//' . CAOS_WEBFONTS_CDN_URL . '/' . hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR;
+    if (OMGF_CDN_URL) {
+        $uploadUrl = '//' . OMGF_CDN_URL . '/' . hwlGetContentDirName() . OMGF_CACHE_DIR;
     } else {
-        $uploadUrl = get_site_url(CAOS_WEBFONTS_CURRENT_BLOG_ID, hwlGetContentDirName() . CAOS_WEBFONTS_CACHE_DIR);
+        $uploadUrl = get_site_url(OMGF_CURRENT_BLOG_ID, hwlGetContentDirName() . OMGF_CACHE_DIR);
     }
 
     return $uploadUrl;
@@ -114,7 +128,7 @@ function hwlGetUploadUrl()
 function hwlCreateWebfontsTable()
 {
     global $wpdb;
-    $sql = "CREATE TABLE IF NOT EXISTS " . CAOS_WEBFONTS_DB_TABLENAME . " (
+    $sql = "CREATE TABLE IF NOT EXISTS " . OMGF_DB_TABLENAME . " (
             font_id varchar(191) NOT NULL,
             font_family varchar(191) NOT NULL,
             font_weight mediumint(5) NOT NULL,
@@ -125,7 +139,7 @@ function hwlCreateWebfontsTable()
             url_woff2 varchar(191) NULL,
             url_eot varchar(191) NULL,
             UNIQUE KEY (font_id)
-            ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
+            ) " . OMGF_DB_CHARSET . ";";
     $wpdb->query($sql);
 
     add_option('caos_webfonts_db_version', '1.6.1');
@@ -137,13 +151,13 @@ function hwlCreateWebfontsTable()
 function hwlCreateSubsetsTable()
 {
     global $wpdb;
-    $sql = "CREATE TABLE IF NOT EXISTS " . CAOS_WEBFONTS_DB_TABLENAME . '_subsets' . " (
+    $sql = "CREATE TABLE IF NOT EXISTS " . OMGF_DB_TABLENAME . '_subsets' . " (
             subset_font varchar(32) NOT NULL,
             subset_family varchar(191) NOT NULL,
             available_subsets varchar(191) NOT NULL,
             selected_subsets varchar(191) NOT NULL,
             UNIQUE KEY (subset_font)
-            ) " . CAOS_WEBFONTS_DB_CHARSET . ";";
+            ) " . OMGF_DB_CHARSET . ";";
     $wpdb->query($sql);
 
     update_option('caos_webfonts_db_version', '1.7.0');
@@ -156,7 +170,7 @@ function hwlAddLocalColumn()
 {
     global $wpdb;
 
-    $sql = "ALTER TABLE " . CAOS_WEBFONTS_DB_TABLENAME . " " .
+    $sql = "ALTER TABLE " . OMGF_DB_TABLENAME . " " .
            "ADD COLUMN local varchar(128) AFTER font_style;";
     $wpdb->query($sql);
 
@@ -175,10 +189,11 @@ function hwlRunDbUpdates()
     if (version_compare($currentVersion, '1.7.0') < 0) {
         hwlCreateSubsetsTable();
     }
-    if (version_compare($currentVersion, CAOS_WEBFONTS_DB_VERSION) < 0) {
+    if (version_compare($currentVersion, OMGF_DB_VERSION) < 0) {
         hwlAddLocalColumn();
     }
 }
+
 add_action('plugins_loaded', 'hwlRunDbUpdates');
 
 /**
@@ -194,6 +209,7 @@ function hwlSettingsLink($links)
 
     return $links;
 }
+
 $caosLink = plugin_basename(__FILE__);
 
 add_filter("plugin_action_links_$caosLink", 'hwlSettingsLink');
@@ -211,21 +227,16 @@ function hwlSettingsPage()
         <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
         <p>
             <?php _e('Developed by: ', 'host-webfonts-local'); ?>
-            <a title="Buy me a beer!" href="<?php echo CAOS_WEBFONTS_SITE_URL; ?>/donate/">
-                Daan van den Bergh</a>.
+            <a title="Buy me a beer!" href="<?php echo OMGF_SITE_URL; ?>/donate/">Daan van den Bergh</a>.
         </p>
 
         <div id="hwl-admin-notices"></div>
 
-        <?php require_once(dirname(__FILE__) . '/includes/templates/settings-welcome.php'); ?>
+        <?php require_once(dirname(__FILE__) . '/includes/templates/settings-welcome.phtml'); ?>
 
         <form id="hwl-options-form" class="settings-column left" name="hwl-options-form" method="post">
             <div class="">
-                <?php
-
-                require_once(dirname(__FILE__) . '/includes/templates/settings-generate-stylesheet.php');
-
-                ?>
+                <?php require_once(dirname(__FILE__) . '/includes/templates/settings-generate-stylesheet.phtml'); ?>
             </div>
         </form>
 
@@ -234,7 +245,7 @@ function hwlSettingsPage()
             settings_fields('caos-webfonts-basic-settings');
             do_settings_sections('caos-webfonts-basic-settings');
 
-            require_once(dirname(__FILE__) . '/includes/templates/settings-basic-settings.php');
+            require_once(dirname(__FILE__) . '/includes/templates/settings-basic-settings.phtml');
 
             do_action('hwl_after_settings_form_settings');
 
@@ -253,7 +264,7 @@ function hwlGetTotalFonts()
     global $wpdb;
 
     try {
-        return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME);
+        return $wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME);
     } catch (\Exception $e) {
         return $e;
     }
@@ -267,7 +278,7 @@ function hwlGetDownloadedFonts()
     global $wpdb;
 
     try {
-        return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . " WHERE downloaded = 1");
+        return $wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . " WHERE downloaded = 1");
     } catch (\Exception $e) {
         return $e;
     }
@@ -292,7 +303,7 @@ function hwlGetSubsets()
     global $wpdb;
 
     try {
-        return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . "_subsets");
+        return $wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . "_subsets");
     } catch (\Exception $e) {
         return $e;
     }
@@ -303,7 +314,7 @@ function hwlGetFontsByFamily($family)
     global $wpdb;
 
     try {
-        return $wpdb->get_results("SELECT * FROM " . CAOS_WEBFONTS_DB_TABLENAME . " WHERE font_family = '$family'");
+        return $wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . " WHERE font_family = '$family'");
     } catch (\Exception $e) {
         return $e;
     }
@@ -317,8 +328,8 @@ function hwlCleanQueue()
     global $wpdb;
 
     try {
-        $wpdb->query("TRUNCATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME);
-        $wpdb->query("TRUNCATE TABLE " . CAOS_WEBFONTS_DB_TABLENAME . "_subsets");
+        $wpdb->query("TRUNCATE TABLE " . OMGF_DB_TABLENAME);
+        $wpdb->query("TRUNCATE TABLE " . OMGF_DB_TABLENAME . "_subsets");
     } catch (\Exception $e) {
         return $e;
     }
@@ -335,6 +346,7 @@ function hwlAjaxGetDownloadStatus()
         )
     );
 }
+
 add_action('wp_ajax_hwlAjaxGetDownloadStatus', 'hwlAjaxGetDownloadStatus');
 
 /**
@@ -344,6 +356,7 @@ function hwlAjaxCleanQueue()
 {
     return wp_die(hwlCleanQueue());
 }
+
 add_action('wp_ajax_hwlAjaxCleanQueue', 'hwlAjaxCleanQueue');
 
 /**
@@ -353,8 +366,9 @@ add_action('wp_ajax_hwlAjaxCleanQueue', 'hwlAjaxCleanQueue');
  */
 function hwlAjaxEmptyDir()
 {
-    return array_map('unlink', array_filter((array) glob(CAOS_WEBFONTS_UPLOAD_DIR . '/*')));
+    return array_map('unlink', array_filter((array) glob(OMGF_UPLOAD_DIR . '/*')));
 }
+
 add_action('wp_ajax_hwlAjaxEmptyDir', 'hwlAjaxEmptyDir');
 
 /**
@@ -367,7 +381,7 @@ function hwlAjaxSearchFontSubsets()
 
         foreach ($searchQueries as $searchQuery) {
             $request = curl_init();
-            curl_setopt($request, CURLOPT_URL, CAOS_WEBFONTS_HELPER_URL . $searchQuery);
+            curl_setopt($request, CURLOPT_URL, OMGF_HELPER_URL . $searchQuery);
             curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
             $result = curl_exec($request);
             curl_close($request);
@@ -384,6 +398,7 @@ function hwlAjaxSearchFontSubsets()
         wp_die($e);
     }
 }
+
 add_action('wp_ajax_hwlAjaxSearchFontSubsets', 'hwlAjaxSearchFontSubsets');
 
 /**
@@ -396,7 +411,7 @@ function hwlAjaxSearchGoogleFonts()
         $searchQuery = sanitize_text_field($_POST['search_query']);
         $subsets     = implode($_POST['search_subsets'], ',');
 
-        curl_setopt($request, CURLOPT_URL, CAOS_WEBFONTS_HELPER_URL . $searchQuery . '?subsets=' . $subsets);
+        curl_setopt($request, CURLOPT_URL, OMGF_HELPER_URL . $searchQuery . '?subsets=' . $subsets);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
 
         $result = curl_exec($request);
@@ -407,6 +422,7 @@ function hwlAjaxSearchGoogleFonts()
         wp_die($e);
     }
 }
+
 add_action('wp_ajax_hwlAjaxSearchGoogleFonts', 'hwlAjaxSearchGoogleFonts');
 
 /**
@@ -414,11 +430,12 @@ add_action('wp_ajax_hwlAjaxSearchGoogleFonts', 'hwlAjaxSearchGoogleFonts');
  */
 function hwlCreateCacheDir()
 {
-    $uploadDir = CAOS_WEBFONTS_UPLOAD_DIR;
+    $uploadDir = OMGF_UPLOAD_DIR;
     if (!is_dir($uploadDir)) {
         wp_mkdir_p($uploadDir);
     }
 }
+
 register_activation_hook(__FILE__, 'hwlCreateCacheDir');
 
 /**
@@ -442,8 +459,9 @@ function hwlFontDisplayOptions()
  */
 function hwlAjaxGenerateStyles()
 {
-    require_once(plugin_dir_path(__FILE__) . 'includes/ajax/generate-stylesheet.php');
+    require_once(dirname(__FILE__) . '/includes/ajax/generate-stylesheet.php');
 }
+
 add_action('wp_ajax_hwlAjaxGenerateStyles', 'hwlAjaxGenerateStyles');
 
 /**
@@ -451,8 +469,9 @@ add_action('wp_ajax_hwlAjaxGenerateStyles', 'hwlAjaxGenerateStyles');
  */
 function hwlAjaxDownloadFonts()
 {
-    require_once(plugin_dir_path(__FILE__) . 'includes/ajax/download-fonts.php');
+    require_once(dirname(__FILE__) . '/includes/ajax/download-fonts.php');
 }
+
 add_action('wp_ajax_hwlAjaxDownloadFonts', 'hwlAjaxDownloadFonts');
 
 /**
@@ -460,8 +479,13 @@ add_action('wp_ajax_hwlAjaxDownloadFonts', 'hwlAjaxDownloadFonts');
  */
 function hwlEnqueueStylesheet()
 {
-    wp_enqueue_style('omgf-fonts', CAOS_WEBFONTS_UPLOAD_URL . '/' . CAOS_WEBFONTS_FILENAME, array(), (CAOS_WEBFONTS_REMOVE_VERSION) ? null : CAOS_WEBFONTS_STATIC_VERSION);
+    if (OMGF_WEB_FONT_LOADER) {
+        require_once(dirname(__FILE__) . '/includes/templates/script-web-font-loader.phtml');
+    } else {
+        wp_enqueue_style('omgf-fonts', OMGF_UPLOAD_URL . '/' . OMGF_FILENAME, array(), (OMGF_REMOVE_VERSION ? null : OMGF_STATIC_VERSION));
+    }
 }
+
 add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet');
 
 /**
@@ -470,10 +494,11 @@ add_action('wp_enqueue_scripts', 'hwlEnqueueStylesheet');
 function hwlEnqueueAdminJs($hook)
 {
     if ($hook == 'settings_page_optimize-webfonts') {
-        wp_enqueue_script('hwl-admin-js', plugin_dir_url(__FILE__) . 'js/hwl-admin.js', array('jquery'), CAOS_WEBFONTS_STATIC_VERSION, true);
-        wp_enqueue_style('hwl-admin-css', plugin_dir_url(__FILE__) . 'css/hwl-admin.css', array(), CAOS_WEBFONTS_STATIC_VERSION);
+        wp_enqueue_script('hwl-admin-js', plugin_dir_url(__FILE__) . 'js/hwl-admin.js', array('jquery'), OMGF_STATIC_VERSION, true);
+        wp_enqueue_style('hwl-admin-css', plugin_dir_url(__FILE__) . 'css/hwl-admin.css', array(), OMGF_STATIC_VERSION);
     }
 }
+
 add_action('admin_enqueue_scripts', 'hwlEnqueueAdminJs');
 
 /**
@@ -485,6 +510,7 @@ function hwlDequeueJsCss()
     wp_dequeue_style('hwl-admin-css');
     wp_dequeue_style('omgf-fonts');
 }
+
 register_deactivation_hook(__FILE__, 'hwlDequeueJsCss');
 
 /**
@@ -495,7 +521,7 @@ function hwlAddLinkPreload()
     global $wp_styles;
 
     $handle = 'omgf-fonts';
-    $style = $wp_styles->registered[$handle];
+    $style  = $wp_styles->registered[$handle];
 
     /** Do not add 'preload' if Minification plugins are enabled. */
     if ($style) {
@@ -506,10 +532,11 @@ function hwlAddLinkPreload()
 
 function hwlIsPreloadEnabled()
 {
-    if (CAOS_WEBFONTS_PRELOAD == 'on') {
+    if (OMGF_PRELOAD == 'on') {
         add_action('wp_head', 'hwlAddLinkPreload', 1);
     }
 }
+
 add_action('init', 'hwlIsPreloadEnabled');
 
 /**
@@ -521,16 +548,18 @@ function hwlRemoveGoogleFonts()
 {
     global $wp_styles;
 
-    $registered = $wp_styles->registered;
-
-    $fonts      = array_filter($registered, function ($contents) {
+    $registered   = $wp_styles->registered;
+    $fonts        = array_filter(
+        $registered, function ($contents) {
         return strpos($contents->src, 'fonts.googleapis.com') !== false
                || strpos($contents->src, 'fonts.gstatic.com') !== false;
-    });
-
-    $dependencies = array_filter($registered, function ($contents) use ($fonts) {
+        }
+    );
+    $dependencies = array_filter(
+        $registered, function ($contents) use ($fonts) {
         return !empty(array_intersect(array_keys($fonts), $contents->deps));
-    });
+        }
+    );
 
     foreach ($fonts as $font) {
         wp_deregister_style($font->handle);
@@ -545,8 +574,9 @@ function hwlRemoveGoogleFonts()
 
 function hwlIsRemoveGoogleFontsEnabled()
 {
-    if (CAOS_WEBFONTS_REMOVE_GFONTS == 'on' && !is_admin()) {
+    if (OMGF_REMOVE_GFONTS == 'on' && !is_admin()) {
         add_action('wp_print_styles', 'hwlRemoveGoogleFonts', PHP_INT_MAX);
     }
 }
+
 add_action('init', 'hwlIsRemoveGoogleFontsEnabled');

@@ -21,26 +21,39 @@ if (!defined( 'ABSPATH')) exit;
 		<tr valign="top">
 			<th scope="row">
                 <label for="caos_webfonts_cache_dir">
-                    <?php _e('Save webfonts to...', 'host-webfonts-local'); ?>
+                    <?php _e('Save webfonts to...', 'host-webfonts-local'); ?> *
                 </label>
             </th>
 			<td>
-				<input id="caos_webfonts_cache_dir" class="caos_webfonts_cache_dir" type="text" name="caos_webfonts_cache_dir" placeholder="<?= __('e.g. /cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= CAOS_WEBFONTS_CACHE_DIR; ?>" />
+				<input id="caos_webfonts_cache_dir" class="caos_webfonts_cache_dir" type="text" name="caos_webfonts_cache_dir" placeholder="<?= __('e.g. /cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_DIR; ?>" />
 				<p class="description">
-					<?php _e("Changes the path where webfonts are cached inside WordPress' content directory (usually <code>wp-content</code>). If you're using Multisite, give each site a unique cache directory path. Defaults to <code>/cache/caos-webfonts</code>.*", 'host-webfonts-local'); ?>
+					<?php _e("Changes the path where webfonts are cached inside WordPress' content directory (usually <code>wp-content</code>). If you're using Multisite, give each site a unique cache directory path. Defaults to <code>/cache/caos-webfonts</code>.", 'host-webfonts-local'); ?>
 				</p>
 			</td>
 		</tr>
         <tr valign="top">
             <th scope="row">
                 <label for="caos_webfonts_cdn_url">
-                    <?php _e('Serve fonts from CDN', 'host-webfonts-local'); ?>
+                    <?php _e('Serve fonts from CDN', 'host-webfonts-local'); ?> *
                 </label>
             </th>
             <td>
-                <input id="caos_webfonts_cdn_url" class="caos_webfonts_cdn_url" type="text" name="caos_webfonts_cdn_url" placeholder="<?= __('e.g. cdn.mydomain.com', 'host-webfonts-local'); ?>" value="<?= CAOS_WEBFONTS_CDN_URL; ?>" />
+                <input id="caos_webfonts_cdn_url" class="caos_webfonts_cdn_url" type="text" name="caos_webfonts_cdn_url" placeholder="<?= __('e.g. cdn.mydomain.com', 'host-webfonts-local'); ?>" value="<?= OMGF_CDN_URL; ?>" />
                 <p class="description">
-                    <?php _e("Are you using a CDN? Then enter the URL here.*", 'host-webfonts-local'); ?>
+                    <?php _e("Are you using a CDN? Then enter the URL here.", 'host-webfonts-local'); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
+                <label for="omgf_web_font_loader">
+                    <?php _e('Use Web Font Loader?', 'host-webfonts-local'); ?>
+                </label>
+            </th>
+            <td>
+                <input id="omgf_web_font_loader" class="omgf_web_font_loader" type="checkbox" name="omgf_web_font_loader" <?= OMGF_WEB_FONT_LOADER ? "checked = 'checked'" : ""; ?> />
+                <p class="description">
+                    <?php _e('Use Typekit\'s Web Font Loader to load fonts asynchronously. <strong>Caution:</strong> while this might raise your Pagespeed Score, it could temporarily cause fonts to be displayed unstyled.', 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
@@ -51,9 +64,9 @@ if (!defined( 'ABSPATH')) exit;
                 </label>
             </th>
             <td>
-                <input id="caos_webfonts_remove_version" class="caos_webfonts_remove_version" type="checkbox" name="caos_webfonts_remove_version" <?= CAOS_WEBFONTS_REMOVE_VERSION ? "checked = 'checked'" : ""; ?> />
+                <input id="caos_webfonts_remove_version" class="caos_webfonts_remove_version" type="checkbox" name="caos_webfonts_remove_version" <?= OMGF_REMOVE_VERSION ? "checked = 'checked'" : ""; ?> />
                 <p class="description">
-                    <?php _e('This removes the <code>?ver=x.x.x</code> parameter from the Stylesheet\'s (<code>fonts.css</code>) request.', 'host-webfonts-local'); ?>
+                    <?php _e('This removes the <code>?ver=x.x.x</code> parameter from the Stylesheet\'s (<code>fonts.css</code>) request. ', 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
@@ -67,7 +80,7 @@ if (!defined( 'ABSPATH')) exit;
                 <?php $fontDisplay = hwlFontDisplayOptions(); ?>
                     <select id="caos_webfonts_display_option" name="caos_webfonts_display_option">
                         <?php foreach ($fontDisplay as $label => $value): ?>
-                        <option value="<?= $value; ?>" <?= $value == CAOS_WEBFONTS_DISPLAY_OPTION ? 'selected' : ''; ?>><?php _e($label, 'host-webfonts-local'); ?></option>
+                        <option value="<?= $value; ?>" <?= $value == OMGF_DISPLAY_OPTION ? 'selected' : ''; ?>><?php _e($label, 'host-webfonts-local'); ?></option>
                         <?php endforeach; ?>
                     </select>
                     <br/>
@@ -84,9 +97,9 @@ if (!defined( 'ABSPATH')) exit;
                 </label>
             </th>
             <td>
-                <input class="caos_webfonts_remove_gfonts" id="caos_webfonts_remove_gfonts" type="checkbox" name="caos_webfonts_remove_gfonts" <?= CAOS_WEBFONTS_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
+                <input class="caos_webfonts_remove_gfonts" id="caos_webfonts_remove_gfonts" type="checkbox" name="caos_webfonts_remove_gfonts" <?= OMGF_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
-                    <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, click %shere%s for a more comprehensive guide.', 'host-webfonts-local'), '<a target="_blank" href="' . CAOS_WEBFONTS_SITE_URL . '/how-to/remove-google-fonts-wordpress">', '</a>'); ?>
+                    <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, click %shere%s for a more comprehensive guide.', 'host-webfonts-local'), '<a target="_blank" href="' . OMGF_SITE_URL . '/how-to/remove-google-fonts-wordpress">', '</a>'); ?>
                 </p>
             </td>
         </tr>
@@ -97,7 +110,7 @@ if (!defined( 'ABSPATH')) exit;
                 </label>
             </th>
             <td>
-                <input class="caos_webfonts_preload" id="caos_webfonts_preload" type="checkbox" name="caos_webfonts_preload" <?= CAOS_WEBFONTS_PRELOAD == 'on' ? 'checked = "checked"' : ''; ?> />
+                <input class="caos_webfonts_preload" id="caos_webfonts_preload" type="checkbox" name="caos_webfonts_preload" <?= OMGF_PRELOAD == 'on' ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
                     <?php _e('Leave this disabled if you\'re using a CSS minification plugin, such as Autoptimize or W3 Total Cache.', 'host-webfonts-local'); ?> <a target="_blank" href="https://developers.google.com/web/fundamentals/performance/resource-prioritization#preload"><?php _e('Read more', 'host-webfonts-local'); ?></a>
                 </p>
