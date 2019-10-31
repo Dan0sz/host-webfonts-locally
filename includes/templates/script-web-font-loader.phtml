@@ -12,13 +12,20 @@ if (!defined('ABSPATH')) {
 }
 
 $fonts             = hwlGetDownloadedFonts();
-$subsets           = hwlGetSubsets();
+$families          = array_unique(
+    array_map(
+        function ($i) {
+            return $i->font_family;
+        },
+        $fonts
+    )
+);
 $omgfStaticVersion = '?ver=' . OMGF_STATIC_VERSION;
 $omgfSrcUrl        = OMGF_UPLOAD_URL . '/' . OMGF_FILENAME . (OMGF_REMOVE_VERSION ? null : $omgfStaticVersion);
 $wflVersion        = '?ver=' . OMGF_WEB_FONT_LOADER_VERSION;
 $wflSrcUrl         = plugin_dir_url(dirname(__FILE__)) . 'libraries/webfont.js' . (OMGF_REMOVE_VERSION ? null : $wflVersion);
 ?>
-<?php if ($fonts): ?>
+<?php if ($fonts && $families): ?>
     <script type="text/javascript">
         /**
          * Using Typekit's Web Font Loader to load OMGF's fonts asynchronously.
@@ -28,14 +35,17 @@ $wflSrcUrl         = plugin_dir_url(dirname(__FILE__)) . 'libraries/webfont.js' 
         WebFontConfig = {
             custom: {
                 families: [
-                    <?php foreach ($subsets as $subset): ?>
+                    <?php foreach ($families as $family): ?>
                     <?php
-                    $fontsByFamily = hwlGetFontsByFamily($subset->subset_family);
-                    foreach ($fontsByFamily as $font) {
-                        $fvds[] = mb_substr($font->font_style, 0, 1) . mb_substr($font->font_weight, 0, 1);
-                    }
+                        $fvds = [];
+                        foreach ($fonts as $font) {
+                            if ($font->font_family != $family) {
+                                continue;
+                            }
+                            $fvds[] = mb_substr($font->font_style, 0, 1) . mb_substr($font->font_weight, 0, 1);
+                        }
                     ?>
-                    '<?= $subset->subset_family; ?>:<?= implode(',', $fvds); ?>',
+                    '<?= $family; ?>:<?= implode(',', $fvds); ?>',
                     <?php endforeach; ?>
                 ],
                 urls: [
@@ -45,12 +55,16 @@ $wflSrcUrl         = plugin_dir_url(dirname(__FILE__)) . 'libraries/webfont.js' 
         };
 
         (function (d) {
-            var wf = d.createElement('script'),
+            var wf = d.createElement(
+                'script'),
                 s = d.scripts[0];
             wf.src = '<?= $wflSrcUrl; ?>';
             wf.async = true;
             wf.text = 'text/javascript';
-            s.parentNode.insertBefore(wf, s);
+            s.parentNode.insertBefore(
+                wf,
+                s
+            );
         })(document);
     </script>
 <?php endif; ?>
