@@ -14,7 +14,16 @@ if (!defined( 'ABSPATH')) exit;
  */
 if (!current_user_can('manage_options'))
 {
-	wp_die(__("You're not cool enough to access this page."));
+	wp_die(__("You're not cool enough to access this page.", 'host-webfonts-local'));
+}
+
+/**
+ * @param $code
+ * @param $message
+ */
+function hwlThrowError($code, $message)
+{
+    wp_send_json_error(__($message, 'host-webfonts-local'), (int) $code);
 }
 
 /**
@@ -44,7 +53,7 @@ $subsets       = $_POST['subsets'];
 
 if (!$selectedFonts || !$subsets)
 {
-	wp_die(__('No fonts or subsets selected.', 'host-webfonts-local'));
+    hwlThrowError('400', 'No fonts or subsets selected.');
 }
 
 /**
@@ -114,16 +123,26 @@ foreach ($selectedFonts as $id => $font) {
 		$localFile  = OMGF_UPLOAD_DIR . '/' . $filename;
 
 		try {
-			$fileWritten = file_put_contents($localFile, file_get_contents($remoteFile));
+		    $file = file_get_contents($remoteFile);
 		} catch (\Exception $e) {
-			wp_die(__("File ($remoteFile) could not be downloaded: $e"));
+            hwlThrowError($e->getCode(), "File ($remoteFile) could not be downloaded: " . $e->getMessage());
 		}
+
+		if ($file) {
+            $writeFile = file_put_contents($localFile, $file);
+        } else {
+		    hwlThrowError('403', "File ($remoteFile) could not be written. Do you have permission to write to <code>" . OMGF_UPLOAD_DIR . '</code>?');
+        }
+
+		if(!filesize($localFile) > 0) {
+		    hwlThrowError('400', "File ($localFile) exists, but is 0 bytes in size. Is <code>allow_url_fopen</code> enabled on your server?");
+        }
 
 		/**
 		 * If file is written, change the external URL to the local URL in the POST data.
 		 * If it fails, we can still fall back to the external URL and nothing breaks.
 		 */
-		if($fileWritten) {
+		if($writeFile) {
 			$localFileUrl = OMGF_UPLOAD_URL . '/' . $filename;
 			$wpdb->update(
 				OMGF_DB_TABLENAME,

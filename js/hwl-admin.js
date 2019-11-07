@@ -24,7 +24,7 @@ function hwlSearchFontSubsets(queriedFonts)
 {
     let searchField  = jQuery('#search-field');
     let searchButton = jQuery('#search-btn');
-    
+
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
@@ -53,18 +53,18 @@ function hwlRenderAvailableSubsets(response)
 {
     let data = response['responseJSON'];
     dataLength = data.length;
-    
+
     for (let ii = 0; ii < dataLength; ii++) {
         subsets = data[ii]['subsets']
         family = data[ii]['family'];
         id = data[ii]['id'];
         length = subsets.length;
         renderedSubsets = [];
-        
+
         for (let iii = 0; iii < length; iii++) {
             renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
         }
-        
+
         jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input type="text" class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
         jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
     }
@@ -79,11 +79,11 @@ function hwlGenerateSearchQuery(id)
 {
     let subsets = [];
     checked = jQuery("input[name='" + id + "']:checked");
-    
+
     jQuery.each(checked, function() {
         subsets.push(jQuery(this).val());
     });
-    
+
     subsets.join()
     hwlSearchGoogleFonts(id, subsets);
 }
@@ -184,21 +184,21 @@ function hwlGatherSelectedSubsets()
         id = this.id;
         checkboxes = jQuery("input[name='" + id + "']");
         checked = jQuery("input[name='" + id + "']:checked");
-        
+
         selectedSubsets = [];
         jQuery.each(checked, function() {
             selectedSubsets.push(jQuery(this).val());
         });
         selectedSubsets.join()
-        
+
         availableSubsets = [];
         jQuery.each(checkboxes, function() {
             availableSubsets.push(jQuery(this).val());
         });
         availableSubsets.join()
-        
+
         family = jQuery(this).find('.hwl-subset-font-family').val();
-        
+
         subsets[id] = {};
         subsets[id]['family'] = {};
         subsets[id]['family'] = family;
@@ -207,12 +207,12 @@ function hwlGatherSelectedSubsets()
         subsets[id]['available'] = {};
         subsets[id]['available'] = availableSubsets;
     })
-    
+
     return subsets;
 }
 
 /**
- * Triggered when 'Save Webfonts' is clicked.
+ * Triggered when 'Download Fonts' is clicked.
  */
 function hwlDownloadFonts()
 {
@@ -234,13 +234,26 @@ function hwlDownloadFonts()
         },
         success: function() {
             clearTimeout(downloadStatus);
-            
+
             hwlUpdateInputValue(downloadButton, 'Done!', '0 41px 1px');
             hwlUpdateStatusBar(100);
-            
+
             setTimeout(function() {
                 hwlUpdateInputValue(downloadButton, 'Download Fonts');
             }, 2500);
+        },
+        error: function(message) {
+            clearTimeout(downloadStatus);
+
+            errorText = message.responseJSON.data;
+            errorCode = message.status;
+
+            var errorMessage = '<div id="setting-error-settings_updated" class="error settings-error notice is-dismissible"><p><strong>Error: ' + errorCode + '</strong> - ' + errorText + '</p></div>';
+
+            jQuery('html, body').animate({scrollTop: 0}, 800);
+            jQuery(errorMessage).insertAfter('.wrap h1');
+
+            hwlUpdateInputValue(downloadButton, 'Download Fonts');
         }
     })
 }
@@ -261,7 +274,7 @@ function hwlGetDownloadStatus()
             downloaded = response.downloaded;
             total = response.total;
             progress = (100 / total) * downloaded;
-            
+
             hwlUpdateStatusBar(progress);
         }
     });
