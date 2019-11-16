@@ -27,6 +27,35 @@ function hwlThrowError($code, $message)
 }
 
 /**
+ * @param $localFile
+ * @param $remoteFile
+ *
+ * @return bool
+ */
+function hwlDownloadFile($localFile, $remoteFile)
+{
+    $localFile = fopen($localFile, 'w+');
+    $curl      = curl_init($remoteFile);
+
+    curl_setopt_array(
+        $curl,
+        array(
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FILE           => $localFile,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HEADER         => false
+        )
+    );
+
+    curl_exec($curl);
+    curl_close($curl);
+
+    return fclose($localFile);
+}
+
+/**
  * If cache directory doesn't exist, we should create it.
  */
 $uploadDir = OMGF_UPLOAD_DIR;
@@ -121,17 +150,16 @@ foreach ($selectedFonts as $id => $font) {
 		$remoteFile = esc_url_raw($url);
 		$filename   = basename($remoteFile);
 		$localFile  = OMGF_UPLOAD_DIR . '/' . $filename;
+        $file = hwlDownloadFile($localFile, $remoteFile);
 
-		try {
-		    $file = file_get_contents($remoteFile);
-		} catch (\Exception $e) {
-            hwlThrowError($e->getCode(), "File ($remoteFile) could not be downloaded: " . $e->getMessage());
-		}
+		if (!$file) {
+            hwlThrowError('403', "File ($remoteFile) could not be downloaded. Is <code>allow_url_fopen</code> enabled on your server?");
+        }
 
-		if ($file) {
-            $writeFile = file_put_contents($localFile, $file);
-        } else {
-		    hwlThrowError('403', "File ($remoteFile) could not be written. Do you have permission to write to <code>" . OMGF_UPLOAD_DIR . '</code>?');
+        $writeFile = file_put_contents($localFile, $file);
+
+		if (!$writeFile) {
+            hwlThrowError('403', "File ($localFile) could not be written. Do you have permission to write to <code>" . OMGF_UPLOAD_DIR . '</code>?');
         }
 
 		if(!filesize($localFile) > 0) {
@@ -142,18 +170,16 @@ foreach ($selectedFonts as $id => $font) {
 		 * If file is written, change the external URL to the local URL in the POST data.
 		 * If it fails, we can still fall back to the external URL and nothing breaks.
 		 */
-		if($writeFile) {
-			$localFileUrl = OMGF_UPLOAD_URL . '/' . $filename;
-			$wpdb->update(
-				OMGF_DB_TABLENAME,
-				array(
-					$type => $localFileUrl
-				),
-				array(
-					'font_id' => $font->font_id
-				)
-			);
-		}
+        $localFileUrl = OMGF_UPLOAD_URL . '/' . $filename;
+        $wpdb->update(
+            OMGF_DB_TABLENAME,
+            array(
+                $type => $localFileUrl
+            ),
+            array(
+                'font_id' => $font->font_id
+            )
+        );
 	}
 
 	/**
