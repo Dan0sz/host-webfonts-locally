@@ -29,30 +29,26 @@ function hwlThrowError($code, $message)
 /**
  * @param $localFile
  * @param $remoteFile
- *
- * @return bool
  */
 function hwlDownloadFile($localFile, $remoteFile)
 {
     $localFile = fopen($localFile, 'w+');
-    $curl      = curl_init($remoteFile);
+    $curl      = curl_init();
 
     curl_setopt_array(
         $curl,
         array(
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL            => $remoteFile,
             CURLOPT_FILE           => $localFile,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HEADER         => false
+            CURLOPT_HEADER         => false,
+            CURLOPT_FOLLOWLOCATION => true
         )
     );
 
     curl_exec($curl);
     curl_close($curl);
-
-    return fclose($localFile);
+    fclose($localFile);
 }
 
 /**
@@ -150,16 +146,11 @@ foreach ($selectedFonts as $id => $font) {
 		$remoteFile = esc_url_raw($url);
 		$filename   = basename($remoteFile);
 		$localFile  = OMGF_UPLOAD_DIR . '/' . $filename;
-        $file = hwlDownloadFile($localFile, $remoteFile);
 
-		if (!$file) {
+		try {
+            hwlDownloadFile($localFile, $remoteFile);
+        } catch (Exception $e) {
             hwlThrowError('403', "File ($remoteFile) could not be downloaded. Is <code>allow_url_fopen</code> enabled on your server?");
-        }
-
-        $writeFile = file_put_contents($localFile, $file);
-
-		if (!$writeFile) {
-            hwlThrowError('403', "File ($localFile) could not be written. Do you have permission to write to <code>" . OMGF_UPLOAD_DIR . '</code>?');
         }
 
 		if(!filesize($localFile) > 0) {
