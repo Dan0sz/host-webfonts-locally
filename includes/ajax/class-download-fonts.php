@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once('../class-ajax.php');
+require_once(dirname(dirname(__FILE__)) . '/class-ajax.php');
 
 class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
 {

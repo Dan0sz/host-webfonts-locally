@@ -17,3 +17,5 @@ class OMGF_AJAX
         wp_send_json_error(__($message, 'host-webfonts-local'), (int) $code);
     }
 }
+
+new OMGF_AJAX();
