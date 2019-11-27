@@ -143,6 +143,14 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
 
             foreach ($urls as $type => $url) {
                 $remoteFile = esc_url_raw($url);
+
+                /**
+                 * We've already downloaded this one before.
+                 */
+                if (strpos($remoteFile, get_site_url()) !== false) {
+                    continue;
+                }
+
                 $filename   = basename($remoteFile);
                 $localFile  = OMGF_UPLOAD_DIR . '/' . $filename;
 
@@ -215,7 +223,7 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
         curl_close($curl);
         fclose($file);
 
-        if (file_exists($localFile) && filesize($localFile) > 1) {
+        if (file_exists($localFile)) {
             return;
         }
 
@@ -231,21 +239,6 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
     private function download_file_fallback($localFile, $remoteFile)
     {
         file_put_contents($localFile, file_get_contents($remoteFile));
-    }
-
-    /**
-     * Because filesize() failed to often, I wrote my own function.
-     *
-     * @param $file
-     */
-    private function file_size($file)
-    {
-        $file = fopen($file, 'rb');
-        fseek($file, 0, SEEK_END);
-        $size = ftell($file);
-        fclose($file);
-
-        return $size;
     }
 }
 

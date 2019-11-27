@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -114,7 +114,7 @@ N/A
 
 == Changelog ==
 
-= 2.0.7 =
+= 2.0.8 =
 Fixed 400-error when re-downloading fonts. Added compatibility for Enfold-theme.
 
 = 2.0.6 =
