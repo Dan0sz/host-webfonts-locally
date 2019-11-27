@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,7 +67,11 @@ Enable Typekit's Web Font Loader in the settings and OMGF will take care of it f
 
 = I'm getting a 'Load resources from a consistent URL' after installing and configuring this plugin. What's going on? =
 
-This must be, because you're still loading the externally hosted Google Fonts, besides the fonts you downloaded using OMGF. Try checking the option 'Remove Google Fonts' and see if that helps. If it doesn't consider using a child theme to 'dequeue' any external requests. If you don't know how to do that, consider using a plugin such as Autoptimize to optimize your CSS and remove the fonts.
+This must be, because you're still loading the externally hosted Google Fonts, besides the fonts you downloaded using OMGF. Try checking the option 'Remove Google Fonts' and see if that helps. If it doesn't consider using a child theme to 'dequeue' any external requests. If you don't know how to do that, please [contact](https://daan.dev/contact/) me.
+
+= I have 'Remove Google Fonts' enabled, but the fonts from fonts.gstatic.com|fonts.googleapis.com are still loaded. What's going on? =
+
+The option in OMGF removes any fonts that are loaded in the conventional way. However, if it doesn't work for you and you're using a popular theme, I'd love to help and make OMGF compatible. So don't hesitate to [contact](https://daan.dev/contact/) me.
 
 = Does this plugin edit template files? =
 
@@ -96,6 +100,10 @@ Yes, it does. When using subdomains, however, you might run into CORS related is
 
 Repeat this for every site you want to use with OMGF. A new stylesheet, using the corresponding site's Home-URL and cache directory for each font, has been generated. Bypassing any Cross-Origin Resource Sharing (CORS) issues you might run into.
 
+= Is this plugin compatible with WPML? =
+
+No, not yet. But I will definitely try to make it compatible in the future!
+
 = Can I buy you a beer? =
 
 Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do shots!")!
@@ -105,6 +113,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 2.0.7 =
+Fixed 400-error when re-downloading fonts. Added compatibility for Enfold-theme.
 
 = 2.0.6 =
 Fixed bug with include paths.

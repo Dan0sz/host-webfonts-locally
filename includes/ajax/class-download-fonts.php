@@ -152,6 +152,8 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
                     $this->throw_error($e->getCode(), "File ($remoteFile) could not be downloaded: " . $e->getMessage());
                 }
 
+                clearstatcache();
+
                 if (file_exists($localFile) && !filesize($localFile) > 0) {
                     $this->throw_error('400', "File ($localFile) exists, but is 0 bytes in size. Is <code>allow_url_fopen</code> enabled on your server?");
                 }
@@ -229,6 +231,21 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
     private function download_file_fallback($localFile, $remoteFile)
     {
         file_put_contents($localFile, file_get_contents($remoteFile));
+    }
+
+    /**
+     * Because filesize() failed to often, I wrote my own function.
+     *
+     * @param $file
+     */
+    private function file_size($file)
+    {
+        $file = fopen($file, 'rb');
+        fseek($file, 0, SEEK_END);
+        $size = ftell($file);
+        fclose($file);
+
+        return $size;
     }
 }
 
