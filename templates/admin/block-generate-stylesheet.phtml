@@ -10,17 +10,20 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+$db = new OMGF_DB();
 ?>
 <div class="">
     <h3><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></h3>
     <p class="description">
-        <?php _e('Search for fonts using a comma-separated list (e.g. Open Sans,Roboto,Poppins) and click \'Search\'.', 'host-webfonts-local'); ?>
+        <?php _e('Search for fonts using a comma-separated list (e.g. Open Sans,Roboto,Poppins) and click \'Search\'. Or use the (experimental) Auto-detect function to automatically detect which fonts your theme is using.', 'host-webfonts-local'); ?>
     </p>
     <div class="hwl-search-box">
         <input type="text" name="search-field"
                id="search-field" class="form-input-tip ui-autocomplete-input" placeholder="<?php _e('Search... (e.g. Roboto,Open Sans)', 'host-webfonts-local'); ?>"/>
         <input type="button" onclick="hwlClickSearch()" name="search-btn"
                id="search-btn" class="button button-primary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
+        <input type="button" onclick="hwlAutoDetectFonts()" name="detect-btn" id="detect-btn" class="button button-secondary button-hero" value="<?= __('Auto-detect', 'host-webfonts-local'); ?>" />
     </div>
     <table>
         <tr id="row" valign="top">
@@ -28,7 +31,7 @@ if (!defined('ABSPATH')) {
         </tr>
         <tbody id="hwl-subsets">
         <?php
-        $subsetFonts = hwlGetSubsets();
+        $subsetFonts = $db->get_subsets();
         ?>
         <?php if ($subsetFonts): ?>
             <?php foreach ($subsetFonts as $subsetFont): ?>
@@ -63,13 +66,13 @@ if (!defined('ABSPATH')) {
     </table>
     <table align="left" id="hwl-results">
         <?php
-        $savedFonts = hwlGetTotalFonts();
+        $savedFonts = $db->get_total_fonts();
         ?>
         <?php if ($savedFonts && $subsetFonts): ?>
             <?php foreach ($subsetFonts as $subsetFont): ?>
                 <tbody id="hwl-section-<?= $subsetFont->subset_font; ?>">
                 <?php
-                $fonts = hwlGetFontsByFamily($subsetFont->subset_family);
+                $fonts = $db->get_fonts_by_family($subsetFont->subset_family);
                 ?>
                 <?php foreach ($fonts as $font):
                     $fontId = $font->font_id;
@@ -138,8 +141,8 @@ if (!defined('ABSPATH')) {
         </tr>
         <tr valign="center">
             <?php
-            $downloaded = hwlGetDownloadStatus()['downloaded'];
-            $total      = hwlGetDownloadStatus()['total'];
+            $downloaded = $db->get_download_status()['downloaded'];
+            $total      = $db->get_download_status()['total'];
             $width      = $downloaded && $total ? (100 / $total) * $downloaded : 0;
             ?>
             <td colspan="5">

@@ -11,7 +11,7 @@
 function hwlClickSearch()
 {
     let input   = jQuery('#search-field')
-    searchQuery = input.val().replace(/\s/g, '-').toLowerCase()
+    searchQuery = input.val().replace(/\s/g, '-').toLowerCase();
     hwlSearchFontSubsets(searchQuery)
 }
 
@@ -29,7 +29,7 @@ function hwlSearchFontSubsets(queriedFonts)
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'hwlAjaxSearchFontSubsets',
+            action: 'omgf_ajax_search_font_subsets',
             search_query: queriedFonts
         },
         dataType: 'json',
@@ -44,6 +44,27 @@ function hwlSearchFontSubsets(queriedFonts)
     })
 }
 
+function hwlAutoDetectFonts()
+{
+    let detectButton = jQuery('#detect-btn');
+
+    jQuery.ajax({
+        type: 'POST',
+        url: ajaxurl,
+        data: {
+            action: 'omgf_ajax_auto_detect_fonts',
+        },
+        dataType: 'json',
+        beforeSend: function() {
+            hwlUpdateInputValue(detectButton, 'Detecting...', '0 37px 1px');
+        },
+        complete: function(response) {
+            hwlUpdateInputValue(detectButton, 'Auto-detect', '0 36px 1px');
+            hwlRenderAvailableSubsets(response);
+        }
+    })
+}
+
 /**
  * Print available subsets
  *
@@ -51,22 +72,34 @@ function hwlSearchFontSubsets(queriedFonts)
  */
 function hwlRenderAvailableSubsets(response)
 {
-    let data = response['responseJSON'];
-    dataLength = data.length;
+    let data        = response['responseJSON'];
+    let subsetArray = data['subsets'] === undefined ? data : data['subsets'];
 
-    for (let ii = 0; ii < dataLength; ii++) {
-        subsets = data[ii]['subsets']
-        family = data[ii]['family'];
-        id = data[ii]['id'];
+    for (let ii = 0; ii < subsetArray.length; ii++) {
+        subsets = subsetArray[ii]['subsets'];
+        family = subsetArray[ii]['family'];
+        id = subsetArray[ii]['id'];
+        usedStyles = subsetArray[ii]['used_styles'];
+
+        if (subsets === null) {
+            subsets = ['latin'];
+        }
+
         length = subsets.length;
         renderedSubsets = [];
 
         for (let iii = 0; iii < length; iii++) {
-            renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick="hwlGenerateSearchQuery('${id}')" />${subsets[iii]}</label></td>`;
+            renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick='hwlGenerateSearchQuery("${id}", ${JSON.stringify(usedStyles)})' />${subsets[iii]}</label></td>`;
         }
 
         jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input type="text" class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
         jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
+    }
+
+    if (data['auto-detect'] === true) {
+        jQuery('#hwl-subsets input').each(function() {
+            this.click();
+        });
     }
 }
 
@@ -74,8 +107,9 @@ function hwlRenderAvailableSubsets(response)
  * Generate search query for selected subsets
  *
  * @param id
+ * @param usedStyles
  */
-function hwlGenerateSearchQuery(id)
+function hwlGenerateSearchQuery(id, usedStyles = null)
 {
     let subsets = [];
     checked = jQuery("input[name='" + id + "']:checked");
@@ -84,8 +118,8 @@ function hwlGenerateSearchQuery(id)
         subsets.push(jQuery(this).val());
     });
 
-    subsets.join()
-    hwlSearchGoogleFonts(id, subsets);
+    subsets.join();
+    hwlSearchGoogleFonts(id, subsets, usedStyles);
 }
 
 /**
@@ -93,18 +127,20 @@ function hwlGenerateSearchQuery(id)
  *
  * @param id
  * @param subsets
+ * @param usedStyles
  */
-function hwlSearchGoogleFonts(id, subsets)
+function hwlSearchGoogleFonts(id, subsets, usedStyles = null)
 {
-    let loadingDiv = jQuery('#hwl-warning .loading')
-    let errorDiv = jQuery('#hwl-warning .error')
+    let loadingDiv = jQuery('#hwl-warning .loading');
+    let errorDiv = jQuery('#hwl-warning .error');
     jQuery.ajax({
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'hwlAjaxSearchGoogleFonts',
+            action: 'omgf_ajax_search_google_fonts',
             search_query: id,
-            search_subsets: subsets
+            search_subsets: subsets,
+            used_styles: usedStyles
         },
         dataType: 'json',
         beforeSend: function() {
@@ -223,7 +259,7 @@ function hwlDownloadFonts()
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'hwlAjaxDownloadFonts',
+            action: 'omgf_ajax_download_fonts',
             subsets: hwlSubsets,
             fonts: hwlFonts,
         },
@@ -267,7 +303,7 @@ function hwlGetDownloadStatus()
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'hwlAjaxGetDownloadStatus'
+            action: 'omgf_ajax_get_download_status'
         },
         dataType: 'text json',
         success: function(response) {
@@ -304,7 +340,7 @@ function hwlGenerateStylesheet()
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'hwlAjaxGenerateStyles',
+            action: 'omgf_ajax_generate_styles',
             selected_fonts: hwlFonts
         },
         beforeSend: function() {
@@ -350,10 +386,10 @@ function hwlEmptyDir()
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'hwlAjaxEmptyDir'
+            action: 'omgf_ajax_empty_dir'
         },
         success: function() {
-            hwlCleanQueue()
+            hwlCleanQueue();
             hwlUpdateStatusBar(0)
         }
     })
@@ -368,7 +404,7 @@ function hwlCleanQueue()
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'hwlAjaxCleanQueue'
+            action: 'omgf_ajax_clean_queue'
         },
         success: function() {
             jQuery('.caos-status-progress-percentage').html('0%')
@@ -414,3 +450,14 @@ function hwlRemoveRow(rowId)
 {
     jQuery('#' + rowId).remove()
 }
+
+
+jQuery('#omgf_web_font_loader, #caos_webfonts_preload').click(function () {
+    if (this.className === 'omgf_web_font_loader' && this.checked === true) {
+        jQuery('#caos_webfonts_preload').attr('checked', false);
+    }
+
+    if (this.className === 'caos_webfonts_preload' && this.checked === true) {
+        jQuery('#omgf_web_font_loader').attr('checked', false);
+    }
+});

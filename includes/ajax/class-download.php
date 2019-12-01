@@ -6,14 +6,9 @@
  * @url      : https://daan.dev
  */
 
-// Exit if accessed directly
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined('ABSPATH') || exit;
 
-require_once(dirname(dirname(__FILE__)) . '/class-ajax.php');
-
-class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
+class OMGF_AJAX_Download extends OMGF_AJAX
 {
     /** @var $fonts */
     private $fonts;
@@ -21,11 +16,22 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
     /** @var $subsets */
     private $subsets;
 
+    /** @var QM_DB $wpdb */
+    private $wpdb;
+
+    /** @var OMGF_DB $db */
+    protected $db;
+
     /**
      * OMGF_Download_Fonts constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
+        global $wpdb;
+
+        $this->wpdb = $wpdb;
+
+        parent::__construct();
+
         $this->init();
     }
 
@@ -40,7 +46,7 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
          * To match the current queue of fonts. We need to truncate the table first.
          */
         try {
-            hwlCleanQueue();
+            $this->db->clean_queue();
         } catch (\Exception $e) {
             $this->throw_error($e->getCode(), $e->getMessage());
         }
@@ -58,7 +64,7 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
         $this->save_subsets_to_db();
         $this->save_fonts_to_db();
 
-        $this->download_fonts();
+        $this->download();
     }
 
     /**
@@ -77,13 +83,11 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
      */
     private function save_subsets_to_db()
     {
-        global $wpdb;
-
         foreach ($this->subsets as $id => $subset) {
             $availableSubsets = implode($subset['available'], ',');
             $selectedSubsets  = implode($subset['selected'], ',');
 
-            $wpdb->insert(
+            $this->wpdb->insert(
                 OMGF_DB_TABLENAME . '_subsets',
                 array(
                     'subset_font'       => $id,
@@ -100,10 +104,8 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
      */
     private function save_fonts_to_db()
     {
-        global $wpdb;
-
         foreach ($this->fonts as $id => $font) {
-            $wpdb->insert(
+            $this->wpdb->insert(
                 OMGF_DB_TABLENAME,
                 array(
                     'font_id'     => sanitize_text_field($id),
@@ -122,13 +124,11 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
     }
 
     /**
-     *
+     * Download the fonts and write them to the database.
      */
-    private function download_fonts()
+    private function download()
     {
-        global $wpdb;
-
-        $selectedFonts = hwlGetTotalFonts();
+        $selectedFonts = $this->db->get_total_fonts();
 
         foreach ($selectedFonts as $id => $font) {
             // If font is marked as downloaded. Skip it.
@@ -171,7 +171,7 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
                  * If it fails, we can still fall back to the external URL and nothing breaks.
                  */
                 $localFileUrl = OMGF_UPLOAD_URL . '/' . $filename;
-                $wpdb->update(
+                $this->wpdb->update(
                     OMGF_DB_TABLENAME,
                     array(
                         $type => $localFileUrl
@@ -185,7 +185,7 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
             /**
              * After all files are downloaded, set the 'downloaded'-field to 1.
              */
-            $wpdb->update(
+            $this->wpdb->update(
                 OMGF_DB_TABLENAME,
                 array(
                     'downloaded' => 1
@@ -241,5 +241,3 @@ class OMGF_AJAX_Download_Fonts extends OMGF_AJAX
         file_put_contents($localFile, file_get_contents($remoteFile));
     }
 }
-
-new OMGF_AJAX_Download_Fonts();

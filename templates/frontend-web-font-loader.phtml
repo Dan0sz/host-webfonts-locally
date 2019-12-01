@@ -6,12 +6,10 @@
  * @url      : https://daan.dev
  */
 
-// Exit if accessed directly
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined('ABSPATH') || exit;
 
-$fonts             = hwlGetDownloadedFonts();
+$db                = new OMGF_DB();
+$fonts             = $db->get_downloaded_fonts();
 $families          = array_unique(
     array_map(
         function ($i) {
@@ -23,7 +21,7 @@ $families          = array_unique(
 $omgfStaticVersion = '?ver=' . OMGF_STATIC_VERSION;
 $omgfSrcUrl        = OMGF_UPLOAD_URL . '/' . OMGF_FILENAME . (OMGF_REMOVE_VERSION ? null : $omgfStaticVersion);
 $wflVersion        = '?ver=' . OMGF_WEB_FONT_LOADER_VERSION;
-$wflSrcUrl         = plugin_dir_url(dirname(__FILE__)) . 'libraries/webfont.js' . (OMGF_REMOVE_VERSION ? null : $wflVersion);
+$wflSrcUrl         = plugin_dir_url(OMGF_PLUGIN_FILE) . 'js/libraries/webfont.js' . (OMGF_REMOVE_VERSION ? null : $wflVersion);
 ?>
 <?php if ($fonts && $families): ?>
     <script type="text/javascript">

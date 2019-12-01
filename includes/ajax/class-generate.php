@@ -6,14 +6,9 @@
  * @url      : https://daan.dev
  */
 
-// Exit if accessed directly
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined('ABSPATH') || exit;
 
-require_once(dirname(dirname(__FILE__)) . '/class-ajax.php');
-
-class OMGF_AJAX_Generate_Styles extends OMGF_AJAX
+class OMGF_AJAX_Generate extends OMGF_AJAX
 {
     /** @var array $fonts */
     private $fonts = [];
@@ -23,6 +18,8 @@ class OMGF_AJAX_Generate_Styles extends OMGF_AJAX
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->init();
     }
 
@@ -35,7 +32,7 @@ class OMGF_AJAX_Generate_Styles extends OMGF_AJAX
 
         $this->insert_promo();
 
-        $selectedFonts = hwlGetTotalFonts();
+        $selectedFonts = $this->db->get_total_fonts();
 
         $this->process_fonts($selectedFonts);
 
@@ -107,5 +104,3 @@ class OMGF_AJAX_Generate_Styles extends OMGF_AJAX
         }
     }
 }
-
-new OMGF_AJAX_Generate_Styles();

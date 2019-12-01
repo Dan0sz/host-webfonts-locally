@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 2.0.8
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,8 @@ That's it. You're done!
 This will *decrease your pageload times*, *leverage browser cache*, *minimize DNS requests* and effectively bring you a perfect score on *Pagespeed Insights* and *Pingdom*, without taking toll on the performance of your webserver.
 
 = Features =
-- Easily find and download your fonts in multiple subsets,
+- Easily find and download your fonts in multiple subsets, or
+- *Automatically detect* which Google Fonts your theme is using,
 - Generate a stylesheet, which is automatically added to your header using WordPress' wp_head()-function,
 - Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Multisite environments and Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
 - Serve your fonts from your CDN,
@@ -113,6 +114,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 2.1.0 =
+Complete overhaul of code. Major performance upgrades. Added Auto-detect feature.
 
 = 2.0.8 =
 Fixed 400-error when re-downloading fonts. Added compatibility for Enfold-theme.
