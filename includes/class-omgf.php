@@ -44,6 +44,7 @@ class OMGF
         define('OMGF_DB_CHARSET', $wpdb->get_charset_collate());
         define('OMGF_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com/api/fonts/');
         define('OMGF_FILENAME', 'fonts.css');
+        define('OMGF_AUTO_DETECT_ENABLED', esc_attr(get_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, false)));
         define('OMGF_CACHE_DIR', esc_attr(get_option('caos_webfonts_cache_dir')) ?: '/cache/omgf-webfonts');
         define('OMGF_CDN_URL', esc_attr(get_option('caos_webfonts_cdn_url')));
         define('OMGF_WEB_FONT_LOADER', esc_attr(get_option('omgf_web_font_loader')));

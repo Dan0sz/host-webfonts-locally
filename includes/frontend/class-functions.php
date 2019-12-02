@@ -18,8 +18,12 @@ class OMGF_Frontend_Functions
     public function __construct()
     {
         // @formatter:off
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_stylesheet'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_stylesheet'), PHP_INT_MAX);
         add_action('wp_print_styles', array($this, 'is_remove_google_fonts_enabled'), 100);
+
+        if (OMGF_AUTO_DETECT_ENABLED) {
+            add_action('wp_enqueue_scripts', array($this, 'auto_detect_fonts'), PHP_INT_MAX);
+        }
 
         if (!OMGF_WEB_FONT_LOADER) {
             add_action('init', array($this, 'is_preload_enabled'));
@@ -67,7 +71,9 @@ class OMGF_Frontend_Functions
     public function is_preload_enabled()
     {
         if (OMGF_PRELOAD == 'on') {
+            // @formatter:off
             add_action('wp_head', array($this, 'add_link_preload'), 1);
+            // @formatter:on
         }
     }
 
@@ -80,17 +86,14 @@ class OMGF_Frontend_Functions
     {
         global $wp_styles;
 
-        $registered   = $wp_styles->registered;
-        $fonts        = array_filter(
-            $registered, function ($contents) {
-            return strpos($contents->src, 'fonts.googleapis.com') !== false
-                   || strpos($contents->src, 'fonts.gstatic.com') !== false;
-            }
-        );
+        $registered = $wp_styles->registered;
+
+        $fonts = $this->detect_registered_google_fonts($registered);
+
         $dependencies = array_filter(
             $registered, function ($contents) use ($fonts) {
             return !empty(array_intersect(array_keys($fonts), $contents->deps));
-            }
+        }
         );
 
         foreach ($fonts as $font) {
@@ -104,6 +107,17 @@ class OMGF_Frontend_Functions
         }
     }
 
+    private function detect_registered_google_fonts($registered_styles)
+    {
+        return array_filter(
+            $registered_styles,
+            function ($contents) {
+                return strpos($contents->src, 'fonts.googleapis.com') !== false
+                       || strpos($contents->src, 'fonts.gstatic.com') !== false;
+            }
+        );
+    }
+
     /**
      * Prioritize the loading of fonts by adding a resource hint to the document head.
      *
@@ -113,12 +127,30 @@ class OMGF_Frontend_Functions
     {
         global $wp_styles;
 
-        $style  = $wp_styles->registered[self::OMGF_STYLE_HANDLE];
+        $style = $wp_styles->registered[self::OMGF_STYLE_HANDLE];
 
         /** Do not add 'preload' if Minification plugins are enabled. */
         if ($style) {
             $source = $style->src . ($style->ver ? "?ver={$style->ver}" : "");
             echo "<link rel='preload' href='{$source}' as='style' />\n";
         }
+    }
+
+    /**
+     * Saves the used Google Fonts in the database, so it can be used by auto-detection.
+     */
+    public function auto_detect_fonts()
+    {
+        global $wp_styles;
+
+        $registered = $wp_styles->registered;
+
+        $fonts = $this->detect_registered_google_fonts($registered);
+
+        foreach ($fonts as $font) {
+            $google_fonts_src[] = $font->src;
+        }
+
+        update_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL, json_encode($google_fonts_src));
     }
 }

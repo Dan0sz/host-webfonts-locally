@@ -21,6 +21,8 @@ class OMGF_Admin
     }
 
     /**
+     * Enqueues the necessary JS and CSS and passes options as a JS object.
+     *
      * @param $hook
      */
     public function enqueue_admin_js($hook)
@@ -28,6 +30,13 @@ class OMGF_Admin
         if ($hook == 'settings_page_optimize-webfonts') {
             wp_enqueue_script(self::OMGF_ADMIN_JS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'js/hwl-admin.js', array('jquery'), OMGF_STATIC_VERSION, true);
             wp_enqueue_style(self::OMGF_ADMIN_CSS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'css/hwl-admin.css', array(), OMGF_STATIC_VERSION);
+
+            $options = array(
+                'auto_detect_enabled' => OMGF_AUTO_DETECT_ENABLED,
+                'detected_fonts'      => get_option('omgf_detected_fonts')
+            );
+
+            wp_localize_script(self::OMGF_ADMIN_JS_HANDLE, 'omgf', $options);
         }
     }
 

@@ -52,15 +52,28 @@ function hwlAutoDetectFonts()
         type: 'POST',
         url: ajaxurl,
         data: {
-            action: 'omgf_ajax_auto_detect_fonts',
+            action: 'omgf_ajax_auto_detect'
         },
         dataType: 'json',
         beforeSend: function() {
-            hwlUpdateInputValue(detectButton, 'Detecting...', '0 37px 1px');
+            if (omgf.auto_detect_enabled === '' && omgf.detected_fonts === '') {
+                hwlCleanQueue();
+            }
         },
         complete: function(response) {
-            hwlUpdateInputValue(detectButton, 'Auto-detect', '0 36px 1px');
-            hwlRenderAvailableSubsets(response);
+            if (omgf.auto_detect_enabled === '' && omgf.detected_fonts === '') {
+                hwlScrollTop();
+                jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>" + response['responseText'] + "</p></div>");
+                hwlUpdateInputValue(detectButton, 'Enabled', '0 38px 1px');
+            } else {
+                try {
+                    hwlUpdateInputValue(detectButton, 'Auto-detect', '0 36px 1px');
+                    hwlRenderAvailableSubsets(response);
+                } catch(error) {
+                    hwlScrollTop();
+                    jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>Oops! Something went wrong. " + error + ". Refresh the page and try again. If all else fails, click 'Clean Queue' and start over.");
+                }
+            }
         }
     })
 }
@@ -97,8 +110,14 @@ function hwlRenderAvailableSubsets(response)
     }
 
     if (data['auto-detect'] === true) {
-        jQuery('#hwl-subsets input').each(function() {
-            this.click();
+        jQuery('#hwl-subsets input[type="checkbox"]').each(function() {
+            /**
+             * These fonts are used by WP Admin. But might be used by front-end as well.
+             * That's why we do return them, but do not trigger a search by default.
+             */
+            if (this.getAttribute('name') !== 'open-sans' && this.getAttribute('name') !== 'noto-serif') {
+                this.click();
+            }
         });
     }
 }

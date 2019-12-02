@@ -27,7 +27,7 @@ class OMGF_AJAX
         add_action('wp_ajax_omgf_ajax_empty_dir', array($this, 'empty_directory'));
         add_action('wp_ajax_omgf_ajax_search_font_subsets', array($this, 'search_font_subsets'));
         add_action('wp_ajax_omgf_ajax_search_google_fonts', array($this, 'search_fonts'));
-        add_action('wp_ajax_omgf_ajax_auto_detect_fonts', array($this, 'auto_detect_fonts'));
+        add_action('wp_ajax_omgf_ajax_auto_detect', array($this, 'auto_detect'));
         // @formatter:on
     }
 
@@ -53,6 +53,7 @@ class OMGF_AJAX
     public function get_download_status()
     {
         $status = json_encode($this->db->get_download_status());
+
         wp_die($status);
     }
 
@@ -61,6 +62,9 @@ class OMGF_AJAX
      */
     public function clean_queue()
     {
+        update_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL, '');
+        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, '');
+
         wp_die($this->db->clean_queue());
     }
 
@@ -71,6 +75,9 @@ class OMGF_AJAX
      */
     public function empty_directory()
     {
+        update_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL, '');
+        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, '');
+
         return array_map('unlink', array_filter((array) glob(OMGF_UPLOAD_DIR . '/*')));
     }
 
@@ -110,7 +117,7 @@ class OMGF_AJAX
         try {
             $request     = curl_init();
             $searchQuery = sanitize_text_field($_POST['search_query']);
-            $subsets     = implode($_POST['search_subsets'], ',');
+            $subsets     = implode(isset($_POST['search_subsets']) ? $_POST['search_subsets'] : array(), ',');
 
             curl_setopt($request, CURLOPT_URL, OMGF_HELPER_URL . $searchQuery . '?subsets=' . $subsets);
             curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
@@ -119,7 +126,7 @@ class OMGF_AJAX
             curl_close($request);
 
             if (!empty($_POST['used_styles'])) {
-                $used_styles['variants'] = $this->process_used_styles($_POST['used_styles'], json_decode($result)->variants);
+                $used_styles['variants'] = array_values($this->process_used_styles($_POST['used_styles'], json_decode($result)->variants));
 
                 wp_die(json_encode($used_styles));
             }
@@ -134,7 +141,7 @@ class OMGF_AJAX
     {
         foreach ($usedStyles as &$style) {
             $fontWeight = preg_replace('/[^0-9]/', '', $style);
-            $fontStyle = preg_replace('/[^a-zA-Z]/', '', $style);
+            $fontStyle  = preg_replace('/[^a-zA-Z]/', '', $style);
 
             if ($fontStyle == 'i') {
                 $fontStyle = 'italic';
@@ -153,29 +160,47 @@ class OMGF_AJAX
         );
     }
 
-    public function auto_detect_fonts()
+    public function auto_detect()
     {
-        global $wp_styles;
+        wp_enqueue_scripts();
 
-        $registered = $wp_styles->registered;
-        $used_fonts = array_filter(
-            $registered,
-            function ($contents) {
-                return strpos($contents->src, 'fonts.googleapis.com') !== false
-                       || strpos($contents->src, 'fonts.gstatic.com') !== false;
-            }
-        );
+        $used_fonts  = json_decode(get_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL));
+        $auto_detect = get_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL);
 
+        if ($used_fonts && $auto_detect) {
+            $this->save_detected_fonts($used_fonts);
+        }
+
+        $this->enable_auto_detect();
+
+        $url = get_permalink(get_posts()[0]->ID);
+
+        wp_die(__("Auto-detection mode enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page. Then click 'Load fonts'."));
+    }
+
+    /**
+     *
+     */
+    private function enable_auto_detect()
+    {
+        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, true);
+    }
+
+    /**
+     *
+     */
+    public function save_detected_fonts($used_fonts)
+    {
         $font_properties = array();
 
-        foreach ($used_fonts as $handle => $properties) {
-            $parts = parse_url($properties->src);
-            parse_str($parts['query'], $font_properties[$handle]);
+        foreach ($used_fonts as $source) {
+            $parts = parse_url($source);
+            parse_str($parts['query'], $font_properties[]);
         }
 
         $i = 0;
 
-        foreach ($font_properties as $handle => $properties) {
+        foreach ($font_properties as $properties) {
             $parts   = explode(':', $properties['family']);
             $subsets = isset($properties['subset']) ? explode(',', $properties['subset']) : null;
 
@@ -193,6 +218,9 @@ class OMGF_AJAX
         }
 
         $fonts['auto-detect'] = true;
+
+        /** It only needs to run once. */
+        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, false);
 
         wp_die(json_encode($fonts));
     }

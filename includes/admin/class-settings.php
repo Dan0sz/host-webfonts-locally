@@ -10,13 +10,15 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings extends OMGF_Admin
 {
-    const OMGF_FONT_DISPLAY_OPTIONS = array(
+    const OMGF_FONT_DISPLAY_OPTIONS         = array(
         'Auto (default)' => 'auto',
         'Block'          => 'block',
         'Swap'           => 'swap',
         'Fallback'       => 'fallback',
         'Optional'       => 'optional'
     );
+    const OMGF_AUTO_DETECTION_ENABLED_LABEL = 'omgf_auto_detection_enabled';
+    const OMGF_DETECTED_FONTS_LABEL         = 'omgf_detected_fonts';
 
     /**
      * OMGF_Admin_Settings constructor.
@@ -101,6 +103,14 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function register_settings()
     {
+        register_setting(
+            'caos-webfonts-basic-settings',
+            self::OMGF_AUTO_DETECTION_ENABLED_LABEL
+        );
+        register_setting(
+            'caos-webfonts-basic-settings',
+            self::OMGF_DETECTED_FONTS_LABEL
+        );
         register_setting(
             'caos-webfonts-basic-settings',
             'caos_webfonts_cache_dir'

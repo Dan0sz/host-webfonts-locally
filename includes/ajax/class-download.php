@@ -85,7 +85,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
     {
         foreach ($this->subsets as $id => $subset) {
             $availableSubsets = implode($subset['available'], ',');
-            $selectedSubsets  = implode($subset['selected'], ',');
+            $selectedSubsets  = implode(isset($subset['selected']) ? $subset['selected'] : array(), ',');
 
             $this->wpdb->insert(
                 OMGF_DB_TABLENAME . '_subsets',

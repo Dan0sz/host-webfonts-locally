@@ -4,7 +4,7 @@
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Minimize DNS requests and leverage browser cache by easily saving Google Fonts to your server and removing the external Google Fonts.
- * Version: 2.1.0
+ * Version: 2.1.1
  * Author: Daan van den Bergh
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
 define('OMGF_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OMGF_PLUGIN_FILE', __FILE__);
 define('OMGF_DB_VERSION', '1.8.3');
-define('OMGF_STATIC_VERSION', '2.1.0');
+define('OMGF_STATIC_VERSION', '2.1.1');
 define('OMGF_WEB_FONT_LOADER_VERSION', '1.6.26');
 
 /**
