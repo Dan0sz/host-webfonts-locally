@@ -25,7 +25,8 @@ class OMGF_AJAX_Download extends OMGF_AJAX
     /**
      * OMGF_Download_Fonts constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         global $wpdb;
 
         $this->wpdb = $wpdb;
@@ -105,6 +106,11 @@ class OMGF_AJAX_Download extends OMGF_AJAX
     private function save_fonts_to_db()
     {
         foreach ($this->fonts as $id => $font) {
+            $urlTtf     = $font['url']['ttf'] !== 'undefined' ? $font['url']['ttf'] : null;
+            $urlWoff    = $font['url']['woff'] !== 'undefined' ? $font['url']['woff'] : null;
+            $urlWoffTwo = $font['url']['woff2'] !== 'undefined' ? $font['url']['woff2'] : null;
+            $urlEot     = $font['url']['eot'] !== 'undefined' ? $font['url']['eot'] : null;
+
             $this->wpdb->insert(
                 OMGF_DB_TABLENAME,
                 array(
@@ -114,10 +120,10 @@ class OMGF_AJAX_Download extends OMGF_AJAX
                     'font_style'  => sanitize_text_field($font['font-style']),
                     'local'       => sanitize_text_field($font['local']),
                     'downloaded'  => 0,
-                    'url_ttf'     => esc_url_raw($font['url']['ttf']),
-                    'url_woff'    => esc_url_raw($font['url']['woff']),
-                    'url_woff2'   => esc_url_raw($font['url']['woff2']),
-                    'url_eot'     => esc_url_raw($font['url']['eot'])
+                    'url_ttf'     => esc_url_raw($urlTtf),
+                    'url_woff'    => esc_url_raw($urlWoff),
+                    'url_woff2'   => esc_url_raw($urlWoffTwo),
+                    'url_eot'     => esc_url_raw($urlEot)
                 )
             );
         }
@@ -142,6 +148,10 @@ class OMGF_AJAX_Download extends OMGF_AJAX
             $urls['url_eot']   = $font->url_eot;
 
             foreach ($urls as $type => $url) {
+                if (!$url) {
+                    continue;
+                }
+
                 $remoteFile = esc_url_raw($url);
 
                 /**
@@ -151,8 +161,8 @@ class OMGF_AJAX_Download extends OMGF_AJAX
                     continue;
                 }
 
-                $filename   = basename($remoteFile);
-                $localFile  = OMGF_UPLOAD_DIR . '/' . $filename;
+                $filename  = basename($remoteFile);
+                $localFile = OMGF_UPLOAD_DIR . '/' . $filename;
 
                 try {
                     $this->download_file_curl($localFile, $remoteFile);

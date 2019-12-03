@@ -4,7 +4,7 @@ Donate link: https://daan.dev/donate/
 Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -114,6 +114,9 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 2.1.3 =
+Added error handling for when certain URLs return 'undefined' from Google Fonts API. Auto-detect now loads detected fonts immediately after settings page refresh. Code optimizations.
 
 = 2.1.2 =
 Added compatibility for (more efficient) chained requests to Google Fonts (separated by a pipe (|)) to the Auto-detect feature. Some themes (like Twenty Sixteen) use this feature.

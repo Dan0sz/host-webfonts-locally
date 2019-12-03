@@ -137,6 +137,12 @@ class OMGF_AJAX
         }
     }
 
+    /**
+     * @param $usedStyles
+     * @param $availableStyles
+     *
+     * @return array
+     */
     private function process_used_styles($usedStyles, $availableStyles)
     {
         foreach ($usedStyles as &$style) {
@@ -160,15 +166,16 @@ class OMGF_AJAX
         );
     }
 
+    /**
+     *
+     */
     public function auto_detect()
     {
-        wp_enqueue_scripts();
-
         $used_fonts  = json_decode(get_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL));
         $auto_detect = get_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL);
 
         if ($used_fonts && $auto_detect) {
-            $this->save_detected_fonts($used_fonts);
+            new OMGF_AJAX_Detect($used_fonts);
         }
 
         $this->enable_auto_detect();
@@ -184,65 +191,6 @@ class OMGF_AJAX
     private function enable_auto_detect()
     {
         update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, true);
-    }
-
-    /**
-     *
-     */
-    public function save_detected_fonts($used_fonts)
-    {
-        $font_properties = array();
-
-        $i = 0;
-
-        foreach ($used_fonts as $source) {
-            $parts = parse_url($source);
-
-            parse_str($parts['query'], $font_properties[]);
-
-            /**
-             * Some themes (like Twenty Sixteen) do chained requests using a pipe (|).
-             * This function explodes these requests and adds them to the query.
-             */
-            if (strpos($font_properties[$i]['family'], '|') !== false) {
-                $parts_parts = explode('|', $font_properties[$i]['family']);
-                $font_property_subset = $font_properties[$i]['subset'];
-
-                foreach ($parts_parts as $part) {
-                    $font_properties[$i]['family'] = $part;
-                    $font_properties[$i]['subset'] = $font_property_subset;
-                    $i++;
-                }
-            }
-
-            $i++;
-        }
-
-        $i = 0;
-
-        foreach ($font_properties as $properties) {
-            $parts   = explode(':', $properties['family']);
-            $subsets = isset($properties['subset']) ? explode(',', $properties['subset']) : null;
-
-            if (!empty($parts)) {
-                $font_family = $parts[0];
-                $styles      = explode(',', $parts[1]);
-            }
-
-            $fonts['subsets'][$i]['family']      = $font_family;
-            $fonts['subsets'][$i]['id']          = str_replace(' ', '-', strtolower($font_family));
-            $fonts['subsets'][$i]['subsets']     = $subsets;
-            $fonts['subsets'][$i]['used_styles'] = $styles;
-
-            $i++;
-        }
-
-        $fonts['auto-detect'] = true;
-
-        /** It only needs to run once. */
-        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, false);
-
-        wp_die(json_encode($fonts));
     }
 
     /**

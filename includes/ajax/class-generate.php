@@ -75,6 +75,8 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
     {
         $fontDisplay = OMGF_DISPLAY_OPTION;
 
+        $i = 1;
+
         foreach ($fonts as $font) {
             $fontFamily     = sanitize_text_field($font->font_family);
             $fontStyle      = sanitize_text_field($font->font_style);
@@ -90,17 +92,19 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
             /**
              * The alignment is crooked, so it'll look nice in the stylesheet.
              */
-            $this->fonts[] = "@font-face {
-    font-family: '$fontFamily';
-    font-display: $fontDisplay;
-    font-style: $fontStyle;
-    font-weight: $fontWeight;
-    src: url('$fontUrlEot'); /* IE9 Compatible */
-    src: local('$fontLocal'), local('$fontLocalDash'),
-         url('$fontUrlWoffTwo') format('woff2'), /* Super Modern Browsers */
-         url('$fontUrlWoff') format('woff'), /* Modern Browsers */
-         url('$fontUrlTtf') format('truetype'); /* Safari, Android, iOS */
-    }";
+            $this->fonts[$i] = "@font-face { \n";
+            $this->fonts[$i] .= "  font-family: '$fontFamily'; \n";
+            $this->fonts[$i] .= "  font-display: $fontDisplay; \n";
+            $this->fonts[$i] .= "  font-style: $fontStyle; \n";
+            $this->fonts[$i] .= "  font-weight: $fontWeight; \n";
+            $this->fonts[$i] .= isset($fontUrlEot) ? "  src: url('$fontUrlEot'); /* IE9 Compatible */ \n" : '';
+            $this->fonts[$i] .= "  src: local('$fontLocal'), local('$fontLocalDash'), \n";
+            $this->fonts[$i] .= isset($fontUrlWoffTwo) ? "  url('$fontUrlWoffTwo') format('woff2'), /* Super Modern Browsers */ \n" : '';
+            $this->fonts[$i] .= isset($fontUrlWoff) ? "  url('$fontUrlWoff') format('woff'), /* Modern Browsers */ \n" : '';
+            $this->fonts[$i] .= "  url('$fontUrlTtf') format('truetype'); /* Safari, Android, iOS */ \n";
+            $this->fonts[$i] .= "}";
+
+            $i++;
         }
     }
 }

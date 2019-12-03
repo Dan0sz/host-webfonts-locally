@@ -10,7 +10,7 @@
  */
 function hwlClickSearch()
 {
-    let input   = jQuery('#search-field')
+    let input   = jQuery('#search-field');
     searchQuery = input.val().replace(/\s/g, '-').toLowerCase();
     hwlSearchFontSubsets(searchQuery)
 }
@@ -76,6 +76,13 @@ function hwlAutoDetectFonts()
             }
         }
     })
+}
+
+/**
+ * Run this after refresh when both statements return true.
+ */
+if (omgf.auto_detect_enabled !== '' && omgf.detected_fonts !== '') {
+    hwlAutoDetectFonts();
 }
 
 /**
@@ -169,12 +176,12 @@ function hwlSearchGoogleFonts(id, subsets, usedStyles = null)
             errorDiv.show()
         },
         complete: function(response) {
-            loadingDiv.hide()
-            errorDiv.hide()
+            loadingDiv.hide();
+            errorDiv.hide();
             if(response['responseText'] !== 'Not found') {
-                hwlRenderAvailableFonts(response)
+                hwlRenderAvailableFonts(response);
             } else {
-                errorDiv.show()
+                errorDiv.show();
             }
         }
     })
@@ -187,17 +194,17 @@ function hwlSearchGoogleFonts(id, subsets, usedStyles = null)
  */
 function hwlRenderAvailableFonts(results)
 {
-    let response = JSON.parse(results['responseText'])
-    variants = response['variants']
-    length = variants.length
-    renderedFonts = []
+    let response = JSON.parse(results['responseText']);
+    variants = response['variants'];
+    length = variants.length;
+    renderedFonts = [];
     for(iii = 0; iii < length; iii++) {
-        fontFamily = variants[iii].fontFamily.replace(/'/g, '')
-        fontId = variants[iii].id
-        font = fontFamily.replace(/\s+/g, '-').toLowerCase() + '-' + variants[iii].id
-        fontWeight = variants[iii].fontWeight
-        fontStyle = variants[iii].fontStyle
-        fontLocal = variants[iii].local
+        fontFamily = variants[iii].fontFamily.replace(/'/g, '');
+        fontId = variants[iii].id;
+        font = fontFamily.replace(/\s+/g, '-').toLowerCase() + '-' + variants[iii].id;
+        fontWeight = variants[iii].fontWeight;
+        fontStyle = variants[iii].fontStyle;
+        fontLocal = variants[iii].local;
         renderedFonts[iii] = `<tr id="row-${font}" valign="top">
                                     <td>
                                         <input readonly type="text" value="${fontFamily}" name="caos_webfonts_array][${font}][font-family]" />
@@ -244,13 +251,13 @@ function hwlGatherSelectedSubsets()
         jQuery.each(checked, function() {
             selectedSubsets.push(jQuery(this).val());
         });
-        selectedSubsets.join()
+        selectedSubsets.join();
 
         availableSubsets = [];
         jQuery.each(checkboxes, function() {
             availableSubsets.push(jQuery(this).val());
         });
-        availableSubsets.join()
+        availableSubsets.join();
 
         family = jQuery(this).find('.hwl-subset-font-family').val();
 
@@ -411,7 +418,7 @@ function hwlEmptyDir()
             hwlCleanQueue();
             hwlUpdateStatusBar(0)
         }
-    })
+    });
 }
 
 /**
@@ -449,14 +456,14 @@ function hwlScrollTop()
  */
 function hwlSerializeArray(data)
 {
-    let result = []
+    let result = [];
     data.each(function() {
-        fields = {}
+        fields = {};
         jQuery.each(jQuery(this).serializeArray(), function() {
             fields[this.name] = this.value
-        })
+        });
         result.push(fields)
-    })
+    });
     return result
 }
 
@@ -467,7 +474,7 @@ function hwlSerializeArray(data)
  */
 function hwlRemoveRow(rowId)
 {
-    jQuery('#' + rowId).remove()
+    jQuery('#' + rowId).remove();
 }
 
 
