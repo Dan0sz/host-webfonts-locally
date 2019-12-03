@@ -193,9 +193,29 @@ class OMGF_AJAX
     {
         $font_properties = array();
 
+        $i = 0;
+
         foreach ($used_fonts as $source) {
             $parts = parse_url($source);
+
             parse_str($parts['query'], $font_properties[]);
+
+            /**
+             * Some themes (like Twenty Sixteen) do chained requests using a pipe (|).
+             * This function explodes these requests and adds them to the query.
+             */
+            if (strpos($font_properties[$i]['family'], '|') !== false) {
+                $parts_parts = explode('|', $font_properties[$i]['family']);
+                $font_property_subset = $font_properties[$i]['subset'];
+
+                foreach ($parts_parts as $part) {
+                    $font_properties[$i]['family'] = $part;
+                    $font_properties[$i]['subset'] = $font_property_subset;
+                    $i++;
+                }
+            }
+
+            $i++;
         }
 
         $i = 0;
