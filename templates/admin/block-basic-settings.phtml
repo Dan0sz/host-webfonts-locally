@@ -10,12 +10,10 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+$utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
 ?>
 <div class="">
     <h3><?php _e('Basic Settings', 'host-webfonts-local'); ?></h3>
-    <p class="description">
-        <?php _e('Do not forget to re-generate the stylesheet after changing settings.', 'host-webfonts-local'); ?>
-    </p>
     <p class="description">
         <?php _e('* Empty Cache Directory, Download Fonts and Generate Stylesheet after changing this setting.', 'host-webfonts-local'); ?>
     </p>
@@ -100,7 +98,7 @@ if (!defined('ABSPATH')) {
             <td>
                 <input class="caos_webfonts_remove_gfonts" id="caos_webfonts_remove_gfonts" type="checkbox" name="caos_webfonts_remove_gfonts" <?= OMGF_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
-                    <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, click %shere%s for a more comprehensive guide.', 'host-webfonts-local'), '<a target="_blank" href="' . OMGF_SITE_URL . '/how-to/remove-google-fonts-wordpress">', '</a>'); ?>
+                    <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, click %shere%s for a more comprehensive guide.', 'host-webfonts-local'), '<a target="_blank" href="' . OMGF_SITE_URL . '/how-to/remove-google-fonts-wordpress/' . $utmTags . '">', '</a>'); ?>
                 </p>
             </td>
         </tr>

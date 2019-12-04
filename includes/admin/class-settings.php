@@ -67,10 +67,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
         ?>
         <div class="wrap">
             <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
-            <p>
-                <?php _e('Developed by: ', 'host-webfonts-local'); ?>
-                <a title="Buy me a beer!" href="<?php echo OMGF_SITE_URL; ?>/donate/">Daan van den Bergh</a>.
-            </p>
 
             <div id="hwl-admin-notices"></div>
 
