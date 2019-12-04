@@ -115,6 +115,9 @@ N/A
 
 == Changelog ==
 
+= 2.1.4 =
+Code clean-up in Generate-script. Improved error-handling.
+
 = 2.1.3 =
 Added error handling for when certain URLs return 'undefined' from Google Fonts API. Auto-detect now loads detected fonts immediately after settings page refresh. Code optimizations.
 
