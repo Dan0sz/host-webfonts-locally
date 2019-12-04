@@ -382,7 +382,7 @@ function hwlGenerateStylesheet()
             hwlScrollTop();
             jQuery('#hwl-admin-notices').append(
                 `<div class="notice notice-error is-dismissible">
-                    <p>The stylesheet could not be created: ${response}</p>
+                    <p>The stylesheet could not be created: ${response.responseText}</p>
                 </div>`
             );
             hwlUpdateInputValue(generateButton, 'Generate Stylesheet');

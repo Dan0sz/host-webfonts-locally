@@ -78,33 +78,62 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
         $i = 1;
 
         foreach ($fonts as $font) {
-            $fontFamily     = sanitize_text_field($font->font_family);
-            $fontStyle      = sanitize_text_field($font->font_style);
-            $fontWeight     = sanitize_text_field($font->font_weight);
-            $fontUrlEot     = esc_url_raw($font->url_eot);
-            $fontUrlWoffTwo = esc_url_raw($font->url_woff2);
-            $fontUrlWoff    = esc_url_raw($font->url_woff);
-            $fontUrlTtf     = esc_url_raw($font->url_ttf);
-            $locals         = explode(',', sanitize_text_field($font->local));
-            $fontLocal      = isset($locals[0]) ? $locals[0] : $fontFamily . " " . ucfirst($fontStyle);
-            $fontLocalDash  = isset($locals[1]) ? $locals[1] : $fontFamily . "-" . ucfirst($fontStyle);
+            $fontUrlEot  = isset($font->url_eot) ? array(0 => esc_url_raw($font->url_eot)) : array();
+            $fontSources = isset($font->url_woff2) ? array('woff2' => esc_url_raw($font->url_woff2)) : array();
+            $fontSources = $fontSources + (isset($font->url_woff) ? array('woff' => esc_url_raw($font->url_woff)) : array());
+            $fontSources = $fontSources + (isset($font->url_ttf) ? array('truetype' => esc_url_raw($font->url_ttf)) : array());
+            $locals      = explode(',', sanitize_text_field($font->local));
 
-            /**
-             * The alignment is crooked, so it'll look nice in the stylesheet.
-             */
             $this->fonts[$i] = "@font-face { \n";
-            $this->fonts[$i] .= "  font-family: '$fontFamily'; \n";
-            $this->fonts[$i] .= "  font-display: $fontDisplay; \n";
-            $this->fonts[$i] .= "  font-style: $fontStyle; \n";
-            $this->fonts[$i] .= "  font-weight: $fontWeight; \n";
-            $this->fonts[$i] .= isset($fontUrlEot) ? "  src: url('$fontUrlEot'); /* IE9 Compatible */ \n" : '';
-            $this->fonts[$i] .= "  src: local('$fontLocal'), local('$fontLocalDash'), \n";
-            $this->fonts[$i] .= isset($fontUrlWoffTwo) ? "  url('$fontUrlWoffTwo') format('woff2'), /* Super Modern Browsers */ \n" : '';
-            $this->fonts[$i] .= isset($fontUrlWoff) ? "  url('$fontUrlWoff') format('woff'), /* Modern Browsers */ \n" : '';
-            $this->fonts[$i] .= "  url('$fontUrlTtf') format('truetype'); /* Safari, Android, iOS */ \n";
+            $this->fonts[$i] .= $this->build_property('font-family', $font->font_family);
+            $this->fonts[$i] .= $this->build_property('font-display', $fontDisplay);
+            $this->fonts[$i] .= $this->build_property('font-style', $font->font_style);
+            $this->fonts[$i] .= $this->build_property('font-weight', $font->font_weight);
+            $this->fonts[$i] .= isset($fontUrlEot) ? "  src: " . $this->build_source_string($fontUrlEot) : '';
+            $this->fonts[$i] .= "  src: " . $this->build_source_string($locals, 'local', false);
+            // There'll always be at least one font available, so no need to check here if $fontSources is set.
+            $this->fonts[$i] .= $this->build_source_string($fontSources);
             $this->fonts[$i] .= "}";
 
             $i++;
         }
+    }
+
+    /**
+     * @param $property
+     * @param $value
+     *
+     * @return string
+     */
+    private function build_property($property, $value)
+    {
+        $value = sanitize_text_field($value);
+
+        return "  $property: $value;\n";
+    }
+
+    /**
+     * @param        $sources
+     * @param string $type
+     * @param bool   $endSemiColon
+     *
+     * @return string
+     */
+    private function build_source_string($sources, $type = 'url', $endSemiColon = true)
+    {
+        $lastSrc = end($sources);
+        $source  = '';
+
+        foreach ($sources as $format => $url) {
+            $source .= "  $type('$url')" . (!is_numeric($format) ? " format('$format')" : '');
+
+            if ($url === $lastSrc && $endSemiColon) {
+                $source .= ";\n";
+            } else {
+                $source .= ",\n";
+            }
+        }
+
+        return $source;
     }
 }
