@@ -29,11 +29,13 @@ class OMGF
 
         // @formatter:off
         register_activation_hook(OMGF_PLUGIN_FILE, array($this, 'create_cache_dir'));
+        register_activation_hook(OMGF_PLUGIN_FILE, array($this, 'do_setup'));
+        register_deactivation_hook(OMGF_PLUGIN_FILE, array($this, 'dequeue_css_js'));
         // @formatter:on
     }
 
     /**
-     *
+     * Define constants.
      */
     public function define_constants()
     {
@@ -124,5 +126,15 @@ class OMGF
         }
 
         return $uploadUrl;
+    }
+
+    /**
+     * Removes all static files upon plugin deactivation.
+     */
+    public function dequeue_css_js()
+    {
+        wp_dequeue_script(OMGF_Admin::OMGF_ADMIN_JS_HANDLE);
+        wp_dequeue_style(OMGF_Admin::OMGF_ADMIN_CSS_HANDLE);
+        wp_dequeue_style(OMGF_Frontend_Functions::OMGF_STYLE_HANDLE);
     }
 }

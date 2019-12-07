@@ -22,10 +22,7 @@ class OMGF_Setup
 
         $this->wpdb = $wpdb;
 
-        // @formatter:off
-        add_action('plugins_loaded', array($this, 'run_db_updates'));
-        register_deactivation_hook(OMGF_PLUGIN_FILE, array($this, 'dequeue_css_js'));
-        // @formatter:on
+        $this->run_db_updates();
     }
 
     /**
@@ -94,15 +91,5 @@ class OMGF_Setup
         $this->wpdb->query($sql);
 
         update_option('caos_webfonts_db_version', '1.8.3');
-    }
-
-    /**
-     * Removes all static files upon plugin deactivation.
-     */
-    public function dequeue_css_js()
-    {
-        wp_dequeue_script(OMGF_Admin::OMGF_ADMIN_JS_HANDLE);
-        wp_dequeue_style(OMGF_Admin::OMGF_ADMIN_CSS_HANDLE);
-        wp_dequeue_style(OMGF_Frontend_Functions::OMGF_STYLE_HANDLE);
     }
 }
