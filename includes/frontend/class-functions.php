@@ -1,10 +1,18 @@
 <?php
-/**
+/* * * * * * * * * * * * * * * * * * * * *
+ *
+ *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
+ * ██╔═══██╗████╗ ████║██╔════╝ ██╔════╝
+ * ██║   ██║██╔████╔██║██║  ███╗█████╗
+ * ██║   ██║██║╚██╔╝██║██║   ██║██╔══╝
+ * ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║
+ *  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝
+ *
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
  * @url      : https://daan.dev
- */
+ * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
 
@@ -151,6 +159,6 @@ class OMGF_Frontend_Functions
             $google_fonts_src[] = $font->src;
         }
 
-        update_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL, json_encode($google_fonts_src));
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, json_encode($google_fonts_src));
     }
 }

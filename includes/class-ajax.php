@@ -1,10 +1,18 @@
 <?php
-/**
+/* * * * * * * * * * * * * * * * * * * * *
+ *
+ *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
+ * ██╔═══██╗████╗ ████║██╔════╝ ██╔════╝
+ * ██║   ██║██╔████╔██║██║  ███╗█████╗
+ * ██║   ██║██║╚██╔╝██║██║   ██║██╔══╝
+ * ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║
+ *  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝
+ *
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
  * @url      : https://daan.dev
- */
+ * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
 
@@ -62,8 +70,8 @@ class OMGF_AJAX
      */
     public function clean_queue()
     {
-        update_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL, '');
-        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, '');
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, '');
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, '');
 
         wp_die($this->db->clean_queue());
     }
@@ -75,8 +83,8 @@ class OMGF_AJAX
      */
     public function empty_directory()
     {
-        update_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL, '');
-        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, '');
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, '');
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, '');
 
         return array_map('unlink', array_filter((array) glob(OMGF_UPLOAD_DIR . '/*')));
     }
@@ -171,8 +179,8 @@ class OMGF_AJAX
      */
     public function auto_detect()
     {
-        $used_fonts  = json_decode(get_option(OMGF_Admin_Settings::OMGF_DETECTED_FONTS_LABEL));
-        $auto_detect = get_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL);
+        $used_fonts  = json_decode(get_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS));
+        $auto_detect = get_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
 
         if ($used_fonts && $auto_detect) {
             new OMGF_AJAX_Detect($used_fonts);
@@ -190,7 +198,7 @@ class OMGF_AJAX
      */
     private function enable_auto_detect()
     {
-        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, true);
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, true);
     }
 
     /**

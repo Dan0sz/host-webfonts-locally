@@ -1,10 +1,18 @@
 <?php
-/**
+/* * * * * * * * * * * * * * * * * * * * *
+ *
+ *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
+ * ██╔═══██╗████╗ ████║██╔════╝ ██╔════╝
+ * ██║   ██║██╔████╔██║██║  ███╗█████╗
+ * ██║   ██║██║╚██╔╝██║██║   ██║██╔══╝
+ * ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║
+ *  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝
+ *
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
  * @url      : https://daan.dev
- */
+ * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
 
@@ -26,7 +34,7 @@ class OMGF_AJAX_Detect
         $fonts = $this->build_subsets_array($font_properties);
 
         /** It only needs to run once. */
-        update_option(OMGF_Admin_Settings::OMGF_AUTO_DETECTION_ENABLED_LABEL, false);
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, false);
 
         wp_die(json_encode($fonts));
     }

@@ -1,24 +1,41 @@
 <?php
-/**
+/* * * * * * * * * * * * * * * * * * * * *
+ *
+ *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
+ * ██╔═══██╗████╗ ████║██╔════╝ ██╔════╝
+ * ██║   ██║██╔████╔██║██║  ███╗█████╗
+ * ██║   ██║██║╚██╔╝██║██║   ██║██╔══╝
+ * ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║
+ *  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝
+ *
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: (c) 2019 Daan van den Bergh
  * @url      : https://daan.dev
- */
+ * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings extends OMGF_Admin
 {
-    const OMGF_FONT_DISPLAY_OPTIONS         = array(
+    const OMGF_FONT_DISPLAY_OPTIONS           = array(
         'Auto (default)' => 'auto',
         'Block'          => 'block',
         'Swap'           => 'swap',
         'Fallback'       => 'fallback',
         'Optional'       => 'optional'
     );
-    const OMGF_AUTO_DETECTION_ENABLED_LABEL = 'omgf_auto_detection_enabled';
-    const OMGF_DETECTED_FONTS_LABEL         = 'omgf_detected_fonts';
+    const OMGF_SETTING_AUTO_DETECTION_ENABLED = 'omgf_auto_detection_enabled';
+    const OMGF_SETTING_DETECTED_FONTS         = 'omgf_detected_fonts';
+    const OMGF_SETTING_CACHE_DIR              = 'caos_webfonts_cache_dir';
+    const OMGF_SETTING_CDN_URL                = 'caos_webfonts_cdn_url';
+    const OMGF_SETTING_WEB_FONT_LOADER        = 'omgf_web_font_loader';
+    const OMGF_SETTING_REMOVE_VERSION         = 'caos_webfonts_remove_version';
+    const OMGF_SETTING_DISPLAY_OPTION         = 'caos_webfonts_display_option';
+    const OMGF_SETTING_REMOVE_GOOGLE_FONTS    = 'caos_webfonts_remove_gfonts';
+    const OMGF_SETTING_ENABLE_PRELOAD         = 'caos_webfonts_preload';
+    const OMGF_SETTING_DB_VERSION             = 'caos_webfonts_db_version';
+    const OMGF_SETTING_UNINSTALL              = 'omgf_uninstall';
 
     /**
      * OMGF_Admin_Settings constructor.
@@ -101,39 +118,43 @@ class OMGF_Admin_Settings extends OMGF_Admin
     {
         register_setting(
             'caos-webfonts-basic-settings',
-            self::OMGF_AUTO_DETECTION_ENABLED_LABEL
+            self::OMGF_SETTING_AUTO_DETECTION_ENABLED
         );
         register_setting(
             'caos-webfonts-basic-settings',
-            self::OMGF_DETECTED_FONTS_LABEL
+            self::OMGF_SETTING_DETECTED_FONTS
         );
         register_setting(
             'caos-webfonts-basic-settings',
-            'caos_webfonts_cache_dir'
+            self::OMGF_SETTING_CACHE_DIR
         );
         register_setting(
             'caos-webfonts-basic-settings',
-            'caos_webfonts_cdn_url'
+            self::OMGF_SETTING_CDN_URL
         );
         register_setting(
             'caos-webfonts-basic-settings',
-            'omgf_web_font_loader'
+            self::OMGF_SETTING_WEB_FONT_LOADER
         );
         register_setting(
             'caos-webfonts-basic-settings',
-            'caos_webfonts_remove_version'
+            self::OMGF_SETTING_REMOVE_VERSION
         );
         register_setting(
             'caos-webfonts-basic-settings',
-            'caos_webfonts_display_option'
+            self::OMGF_SETTING_DISPLAY_OPTION
         );
         register_setting(
             'caos-webfonts-basic-settings',
-            'caos_webfonts_remove_gfonts'
+            self::OMGF_SETTING_REMOVE_GOOGLE_FONTS
         );
         register_setting(
             'caos-webfonts-basic-settings',
-            'caos_webfonts_preload'
+            self::OMGF_SETTING_ENABLE_PRELOAD
+        );
+        register_setting(
+            'caos-webfonts-basic-settings',
+            self::OMGF_SETTING_UNINSTALL
         );
     }
 
