@@ -100,8 +100,9 @@ class OMGF_Frontend_Functions
 
         $dependencies = array_filter(
             $registered, function ($contents) use ($fonts) {
-            return !empty(array_intersect(array_keys($fonts), $contents->deps));
-        }
+            return !empty(array_intersect(array_keys($fonts), $contents->deps))
+                   && $contents->handle !== 'wp-block-editor';
+            }
         );
 
         foreach ($fonts as $font) {
