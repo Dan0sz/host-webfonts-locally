@@ -41,9 +41,10 @@ class OMGF_Uninstall
         }
 
         global $wpdb;
+        $settings = new OMGF_Admin_Settings();
 
         $this->wpdb     = $wpdb;
-        $this->options  = $this->get_options();
+        $this->options  = $settings->get_settings();
         $this->table    = OMGF_DB_TABLENAME;
         $this->cacheDir = OMGF_UPLOAD_DIR;
 
@@ -51,25 +52,6 @@ class OMGF_Uninstall
         $this->drop_tables();
         $this->delete_files();
         $this->delete_dir();
-    }
-
-    /**
-     * @return array
-     * @throws ReflectionException
-     */
-    private function get_options()
-    {
-        $settings       = new OMGF_Admin_Settings();
-        $reflection     = new ReflectionClass($settings);
-        $constants      = $reflection->getConstants();
-
-        return array_filter(
-            $constants,
-            function ($key) {
-                return strpos($key, 'OMGF_SETTING') !== false;
-            },
-            ARRAY_FILTER_USE_KEY
-        );
     }
 
     /**

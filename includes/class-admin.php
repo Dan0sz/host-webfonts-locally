@@ -24,7 +24,7 @@ class OMGF_Admin
     public function __construct()
     {
         // @formatter:off
-        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_js'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
         // @formatter:on
     }
 
@@ -33,7 +33,7 @@ class OMGF_Admin
      *
      * @param $hook
      */
-    public function enqueue_admin_js($hook)
+    public function enqueue_admin_scripts($hook)
     {
         if ($hook == 'settings_page_optimize-webfonts') {
             wp_enqueue_script(self::OMGF_ADMIN_JS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'js/hwl-admin.js', array('jquery'), OMGF_STATIC_VERSION, true);

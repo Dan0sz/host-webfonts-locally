@@ -27,14 +27,14 @@ class OMGF_Admin_Settings extends OMGF_Admin
     );
     const OMGF_SETTING_AUTO_DETECTION_ENABLED = 'omgf_auto_detection_enabled';
     const OMGF_SETTING_DETECTED_FONTS         = 'omgf_detected_fonts';
-    const OMGF_SETTING_CACHE_DIR              = 'caos_webfonts_cache_dir';
-    const OMGF_SETTING_CDN_URL                = 'caos_webfonts_cdn_url';
+    const OMGF_SETTING_CACHE_DIR              = 'omgf_cache_dir';
+    const OMGF_SETTING_CDN_URL                = 'omgf_cdn_url';
     const OMGF_SETTING_WEB_FONT_LOADER        = 'omgf_web_font_loader';
-    const OMGF_SETTING_REMOVE_VERSION         = 'caos_webfonts_remove_version';
-    const OMGF_SETTING_DISPLAY_OPTION         = 'caos_webfonts_display_option';
-    const OMGF_SETTING_REMOVE_GOOGLE_FONTS    = 'caos_webfonts_remove_gfonts';
-    const OMGF_SETTING_ENABLE_PRELOAD         = 'caos_webfonts_preload';
-    const OMGF_SETTING_DB_VERSION             = 'caos_webfonts_db_version';
+    const OMGF_SETTING_REMOVE_VERSION         = 'omgf_remove_version';
+    const OMGF_SETTING_DISPLAY_OPTION         = 'omgf_display_option';
+    const OMGF_SETTING_REMOVE_GOOGLE_FONTS    = 'omgf_remove_gfonts';
+    const OMGF_SETTING_ENABLE_PRELOAD         = 'omgf_preload';
+    const OMGF_SETTING_DB_VERSION             = 'omgf_db_version';
     const OMGF_SETTING_UNINSTALL              = 'omgf_uninstall';
 
     /**
@@ -97,12 +97,12 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
             <form id="hwl-settings-form" class="settings-column right" name="hwl-settings-form" method="post" action="options.php">
                 <?php
-                settings_fields('caos-webfonts-basic-settings');
-                do_settings_sections('caos-webfonts-basic-settings');
+                settings_fields('omgf-basic-settings');
+                do_settings_sections('omgf-basic-settings');
 
                 $this->get_template('basic-settings');
 
-                do_action('hwl_after_settings_form_settings');
+                do_action('omgf_after_settings_form_settings');
 
                 submit_button();
                 ?>
@@ -112,50 +112,19 @@ class OMGF_Admin_Settings extends OMGF_Admin
     }
 
     /**
-     * Register our settings.
+     * Register all settings.
+     *
+     * @throws ReflectionException
      */
     public function register_settings()
     {
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_AUTO_DETECTION_ENABLED
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_DETECTED_FONTS
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_CACHE_DIR
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_CDN_URL
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_WEB_FONT_LOADER
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_REMOVE_VERSION
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_DISPLAY_OPTION
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_REMOVE_GOOGLE_FONTS
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_ENABLE_PRELOAD
-        );
-        register_setting(
-            'caos-webfonts-basic-settings',
-            self::OMGF_SETTING_UNINSTALL
-        );
+        foreach ($this->get_settings() as $constant => $value)
+        {
+            register_setting(
+                'omgf-basic-settings',
+                $value
+            );
+        }
     }
 
     /**
@@ -170,5 +139,25 @@ class OMGF_Admin_Settings extends OMGF_Admin
         array_push($links, $settingsLink);
 
         return $links;
+    }
+
+    /**
+     * Get all settings using the constants in this class.
+     *
+     * @return array
+     * @throws ReflectionException
+     */
+    public function get_settings()
+    {
+        $reflection     = new ReflectionClass($this);
+        $constants      = $reflection->getConstants();
+
+        return array_filter(
+            $constants,
+            function ($key) {
+                return strpos($key, 'OMGF_SETTING') !== false;
+            },
+            ARRAY_FILTER_USE_KEY
+        );
     }
 }

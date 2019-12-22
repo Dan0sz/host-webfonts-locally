@@ -38,15 +38,19 @@ class OMGF_Setup
      */
     public function run_db_updates()
     {
-        $currentVersion = get_option('caos_webfonts_db_version') ?: '1.0.0';
+        $currentVersion = get_option(OMGF_Admin_Settings::OMGF_SETTING_DB_VERSION) ?: get_option('caos_webfonts_db_version') ?: '1.0.0';
         if (version_compare($currentVersion, '1.6.1') < 0) {
             $this->create_webfonts_table();
         }
         if (version_compare($currentVersion, '1.7.0') < 0) {
             $this->create_subsets_table();
         }
-        if (version_compare($currentVersion, OMGF_DB_VERSION) < 0) {
+        if (version_compare($currentVersion, '1.8.3') < 0) {
             $this->add_local_column();
+        }
+        if (version_compare($currentVersion, OMGF_DB_VERSION) < 0) {
+            $this->rename_tables();
+            $this->migrate_options();
         }
     }
 
@@ -69,7 +73,7 @@ class OMGF_Setup
             ) " . OMGF_DB_CHARSET . ";";
         $this->wpdb->query($sql);
 
-        add_option('caos_webfonts_db_version', '1.6.1');
+        $this->set_db_version('1.6.1');
     }
 
     /**
@@ -86,7 +90,7 @@ class OMGF_Setup
             ) " . OMGF_DB_CHARSET . ";";
         $this->wpdb->query($sql);
 
-        update_option('caos_webfonts_db_version', '1.7.0');
+        $this->set_db_version('1.7.0');
     }
 
     /**
@@ -98,6 +102,49 @@ class OMGF_Setup
                "ADD COLUMN local varchar(128) AFTER font_style;";
         $this->wpdb->query($sql);
 
-        update_option('caos_webfonts_db_version', '1.8.3');
+        $this->set_db_version('1.8.3');
+    }
+
+    /**
+     * Delete options with old plugin names and migrate them to new names.
+     */
+    private function migrate_options()
+    {
+        $table          = $this->wpdb->prefix . 'options';
+        $sql            = "SELECT * FROM $table WHERE option_name LIKE '%caos_webfonts%'";
+        $legacy_options = $this->wpdb->get_results($sql);
+
+        foreach ($legacy_options as &$option) {
+            $legacy_name = $option->option_name;
+            $option->option_name = str_replace('caos_webfonts', 'omgf', $legacy_name);
+            add_option($option->option_name, $option->option_value);
+            delete_option($legacy_name);
+        }
+
+        $this->set_db_version('2.2.2');
+    }
+
+    /**
+     * Rename tables using OMGF_DB_TABLENAME.
+     */
+    private function rename_tables()
+    {
+        $table       = $this->wpdb->prefix . 'caos_webfonts';
+        $subsets     = $table . '_subsets';
+        $sql         = "ALTER TABLE $table RENAME TO " . OMGF_DB_TABLENAME;
+        $sql_subsets = "ALTER TABLE $subsets RENAME TO " . OMGF_DB_TABLENAME . '_subsets';
+
+        $this->wpdb->query($sql);
+        $this->wpdb->query($sql_subsets);
+
+        $this->set_db_version('2.2.2');
+    }
+
+    /**
+     * @param $value
+     */
+    private function set_db_version($value)
+    {
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_DB_VERSION, $value);
     }
 }
