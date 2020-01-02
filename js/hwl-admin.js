@@ -79,7 +79,7 @@ function hwlAutoDetectFonts()
                     hwlRenderAvailableSubsets(response);
                 } catch(error) {
                     hwlScrollTop();
-                    jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>Oops! Something went wrong. " + error + ". Refresh the page and try again. If all else fails, click 'Clean Queue' and start over.");
+                    jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>Oops! Something went wrong. " + error + ". <a href='javascript:location.reload();'>Refresh this page</a> and try again. If it still fails, <a href='javascript:hwlEmptyDir();'>empty the cache</a> and <a href='javascript:location.reload();'>refresh this page</a>.");
                 }
             }
         }
