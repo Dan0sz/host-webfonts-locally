@@ -61,7 +61,7 @@ class OMGF_AJAX_Detect
              */
             if (strpos($font_properties[$i]['family'], '|') !== false) {
                 $parts_parts = explode('|', $font_properties[$i]['family']);
-                $font_property_subset = $font_properties[$i]['subset'];
+                $font_property_subset = isset($font_properties[$i]['subset']) ? $font_properties[$i]['subset'] : 'latin';
 
                 foreach ($parts_parts as $part) {
                     $font_properties[$i]['family'] = $part;
