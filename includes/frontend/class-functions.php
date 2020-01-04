@@ -26,11 +26,11 @@ class OMGF_Frontend_Functions
     public function __construct()
     {
         // @formatter:off
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_stylesheet'), PHP_INT_MAX);
-        add_action('wp_print_styles', array($this, 'is_remove_google_fonts_enabled'), 100);
+        add_action('wp_print_styles', array($this, 'is_remove_google_fonts_enabled'), PHP_INT_MAX - 1000);
+        add_action('wp_print_styles', array($this, 'enqueue_stylesheet'), PHP_INT_MAX);
 
         if (OMGF_AUTO_DETECT_ENABLED) {
-            add_action('wp_enqueue_scripts', array($this, 'auto_detect_fonts'), PHP_INT_MAX);
+            add_action('wp_print_styles', array($this, 'auto_detect_fonts'), PHP_INT_MAX - 10000);
         }
 
         if (!OMGF_WEB_FONT_LOADER) {
@@ -66,7 +66,7 @@ class OMGF_Frontend_Functions
     {
         if (OMGF_REMOVE_GFONTS == 'on' && !is_admin()) {
             // @formatter:off
-            add_action('wp_print_styles', array($this, 'remove_google_fonts'), PHP_INT_MAX);
+            add_action('wp_print_styles', array($this, 'remove_google_fonts'), PHP_INT_MAX - 500);
             // Theme: Enfold
             add_filter('avf_output_google_webfonts_script', function() { return false; });
             // @formatter:on
