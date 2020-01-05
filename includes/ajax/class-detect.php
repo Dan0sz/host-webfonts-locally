@@ -36,7 +36,7 @@ class OMGF_AJAX_Detect
         /** It only needs to run once. */
         update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, false);
 
-        wp_die(json_encode($fonts));
+        wp_send_json_success($fonts);
     }
 
     /**

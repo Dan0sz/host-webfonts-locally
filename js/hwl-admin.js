@@ -45,7 +45,10 @@ function hwlSearchFontSubsets(queriedFonts)
             hwlUpdateInputValue(searchButton, 'Searching...', '0 20px');
             searchField.val('');
         },
-        complete: function(response) {
+        error: function(response) {
+            displayError(response.responseJSON.data);
+        },
+        success: function(response) {
             hwlUpdateInputValue(searchButton, 'Search', '0 36px');
             hwlRenderAvailableSubsets(response);
         }
@@ -68,15 +71,18 @@ function hwlAutoDetectFonts()
                 hwlCleanQueue();
             }
         },
+        error: function (response) {
+            displayError(response.responseJSON.data);
+        },
         complete: function(response) {
             if (omgf.auto_detect_enabled === '' && omgf.detected_fonts === '') {
                 hwlScrollTop();
-                jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>" + response['responseText'] + "</p></div>");
+                jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>" + response.responseJSON.data + "</p></div>");
                 hwlUpdateInputValue(detectButton, 'Enabled', '0 38px 1px');
             } else {
                 try {
                     hwlUpdateInputValue(detectButton, 'Auto-detect', '0 36px 1px');
-                    hwlRenderAvailableSubsets(response);
+                    hwlRenderAvailableSubsets(response.responseJSON);
                 } catch(error) {
                     hwlScrollTop();
                     jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>Oops! Something went wrong. " + error + ". <a href='javascript:location.reload();'>Refresh this page</a> and try again. If it still fails, <a href='javascript:hwlEmptyDir();'>empty the cache</a> and <a href='javascript:location.reload();'>refresh this page</a>.");
@@ -100,8 +106,8 @@ if (omgf.auto_detect_enabled !== '' && omgf.detected_fonts !== '') {
  */
 function hwlRenderAvailableSubsets(response)
 {
-    let data        = response['responseJSON'];
-    let subsetArray = data['subsets'] === undefined ? data : data['subsets'];
+    let data        = response.data;
+    let subsetArray = data.subsets === undefined ? data : data.subsets;
 
     for (let ii = 0; ii < subsetArray.length; ii++) {
         subsets = subsetArray[ii]['subsets'];
@@ -180,10 +186,10 @@ function hwlSearchGoogleFonts(id, subsets, usedStyles = null)
         beforeSend: function() {
             loadingDiv.show()
         },
-        error: function() {
-            errorDiv.show()
+        error: function(response) {
+            displayError(response.responseJSON.data);
         },
-        complete: function(response) {
+        success: function(response) {
             loadingDiv.hide();
             errorDiv.hide();
             if(response['responseText'] !== 'Not found') {
@@ -195,6 +201,16 @@ function hwlSearchGoogleFonts(id, subsets, usedStyles = null)
     })
 }
 
+function displayError(message) {
+    let loadingDiv = jQuery('#hwl-warning .loading');
+    let errorDiv = jQuery('#hwl-warning .error');
+
+    loadingDiv.hide();
+    errorDiv.show();
+    hwlScrollTop();
+    jQuery('#hwl-admin-notices').html("<div class='notice notice-success is-dismissible'><p>Oops! Something went wrong. " + message + ".");
+}
+
 /**
  * Displays the search results
  *
@@ -202,8 +218,7 @@ function hwlSearchGoogleFonts(id, subsets, usedStyles = null)
  */
 function hwlRenderAvailableFonts(results)
 {
-    let response = JSON.parse(results['responseText']);
-    variants = response['variants'];
+    variants = results.data.variants === undefined ? results.responseJSON.data.variants : results.data.variants;
     length = variants.length;
     renderedFonts = [];
     for(iii = 0; iii < length; iii++) {
@@ -368,7 +383,7 @@ function hwlUpdateStatusBar(progress)
  */
 function hwlGenerateStylesheet()
 {
-    let hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'))
+    let hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'));
     let generateButton = jQuery('#generate-btn');
     jQuery.ajax({
         type: 'POST',

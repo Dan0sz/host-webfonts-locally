@@ -25,6 +25,10 @@ class OMGF_AJAX
      */
     public function __construct()
     {
+        if (!function_exists('curl_exec')) {
+            $this->throw_error(500, 'cURL is disabled on your server and required for OMGF to function properly. Contact your hosting provider for assistance to enable cURL on your server.');
+        }
+
         $this->db = new OMGF_DB();
 
         // @formatter:off
@@ -111,9 +115,9 @@ class OMGF_AJAX
                     'subsets' => $result->subsets
                 );
             }
-            wp_die(json_encode($response));
+            wp_send_json_success($response);
         } catch (\Exception $e) {
-            wp_die($e);
+            wp_send_json_error($e->getMessage(), $e->getCode());
         }
     }
 
@@ -131,17 +135,20 @@ class OMGF_AJAX
             curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
 
             $result = curl_exec($request);
+
             curl_close($request);
 
-            if (!empty($_POST['used_styles'])) {
-                $used_styles['variants'] = array_values($this->process_used_styles($_POST['used_styles'], json_decode($result)->variants));
+            $result = json_decode($result);
 
-                wp_die(json_encode($used_styles));
+            if (!empty($_POST['used_styles']) && is_object($result) && $variants = $result->variants) {
+                $used_styles['variants'] = array_values($this->process_used_styles($_POST['used_styles'], $variants));
+
+                wp_send_json_success($used_styles);
             }
 
-            wp_die($result);
+            wp_send_json_success($result);
         } catch (\Exception $e) {
-            wp_die($e);
+            wp_send_json_error($e->getMessage(), $e->getCode());
         }
     }
 
@@ -186,11 +193,17 @@ class OMGF_AJAX
             new OMGF_AJAX_Detect($used_fonts);
         }
 
+        if ((!$used_fonts && $auto_detect) || ($used_fonts && !$auto_detect)) {
+            update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, '');
+            update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, null);
+            $this->throw_error(406, 'Something went wrong while trying to enable Auto Detection. <a href="javascript:location.reload()">Refresh this page</a> and try again.');
+        }
+
         $this->enable_auto_detect();
 
         $url = get_permalink(get_posts()[0]->ID);
 
-        wp_die(__("Auto-detection mode enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page. Then click 'Load fonts'."));
+        wp_send_json_success(__("Auto-detection mode enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page. Then click 'Load fonts'.", "host-webfonts-local"));
     }
 
     /**
