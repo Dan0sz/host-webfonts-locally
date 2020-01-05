@@ -25,10 +25,6 @@ class OMGF_AJAX
      */
     public function __construct()
     {
-        if (!function_exists('curl_exec')) {
-            $this->throw_error(500, 'cURL is disabled on your server and required for OMGF to function properly. Contact your hosting provider for assistance to enable cURL on your server.');
-        }
-
         $this->db = new OMGF_DB();
 
         // @formatter:off
@@ -98,6 +94,10 @@ class OMGF_AJAX
      */
     public function search_font_subsets()
     {
+        if (!function_exists('curl_exec')) {
+            $this->throw_error(500, 'cURL is disabled on your server and required for OMGF to function properly. Contact your hosting provider for assistance to enable cURL on your server.');
+        }
+
         try {
             $searchQueries = explode(',', sanitize_text_field($_POST['search_query']));
 

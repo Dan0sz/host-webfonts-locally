@@ -223,6 +223,10 @@ class OMGF_AJAX_Download extends OMGF_AJAX
      */
     private function download_file_curl($localFile, $remoteFile)
     {
+        if (!function_exists('curl_exec')) {
+            $this->throw_error(500, 'cURL is disabled on your server and required for OMGF to function properly. Contact your hosting provider for assistance to enable cURL on your server.');
+        }
+
         $file = fopen($localFile, 'w+');
         $curl = curl_init();
 
