@@ -115,6 +115,9 @@ N/A
 
 == Changelog ==
 
+= 2.2.8 =
+Throw clear error if any of the new tables don't exist. To prevent confusion.
+
 = 2.2.7 =
 Forget to up static version after changes to Admin JS files.
 
