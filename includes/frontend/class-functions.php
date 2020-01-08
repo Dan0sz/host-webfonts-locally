@@ -27,7 +27,7 @@ class OMGF_Frontend_Functions
     {
         // @formatter:off
         add_action('wp_print_styles', array($this, 'is_remove_google_fonts_enabled'), PHP_INT_MAX - 1000);
-        add_action('wp_print_styles', array($this, 'enqueue_stylesheet'), PHP_INT_MAX);
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_stylesheet'), 100);
 
         if (OMGF_AUTO_DETECT_ENABLED) {
             add_action('wp_print_styles', array($this, 'auto_detect_fonts'), PHP_INT_MAX - 10000);
@@ -136,7 +136,7 @@ class OMGF_Frontend_Functions
     {
         global $wp_styles;
 
-        $style = $wp_styles->registered[self::OMGF_STYLE_HANDLE];
+        $style = isset($wp_styles->registered[self::OMGF_STYLE_HANDLE]) ? $wp_styles->registered[self::OMGF_STYLE_HANDLE] : null;
 
         /** Do not add 'preload' if Minification plugins are enabled. */
         if ($style) {
