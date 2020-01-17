@@ -131,7 +131,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <td>
                 <input type="number" name="<?= OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER; ?>" id="<?= OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER ?>" min="0" value="<?= OMGF_ENQUEUE_ORDER; ?>" />
                 <p class="description">
-                    <?php _e('Lower this value if the generated stylesheet (<code>fonts.css</code>) is not captured by your CSS minification/combining plugin.', 'host-webfonts-local'); ?>
+                    <?php _e('Lower this value if the generated stylesheet (<code>fonts.css</code>) is not captured by your CSS minification/combining plugin. Doesn\'t work with Web Font Loader enabled.', 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
