@@ -124,6 +124,19 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
+                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER; ?>">
+                    <?php _e('Change enqueue order of stylesheet? (experimental)', 'host-webfonts-local'); ?>
+                </label>
+            </th>
+            <td>
+                <input type="number" name="<?= OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER; ?>" id="<?= OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER ?>" min="0" value="<?= OMGF_ENQUEUE_ORDER; ?>" />
+                <p class="description">
+                    <?php _e('Lower this value if the generated stylesheet (<code>fonts.css</code>) is not captured by your CSS minification/combining plugin.', 'host-webfonts-local'); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_UNINSTALL ?>">
                     <?php _e('Remove settings and files at uninstall?', 'host-webfonts-local'); ?>
                 </label>

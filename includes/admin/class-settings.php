@@ -36,6 +36,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     const OMGF_SETTING_ENABLE_PRELOAD         = 'omgf_preload';
     const OMGF_SETTING_DB_VERSION             = 'omgf_db_version';
     const OMGF_SETTING_UNINSTALL              = 'omgf_uninstall';
+    const OMGF_SETTING_ENQUEUE_ORDER          = 'omgf_enqueue_order';
 
     /**
      * OMGF_Admin_Settings constructor.
