@@ -169,7 +169,10 @@ class OMGF_AJAX_Download extends OMGF_AJAX
                     continue;
                 }
 
-                $filename  = basename($remoteFile);
+                /**
+                 * We rewrite the local filename for easier debugging in the waterfall.
+                 */
+                $filename  = $font->font_family . '-' . $font->font_weight . '-' . $font->font_style . '-' . substr(basename($remoteFile), -10);
                 $localFile = OMGF_UPLOAD_DIR . '/' . $filename;
 
                 try {
