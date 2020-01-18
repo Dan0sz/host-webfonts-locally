@@ -55,6 +55,7 @@ class OMGF
         define('OMGF_FILENAME', 'fonts.css');
         define('OMGF_AUTO_DETECT_ENABLED', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, false)));
         define('OMGF_CACHE_DIR', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR)) ?: '/cache/omgf-webfonts');
+        define('OMGF_RELATIVE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL)));
         define('OMGF_CDN_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_CDN_URL)));
         define('OMGF_WEB_FONT_LOADER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_WEB_FONT_LOADER)));
         define('OMGF_REMOVE_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION)));
@@ -129,6 +130,10 @@ class OMGF
      */
     public function get_upload_url()
     {
+        If (OMGF_RELATIVE_URL) {
+            return '/' . $this->get_content_dir() . OMGF_CACHE_DIR;
+        }
+
         if (OMGF_CDN_URL) {
             $uploadUrl = '//' . OMGF_CDN_URL . '/' . $this->get_content_dir() . OMGF_CACHE_DIR;
         } else {

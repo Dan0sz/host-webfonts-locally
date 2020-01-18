@@ -112,6 +112,7 @@ function hwlRenderAvailableSubsets(response)
     for (let ii = 0; ii < subsetArray.length; ii++) {
         subsets = subsetArray[ii]['subsets'];
         family = subsetArray[ii]['family'];
+
         id = subsetArray[ii]['id'];
         usedStyles = subsetArray[ii]['used_styles'];
 
@@ -291,7 +292,7 @@ function hwlGatherSelectedSubsets()
         subsets[id]['selected'] = selectedSubsets;
         subsets[id]['available'] = {};
         subsets[id]['available'] = availableSubsets;
-    })
+    });
 
     return subsets;
 }
@@ -500,13 +501,28 @@ function hwlRemoveRow(rowId)
     jQuery('#' + rowId).remove();
 }
 
+/**
+ * TODO: Move all above functions within document.ready().
+ */
+jQuery(document).ready(function($) {
+    /**
+     * Toggle different options that aren't compatible with each other.
+     */
+    $('#omgf_web_font_loader, #omgf_preload').click(function () {
+        if (this.className === 'omgf_web_font_loader' && this.checked === true) {
+            $('#omgf_preload').attr('checked', false);
+        }
 
-jQuery('#omgf_web_font_loader, #caos_webfonts_preload').click(function () {
-    if (this.className === 'omgf_web_font_loader' && this.checked === true) {
-        jQuery('#caos_webfonts_preload').attr('checked', false);
-    }
+        if (this.className === 'omgf_preload' && this.checked === true) {
+            $('#omgf_web_font_loader').attr('checked', false);
+        }
+    });
 
-    if (this.className === 'caos_webfonts_preload' && this.checked === true) {
-        jQuery('#omgf_web_font_loader').attr('checked', false);
-    }
+    $('#omgf_relative_url').click(function () {
+        if (this.checked === true) {
+            $('#omgf_cdn_url').prop('disabled', true);
+        } else {
+            $('#omgf_cdn_url').prop('disabled', false);
+        }
+    })
 });

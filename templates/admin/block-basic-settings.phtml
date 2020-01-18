@@ -39,12 +39,25 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
+                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>">
+                    <?php _e('Use Relative URLs?', 'host-webfonts-local'); ?> *
+                </label>
+            </th>
+            <td>
+                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>" <?= OMGF_RELATIVE_URL ? "checked ='checked'" : ''; ?> />
+                <p class="description">
+                    <?php _e('Use relative instead of absolute (full) URLs to generate the stylesheet. <strong>Warning!</strong> This disables the CDN URL!', 'host-webfonts-local'); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>">
                     <?php _e('Serve fonts from CDN', 'host-webfonts-local'); ?> *
                 </label>
             </th>
             <td>
-                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" placeholder="<?= __('e.g. cdn.mydomain.com', 'host-webfonts-local'); ?>" value="<?= OMGF_CDN_URL; ?>"/>
+                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" placeholder="<?= __('e.g. cdn.mydomain.com', 'host-webfonts-local'); ?>" value="<?= OMGF_CDN_URL; ?>" <?= OMGF_RELATIVE_URL ? 'disabled' : ''; ?> />
                 <p class="description">
                     <?php _e("Are you using a CDN? Then enter the URL here.", 'host-webfonts-local'); ?>
                 </p>
