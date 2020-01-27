@@ -27,9 +27,15 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=support_tab';
             <div class="welcome-panel-column" style="width: 31%; margin-right: 15px;">
                 <h3><?php _e( 'Quickstart', 'host-webfonts-local') ;?></h3>
                 <ul>
-                    <li class="welcome-icon dashicons-before dashicons-admin-settings"><?php _e('Click Auto-detect and wait for the on-screen instructions', 'host-webfonts-local'); ?></li>
-                    <li class="welcome-icon dashicons-before dashicons-update"><?php _e('Click \'Download Fonts\' and wait for the download to complete', 'host-webfonts-local'); ?></li>
-                    <li class="welcome-icon dashicons-before dashicons-art"><?php _e('Click \'Generate Stylesheet\' and wait for the process to complete', 'host-webfonts-local'); ?></li>
+                    <li class="welcome-icon dashicons-before dashicons-admin-settings">
+                        <?= sprintf(__('Click %sAuto-detect%s and wait for the on-screen instructions', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlAutoDetectFonts();">', '</a>'); ?>
+                    </li>
+                    <li class="welcome-icon dashicons-before dashicons-update">
+                        <?= sprintf(__('Click %sDownload Fonts%s and wait for the download to complete', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlDownloadFonts();">', '</a>'); ?>
+                    </li>
+                    <li class="welcome-icon dashicons-before dashicons-art">
+                        <?= sprintf(__('Click %sGenerate Stylesheet%s and wait for the process to complete', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlGenerateStylesheet();">', '</a>'); ?>
+                    </li>
                     <li class="welcome-icon dashicons-before dashicons-media-text"><?php _e('The stylesheet is generated and added to your theme\'s header', 'host-webfonts-local'); ?></li>
                     <li class="welcome-icon dashicons-before dashicons-editor-removeformatting"><?php _e('Check \'Remove Google Fonts\' and save your changes', 'host-webfonts-local'); ?></li>
                     <li class="welcome-icon dashicons-before dashicons-smiley"><?php _e('Done!', 'host-webfonts-local'); ?></li>
