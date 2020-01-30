@@ -106,10 +106,6 @@ Repeat this for every site you want to use with OMGF. A new stylesheet, using th
 
 No, not yet. But I will definitely try to make it compatible in the future!
 
-= Can I buy you a beer? =
-
-Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do shots!")!
-
 == Screenshots ==
 
 N/A

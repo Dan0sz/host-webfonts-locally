@@ -28,8 +28,6 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 
 **Can I buy you a beer?**
 
-Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do shots!")!
-
 Visit the [FAQ at Wordpress.org](https://wordpress.org/plugins/host-webfonts-local/#faq)
 
 ## Support
