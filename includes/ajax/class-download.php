@@ -127,6 +127,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
                     'font_weight' => sanitize_text_field($font['font-weight']),
                     'font_style'  => sanitize_text_field($font['font-style']),
                     'local'       => sanitize_text_field($font['local']),
+                    'preload'     => sanitize_text_field($font['preload'] ?? null),
                     'downloaded'  => 0,
                     'url_ttf'     => esc_url_raw($urlTtf),
                     'url_woff'    => esc_url_raw($urlWoff),

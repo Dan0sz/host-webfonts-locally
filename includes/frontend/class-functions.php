@@ -20,6 +20,9 @@ class OMGF_Frontend_Functions
 {
     const OMGF_STYLE_HANDLE = 'omgf-fonts';
 
+    /** @var OMGF_DB */
+    private $db;
+
     /**
      * OMGF_Frontend_Functions constructor.
      */
@@ -36,7 +39,72 @@ class OMGF_Frontend_Functions
         if (!OMGF_WEB_FONT_LOADER) {
             add_action('init', array($this, 'is_preload_enabled'));
         }
+
+        $this->db = new OMGF_DB();
+        // Needs to be loaded before stylesheet.
+        add_action('wp_enqueue_scripts', array($this, 'preload_fonts'), 0);
         // @formatter:on
+    }
+
+    /**
+     * Check if the Remove Google Fonts option is enabled.
+     */
+    public function is_remove_google_fonts_enabled()
+    {
+        if (OMGF_REMOVE_GFONTS == 'on' && !is_admin()) {
+            // @formatter:off
+            add_action('wp_print_styles', array($this, 'remove_google_fonts'), PHP_INT_MAX - 500);
+            // Theme: Enfold
+            add_filter('avf_output_google_webfonts_script', function() { return false; });
+            // @formatter:on
+        }
+    }
+
+    /**
+     * Automatically dequeues any stylesheets loaded from fonts.gstatic.com or
+     * fonts.googleapis.com. Also checks for stylesheets dependant on Google Fonts and
+     * re-enqueues and registers them.
+     */
+    public function remove_google_fonts()
+    {
+        global $wp_styles;
+
+        $registered = $wp_styles->registered;
+
+        $fonts = $this->detect_registered_google_fonts($registered);
+
+        $dependencies = array_filter(
+            $registered, function ($contents) use ($fonts) {
+            return !empty(array_intersect(array_keys($fonts), $contents->deps))
+                   && $contents->handle !== 'wp-block-editor';
+        }
+        );
+
+        foreach ($fonts as $font) {
+            wp_deregister_style($font->handle);
+            wp_dequeue_style($font->handle);
+        }
+
+        foreach ($dependencies as $dependency) {
+            wp_register_style('omgf-dep-' . $dependency->handle, $dependency->src);
+            wp_enqueue_style('omgf-dep-' . $dependency->handle, $dependency->src);
+        }
+    }
+
+    /**
+     * @param $registered_styles
+     *
+     * @return array
+     */
+    private function detect_registered_google_fonts($registered_styles)
+    {
+        return array_filter(
+            $registered_styles,
+            function ($contents) {
+                return strpos($contents->src, 'fonts.googleapis.com') !== false
+                       || strpos($contents->src, 'fonts.gstatic.com') !== false;
+            }
+        );
     }
 
     /**
@@ -60,71 +128,15 @@ class OMGF_Frontend_Functions
     }
 
     /**
-     * Check if the Remove Google Fonts option is enabled.
-     */
-    public function is_remove_google_fonts_enabled()
-    {
-        if (OMGF_REMOVE_GFONTS == 'on' && !is_admin()) {
-            // @formatter:off
-            add_action('wp_print_styles', array($this, 'remove_google_fonts'), PHP_INT_MAX - 500);
-            // Theme: Enfold
-            add_filter('avf_output_google_webfonts_script', function() { return false; });
-            // @formatter:on
-        }
-    }
-
-    /**
      * Check if the Preload option is enabled.
      */
     public function is_preload_enabled()
     {
         if (OMGF_PRELOAD == 'on') {
             // @formatter:off
-            add_action('wp_head', array($this, 'add_link_preload'), 1);
+            add_action('wp_enqueue_scripts', array($this, 'add_stylesheet_preload'), 0);
             // @formatter:on
         }
-    }
-
-    /**
-     * Automatically dequeues any stylesheets loaded from fonts.gstatic.com or
-     * fonts.googleapis.com. Also checks for stylesheets dependant on Google Fonts and
-     * re-enqueues and registers them.
-     */
-    public function remove_google_fonts()
-    {
-        global $wp_styles;
-
-        $registered = $wp_styles->registered;
-
-        $fonts = $this->detect_registered_google_fonts($registered);
-
-        $dependencies = array_filter(
-            $registered, function ($contents) use ($fonts) {
-            return !empty(array_intersect(array_keys($fonts), $contents->deps))
-                   && $contents->handle !== 'wp-block-editor';
-            }
-        );
-
-        foreach ($fonts as $font) {
-            wp_deregister_style($font->handle);
-            wp_dequeue_style($font->handle);
-        }
-
-        foreach ($dependencies as $dependency) {
-            wp_register_style('omgf-dep-' . $dependency->handle, $dependency->src);
-            wp_enqueue_style('omgf-dep-' . $dependency->handle, $dependency->src);
-        }
-    }
-
-    private function detect_registered_google_fonts($registered_styles)
-    {
-        return array_filter(
-            $registered_styles,
-            function ($contents) {
-                return strpos($contents->src, 'fonts.googleapis.com') !== false
-                       || strpos($contents->src, 'fonts.gstatic.com') !== false;
-            }
-        );
     }
 
     /**
@@ -132,7 +144,7 @@ class OMGF_Frontend_Functions
      *
      * Does not work with Web Font Loader enabled.
      */
-    public function add_link_preload()
+    public function add_stylesheet_preload()
     {
         global $wp_styles;
 
@@ -161,5 +173,29 @@ class OMGF_Frontend_Functions
         }
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, json_encode($google_fonts_src));
+    }
+
+    /**
+     * Collect and render preload fonts in wp_head().
+     */
+    public function preload_fonts()
+    {
+        $preload_fonts = $this->db->get_preload_fonts();
+
+        if (!$preload_fonts) {
+            return;
+        }
+
+        foreach ($preload_fonts as $font) {
+            $font_urls[] = array_values(array_filter((array) $font, function ($properties) {
+                return strpos($properties, 'woff2') !== false;
+            }, ARRAY_FILTER_USE_KEY));
+        }
+
+        $urls = array_reduce($font_urls, 'array_merge', []);
+
+        foreach ($urls as $url) {
+            echo "<link rel='preload' href='$url' as='font' type='font/" . pathinfo($url, PATHINFO_EXTENSION) . "' crossorigin>\n";
+        }
     }
 }

@@ -229,7 +229,7 @@ function hwlRenderAvailableFonts(results)
         fontWeight = variants[iii].fontWeight;
         fontStyle = variants[iii].fontStyle;
         fontLocal = variants[iii].local;
-        renderedFonts[iii] = `<tr id="row-${font}" valign="top">
+        renderedFonts[iii] = `<tr id="row-${font}" valign="top" align="center">
                                     <td>
                                         <input readonly type="text" value="${fontFamily}" name="caos_webfonts_array][${font}][font-family]" />
                                     </td>
@@ -238,6 +238,9 @@ function hwlRenderAvailableFonts(results)
                                     </td>
                                     <td>
                                         <input readonly type="text" value="${fontWeight}" name="caos_webfonts_array][${font}][font-weight]" />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" value="1" name="caos_webfonts_array][${font}][preload]" />
                                     </td>
                                     <td>
                                         <input type="hidden" value="${fontId}" name="caos_webfonts_array][${font}][id]" />
@@ -457,8 +460,8 @@ function hwlCleanQueue()
             action: 'omgf_ajax_clean_queue'
         },
         success: function() {
-            jQuery('.caos-status-progress-percentage').html('0%')
-            jQuery('#hwl-results, #hwl-subsets').empty()
+            jQuery('.caos-status-progress-percentage').html('0%');
+            jQuery('#hwl-subsets, tbody[id^=hwl-section]').empty()
         }
     })
 }

@@ -1,10 +1,11 @@
 === OMGF | Host Google Fonts Locally ===
 Contributors: DaanvandenBergh
 Donate link: https://daan.dev/donate/
-Tags: google, fonts, host, save, local, locally, webfonts, update, minimize, external, requests, leverage, browser, cache
+Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 2.4.1
+Stable tag: 2.5.0
+Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,10 +28,10 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 - Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Multisite environments and Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
 - Serve your fonts from your CDN,
 - Enable Typekit's [Web Font Loader](https://github.com/typekit/webfontloader) to load your fonts asynchronously and further increase your Pagespeed Insights score (!),
+- Preload the entire stylesheet or just fonts loaded above-the-fold,
 - Control font performance by adding font-display property,
 - Auto-generates the local source for webfonts,
-- Automatically remove any fonts loaded from fonts.gstatic.com or fonts.googleapis.com,
-- Prioritize fonts with rel='preload'.
+- Automatically remove any fonts loaded from fonts.gstatic.com or fonts.googleapis.com.
 
 Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration and optimization of your WordPress blog. Or [hire me to do it for you](https://woosh.dev/wordpress-services/omgf-expert-configuration/).
 
@@ -114,6 +115,10 @@ Yes, please! [Click here to buy me a beer](https://daan.dev/donate/ "Let's do sh
 N/A
 
 == Changelog ==
+
+= 2.5.0 =
+Updated Welcome-panel with WoOSH!-services.
+Preload can now be used for certain fonts only (also combined with Web Font Loader).
 
 = 2.4.1 =
 Filenames are now rewritten to be more informative and for easier debugging.

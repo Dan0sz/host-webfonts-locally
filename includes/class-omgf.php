@@ -28,6 +28,7 @@ class OMGF
         if (is_admin()) {
             $this->do_settings();
             $this->add_ajax_hooks();
+            add_action('plugin_loaded', array($this, 'do_setup'));
         }
 
         if (!is_admin()) {
@@ -35,7 +36,6 @@ class OMGF
         }
 
         // @formatter:off
-        register_activation_hook(OMGF_PLUGIN_FILE, array($this, 'do_setup'));
         register_activation_hook(OMGF_PLUGIN_FILE, array($this, 'create_cache_dir'));
         register_deactivation_hook(OMGF_PLUGIN_FILE, array($this, 'dequeue_css_js'));
         // @formatter:on

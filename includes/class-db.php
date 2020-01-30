@@ -55,6 +55,18 @@ class OMGF_DB
     }
 
     /**
+     * @return array|Exception|object|null
+     */
+    public function get_preload_fonts()
+    {
+        try {
+            return $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . " WHERE preload = 1");
+        } catch(\Exception $e) {
+            return $e;
+        }
+    }
+
+    /**
      * @return array|\Exception
      */
     public function get_total_fonts()

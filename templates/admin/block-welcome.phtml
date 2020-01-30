@@ -17,6 +17,7 @@
 defined('ABSPATH') || exit;
 
 $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=support_tab';
+$tweetUrl = 'https://twitter.com/intent/tweet?text=I+just+optimized+my+Google+Fonts+with+OMGF+for+@WordPress!+Try+it+for+yourself:&via=Dan0sz&hashtags=GoogleFonts,WordPress,Pagespeed,Insights&url=https://wordpress.org/plugins/host-webfonts-local/';
 ?>
 <div id="welcome-panel" class="welcome-panel">
     <div class="welcome-panel-content">
@@ -50,8 +51,8 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=support_tab';
                 </h3>
                 <p>
                     <?= sprintf(__('Visit the %sFAQ%s and %sSupport Forum%s to see if your question has already been answered. If not, ask a question on the Support Forum.', 'host-webfonts-local'), '<a href="' . OMGF_SITE_URL . '/wordpress/host-google-fonts-locally/' . $utmTags . '" target="_blank">', '</a>', '<a href="https://wordpress.org/plugins/host-webfonts-local/#description" target="_blank">', '</a>', '<a href="https://wordpress.org/support/plugin/host-webfonts-local">', '</a>'); ?>
-
                 </p>
+                <hr/>
                 <h3><span class="dashicons dashicons-dashboard"></span> <?php _e('Make WordPress <em>Faster</em> Than Superman', 'host-webfonts-local'); ?></h3>
                 <p>
                     <?= __('Superman can reach the other side of the world in <strong>3 seconds</strong>. Google wants your website to do it <strong>faster</strong>. Let\'s give Google a run for its money.', 'host-webfonts-local'); ?>
@@ -62,18 +63,20 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=support_tab';
             </div>
             <div class="welcome-panel-column welcome-panel-last" style="width: 33%;">
                 <h3>
-                    <?php _e('Support OMGF', 'host-webfonts-local'); ?>
+                    <?php _e('Support OMGF by Spreading the Word!', 'host-webfonts-local'); ?>
                 </h3>
                 <p>
                     <?= sprintf(__('I am convinced that knowledge should be free. That\'s why I will never charge you for the plugins I create and I will help you to succeed in your projects through the %stutorials%s on my blog.', 'host-webfonts-local'), '<a href="' . OMGF_SITE_URL . '/how-to/' . $utmTags . '" target="_blank">', '</a>'); ?>
                 </p>
                 <p>
-                    <?= sprintf(__('However, my time is just as valuable as yours. Consider supporting me by either %sdonating%s or leaving a %s5-star review%s on Wordpress.org.', 'host-webfonts-local'), '<a href="' . OMGF_SITE_URL . '/donate" target="_blank">', '</a>', '<a target="_blank" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post">', '</a>'); ?>
+                    <?= __('But that doesn\'t mean there\'s nothing you can do to show your support! :)', 'host-webfonts-local'); ?>
                 </p>
                 <p>
-                    <a target="_blank" class="button button-secondary button-hero" href="<?= OMGF_SITE_URL; ?>/donate/?utm_source=omgf&utm_medium=plugin&utm_campaign=donate_button"><span class="dashicons-before dashicons-heart"> <?php _e('Donate', 'host-webfonts-local'); ?></span></a>
+                    <?= sprintf(__('Please help me spread the word by leaving a %s5-star review%s on Wordpress.org or sending a %sTweet%s about OMGF.', 'host-webfonts-local'), '<a target="_blank" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post">', '</a>', "<a href='$tweetUrl'>", '</a>'); ?>
+                </p>
+                <p>
                     <a target="_blank" class="button button-secondary button-hero" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post"><span class="dashicons-before dashicons-star-filled"> <?php _e('Review', 'host-webfonts-local'); ?></span></a>
-                    <a target="_blank" class="button button-secondary button-hero" href="https://twitter.com/Dan0sz"><span class="dashicons-before dashicons-twitter"> <?php _e('Follow', 'host-webfonts-local'); ?></span></a>
+                    <a target="_blank" class="button button-secondary button-hero" href="<?= $tweetUrl; ?>"><span class="dashicons-before dashicons-twitter"> <?php _e('Tweet', 'host-webfonts-local'); ?></span></a>
                 </p>
             </div>
         </div>

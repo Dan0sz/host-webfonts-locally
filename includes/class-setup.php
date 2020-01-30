@@ -21,6 +21,8 @@ class OMGF_Setup
     /** @var QM_DB $wpdb */
     private $wpdb;
 
+    private $version;
+
     /**
      * OMGF_Admin_Setup constructor.
      */
@@ -29,8 +31,11 @@ class OMGF_Setup
         global $wpdb;
 
         $this->wpdb = $wpdb;
+        $this->version = get_option(OMGF_Admin_Settings::OMGF_SETTING_DB_VERSION) ?: get_option('caos_webfonts_db_version') ?: '1.0.0';
 
-        $this->run_db_updates();
+        if (version_compare($this->version, OMGF_DB_VERSION) < 0) {
+            $this->run_db_updates();
+        }
     }
 
     /**
@@ -38,24 +43,28 @@ class OMGF_Setup
      */
     public function run_db_updates()
     {
-        $currentVersion = get_option(OMGF_Admin_Settings::OMGF_SETTING_DB_VERSION) ?: get_option('caos_webfonts_db_version') ?: '1.0.0';
-        if (version_compare($currentVersion, '1.6.1') < 0) {
+        if (version_compare($this->version, '1.6.1') < 0) {
             $this->create_webfonts_table();
         }
-        if (version_compare($currentVersion, '1.7.0') < 0) {
+        if (version_compare($this->version, '1.7.0') < 0) {
             $this->create_subsets_table();
         }
-        if (version_compare($currentVersion, '1.8.3') < 0) {
+        if (version_compare($this->version, '1.8.3') < 0) {
             $this->add_local_column();
         }
-        if (version_compare($currentVersion, OMGF_DB_VERSION) < 0) {
+        if (version_compare($this->version, '2.2.2') < 0) {
             $this->rename_tables();
             $this->migrate_options();
+        }
+        if (version_compare($this->version, OMGF_DB_VERSION) < 0) {
+            $this->add_preload_column();
         }
     }
 
     /**
      * Create the table where downloaded webfonts are registered.
+     *
+     * @since 1.6.1
      */
     private function create_webfonts_table()
     {
@@ -78,6 +87,8 @@ class OMGF_Setup
 
     /**
      * Creates the subsets table.
+     *
+     * @since 1.7.0
      */
     private function create_subsets_table()
     {
@@ -95,6 +106,8 @@ class OMGF_Setup
 
     /**
      * Adds 'local' column.
+     *
+     * @since 1.8.3
      */
     private function add_local_column()
     {
@@ -107,6 +120,8 @@ class OMGF_Setup
 
     /**
      * Delete options with old plugin names and migrate them to new names.
+     *
+     * @since 2.2.2
      */
     private function migrate_options()
     {
@@ -126,9 +141,12 @@ class OMGF_Setup
 
     /**
      * Rename tables using OMGF_DB_TABLENAME.
+     *
+     * @since 2.2.2
      */
     private function rename_tables()
     {
+        // Migrate table. DO NOT TOUCH!
         $table       = $this->wpdb->prefix . 'caos_webfonts';
         $subsets     = $table . '_subsets';
         $sql         = "ALTER TABLE $table RENAME TO " . OMGF_DB_TABLENAME;
@@ -138,6 +156,20 @@ class OMGF_Setup
         $this->wpdb->query($sql_subsets);
 
         $this->set_db_version('2.2.2');
+    }
+
+    /**
+     * Adds preload column to OMGF_DB_TABLENAME.
+     *
+     * @since 2.5.0
+     */
+    private function add_preload_column()
+    {
+        $sql = "ALTER TABLE " . OMGF_DB_TABLENAME . " " .
+               "ADD COLUMN preload tinyint(1) DEFAULT 0 AFTER local;";
+        $this->wpdb->query($sql);
+
+        $this->set_db_version('2.5.0');
     }
 
     /**
