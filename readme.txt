@@ -1,6 +1,5 @@
 === OMGF | Host Google Fonts Locally ===
 Contributors: DaanvandenBergh
-Donate link: https://daan.dev/donate/
 Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.3
