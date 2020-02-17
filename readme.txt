@@ -20,7 +20,9 @@ That's it. You're done!
 
 This will *decrease your pageload times*, *leverage browser cache*, *minimize DNS requests* and effectively bring you a perfect score on *Pagespeed Insights* and *Pingdom*, without taking toll on the performance of your webserver.
 
-= Features =
+Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://woosh.dev/wordpress-services/omgf-expert-configuration/).
+
+== Features ==
 - *Automatically detect* which Google Fonts your theme is using or,
 - Easily find additional fonts in any/multiple subsets,
 - Download them and generate a stylesheet, which is automatically added to your header using WordPress' wp_head()-function,
@@ -31,8 +33,6 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 - Control font performance by adding font-display property,
 - Auto-generates the local source for webfonts,
 - Automatically remove any fonts loaded from fonts.gstatic.com or fonts.googleapis.com.
-
-Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration and optimization of your WordPress blog. Or [hire me to do it for you](https://woosh.dev/wordpress-services/omgf-expert-configuration/).
 
 == Installation ==
 
