@@ -177,7 +177,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
                 $localFile = OMGF_UPLOAD_DIR . '/' . $filename;
 
                 try {
-                    $this->download_file_curl($localFile, $remoteFile);
+                    $this->download_file($localFile, $remoteFile);
                 } catch (Exception $e) {
                     $this->throw_error($e->getCode(), "File ($remoteFile) could not be downloaded: " . $e->getMessage());
                 }
@@ -225,45 +225,39 @@ class OMGF_AJAX_Download extends OMGF_AJAX
      * @param $localFile
      * @param $remoteFile
      */
-    private function download_file_curl($localFile, $remoteFile)
+    private function download_file($localFile, $remoteFile)
     {
         if (!function_exists('curl_exec')) {
             $this->throw_error(500, 'cURL is disabled on your server and required for OMGF to function properly. Contact your hosting provider for assistance to enable cURL on your server.');
         }
 
-        $file = fopen($localFile, 'w+');
-        $curl = curl_init();
+        $file = wp_remote_get($remoteFile, $localFile);
 
-        curl_setopt_array(
-            $curl,
-            array(
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_URL            => $remoteFile,
-                CURLOPT_FILE           => $file,
-                CURLOPT_HEADER         => false,
-                CURLOPT_FOLLOWLOCATION => true
-            )
-        );
+        if (is_wp_error($file)) {
+            $this->throw_error($file->get_error_code(), $file->get_error_message());
+        }
 
-        curl_exec($curl);
-        curl_close($curl);
-        fclose($file);
+        $this->filesystem()->put_contents($localFile, $file['body']);
 
         if (file_exists($localFile)) {
             return;
         }
-
-        $this->download_file_fallback($localFile, $remoteFile);
     }
 
     /**
-     * Fallback download method if cUrl failed.
+     * Helper to return WordPress filesystem subclass.
      *
-     * @param $localFile
-     * @param $remoteFile
+     * @return WP_Filesystem_Base $wp_filesystem
      */
-    private function download_file_fallback($localFile, $remoteFile)
+    private function filesystem()
     {
-        file_put_contents($localFile, file_get_contents($remoteFile));
+        global $wp_filesystem;
+
+        if ( is_null( $wp_filesystem ) ) {
+            require_once ABSPATH . '/wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
+
+        return $wp_filesystem;
     }
 }
