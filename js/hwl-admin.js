@@ -156,8 +156,8 @@ jQuery(document).ready(function ($) {
         $removed_font_style: $('.omgf-font-remove'),
 
         init: function () {
-            this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, 3000)});
-            this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, 3000)});
+            this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, 1500)});
+            this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, 1500)});
             this.$removed_font_style.on('click', this.remove_font_style);
         },
 
@@ -225,7 +225,7 @@ jQuery(document).ready(function ($) {
 
             $('#' + row).remove();
 
-            setTimeout(omgf_admin.refresh_font_style_list, 3000);
+            setTimeout(omgf_admin.refresh_font_style_list, 1500);
         },
 
         refresh_font_style_list: function() {
