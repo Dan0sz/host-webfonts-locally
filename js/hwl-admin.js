@@ -154,7 +154,6 @@ jQuery(document).ready(function ($) {
         $preload_font_styles: $('.omgf-font-preload'),
         $preload_font_styles_checked: $('.omgf-font-preload:checked'),
         $removed_font_style: $('.omgf-font-remove'),
-        $font_styles: $('.omgf-font-style'),
 
         init: function () {
             this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, 3000)});
