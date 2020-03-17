@@ -92,7 +92,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                 $arrayPath = "caos_webfonts_array][$fontId]";
                 ?>
                 <tbody align="center" id="hwl-section-<?= strtolower($font['font_family']); ?>">
-                    <tr id="row-<?= $fontId; ?>" valign="top" align="center">
+                    <tr class="omgf-font-style" data-font-id="<?= $fontId; ?>" id="row-<?= $fontId; ?>" valign="top" align="center">
                         <td>
                             <input readonly type="text" value="<?= $font['font_family']; ?>" name="<?= $arrayPath; ?>[font-family]"/>
                         </td>
@@ -103,7 +103,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                             <input readonly type="text" value="<?= $font['font_weight']; ?>" name="<?= $arrayPath; ?>[font-weight]"/>
                         </td>
                         <td>
-                            <input type="checkbox" value="1" <?= $font['preload'] == 1 ? 'checked' : ''; ?> name="<?= $arrayPath; ?>[preload]"/>
+                            <input type="checkbox" class="omgf-font-preload" data-preload="<?= $fontId; ?>" value="1" <?= $font['preload'] == 1 ? 'checked' : ''; ?> name="<?= $arrayPath; ?>[preload]"/>
                         </td>
                         <td>
                             <input type="hidden" value="<?= $fontId; ?>" name="<?= $arrayPath; ?>[id]"/>
@@ -112,11 +112,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                             <input type="hidden" value="<?= $font['url_woff']; ?>" name="<?= $arrayPath; ?>[url][woff]"/>
                             <input type="hidden" value="<?= $font['url_woff2']; ?>" name="<?= $arrayPath; ?>[url][woff2]"/>
                             <input type="hidden" value="<?= $font['url_eot']; ?>" name="<?= $arrayPath; ?>[url][eot]"/>
-                            <div class="hwl-remove">
-                                <a onclick="hwlRemoveRow('row-<?= $fontId; ?>')">
-                                    <small><?php _e('remove', 'host-webfonts-local'); ?></small>
-                                </a>
-                            </div>
+                            <span data-row="row-<?= $fontId; ?>" class="omgf-font-remove notice-dismiss">&nbsp;</span>
                         </td>
                     </tr>
                 </tbody>

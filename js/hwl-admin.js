@@ -143,13 +143,23 @@ function hwlRenderAvailableSubsets(response)
 jQuery(document).ready(function ($) {
     var omgf_admin = {
         search_fonts_xhr: false,
-        font_families: false,
+        preload_font_style_xhr: false,
+        refresh_font_style_list_xhr: false,
+        font_families: [],
+        preload_font_styles: [],
+        font_style_list: [],
         $font_families: $('.omgf-subset-font-family'),
         $subsets: $('.omgf-subset'),
         $loading: $('#hwl-warning .loading'),
+        $preload_font_styles: $('.omgf-font-preload'),
+        $preload_font_styles_checked: $('.omgf-font-preload:checked'),
+        $removed_font_style: $('.omgf-font-remove'),
+        $font_styles: $('.omgf-font-style'),
 
         init: function () {
             this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, 3000)});
+            this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, 3000)});
+            this.$removed_font_style.on('click', this.remove_font_style);
         },
 
         search_google_fonts: function () {
@@ -176,7 +186,7 @@ jQuery(document).ready(function ($) {
                 url: ajaxurl,
                 data: {
                     action: 'omgf_ajax_search_google_fonts',
-                    search_fonts: omgf_admin.font_families,
+                    search_google_fonts: omgf_admin.font_families,
                 },
                 dataType: 'json',
                 beforeSend: function() {
@@ -184,6 +194,60 @@ jQuery(document).ready(function ($) {
                 },
                 complete: function () {
                     location.reload()
+                }
+            });
+        },
+
+        preload_font_style: function() {
+            if (omgf_admin.preload_font_style_xhr) {
+                omgf_admin.preload_font_style_xhr.abort();
+            }
+
+            omgf_admin.preload_font_styles = omgf_admin.$preload_font_styles_checked.map(function () {
+                return $(this).data('preload');
+            }).get();
+
+            omgf_admin.preload_font_style_xhr = $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_preload_font_style',
+                    preload_font_styles: omgf_admin.preload_font_styles
+                },
+                dataType: 'json',
+                complete: function() {
+                    location.reload();
+                }
+            });
+        },
+
+        remove_font_style: function() {
+            row = $(this).data('row');
+
+            $('#' + row).remove();
+
+            setTimeout(omgf_admin.refresh_font_style_list, 3000);
+        },
+
+        refresh_font_style_list: function() {
+            if (omgf_admin.refresh_font_style_list_xhr) {
+                omgf_admin.refresh_font_style_list_xhr.abort();
+            }
+
+            omgf_admin.font_style_list = $('.omgf-font-style').map(function () {
+                return $(this).data('font-id');
+            }).get();
+
+            omgf_admin.refresh_font_style_list_xhr = $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_refresh_font_style_list',
+                    font_styles: omgf_admin.font_style_list
+                },
+                dataType: 'json',
+                complete: function() {
+                    location.reload();
                 }
             });
         }
@@ -540,16 +604,6 @@ function hwlSerializeArray(data)
         result.push(fields)
     });
     return result
-}
-
-/**
- * Remove selected row.
- *
- * @param rowId
- */
-function hwlRemoveRow(rowId)
-{
-    jQuery('#' + rowId).remove();
 }
 
 /**

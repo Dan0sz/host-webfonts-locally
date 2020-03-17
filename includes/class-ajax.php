@@ -35,6 +35,8 @@ class OMGF_AJAX
         add_action('wp_ajax_omgf_ajax_empty_dir', array($this, 'empty_directory'));
         add_action('wp_ajax_omgf_ajax_search_font_subsets', array($this, 'search_font_subsets'));
         add_action('wp_ajax_omgf_ajax_search_google_fonts', array($this, 'search_fonts'));
+        add_action('wp_ajax_omgf_ajax_preload_font_style', array($this, 'preload_font_style'));
+        add_action('wp_ajax_omgf_ajax_refresh_font_style_list', array($this, 'refresh_font_style_list'));
         add_action('wp_ajax_omgf_ajax_auto_detect', array($this, 'auto_detect'));
         // @formatter:on
     }
@@ -123,9 +125,11 @@ class OMGF_AJAX
         $subsets = get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
 
         foreach ($subsets as $index => &$properties) {
+            $i = 0;
             foreach ($properties['available_subsets'] as $subset) {
                 if (in_array($subset, $_POST['search_fonts'][$index]['subsets'])) {
-                    $properties['selected_subsets'][] = $subset;
+                    $properties['selected_subsets'][$i] = $subset;
+                    $i++;
                 }
             }
         }
@@ -133,7 +137,7 @@ class OMGF_AJAX
         update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $subsets);
 
         try {
-            foreach ($_POST['search_fonts'] as $font) {
+            foreach ($_POST['search_google_fonts'] as $font) {
                 $selected_subsets  = implode($font['subsets'], ',');
                 $request  = wp_remote_get(OMGF_HELPER_URL . $font['family'] . '?subsets=' . $selected_subsets);
                 $result   = json_decode($request['body']);
@@ -162,11 +166,41 @@ class OMGF_AJAX
             }
 
             update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
-            OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('fonts found. Remove the ones you don\'t need and click \'Download\'.'));
+            OMGF_Admin_Notice::set_notice(__('font styles found. Remove the ones you don\'t need and click \'Download\'.'));
             wp_send_json_success();
         } catch (\Exception $e) {
             wp_send_json_error($e->getMessage(), $e->getCode());
         }
+    }
+
+    /**
+     * Update options with font styles selected for preloading.
+     */
+    public function preload_font_style()
+    {
+        $fonts = get_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
+        $preload_styles = $_POST['preload_font_styles'];
+
+        foreach ($fonts as &$font) {
+            if (in_array($font['font_id'], $preload_styles)) {
+                $font['preload'] = 1;
+            }
+        }
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
+    }
+
+    public function refresh_font_style_list()
+    {
+        $fonts = get_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
+
+        $current = $_POST['font_styles'];
+
+        $refreshed_list = array_filter($fonts, function ($font_style) use ($current) {
+            return in_array($font_style['font_id'], $current);
+        });
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $refreshed_list);
     }
 
     /**

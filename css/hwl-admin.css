@@ -75,6 +75,17 @@ tr.loading td {
     cursor: pointer;
 }
 
+.omgf-font-remove {
+    padding: 0 0 0 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.omgf-font-remove:before {
+    position: absolute;
+    left: 0;
+}
+
 .button-cancel {
     color: #a00;
     text-decoration: none;
