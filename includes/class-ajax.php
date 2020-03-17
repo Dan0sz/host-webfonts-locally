@@ -121,18 +121,27 @@ class OMGF_AJAX
     public function search_fonts()
     {
         try {
-            $request     = curl_init();
-            $searchQuery = sanitize_text_field($_POST['search_query']);
-            $subsets     = implode(isset($_POST['search_subsets']) ? $_POST['search_subsets'] : array(), ',');
+            foreach ($_POST['search_fonts'] as $font) {
+                $subsets  = implode($font['subsets'], ',');
+                $request  = wp_remote_get(OMGF_HELPER_URL . $font['family'] . '?subsets=' . $subsets);
+                $result   = json_decode($request['body']);
 
-            curl_setopt($request, CURLOPT_URL, OMGF_HELPER_URL . $searchQuery . '?subsets=' . $subsets);
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-
-            $result = curl_exec($request);
-
-            curl_close($request);
-
-            $result = json_decode($result);
+                foreach ($result->variants as $variant) {
+                    $fonts[] = [
+                        'font_id'     => $result->id . '-' . $variant->id,
+                        'font_family' => $variant->fontFamily,
+                        'font_weight' => $variant->fontWeight,
+                        'font_style'  => $variant->fontStyle,
+                        'local'       => implode($variant->local, ','),
+                        'preload'     => 0,
+                        'downloaded'  => 0,
+                        'url_ttf'     => $variant->ttf,
+                        'url_woff'    => $variant->woff,
+                        'url_woff2'   => $variant->woff2,
+                        'url_eot'     => $variant->eot
+                    ];
+                }
+            }
 
             if (!empty($_POST['used_styles']) && is_object($result) && $variants = $result->variants) {
                 $used_styles['variants'] = array_values($this->process_used_styles($_POST['used_styles'], $variants));
@@ -140,7 +149,8 @@ class OMGF_AJAX
                 wp_send_json_success($used_styles);
             }
 
-            wp_send_json_success($result);
+            update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
+            wp_send_json_success();
         } catch (\Exception $e) {
             wp_send_json_error($e->getMessage(), $e->getCode());
         }

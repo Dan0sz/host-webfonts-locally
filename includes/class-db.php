@@ -72,7 +72,7 @@ class OMGF_DB
     public function get_total_fonts()
     {
         try {
-            return $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME);
+            return get_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
         } catch (\Exception $e) {
             return $e;
         }

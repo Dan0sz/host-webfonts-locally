@@ -27,6 +27,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     );
     const OMGF_SETTING_AUTO_DETECTION_ENABLED = 'omgf_auto_detection_enabled';
     const OMGF_SETTING_SUBSETS                = 'omgf_subsets';
+    const OMGF_SETTING_FONTS                  = 'omgf_fonts';
     const OMGF_SETTING_DETECTED_FONTS         = 'omgf_detected_fonts';
     const OMGF_SETTING_CACHE_DIR              = 'omgf_cache_dir';
     const OMGF_SETTING_CDN_URL                = 'omgf_cdn_url';

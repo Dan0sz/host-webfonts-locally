@@ -45,14 +45,14 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                 <tr valign="top" id="<?= $subsetFont['subset_font']; ?>">
                     <td>
                         <label>
-                            <input readonly type="text" class="hwl-subset-font-family" value="<?= $subsetFont['subset_family']; ?>" />
+                            <input readonly type="text" class="omgf-subset-font-family" data-font-family="<?= $subsetFont['subset_font']; ?>" value="<?= $subsetFont['subset_family']; ?>" />
                         </label>
                     </td>
                     <?php foreach ($subsetFont['available_subsets'] as $availableSubset): ?>
                         <td>
                             <label>
                                 <?php $checked = in_array($availableSubset, $subsetFont['selected_subsets']) ? 'checked="checked"' : ''; ?>
-                                <input name="<?= $subsetFont['subset_font']; ?>" value="<?= $availableSubset; ?>" type="checkbox" onclick="hwlGenerateSearchQuery('<?= $subsetFont['subset_font']; ?>')" <?= $checked; ?> />
+                                <input class="omgf-subset" name="<?= $subsetFont['subset_font']; ?>" value="<?= $availableSubset; ?>" type="checkbox" <?= $checked; ?> />
                                 <?= $availableSubset; ?>
                             </label>
                         </td>
@@ -87,35 +87,31 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         $savedFonts = $db->get_total_fonts();
         ?>
         <?php if ($savedFonts && $subsetFonts): ?>
-            <?php foreach ($subsetFonts as $subsetFont): ?>
-                <tbody align="center" id="hwl-section-<?= $subsetFont->subset_font; ?>">
-                <?php
-                $fonts = $db->get_fonts_by_family($subsetFont->subset_family);
+            <?php foreach ($savedFonts as $font):
+                $fontId = $font['font_id'];
+                $arrayPath = "caos_webfonts_array][$fontId]";
                 ?>
-                <?php foreach ($fonts as $font):
-                    $fontId = $font->font_id;
-                    $arrayPath = "caos_webfonts_array][$fontId]";
-                    ?>
+                <tbody align="center" id="hwl-section-<?= strtolower($font['font_family']); ?>">
                     <tr id="row-<?= $fontId; ?>" valign="top" align="center">
                         <td>
-                            <input readonly type="text" value="<?= $font->font_family; ?>" name="<?= $arrayPath; ?>[font-family]"/>
+                            <input readonly type="text" value="<?= $font['font_family']; ?>" name="<?= $arrayPath; ?>[font-family]"/>
                         </td>
                         <td>
-                            <input readonly type="text" value="<?= $font->font_style; ?>" name="<?= $arrayPath; ?>[font-style]"/>
+                            <input readonly type="text" value="<?= $font['font_style']; ?>" name="<?= $arrayPath; ?>[font-style]"/>
                         </td>
                         <td>
-                            <input readonly type="text" value="<?= $font->font_weight; ?>" name="<?= $arrayPath; ?>[font-weight]"/>
+                            <input readonly type="text" value="<?= $font['font_weight']; ?>" name="<?= $arrayPath; ?>[font-weight]"/>
                         </td>
                         <td>
-                            <input type="checkbox" value="1" <?= $font->preload == 1 ? 'checked' : ''; ?> name="<?= $arrayPath; ?>[preload]" />
+                            <input type="checkbox" value="1" <?= $font['preload'] == 1 ? 'checked' : ''; ?> name="<?= $arrayPath; ?>[preload]"/>
                         </td>
                         <td>
                             <input type="hidden" value="<?= $fontId; ?>" name="<?= $arrayPath; ?>[id]"/>
-                            <input type="hidden" value="<?= $font->local; ?>" name="<?= $arrayPath; ?>[local]"/>
-                            <input type="hidden" value="<?= $font->url_ttf; ?>" name="<?= $arrayPath; ?>[url][ttf]"/>
-                            <input type="hidden" value="<?= $font->url_woff; ?>" name="<?= $arrayPath; ?>[url][woff]"/>
-                            <input type="hidden" value="<?= $font->url_woff2; ?>" name="<?= $arrayPath; ?>[url][woff2]"/>
-                            <input type="hidden" value="<?= $font->url_eot; ?>" name="<?= $arrayPath; ?>[url][eot]"/>
+                            <input type="hidden" value="<?= $font['local']; ?>" name="<?= $arrayPath; ?>[local]"/>
+                            <input type="hidden" value="<?= $font['url_ttf']; ?>" name="<?= $arrayPath; ?>[url][ttf]"/>
+                            <input type="hidden" value="<?= $font['url_woff']; ?>" name="<?= $arrayPath; ?>[url][woff]"/>
+                            <input type="hidden" value="<?= $font['url_woff2']; ?>" name="<?= $arrayPath; ?>[url][woff2]"/>
+                            <input type="hidden" value="<?= $font['url_eot']; ?>" name="<?= $arrayPath; ?>[url][eot]"/>
                             <div class="hwl-remove">
                                 <a onclick="hwlRemoveRow('row-<?= $fontId; ?>')">
                                     <small><?php _e('remove', 'host-webfonts-local'); ?></small>
@@ -123,7 +119,6 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                             </div>
                         </td>
                     </tr>
-                <?php endforeach; ?>
                 </tbody>
             <?php endforeach; ?>
         <?php endif; ?>

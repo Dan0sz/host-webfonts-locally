@@ -140,6 +140,58 @@ function hwlRenderAvailableSubsets(response)
     }
 }
 
+jQuery(document).ready(function ($) {
+    var omgf_admin = {
+        search_fonts_xhr: false,
+        font_families: false,
+        $font_families: $('.omgf-subset-font-family'),
+        $subsets: $('.omgf-subset'),
+        $loading: $('#hwl-warning .loading'),
+
+        init: function () {
+            this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, 3000)});
+        },
+
+        search_google_fonts: function () {
+            if (omgf_admin.search_fonts_xhr) {
+                omgf_admin.search_fonts_xhr.abort();
+            }
+
+            omgf_admin.font_families = omgf_admin.$font_families.map(function () {
+                return $(this).data('font-family');
+            }).get();
+
+            omgf_admin.font_families.forEach(function(font, index) {
+                omgf_admin.font_families[index] = {};
+                omgf_admin.font_families[index].subsets = [];
+
+                $('input[name="' + font + '"]:checked').each(function(i) {
+                    omgf_admin.font_families[index].family = font;
+                    omgf_admin.font_families[index].subsets[i] = this.value;
+                });
+            });
+
+            omgf_admin.search_fonts_xhr = $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_search_google_fonts',
+                    search_fonts: omgf_admin.font_families,
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    omgf_admin.$loading.show()
+                },
+                complete: function () {
+                    location.reload()
+                }
+            });
+        }
+    };
+
+    omgf_admin.init();
+});
+
 /**
  * Generate search query for selected subsets
  *
