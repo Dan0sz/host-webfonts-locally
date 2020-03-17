@@ -120,10 +120,22 @@ class OMGF_AJAX
      */
     public function search_fonts()
     {
+        $subsets = get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
+
+        foreach ($subsets as $index => &$properties) {
+            foreach ($properties['available_subsets'] as $subset) {
+                if (in_array($subset, $_POST['search_fonts'][$index]['subsets'])) {
+                    $properties['selected_subsets'][] = $subset;
+                }
+            }
+        }
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $subsets);
+
         try {
             foreach ($_POST['search_fonts'] as $font) {
-                $subsets  = implode($font['subsets'], ',');
-                $request  = wp_remote_get(OMGF_HELPER_URL . $font['family'] . '?subsets=' . $subsets);
+                $selected_subsets  = implode($font['subsets'], ',');
+                $request  = wp_remote_get(OMGF_HELPER_URL . $font['family'] . '?subsets=' . $selected_subsets);
                 $result   = json_decode($request['body']);
 
                 foreach ($result->variants as $variant) {
@@ -150,6 +162,7 @@ class OMGF_AJAX
             }
 
             update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
+            OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('fonts found. Remove the ones you don\'t need and click \'Download\'.'));
             wp_send_json_success();
         } catch (\Exception $e) {
             wp_send_json_error($e->getMessage(), $e->getCode());
