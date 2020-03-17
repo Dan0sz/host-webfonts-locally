@@ -45,14 +45,10 @@ function hwlSearchFontSubsets(queriedFonts)
             hwlUpdateInputValue(searchButton, 'Searching...', '0 20px');
             searchField.val('');
         },
-        error: function(response) {
-            displayError(response.responseJSON.data);
-        },
-        success: function(response) {
-            hwlUpdateInputValue(searchButton, 'Search', '0 36px');
-            hwlRenderAvailableSubsets(response);
+        complete: function() {
+            location.reload();
         }
-    })
+    });
 }
 
 function hwlAutoDetectFonts()

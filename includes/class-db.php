@@ -84,7 +84,7 @@ class OMGF_DB
     public function get_subsets()
     {
         try {
-            return $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . "_subsets");
+            return get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
         } catch (\Exception $e) {
             return $e;
         }

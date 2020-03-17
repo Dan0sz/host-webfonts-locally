@@ -30,8 +30,9 @@ class OMGF_Admin
 
         $this->wpdb = $wpdb;
         // @formatter:off
-        add_action('admin_notices', array($this, 'table_exists'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+        add_action('admin_notices', array($this, 'table_exists'));
+        add_action('admin_notices', array($this, 'add_notice'));
         // @formatter:on
     }
 
@@ -87,5 +88,13 @@ class OMGF_Admin
     protected function get_template($name)
     {
         return include OMGF_PLUGIN_DIR . 'templates/admin/block-' . $name . '.phtml';
+    }
+
+    /**
+     * Add notice to admin screen.
+     */
+    public function add_notice()
+    {
+        OMGF_Admin_Notice::print_notice();
     }
 }

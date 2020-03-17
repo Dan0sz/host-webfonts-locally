@@ -94,28 +94,22 @@ class OMGF_AJAX
      */
     public function search_font_subsets()
     {
-        if (!function_exists('curl_exec')) {
-            $this->throw_error(500, 'cURL is disabled on your server and required for OMGF to function properly. Contact your hosting provider for assistance to enable cURL on your server.');
-        }
-
         try {
             $searchQueries = explode(',', sanitize_text_field($_POST['search_query']));
 
             foreach ($searchQueries as $searchQuery) {
-                $request = curl_init();
-                curl_setopt($request, CURLOPT_URL, OMGF_HELPER_URL . $searchQuery);
-                curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-                $result = curl_exec($request);
-                curl_close($request);
-
-                $result     = json_decode($result);
+                $request    = wp_remote_get(OMGF_HELPER_URL . $searchQuery)['body'];
+                $result     = json_decode($request);
                 $response[] = array(
-                    'family'  => $result->family,
-                    'id'      => $result->id,
-                    'subsets' => $result->subsets
+                    'subset_family'     => $result->family,
+                    'subset_font'       => $result->id,
+                    'available_subsets' => $result->subsets,
+                    'selected_subsets'  => []
                 );
             }
-            wp_send_json_success($response);
+            update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $response);
+            OMGF_Admin_Notice::set_notice(__('Subset search finished.', 'host-webfonts-local'), 'success');
+            wp_send_json_success();
         } catch (\Exception $e) {
             wp_send_json_error($e->getMessage(), $e->getCode());
         }
@@ -220,6 +214,7 @@ class OMGF_AJAX
      */
     protected function throw_error($code, $message)
     {
+        OMGF_Admin_Notice::set_notice($code . ': ' . $message, 'error');
         wp_send_json_error(__($message, 'host-webfonts-local'), (int) $code);
     }
 }
