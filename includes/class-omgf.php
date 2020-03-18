@@ -50,7 +50,7 @@ class OMGF
         global $wpdb;
 
         define('OMGF_SITE_URL', 'https://daan.dev');
-        define('OMGF_DB_TABLENAME', $wpdb->prefix . 'omgf_fonts');
+        define('OMGF_DB_TABLENAME', $wpdb->prefix . 'omgf_fonts'); // legacy
         define('OMGF_DB_CHARSET', $wpdb->get_charset_collate());
         define('OMGF_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com/api/fonts/');
         define('OMGF_FILENAME', 'fonts.css');

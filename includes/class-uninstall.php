@@ -24,9 +24,6 @@ class OMGF_Uninstall
     /** @var array $options */
     private $options;
 
-    /** @var string $table */
-    private $table;
-
     /** @var string $cacheDir */
     private $cacheDir;
 
@@ -45,11 +42,9 @@ class OMGF_Uninstall
 
         $this->wpdb     = $wpdb;
         $this->options  = $settings->get_settings();
-        $this->table    = OMGF_DB_TABLENAME;
         $this->cacheDir = OMGF_UPLOAD_DIR;
 
         $this->remove_db_entries();
-        $this->drop_tables();
         $this->delete_files();
         $this->delete_dir();
     }
@@ -62,16 +57,6 @@ class OMGF_Uninstall
         foreach ($this->options as $key => $option) {
             delete_option($option);
         }
-    }
-
-    /**
-     * Drop all tables associated with OMGF.
-     */
-    private function drop_tables()
-    {
-        $this->wpdb->query(
-            'DROP TABLE IF EXISTS ' . $this->table . ', ' . $this->table . '_subsets;'
-        );
     }
 
     /**
