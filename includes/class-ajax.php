@@ -79,7 +79,7 @@ class OMGF_AJAX
         foreach ($subsets as $index => &$properties) {
             $i = 0;
             foreach ($properties['available_subsets'] as $subset) {
-                if (in_array($subset, $_POST['search_fonts'][$index]['subsets'])) {
+                if (in_array($subset, $_POST['search_google_fonts'][$index]['subsets'])) {
                     $properties['selected_subsets'][$i] = $subset;
                     $i++;
                 }
@@ -91,10 +91,10 @@ class OMGF_AJAX
         foreach ($_POST['search_google_fonts'] as $font) {
             $selected_subsets = implode($font['subsets'], ',');
             $api              = new OMGF_API();
-            $fonts            = $api->get_font_styles($font['family'], $selected_subsets);
+            $fonts[]          = $api->get_font_styles($font['family'], $selected_subsets);
         }
 
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, array_merge(...$fonts));
 
         OMGF_Admin_Notice::set_notice(__('font styles found. Remove the ones you don\'t need and click \'Download\'.'));
     }
