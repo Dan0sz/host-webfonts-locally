@@ -157,7 +157,7 @@ class OMGF_AJAX
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $refreshed_list);
 
-        OMGF_Admin_Notice::set_notice(count($fonts) - count($current) . ' ' . __('fonts removed from list.', 'host-webfonts-local'));
+        OMGF_Admin_Notice::set_notice(count($fonts) - count($refreshed_list) . ' ' . __('fonts removed from list.', 'host-webfonts-local'));
     }
 
     /**
