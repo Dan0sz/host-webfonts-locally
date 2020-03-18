@@ -235,8 +235,6 @@ jQuery(document).ready(function ($) {
                 beforeSend: function() {
                     $('#omgf-download').attr('disabled', true);
                     omgf_admin.show_loader('.omgf-search-section');
-                    omgf_admin.update_status_bar(0);
-                    omgf_admin.get_download_status();
                 },
                 complete: function() {
                     location.reload();
@@ -283,40 +281,6 @@ jQuery(document).ready(function ($) {
                 }
             });
         },
-
-        /**
-         * Updated Status-bar with the set progress
-         *
-         * @param progress
-         */
-        update_status_bar: function (progress) {
-            progress = Math.round(progress) + '%';
-            $('#omgf-status-progress-bar').width(progress);
-            $('.omgf-status-progress-percentage').html(progress);
-        },
-
-        /**
-         * Gets a JSON object with the download progress information
-         */
-        get_download_status: function () {
-            jQuery.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: {
-                    action: 'omgf_ajax_get_download_status'
-                },
-                dataType: 'json',
-                success: function(response) {
-                    downloaded = response.data.downloaded;
-                    total = response.data.total;
-                    progress = (100 / total) * downloaded;
-
-                    omgf_admin.update_status_bar(progress);
-                }
-            });
-
-            downloadStatus = setTimeout(omgf_admin.get_download_status, 500);
-        }
     };
 
     omgf_admin.init();
