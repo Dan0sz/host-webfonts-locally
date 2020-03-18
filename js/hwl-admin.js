@@ -305,10 +305,10 @@ jQuery(document).ready(function ($) {
                 data: {
                     action: 'omgf_ajax_get_download_status'
                 },
-                dataType: 'text json',
+                dataType: 'json',
                 success: function(response) {
-                    downloaded = response.downloaded;
-                    total = response.total;
+                    downloaded = response.data.downloaded;
+                    total = response.data.total;
                     progress = (100 / total) * downloaded;
 
                     omgf_admin.update_status_bar(progress);
