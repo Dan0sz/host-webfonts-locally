@@ -21,7 +21,7 @@ $fonts             = $db->get_downloaded_fonts();
 $families          = array_unique(
     array_map(
         function ($i) {
-            return $i->font_family;
+            return $i['font_family'];
         },
         $fonts
     )
@@ -45,10 +45,10 @@ $wflSrcUrl         = plugin_dir_url(OMGF_PLUGIN_FILE) . 'js/libraries/webfont.js
                     <?php
                         $fvds = [];
                         foreach ($fonts as $font) {
-                            if ($font->font_family != $family) {
+                            if ($font['font_family'] != $family) {
                                 continue;
                             }
-                            $fvds[] = mb_substr($font->font_style, 0, 1) . mb_substr($font->font_weight, 0, 1);
+                            $fvds[] = mb_substr($font['font_style'], 0, 1) . mb_substr($font['font_weight'], 0, 1);
                         }
                     ?>
                     '<?= $family; ?>:<?= implode(',', $fvds); ?>',

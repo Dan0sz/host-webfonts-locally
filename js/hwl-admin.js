@@ -234,6 +234,7 @@ jQuery(document).ready(function ($) {
                 },
                 beforeSend: function() {
                     $('#omgf-download').attr('disabled', true);
+                    omgf_admin.show_loader('.omgf-search-section');
                     omgf_admin.update_status_bar(0);
                     omgf_admin.get_download_status();
                 },
@@ -314,7 +315,7 @@ jQuery(document).ready(function ($) {
                 }
             });
 
-            downloadStatus = setTimeout(omgf_admin.get_download_status, 1000);
+            downloadStatus = setTimeout(omgf_admin.get_download_status, 500);
         }
     };
 
