@@ -21,62 +21,64 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
 ?>
 <div class="omgf-generate-stylesheet">
     <h3><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></h3>
-    <div class="omgf-search-box">
-        <input type="text" id="omgf-search" class="form-input-tip ui-autocomplete-input" placeholder="<?php _e('Search... (e.g. Roboto,Open Sans)', 'host-webfonts-local'); ?>" />
-        <input type="button" id="omgf-search-subsets" class="button button-primary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
-        <input type="button" id="omgf-auto-detect" class="button button-secondary button-hero" value="<?= __('Auto-detect', 'host-webfonts-local'); ?>" />
-    </div>
-    <p class="description">
-        <?= __('Default WordPress fonts are left unchecked by default. Enable them only if you\'re sure that your theme uses them.', 'host-webfonts-local'); ?><br />
-        <a href="<?= OMGF_SITE_URL; ?>/how-to/find-wordpress-website-fonts/<?= $utmTags; ?>"><?= __('Which fonts does my theme use?', 'host-webfonts-local'); ?></a>
-    </p>
-    <table>
-        <tr id="row" valign="top">
-            <th align="left" colspan="3"><?php _e('Available subsets', 'host-webfonts-local'); ?></th>
-        </tr>
-        <tbody id="omgf-subsets">
-        <?php
-        $subsetFonts = $db->get_subsets();
-        ?>
-        <?php if ($subsetFonts): ?>
-            <?php foreach ($subsetFonts as $subsetFont): ?>
-                <tr valign="top" id="<?= $subsetFont['subset_font']; ?>">
-                    <td>
-                        <label>
-                            <input readonly type="text" class="omgf-subset-font-family" data-font-family="<?= $subsetFont['subset_font']; ?>" value="<?= $subsetFont['subset_family']; ?>" />
-                        </label>
-                    </td>
-                    <?php foreach ($subsetFont['available_subsets'] as $availableSubset): ?>
+
+    <div class="omgf-search-section">
+        <div class="omgf-search-box">
+            <input type="text" id="omgf-search" class="form-input-tip ui-autocomplete-input" placeholder="<?php _e('Search... (e.g. Roboto,Open Sans)', 'host-webfonts-local'); ?>" />
+            <input type="button" id="omgf-search-subsets" class="button button-primary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
+            <input type="button" id="omgf-auto-detect" class="button button-secondary button-hero" value="<?= __('Auto-detect', 'host-webfonts-local'); ?>" />
+        </div>
+        <p class="description">
+            <?= __('Default WordPress fonts are left unchecked by default. Enable them only if you\'re sure that your theme uses them.', 'host-webfonts-local'); ?><br />
+            <a href="<?= OMGF_SITE_URL; ?>/how-to/find-wordpress-website-fonts/<?= $utmTags; ?>"><?= __('Which fonts does my theme use?', 'host-webfonts-local'); ?></a>
+        </p>
+        <table>
+            <tr id="row" valign="top">
+                <th align="left" colspan="3"><?php _e('Available subsets', 'host-webfonts-local'); ?></th>
+            </tr>
+            <tbody id="omgf-subsets">
+            <?php
+            $subsetFonts = $db->get_subsets();
+            ?>
+            <?php if ($subsetFonts): ?>
+                <?php foreach ($subsetFonts as $subsetFont): ?>
+                    <tr valign="top" id="<?= $subsetFont['subset_font']; ?>">
                         <td>
                             <label>
-                                <?php $checked = in_array($availableSubset, $subsetFont['selected_subsets']) ? 'checked="checked"' : ''; ?>
-                                <input class="omgf-subset" data-subset-font-family="<?= $subsetFont['subset_font']; ?>" value="<?= $availableSubset; ?>" type="checkbox" <?= $checked; ?> />
-                                <?= $availableSubset; ?>
+                                <input readonly type="text" class="omgf-subset-font-family" data-font-family="<?= $subsetFont['subset_font']; ?>" value="<?= $subsetFont['subset_family']; ?>" />
                             </label>
                         </td>
-                    <?php endforeach; ?>
+                        <?php foreach ($subsetFont['available_subsets'] as $availableSubset): ?>
+                            <td>
+                                <label>
+                                    <?php $checked = in_array($availableSubset, $subsetFont['selected_subsets']) ? 'checked="checked"' : ''; ?>
+                                    <input class="omgf-subset" data-subset-font-family="<?= $subsetFont['subset_font']; ?>" value="<?= $availableSubset; ?>" type="checkbox" <?= $checked; ?> />
+                                    <?= $availableSubset; ?>
+                                </label>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr colspan="3">
+                    <td>
+                        <em><?php _e('No subsets found. Use <strong>Search</strong> or <strong>Auto Detect</strong> start.', 'host-webfonts-local'); ?></em>
+                    </td>
                 </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <tr colspan="3">
-                <td>
-                    <em><?php _e('No subsets found. Use <strong>Search</strong> or <strong>Auto Detect</strong> start.', 'host-webfonts-local'); ?></em>
-                </td>
+            <?php endif; ?>
+            </tbody>
+        </table>
+        <table>
+            <tr valign="top">
+                <th align="left" colspan="3"><?php _e('Available fonts', 'host-webfonts-local'); ?></th>
             </tr>
-        <?php endif; ?>
-        </tbody>
-    </table>
-    <table>
-        <tr valign="top">
-            <th align="left" colspan="3"><?php _e('Available fonts', 'host-webfonts-local'); ?></th>
-        </tr>
-    </table>
-    <table id="omgf-font-styles-list">
-        <?php
-        $savedFonts = $db->get_total_fonts();
-        ?>
-        <?php if ($savedFonts && $subsetFonts): ?>
-            <thead align="center">
+        </table>
+        <table id="omgf-font-styles-list">
+            <?php
+            $savedFonts = $db->get_total_fonts();
+            ?>
+            <?php if ($savedFonts && $subsetFonts): ?>
+                <thead align="center">
                 <th>
                     <?= __('Font Family', 'host-webfonts-local'); ?>
                 </th>
@@ -90,8 +92,8 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                     <?= __('Preload? *', 'host-webfonts-local'); ?>
                 </th>
                 <th></th>
-            </thead>
-            <tbody align="center" id="omgf-font-styles">
+                </thead>
+                <tbody align="center" id="omgf-font-styles">
                 <?php foreach ($savedFonts as $font):
                     $fontId = $font['font_id'];
                     ?>
@@ -124,15 +126,16 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                         <span class="description">* <?= __('Only the <strong>woff2</strong> format is preloaded, since this format is widely supported by Modern Browsers which support preload.', 'host-webfonts-local'); ?></span>
                     </td>
                 </tr>
-            </tbody>
-        <?php else: ?>
-        <tr>
-            <td>
-                <em><?php _e('No fonts found. Choose <strong>subsets</strong> to start searching for fonts.', 'host-webfonts-local'); ?></em>
-            </td>
-        </tr>
-        <?php endif; ?>
-    </table>
+                </tbody>
+            <?php else: ?>
+                <tr>
+                    <td>
+                        <em><?php _e('No fonts found. Choose <strong>subsets</strong> to start searching for fonts.', 'host-webfonts-local'); ?></em>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </table>
+    </div>
 
     <table id="omgf-control-panel">
         <tbody>

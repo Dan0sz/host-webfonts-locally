@@ -162,9 +162,9 @@ class OMGF_AJAX
      */
     public function get_download_status()
     {
-        $status = json_encode($this->db->get_download_status());
+        $status = $this->db->get_download_status();
 
-        wp_die($status);
+        wp_send_json_success($status);
     }
 
     /**

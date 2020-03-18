@@ -226,8 +226,6 @@ jQuery(document).ready(function ($) {
                 omgf_admin.download_fonts_xhr.abort();
             }
 
-            let downloadButton = $('#save-btn');
-
             omgf_admin.download_fonts_xhr = $.ajax({
                 type: 'POST',
                 url: ajaxurl,
@@ -235,8 +233,9 @@ jQuery(document).ready(function ($) {
                     action: 'omgf_ajax_download_fonts'
                 },
                 beforeSend: function() {
-                    hwlUpdateStatusBar(0);
-                    hwlGetDownloadStatus();
+                    $('#omgf-download').attr('disabled', true);
+                    omgf_admin.update_status_bar(0);
+                    omgf_admin.get_download_status();
                 },
                 complete: function() {
                     location.reload();
@@ -248,8 +247,6 @@ jQuery(document).ready(function ($) {
          * Generate stylesheet and refresh window.
          */
         generate_stylesheet: function () {
-            let generateButton = $('#generate-btn');
-
             $.ajax({
                 type: 'POST',
                 url: ajaxurl,
@@ -257,7 +254,8 @@ jQuery(document).ready(function ($) {
                     action: 'omgf_ajax_generate_styles',
                 },
                 beforeSend: function() {
-
+                    $('#omgf-generate').attr('disabled', true);
+                    omgf_admin.show_loader('.omgf-search-section');
                 },
                 complete: function() {
                     location.reload();
@@ -277,57 +275,51 @@ jQuery(document).ready(function ($) {
                     action: 'omgf_ajax_empty_dir'
                 },
                 beforeSend: function() {
-
+                    omgf_admin.show_loader('.omgf-search-section');
                 },
                 complete: function() {
                     location.reload();
                 }
             });
+        },
+
+        /**
+         * Updated Status-bar with the set progress
+         *
+         * @param progress
+         */
+        update_status_bar: function (progress) {
+            progress = Math.round(progress) + '%';
+            $('#omgf-status-progress-bar').width(progress);
+            $('.omgf-status-progress-percentage').html(progress);
+        },
+
+        /**
+         * Gets a JSON object with the download progress information
+         */
+        get_download_status: function () {
+            jQuery.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_get_download_status'
+                },
+                dataType: 'text json',
+                success: function(response) {
+                    downloaded = response.downloaded;
+                    total = response.total;
+                    progress = (100 / total) * downloaded;
+
+                    omgf_admin.update_status_bar(progress);
+                }
+            });
+
+            downloadStatus = setTimeout(omgf_admin.get_download_status, 1000);
         }
     };
 
     omgf_admin.init();
-});
 
-/**
- * Gets a JSON object with the download progress information
- */
-function hwlGetDownloadStatus()
-{
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'omgf_ajax_get_download_status'
-        },
-        dataType: 'text json',
-        success: function(response) {
-            downloaded = response.downloaded;
-            total = response.total;
-            progress = (100 / total) * downloaded;
-
-            hwlUpdateStatusBar(progress);
-        }
-    });
-    downloadStatus = setTimeout(hwlGetDownloadStatus, 1000);
-}
-
-/**
- * Updated Status-bar with the set progress
- *
- * @param progress
- */
-function hwlUpdateStatusBar(progress)
-{
-    progress = Math.round(progress) + '%';
-    jQuery('#caos-status-progress-bar').width(progress);
-    jQuery('.caos-status-progress-percentage').html(progress);
-}
-
-/**
- * TODO: Move all above functions within document.ready().
- */
-jQuery(document).ready(function($) {
     /**
      * Toggle different options that aren't compatible with each other.
      */
