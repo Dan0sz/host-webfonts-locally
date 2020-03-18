@@ -29,9 +29,9 @@ jQuery(document).ready(function ($) {
         font_style_list: [],
 
         // Selectors
+        $loader: $('.omgf-loading'),
         $font_families: $('.omgf-subset-font-family'),
         $subsets: $('.omgf-subset'),
-        $loading: $('#hwl-warning .loading'),
         $preload_font_styles: $('.omgf-font-preload'),
         $preload_font_styles_checked: $('.omgf-font-preload:checked'),
         $removed_font_style: $('.omgf-font-remove'),
@@ -72,7 +72,10 @@ jQuery(document).ready(function ($) {
                     action: 'omgf_ajax_enable_auto_detect'
                 },
                 dataType: 'json',
-                complete: function() {
+                beforeSend: function () {
+                    omgf_admin.$loader.show();
+                },
+                complete: function () {
                     location.reload();
                 }
             })
@@ -84,8 +87,6 @@ jQuery(document).ready(function ($) {
          * @param query
          */
         search_subsets: function (query) {
-            let searchButton = $('#omgf-search-subsets');
-
             jQuery.ajax({
                 type: 'POST',
                 url: ajaxurl,
@@ -94,8 +95,8 @@ jQuery(document).ready(function ($) {
                     search_query: query
                 },
                 dataType: 'json',
-                beforeSend: function() {
-                    hwlUpdateInputValue(searchButton, 'Searching...', '0 20px');
+                beforeSend: function () {
+                    omgf_admin.$loader.show();
                 },
                 complete: function() {
                     location.reload();
@@ -134,7 +135,7 @@ jQuery(document).ready(function ($) {
                 },
                 dataType: 'json',
                 beforeSend: function() {
-                    omgf_admin.$loading.show()
+
                 },
                 complete: function () {
                     location.reload()
