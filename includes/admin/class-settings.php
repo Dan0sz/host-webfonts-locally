@@ -89,15 +89,13 @@ class OMGF_Admin_Settings extends OMGF_Admin
         <div class="wrap">
             <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
 
-            <?php $this->get_template('welcome'); ?>
-
             <form id="omgf-options-form" class="settings-column left" name="omgf-options-form" method="post">
                 <div class="">
                     <?php $this->get_template('generate-stylesheet'); ?>
                 </div>
             </form>
 
-            <form id="omgf-settings-form" class="settings-column right" name="omgf-settings-form" method="post" action="options.php">
+            <form id="omgf-settings-form" class="settings-column center" name="omgf-settings-form" method="post" action="options.php">
                 <?php
                 settings_fields('omgf-basic-settings');
                 do_settings_sections('omgf-basic-settings');
@@ -109,6 +107,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
                 submit_button();
                 ?>
             </form>
+
+            <div class="settings-column right">
+                <?php $this->get_template('welcome'); ?>
+            </div>
         </div>
         <?php
     }

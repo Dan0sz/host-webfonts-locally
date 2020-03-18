@@ -18,15 +18,22 @@
  */
 
 .settings-column {
-    float: left;
+    display: inline-block;
 }
 
 .settings-column.left {
-    width: 60%;
+    float: left;
+    min-width: 687px;
+    width: 45%;
+}
+
+.settings-column.center {
+    width: 27%
 }
 
 .settings-column.right {
-    width: 39%
+    float: right;
+    width: 25%;
 }
 
 @media only screen and (max-width: 940px) {
@@ -36,8 +43,19 @@
     }
 
     .settings-column.left,
+    .settings-column.center,
     .settings-column.right {
         width: 100%;
+    }
+}
+
+@media only screen and (min-width: 941px) and (max-width: 1024px) {
+    .settings-column.center {
+        width: 66%;
+    }
+
+    .settings-column.right {
+        width: 33%;
     }
 }
 
