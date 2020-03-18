@@ -86,17 +86,17 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
         $i = 1;
 
         foreach ($fonts as $font) {
-            $fontUrlEot  = isset($font->url_eot) ? array(0 => esc_url_raw($font->url_eot)) : array();
-            $fontSources = isset($font->url_woff2) ? array('woff2' => esc_url_raw($font->url_woff2)) : array();
-            $fontSources = $fontSources + (isset($font->url_woff) ? array('woff' => esc_url_raw($font->url_woff)) : array());
-            $fontSources = $fontSources + (isset($font->url_ttf) ? array('truetype' => esc_url_raw($font->url_ttf)) : array());
-            $locals      = explode(',', sanitize_text_field($font->local));
+            $fontUrlEot  = isset($font['url_eot']) ? array(0 => esc_url_raw($font['url_eot'])) : array();
+            $fontSources = isset($font['url_woff2']) ? array('woff2' => esc_url_raw($font['url_woff2'])) : array();
+            $fontSources = $fontSources + (isset($font['url_woff']) ? array('woff' => esc_url_raw($font['url_woff'])) : array());
+            $fontSources = $fontSources + (isset($font['url_ttf']) ? array('truetype' => esc_url_raw($font['url_ttf'])) : array());
+            $locals      = explode(',', sanitize_text_field($font['local']));
 
             $this->fonts[$i] = "@font-face { \n";
-            $this->fonts[$i] .= $this->build_property('font-family', $font->font_family);
+            $this->fonts[$i] .= $this->build_property('font-family', $font['font_family']);
             $this->fonts[$i] .= $this->build_property('font-display', $fontDisplay);
-            $this->fonts[$i] .= $this->build_property('font-style', $font->font_style);
-            $this->fonts[$i] .= $this->build_property('font-weight', $font->font_weight);
+            $this->fonts[$i] .= $this->build_property('font-style', $font['font_style']);
+            $this->fonts[$i] .= $this->build_property('font-weight', $font['font_weight']);
             $this->fonts[$i] .= isset($fontUrlEot) ? "  src: " . $this->build_source_string($fontUrlEot) : '';
             $this->fonts[$i] .= "  src: " . $this->build_source_string($locals, 'local', false);
             // There'll always be at least one font available, so no need to check here if $fontSources is set.

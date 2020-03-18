@@ -48,7 +48,13 @@ class OMGF_DB
     public function get_downloaded_fonts()
     {
         try {
-            return $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . " WHERE downloaded = 1");
+            $fonts = $this->get_total_fonts();
+
+            $downloaded = array_filter($fonts, function($font) {
+                return $font['downloaded'] == 1;
+            });
+
+            return $downloaded;
         } catch (\Exception $e) {
             return $e;
         }
@@ -60,7 +66,13 @@ class OMGF_DB
     public function get_preload_fonts()
     {
         try {
-            return $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . " WHERE preload = 1");
+            $fonts = $this->get_total_fonts();
+
+            $preload = array_filter($fonts, function($font) {
+                return $font['preload'] == 1;
+            });
+
+            return $preload;
         } catch(\Exception $e) {
             return $e;
         }
@@ -91,27 +103,13 @@ class OMGF_DB
     }
 
     /**
-     * @param $family
-     *
-     * @return array|Exception|object|null
-     */
-    public function get_fonts_by_family($family)
-    {
-        try {
-            return $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . " WHERE font_family = '$family'");
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-
-    /**
      * @return Exception|void
      */
     public function clean_queue()
     {
         try {
-            $this->wpdb->query("TRUNCATE TABLE " . OMGF_DB_TABLENAME);
-            $this->wpdb->query("TRUNCATE TABLE " . OMGF_DB_TABLENAME . "_subsets");
+            delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
+            delete_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
         } catch (\Exception $e) {
             return $e;
         }
