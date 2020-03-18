@@ -29,7 +29,7 @@ class OMGF_AJAX
 
         // @formatter:off
         add_action('wp_ajax_omgf_ajax_search_font_subsets', array($this, 'search_font_subsets'));
-        add_action('wp_ajax_omgf_ajax_auto_detect', array($this, 'auto_detect'));
+        add_action('wp_ajax_omgf_ajax_enable_auto_detect', [$this, 'enable_auto_detect']);
         add_action('wp_ajax_omgf_ajax_search_google_fonts', array($this, 'search_fonts'));
         add_action('wp_ajax_omgf_ajax_download_fonts', array($this, 'download_fonts'));
         add_action('wp_ajax_omgf_ajax_generate_styles', array($this, 'generate_styles'));
@@ -48,14 +48,9 @@ class OMGF_AJAX
         $searchQueries = explode(',', sanitize_text_field($_POST['search_query']));
 
         foreach ($searchQueries as $searchQuery) {
-            $request    = wp_remote_get(OMGF_HELPER_URL . $searchQuery)['body'];
-            $result     = json_decode($request);
-            $response[] = array(
-                'subset_family'     => $result->family,
-                'subset_font'       => $result->id,
-                'available_subsets' => $result->subsets,
-                'selected_subsets'  => []
-            );
+            $api = new OMGF_API();
+
+            $response[] = $api->get_subsets($searchQuery);
         }
         update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $response);
 
@@ -63,36 +58,15 @@ class OMGF_AJAX
     }
 
     /**
-     *
+     * Enable Auto Detect
      */
-    public function auto_detect()
+    public function enable_auto_detect()
     {
-        $used_fonts  = json_decode(get_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS));
-        $auto_detect = get_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
-
-        if ($used_fonts && $auto_detect) {
-            new OMGF_AJAX_Detect($used_fonts);
-        }
-
-        if ((!$used_fonts && $auto_detect) || ($used_fonts && !$auto_detect)) {
-            update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, '');
-            update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, null);
-            OMGF_Admin_Notice::set_notice(__('Something went wrong while trying to enable Auto Detection. <a href="javascript:location.reload()">Refresh this page</a> and try again.', 'host-webfonts-local'), true, 'error', 406);
-        }
-
-        $this->enable_auto_detect();
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, true);
 
         $url = get_permalink(get_posts()[0]->ID);
 
         OMGF_Admin_Notice::set_notice(__("Auto-detection mode enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page. Then click 'Load fonts'.", "host-webfonts-local"));
-    }
-
-    /**
-     *
-     */
-    private function enable_auto_detect()
-    {
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, true);
     }
 
     /**
@@ -115,64 +89,14 @@ class OMGF_AJAX
         update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $subsets);
 
         foreach ($_POST['search_google_fonts'] as $font) {
-            $selected_subsets  = implode($font['subsets'], ',');
-            $request  = wp_remote_get(OMGF_HELPER_URL . $font['family'] . '?subsets=' . $selected_subsets);
-            $result   = json_decode($request['body']);
-
-            foreach ($result->variants as $variant) {
-                $fonts[] = [
-                    'font_id'     => $result->id . '-' . $variant->id,
-                    'font_family' => $variant->fontFamily,
-                    'font_weight' => $variant->fontWeight,
-                    'font_style'  => $variant->fontStyle,
-                    'local'       => implode($variant->local, ','),
-                    'preload'     => 0,
-                    'downloaded'  => 0,
-                    'url_ttf'     => $variant->ttf,
-                    'url_woff'    => $variant->woff,
-                    'url_woff2'   => $variant->woff2,
-                    'url_eot'     => $variant->eot
-                ];
-            }
-        }
-
-        if (!empty($_POST['used_styles']) && is_object($result) && $variants = $result->variants) {
-            $used_styles['variants'] = array_values($this->process_used_styles($_POST['used_styles'], $variants));
-
-            wp_send_json_success($used_styles);
+            $selected_subsets = implode($font['subsets'], ',');
+            $api              = new OMGF_API();
+            $fonts            = $api->get_font_styles($font['family'], $selected_subsets);
         }
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
+
         OMGF_Admin_Notice::set_notice(__('font styles found. Remove the ones you don\'t need and click \'Download\'.'));
-    }
-
-    /**
-     * @param $usedStyles
-     * @param $availableStyles
-     *
-     * @return array
-     */
-    private function process_used_styles($usedStyles, $availableStyles)
-    {
-        foreach ($usedStyles as &$style) {
-            $fontWeight = preg_replace('/[^0-9]/', '', $style);
-            $fontStyle  = preg_replace('/[^a-zA-Z]/', '', $style);
-
-            if ($fontStyle == 'i') {
-                $fontStyle = 'italic';
-            }
-
-            $style = $fontWeight . $fontStyle;
-        }
-
-        return array_filter(
-            $availableStyles,
-            function ($style) use ($usedStyles) {
-                $fontStyle = $style->fontWeight . ($style->fontStyle !== 'normal' ? $style->fontStyle : '');
-
-                return in_array($fontStyle, $usedStyles);
-            }
-        );
     }
 
     /**
@@ -240,8 +164,6 @@ class OMGF_AJAX
     public function empty_directory()
     {
         try {
-            delete_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS);
-            delete_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
             delete_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
             delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
 

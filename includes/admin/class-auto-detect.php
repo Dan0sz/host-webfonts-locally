@@ -10,33 +10,58 @@
  *
  * @package  : OMGF
  * @author   : Daan van den Bergh
- * @copyright: (c) 2019 Daan van den Bergh
+ * @copyright: (c) 2020 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
 
-class OMGF_AJAX_Detect
+class OMGF_Admin_AutoDetect
 {
+    private $detected_fonts = [];
+
+    private $api;
+
     public function __construct(
-        $fonts
+        $detected_fonts
     ) {
-        $this->save_detected_fonts($fonts);
+        $this->detected_fonts = $detected_fonts;
+        $this->api = new OMGF_API();
+
+        $this->init();
     }
 
-    /**
-     *
-     */
-    public function save_detected_fonts($used_fonts)
+    private function init()
     {
-        $font_properties = $this->extract_font_properties($used_fonts);
+        $font_properties = $this->extract_font_properties($this->detected_fonts);
 
         $fonts = $this->build_subsets_array($font_properties);
 
+        foreach ($fonts['subsets'] as $subset) {
+            $subsets[] = [
+                'subset_family'     => $subset['family'],
+                'subset_font'       => $subset['id'],
+                'available_subsets' => $subset['subsets'] ?? [ 'latin' ],
+                'selected_subsets'  => $subset['subsets'] ?? [ 'latin' ]
+            ];
+        }
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $subsets);
+
+        foreach ($subsets as $subset) {
+            $font_styles[] = $this->api->get_font_styles($subset['subset_font'], implode(',', $subset['selected_subsets']));
+        }
+
+        foreach ($fonts['subsets'] as $index => $subset) {
+            $used_styles[] = $this->process_used_styles($subset['used_styles'], $font_styles[$index]);
+        }
+
+        $detected_fonts = array_merge(...$used_styles);
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $detected_fonts);
+
         /** It only needs to run once. */
         update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, false);
-
-        wp_send_json_success($fonts);
     }
 
     /**
@@ -102,8 +127,35 @@ class OMGF_AJAX_Detect
             $i++;
         }
 
-        $fonts['auto-detect'] = true;
-
         return $fonts;
+    }
+
+    /**
+     * @param $usedStyles
+     * @param $availableStyles
+     *
+     * @return array
+     */
+    private function process_used_styles($usedStyles, $availableStyles)
+    {
+        foreach ($usedStyles as &$style) {
+            $fontWeight = preg_replace('/[^0-9]/', '', $style);
+            $fontStyle  = preg_replace('/[^a-zA-Z]/', '', $style);
+
+            if ($fontStyle == 'i') {
+                $fontStyle = 'italic';
+            }
+
+            $style = $fontWeight . $fontStyle;
+        }
+
+        return array_filter(
+            $availableStyles,
+            function ($style) use ($usedStyles) {
+                $fontStyle = $style['font_weight'] . ($style['font_style'] !== 'normal' ? $style['font_style'] : '');
+
+                return in_array($fontStyle, $usedStyles);
+            }
+        );
     }
 }

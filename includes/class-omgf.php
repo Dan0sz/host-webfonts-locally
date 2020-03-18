@@ -26,6 +26,7 @@ class OMGF
         $this->define_constants();
 
         if (is_admin()) {
+            $this->do_auto_detect();
             $this->do_settings();
             $this->add_ajax_hooks();
             add_action('plugin_loaded', array($this, 'do_setup'));
@@ -82,6 +83,18 @@ class OMGF
     private function add_ajax_hooks()
     {
         return new OMGF_AJAX();
+    }
+
+    /**
+     * @return OMGF_Admin_AutoDetect
+     */
+    private function do_auto_detect()
+    {
+        $fonts = json_decode(get_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS));
+
+        if (OMGF_AUTO_DETECT_ENABLED && $fonts) {
+            return new OMGF_Admin_AutoDetect($fonts);
+        }
     }
 
     /**

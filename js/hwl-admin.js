@@ -13,95 +13,6 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
-function hwlAutoDetectFonts()
-{
-    let detectButton = jQuery('#detect-btn');
-
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'omgf_ajax_auto_detect'
-        },
-        dataType: 'json',
-        beforeSend: function() {
-            if (omgf.auto_detect_enabled === '' && omgf.detected_fonts === '') {
-                hwlCleanQueue();
-            }
-        },
-        error: function (response) {
-            displayError(response.responseJSON.data);
-        },
-        complete: function(response) {
-            if (omgf.auto_detect_enabled === '' && omgf.detected_fonts === '') {
-                hwlScrollTop();
-                jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>" + response.responseJSON.data + "</p></div>");
-                hwlUpdateInputValue(detectButton, 'Enabled', '0 38px 1px');
-            } else {
-                try {
-                    hwlUpdateInputValue(detectButton, 'Auto-detect', '0 36px 1px');
-                    hwlRenderAvailableSubsets(response.responseJSON);
-                } catch(error) {
-                    hwlScrollTop();
-                    jQuery('#hwl-admin-notices').append("<div class='notice notice-success is-dismissible'><p>Oops! Something went wrong. " + error + ". <a href='javascript:location.reload();'>Refresh this page</a> and try again. If it still fails, <a href='javascript:hwlEmptyDir();'>empty the cache</a> and <a href='javascript:location.reload();'>refresh this page</a>.");
-                }
-            }
-        }
-    })
-}
-
-/**
- * Run this after refresh when both statements return true.
- */
-if (omgf.auto_detect_enabled !== '' && omgf.detected_fonts !== '') {
-    hwlAutoDetectFonts();
-}
-
-/**
- * Print available subsets
- *
- * @param response
- */
-function hwlRenderAvailableSubsets(response)
-{
-    let data        = response.data;
-    let subsetArray = data.subsets === undefined ? data : data.subsets;
-
-    for (let ii = 0; ii < subsetArray.length; ii++) {
-        subsets = subsetArray[ii]['subsets'];
-        family = subsetArray[ii]['family'];
-
-        id = subsetArray[ii]['id'];
-        usedStyles = subsetArray[ii]['used_styles'];
-
-        if (subsets === null) {
-            subsets = ['latin'];
-        }
-
-        length = subsets.length;
-        renderedSubsets = [];
-
-        for (let iii = 0; iii < length; iii++) {
-            renderedSubsets[iii] = `<td><label><input name="${id}" value="${subsets[iii]}" type="checkbox" onclick='hwlGenerateSearchQuery("${id}", ${JSON.stringify(usedStyles)})' />${subsets[iii]}</label></td>`;
-        }
-
-        jQuery('#hwl-subsets').append('<tr valign="top" id="' + id + '"><td><input type="text" class="hwl-subset-font-family" value="' + family + '" readonly/></td>' + renderedSubsets + '</tr>');
-        jQuery('#hwl-results').append("<tbody id='" + 'hwl-section-' + id + "'></tbody>");
-    }
-
-    if (data['auto-detect'] === true) {
-        jQuery('#hwl-subsets input[type="checkbox"]').each(function() {
-            /**
-             * These fonts are used by WP Admin. But might be used by front-end as well.
-             * That's why we do return them, but do not trigger a search by default.
-             */
-            if (this.getAttribute('name') !== 'open-sans' && this.getAttribute('name') !== 'noto-serif') {
-                this.click();
-            }
-        });
-    }
-}
-
 jQuery(document).ready(function ($) {
     var omgf_admin = {
         // XHR
@@ -136,6 +47,7 @@ jQuery(document).ready(function ($) {
 
             // Buttons
             $('#omgf-search-subsets').on('click', this.click_search);
+            $('#omgf-auto-detect').on('click', this.enable_auto_detect);
             $('#omgf-download').on('click', this.download_fonts);
             $('#omgf-generate').on('click', this.generate_stylesheet);
             $('#omgf-empty').on('click', this.empty_cache_directory);
@@ -147,6 +59,23 @@ jQuery(document).ready(function ($) {
         click_search: function () {
             searchQuery = $('#omgf-search').val().replace(/\s/g, '-').toLowerCase();
             omgf_admin.search_subsets(searchQuery);
+        },
+
+        /**
+         * Enable Auto Detect.
+         */
+        enable_auto_detect: function () {
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_enable_auto_detect'
+                },
+                dataType: 'json',
+                complete: function() {
+                    location.reload();
+                }
+            })
         },
 
         /**
@@ -349,162 +278,6 @@ jQuery(document).ready(function ($) {
 });
 
 /**
- * Generate search query for selected subsets
- *
- * @param id
- * @param usedStyles
- */
-function hwlGenerateSearchQuery(id, usedStyles = null)
-{
-    let subsets = [];
-    checked = jQuery("input[name='" + id + "']:checked");
-
-    jQuery.each(checked, function() {
-        subsets.push(jQuery(this).val());
-    });
-
-    subsets.join();
-    hwlSearchGoogleFonts(id, subsets, usedStyles);
-}
-
-/**
- * Triggers the AJAX-request to Google Webfont Helper.
- *
- * @param id
- * @param subsets
- * @param usedStyles
- */
-function hwlSearchGoogleFonts(id, subsets, usedStyles = null)
-{
-    let loadingDiv = jQuery('#hwl-warning .loading');
-    let errorDiv = jQuery('#hwl-warning .error');
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'omgf_ajax_search_google_fonts',
-            search_query: id,
-            search_subsets: subsets,
-            used_styles: usedStyles
-        },
-        dataType: 'json',
-        beforeSend: function() {
-            loadingDiv.show()
-        },
-        error: function(response) {
-            displayError(response.responseJSON.data);
-        },
-        success: function(response) {
-            loadingDiv.hide();
-            errorDiv.hide();
-            if(response['responseText'] !== 'Not found') {
-                hwlRenderAvailableFonts(response);
-            } else {
-                errorDiv.show();
-            }
-        }
-    })
-}
-
-function displayError(message) {
-    let loadingDiv = jQuery('#hwl-warning .loading');
-    let errorDiv = jQuery('#hwl-warning .error');
-
-    loadingDiv.hide();
-    errorDiv.show();
-    hwlScrollTop();
-    jQuery('#hwl-admin-notices').html("<div class='notice notice-success is-dismissible'><p>Oops! Something went wrong. " + message + ".");
-}
-
-/**
- * Displays the search results
- *
- * @param results
- */
-function hwlRenderAvailableFonts(results)
-{
-    variants = results.data.variants === undefined ? results.responseJSON.data.variants : results.data.variants;
-    length = variants.length;
-    renderedFonts = [];
-    for(iii = 0; iii < length; iii++) {
-        fontFamily = variants[iii].fontFamily.replace(/'/g, '');
-        fontId = variants[iii].id;
-        font = fontFamily.replace(/\s+/g, '-').toLowerCase() + '-' + variants[iii].id;
-        fontWeight = variants[iii].fontWeight;
-        fontStyle = variants[iii].fontStyle;
-        fontLocal = variants[iii].local;
-        renderedFonts[iii] = `<tr id="row-${font}" valign="top" align="center">
-                                    <td>
-                                        <input readonly type="text" value="${fontFamily}" name="caos_webfonts_array][${font}][font-family]" />
-                                    </td>
-                                    <td>
-                                        <input readonly type="text" value="${fontStyle}" name="caos_webfonts_array][${font}][font-style]" />
-                                    </td>
-                                    <td>
-                                        <input readonly type="text" value="${fontWeight}" name="caos_webfonts_array][${font}][font-weight]" />
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" value="1" name="caos_webfonts_array][${font}][preload]" />
-                                    </td>
-                                    <td>
-                                        <input type="hidden" value="${fontId}" name="caos_webfonts_array][${font}][id]" />
-                                        <input type="hidden" value="${fontLocal}" name="caos_webfonts_array][${font}][local]" />
-                                        <input type="hidden" value="${variants[iii].ttf}" name="caos_webfonts_array][${font}][url][ttf]" />
-                                        <input type="hidden" value="${variants[iii].woff}" name="caos_webfonts_array][${font}][url][woff]" />
-                                        <input type="hidden" value="${variants[iii].woff2}" name="caos_webfonts_array][${font}][url][woff2]" />
-                                        <input type="hidden" value="${variants[iii].eot}" name="caos_webfonts_array][${font}][url][eot]" />
-                                        <div class="hwl-remove">
-                                            <a onclick="hwlRemoveRow('row-${font}')"><small>remove</small></a>
-                                        </div>
-                                    </td>
-                                 </tr>`
-    }
-    console.log(fontFamily.replace(/\s+/g, '-').toLowerCase());
-    jQuery('#hwl-section-' + fontFamily.replace(/\s+/g, '-').toLowerCase()).html(renderedFonts)
-}
-
-/**
- * Gathers all information about the subsets
- *
- * @returns {{}}
- */
-function hwlGatherSelectedSubsets()
-{
-    rows = jQuery('#hwl-subsets tr');
-    length = rows.length;
-    subsets = {};
-    jQuery(rows).each(function() {
-        id = this.id;
-        checkboxes = jQuery("input[name='" + id + "']");
-        checked = jQuery("input[name='" + id + "']:checked");
-
-        selectedSubsets = [];
-        jQuery.each(checked, function() {
-            selectedSubsets.push(jQuery(this).val());
-        });
-        selectedSubsets.join();
-
-        availableSubsets = [];
-        jQuery.each(checkboxes, function() {
-            availableSubsets.push(jQuery(this).val());
-        });
-        availableSubsets.join();
-
-        family = jQuery(this).find('.hwl-subset-font-family').val();
-
-        subsets[id] = {};
-        subsets[id]['family'] = {};
-        subsets[id]['family'] = family;
-        subsets[id]['selected'] = {};
-        subsets[id]['selected'] = selectedSubsets;
-        subsets[id]['available'] = {};
-        subsets[id]['available'] = availableSubsets;
-    });
-
-    return subsets;
-}
-
-/**
  * Gets a JSON object with the download progress information
  */
 function hwlGetDownloadStatus()
@@ -550,70 +323,6 @@ function hwlUpdateInputValue(input, text, padding = '0 10px 1px')
 {
     input.val(text);
     input.css('padding', padding);
-}
-
-/**
- * Remove all files within the configured cache dir.
- */
-function hwlEmptyDir()
-{
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'omgf_ajax_empty_dir'
-        },
-        success: function() {
-            hwlCleanQueue();
-            hwlUpdateStatusBar(0)
-        }
-    });
-}
-
-/**
- * Trigger the DB clean-up and clean list.
- */
-function hwlCleanQueue()
-{
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'omgf_ajax_clean_queue'
-        },
-        success: function() {
-            jQuery('.caos-status-progress-percentage').html('0%');
-            jQuery('#hwl-subsets, tbody[id^=hwl-section]').empty()
-        }
-    })
-}
-
-/**
- * Scroll to top-effect.
- */
-function hwlScrollTop()
-{
-    setTimeout(function () {
-        jQuery('html, body').animate({
-            scrollTop: 0
-        }, 1500)
-    }, 1500)
-}
-
-/**
- * Serialize form data to a multi-dimensional array.
- */
-function hwlSerializeArray(data)
-{
-    let result = [];
-    data.each(function() {
-        fields = {};
-        jQuery.each(jQuery(this).serializeArray(), function() {
-            fields[this.name] = this.value
-        });
-        result.push(fields)
-    });
-    return result
 }
 
 /**
