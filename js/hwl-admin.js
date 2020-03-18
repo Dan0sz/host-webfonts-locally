@@ -120,7 +120,7 @@ jQuery(document).ready(function ($) {
                 omgf_admin.font_families[index] = {};
                 omgf_admin.font_families[index].subsets = [];
 
-                $('input[name="' + font + '"]:checked').each(function(i) {
+                $('input[data-subset-font-family="' + font + '"]:checked').each(function(i) {
                     omgf_admin.font_families[index].family = font;
                     omgf_admin.font_families[index].subsets[i] = this.value;
                 });
