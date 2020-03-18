@@ -19,9 +19,9 @@ defined('ABSPATH') || exit;
 $db = new OMGF_DB();
 $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
 ?>
-<div class="">
+<div class="omgf-generate-stylesheet">
     <h3><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></h3>
-    <div class="hwl-search-box">
+    <div class="omgf-search-box">
         <input type="text" id="omgf-search" class="form-input-tip ui-autocomplete-input" placeholder="<?php _e('Search... (e.g. Roboto,Open Sans)', 'host-webfonts-local'); ?>" />
         <input type="button" id="omgf-search-subsets" class="button button-primary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
         <input type="button" id="omgf-auto-detect" class="button button-secondary button-hero" value="<?= __('Auto-detect', 'host-webfonts-local'); ?>" />
@@ -34,7 +34,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         <tr id="row" valign="top">
             <th align="left" colspan="3"><?php _e('Available subsets', 'host-webfonts-local'); ?></th>
         </tr>
-        <tbody id="hwl-subsets">
+        <tbody id="omgf-subsets">
         <?php
         $subsetFonts = $db->get_subsets();
         ?>
@@ -71,7 +71,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <th align="left" colspan="3"><?php _e('Available fonts', 'host-webfonts-local'); ?></th>
         </tr>
     </table>
-    <table id="hwl-results">
+    <table id="omgf-font-styles-list">
         <?php
         $savedFonts = $db->get_total_fonts();
         ?>
@@ -134,7 +134,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         <?php endif; ?>
     </table>
 
-    <table>
+    <table id="omgf-control-panel">
         <tbody>
         <tr valign="center">
             <td>
@@ -146,6 +146,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <td>
                 <a id="omgf-empty" class="button-cancel"><?php _e('Empty Cache Directory', 'host-webfonts-local'); ?></a>
             </td>
+            <td style="width: 33%;"></td>
         </tr>
         <tr valign="center">
             <?php
@@ -153,10 +154,10 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             $total      = $db->get_download_status()['total'];
             $width      = $downloaded && $total ? (100 / $total) * $downloaded : 0;
             ?>
-            <td colspan="5">
-                <div class="caos-status-total-bar" style="">
-                    <div id="caos-status-progress-bar" style="width: <?= $width; ?>%;">
-                        <span class="caos-status-progress-percentage"><?= $width . '%'; ?></span>
+            <td colspan="4">
+                <div class="omgf-status-total-bar" style="">
+                    <div id="omgf-status-progress-bar" style="width: <?= $width; ?>%;">
+                        <span class="omgf-status-progress-percentage"><?= $width . '%'; ?></span>
                     </div>
                 </div>
             </td>

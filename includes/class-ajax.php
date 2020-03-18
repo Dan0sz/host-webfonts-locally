@@ -45,7 +45,14 @@ class OMGF_AJAX
      */
     public function search_font_subsets()
     {
-        $searchQueries = explode(',', sanitize_text_field($_POST['search_query']));
+        delete_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
+        delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
+
+        if (!($query = $_POST['search_query'])) {
+            OMGF_Admin_Notice::set_notice(__('Search query not found.', 'host-webfonts-local'), true, 'warning');
+        }
+
+        $searchQueries = explode(',', sanitize_text_field($query));
 
         foreach ($searchQueries as $searchQuery) {
             $api = new OMGF_API();

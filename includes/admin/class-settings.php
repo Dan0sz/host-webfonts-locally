@@ -91,13 +91,13 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
             <?php $this->get_template('welcome'); ?>
 
-            <form id="hwl-options-form" class="settings-column left" name="hwl-options-form" method="post">
+            <form id="omgf-options-form" class="settings-column left" name="omgf-options-form" method="post">
                 <div class="">
                     <?php $this->get_template('generate-stylesheet'); ?>
                 </div>
             </form>
 
-            <form id="hwl-settings-form" class="settings-column right" name="hwl-settings-form" method="post" action="options.php">
+            <form id="omgf-settings-form" class="settings-column right" name="omgf-settings-form" method="post" action="options.php">
                 <?php
                 settings_fields('omgf-basic-settings');
                 do_settings_sections('omgf-basic-settings');

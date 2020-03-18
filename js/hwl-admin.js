@@ -73,7 +73,7 @@ jQuery(document).ready(function ($) {
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    omgf_admin.$loader.show();
+                    omgf_admin.show_loader('.omgf-search-box');
                 },
                 complete: function () {
                     location.reload();
@@ -96,12 +96,23 @@ jQuery(document).ready(function ($) {
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    omgf_admin.$loader.show();
+                    omgf_admin.show_loader('.omgf-search-box')
                 },
                 complete: function() {
                     location.reload();
                 }
             });
+        },
+
+        show_loader: function (element) {
+            let clone = omgf_admin.$loader.clone();
+
+            $(element).append(clone).css({
+                'position': 'relative',
+                'opacity': '0.5'
+            });
+
+            clone.show();
         },
 
         /**
@@ -135,7 +146,7 @@ jQuery(document).ready(function ($) {
                 },
                 dataType: 'json',
                 beforeSend: function() {
-
+                    omgf_admin.show_loader('#omgf-font-styles-list');
                 },
                 complete: function () {
                     location.reload()
@@ -163,7 +174,7 @@ jQuery(document).ready(function ($) {
                     preload_font_styles: omgf_admin.preload_font_styles
                 },
                 dataType: 'json',
-                complete: function() {
+                complete: function () {
                     location.reload();
                 }
             });
@@ -173,9 +184,10 @@ jQuery(document).ready(function ($) {
          * Triggered when remove is clicked. If multiple are checked, all are processed at once.
          */
         remove_font_style: function() {
-            row = $(this).data('row');
+            row = '#' + $(this).data('row');
 
-            $('#' + row).remove();
+            omgf_admin.show_loader(row);
+            $(row).removeClass('omgf-font-style');
 
             setTimeout(omgf_admin.refresh_font_style_list, 1500);
         },
@@ -225,7 +237,6 @@ jQuery(document).ready(function ($) {
                 beforeSend: function() {
                     hwlUpdateStatusBar(0);
                     hwlGetDownloadStatus();
-                    hwlUpdateInputValue(downloadButton, 'Downloading...', '0 14px 1px');
                 },
                 complete: function() {
                     location.reload();
@@ -246,7 +257,7 @@ jQuery(document).ready(function ($) {
                     action: 'omgf_ajax_generate_styles',
                 },
                 beforeSend: function() {
-                    hwlUpdateInputValue(generateButton, 'Generating...', '0 33px 1px');
+
                 },
                 complete: function() {
                     location.reload();
@@ -311,19 +322,6 @@ function hwlUpdateStatusBar(progress)
     progress = Math.round(progress) + '%';
     jQuery('#caos-status-progress-bar').width(progress);
     jQuery('.caos-status-progress-percentage').html(progress);
-}
-
-/**
- * Updates the value of any input to show status updates
- *
- * @param input
- * @param text
- * @param padding
- */
-function hwlUpdateInputValue(input, text, padding = '0 10px 1px')
-{
-    input.val(text);
-    input.css('padding', padding);
 }
 
 /**
