@@ -89,8 +89,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
         <div class="wrap">
             <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
 
-            <div id="hwl-admin-notices"></div>
-
             <?php $this->get_template('welcome'); ?>
 
             <form id="hwl-options-form" class="settings-column left" name="hwl-options-form" method="post">
