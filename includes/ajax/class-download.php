@@ -111,6 +111,8 @@ class OMGF_AJAX_Download extends OMGF_AJAX
         }
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $selectedFonts);
+
+        OMGF_Admin_Notice::set_notice(count($selectedFonts) . ' ' . __('fonts downloaded. You can now proceed to generate the stylesheet.', 'host-webfonts-local'));
     }
 
     /**

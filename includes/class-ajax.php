@@ -35,7 +35,6 @@ class OMGF_AJAX
         add_action('wp_ajax_omgf_ajax_generate_styles', array($this, 'generate_styles'));
         add_action('wp_ajax_omgf_ajax_preload_font_style', array($this, 'preload_font_style'));
         add_action('wp_ajax_omgf_ajax_refresh_font_style_list', array($this, 'refresh_font_style_list'));
-        add_action('wp_ajax_omgf_ajax_get_download_status', array($this, 'get_download_status'));
         add_action('wp_ajax_omgf_ajax_empty_dir', array($this, 'empty_directory'));
         // @formatter:on
     }
@@ -139,6 +138,8 @@ class OMGF_AJAX
         }
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
+
+        OMGF_Admin_Notice::set_notice(count($preload_styles) . ' ' . __('fonts set to preload.', 'host-webfonts-local'));
     }
 
     /**
@@ -155,16 +156,8 @@ class OMGF_AJAX
         });
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $refreshed_list);
-    }
 
-    /**
-     * Get download status from DB.
-     */
-    public function get_download_status()
-    {
-        $status = $this->db->get_download_status();
-
-        wp_send_json_success($status);
+        OMGF_Admin_Notice::set_notice(count($fonts) - count($current) . ' ' . __('fonts removed from list.', 'host-webfonts-local'));
     }
 
     /**

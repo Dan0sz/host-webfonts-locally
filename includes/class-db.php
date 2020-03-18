@@ -32,17 +32,6 @@ class OMGF_DB
     }
 
     /**
-     * @return array
-     */
-    public function get_download_status()
-    {
-        return array(
-            "downloaded" => count($this->get_downloaded_fonts()),
-            "total"      => count($this->get_total_fonts())
-        );
-    }
-
-    /**
      * @return array|\Exception
      */
     public function get_downloaded_fonts()
