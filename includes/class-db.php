@@ -79,39 +79,29 @@ class OMGF_DB
     }
 
     /**
-     * @return array|\Exception
+     * @return array
      */
     public function get_total_fonts()
     {
-        try {
-            return get_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
-        } catch (\Exception $e) {
-            return $e;
-        }
+        return get_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS) ?: [];
     }
 
     /**
-     * @return array|\Exception|null|object
+     * @return array
      */
     public function get_subsets()
     {
-        try {
-            return get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
-        } catch (\Exception $e) {
-            return $e;
-        }
+        return get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS) ?: [];
     }
 
     /**
-     * @return Exception|void
+     * @return bool
      */
     public function clean_queue()
     {
-        try {
-            delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
-            delete_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
-        } catch (\Exception $e) {
-            return $e;
-        }
+        delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
+        delete_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
+
+        return true;
     }
 }

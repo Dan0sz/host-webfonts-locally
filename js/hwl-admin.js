@@ -13,44 +13,6 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
-/**
- * When user is done typing, trigger search.
- */
-function hwlClickSearch()
-{
-    let input   = jQuery('#search-field');
-    searchQuery = input.val().replace(/\s/g, '-').toLowerCase();
-    hwlSearchFontSubsets(searchQuery)
-}
-
-/**
- * Return available subsets for searched font.
- *
- * @param queriedFonts
- */
-function hwlSearchFontSubsets(queriedFonts)
-{
-    let searchField  = jQuery('#search-field');
-    let searchButton = jQuery('#search-btn');
-
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'omgf_ajax_search_font_subsets',
-            search_query: queriedFonts
-        },
-        dataType: 'json',
-        beforeSend: function() {
-            hwlUpdateInputValue(searchButton, 'Searching...', '0 20px');
-            searchField.val('');
-        },
-        complete: function() {
-            location.reload();
-        }
-    });
-}
-
 function hwlAutoDetectFonts()
 {
     let detectButton = jQuery('#detect-btn');
@@ -173,9 +135,43 @@ jQuery(document).ready(function ($) {
             this.$removed_font_style.on('click', this.remove_font_style);
 
             // Buttons
+            $('#omgf-search-subsets').on('click', this.click_search);
             $('#omgf-download').on('click', this.download_fonts);
             $('#omgf-generate').on('click', this.generate_stylesheet);
             $('#omgf-empty').on('click', this.empty_cache_directory);
+        },
+
+        /**
+         * Triggered when Search is clicked.
+         */
+        click_search: function () {
+            searchQuery = $('#omgf-search').val().replace(/\s/g, '-').toLowerCase();
+            omgf_admin.search_subsets(searchQuery);
+        },
+
+        /**
+         * Triggered by Click Search
+         *
+         * @param query
+         */
+        search_subsets: function (query) {
+            let searchButton = $('#omgf-search-subsets');
+
+            jQuery.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_search_font_subsets',
+                    search_query: query
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    hwlUpdateInputValue(searchButton, 'Searching...', '0 20px');
+                },
+                complete: function() {
+                    location.reload();
+                }
+            });
         },
 
         /**
