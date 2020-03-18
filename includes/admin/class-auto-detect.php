@@ -61,7 +61,10 @@ class OMGF_Admin_AutoDetect
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $detected_fonts);
 
         /** It only needs to run once. */
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, false);
+        delete_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
+        delete_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS);
+
+        OMGF_Admin_Notice::set_notice(__('Auto-detection completed. Please check the results and proceed to download the fonts and generate the stylesheet.', 'host-webfonts-local'), false);
     }
 
     /**
