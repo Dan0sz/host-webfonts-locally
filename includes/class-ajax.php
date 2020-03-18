@@ -94,9 +94,11 @@ class OMGF_AJAX
             $fonts[]          = $api->get_font_styles($font['family'], $selected_subsets);
         }
 
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, array_merge(...$fonts));
+        $fonts = array_merge(...$fonts);
 
-        OMGF_Admin_Notice::set_notice(__('font styles found. Remove the ones you don\'t need and click \'Download\'.'));
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
+
+        OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Trim the list to your needs and click \'Download\'.', 'host-webfonts-local'));
     }
 
     /**
