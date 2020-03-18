@@ -2,8 +2,8 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
-Tested up to: 5.3
-Stable tag: 2.5.0
+Tested up to: 5.4
+Stable tag: 3.0.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -78,12 +78,6 @@ The option in OMGF removes any fonts that are loaded in the conventional way. Ho
 
 No, it does not. It creates a CSS Stylesheet which will be automatically added to your theme's header using a built-in WordPress queueing system.
 
-= My fonts aren't being downloaded! What's going on? =
-
-First check your database if the table {prefix}_caos_webfonts exists. If it doesn't, remove the `caos_webfonts_db_version` from the `wp_options` table and reload the page. The table should be created and the issue should be resolved.
-
-If the issue still persists and you're using any caching plugins, such as Autoptimize, W3TC or WP Super Cache? Empty their caches. After that empty your browser's cache and reload the page. Try again.
-
 = The stylesheet isn't loaded? What's going on? =
 
 OMGF enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function into it's header section.
@@ -110,6 +104,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.0.0 =
+Complete code overhaul to increase performance and UX. Fixed several bugs.
+OMGF now uses wp_options table, instead of own table.
 
 = 2.5.0 =
 Updated Welcome-panel with WoOSH!-services.
