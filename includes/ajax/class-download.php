@@ -18,12 +18,6 @@ defined('ABSPATH') || exit;
 
 class OMGF_AJAX_Download extends OMGF_AJAX
 {
-    /** @var $fonts */
-    private $fonts;
-
-    /** @var $subsets */
-    private $subsets;
-
     /** @var QM_DB $wpdb */
     private $wpdb;
 
@@ -107,7 +101,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
                     $this->download_file($localFile, $remoteFile);
                     $font['downloaded'] = 1;
                 } catch (Exception $e) {
-                    $this->throw_error($e->getCode(), "File ($remoteFile) could not be downloaded: " . $e->getMessage());
+                    OMGF_Admin_Notice::set_notice(__("File ($remoteFile) could not be downloaded: ", 'host-webfonts-local') . $e->getMessage(), 'error', $e->getCode());
                 }
 
                 clearstatcache();
@@ -130,7 +124,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
         $file = wp_remote_get($remoteFile, $localFile);
 
         if (is_wp_error($file)) {
-            $this->throw_error($file->get_error_code(), $file->get_error_message());
+            OMGF_Admin_Notice::set_notice($file->get_error_message(), true, 'error', $file->get_error_code());
         }
 
         $this->filesystem()->put_contents($localFile, $file['body']);

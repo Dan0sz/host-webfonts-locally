@@ -31,7 +31,6 @@ class OMGF_AJAX
         add_action('wp_ajax_omgf_ajax_download_fonts', array($this, 'download_fonts'));
         add_action('wp_ajax_omgf_ajax_generate_styles', array($this, 'generate_styles'));
         add_action('wp_ajax_omgf_ajax_get_download_status', array($this, 'get_download_status'));
-        add_action('wp_ajax_omgf_ajax_clean_queue', array($this, 'clean_queue'));
         add_action('wp_ajax_omgf_ajax_empty_dir', array($this, 'empty_directory'));
         add_action('wp_ajax_omgf_ajax_search_font_subsets', array($this, 'search_font_subsets'));
         add_action('wp_ajax_omgf_ajax_search_google_fonts', array($this, 'search_fonts'));
@@ -68,25 +67,14 @@ class OMGF_AJAX
     }
 
     /**
-     * AJAX-wrapper for hwlCleanQueue()
-     */
-    public function clean_queue()
-    {
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, '');
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, '');
-
-        wp_die($this->db->clean_queue());
-    }
-
-    /**
      * Empty cache directory.
      *
      * @return array
      */
     public function empty_directory()
     {
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, '');
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, '');
+        delete_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS);
+        delete_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
 
         return array_map('unlink', array_filter((array) glob(OMGF_UPLOAD_DIR . '/*')));
     }
@@ -110,10 +98,9 @@ class OMGF_AJAX
                 );
             }
             update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $response);
-            OMGF_Admin_Notice::set_notice(__('Subset search finished.', 'host-webfonts-local'), 'success');
-            wp_send_json_success();
+            OMGF_Admin_Notice::set_notice(__('Subset search finished.', 'host-webfonts-local'));
         } catch (\Exception $e) {
-            wp_send_json_error($e->getMessage(), $e->getCode());
+            OMGF_Admin_Notice::set_notice($e->getMessage(), true, 'error', $e->getCode());
         }
     }
 
@@ -167,9 +154,8 @@ class OMGF_AJAX
 
             update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
             OMGF_Admin_Notice::set_notice(__('font styles found. Remove the ones you don\'t need and click \'Download\'.'));
-            wp_send_json_success();
         } catch (\Exception $e) {
-            wp_send_json_error($e->getMessage(), $e->getCode());
+            OMGF_Admin_Notice::set_notice($e->getMessage(), true, 'error', $e->getCode());
         }
     }
 
@@ -247,14 +233,14 @@ class OMGF_AJAX
         if ((!$used_fonts && $auto_detect) || ($used_fonts && !$auto_detect)) {
             update_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS, '');
             update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, null);
-            $this->throw_error(406, 'Something went wrong while trying to enable Auto Detection. <a href="javascript:location.reload()">Refresh this page</a> and try again.');
+            OMGF_Admin_Notice::set_notice(__('Something went wrong while trying to enable Auto Detection. <a href="javascript:location.reload()">Refresh this page</a> and try again.', 'host-webfonts-local'), true, 'error', 406);
         }
 
         $this->enable_auto_detect();
 
         $url = get_permalink(get_posts()[0]->ID);
 
-        wp_send_json_success(__("Auto-detection mode enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page. Then click 'Load fonts'.", "host-webfonts-local"));
+        OMGF_Admin_Notice::set_notice(__("Auto-detection mode enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page. Then click 'Load fonts'.", "host-webfonts-local"));
     }
 
     /**
@@ -263,15 +249,5 @@ class OMGF_AJAX
     private function enable_auto_detect()
     {
         update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, true);
-    }
-
-    /**
-     * @param $code
-     * @param $message
-     */
-    protected function throw_error($code, $message)
-    {
-        OMGF_Admin_Notice::set_notice($code . ': ' . $message, 'error');
-        wp_send_json_error(__($message, 'host-webfonts-local'), (int) $code);
     }
 }

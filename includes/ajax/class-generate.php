@@ -51,12 +51,13 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
          * If the file can be created and uploaded. Let's try to write it.
          */
         try {
-            $stylesheet = fopen($file, 'w') or $this->throw_error(400, "Cannot create file {$file}");
+            $stylesheet = fopen($file, 'w') or OMGF_Admin_Notice::set_notice(__("Cannot create file {$file}", 'host-webfonts-local', true, 'error', 400));
             fwrite($stylesheet, $fonts);
             fclose($stylesheet);
-            wp_die(__('Stylesheet was successfully generated and added to your theme\'s header.'));
+
+            OMGF_Admin_Notice::set_notice(__('Stylesheet was successfully generated and added to your theme\'s header.'));
         } catch (Exception $e) {
-            $this->throw_error($e->getCode(), __("Stylesheet could not be generated: $e"));
+            OMGF_Admin_Notice::set_notice(__("Stylesheet could not be generated: $e"), true, 'error', $e->getCode());
         }
     }
 

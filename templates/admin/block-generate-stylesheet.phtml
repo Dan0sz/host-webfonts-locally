@@ -87,36 +87,36 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         $savedFonts = $db->get_total_fonts();
         ?>
         <?php if ($savedFonts && $subsetFonts): ?>
+        <tbody align="center" id="omgf-font-styles">
             <?php foreach ($savedFonts as $font):
                 $fontId = $font['font_id'];
                 $arrayPath = "caos_webfonts_array][$fontId]";
                 ?>
-                <tbody align="center" id="hwl-section-<?= strtolower($font['font_family']); ?>">
-                    <tr class="omgf-font-style" data-font-id="<?= $fontId; ?>" id="row-<?= $fontId; ?>" valign="top" align="center">
-                        <td>
-                            <input readonly type="text" value="<?= $font['font_family']; ?>" name="<?= $arrayPath; ?>[font-family]"/>
-                        </td>
-                        <td>
-                            <input readonly type="text" value="<?= $font['font_style']; ?>" name="<?= $arrayPath; ?>[font-style]"/>
-                        </td>
-                        <td>
-                            <input readonly type="text" value="<?= $font['font_weight']; ?>" name="<?= $arrayPath; ?>[font-weight]"/>
-                        </td>
-                        <td>
-                            <input type="checkbox" class="omgf-font-preload" data-preload="<?= $fontId; ?>" value="1" <?= $font['preload'] == 1 ? 'checked' : ''; ?> name="<?= $arrayPath; ?>[preload]"/>
-                        </td>
-                        <td>
-                            <input type="hidden" value="<?= $fontId; ?>" name="<?= $arrayPath; ?>[id]"/>
-                            <input type="hidden" value="<?= $font['local']; ?>" name="<?= $arrayPath; ?>[local]"/>
-                            <input type="hidden" value="<?= $font['url_ttf']; ?>" name="<?= $arrayPath; ?>[url][ttf]"/>
-                            <input type="hidden" value="<?= $font['url_woff']; ?>" name="<?= $arrayPath; ?>[url][woff]"/>
-                            <input type="hidden" value="<?= $font['url_woff2']; ?>" name="<?= $arrayPath; ?>[url][woff2]"/>
-                            <input type="hidden" value="<?= $font['url_eot']; ?>" name="<?= $arrayPath; ?>[url][eot]"/>
-                            <span data-row="row-<?= $fontId; ?>" class="omgf-font-remove notice-dismiss">&nbsp;</span>
-                        </td>
-                    </tr>
-                </tbody>
+                <tr class="omgf-font-style" data-font-id="<?= $fontId; ?>" id="row-<?= $fontId; ?>" valign="top" align="center">
+                    <td>
+                        <input readonly type="text" value="<?= $font['font_family']; ?>" name="<?= $arrayPath; ?>[font-family]"/>
+                    </td>
+                    <td>
+                        <input readonly type="text" value="<?= $font['font_style']; ?>" name="<?= $arrayPath; ?>[font-style]"/>
+                    </td>
+                    <td>
+                        <input readonly type="text" value="<?= $font['font_weight']; ?>" name="<?= $arrayPath; ?>[font-weight]"/>
+                    </td>
+                    <td>
+                        <input type="checkbox" class="omgf-font-preload" data-preload="<?= $fontId; ?>" value="1" <?= $font['preload'] == 1 ? 'checked' : ''; ?> name="<?= $arrayPath; ?>[preload]"/>
+                    </td>
+                    <td>
+                        <input type="hidden" value="<?= $fontId; ?>" name="<?= $arrayPath; ?>[id]"/>
+                        <input type="hidden" value="<?= $font['local']; ?>" name="<?= $arrayPath; ?>[local]"/>
+                        <input type="hidden" value="<?= $font['url_ttf']; ?>" name="<?= $arrayPath; ?>[url][ttf]"/>
+                        <input type="hidden" value="<?= $font['url_woff']; ?>" name="<?= $arrayPath; ?>[url][woff]"/>
+                        <input type="hidden" value="<?= $font['url_woff2']; ?>" name="<?= $arrayPath; ?>[url][woff2]"/>
+                        <input type="hidden" value="<?= $font['url_eot']; ?>" name="<?= $arrayPath; ?>[url][eot]"/>
+                        <span data-row="row-<?= $fontId; ?>" class="omgf-font-remove notice-dismiss">&nbsp;</span>
+                    </td>
+                </tr>
             <?php endforeach; ?>
+        </tbody>
         <?php endif; ?>
         <tbody id="hwl-warning">
         <tr class="loading" style="display: none;">
@@ -133,28 +133,23 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
     <table>
         <tbody>
         <tr>
-            <td colspan="5">
+            <td colspan="3">
                 <span class="description">* <?= __('Only the <strong>woff2</strong> format is preloaded, since this format is widely supported by Modern Browsers which support preload.'); ?></span>
             </td>
         </tr>
-        <tr valign="center" align="center">
+        <tr valign="center">
             <td>
-                <input type="button" onclick="hwlDownloadFonts()" name="save-btn"
-                       id="save-btn" class="button-primary" value="<?php _e('Download Fonts', 'host-webfonts-local'); ?>"/>
+                <input type="button" name="save-btn"
+                       id="omgf-download" class="button-primary" value="<?php _e('Download Fonts', 'host-webfonts-local'); ?>"/>
             </td>
             <td>
-                <input type="button" onclick="hwlGenerateStylesheet()" name="generate-btn"
-                       id="generate-btn" class="button-secondary" value="<?php _e('Generate Stylesheet', 'host-webfonts-local'); ?>"/>
+                <input type="button" name="generate-btn"
+                       id="omgf-generate" class="button-secondary" value="<?php _e('Generate Stylesheet', 'host-webfonts-local'); ?>"/>
             </td>
             <td>
-                <a onclick="hwlCleanQueue()" name="clean-btn"
-                   id="clean-btn" class="button-cancel"><?php _e('Clean Queue', 'host-webfonts-local'); ?></a>
+                <a name="empty-btn"
+                   id="omgf-empty" class="button-cancel"><?php _e('Empty Cache Directory', 'host-webfonts-local'); ?></a>
             </td>
-            <td>
-                <a onclick="hwlEmptyDir()" name="empty-btn"
-                   id="empty-btn" class="button-cancel"><?php _e('Empty Cache Directory', 'host-webfonts-local'); ?></a>
-            </td>
-            <td width="20%"></td>
         </tr>
         <tr valign="center">
             <?php

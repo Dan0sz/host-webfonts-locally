@@ -142,12 +142,20 @@ function hwlRenderAvailableSubsets(response)
 
 jQuery(document).ready(function ($) {
     var omgf_admin = {
+        // XHR
         search_fonts_xhr: false,
         preload_font_style_xhr: false,
         refresh_font_style_list_xhr: false,
+        download_fonts_xhr: false,
+        generate_stylesheet_xhr: false,
+        empty_cache_directory_xhr: false,
+
+        // Data
         font_families: [],
         preload_font_styles: [],
         font_style_list: [],
+
+        // Selectors
         $font_families: $('.omgf-subset-font-family'),
         $subsets: $('.omgf-subset'),
         $loading: $('#hwl-warning .loading'),
@@ -155,12 +163,24 @@ jQuery(document).ready(function ($) {
         $preload_font_styles_checked: $('.omgf-font-preload:checked'),
         $removed_font_style: $('.omgf-font-remove'),
 
+        /**
+         * Initialize all on click events.
+         */
         init: function () {
+            // Generate Stylesheet Section
             this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, 1500)});
             this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, 1500)});
             this.$removed_font_style.on('click', this.remove_font_style);
+
+            // Buttons
+            $('#omgf-download').on('click', this.download_fonts);
+            $('#omgf-generate').on('click', this.generate_stylesheet);
+            $('#omgf-empty').on('click', this.empty_cache_directory);
         },
 
+        /**
+         * Triggered on Search
+         */
         search_google_fonts: function () {
             if (omgf_admin.search_fonts_xhr) {
                 omgf_admin.search_fonts_xhr.abort();
@@ -197,6 +217,9 @@ jQuery(document).ready(function ($) {
             });
         },
 
+        /**
+         * Triggered when preload is checked. If multiple are checked, all are processed at once.
+         */
         preload_font_style: function() {
             if (omgf_admin.preload_font_style_xhr) {
                 omgf_admin.preload_font_style_xhr.abort();
@@ -220,6 +243,9 @@ jQuery(document).ready(function ($) {
             });
         },
 
+        /**
+         * Triggered when remove is clicked. If multiple are checked, all are processed at once.
+         */
         remove_font_style: function() {
             row = $(this).data('row');
 
@@ -228,7 +254,10 @@ jQuery(document).ready(function ($) {
             setTimeout(omgf_admin.refresh_font_style_list, 1500);
         },
 
-        refresh_font_style_list: function() {
+        /**
+         * Triggered after remove to sync data to backend.
+         */
+        refresh_font_style_list: function () {
             if (omgf_admin.refresh_font_style_list_xhr) {
                 omgf_admin.refresh_font_style_list_xhr.abort();
             }
@@ -245,6 +274,74 @@ jQuery(document).ready(function ($) {
                     font_styles: omgf_admin.font_style_list
                 },
                 dataType: 'json',
+                complete: function() {
+                    location.reload();
+                }
+            });
+        },
+
+        /**
+         * Download fonts and refresh window.
+         */
+        download_fonts: function () {
+            if (omgf_admin.download_fonts_xhr) {
+                omgf_admin.download_fonts_xhr.abort();
+            }
+
+            let downloadButton = $('#save-btn');
+
+            omgf_admin.download_fonts_xhr = $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_download_fonts'
+                },
+                beforeSend: function() {
+                    hwlUpdateStatusBar(0);
+                    hwlGetDownloadStatus();
+                    hwlUpdateInputValue(downloadButton, 'Downloading...', '0 14px 1px');
+                },
+                complete: function() {
+                    location.reload();
+                }
+            })
+        },
+
+        /**
+         * Generate stylesheet and refresh window.
+         */
+        generate_stylesheet: function () {
+            let generateButton = $('#generate-btn');
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_generate_styles',
+                },
+                beforeSend: function() {
+                    hwlUpdateInputValue(generateButton, 'Generating...', '0 33px 1px');
+                },
+                complete: function() {
+                    location.reload();
+                }
+            })
+        },
+
+        empty_cache_directory: function () {
+            if (omgf_admin.empty_cache_directory_xhr) {
+                omgf_admin.empty_cache_directory_xhr.abort();
+            }
+
+            omgf_admin.empty_cache_directory_xhr = $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_empty_dir'
+                },
+                beforeSend: function() {
+
+                },
                 complete: function() {
                     location.reload();
                 }
@@ -412,53 +509,6 @@ function hwlGatherSelectedSubsets()
 }
 
 /**
- * Triggered when 'Download Fonts' is clicked.
- */
-function hwlDownloadFonts()
-{
-    let hwlFonts  = hwlSerializeArray(jQuery('#hwl-options-form'));
-    let hwlSubsets = hwlGatherSelectedSubsets();
-    let downloadButton = jQuery('#save-btn');
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'omgf_ajax_download_fonts',
-            subsets: hwlSubsets,
-            fonts: hwlFonts,
-        },
-        beforeSend: function() {
-            hwlUpdateStatusBar(0);
-            hwlGetDownloadStatus();
-            hwlUpdateInputValue(downloadButton, 'Downloading...', '0 14px 1px');
-        },
-        success: function() {
-            clearTimeout(downloadStatus);
-
-            hwlUpdateInputValue(downloadButton, 'Done!', '0 41px 1px');
-            hwlUpdateStatusBar(100);
-
-            setTimeout(function() {
-                hwlUpdateInputValue(downloadButton, 'Download Fonts');
-            }, 2500);
-        },
-        error: function(message) {
-            clearTimeout(downloadStatus);
-
-            errorText = message.responseJSON.data;
-            errorCode = message.status;
-
-            var errorMessage = '<div id="setting-error-settings_updated" class="error settings-error notice is-dismissible"><p><strong>Error: ' + errorCode + '</strong> - ' + errorText + '</p></div>';
-
-            jQuery('html, body').animate({scrollTop: 0}, 800);
-            jQuery(errorMessage).insertAfter('.wrap h1');
-
-            hwlUpdateInputValue(downloadButton, 'Download Fonts');
-        }
-    })
-}
-
-/**
  * Gets a JSON object with the download progress information
  */
 function hwlGetDownloadStatus()
@@ -491,41 +541,6 @@ function hwlUpdateStatusBar(progress)
     progress = Math.round(progress) + '%';
     jQuery('#caos-status-progress-bar').width(progress);
     jQuery('.caos-status-progress-percentage').html(progress);
-}
-
-/**
- * Call the generate-stylesheet script.
- */
-function hwlGenerateStylesheet()
-{
-    let hwlFonts = hwlSerializeArray(jQuery('#hwl-options-form'));
-    let generateButton = jQuery('#generate-btn');
-    jQuery.ajax({
-        type: 'POST',
-        url: ajaxurl,
-        data: {
-            action: 'omgf_ajax_generate_styles',
-            selected_fonts: hwlFonts
-        },
-        beforeSend: function() {
-            hwlUpdateInputValue(generateButton, 'Generating...', '0 33px 1px');
-        },
-        success: function() {
-            hwlUpdateInputValue(generateButton, 'Done!', '0 54px 1px');
-            setTimeout(function() {
-                hwlUpdateInputValue(generateButton, 'Generate Stylesheet');
-            }, 2500);
-        },
-        error: function(response) {
-            hwlScrollTop();
-            jQuery('#hwl-admin-notices').append(
-                `<div class="notice notice-error is-dismissible">
-                    <p>The stylesheet could not be created: ${response.responseText}</p>
-                </div>`
-            );
-            hwlUpdateInputValue(generateButton, 'Generate Stylesheet');
-        }
-    })
 }
 
 /**
