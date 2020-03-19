@@ -48,7 +48,11 @@ class OMGF_Setup
      */
     public function run_db_updates()
     {
-        $this->migrate_db();
+        $table_exists = $this->wpdb->query("SHOW TABLES LIKE '" . OMGF_DB_TABLENAME . "'");
+
+        if ($table_exists) {
+            $this->migrate_db();
+        }
 
         $this->drop_tables();
     }
