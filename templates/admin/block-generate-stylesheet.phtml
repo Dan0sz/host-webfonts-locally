@@ -96,21 +96,21 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                 </th>
                 <th></th>
                 </thead>
-                <tbody align="center" id="omgf-font-styles">
+                <tbody id="omgf-font-styles">
                 <?php foreach ($savedFonts as $font):
                     $fontId = $font['font_id'];
                     ?>
-                    <tr class="omgf-font-style" data-font-id="<?= $fontId; ?>" id="row-<?= $fontId; ?>" valign="top" align="center">
-                        <td>
+                    <tr class="omgf-font-style" data-font-id="<?= $fontId; ?>" id="row-<?= $fontId; ?>">
+                        <td style="width: 195px;">
                             <input readonly type="text" value="<?= $font['font_family']; ?>" />
                         </td>
-                        <td>
-                            <input readonly type="text" value="<?= $font['font_style']; ?>" />
+                        <td style="width: 150px;">
+                            <input style="width: 150px;" readonly type="text" value="<?= $font['font_style']; ?>" />
                         </td>
-                        <td>
-                            <input readonly type="text" value="<?= $font['font_weight']; ?>" />
+                        <td style="width: 100px;">
+                            <input style="width: 100px;" readonly type="text" value="<?= $font['font_weight']; ?>" />
                         </td>
-                        <td>
+                        <td align="center" style="width: 75px;">
                             <input type="checkbox" class="omgf-font-preload" data-preload="<?= $fontId; ?>" value="1" <?= $font['preload'] == 1 ? 'checked' : ''; ?> />
                         </td>
                         <td>

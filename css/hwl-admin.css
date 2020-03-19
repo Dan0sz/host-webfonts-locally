@@ -23,12 +23,12 @@
 
 .settings-column.left {
     float: left;
-    min-width: 687px;
-    width: 45%;
+    min-width: 655px;
+    width: 37%;
 }
 
 .settings-column.center {
-    width: 27%
+    width: 35%
 }
 
 .settings-column.right {
