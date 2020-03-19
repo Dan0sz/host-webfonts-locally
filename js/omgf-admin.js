@@ -133,11 +133,11 @@ jQuery(document).ready(function ($) {
 
             omgf_admin.font_families.forEach(function(font, index) {
                 omgf_admin.font_families[index] = {};
-                omgf_admin.font_families[index].subsets = [];
+                omgf_admin.font_families[index].selected_subsets = [];
 
                 $('input[data-subset-font-family="' + font + '"]:checked').each(function(i) {
-                    omgf_admin.font_families[index].family = font;
-                    omgf_admin.font_families[index].subsets[i] = this.value;
+                    omgf_admin.font_families[index].subset_font = font;
+                    omgf_admin.font_families[index].selected_subsets[i] = this.value;
                 });
             });
 

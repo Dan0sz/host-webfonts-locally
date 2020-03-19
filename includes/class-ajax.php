@@ -80,26 +80,34 @@ class OMGF_AJAX
      */
     public function search_fonts()
     {
+        if (!$search_google_fonts = $_POST['search_google_fonts']) {
+            delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
+
+            OMGF_Admin_Notice::set_notice(__('Search query not found. Did you select any subsets? If so, try again.'), true, 'warning');
+        }
+
         $subsets = get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
 
-        foreach ($subsets as $index => &$properties) {
-            $i = 0;
-            foreach ($properties['available_subsets'] as $subset) {
-                if (in_array($subset, $_POST['search_google_fonts'][$index]['subsets'])) {
-                    $properties['selected_subsets'][$i] = $subset;
-                    $i++;
-                }
+        // Unset subsets which were checked before, but aren't now.
+        foreach ($subsets as $index => &$font) {
+            if (!in_array($index, array_keys($search_google_fonts))) {
+                $font['selected_subsets'] = [];
             }
         }
 
+        // Overwrite current selected subsets in settings with new values.
+        $subsets = array_replace_recursive($subsets, $search_google_fonts);
+
         update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $subsets);
 
-        foreach ($_POST['search_google_fonts'] as $font) {
-            $selected_subsets = implode($font['subsets'], ',');
+        // Retrieve available font styles.
+        foreach ($search_google_fonts as $font) {
+            $selected_subsets = implode($font['selected_subsets'], ',');
             $api              = new OMGF_API();
-            $fonts[]          = $api->get_font_styles($font['family'], $selected_subsets);
+            $fonts[]          = $api->get_font_styles($font['subset_font'], $selected_subsets);
         }
 
+        // Create font styles list.
         $fonts = array_merge(...$fonts);
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
