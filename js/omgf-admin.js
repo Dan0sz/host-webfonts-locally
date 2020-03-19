@@ -35,13 +35,16 @@ jQuery(document).ready(function ($) {
         $preload_font_styles: $('.omgf-font-preload'),
         $removed_font_style: $('.omgf-font-remove'),
 
+        // Timeout for User Interaction
+        timeout: 2000,
+
         /**
          * Initialize all on click events.
          */
         init: function () {
             // Generate Stylesheet Section
-            this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, 1500)});
-            this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, 1500)});
+            this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, this.timeout)});
+            this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, this.timeout)});
             this.$removed_font_style.on('click', this.remove_font_style);
 
             // Buttons
@@ -193,7 +196,7 @@ jQuery(document).ready(function ($) {
             omgf_admin.show_loader(row);
             $(row).removeClass('omgf-font-style');
 
-            setTimeout(omgf_admin.refresh_font_style_list, 1500);
+            setTimeout(omgf_admin.refresh_font_style_list, this.timeout);
         },
 
         /**
