@@ -65,16 +65,18 @@ class OMGF_Admin_AutoDetect
             $used_styles[] = $this->process_used_styles($subset['used_styles'], $font_styles[$subset['subset_font']]);
         }
 
-        $detected_fonts = array_merge(...$used_styles);
+        if (isset($used_styles)) {
+            $detected_fonts = array_merge(...$used_styles);
 
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $detected_fonts);
+            update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $detected_fonts);
+        }
 
         /** It only needs to run once. */
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS);
 
-        if (count($fonts) <= 2) {
-            OMGF_Admin_Notice::set_notice(__('Auto-detection completed successfully, but no Google Fonts were found besides WordPress\' default fonts. You can safely uncheck these if your theme doesn\'t use them. They will not be loaded in the frontend of your website.', 'host-webfonts-local'), false);
+        if (empty($fonts)) {
+            OMGF_Admin_Notice::set_notice(__('Auto-detection completed successfully, but no Google Fonts were found.', 'host-webfonts-local'), false, 'warning');
 
             OMGF_Admin_Notice::set_notice(sprintf(__('Your theme (or plugin) might be using unconventional methods (or Web Font Loader) to load Google Fonts. For a custom integration to load your Google Fonts locally, <a href="%s" target="_blank">hire me</a> or <a href="%s" target="_blank">contact me</a> when in doubt.', 'host-webfonts-local'), 'https://woosh.dev/wordpress-services/omgf-expert-configuration/', OMGF_SITE_URL . '/contact'), false, 'info');
         } else {
