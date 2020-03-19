@@ -38,9 +38,9 @@ class OMGF_Setup
         $this->version = get_option(OMGF_Admin_Settings::OMGF_SETTING_DB_VERSION);
         $this->table   = OMGF_DB_TABLENAME;
 
-        if (version_compare($this->version, OMGF_DB_VERSION) < 0) {
+//        if (version_compare($this->version, OMGF_DB_VERSION) < 0) {
             $this->run_db_updates();
-        }
+//        }
     }
 
     /**
@@ -48,7 +48,24 @@ class OMGF_Setup
      */
     public function run_db_updates()
     {
-        $this->drop_tables();
+        $this->migrate_db();
+
+//        $this->drop_tables();
+    }
+
+    private function migrate_db()
+    {
+        $current_fonts = $this->wpdb->query(
+            'SELECT * FROM ' . $this->table
+        );
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, (array) $current_fonts);
+
+        $current_subsets = $this->wpdb->query(
+            'SELECT * FROM ' . $this->table . '_subsets'
+        );
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, (array) $current_subsets);
     }
 
     /**
