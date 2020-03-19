@@ -18,10 +18,17 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_AutoDetect
 {
+    /** @var array $detected_fonts */
     private $detected_fonts = [];
 
+    /** @var OMGF_API $api */
     private $api;
 
+    /**
+     * OMGF_Admin_AutoDetect constructor.
+     *
+     * @param $detected_fonts
+     */
     public function __construct(
         $detected_fonts
     ) {
@@ -31,6 +38,9 @@ class OMGF_Admin_AutoDetect
         $this->init();
     }
 
+    /**
+     * Initialize Auto Detect.
+     */
     private function init()
     {
         $font_properties = $this->extract_font_properties($this->detected_fonts);
