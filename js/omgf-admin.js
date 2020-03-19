@@ -103,6 +103,11 @@ jQuery(document).ready(function ($) {
             });
         },
 
+        /**
+         * Show loader on element
+         *
+         * @param element
+         */
         show_loader: function (element) {
             let clone = omgf_admin.$loader.clone();
 
@@ -211,7 +216,7 @@ jQuery(document).ready(function ($) {
                     font_styles: omgf_admin.font_style_list
                 },
                 dataType: 'json',
-                complete: function() {
+                success: function() {
                     location.reload();
                 }
             });
@@ -261,6 +266,9 @@ jQuery(document).ready(function ($) {
             })
         },
 
+        /**
+         * Empty queue, db and cache directory.
+         */
         empty_cache_directory: function () {
             if (omgf_admin.empty_cache_directory_xhr) {
                 omgf_admin.empty_cache_directory_xhr.abort();
