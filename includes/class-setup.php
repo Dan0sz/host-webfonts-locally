@@ -55,15 +55,11 @@ class OMGF_Setup
 
     private function migrate_db()
     {
-        $current_fonts = $this->wpdb->query(
-            'SELECT * FROM ' . $this->table
-        );
+        $current_fonts = $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME);
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, (array) $current_fonts);
 
-        $current_subsets = $this->wpdb->query(
-            'SELECT * FROM ' . $this->table . '_subsets'
-        );
+        $current_subsets = $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . '_subsets');
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, (array) $current_subsets);
     }
