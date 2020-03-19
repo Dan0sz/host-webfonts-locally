@@ -55,9 +55,10 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
             fwrite($stylesheet, $fonts);
             fclose($stylesheet);
 
-            OMGF_Admin_Notice::set_notice(__('Stylesheet was successfully generated and added to your theme\'s header.'));
+            OMGF_Admin_Notice::set_notice(__('Congratulations! Your stylesheet was generated successfully and added to your theme\'s header.', 'host-webfonts-local'), false);
+            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF has optimized %s fonts. Enjoy your performance boost!', 'host-webfonts-local'), count($selectedFonts)) . ' ' . __('Would you be willing to <a href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post" target="_blank">leave a review</a>?', 'host-webfonts-local'), true, 'info');
         } catch (Exception $e) {
-            OMGF_Admin_Notice::set_notice(__("Stylesheet could not be generated: $e"), true, 'error', $e->getCode());
+            OMGF_Admin_Notice::set_notice(__("Stylesheet could not be generated:", 'host-webfonts-local') . " $e", true, 'error', $e->getCode());
         }
     }
 

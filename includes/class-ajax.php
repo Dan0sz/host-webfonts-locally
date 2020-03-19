@@ -110,7 +110,7 @@ class OMGF_AJAX
             OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Did you select any subsets?', 'host-webfonts-local'), true, 'warning');
         }
 
-        OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Trim the list to your needs and click \'Download\'.', 'host-webfonts-local'));
+        OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Trim the list to your needs and click <strong>Download Fonts</strong>.', 'host-webfonts-local'));
     }
 
     /**
@@ -145,7 +145,7 @@ class OMGF_AJAX
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
 
-        OMGF_Admin_Notice::set_notice(count($preload_styles) . ' ' . __('fonts set to preload.', 'host-webfonts-local'));
+        OMGF_Admin_Notice::set_notice(count($preload_styles) . ' ' . __('fonts set to preload. If you haven\'t already, you can now <strong>download</strong> the <strong>fonts</strong>. Otherwise, just (re-)<strong>generate</strong> the <strong>stylesheet</strong>.', 'host-webfonts-local'));
     }
 
     /**
@@ -163,7 +163,7 @@ class OMGF_AJAX
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $refreshed_list);
 
-        OMGF_Admin_Notice::set_notice(count($fonts) - count($refreshed_list) . ' ' . __('fonts removed from list.', 'host-webfonts-local'));
+        OMGF_Admin_Notice::set_notice(count($fonts) - count($refreshed_list) . ' ' . __('fonts removed from list. If you haven\'t already, you can now <strong>download</strong> the <strong>fonts</strong>. Otherwise, just (re-)<strong>generate</strong> the <strong>stylesheet</strong>.', 'host-webfonts-local'));
     }
 
     /**
