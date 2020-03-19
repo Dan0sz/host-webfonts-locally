@@ -33,7 +33,6 @@ jQuery(document).ready(function ($) {
         $font_families: $('.omgf-subset-font-family'),
         $subsets: $('.omgf-subset'),
         $preload_font_styles: $('.omgf-font-preload'),
-        $preload_font_styles_checked: $('.omgf-font-preload:checked'),
         $removed_font_style: $('.omgf-font-remove'),
 
         /**
@@ -162,7 +161,7 @@ jQuery(document).ready(function ($) {
                 omgf_admin.preload_font_style_xhr.abort();
             }
 
-            omgf_admin.preload_font_styles = omgf_admin.$preload_font_styles_checked.map(function () {
+            omgf_admin.preload_font_styles = $('.omgf-font-preload:checked').map(function () {
                 return $(this).data('preload');
             }).get();
 
@@ -174,7 +173,7 @@ jQuery(document).ready(function ($) {
                     preload_font_styles: omgf_admin.preload_font_styles
                 },
                 dataType: 'json',
-                complete: function () {
+                success: function () {
                     location.reload();
                 }
             });
