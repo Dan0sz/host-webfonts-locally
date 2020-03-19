@@ -82,7 +82,7 @@ class OMGF_AJAX
 
         $url = get_permalink(get_posts()[0]->ID);
 
-        OMGF_Admin_Notice::set_notice(__("Auto-detection mode enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page. Then click 'Load fonts'.", "host-webfonts-local"));
+        OMGF_Admin_Notice::set_notice(__("Auto-detection mode enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page.", "host-webfonts-local"));
     }
 
     /**
