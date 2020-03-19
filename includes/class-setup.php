@@ -38,9 +38,9 @@ class OMGF_Setup
         $this->version = get_option(OMGF_Admin_Settings::OMGF_SETTING_DB_VERSION);
         $this->table   = OMGF_DB_TABLENAME;
 
-//        if (version_compare($this->version, OMGF_DB_VERSION) < 0) {
+        if (version_compare($this->version, OMGF_DB_VERSION) < 0) {
             $this->run_db_updates();
-//        }
+        }
     }
 
     /**
@@ -50,18 +50,27 @@ class OMGF_Setup
     {
         $this->migrate_db();
 
-//        $this->drop_tables();
+        $this->drop_tables();
     }
 
     private function migrate_db()
     {
         $current_fonts = $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME);
+        $fonts_array = json_decode(json_encode($current_fonts), true);
 
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, (array) $current_fonts);
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts_array);
 
         $current_subsets = $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME . '_subsets');
+        $subsets_array        = json_decode(json_encode($current_subsets), true);
 
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, (array) $current_subsets);
+        foreach ($subsets_array as &$subset) {
+            $available = $subset['available_subsets'];
+            $selected  = $subset['selected_subsets'];
+            $subset['available_subsets'] = strpos($available, ',') !== false ? explode(',', $available) : [ $available ];
+            $subset['selected_subsets']  = strpos($selected, ',') !== false ? explode(',', $selected) : [ $selected ];
+        }
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $subsets_array);
     }
 
     /**
