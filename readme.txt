@@ -106,8 +106,13 @@ N/A
 == Changelog ==
 
 = 3.0.0 =
-Complete code overhaul to increase performance and UX. Fixed several bugs.
-OMGF now uses wp_options table, instead of own table.
+*OMGF - CORONA EDITION*
+* Moved Welcome-panel to the side.
+* Complete code overhaul to increase performance and UX.
+* Notices are now more explanatory and dismissable.
+* Fixed several bugs.
+* OMGF now uses wp_options table, instead of own tables.
+* Old tables are removed and data is migrated.
 
 = 2.5.0 =
 Updated Welcome-panel with WoOSH!-services.
