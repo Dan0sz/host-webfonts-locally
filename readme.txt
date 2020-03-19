@@ -108,8 +108,9 @@ N/A
 = 3.0.0 =
 *OMGF - CORONA EDITION*
 * Moved Welcome-panel to the side.
+* wp_remote_get() is now used instead of cURL.
 * Complete code overhaul to increase performance and UX.
-* Notices are now more explanatory and dismissable.
+* Notices and errors are now more explanatory and dismissable.
 * Fixed several bugs.
 * OMGF now uses wp_options table, instead of own tables.
 * Old tables are removed and data is migrated.
