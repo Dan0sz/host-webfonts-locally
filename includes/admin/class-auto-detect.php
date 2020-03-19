@@ -64,7 +64,13 @@ class OMGF_Admin_AutoDetect
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS);
 
-        OMGF_Admin_Notice::set_notice(__('Auto-detection completed. Please check the results and proceed to download the fonts and generate the stylesheet.', 'host-webfonts-local'), false);
+        if (count($fonts['subsets']) <= 2) {
+            OMGF_Admin_Notice::set_notice(__('Auto-detection completed successfully, but no Google Fonts were found besides WordPress\' default fonts. You can safely uncheck these if your theme doesn\'t use them.', 'host-webfonts-local'), false);
+
+            OMGF_Admin_Notice::set_notice(__('Maybe your theme (or plugin) is using unconventional methods (or Web Font Loader) to load Google Fonts? For a custom integration to load your Google Fonts locally, <a href="https://woosh.dev/wordpress-services/omgf-expert-configuration/" target="_blank">hire me</a>.', 'host-webfonts-local'), false, 'info');
+        } else {
+            OMGF_Admin_Notice::set_notice(__('Auto-detection completed. Please check the results and proceed to download the fonts and generate the stylesheet.', 'host-webfonts-local'), false);
+        }
     }
 
     /**

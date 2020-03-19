@@ -104,6 +104,12 @@ class OMGF_AJAX
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
 
+        $count = count($fonts);
+
+        if ($count == 0) {
+            OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Did you select any subsets?', 'host-webfonts-local'), true, 'warning');
+        }
+
         OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Trim the list to your needs and click \'Download\'.', 'host-webfonts-local'));
     }
 
