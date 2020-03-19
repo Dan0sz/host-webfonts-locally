@@ -64,13 +64,6 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <?php endif; ?>
             </tbody>
         </table>
-        <?php if ($subsetFonts): ?>
-        <div>
-            <p class="description">
-                <?= __('Open Sans and Noto Serif are default WordPress fonts. Uncheck them, unless you\'re sure that your theme (or plugins) uses them.', 'host-webfonts-local'); ?> <a href="<?= OMGF_SITE_URL; ?>/how-to/find-wordpress-website-fonts/<?= $utmTags; ?>"><?= __('Which fonts does my theme use?', 'host-webfonts-local'); ?></a>
-            </p>
-        </div>
-        <?php endif; ?>
         <table>
             <tr valign="top">
                 <th align="left" colspan="3"><?php _e('Available fonts', 'host-webfonts-local'); ?></th>
