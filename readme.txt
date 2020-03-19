@@ -113,6 +113,9 @@ N/A
 * Fixed several bugs.
 * OMGF now uses wp_options table, instead of own tables.
 * Old tables are removed and data is migrated.
+* Auto detect now works better than ever.
+* Search now works bug free.
+* WordPress' default admin fonts no longer show up as results.
 
 = 2.5.0 =
 Updated Welcome-panel with WoOSH!-services.
