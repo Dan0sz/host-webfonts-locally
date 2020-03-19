@@ -43,8 +43,8 @@ class OMGF_Admin
     public function enqueue_admin_scripts($hook)
     {
         if ($hook == 'settings_page_optimize-webfonts') {
-            wp_enqueue_script(self::OMGF_ADMIN_JS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'js/hwl-admin.js', array('jquery'), OMGF_STATIC_VERSION, true);
-            wp_enqueue_style(self::OMGF_ADMIN_CSS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'css/hwl-admin.css', array(), OMGF_STATIC_VERSION);
+            wp_enqueue_script(self::OMGF_ADMIN_JS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'js/omgf-admin.js', array('jquery'), OMGF_STATIC_VERSION, true);
+            wp_enqueue_style(self::OMGF_ADMIN_CSS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'css/omgf-admin.css', array(), OMGF_STATIC_VERSION);
 
             $options = array(
                 'auto_detect_enabled' => OMGF_AUTO_DETECT_ENABLED,
