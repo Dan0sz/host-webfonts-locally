@@ -47,23 +47,22 @@ class OMGF_Admin_AutoDetect
 
         $fonts = $this->build_subsets_array($font_properties);
 
-        foreach ($fonts['subsets'] as $subset) {
-            $subsets[] = [
-                'subset_family'     => $subset['family'],
-                'subset_font'       => $subset['id'],
-                'available_subsets' => $subset['subsets'] ?? [ 'latin' ],
-                'selected_subsets'  => $subset['subsets'] ?? [ 'latin' ]
-            ];
+        // Fetch available font styles from API, except for default WordPress Admin fonts.
+        foreach ($fonts as $index => &$font) {
+            if (($index == 0 && $font['subset_font'] == 'open-sans') || ($index == 1 && $font['subset_font'] == 'noto-serif')) {
+                unset($fonts[$index]);
+
+                continue;
+            }
+
+            $font_styles[$font['subset_font']] = $this->api->get_font_styles($font['subset_font'], implode(',', $font['selected_subsets']));
         }
 
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $subsets);
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $fonts);
 
-        foreach ($subsets as $subset) {
-            $font_styles[] = $this->api->get_font_styles($subset['subset_font'], implode(',', $subset['selected_subsets']));
-        }
-
-        foreach ($fonts['subsets'] as $index => $subset) {
-            $used_styles[] = $this->process_used_styles($subset['used_styles'], $font_styles[$index]);
+        // Match used styles with available styles.
+        foreach ($fonts as $subset) {
+            $used_styles[] = $this->process_used_styles($subset['used_styles'], $font_styles[$subset['subset_font']]);
         }
 
         $detected_fonts = array_merge(...$used_styles);
@@ -74,7 +73,7 @@ class OMGF_Admin_AutoDetect
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS);
 
-        if (count($fonts['subsets']) <= 2) {
+        if (count($fonts) <= 2) {
             OMGF_Admin_Notice::set_notice(__('Auto-detection completed successfully, but no Google Fonts were found besides WordPress\' default fonts. You can safely uncheck these if your theme doesn\'t use them. They will not be loaded in the frontend of your website.', 'host-webfonts-local'), false);
 
             OMGF_Admin_Notice::set_notice(sprintf(__('Your theme (or plugin) might be using unconventional methods (or Web Font Loader) to load Google Fonts. For a custom integration to load your Google Fonts locally, <a href="%s" target="_blank">hire me</a> or <a href="%s" target="_blank">contact me</a> when in doubt.', 'host-webfonts-local'), 'https://woosh.dev/wordpress-services/omgf-expert-configuration/', OMGF_SITE_URL . '/contact'), false, 'info');
@@ -127,8 +126,6 @@ class OMGF_Admin_AutoDetect
      */
     private function build_subsets_array($font_properties)
     {
-        $i = 0;
-
         foreach ($font_properties as $properties) {
             $parts   = explode(':', $properties['family']);
             $subsets = isset($properties['subset']) ? explode(',', $properties['subset']) : null;
@@ -138,12 +135,13 @@ class OMGF_Admin_AutoDetect
                 $styles      = explode(',', $parts[1]);
             }
 
-            $fonts['subsets'][$i]['family']      = $font_family;
-            $fonts['subsets'][$i]['id']          = str_replace(' ', '-', strtolower($font_family));
-            $fonts['subsets'][$i]['subsets']     = $subsets;
-            $fonts['subsets'][$i]['used_styles'] = $styles;
-
-            $i++;
+            $fonts[] = [
+                'subset_family'     => $font_family,
+                'subset_font'       => str_replace(' ', '-', strtolower($font_family)),
+                'available_subsets' => $subsets ?? [ 'latin' ],
+                'selected_subsets'  => $subsets ?? [ 'latin' ],
+                'used_styles'       => $styles
+            ];
         }
 
         return $fonts;
