@@ -116,7 +116,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
     }
 
     /**
-     * Download $remoteFile using cUrl and write to $localFile
+     * Download $remoteFile and write to $localFile
      *
      * @param $localFile
      * @param $remoteFile
