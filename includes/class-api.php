@@ -26,6 +26,11 @@ class OMGF_API
     public function get_subsets($query)
     {
         $request    = wp_remote_get(OMGF_HELPER_URL . $query)['body'];
+
+        if ($request == 'Not found') {
+            return [];
+        }
+
         $result     = json_decode($request);
 
         return [

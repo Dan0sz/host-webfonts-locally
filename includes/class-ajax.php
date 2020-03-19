@@ -56,11 +56,21 @@ class OMGF_AJAX
         foreach ($searchQueries as $searchQuery) {
             $api = new OMGF_API();
 
-            $response[] = $api->get_subsets($searchQuery);
+            $subsets = $api->get_subsets($searchQuery);
+
+            // If subset search comes back empty. Add a notice and skip to the next one.
+            if (empty($subsets)) {
+                OMGF_Admin_Notice::set_notice(sprintf(__('Font %s not found. Are you sure it\'s a Google Font?', 'host-webfonts-local'), $searchQuery), false, 'error');
+
+                continue;
+            }
+
+            $response[] = $subsets;
         }
+
         update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $response);
 
-        OMGF_Admin_Notice::set_notice(__('Subset search complete.', 'host-webfonts-local'));
+        OMGF_Admin_Notice::set_notice(__('Subset search complete. Select subsets to generate a list of available font styles.', 'host-webfonts-local'));
     }
 
     /**

@@ -31,14 +31,14 @@ class OMGF_Admin_Notice
      * @param bool   $json
      * @param int    $code
      */
-    public static function set_notice($message, $json = true, $type = 'success', $code = 200, $screen_id = 'all')
+    public static function set_notice($message, $die = true, $type = 'success', $code = 200, $screen_id = 'all')
     {
         self::$notices                    = get_transient(self::OMGF_ADMIN_NOTICE_TRANSIENT);
         self::$notices[$screen_id][$type] = $message;
 
         set_transient(self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices, self::OMGF_ADMIN_NOTICE_EXPIRATION);
 
-        if ($json) {
+        if ($die) {
             switch ($type) {
                 case 'error':
                     wp_send_json_error($message, $code);
