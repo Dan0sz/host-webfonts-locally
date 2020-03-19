@@ -80,11 +80,13 @@ class OMGF_AJAX
      */
     public function search_fonts()
     {
-        if (!$search_google_fonts = $_POST['search_google_fonts']) {
+        if (!isset($_POST['search_google_fonts'])) {
             delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
 
             OMGF_Admin_Notice::set_notice(__('Search query not found. Did you select any subsets? If so, try again.'), true, 'warning');
         }
+
+        $search_google_fonts = $_POST['search_google_fonts'];
 
         $subsets = get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
 
@@ -111,12 +113,6 @@ class OMGF_AJAX
         $fonts = array_merge(...$fonts);
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
-
-        $count = count($fonts);
-
-        if ($count == 0) {
-            OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Did you select any subsets?', 'host-webfonts-local'), true, 'warning');
-        }
 
         OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Trim the list to your needs and click <strong>Download Fonts</strong>.', 'host-webfonts-local'));
     }
