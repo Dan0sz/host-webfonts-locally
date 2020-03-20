@@ -149,7 +149,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     }
 
     /**
-     *
+     * Preserve fonts and subsets when saving changes.
      *
      * @param $options
      *
