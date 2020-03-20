@@ -24,7 +24,7 @@ Please keep in mind that, although I try to make the configuration of this plugi
 
 == Features ==
 - *Automatically detect* which Google Fonts your theme is using or,
-- Easily find additional fonts in any/multiple subsets,
+- Easily find fonts in multiple subsets,
 - Download them and generate a stylesheet, which is automatically added to your header using WordPress' wp_head()-function,
 - Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Multisite environments and Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
 - Serve your fonts from your CDN,
