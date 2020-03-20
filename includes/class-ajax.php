@@ -114,7 +114,7 @@ class OMGF_AJAX
 
         // Retrieve available font styles.
         foreach ($search_google_fonts as $font) {
-            $selected_subsets = implode($font['selected_subsets'], ',');
+            $selected_subsets = implode(',', $font['selected_subsets']);
             $api              = new OMGF_API();
             $fonts[]          = $api->get_font_styles($font['subset_font'], $selected_subsets);
         }

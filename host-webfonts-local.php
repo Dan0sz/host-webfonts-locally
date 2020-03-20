@@ -57,7 +57,7 @@ function omgf_autoload($class)
 
         $pieces = preg_split('/(?=[A-Z])/', lcfirst($path[$i]));
 
-        $filename .= 'class-' . strtolower(implode($pieces, '-')) . '.php';
+        $filename .= 'class-' . strtolower(implode('-', $pieces)) . '.php';
     }
 
     return include OMGF_PLUGIN_DIR . 'includes/' . $filename;
