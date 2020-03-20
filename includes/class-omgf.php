@@ -145,12 +145,14 @@ class OMGF
      */
     public function get_upload_url()
     {
-        If (OMGF_RELATIVE_URL) {
+        if (OMGF_RELATIVE_URL) {
             return '/' . $this->get_content_dir() . OMGF_CACHE_DIR;
         }
 
         if (OMGF_CDN_URL) {
             $uploadUrl = '//' . OMGF_CDN_URL . '/' . $this->get_content_dir() . OMGF_CACHE_DIR;
+        } elseif (OMGF_SERVE_URI) {
+            $uploadUrl = OMGF_SERVE_URI;
         } else {
             $uploadUrl = get_site_url(OMGF_CURRENT_BLOG_ID, $this->get_content_dir() . OMGF_CACHE_DIR);
         }

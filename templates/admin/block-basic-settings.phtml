@@ -33,7 +33,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <td>
                 <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR; ?>" placeholder="<?= __('e.g. /cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_DIR; ?>"/>
                 <p class="description">
-                    <?php _e("Changes the path where webfonts are cached inside WordPress' content directory (usually <code>wp-content</code>). If you're using Multisite, give each site a unique cache directory path. Defaults to <code>/cache/omgf-webfonts</code>.", 'host-webfonts-local'); ?>
+                    <?php _e("The relative path (inside <code>wp-content</code>) to the cache directory where webfonts should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/cache/omgf-webfonts</code>.", 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
@@ -46,7 +46,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <td>
                 <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_SERVE_URI; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_SERVE_URI; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_SERVE_URI; ?>" placeholder="<?= __('e.g. /app/cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_SERVE_URI; ?>" />
                 <p class="description">
-                    <?php _e('Changes the path where webfonts are served from. Useful for when you\'re using security through obscurity plugins, such as WP Hide.', 'host-webfonts-local'); ?>
+                    <?php _e('The relative path to serve webfonts from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the cache directory specified above will be used.', 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
