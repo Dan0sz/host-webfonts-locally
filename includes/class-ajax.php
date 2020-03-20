@@ -189,7 +189,7 @@ class OMGF_AJAX
             delete_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
             delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
 
-            array_map('unlink', array_filter((array) glob(OMGF_UPLOAD_DIR . '/*')));
+            array_map('unlink', array_filter((array) glob(OMGF_FONTS_DIR . '/*')));
 
             OMGF_Admin_Notice::set_notice(__('Cache directory successfully emptied.', 'host-webfonts-local'));
         } catch (\Exception $e) {

@@ -19,28 +19,42 @@ defined('ABSPATH') || exit;
 $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
 ?>
 <div class="">
-    <h3><?php _e('Basic Settings', 'host-webfonts-local'); ?></h3>
+    <h3><?php _e('Advanced Settings', 'host-webfonts-local'); ?></h3>
     <p class="description">
-        <?php _e('* Empty Cache Directory, Download Fonts and Generate Stylesheet after changing this setting.', 'host-webfonts-local'); ?>
+        <?php _e('* Re-generate stylesheet after changing this setting.', 'host-webfonts-local'); ?><br />
+        <?php _e('** Empty Cache Directory, Download Fonts and Generate Stylesheet after changing this setting.', 'host-webfonts-local'); ?>
     </p>
     <table class="form-table">
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR; ?>">
-                    <?php _e('Save webfonts to...', 'host-webfonts-local'); ?> *
+                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>">
+                    <?php _e('Save webfonts to...', 'host-webfonts-local'); ?> **
                 </label>
             </th>
             <td>
-                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR; ?>" placeholder="<?= __('e.g. /cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_DIR; ?>"/>
+                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" placeholder="<?= __('e.g. /cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_PATH; ?>"/>
                 <p class="description">
-                    <?php _e("Changes the path where webfonts are cached inside WordPress' content directory (usually <code>wp-content</code>). If you're using Multisite, give each site a unique cache directory path. Defaults to <code>/cache/omgf-webfonts</code>.", 'host-webfonts-local'); ?>
+                    <?php _e("The relative path (inside <code>wp-content</code>) to the cache directory where webfonts should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/cache/omgf-webfonts</code>.", 'host-webfonts-local'); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
+                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI; ?>">
+                    <?php _e('Serve webfonts from...', 'host-webfonts-local'); ?> **
+                </label>
+            </th>
+            <td>
+                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI; ?>" placeholder="<?= __('e.g. /app/cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_URI; ?>" />
+                <p class="description">
+                    <?php _e('The relative path to serve webfonts from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the cache directory specified above will be used.', 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
         <tr valign="top">
             <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>">
-                    <?php _e('Use Relative URLs?', 'host-webfonts-local'); ?> *
+                    <?php _e('Use Relative URLs?', 'host-webfonts-local'); ?> **
                 </label>
             </th>
             <td>
@@ -53,7 +67,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         <tr valign="top">
             <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>">
-                    <?php _e('Serve fonts from CDN', 'host-webfonts-local'); ?> *
+                    <?php _e('Serve fonts from CDN', 'host-webfonts-local'); ?> **
                 </label>
             </th>
             <td>
@@ -92,7 +106,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         <tr valign="top">
             <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>">
-                    <?php _e('Font-display option', 'host-webfonts-local'); ?>
+                    <?php _e('Font-display option', 'host-webfonts-local'); ?> *
                 </label>
             </th>
             <td>

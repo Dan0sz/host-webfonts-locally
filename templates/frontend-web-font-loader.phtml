@@ -27,7 +27,7 @@ $families          = array_unique(
     )
 );
 $omgfStaticVersion = '?ver=' . OMGF_STATIC_VERSION;
-$omgfSrcUrl        = OMGF_UPLOAD_URL . '/' . OMGF_FILENAME . (OMGF_REMOVE_VERSION ? null : $omgfStaticVersion);
+$omgfSrcUrl        = OMGF_FONTS_URL . '/' . OMGF_FILENAME . (OMGF_REMOVE_VERSION ? null : $omgfStaticVersion);
 $wflVersion        = '?ver=' . OMGF_WEB_FONT_LOADER_VERSION;
 $wflSrcUrl         = plugin_dir_url(OMGF_PLUGIN_FILE) . 'js/libraries/webfont.js' . (OMGF_REMOVE_VERSION ? null : $wflVersion);
 ?>
