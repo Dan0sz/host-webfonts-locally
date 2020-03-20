@@ -18,6 +18,7 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings extends OMGF_Admin
 {
+    const OMGF_SETTINGS_FIELD_ADVANCED        = 'omgf-advanced-settings';
     const OMGF_FONT_DISPLAY_OPTIONS           = array(
         'Auto (default)' => 'auto',
         'Block'          => 'block',
@@ -53,6 +54,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
         $caosLink = plugin_basename(OMGF_PLUGIN_FILE);
 
         add_filter("plugin_action_links_$caosLink", array($this, 'create_settings_link'));
+        add_filter('whitelist_options', [$this, 'remove_settings_from_whitelist'], 100);
         // @formatter:on
 
         parent::__construct();
@@ -91,15 +93,15 @@ class OMGF_Admin_Settings extends OMGF_Admin
             <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
 
             <form id="omgf-fonts-form" class="settings-column left" name="omgf-fonts-form">
-                <div class="">
-                    <?php $this->get_template('generate-stylesheet'); ?>
-                </div>
+                <?php
+                $this->get_template('generate-stylesheet');
+                ?>
             </form>
 
             <form id="omgf-settings-form" class="settings-column center" name="omgf-settings-form" method="post" action="options.php">
                 <?php
-                settings_fields('omgf-basic-settings');
-                do_settings_sections('omgf-basic-settings');
+                settings_fields(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
+                do_settings_sections(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
 
                 $this->get_template('basic-settings');
 
@@ -126,7 +128,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
         foreach ($this->get_settings() as $constant => $value)
         {
             register_setting(
-                'omgf-basic-settings',
+                OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED,
                 $value
             );
         }
@@ -144,6 +146,28 @@ class OMGF_Admin_Settings extends OMGF_Admin
         array_push($links, $settingsLink);
 
         return $links;
+    }
+
+    /**
+     *
+     *
+     * @param $options
+     *
+     * @return array
+     */
+    public function remove_settings_from_whitelist($options)
+    {
+        if (!isset($options[self::OMGF_SETTINGS_FIELD_ADVANCED])) {
+            return $options;
+        }
+
+        foreach ($options[self::OMGF_SETTINGS_FIELD_ADVANCED] as $key => &$setting) {
+            if ($setting == self::OMGF_SETTING_FONTS || $setting == self::OMGF_SETTING_SUBSETS) {
+                unset($options[self::OMGF_SETTINGS_FIELD_ADVANCED][$key]);
+            }
+        }
+
+        return $options;
     }
 
     /**
