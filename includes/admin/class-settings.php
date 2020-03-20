@@ -103,7 +103,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
                 settings_fields(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
                 do_settings_sections(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
 
-                $this->get_template('basic-settings');
+                $this->get_template('advanced-settings');
 
                 do_action('omgf_after_settings_form_settings');
 
