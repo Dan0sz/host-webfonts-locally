@@ -52,7 +52,7 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
         $file  = OMGF_UPLOAD_DIR . '/' . OMGF_FILENAME;
 
         /**
-         * If the file can be created and uploaded. Let's try to write it.
+         * If the file can be created and written. Let's try to write it.
          */
         try {
             $stylesheet = fopen($file, 'w') or OMGF_Admin_Notice::set_notice(__("Cannot create file {$file}", 'host-webfonts-local', true, 'error', 400));
