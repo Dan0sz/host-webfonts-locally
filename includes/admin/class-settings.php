@@ -90,7 +90,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
         <div class="wrap">
             <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
 
-            <form id="omgf-options-form" class="settings-column left" name="omgf-options-form" method="post">
+            <form id="omgf-fonts-form" class="settings-column left" name="omgf-fonts-form">
                 <div class="">
                     <?php $this->get_template('generate-stylesheet'); ?>
                 </div>
