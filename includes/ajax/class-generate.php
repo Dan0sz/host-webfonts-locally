@@ -49,7 +49,7 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
         $this->process_fonts($selectedFonts);
 
         $fonts = implode("\n", $this->fonts);
-        $file  = OMGF_UPLOAD_DIR . '/' . OMGF_FILENAME;
+        $file  = OMGF_FONTS_DIR . '/' . OMGF_FILENAME;
 
         /**
          * If the file can be created and written. Let's try to write it.

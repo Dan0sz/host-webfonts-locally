@@ -53,7 +53,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
      */
     private function create_dir_recursive()
     {
-        $uploadDir = OMGF_UPLOAD_DIR;
+        $uploadDir = OMGF_FONTS_DIR;
         if (!file_exists($uploadDir)) {
             wp_mkdir_p($uploadDir);
         }
@@ -99,7 +99,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
                  * We rewrite the local filename for easier debugging in the waterfall.
                  */
                 $filename  = sanitize_title_with_dashes($font['font_family']) . '-' . $font['font_weight'] . '-' . $font['font_style'] . '-' . substr(basename($remoteFile), -10);
-                $localFile = OMGF_UPLOAD_DIR . '/' . $filename;
+                $localFile = OMGF_FONTS_DIR . '/' . $filename;
 
                 try {
                     $this->download_file($localFile, $remoteFile);
@@ -110,7 +110,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
 
                 clearstatcache();
 
-                $font[$type] = OMGF_UPLOAD_URL . '/' . $filename;
+                $font[$type] = OMGF_FONTS_URL . '/' . $filename;
             }
         }
 

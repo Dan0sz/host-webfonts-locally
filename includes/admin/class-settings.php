@@ -29,8 +29,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
     const OMGF_SETTING_SUBSETS                = 'omgf_subsets';
     const OMGF_SETTING_FONTS                  = 'omgf_fonts';
     const OMGF_SETTING_DETECTED_FONTS         = 'omgf_detected_fonts';
-    const OMGF_SETTING_CACHE_DIR              = 'omgf_cache_dir';
-    const OMGF_SETTING_SERVE_URI              = 'omgf_serve_uri';
+    const OMGF_SETTING_CACHE_PATH             = 'omgf_cache_dir';
+    const OMGF_SETTING_CACHE_URI              = 'omgf_cache_uri';
     const OMGF_SETTING_CDN_URL                = 'omgf_cdn_url';
     const OMGF_SETTING_WEB_FONT_LOADER        = 'omgf_web_font_loader';
     const OMGF_SETTING_REMOVE_VERSION         = 'omgf_remove_version';
