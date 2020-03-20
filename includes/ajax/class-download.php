@@ -105,7 +105,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
                     $this->download_file($localFile, $remoteFile);
                     $font['downloaded'] = 1;
                 } catch (Exception $e) {
-                    OMGF_Admin_Notice::set_notice(__("File ($remoteFile) could not be downloaded: ", 'host-webfonts-local') . $e->getMessage(), 'error', $e->getCode());
+                    OMGF_Admin_Notice::set_notice(__("File ($remoteFile) could not be downloaded: ", 'host-webfonts-local') . $e->getMessage(), false, 'error', $e->getCode());
                 }
 
                 clearstatcache();
