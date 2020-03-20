@@ -39,6 +39,19 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
+                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_SERVE_URI; ?>">
+                    <?php _e('Serve webfonts from...', 'host-webfonts-local'); ?> *
+                </label>
+            </th>
+            <td>
+                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_SERVE_URI; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_SERVE_URI; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_SERVE_URI; ?>" placeholder="<?= __('e.g. /app/cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_SERVE_URI; ?>" />
+                <p class="description">
+                    <?php _e('Changes the path where webfonts are served from. Useful for when you\'re using security through obscurity plugins, such as WP Hide.', 'host-webfonts-local'); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>">
                     <?php _e('Use Relative URLs?', 'host-webfonts-local'); ?> *
                 </label>

@@ -56,6 +56,7 @@ class OMGF
         define('OMGF_FILENAME', 'fonts.css');
         define('OMGF_AUTO_DETECT_ENABLED', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, false)));
         define('OMGF_CACHE_DIR', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_CACHE_DIR)) ?: '/cache/omgf-webfonts');
+        define('OMGF_SERVE_URI', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_SERVE_URI)) ?: '');
         define('OMGF_RELATIVE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL)));
         define('OMGF_CDN_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_CDN_URL)));
         define('OMGF_WEB_FONT_LOADER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_WEB_FONT_LOADER)));
@@ -69,6 +70,7 @@ class OMGF
         define('OMGF_ENQUEUE_ORDER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER, 100)));
         define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_UNINSTALL)));
     }
+
     /**
      * @return OMGF_Admin_Settings
      */
