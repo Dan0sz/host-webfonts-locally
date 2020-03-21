@@ -32,9 +32,11 @@ class OMGF_DB
     }
 
     /**
-     * @return array|\Exception
+     * @param bool $clean
+     *
+     * @return array|Exception
      */
-    public function get_downloaded_fonts()
+    public function get_downloaded_fonts($clean = false)
     {
         try {
             $fonts = $this->get_total_fonts();
@@ -43,6 +45,12 @@ class OMGF_DB
                 return $font['downloaded'] == 1;
             });
 
+            if ($clean) {
+                foreach ($downloaded as &$download) {
+                    $download['font_family'] = str_replace('\'', '', $download['font_family']);
+                }
+            }
+
             return $downloaded;
         } catch (\Exception $e) {
             return $e;
@@ -50,7 +58,7 @@ class OMGF_DB
     }
 
     /**
-     * @return array|Exception|object|null
+     * @return array|Exception
      */
     public function get_preload_fonts()
     {
