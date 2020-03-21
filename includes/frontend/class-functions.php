@@ -23,14 +23,26 @@ class OMGF_Frontend_Functions
     /** @var OMGF_DB */
     private $db;
 
+    /** @var string */
+    private $stylesheet_file;
+
+    /** @var string */
+    private $stylesheet_url;
+
     /**
      * OMGF_Frontend_Functions constructor.
      */
     public function __construct()
     {
+        $this->stylesheet_file = OMGF_FONTS_DIR . '/' . OMGF_FILENAME;
+        $this->stylesheet_url  = OMGF_FONTS_URL . '/' . OMGF_FILENAME;
+
         // @formatter:off
         add_action('wp_print_styles', array($this, 'is_remove_google_fonts_enabled'), PHP_INT_MAX - 1000);
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_stylesheet'), OMGF_ENQUEUE_ORDER);
+
+        if (file_exists($this->stylesheet_file)) {
+            add_action('wp_enqueue_scripts', array($this, 'enqueue_stylesheet'), OMGF_ENQUEUE_ORDER);
+        }
 
         if (OMGF_AUTO_DETECT_ENABLED) {
             add_action('wp_print_styles', array($this, 'auto_detect_fonts'), PHP_INT_MAX - 10000);
