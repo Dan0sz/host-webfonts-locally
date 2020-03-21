@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -105,8 +105,12 @@ N/A
 
 == Changelog ==
 
+= 3.1.1 =
+* Fixed bug in Web Font Loader.
+* Fixed bug where sometimes stylesheet would still be enqueued, even though the file didn't exist.
+
 = 3.1.0 =
-* OMGF can now rewrite the URI from where fonts are served using the 'Serve webfonts from...' setting. This is particularly useful when using seurity through obscurity (e.g. WP Hide)
+* OMGF can now rewrite the URI from where fonts are served using the 'Serve webfonts from...' setting. This is particularly useful when using seurity through obscurity plugins (e.g. WP Hide.)
 * Fixed bug where clicking 'save changes' would remove listed fonts and subsets.
 * Gave some settings more accurate descriptions.
 
