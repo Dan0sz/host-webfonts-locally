@@ -337,5 +337,5 @@ jQuery(document).ready(function ($) {
         } else {
             $('#omgf_cdn_url').prop('disabled', false);
         }
-    })
+    });
 });
