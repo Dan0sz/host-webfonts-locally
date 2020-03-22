@@ -53,8 +53,8 @@ jQuery(document).ready(function ($) {
             this.$nav.on('click', this.toggle_section);
 
             // Generate Stylesheet Section
-            this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, this.timeout)});
-            this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, this.timeout)});
+            this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, this.timeout); });
+            this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, this.timeout); });
             this.$removed_font_style.on('click', this.remove_font_style);
 
             // Buttons
@@ -103,7 +103,7 @@ jQuery(document).ready(function ($) {
                 complete: function () {
                     location.reload();
                 }
-            })
+            });
         },
 
         /**
@@ -121,7 +121,7 @@ jQuery(document).ready(function ($) {
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    omgf_admin.show_loader('.omgf-search-box')
+                    omgf_admin.show_loader('.omgf-search-box');
                 },
                 complete: function() {
                     location.reload();
@@ -135,7 +135,7 @@ jQuery(document).ready(function ($) {
          * @param element
          */
         show_loader: function (element) {
-            let clone = omgf_admin.$loader.clone();
+            var clone = omgf_admin.$loader.clone();
 
             $(element).append(clone).css({
                 'position': 'relative',
@@ -179,7 +179,7 @@ jQuery(document).ready(function ($) {
                     omgf_admin.show_loader('#omgf-font-styles-list');
                 },
                 complete: function () {
-                    location.reload()
+                    location.reload();
                 }
             });
         },
@@ -269,7 +269,7 @@ jQuery(document).ready(function ($) {
                 complete: function() {
                     location.reload();
                 }
-            })
+            });
         },
 
         /**
@@ -289,7 +289,7 @@ jQuery(document).ready(function ($) {
                 complete: function() {
                     location.reload();
                 }
-            })
+            });
         },
 
         /**
