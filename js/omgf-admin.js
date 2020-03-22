@@ -28,6 +28,13 @@ jQuery(document).ready(function ($) {
         preload_font_styles: [],
         font_style_list: [],
 
+        // Settings screen elements
+        $nav: $('.omgf-nav span'),
+        $nav_generate_stylesheet: $('.generate-stylesheet'),
+        $nav_advanced_settings: $('.advanced-settings'),
+        $generate_stylesheet_form: $('#omgf-generate-stylesheet-form'),
+        $advanced_settings_form: $('#omgf-advanced-settings-form'),
+
         // Selectors
         $loader: $('.omgf-loading'),
         $font_families: $('.omgf-subset-font-family'),
@@ -42,6 +49,9 @@ jQuery(document).ready(function ($) {
          * Initialize all on click events.
          */
         init: function () {
+            // Nav
+            this.$nav.on('click', this.toggle_section);
+
             // Generate Stylesheet Section
             this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, this.timeout)});
             this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, this.timeout)});
@@ -53,6 +63,19 @@ jQuery(document).ready(function ($) {
             $('#omgf-download').on('click', this.download_fonts);
             $('#omgf-generate').on('click', this.generate_stylesheet);
             $('#omgf-empty').on('click', this.empty_cache_directory);
+        },
+
+        toggle_section: function () {
+            omgf_admin.$nav.removeClass('selected');
+            $(this).addClass('selected');
+
+            if (this.classList.contains('generate-stylesheet')) {
+                omgf_admin.$generate_stylesheet_form.fadeIn();
+                omgf_admin.$advanced_settings_form.fadeOut(100);
+            } else {
+                omgf_admin.$advanced_settings_form.fadeIn();
+                omgf_admin.$generate_stylesheet_form.fadeOut(100);
+            }
         },
 
         /**

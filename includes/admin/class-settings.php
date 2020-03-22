@@ -92,24 +92,31 @@ class OMGF_Admin_Settings extends OMGF_Admin
         <div class="wrap">
             <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
 
-            <form id="omgf-fonts-form" class="settings-column left" name="omgf-fonts-form">
-                <?php
-                $this->get_template('generate-stylesheet');
-                ?>
-            </form>
+            <div class="settings-column left">
+                <div class="omgf-nav">
+                    <span class="generate-stylesheet selected"><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></span>
+                    <span class="advanced-settings"><?php _e('Advanced Settings', 'host-webfonts-local'); ?></span>
+                </div>
 
-            <form id="omgf-settings-form" class="settings-column center" name="omgf-settings-form" method="post" action="options.php">
-                <?php
-                settings_fields(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
-                do_settings_sections(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
+                <form id="omgf-generate-stylesheet-form" name="omgf-generate-stylesheet-form" style="display: block;">
+                    <?php
+                    $this->get_template('generate-stylesheet');
+                    ?>
+                </form>
 
-                $this->get_template('advanced-settings');
+                <form id="omgf-advanced-settings-form" name="omgf-settings-form" method="post" action="options.php" style="display: none;">
+                    <?php
+                    settings_fields(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
+                    do_settings_sections(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
 
-                do_action('omgf_after_settings_form_settings');
+                    $this->get_template('advanced-settings');
 
-                submit_button();
-                ?>
-            </form>
+                    do_action('omgf_after_settings_form_settings');
+
+                    submit_button();
+                    ?>
+                </form>
+            </div>
 
             <div class="settings-column right">
                 <?php $this->get_template('welcome'); ?>

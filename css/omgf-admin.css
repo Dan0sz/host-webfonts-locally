@@ -13,9 +13,28 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
-/**
- * Responsiveness
- */
+.omgf-nav {
+    padding: 1em 0;
+}
+.omgf-nav span {
+    color: #23282d;
+    font-size: 1.3em;
+    margin-right: 1em;
+    font-weight: 600;
+}
+
+.omgf-nav span:hover {
+    cursor: pointer;
+}
+
+.omgf-nav .selected {
+    border-bottom: 1px dashed #23282d;
+    padding: 3px 0;
+}
+
+.omgf-nav span:not(.selected) {
+    opacity: 0.8;
+}
 
 .settings-column {
     display: inline-block;
@@ -24,38 +43,26 @@
 .settings-column.left {
     float: left;
     min-width: 655px;
-    width: 37%;
-}
-
-.settings-column.center {
-    width: 35%
+    width: 66%;
 }
 
 .settings-column.right {
     float: right;
-    width: 25%;
+    width: 28.6%;
 }
 
-@media only screen and (max-width: 940px) {
+/**
+ * Responsiveness
+ */
+@media only screen and (max-width: 1024px) {
     .settings-column {
         display: block;
         float: none;
     }
 
     .settings-column.left,
-    .settings-column.center,
     .settings-column.right {
         width: 100%;
-    }
-}
-
-@media only screen and (min-width: 941px) and (max-width: 1024px) {
-    .settings-column.center {
-        width: 66%;
-    }
-
-    .settings-column.right {
-        width: 33%;
     }
 }
 
