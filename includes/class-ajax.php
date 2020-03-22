@@ -69,7 +69,7 @@ class OMGF_AJAX
                 continue;
             }
 
-            $response[] = $subsets;
+            $response[$subsets['subset_font']] = $subsets;
         }
 
         $option_subsets = array_merge($option_subsets, $response);
@@ -103,6 +103,11 @@ class OMGF_AJAX
         }
 
         $search_google_fonts = $_POST['search_google_fonts'];
+
+        foreach ($search_google_fonts as $index => $google_font) {
+            $search_google_fonts[$google_font['subset_font']] = $google_font;
+            unset($search_google_fonts[$index]);
+        }
 
         $subsets = get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
 

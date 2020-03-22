@@ -47,15 +47,15 @@ class OMGF_Admin_AutoDetect
 
         $fonts = $this->build_subsets_array($font_properties);
 
-        // Fetch available font styles from API, except for default WordPress Admin fonts.
         foreach ($fonts as $index => &$font) {
-            if (($index == 0 && $font['subset_font'] == 'open-sans') || ($index == 1 && $font['subset_font'] == 'noto-serif')) {
-                unset($fonts[$index]);
-
+            if (!is_numeric($index)) {
                 continue;
             }
 
             $font_styles[$font['subset_font']] = $this->api->get_font_styles($font['subset_font'], implode(',', $font['selected_subsets']));
+
+            $fonts[$font['subset_font']] = $font;
+            unset($fonts[$index]);
         }
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $fonts);
@@ -97,6 +97,14 @@ class OMGF_Admin_AutoDetect
 
         foreach ($fontSource as $source) {
             $parts = parse_url($source);
+
+            /**
+             * Skip over default Admin WordPress fonts; Noto Serif and Open Sans, which are always detected first (as far as I know.)
+             * We check on iteration value, to make sure these fonts are still returned if they are also used in the theme.
+             */
+            if (($i == 0 && strpos($parts['query'], 'Open+Sans') !== false) || ($i == 0 && strpos($parts['query'], 'Noto+Serif') !== false)) {
+                continue;
+            }
 
             parse_str($parts['query'], $font_properties[]);
 
@@ -150,14 +158,14 @@ class OMGF_Admin_AutoDetect
     }
 
     /**
-     * @param $usedStyles
-     * @param $availableStyles
+     * @param $used_styles
+     * @param $available_styles
      *
      * @return array
      */
-    private function process_used_styles($usedStyles, $availableStyles)
+    private function process_used_styles($used_styles, $available_styles)
     {
-        foreach ($usedStyles as &$style) {
+        foreach ($used_styles as &$style) {
             $fontWeight = preg_replace('/[^0-9]/', '', $style);
             $fontStyle  = preg_replace('/[^a-zA-Z]/', '', $style);
 
@@ -169,11 +177,11 @@ class OMGF_Admin_AutoDetect
         }
 
         return array_filter(
-            $availableStyles,
-            function ($style) use ($usedStyles) {
+            $available_styles,
+            function ($style) use ($used_styles) {
                 $fontStyle = $style['font_weight'] . ($style['font_style'] !== 'normal' ? $style['font_style'] : '');
 
-                return in_array($fontStyle, $usedStyles);
+                return in_array($fontStyle, $used_styles);
             }
         );
     }
