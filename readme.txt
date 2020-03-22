@@ -105,6 +105,10 @@ N/A
 
 == Changelog ==
 
+= 3.1.2 =
+* Comma-separated search now works better (supports ',' as well as ', ')
+* Search results are now added to the old subsets results. Allowing for more flexible search.
+
 = 3.1.1 =
 * Fixed bug in Web Font Loader.
 * Fixed bug where sometimes stylesheet would still be enqueued, even though the file didn't exist.
