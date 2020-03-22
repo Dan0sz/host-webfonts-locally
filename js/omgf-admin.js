@@ -34,6 +34,8 @@ jQuery(document).ready(function ($) {
         $nav_advanced_settings: $('.advanced-settings'),
         $generate_stylesheet_form: $('#omgf-generate-stylesheet-form'),
         $advanced_settings_form: $('#omgf-advanced-settings-form'),
+        $welcome_panel: $('#omgf-welcome-panel'),
+        $welcome_panel_clone: $('#omgf-welcome-panel-clone'),
 
         // Selectors
         $loader: $('.omgf-loading'),
@@ -51,6 +53,9 @@ jQuery(document).ready(function ($) {
         init: function () {
             // Nav
             this.$nav.on('click', this.toggle_section);
+
+            // Sidebar
+            $(window).scroll(this.scroll_sidebar);
 
             // Generate Stylesheet Section
             this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, this.timeout); });
@@ -75,6 +80,29 @@ jQuery(document).ready(function ($) {
             } else {
                 omgf_admin.$advanced_settings_form.fadeIn();
                 omgf_admin.$generate_stylesheet_form.fadeOut(100);
+            }
+        },
+
+        scroll_sidebar: function () {
+            /**
+             * Make sure widgetClone has correct width, since its
+             * position is fixed.
+             */
+            widgetWidth = omgf_admin.$welcome_panel.width();
+            omgf_admin.$welcome_panel_clone.width(widgetWidth);
+
+            /**
+             * Only appear if widget reaches top of screen.
+             */
+            widgetOffset = omgf_admin.$welcome_panel.offset().top;
+
+            if ($(window).scrollTop() >= widgetOffset) {
+                omgf_admin.$welcome_panel.css('opacity', '0');
+                omgf_admin.$welcome_panel_clone.css('top', 20);
+                omgf_admin.$welcome_panel_clone.show();
+            } else {
+                omgf_admin.$welcome_panel.css('opacity', '1');
+                omgf_admin.$welcome_panel_clone.hide();
             }
         },
 

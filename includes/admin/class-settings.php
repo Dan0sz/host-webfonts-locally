@@ -123,7 +123,12 @@ class OMGF_Admin_Settings extends OMGF_Admin
             </div>
 
             <div class="settings-column right">
-                <?php $this->get_template('welcome'); ?>
+                <div id="omgf-welcome-panel" class="welcome-panel">
+                    <?php $this->get_template('welcome'); ?>
+                </div>
+                <div id="omgf-welcome-panel-clone" class="welcome-panel" style="display: none;">
+                    <?php $this->get_template('welcome'); ?>
+                </div>
             </div>
         </div>
         <?php

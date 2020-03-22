@@ -64,6 +64,27 @@
 }
 
 /**
+ * Welcome block
+ */
+h3 > .dashicons {
+    line-height: 1.4;
+}
+
+#omgf-welcome-panel-clone {
+    display: none;
+    position: fixed;
+    z-index: 100000;
+}
+
+#omgf-welcome-panel,
+#omgf-welcome-panel-clone {
+    /*border: 1px #eee solid;*/
+    width: 100%;
+    padding: 20px 10px 5px;
+    box-sizing: border-box;
+}
+
+/**
  * Responsiveness
  */
 @media only screen and (max-width: 1024px) {

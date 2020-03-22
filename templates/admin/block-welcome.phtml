@@ -16,73 +16,70 @@
 
 defined('ABSPATH') || exit;
 
-$utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=support_tab';
+$utmTags  = '?utm_source=omgf&utm_medium=plugin&utm_campaign=support_tab';
 $tweetUrl = 'https://twitter.com/intent/tweet?text=I+just+optimized+my+Google+Fonts+with+OMGF+for+@WordPress!+Try+it+for+yourself:&via=Dan0sz&hashtags=GoogleFonts,WordPress,Pagespeed,Insights&url=https://wordpress.org/plugins/host-webfonts-local/';
 ?>
-<div id="welcome-panel" class="welcome-panel">
-    <div class="welcome-panel-content">
-        <div class="welcome-panel-column-container">
-            <div class="welcome-panel-column" style="width: 100%; margin-right: 15px;">
-                <h2><?php _e( 'Quickstart', 'host-webfonts-local') ;?></h2>
-                <ul>
-                    <li class="welcome-icon dashicons-before dashicons-admin-settings">
-                        <?= sprintf(__('Click %sAuto-detect%s and wait for the on-screen instructions', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlAutoDetectFonts();">', '</a>'); ?>
-                    </li>
-                    <li class="welcome-icon dashicons-before dashicons-update">
-                        <?= sprintf(__('Click %sDownload Fonts%s and wait for the download to complete', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlDownloadFonts();">', '</a>'); ?>
-                    </li>
-                    <li class="welcome-icon dashicons-before dashicons-art">
-                        <?= sprintf(__('Click %sGenerate Stylesheet%s and wait for the process to complete', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlGenerateStylesheet();">', '</a>'); ?>
-                    </li>
-                    <li class="welcome-icon dashicons-before dashicons-media-text"><?php _e('The stylesheet is generated and added to your theme\'s header', 'host-webfonts-local'); ?></li>
-                    <li class="welcome-icon dashicons-before dashicons-editor-removeformatting"><?php _e('Check \'Remove Google Fonts\' and save your changes', 'host-webfonts-local'); ?></li>
-                    <li class="welcome-icon dashicons-before dashicons-smiley"><?php _e('Done!', 'host-webfonts-local'); ?></li>
-                </ul>
-                <p>
-                    <?= sprintf(__('%sClick here%s for a more comprehensive guide.', 'host-webfonts-local'), '<a target="_blank" href="' . OMGF_SITE_URL . '/wordpress/host-google-fonts-locally/' . $utmTags . '">', '</a>'); ?>
-                </p>
-                <hr />
-            </div>
-            <div class="welcome-panel-column" style="width: 100%; margin-right: 15px;">
-                <h3><span class="dashicons dashicons-dashboard"></span> <?php _e('Make WordPress <em>Faster</em> Than Superman', 'host-webfonts-local'); ?></h3>
-                <p>
-                    <?= __('Superman can reach the other side of the world in <strong>3 seconds</strong>. Google wants your website to do it <strong>faster</strong>. Let\'s give Google a run for its money.', 'host-webfonts-local'); ?>
-                </p>
-                <p>
-                    <a target="_blank" class="button button-primary button-hero" href="https://woosh.dev/wordpress-services/<?= $utmTags; ?>"><span class="dashicons dashicons-thumbs-up"></span> <?= __('Hire me', 'host-webfonts-local'); ?></a> <span><em>(<?= __('Starting at € 99,-', 'host-analyticsjs-local'); ?>)</em></span>
-                </p>
-                <hr />
-            </div>
-            <div class="welcome-panel-column welcome-panel-last" style="width: 100%;">
-                <h3>
-                    <?php _e('Support OMGF by Spreading the Word!', 'host-webfonts-local'); ?>
-                </h3>
-                <p>
-                    <?= sprintf(__('I am convinced that knowledge should be free. That\'s why I will never charge you for the plugins I create and I will help you to succeed in your projects through the %stutorials%s on my blog.', 'host-webfonts-local'), '<a href="' . OMGF_SITE_URL . '/how-to/' . $utmTags . '" target="_blank">', '</a>'); ?>
-                </p>
-                <p>
-                    <?= __('But that doesn\'t mean there\'s nothing you can do to show your support! :)', 'host-webfonts-local'); ?>
-                </p>
-                <p>
-                    <?= sprintf(__('Please help me spread the word by leaving a %s5-star review%s on Wordpress.org or sending a %sTweet%s about OMGF.', 'host-webfonts-local'), '<a target="_blank" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post">', '</a>', "<a href='$tweetUrl'>", '</a>'); ?>
-                </p>
-                <p>
-                    <a target="_blank" class="button button-secondary button-hero" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post"><span class="dashicons-before dashicons-star-filled"> <?php _e('Review', 'host-webfonts-local'); ?></span></a>
-                    <a target="_blank" class="button button-secondary button-hero" href="<?= $tweetUrl; ?>"><span class="dashicons-before dashicons-twitter"> <?php _e('Tweet', 'host-webfonts-local'); ?></span></a>
-                </p>
-                <hr />
-                <h3>
-                    <?php _e('Need Help?', 'host-webfonts-local'); ?>
-                </h3>
-                <p>
-                    <?= sprintf(__('Visit the %sFAQ%s and %sSupport Forum%s to see if your question has already been answered. If not, ask a question on the Support Forum.', 'host-webfonts-local'), '<a href="' . OMGF_SITE_URL . '/wordpress/host-google-fonts-locally/' . $utmTags . '" target="_blank">', '</a>', '<a href="https://wordpress.org/plugins/host-webfonts-local/#description" target="_blank">', '</a>', '<a href="https://wordpress.org/support/plugin/host-webfonts-local">', '</a>'); ?>
-                </p>
-            </div>
+<div class="welcome-panel-content">
+    <div class="welcome-panel-column-container">
+        <div class="welcome-panel-column" style="width: 100%; margin-right: 15px;">
+            <h2><?php _e('Quickstart', 'host-webfonts-local'); ?></h2>
+            <ul>
+                <li class="welcome-icon dashicons-before dashicons-admin-settings">
+                    <?= sprintf(__('Click %sAuto-detect%s and wait for the on-screen instructions', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlAutoDetectFonts();">', '</a>'); ?>
+                </li>
+                <li class="welcome-icon dashicons-before dashicons-update">
+                    <?= sprintf(__('Click %sDownload Fonts%s and wait for the download to complete', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlDownloadFonts();">', '</a>'); ?>
+                </li>
+                <li class="welcome-icon dashicons-before dashicons-art">
+                    <?= sprintf(__('Click %sGenerate Stylesheet%s and wait for the process to complete', 'host-webfonts-local'), '<a href="javascript: void(0);" onclick="hwlGenerateStylesheet();">', '</a>'); ?>
+                </li>
+                <li class="welcome-icon dashicons-before dashicons-media-text"><?php _e('The stylesheet is generated and added to your theme\'s header', 'host-webfonts-local'); ?></li>
+                <li class="welcome-icon dashicons-before dashicons-editor-removeformatting"><?php _e('Check \'Remove Google Fonts\' and save your changes', 'host-webfonts-local'); ?></li>
+                <li class="welcome-icon dashicons-before dashicons-smiley"><?php _e('Done!', 'host-webfonts-local'); ?></li>
+            </ul>
+            <p>
+                <?= sprintf(__('%sClick here%s for a more comprehensive guide.', 'host-webfonts-local'), '<a target="_blank" href="' . OMGF_SITE_URL . '/wordpress/host-google-fonts-locally/' . $utmTags . '">', '</a>'); ?>
+            </p>
+            <hr/>
+        </div>
+        <div class="welcome-panel-column" style="width: 100%; margin-right: 15px;">
+            <h3>
+                <span class="dashicons dashicons-dashboard"></span> <?php _e('Make WordPress <em>Faster</em> Than Superman', 'host-webfonts-local'); ?>
+            </h3>
+            <p>
+                <?= __('Superman can reach the other side of the world in <strong>3 seconds</strong>. Google wants your website to do it <strong>faster</strong>. Let\'s give Google a run for its money.', 'host-webfonts-local'); ?>
+            </p>
+            <p>
+                <a target="_blank" class="button button-primary button-hero" href="https://woosh.dev/wordpress-services/<?= $utmTags; ?>"><span class="dashicons dashicons-thumbs-up"></span> <?= __('Hire me', 'host-webfonts-local'); ?>
+                </a>
+                <span><em>(<?= __('Starting at € 99,-', 'host-analyticsjs-local'); ?>)</em></span>
+            </p>
+            <hr/>
+        </div>
+        <div class="welcome-panel-column welcome-panel-last" style="width: 100%;">
+            <h3>
+                <?php _e('Support OMGF by Spreading the Word!', 'host-webfonts-local'); ?>
+            </h3>
+            <p>
+                <?= sprintf(__('I am convinced that knowledge should be free. That\'s why I will never charge you for the plugins I create and I will help you to succeed in your projects through the %stutorials%s on my blog.', 'host-webfonts-local'), '<a href="' . OMGF_SITE_URL . '/how-to/' . $utmTags . '" target="_blank">', '</a>'); ?>
+            </p>
+            <p>
+                <?= __('But that doesn\'t mean there\'s nothing you can do to show your support! :)', 'host-webfonts-local'); ?>
+            </p>
+            <p>
+                <?= sprintf(__('Please help me spread the word by leaving a %s5-star review%s on Wordpress.org or sending a %sTweet%s about OMGF.', 'host-webfonts-local'), '<a target="_blank" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post">', '</a>', "<a href='$tweetUrl'>", '</a>'); ?>
+            </p>
+            <p>
+                <a target="_blank" class="button button-secondary button-hero" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post"><span class="dashicons-before dashicons-star-filled"> <?php _e('Review', 'host-webfonts-local'); ?></span></a>
+                <a target="_blank" class="button button-secondary button-hero" href="<?= $tweetUrl; ?>"><span class="dashicons-before dashicons-twitter"> <?php _e('Tweet', 'host-webfonts-local'); ?></span></a>
+            </p>
+            <hr/>
+            <h3>
+                <?php _e('Need Help?', 'host-webfonts-local'); ?>
+            </h3>
+            <p>
+                <?= sprintf(__('Visit the %sFAQ%s and %sSupport Forum%s to see if your question has already been answered. If not, ask a question on the Support Forum.', 'host-webfonts-local'), '<a href="' . OMGF_SITE_URL . '/wordpress/host-google-fonts-locally/' . $utmTags . '" target="_blank">', '</a>', '<a href="https://wordpress.org/plugins/host-webfonts-local/#description" target="_blank">', '</a>', '<a href="https://wordpress.org/support/plugin/host-webfonts-local">', '</a>'); ?>
+            </p>
         </div>
     </div>
 </div>
-<style>
-    h3 > .dashicons {
-        line-height: 1.4;
-    }
-</style>
