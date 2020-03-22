@@ -92,7 +92,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
         <div class="wrap">
             <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
 
-            <p class="about-description">
+            <p>
                 <?= get_plugin_data(OMGF_PLUGIN_FILE)['Description']; ?>
             </p>
 
