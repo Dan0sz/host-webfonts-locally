@@ -39,48 +39,51 @@ class OMGF_Admin_AutoDetect
     }
 
     /**
-     * Initialize Auto Detect.
+     * Run Auto Detect.
      */
     private function init()
     {
         $font_properties = $this->extract_font_properties($this->detected_fonts);
 
-        $fonts = $this->build_subsets_array($font_properties);
+        $subsets = $this->build_subsets_array($font_properties);
 
-        foreach ($fonts as $index => &$font) {
+        foreach ($subsets as $index => &$font) {
             if (!is_numeric($index)) {
                 continue;
             }
 
             $font_styles[$font['subset_font']] = $this->api->get_font_styles($font['subset_font'], implode(',', $font['selected_subsets']));
 
-            $fonts[$font['subset_font']] = $font;
-            unset($fonts[$index]);
+            $subsets[$font['subset_font']] = $font;
+            unset($subsets[$index]);
         }
 
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $fonts);
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $subsets);
 
         // Match used styles with available styles.
-        foreach ($fonts as $subset) {
+        foreach ($subsets as $subset) {
             $used_styles[] = $this->process_used_styles($subset['used_styles'], $font_styles[$subset['subset_font']]);
         }
 
         if (isset($used_styles)) {
-            $detected_fonts = array_merge(...$used_styles);
+            $detected_font_styles = array_merge(...$used_styles);
 
-            update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $detected_fonts);
+            update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $detected_font_styles);
         }
 
         /** It only needs to run once. */
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED);
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS);
 
-        if (empty($fonts)) {
-            OMGF_Admin_Notice::set_notice(__('Auto-detection completed successfully, but no Google Fonts were found.', 'host-webfonts-local'), false, 'warning');
+        if (empty($subsets)) {
+            OMGF_Admin_Notice::set_notice(__('Auto Detect completed successfully, but no Google Fonts were found.', 'host-webfonts-local'), false, 'warning');
 
             OMGF_Admin_Notice::set_notice(sprintf(__('Your theme (or plugin) might be using unconventional methods (or Web Font Loader) to load Google Fonts. For a custom integration to load your Google Fonts locally, <a href="%s" target="_blank">hire me</a> or <a href="%s" target="_blank">contact me</a> when in doubt.', 'host-webfonts-local'), 'https://woosh.dev/wordpress-services/omgf-expert-configuration/', OMGF_SITE_URL . '/contact'), false, 'info');
         } else {
-            OMGF_Admin_Notice::set_notice(__('Auto-detection completed. Please check the results and proceed to download the fonts and generate the stylesheet.', 'host-webfonts-local'), false);
+            $count_subsets = count($subsets);
+            $count_fonts   = count($detected_font_styles);
+
+            OMGF_Admin_Notice::set_notice(__("Auto Detect found $count_subsets subsets and $count_fonts font styles. Please check the results and proceed to download the fonts and generate the stylesheet.", 'host-webfonts-local'), false);
         }
     }
 
