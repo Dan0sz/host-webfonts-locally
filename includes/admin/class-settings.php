@@ -98,8 +98,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
             <div class="settings-column left">
                 <div class="omgf-nav">
-                    <span class="generate-stylesheet selected"><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></span>
-                    <span class="advanced-settings"><?php _e('Advanced Settings', 'host-webfonts-local'); ?></span>
+                    <span class="generate-stylesheet dashicons-before dashicons-admin-appearance selected"><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></span>
+                    <span class="advanced-settings dashicons-before dashicons-admin-settings"><?php _e('Advanced Settings', 'host-webfonts-local'); ?></span>
                 </div>
 
                 <form id="omgf-generate-stylesheet-form" name="omgf-generate-stylesheet-form" style="display: block;">
