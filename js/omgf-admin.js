@@ -59,7 +59,7 @@ jQuery(document).ready(function ($) {
          * Triggered when Search is clicked.
          */
         click_search: function () {
-            searchQuery = $('#omgf-search').val().replace(/\s/g, '-').toLowerCase();
+            searchQuery = $('#omgf-search').val();
             omgf_admin.search_subsets(searchQuery);
         },
 

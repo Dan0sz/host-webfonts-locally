@@ -44,13 +44,17 @@ class OMGF_AJAX
      */
     public function search_font_subsets()
     {
+        $option_subsets = get_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS) ?: [];
+
         delete_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS);
-        delete_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
+
 
         if (!($query = $_POST['search_query'])) {
             OMGF_Admin_Notice::set_notice(__('Search query not found.', 'host-webfonts-local'), true, 'warning');
         }
 
+        $query         = strtolower(str_replace(', ', ',', $query));
+        $query         = str_replace(' ', '-', $query);
         $searchQueries = explode(',', sanitize_text_field($query));
 
         foreach ($searchQueries as $searchQuery) {
@@ -68,7 +72,9 @@ class OMGF_AJAX
             $response[] = $subsets;
         }
 
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $response);
+        $option_subsets = array_merge($option_subsets, $response);
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $option_subsets);
 
         OMGF_Admin_Notice::set_notice(__('Subset search complete. Select subsets to generate a list of available font styles.', 'host-webfonts-local'));
     }
