@@ -92,6 +92,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
         <div class="wrap">
             <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
 
+            <p class="about-description">
+                <?= get_plugin_data(OMGF_PLUGIN_FILE)['Description']; ?>
+            </p>
+
             <div class="settings-column left">
                 <div class="omgf-nav">
                     <span class="generate-stylesheet selected"><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></span>

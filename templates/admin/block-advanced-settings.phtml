@@ -20,10 +20,47 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
 ?>
 <div class="">
     <p class="description">
-        <?php _e('* Re-generate stylesheet after changing this setting.', 'host-webfonts-local'); ?><br />
+        <strong><?= __('Make sure you\'ve saved your settings, before generating the stylesheet!', 'host-webfonts-local'); ?></strong>
+    </p>
+    <p class="description">
+        <?php _e('* Re-generate stylesheet after changing this setting.', 'host-webfonts-local'); ?>
+    </p>
+    <p class="description">
         <?php _e('** Empty Cache Directory, Download Fonts and Generate Stylesheet after changing this setting.', 'host-webfonts-local'); ?>
     </p>
     <table class="form-table">
+        <tr valign="top">
+            <th scope="row">
+                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>">
+                    <?php _e('Remove Google Fonts (experimental)', 'host-webfonts-local'); ?>
+                </label>
+            </th>
+            <td>
+                <input class="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" id="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" <?= OMGF_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
+                <p class="description">
+                    <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, your theme and/or plugin(s) are using unconventional methods (or Web Font Loader) to load Google Fonts. <a href="%s" target="_blank">Hire me</a> for a custom integration or <a href="%s" target="_blank">contact me</a> when in doubt.', 'host-webfonts-local'), 'https://woosh.dev/wordpress-services/omgf-expert-configuration/' . $utmTags, OMGF_SITE_URL . '/contact/' . $utmTags); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
+                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>">
+                    <?php _e('Font-display option', 'host-webfonts-local'); ?> *
+                </label>
+            </th>
+            <td>
+                <select id="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>" name="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>">
+                    <?php foreach (OMGF_Admin_Settings::OMGF_FONT_DISPLAY_OPTIONS as $label => $value): ?>
+                        <option value="<?= $value; ?>" <?= $value == OMGF_DISPLAY_OPTION ? 'selected' : ''; ?>><?php _e($label, 'host-webfonts-local'); ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <br/>
+                <p class="description">
+                    <?php _e('Select which font-display strategy to use. Defaults to \'Auto\'.', 'host-webfonts-local'); ?>
+                    <a target="_blank" href="https://developers.google.com/web/updates/2016/02/font-display"><?php _e('Read more', 'host-webfonts-local'); ?></a>
+                </p>
+            </td>
+        </tr>
         <tr valign="top">
             <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>">
@@ -99,38 +136,6 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                 <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION; ?>" <?= OMGF_REMOVE_VERSION ? "checked = 'checked'" : ""; ?> />
                 <p class="description">
                     <?php _e('This removes the <code>?ver=x.x.x</code> parameter from the Stylesheet\'s (<code>fonts.css</code>) request. ', 'host-webfonts-local'); ?>
-                </p>
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>">
-                    <?php _e('Font-display option', 'host-webfonts-local'); ?> *
-                </label>
-            </th>
-            <td>
-                <select id="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>" name="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>">
-                    <?php foreach (OMGF_Admin_Settings::OMGF_FONT_DISPLAY_OPTIONS as $label => $value): ?>
-                        <option value="<?= $value; ?>" <?= $value == OMGF_DISPLAY_OPTION ? 'selected' : ''; ?>><?php _e($label, 'host-webfonts-local'); ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <br/>
-                <p class="description">
-                    <?php _e('Select which font-display strategy to use. Defaults to \'Auto\'.', 'host-webfonts-local'); ?>
-                    <a target="_blank" href="https://developers.google.com/web/updates/2016/02/font-display"><?php _e('Read more', 'host-webfonts-local'); ?></a>
-                </p>
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>">
-                    <?php _e('Remove Google Fonts (experimental)', 'host-webfonts-local'); ?>
-                </label>
-            </th>
-            <td>
-                <input class="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" id="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" <?= OMGF_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
-                <p class="description">
-                    <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, click %shere%s for a more comprehensive guide.', 'host-webfonts-local'), '<a target="_blank" href="' . OMGF_SITE_URL . '/how-to/remove-google-fonts-wordpress/' . $utmTags . '">', '</a>'); ?>
                 </p>
             </td>
         </tr>

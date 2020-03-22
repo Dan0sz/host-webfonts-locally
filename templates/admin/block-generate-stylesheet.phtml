@@ -21,7 +21,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
 ?>
 <div class="omgf-generate-stylesheet">
     <p class="description">
-        <?= __('<strong>Search</strong> returns all available subsets and font styles for each font. <strong>Auto Detect</strong> only returns subsets and fonts that\'re used by your installed theme and plugins.', 'host-webfonts-local'); ?>
+        <?= __('<strong>Search</strong> returns all available subsets and font styles for each font family. <strong>Auto Detect</strong> only returns subsets and font styles that\'re used by your installed theme and plugins.', 'host-webfonts-local'); ?>
     </p>
     <p class="description">
         <?= __('You can <strong>Search</strong> by either using a comma separated list (e.g. Open Sans, Poppins, Roboto) or by adding each font family one by one.', 'host-webfonts-local'); ?>
@@ -33,9 +33,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <input type="button" id="omgf-auto-detect" class="button button-secondary button-hero" value="<?= __('Auto Detect', 'host-webfonts-local'); ?>" />
         </div>
         <table>
-            <tr id="row" valign="top">
-                <th align="left" colspan="3"><?php _e('Available subsets', 'host-webfonts-local'); ?></th>
-            </tr>
+            <caption><?php _e('Available subsets', 'host-webfonts-local'); ?></caption>
             <tbody id="omgf-subsets">
             <?php
             $subsetFonts = $db->get_subsets();
@@ -68,12 +66,8 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <?php endif; ?>
             </tbody>
         </table>
-        <table>
-            <tr valign="top">
-                <th align="left" colspan="3"><?php _e('Available fonts', 'host-webfonts-local'); ?></th>
-            </tr>
-        </table>
         <table id="omgf-font-styles-list">
+            <caption><?php _e('Available font styles', 'host-webfonts-local'); ?></caption>
             <?php
             $savedFonts = $db->get_total_fonts();
             ?>
@@ -110,7 +104,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                         <td align="center" style="width: 75px;">
                             <input type="checkbox" class="omgf-font-preload" data-preload="<?= $fontId; ?>" value="1" <?= $font['preload'] == 1 ? 'checked' : ''; ?> />
                         </td>
-                        <td>
+                        <td style="width: 75px;">
                             <input type="hidden" value="<?= $fontId; ?>" />
                             <input type="hidden" value="<?= $font['local']; ?>" />
                             <input type="hidden" value="<?= $font['url_ttf']; ?>" />

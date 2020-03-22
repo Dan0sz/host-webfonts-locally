@@ -13,13 +13,16 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
+/**
+ * Navigation
+ */
 .omgf-nav {
-    padding: 1em 0;
+    padding: 1em 0 1.5em;
 }
 .omgf-nav span {
     color: #23282d;
     font-size: 1.3em;
-    margin-right: 1em;
+    margin-right: 1.5em;
     font-weight: 600;
 }
 
@@ -27,15 +30,19 @@
     cursor: pointer;
 }
 
-.omgf-nav .selected {
+.omgf-nav .selected,
+.omgf-nav span:hover {
     border-bottom: 1px dashed #23282d;
     padding: 3px 0;
 }
 
 .omgf-nav span:not(.selected) {
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
+/**
+ * Sections
+ */
 .settings-column {
     display: inline-block;
 }
@@ -69,11 +76,19 @@
 /**
  * Generate Stylesheet-form
  */
-
 #omgf-search {
     line-height: 38px;
     width: 360px;
     padding: 3px 10px;
+}
+
+.omgf-search-section caption {
+
+    text-align: left;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0.66em 0 0.33em;
+
 }
 
 .omgf-loading {
