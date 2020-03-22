@@ -76,6 +76,14 @@
 /**
  * Generate Stylesheet-form
  */
+.omgf-generate-stylesheet table {
+    margin-top: .66em;
+}
+
+.omgf-search-section {
+    margin-top: 1em;
+}
+
 #omgf-search {
     line-height: 38px;
     width: 360px;
