@@ -34,7 +34,8 @@ class OMGF_Admin
         // @formatter:off
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         add_action('admin_notices', [$this, 'add_notice']);
-        add_filter('pre_update_option_omgf_cache_dir', [$this, 'reset_fonts_downloaded_value'], 50, 2);
+        add_filter('pre_update_option_omgf_cache_dir', [$this, 'reset_fonts_downloaded_value'], 10, 2);
+        add_filter('pre_update_option_omgf_cache_uri', [$this, 'rewrite_fonts_urls'], 10, 2);
         // @formatter:on
     }
 
@@ -106,6 +107,33 @@ class OMGF_Admin
         }
 
         return $new_cache_dir;
+    }
+
+    /**
+     * @param $new_uri
+     * @param $old_uri
+     *
+     * @return mixed
+     */
+    public function rewrite_fonts_urls($new_uri, $old_uri)
+    {
+        if ($new_uri !== $old_uri && !empty($new_uri)) {
+            $font_styles = $this->db->get_downloaded_fonts();
+
+            if (empty($font_styles)) {
+                return $new_uri;
+            }
+
+            preg_match('/[^\/]+$/u', WP_CONTENT_DIR, $match);
+
+            $font_styles = $this->rewrite_urls($font_styles, '/' . $match[0] . OMGF_CACHE_PATH, $new_uri);
+
+            update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $font_styles);
+
+            OMGF_Admin_Notice::set_notice(__('You have changed OMGF\'s font URLs. Regenerate the stylesheet to reflect the changes.', 'host-webfonts-local'), false, 'info');
+        }
+
+        return $new_uri;
     }
 
     /**
