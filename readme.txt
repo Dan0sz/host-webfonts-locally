@@ -106,7 +106,8 @@ N/A
 == Changelog ==
 
 = 3.2.0 =
-* Fonts are now automatically updated when the 'Save fonts to...' or 'Serve fonts from...' options are changed, so all that is needed afterwards is generate the stylesheet.
+* Sidebar now scrolls along
+* Fonts are now automatically updated after the 'Serve fonts from...' or 'Save fonts to...' options are changed. Added reminder notices for them, too.
 
 = 3.1.3 =
 * Added toggleable navigation menu. Made it a bit more UX friendly.
