@@ -104,9 +104,9 @@ class OMGF_Admin
             if (!OMGF_CACHE_URI) {
                 $font_styles = $this->rewrite_urls($font_styles, $old_cache_dir, $new_cache_dir);
 
-                OMGF_Admin_Notice::set_notice(__("You've changed OMGF's storage folder to $new_cache_dir. Regenerate the stylesheet to implement this change.", 'host-webfonts-local'), false, 'info');
+                OMGF_Admin_Notice::set_notice(__("You've changed OMGF's storage folder to <strong>$new_cache_dir</strong>. Regenerate the stylesheet to implement this change.", 'host-webfonts-local'), false, 'info');
             } else {
-                OMGF_Admin_Notice::set_notice(__("You\'ve changed OMGF's storage folder to $new_cache_dir. Make sure the setting <em>Serve font files from...</em> reflects your changes and regenerate the stylesheet.", 'host-webfonts-local'), false);
+                OMGF_Admin_Notice::set_notice(__("You've changed OMGF's storage folder to <strong>$new_cache_dir</strong>. Make sure the setting <em>Serve font files from...</em> reflects your changes and regenerate the stylesheet.", 'host-webfonts-local'), false);
             }
 
             update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $font_styles);
@@ -179,7 +179,7 @@ class OMGF_Admin
 
     public function cdn_url_changed($new_url, $old_url)
     {
-        if ($new_url != $old_url && !empty($new_url)) {
+        if ($new_url != $old_url) {
             $font_styles = $this->db->get_downloaded_fonts();
 
             if (empty($font_styles)) {
