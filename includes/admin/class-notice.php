@@ -33,8 +33,8 @@ class OMGF_Admin_Notice
      */
     public static function set_notice($message, $die = true, $type = 'success', $code = 200, $screen_id = 'all')
     {
-        self::$notices                    = get_transient(self::OMGF_ADMIN_NOTICE_TRANSIENT);
-        self::$notices[$screen_id][$type] = $message;
+        self::$notices                      = get_transient(self::OMGF_ADMIN_NOTICE_TRANSIENT);
+        self::$notices[$screen_id][$type][] = $message;
 
         set_transient(self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices, self::OMGF_ADMIN_NOTICE_EXPIRATION);
 
@@ -67,7 +67,9 @@ class OMGF_Admin_Notice
                 foreach ($notice as $type => $message) {
                     ?>
                     <div id="message" class="notice notice-<?php echo $type; ?> is-dismissible">
-                        <p><?php _e($message, 'host-webfonts-local'); ?></p>
+                        <?php foreach ($message as $line): ?>
+                            <p><?= $line; ?></p>
+                        <?php endforeach; ?>
                     </div>
                     <?php
                 }
