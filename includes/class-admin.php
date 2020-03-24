@@ -36,6 +36,8 @@ class OMGF_Admin
         add_action('admin_notices', [$this, 'add_notice']);
         add_filter('pre_update_option_omgf_cache_dir', [$this, 'cache_dir_changed'], 10, 2);
         add_filter('pre_update_option_omgf_cache_uri', [$this, 'serve_uri_changed'], 10, 2);
+        add_filter('pre_update_option_omgf_relative_url', [$this, 'relative_url_changed'], 10, 2);
+        add_filter('pre_update_option_omgf_cdn_url', [$this, 'cdn_url_changed'], 10, 2);
         // @formatter:on
     }
 
@@ -102,9 +104,9 @@ class OMGF_Admin
             if (!OMGF_CACHE_URI) {
                 $font_styles = $this->rewrite_urls($font_styles, $old_cache_dir, $new_cache_dir);
 
-                OMGF_Admin_Notice::set_notice(__('You have changed OMGF\'s storage folder. Regenerate the stylesheet to reflect the changes.', 'host-webfonts-local'), false, 'info');
+                OMGF_Admin_Notice::set_notice(__("You've changed OMGF\'s storage folder to $new_cache_dir. Regenerate the stylesheet to implement this change.", 'host-webfonts-local'), false, 'info');
             } else {
-                OMGF_Admin_Notice::set_notice(__('You have changed OMGF\'s storage folder. Make sure the setting <strong>Serve font files from...</strong> reflects your changes and regenerate the stylesheet.', 'host-webfonts-local'), false);
+                OMGF_Admin_Notice::set_notice(__("You\'ve changed OMGF's storage folder to $new_cache_dir. Make sure the setting <em>Serve font files from...</em> reflects your changes and regenerate the stylesheet.", 'host-webfonts-local'), false);
             }
 
             update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $font_styles);
@@ -134,10 +136,66 @@ class OMGF_Admin
 
             update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $font_styles);
 
-            OMGF_Admin_Notice::set_notice(__('You have changed OMGF\'s font URLs. Regenerate the stylesheet to reflect the changes.', 'host-webfonts-local'), false, 'info');
+            OMGF_Admin_Notice::set_notice(__("Fonts updated successfully. Regenerate the stylesheet to <em>serve font files from</em> $new_uri.", 'host-webfonts-local'), false, 'info');
         }
 
         return $new_uri;
+    }
+
+    /**
+     * @param $new_value
+     * @param $old_value
+     *
+     * @return mixed
+     */
+    public function relative_url_changed($new_value, $old_value)
+    {
+        if ($new_value !== $old_value) {
+            $font_styles = $this->db->get_downloaded_fonts();
+
+            if (empty($font_styles)) {
+                return $new_value;
+            }
+
+            $result = $this->unset_downloaded_value($font_styles);
+
+            if ($new_value == 'on') {
+                $status = 'enabled';
+            } elseif (!$new_value) {
+                $status = 'disabled';
+            }
+
+            if ($result) {
+                OMGF_Admin_Notice::set_notice(sprintf(__('You\'ve %s the setting <em>Use relative URLs</em>. <strong>Download</strong> the <strong>fonts</strong> again and (re-)<strong>generate</strong> the <strong>stylesheet</strong> to implement this change.', 'host-webfonts-local'), $status), false, 'info');
+
+                return $new_value;
+            }
+
+            OMGF_Admin_Notice::set_notice(__('You\'ve %s the setting <em>Use relative URLs</em>. Something went wrong while updating the fonts. <strong>Empty</strong> the <strong>cache directory</strong>, <strong>download</strong> the <strong>fonts</strong> and <strong>generate</strong> the <strong>stylesheet</strong> to implement this change.', 'host-webfonts-local'), false, 'error');
+        }
+
+        return $new_value;
+    }
+
+    public function cdn_url_changed($new_url, $old_url)
+    {
+        if ($new_url !== $old_url && !empty($new_url)) {
+            $font_styles = $this->db->get_downloaded_fonts();
+
+            if (empty($font_styles)) {
+                return $new_url;
+            }
+
+            $result = $this->unset_downloaded_value($font_styles);
+
+            if ($result) {
+                OMGF_Admin_Notice::set_notice(__('Fonts updated successfully. <strong>Download</strong> the <strong>fonts</strong> and (re-)<strong>generate</strong> the <strong>stylesheet</strong> to <em>serve fonts from CDN</em>.', 'host-webfonts-local'), false, 'info');
+            } else {
+                OMGF_Admin_Notice::set_notice(__('Something went wrong while updating your settings. <strong>Empty</strong> the <strong>Cache Directory</strong>, <strong>download</strong> the <strong>fonts</strong> and <strong>generate</strong> the <strong>stylesheet</strong> to <em>serve fonts from CDN</em>.', 'host-webfonts-local'), false, 'info');
+            }
+        }
+
+        return $new_url;
     }
 
     /**
@@ -204,6 +262,26 @@ class OMGF_Admin
         }
 
         return $font_styles;
+    }
+
+    /**
+     * @param $fonts
+     *
+     * @return bool
+     */
+    private function unset_downloaded_value($fonts)
+    {
+        foreach ($fonts as &$font_style) {
+            $font_style['downloaded'] = 0;
+        }
+
+        $updated = update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
+
+        if ($updated) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
