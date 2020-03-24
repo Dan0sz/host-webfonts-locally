@@ -71,11 +71,6 @@ class OMGF_AJAX_Download extends OMGF_AJAX
         }
 
         foreach ($selectedFonts as $id => &$font) {
-            // If font is marked as downloaded. Skip it.
-            if ($font['downloaded']) {
-                continue;
-            }
-
             $urls['url_ttf']   = $font['url_ttf'];
             $urls['url_woff']  = $font['url_woff'];
             $urls['url_woff2'] = $font['url_woff2'];
