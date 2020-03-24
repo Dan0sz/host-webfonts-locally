@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.1.3
+Stable tag: 3.2.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,9 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.2.0 =
+* Fonts are now automatically updated when the 'Save fonts to...' or 'Serve fonts from...' options are changed, so all that is needed afterwards is generate the stylesheet.
 
 = 3.1.3 =
 * Added toggleable navigation menu. Made it a bit more UX friendly.
