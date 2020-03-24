@@ -150,7 +150,7 @@ class OMGF_Admin
      */
     public function relative_url_changed($new_value, $old_value)
     {
-        if ($new_value !== $old_value) {
+        if ($new_value != $old_value) {
             $font_styles = $this->db->get_downloaded_fonts();
 
             if (empty($font_styles)) {
