@@ -179,7 +179,7 @@ class OMGF_Admin
 
     public function cdn_url_changed($new_url, $old_url)
     {
-        if ($new_url !== $old_url && !empty($new_url)) {
+        if ($new_url != $old_url && !empty($new_url)) {
             $font_styles = $this->db->get_downloaded_fonts();
 
             if (empty($font_styles)) {
@@ -191,7 +191,7 @@ class OMGF_Admin
             if ($result) {
                 OMGF_Admin_Notice::set_notice(__('Fonts updated successfully. <strong>Download</strong> the <strong>fonts</strong> and (re-)<strong>generate</strong> the <strong>stylesheet</strong> to <em>serve fonts from CDN</em>.', 'host-webfonts-local'), false, 'info');
             } else {
-                OMGF_Admin_Notice::set_notice(__('Something went wrong while updating your settings. <strong>Empty</strong> the <strong>Cache Directory</strong>, <strong>download</strong> the <strong>fonts</strong> and <strong>generate</strong> the <strong>stylesheet</strong> to <em>serve fonts from CDN</em>.', 'host-webfonts-local'), false, 'info');
+                OMGF_Admin_Notice::set_notice(__('Something went wrong while updating your settings. <strong>Empty</strong> the <strong>Cache Directory</strong>, <strong>download</strong> the <strong>fonts</strong> and <strong>generate</strong> the <strong>stylesheet</strong> to <em>serve fonts from CDN</em>.', 'host-webfonts-local'), false, 'error');
             }
         }
 
