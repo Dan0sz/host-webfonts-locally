@@ -70,7 +70,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <td>
                 <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" placeholder="<?= __('e.g. /cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_PATH; ?>"/>
                 <p class="description">
-                    <?php _e("The relative path (inside <code>wp-content</code>) to the cache directory where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/cache/omgf-webfonts</code>.", 'host-webfonts-local'); ?>
+                    <?php _e("The folder (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/cache/omgf-webfonts</code>. Folder will be created if it doesn't exist and existing files will be moved automatically.", 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
