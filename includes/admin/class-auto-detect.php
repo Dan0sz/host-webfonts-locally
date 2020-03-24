@@ -80,10 +80,14 @@ class OMGF_Admin_AutoDetect
 
             OMGF_Admin_Notice::set_notice(sprintf(__('Your theme (or plugin) might be using unconventional methods (or Web Font Loader) to load Google Fonts. For a custom integration to load your Google Fonts locally, <a href="%s" target="_blank">hire me</a> or <a href="%s" target="_blank">contact me</a> when in doubt.', 'host-webfonts-local'), 'https://woosh.dev/wordpress-services/omgf-expert-configuration/', OMGF_SITE_URL . '/contact'), false, 'info');
         } else {
-            $count_subsets = count($subsets);
-            $count_fonts   = count($detected_font_styles);
+            $count_fonts   = count($subsets);
+            $count_subsets = 0;
+            foreach ($subsets as $subset) {
+                $count_subsets += count($subset['available_subsets']);
+            }
+            $count_font_styles = count($detected_font_styles);
 
-            OMGF_Admin_Notice::set_notice(__("Auto Detect found $count_subsets subsets and $count_fonts font styles. Please check the results and proceed to download the fonts and generate the stylesheet.", 'host-webfonts-local'), false);
+            OMGF_Admin_Notice::set_notice(__("Auto Detect found $count_fonts fonts in $count_subsets different subsets and $count_font_styles font styles. Please check the results and proceed to download the fonts and generate the stylesheet.", 'host-webfonts-local'), false);
         }
     }
 
