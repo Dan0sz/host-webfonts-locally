@@ -34,8 +34,8 @@ class OMGF_Admin
         // @formatter:off
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         add_action('admin_notices', [$this, 'add_notice']);
-        add_filter('pre_update_option_omgf_cache_dir', [$this, 'reset_fonts_downloaded_value'], 10, 2);
-        add_filter('pre_update_option_omgf_cache_uri', [$this, 'rewrite_fonts_urls'], 10, 2);
+        add_filter('pre_update_option_omgf_cache_dir', [$this, 'cache_dir_changed'], 10, 2);
+        add_filter('pre_update_option_omgf_cache_uri', [$this, 'serve_uri_changed'], 10, 2);
         // @formatter:on
     }
 
@@ -86,7 +86,7 @@ class OMGF_Admin
      *
      * @return mixed
      */
-    public function reset_fonts_downloaded_value($new_cache_dir, $old_cache_dir)
+    public function cache_dir_changed($new_cache_dir, $old_cache_dir)
     {
         if ($new_cache_dir !== $old_cache_dir && !empty($new_cache_dir)) {
             $font_styles = $this->db->get_downloaded_fonts();
@@ -99,11 +99,15 @@ class OMGF_Admin
 
             $this->move_files($files, $new_cache_dir);
 
-            $font_styles = $this->rewrite_urls($font_styles, $old_cache_dir, $new_cache_dir);
+            if (!OMGF_CACHE_URI) {
+                $font_styles = $this->rewrite_urls($font_styles, $old_cache_dir, $new_cache_dir);
+
+                OMGF_Admin_Notice::set_notice(__('You have changed OMGF\'s storage folder. Regenerate the stylesheet to reflect the changes.', 'host-webfonts-local'), false, 'info');
+            } else {
+                OMGF_Admin_Notice::set_notice(__('You have changed OMGF\'s storage folder. Make sure the setting <strong>Serve font files from...</strong> reflects your changes and regenerate the stylesheet.', 'host-webfonts-local'), false);
+            }
 
             update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $font_styles);
-
-            OMGF_Admin_Notice::set_notice(__('You have changed OMGF\'s storage folder. Don\'t forget to regenerate the stylesheet!', 'host-webfonts-local'), false, 'info');
         }
 
         return $new_cache_dir;
@@ -115,7 +119,7 @@ class OMGF_Admin
      *
      * @return mixed
      */
-    public function rewrite_fonts_urls($new_uri, $old_uri)
+    public function serve_uri_changed($new_uri, $old_uri)
     {
         if ($new_uri !== $old_uri && !empty($new_uri)) {
             $font_styles = $this->db->get_downloaded_fonts();
@@ -126,7 +130,7 @@ class OMGF_Admin
 
             preg_match('/[^\/]+$/u', WP_CONTENT_DIR, $match);
 
-            $font_styles = $this->rewrite_urls($font_styles, '/' . $match[0] . OMGF_CACHE_PATH, $new_uri);
+            $font_styles = $this->rewrite_urls($font_styles, $old_uri, $new_uri);
 
             update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $font_styles);
 
@@ -149,7 +153,7 @@ class OMGF_Admin
         foreach($files as $filename) {
             $old_path = OMGF_FONTS_DIR . "/$filename";
             $new_path = WP_CONTENT_DIR . $destination . "/$filename";
-            $move = rename($old_path, $new_path);
+            $move     = rename($old_path, $new_path);
 
             if ($move == false) {
                 $errors[] = $filename;
@@ -163,6 +167,7 @@ class OMGF_Admin
 
             return false;
         }
+
         $message    = sprintf(__('Moved %s files', 'host-webfonts-local'), count($files));
         $remove_dir = rmdir(OMGF_FONTS_DIR);
 
@@ -210,5 +215,13 @@ class OMGF_Admin
         if (!file_exists($uploadDir)) {
             wp_mkdir_p($uploadDir);
         }
+    }
+
+    /**
+     * @param $path
+     */
+    private function remove_dir_recursive($path)
+    {
+        $dirs = explode('/', $path);
     }
 }

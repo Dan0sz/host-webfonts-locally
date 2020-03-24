@@ -133,9 +133,14 @@ class OMGF
      *
      * @return mixed
      */
-    public function get_content_dir()
+    private function get_content_dir()
     {
-        preg_match('/[^\/]+$/u', WP_CONTENT_DIR, $match);
+        if (OMGF_CACHE_URI) {
+            $match = array_filter(explode('/', OMGF_CACHE_URI));
+            $match = array_values($match);
+        } else {
+            preg_match('/[^\/]+$/u', WP_CONTENT_DIR, $match);
+        }
 
         return $match[0];
     }
@@ -152,7 +157,7 @@ class OMGF
         if (OMGF_CDN_URL) {
             $uploadUrl = '//' . OMGF_CDN_URL . '/' . $this->get_content_dir() . OMGF_CACHE_PATH;
         } elseif (OMGF_CACHE_URI) {
-            $uploadUrl = OMGF_CACHE_URI;
+            $uploadUrl = get_site_url(OMGF_CURRENT_BLOG_ID, OMGF_CACHE_URI);
         } else {
             $uploadUrl = get_site_url(OMGF_CURRENT_BLOG_ID, $this->get_content_dir() . OMGF_CACHE_PATH);
         }
