@@ -103,7 +103,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
 
                 clearstatcache();
 
-                $font[$type] = OMGF_FONTS_URL . '/' . $filename;
+                $font[$type . '_local'] = OMGF_FONTS_URL . '/' . $filename;
             }
         }
 

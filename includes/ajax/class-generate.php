@@ -97,10 +97,10 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
         $i = 1;
 
         foreach ($fonts as $font) {
-            $fontUrlEot  = isset($font['url_eot']) ? array(0 => esc_url_raw($font['url_eot'])) : array();
-            $fontSources = isset($font['url_woff2']) ? array('woff2' => esc_url_raw($font['url_woff2'])) : array();
-            $fontSources = $fontSources + (isset($font['url_woff']) ? array('woff' => esc_url_raw($font['url_woff'])) : array());
-            $fontSources = $fontSources + (isset($font['url_ttf']) ? array('truetype' => esc_url_raw($font['url_ttf'])) : array());
+            $fontUrlEot  = isset($font['url_eot_local']) ? array(0 => esc_url_raw($font['url_eot_local'])) : array();
+            $fontSources = isset($font['url_woff2_local']) ? array('woff2' => esc_url_raw($font['url_woff2_local'])) : array();
+            $fontSources = $fontSources + (isset($font['url_woff_local']) ? array('woff' => esc_url_raw($font['url_woff_local'])) : array());
+            $fontSources = $fontSources + (isset($font['url_ttf_local']) ? array('truetype' => esc_url_raw($font['url_ttf_local'])) : array());
             $locals      = explode(',', sanitize_text_field($font['local']));
 
             $this->fonts[$i] = "@font-face { \n";
