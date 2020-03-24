@@ -50,7 +50,7 @@ class OMGF_Admin_Notice
     }
 
     /**
-     * Prints notice (if any)
+     * Prints notice (if any) grouped by type.
      */
     public static function print_notice()
     {

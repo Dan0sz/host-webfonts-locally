@@ -166,12 +166,12 @@ class OMGF_Admin
             }
 
             if ($result) {
-                OMGF_Admin_Notice::set_notice(sprintf(__('You\'ve %s the setting <em>Use relative URLs</em>. <strong>Download</strong> the <strong>fonts</strong> again and (re-)<strong>generate</strong> the <strong>stylesheet</strong> to implement this change.', 'host-webfonts-local'), $status), false, 'info');
+                OMGF_Admin_Notice::set_notice(sprintf(__('You\'ve %s using <em>relative URLs</em>. <strong>Download</strong> the <strong>fonts</strong> again and (re-)<strong>generate</strong> the <strong>stylesheet</strong> to implement this change.', 'host-webfonts-local'), $status), false, 'info');
 
                 return $new_value;
             }
 
-            OMGF_Admin_Notice::set_notice(__('You\'ve %s the setting <em>Use relative URLs</em>. Something went wrong while updating the fonts. <strong>Empty</strong> the <strong>cache directory</strong>, <strong>download</strong> the <strong>fonts</strong> and <strong>generate</strong> the <strong>stylesheet</strong> to implement this change.', 'host-webfonts-local'), false, 'error');
+            OMGF_Admin_Notice::set_notice(__('You\'ve %s using <em>relative URLs</em>. Something went wrong while updating the fonts. <strong>Empty</strong> the <strong>cache directory</strong>, <strong>download</strong> the <strong>fonts</strong> and <strong>generate</strong> the <strong>stylesheet</strong> to implement this change.', 'host-webfonts-local'), false, 'error');
         }
 
         return $new_value;
