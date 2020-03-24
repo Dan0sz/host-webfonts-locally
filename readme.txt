@@ -107,7 +107,9 @@ N/A
 
 = 3.2.0 =
 * Sidebar now scrolls along
-* Fonts are now automatically updated after the 'Serve fonts from...' or 'Save fonts to...' options are changed. Added reminder notices for them, too.
+* Fonts are now automatically updated and font files and stylesheet are automatically moved after the 'Serve fonts from...' or 'Save fonts to...' options are changed.
+* Added several reminder notices to improve UX and reduce the level of complexity.
+* Notices/warnings/errors are now grouped.
 
 = 3.1.3 =
 * Added toggleable navigation menu. Made it a bit more UX friendly.
