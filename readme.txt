@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.2.0
+Stable tag: 3.2.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.2.1 =
+* Fixes in responsiveness of admin screen.
+* Fixed links in Quick Start and Support block.
 
 = 3.2.0 =
 * Sidebar now scrolls along
