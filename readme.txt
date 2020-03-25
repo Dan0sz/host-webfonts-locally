@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.2.1
+Stable tag: 3.3.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -105,12 +105,15 @@ N/A
 
 == Changelog ==
 
+= 3.3.0 =
+* Introduced a queueing system for font-styles search, preload and remove for easier management. The 'Apply' buttons now process all your changes at once.
+* The 'Apply' buttons are sticky, so they're visible for long lists.
+
 = 3.2.1 =
 * Fixes in responsiveness of admin screen.
 * Fixed links in Quick Start and Support block.
 
 = 3.2.0 =
-* Sidebar now scrolls along
 * Fonts are now automatically updated and font files and stylesheet are automatically moved after the 'Serve fonts from...' or 'Save fonts to...' options are changed.
 * Added several reminder notices to improve UX and reduce the level of complexity.
 * Notices/warnings/errors are now grouped.
