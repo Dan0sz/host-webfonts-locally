@@ -64,9 +64,9 @@ jQuery(document).ready(function ($) {
 
             // Buttons
             $('#omgf-search-subsets').on('click', this.click_search);
-            $('#omgf-auto-detect').on('click', this.enable_auto_detect);
-            $('#omgf-download').on('click', this.download_fonts);
-            $('#omgf-generate').on('click', this.generate_stylesheet);
+            $('#omgf-auto-detect, .help.auto-detect').on('click', this.enable_auto_detect);
+            $('#omgf-download, .help.download-fonts').on('click', this.download_fonts);
+            $('#omgf-generate, .help.generate-stylesheet').on('click', this.generate_stylesheet);
             $('#omgf-empty').on('click', this.empty_cache_directory);
         },
 

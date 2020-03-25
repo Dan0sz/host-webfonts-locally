@@ -59,7 +59,7 @@
 
 .settings-column.right {
     float: right;
-    width: 28.6%;
+    width: 21.75%;
 }
 
 /**
@@ -77,7 +77,6 @@ h3 > .dashicons {
 
 #omgf-welcome-panel,
 #omgf-welcome-panel-clone {
-    /*border: 1px #eee solid;*/
     width: 100%;
     padding: 20px 10px 5px;
     box-sizing: border-box;
@@ -170,6 +169,9 @@ h3 > .dashicons {
 }
 
 #omgf-control-panel {
-    min-width: 654px;
-    width: 66%;
+    margin-top: 1em;
+}
+
+#omgf-control-panel .button-cancel {
+    padding: 1px 10px !important;
 }
