@@ -113,73 +113,6 @@ jQuery(document).ready(function ($) {
         },
 
         /**
-         * Triggered when Search is clicked.
-         */
-        click_search: function () {
-            searchQuery = $('#omgf-search').val();
-            omgf_admin.search_subsets(searchQuery);
-        },
-
-        /**
-         * Enable Auto Detect.
-         */
-        enable_auto_detect: function () {
-            $.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: {
-                    action: 'omgf_ajax_enable_auto_detect'
-                },
-                dataType: 'json',
-                beforeSend: function () {
-                    omgf_admin.show_loader('.omgf-search-box');
-                },
-                complete: function () {
-                    location.reload();
-                }
-            });
-        },
-
-        /**
-         * Triggered by Click Search
-         *
-         * @param query
-         */
-        search_subsets: function (query) {
-            jQuery.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: {
-                    action: 'omgf_ajax_search_font_subsets',
-                    search_query: query
-                },
-                dataType: 'json',
-                beforeSend: function () {
-                    omgf_admin.show_loader('.omgf-search-box');
-                },
-                complete: function() {
-                    location.reload();
-                }
-            });
-        },
-
-        /**
-         * Show loader on element
-         *
-         * @param element
-         */
-        show_loader: function (element) {
-            var clone = omgf_admin.$loader.clone();
-
-            $(element).append(clone).css({
-                'position': 'relative',
-                'opacity': '0.5'
-            });
-
-            clone.show();
-        },
-
-        /**
          * If any subsets are checked for search.
          */
         manage_subset_queue: function () {
@@ -188,71 +121,6 @@ jQuery(document).ready(function ($) {
             $('.omgf-subsets-search').attr('colspan', colspan);
 
             omgf_admin.toggle_button($('.omgf-subset:checked'), $('.omgf-apply.font-styles-search'), section);
-        },
-
-        /**
-         * Triggered on Search
-         */
-        search_google_fonts: function () {
-            if (omgf_admin.search_fonts_xhr) {
-                omgf_admin.search_fonts_xhr.abort();
-            }
-
-            omgf_admin.font_families = omgf_admin.$font_families.map(function () {
-                return $(this).data('font-family');
-            }).get();
-
-            omgf_admin.font_families.forEach(function(font, index) {
-                omgf_admin.font_families[index] = {};
-                omgf_admin.font_families[index].selected_subsets = [];
-
-                $('input[data-subset-font-family="' + font + '"]:checked').each(function(i) {
-                    omgf_admin.font_families[index].subset_font = font;
-                    omgf_admin.font_families[index].selected_subsets[i] = this.value;
-                });
-            });
-
-            omgf_admin.search_fonts_xhr = $.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: {
-                    action: 'omgf_ajax_search_google_fonts',
-                    search_google_fonts: omgf_admin.font_families,
-                },
-                dataType: 'json',
-                beforeSend: function() {
-                    omgf_admin.show_loader('#omgf-font-styles-list');
-                },
-                complete: function () {
-                    location.reload();
-                }
-            });
-        },
-
-        /**
-         * Triggered when preload is checked. If multiple are checked, all are processed at once.
-         */
-        preload_font_style: function() {
-            if (omgf_admin.preload_font_style_xhr) {
-                omgf_admin.preload_font_style_xhr.abort();
-            }
-
-            omgf_admin.preload_font_styles = $('.omgf-font-preload:checked').map(function () {
-                return $(this).data('preload');
-            }).get();
-
-            omgf_admin.preload_font_style_xhr = $.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: {
-                    action: 'omgf_ajax_preload_font_style',
-                    preload_font_styles: omgf_admin.preload_font_styles
-                },
-                dataType: 'json',
-                success: function () {
-                    location.reload();
-                }
-            });
         },
 
         /**
@@ -270,6 +138,28 @@ jQuery(document).ready(function ($) {
                 omgf_admin.enqueue_for_removal(this);
             } else {
                 omgf_admin.undo_removal(this);
+            }
+        },
+
+        /**
+         * @param conditional
+         * @param button
+         * @param section
+         */
+        toggle_button: function(conditional, button, section) {
+            help_text = section.find('.omgf-apply.help');
+            buttons   = section.find('.omgf-apply.button');
+
+            if (conditional.length > 0) {
+                button.show();
+            } else {
+                button.hide();
+            }
+
+            if (buttons.is(':visible')) {
+                help_text.show();
+            } else {
+                help_text.hide();
             }
         },
 
@@ -312,25 +202,93 @@ jQuery(document).ready(function ($) {
         },
 
         /**
-         * @param conditional
-         * @param button
-         * @param section
+         * Triggered when Search is clicked.
          */
-        toggle_button: function(conditional, button, section) {
-            help_text = section.find('.omgf-apply.help');
-            buttons   = section.find('.omgf-apply.button');
+        click_search: function () {
+            searchQuery = $('#omgf-search').val();
+            omgf_admin.search_subsets(searchQuery);
+        },
 
-            if (conditional.length > 0) {
-                button.show();
-            } else {
-                button.hide();
+        /**
+         * Triggered by Click Search
+         *
+         * @param query
+         */
+        search_subsets: function (query) {
+            jQuery.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_search_font_subsets',
+                    search_query: query
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    omgf_admin.show_loader('.omgf-search-box');
+                },
+                complete: function() {
+                    location.reload();
+                }
+            });
+        },
+
+        /**
+         * Enable Auto Detect.
+         */
+        enable_auto_detect: function () {
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_enable_auto_detect'
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    omgf_admin.show_loader('.omgf-search-box');
+                },
+                complete: function () {
+                    location.reload();
+                }
+            });
+        },
+
+        /**
+         * Triggered on Search
+         */
+        search_google_fonts: function () {
+            if (omgf_admin.search_fonts_xhr) {
+                omgf_admin.search_fonts_xhr.abort();
             }
 
-            if (buttons.is(':visible')) {
-                help_text.show();
-            } else {
-                help_text.hide();
-            }
+            omgf_admin.font_families = omgf_admin.$font_families.map(function () {
+                return $(this).data('font-family');
+            }).get();
+
+            omgf_admin.font_families.forEach(function(font, index) {
+                omgf_admin.font_families[index] = {};
+                omgf_admin.font_families[index].selected_subsets = [];
+
+                $('input[data-subset-font-family="' + font + '"]:checked').each(function(i) {
+                    omgf_admin.font_families[index].subset_font = font;
+                    omgf_admin.font_families[index].selected_subsets[i] = this.value;
+                });
+            });
+
+            omgf_admin.search_fonts_xhr = $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_search_google_fonts',
+                    search_google_fonts: omgf_admin.font_families,
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    omgf_admin.show_loader('#omgf-font-styles-list');
+                },
+                complete: function () {
+                    location.reload();
+                }
+            });
         },
 
         /**
@@ -365,7 +323,39 @@ jQuery(document).ready(function ($) {
                     font_styles: omgf_admin.font_style_list
                 },
                 dataType: 'json',
+                beforeSend: function() {
+                    omgf_admin.show_loader('#omgf-font-styles-list');
+                },
                 success: function() {
+                    location.reload();
+                }
+            });
+        },
+
+        /**
+         * Triggered when preload is checked. If multiple are checked, all are processed at once.
+         */
+        preload_font_style: function() {
+            if (omgf_admin.preload_font_style_xhr) {
+                omgf_admin.preload_font_style_xhr.abort();
+            }
+
+            omgf_admin.preload_font_styles = $('.omgf-font-preload:checked').map(function () {
+                return $(this).data('preload');
+            }).get();
+
+            omgf_admin.preload_font_style_xhr = $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_preload_font_style',
+                    preload_font_styles: omgf_admin.preload_font_styles
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    omgf_admin.show_loader('#omgf-font-styles-list');
+                },
+                success: function () {
                     location.reload();
                 }
             });
@@ -436,6 +426,22 @@ jQuery(document).ready(function ($) {
                     location.reload();
                 }
             });
+        },
+
+        /**
+         * Show loader on element
+         *
+         * @param element
+         */
+        show_loader: function (element) {
+            var clone = omgf_admin.$loader.clone();
+
+            $(element).append(clone).css({
+                'position': 'relative',
+                'opacity': '0.5'
+            });
+
+            clone.show();
         },
     };
 

@@ -105,10 +105,10 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                         <td style="width: 100px;">
                             <input style="width: 100px;" readonly type="text" value="<?= $font['font_weight']; ?>" />
                         </td>
-                        <td align="center" style="width: 75px;">
+                        <td align="center" style="width: 45px;">
                             <input type="checkbox" class="omgf-font-preload" data-preload="<?= $fontId; ?>" value="1" <?= $font['preload'] == 1 ? 'checked' : ''; ?> />
                         </td>
-                        <td style="width: 75px;">
+                        <td style="width: 45px;">
                             <input type="hidden" value="<?= $fontId; ?>" />
                             <input type="hidden" value="<?= $font['local']; ?>" />
                             <input type="hidden" value="<?= $font['url_ttf']; ?>" />
@@ -119,10 +119,11 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                         </td>
                     </tr>
                 <?php endforeach; ?>
-                    <tr align="center">
+                    <!-- The navbar at the bottom of the table. -->
+                    <tr id="font-styles-nav" align="right">
                         <td align="right" colspan="3"><span class="omgf-apply help font-styles" style="display: none;"><strong><?= __('Apply Changes', 'host-webfonts-local'); ?></strong></span></td>
-                        <td><a class="button-primary omgf-apply button preload" href="#" style="display: none;"><span class="dashicons-before dashicons-yes-alt">&nbsp;</span></a></td>
-                        <td align="left"><a class="button-primary omgf-apply button remove" href="#" style="display: none;'"><span class="dashicons-before dashicons-yes-alt">&nbsp;</span></a></td>
+                        <td align="center" style="width: 45px"><a class="button-primary omgf-apply button preload" href="#" style="display: none;"><span class="dashicons-before dashicons-yes-alt">&nbsp;</span></a></td>
+                        <td align="left" style="width: 45px;"><a class="button-primary omgf-apply button remove" href="#" style="display: none;'"><span class="dashicons-before dashicons-yes-alt">&nbsp;</span></a></td>
                     </tr>
                     <tr>
                         <td colspan="5">

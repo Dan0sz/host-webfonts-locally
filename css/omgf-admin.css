@@ -105,6 +105,7 @@ h3 > .dashicons {
 }
 
 .omgf-search-section {
+    max-width: 640px;
     margin-top: 1em;
 }
 
