@@ -12,16 +12,11 @@
  * @copyright: (c) 2020 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
-
 /**
  * Navigation
  */
 .omgf-nav {
     padding: 1em 0 1.5em;
-}
-
-.omgf-nav .dashicons-before:before {
-    margin-right: .25em;
 }
 
 .omgf-nav span {
@@ -35,14 +30,18 @@
     cursor: pointer;
 }
 
+.omgf-nav span:not(.selected) {
+    opacity: 0.85;
+}
+
 .omgf-nav .selected,
 .omgf-nav span:hover {
     border-bottom: 1px dashed #23282d;
     padding: 3px 0;
 }
 
-.omgf-nav span:not(.selected) {
-    opacity: 0.85;
+.omgf-nav .dashicons-before:before {
+    margin-right: 0.25em;
 }
 
 /**
@@ -65,63 +64,91 @@
 /**
  * Welcome block
  */
-h3 > .dashicons {
-    line-height: 1.4;
-}
-
-#omgf-welcome-panel-clone {
-    display: none;
-    position: fixed;
-    z-index: 100000;
-}
-
-#omgf-welcome-panel,
-#omgf-welcome-panel-clone {
-    width: 100%;
+#omgf-welcome-panel {
     padding: 20px 10px 5px;
-    box-sizing: border-box;
 }
 
-/**
- * Responsiveness
- */
-@media only screen and (max-width: 1024px) {
-    .settings-column {
-        display: block;
-        float: none;
-    }
-
-    .settings-column.left,
-    .settings-column.right {
-        width: 100%;
-    }
+#omgf-welcome-panel h3 > .dashicons {
+    line-height: 1.4;
 }
 
 /**
  * Generate Stylesheet-form
  */
 .omgf-generate-stylesheet table {
-    margin-top: .66em;
+    margin-top: 0.66em;
 }
 
-.omgf-search-section {
+.omgf-generate-stylesheet .omgf-search-section {
     max-width: 640px;
     margin-top: 1em;
 }
 
-#omgf-search {
-    line-height: 38px;
-    width: 360px;
-    padding: 3px 10px;
+.omgf-generate-stylesheet .omgf-search-section a.omgf-apply span:before {
+    line-height: 1.4;
+    width: 16px;
 }
 
-.omgf-search-section caption {
+.omgf-generate-stylesheet .omgf-search-section caption {
     text-align: left;
     font-size: 1.2em;
     font-weight: 600;
     margin: 0.66em 0 0.33em;
 }
 
+.omgf-generate-stylesheet .omgf-search-section span.omgf-apply.font-styles-search {
+    width: 75%;
+}
+
+.omgf-generate-stylesheet .omgf-search-section #omgf-search {
+    line-height: 38px;
+    width: 360px;
+    padding: 3px 10px;
+}
+
+.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-remove {
+    cursor: pointer;
+    padding: 0 0 0 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-remove:before {
+    position: absolute;
+    left: 0;
+}
+
+.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles #font-styles-nav.sticky {
+    background: #f1f1f1;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    width: 565px;
+}
+
+.omgf-generate-stylesheet #omgf-control-panel {
+    margin-top: 1em;
+}
+
+.omgf-generate-stylesheet #omgf-control-panel .button-cancel {
+    color: #a00;
+    text-decoration: none;
+    border-color: transparent;
+    box-shadow: none;
+    background: 0 0;
+    border-radius: 3px;
+    white-space: nowrap;
+    padding: 1px 10px !important;
+}
+
+.omgf-generate-stylesheet #omgf-control-panel .button-cancel:hover {
+    cursor: pointer;
+    background: #d54e21;
+    color: #fff;
+    border-color: #d54e21;
+}
+
+/**
+ * Loader
+ */
 .omgf-loading {
     position: absolute;
     width: 100%;
@@ -140,60 +167,36 @@ h3 > .dashicons {
     transform: translate(0, -70%);
 }
 
-.omgf-font-remove {
-    cursor: pointer;
-    padding: 0 0 0 20px;
-    position: relative;
-    display: inline-block;
+/**
+ * Sticky elements.
+ */
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    overflow: visible;
 }
 
-.omgf-font-remove:before {
-    position: absolute;
-    left: 0;
+.sticky.top {
+    top: 25px;
 }
 
-#omgf-font-styles a.omgf-apply span:before,
-#omgf-subsets a.omgf-apply span:before {
-    line-height: 1.4;
-    width: 16px;
-}
-
-.omgf-apply.font-styles-search {
-    width: 75%;
-}
-
-#font-styles-nav.sticky {
-    position: fixed;
+.sticky.bottom {
     bottom: 0;
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-    z-index: 10000;
-    width: 565px;
 }
 
-.button-cancel {
-    color: #a00;
-    text-decoration: none;
-    border-color: transparent;
-    box-shadow: none;
-    background: 0 0;
-    border-radius: 3px;
-    white-space: nowrap;
-    padding: 6px 10px !important;
+/**
+ * Responsiveness
+ */
+@media only screen and (max-width: 1024px) {
+    .settings-column {
+        display: block;
+        float: none;
+    }
+
+    .settings-column.left,
+    .settings-column.right {
+        width: 100%;
+    }
 }
 
-.button-cancel:hover {
-    cursor: pointer;
-    background: #d54e21;
-    color: #fff;
-    border-color: #d54e21;
-}
-
-#omgf-control-panel {
-    margin-top: 1em;
-}
-
-#omgf-control-panel .button-cancel {
-    padding: 1px 10px !important;
-}
+/*# sourceMappingURL=omgf-admin.css.map */
