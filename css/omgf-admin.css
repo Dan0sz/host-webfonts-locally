@@ -151,9 +151,14 @@ h3 > .dashicons {
     left: 0;
 }
 
-#omgf-font-styles a.omgf-apply span:before {
+#omgf-font-styles a.omgf-apply span:before,
+#omgf-subsets a.omgf-apply span:before {
     line-height: 1.4;
     width: 16px;
+}
+
+.omgf-apply.font-styles-search {
+    width: 75%;
 }
 
 .button-cancel {

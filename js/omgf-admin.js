@@ -44,9 +44,6 @@ jQuery(document).ready(function ($) {
         $preload_font_styles: $('.omgf-font-preload'),
         $removed_font_style: $('.omgf-font-remove'),
 
-        // Timeout for User Interaction
-        timeout: 2000,
-
         /**
          * Initialize all on click events.
          */
@@ -57,14 +54,15 @@ jQuery(document).ready(function ($) {
             // Sidebar
             $(window).scroll(this.scroll_sidebar);
 
-            // Generate Stylesheet Section
-            this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, this.timeout); });
+            // Manage queues
+            this.$subsets.on('click', this.manage_subset_queue);
             this.$preload_font_styles.on('click', this.manage_preload_queue);
             this.$removed_font_style.on('click', this.manage_removal_queue);
 
             // Buttons
             $('#omgf-search-subsets').on('click', this.click_search);
             $('#omgf-auto-detect, .help.auto-detect').on('click', this.enable_auto_detect);
+            $('.omgf-apply.font-styles-search').on('click', this.search_google_fonts);
             $('.omgf-apply.remove').on('click', this.process_removal_queue);
             $('.omgf-apply.preload').on('click', this.preload_font_style);
             $('#omgf-download, .help.download-fonts').on('click', this.download_fonts);
@@ -182,6 +180,17 @@ jQuery(document).ready(function ($) {
         },
 
         /**
+         * If any subsets are checked for search.
+         */
+        manage_subset_queue: function () {
+            section = $('#omgf-subsets');
+            colspan = section.find("tr:first td").length - 1;
+            $('.omgf-subsets-search').attr('colspan', colspan);
+
+            omgf_admin.toggle_button($('.omgf-subset:checked'), $('.omgf-apply.font-styles-search'), section);
+        },
+
+        /**
          * Triggered on Search
          */
         search_google_fonts: function () {
@@ -250,7 +259,7 @@ jQuery(document).ready(function ($) {
          * If any fonts are checked for preload, display Preload apply button.
          */
         manage_preload_queue: function () {
-            omgf_admin.toggle_button($('.omgf-font-preload:checked'), $('.omgf-apply.preload'));
+            omgf_admin.toggle_button($('.omgf-font-preload:checked'), $('.omgf-apply.preload'), $('#omgf-font-styles-list'));
         },
 
         /**
@@ -280,7 +289,7 @@ jQuery(document).ready(function ($) {
             $(item).removeClass('notice-dismiss');
             $(row).removeClass('omgf-font-style');
 
-            omgf_admin.toggle_button($('.dashicons-undo'), $('.omgf-apply.remove'));
+            omgf_admin.toggle_button($('.dashicons-undo'), $('.omgf-apply.remove'), $('#omgf-font-styles-list'));
         },
 
         /**
@@ -299,15 +308,17 @@ jQuery(document).ready(function ($) {
             $(item).addClass('notice-dismiss');
             $(row).addClass('omgf-font-style');
 
-            omgf_admin.toggle_button($('.dashicons-undo'), $('.omgf-apply.remove'));
+            omgf_admin.toggle_button($('.dashicons-undo'), $('.omgf-apply.remove'), $('#omgf-font-styles-list'));
         },
 
         /**
          * @param conditional
          * @param button
+         * @param section
          */
-        toggle_button: function(conditional, button) {
-            help_text = $('span.omgf-apply');
+        toggle_button: function(conditional, button, section) {
+            help_text = section.find('.omgf-apply.help');
+            buttons   = section.find('.omgf-apply.button');
 
             if (conditional.length > 0) {
                 button.show();
@@ -315,7 +326,7 @@ jQuery(document).ready(function ($) {
                 button.hide();
             }
 
-            if ($('.omgf-apply.button').is(':visible')) {
+            if (buttons.is(':visible')) {
                 help_text.show();
             } else {
                 help_text.hide();
