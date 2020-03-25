@@ -162,6 +162,14 @@ h3 > .dashicons {
     width: 75%;
 }
 
+#font-styles-nav.sticky {
+    position: fixed;
+    bottom: 0;
+    background: #fff;
+    z-index: 10000;
+    width: 565px;
+}
+
 .button-cancel {
     color: #a00;
     text-decoration: none;
