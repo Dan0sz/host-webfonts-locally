@@ -59,17 +59,22 @@ jQuery(document).ready(function ($) {
 
             // Generate Stylesheet Section
             this.$subsets.on('click', function () { setTimeout(omgf_admin.search_google_fonts, this.timeout); });
-            this.$preload_font_styles.on('click', function() { setTimeout(omgf_admin.preload_font_style, this.timeout); });
-            this.$removed_font_style.on('click', this.remove_font_style);
+            this.$preload_font_styles.on('click', this.manage_preload_queue);
+            this.$removed_font_style.on('click', this.manage_removal_queue);
 
             // Buttons
             $('#omgf-search-subsets').on('click', this.click_search);
             $('#omgf-auto-detect, .help.auto-detect').on('click', this.enable_auto_detect);
+            $('.omgf-apply.remove').on('click', this.process_removal_queue);
+            $('.omgf-apply.preload').on('click', this.preload_font_style);
             $('#omgf-download, .help.download-fonts').on('click', this.download_fonts);
             $('#omgf-generate, .help.generate-stylesheet').on('click', this.generate_stylesheet);
             $('#omgf-empty').on('click', this.empty_cache_directory);
         },
 
+        /**
+         * Toggle settings sections.
+         */
         toggle_section: function () {
             omgf_admin.$nav.removeClass('selected');
             $(this).addClass('selected');
@@ -83,6 +88,9 @@ jQuery(document).ready(function ($) {
             }
         },
 
+        /**
+         * Scroll sidebar in settings.
+         */
         scroll_sidebar: function () {
             /**
              * Make sure widgetClone has correct width, since its
@@ -239,9 +247,85 @@ jQuery(document).ready(function ($) {
         },
 
         /**
-         * Triggered when remove is clicked. If multiple are checked, all are processed at once.
+         * If any fonts are checked for preload, display Preload apply button.
          */
-        remove_font_style: function() {
+        manage_preload_queue: function () {
+            omgf_admin.toggle_button($('.omgf-font-preload:checked'), $('.omgf-apply.preload'));
+        },
+
+        /**
+         * Enqueue for removal or undo removal of current item.
+         */
+        manage_removal_queue: function () {
+            if (this.classList.contains('notice-dismiss')) {
+                omgf_admin.enqueue_for_removal(this);
+            } else {
+                omgf_admin.undo_removal(this);
+            }
+        },
+
+        /**
+         * Add current item to removal queue.
+         *
+         * @param item
+         */
+        enqueue_for_removal: function (item) {
+            row = '#' + $(item).data('row');
+
+            $(row).css({
+                'opacity': '0.5'
+            });
+
+            $(item).addClass('dashicons-before dashicons-undo');
+            $(item).removeClass('notice-dismiss');
+            $(row).removeClass('omgf-font-style');
+
+            omgf_admin.toggle_button($('.dashicons-undo'), $('.omgf-apply.remove'));
+        },
+
+        /**
+         * Remove current item from removal queue.
+         *
+         * @param item
+         */
+        undo_removal: function (item) {
+            row = '#' + $(item).data('row');
+
+            $(row).css({
+                'opacity': '1'
+            });
+
+            $(item).removeClass('dashicons-before dashicons-undo');
+            $(item).addClass('notice-dismiss');
+            $(row).addClass('omgf-font-style');
+
+            omgf_admin.toggle_button($('.dashicons-undo'), $('.omgf-apply.remove'));
+        },
+
+        /**
+         * @param conditional
+         * @param button
+         */
+        toggle_button: function(conditional, button) {
+            help_text = $('span.omgf-apply');
+
+            if (conditional.length > 0) {
+                button.show();
+            } else {
+                button.hide();
+            }
+
+            if ($('.omgf-apply.button').is(':visible')) {
+                help_text.show();
+            } else {
+                help_text.hide();
+            }
+        },
+
+        /**
+         * Processes the removal queue.
+         */
+        process_removal_queue: function() {
             row = '#' + $(this).data('row');
 
             omgf_admin.show_loader(row);

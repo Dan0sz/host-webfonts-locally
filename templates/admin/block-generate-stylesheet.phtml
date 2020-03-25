@@ -115,11 +115,16 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                         </td>
                     </tr>
                 <?php endforeach; ?>
-                <tr>
-                    <td colspan="5">
-                        <span class="description">* <?= __('Only the <strong>woff2</strong> format is preloaded, since this format is widely supported by Modern Browsers which support preload.', 'host-webfonts-local'); ?></span>
-                    </td>
-                </tr>
+                    <tr align="center">
+                        <td align="right" colspan="3"><span class="omgf-apply" style="display: none;"><strong><?= __('Apply Changes', 'host-webfonts-local'); ?></strong></span></td>
+                        <td><a class="button-primary omgf-apply button preload" href="#" style="display: none;"><span class="dashicons-before dashicons-yes-alt">&nbsp;</span></a></td>
+                        <td align="left"><a class="button-primary omgf-apply button remove" href="#" style="display: none;'"><span class="dashicons-before dashicons-yes-alt">&nbsp;</span></a></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <span class="description">* <?= __('Only the <strong>woff2</strong> format is preloaded, since this format is widely supported by Modern Browsers which support preload.', 'host-webfonts-local'); ?></span>
+                        </td>
+                    </tr>
                 </tbody>
             <?php else: ?>
                 <tr>

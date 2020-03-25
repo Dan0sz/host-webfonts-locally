@@ -140,6 +140,7 @@ h3 > .dashicons {
 }
 
 .omgf-font-remove {
+    cursor: pointer;
     padding: 0 0 0 20px;
     position: relative;
     display: inline-block;
@@ -148,6 +149,11 @@ h3 > .dashicons {
 .omgf-font-remove:before {
     position: absolute;
     left: 0;
+}
+
+#omgf-font-styles a.omgf-apply span:before {
+    line-height: 1.4;
+    width: 16px;
 }
 
 .button-cancel {
