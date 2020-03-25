@@ -44,6 +44,13 @@ jQuery(document).ready(function ($) {
         $preload_font_styles: $('.omgf-font-preload'),
         $removed_font_style: $('.omgf-font-remove'),
 
+        // Used for Sticky Navbar
+        $font_styles_nav: $('#font-styles-nav'),
+        fs_nav_bounds: {
+            top: 0,
+            bottom: 0
+        },
+
         /**
          * Initialize all on click events.
          */
@@ -53,6 +60,11 @@ jQuery(document).ready(function ($) {
 
             // Sidebar
             $(window).scroll(this.scroll_sidebar);
+
+            // Font Styles Nav
+            this.fs_nav_bounds        = this.$font_styles_nav.offset();
+            this.fs_nav_bounds.bottom = this.fs_nav_bounds.top + this.$font_styles_nav.outerHeight();
+            $(window).scroll(this.toggle_navbar_stickiness);
 
             // Manage queues
             this.$subsets.on('click', this.manage_subset_queue);
@@ -110,6 +122,32 @@ jQuery(document).ready(function ($) {
                 omgf_admin.$welcome_panel.css('opacity', '1');
                 omgf_admin.$welcome_panel_clone.hide();
             }
+        },
+
+        /**
+         * If Navbar is visible, make it sticky. Otherwise, don't.
+         */
+        toggle_navbar_stickiness: function () {
+            if (omgf_admin.is_in_viewport(omgf_admin.fs_nav_bounds)) {
+                omgf_admin.$font_styles_nav.removeClass('sticky');
+            } else {
+                omgf_admin.$font_styles_nav.addClass('sticky');
+            }
+        },
+
+        /**
+         * @param bounds
+         * @returns {boolean}
+         */
+        is_in_viewport: function (bounds) {
+            var win = $(window);
+
+            var viewport = {
+                top : win.scrollTop()
+            };
+            viewport.bottom = viewport.top + win.height();
+
+            return (!(viewport.bottom < bounds.top || viewport.top > bounds.bottom));
         },
 
         /**
