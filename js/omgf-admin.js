@@ -261,7 +261,7 @@ jQuery(document).ready(function ($) {
             }).get();
 
             omgf_admin.preload_font_styles = $('.omgf-font-preload:checked').map(function () {
-                return $(this).data('preload');
+                return this.value;
             }).get();
 
             omgf_admin.process_font_styles_xhr = $.ajax({

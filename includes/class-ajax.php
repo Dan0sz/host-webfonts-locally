@@ -153,6 +153,8 @@ class OMGF_AJAX
         foreach ($selected_fonts as &$font) {
             if (in_array($font['font_id'], $to_be_preloaded)) {
                 $font['preload'] = 1;
+            } else {
+                $font['preload'] = 0;
             }
         }
 
