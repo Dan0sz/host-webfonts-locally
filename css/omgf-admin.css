@@ -28,9 +28,6 @@
 /**
  * Sections
  */
-.settings-column {
-  display: inline-block;
-}
 .settings-column.left {
   float: left;
   width: 66%;
@@ -140,7 +137,6 @@
 .sticky {
   position: -webkit-sticky;
   position: sticky;
-  overflow: visible;
 }
 .sticky.top {
   top: 25px;
