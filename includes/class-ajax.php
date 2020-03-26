@@ -31,10 +31,9 @@ class OMGF_AJAX
         add_action('wp_ajax_omgf_ajax_search_font_subsets', array($this, 'search_font_subsets'));
         add_action('wp_ajax_omgf_ajax_enable_auto_detect', [$this, 'enable_auto_detect']);
         add_action('wp_ajax_omgf_ajax_search_google_fonts', array($this, 'search_fonts'));
+        add_action('wp_ajax_omgf_ajax_process_font_styles_queue', [$this, 'process_font_styles_queue']);
         add_action('wp_ajax_omgf_ajax_download_fonts', array($this, 'download_fonts'));
         add_action('wp_ajax_omgf_ajax_generate_styles', array($this, 'generate_styles'));
-        add_action('wp_ajax_omgf_ajax_preload_font_style', array($this, 'preload_font_style'));
-        add_action('wp_ajax_omgf_ajax_refresh_font_style_list', array($this, 'refresh_font_style_list'));
         add_action('wp_ajax_omgf_ajax_empty_dir', array($this, 'empty_directory'));
         // @formatter:on
     }
@@ -139,6 +138,30 @@ class OMGF_AJAX
     }
 
     /**
+     * Update options with font styles selected for preloading.
+     */
+    public function process_font_styles_queue()
+    {
+        $current_fonts   = get_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
+        $selected_fonts  = $_POST['font_styles'];
+        $to_be_preloaded = $_POST['preload_font_styles'];
+
+        $selected_fonts = array_filter($current_fonts, function ($font_style) use ($selected_fonts) {
+            return in_array($font_style['font_id'], $selected_fonts);
+        });
+
+        foreach ($selected_fonts as &$font) {
+            if (in_array($font['font_id'], $to_be_preloaded)) {
+                $font['preload'] = 1;
+            }
+        }
+
+        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $selected_fonts);
+
+        OMGF_Admin_Notice::set_notice(count($current_fonts) - count($selected_fonts) . ' ' . __('fonts removed from list and', 'host-webfonts-local') . ' ' . count($to_be_preloaded) . ' ' . __('fonts set to preload. If you haven\'t already, you can now <strong>download</strong> the <strong>fonts</strong>. Otherwise, just (re-)<strong>generate</strong> the <strong>stylesheet</strong>.', 'host-webfonts-local'), false);
+    }
+
+    /**
      * @return OMGF_AJAX_Download
      */
     public function download_fonts()
@@ -152,43 +175,6 @@ class OMGF_AJAX
     public function generate_styles()
     {
         return new OMGF_AJAX_Generate();
-    }
-
-    /**
-     * Update options with font styles selected for preloading.
-     */
-    public function preload_font_style()
-    {
-        $fonts = get_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
-        $preload_styles = $_POST['preload_font_styles'];
-
-        foreach ($fonts as &$font) {
-            if (in_array($font['font_id'], $preload_styles)) {
-                $font['preload'] = 1;
-            }
-        }
-
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
-
-        OMGF_Admin_Notice::set_notice(count($preload_styles) . ' ' . __('fonts set to preload. If you haven\'t already, you can now <strong>download</strong> the <strong>fonts</strong>. Otherwise, just (re-)<strong>generate</strong> the <strong>stylesheet</strong>.', 'host-webfonts-local'));
-    }
-
-    /**
-     * Refresh font style list after rows have been removed.
-     */
-    public function refresh_font_style_list()
-    {
-        $fonts = get_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS);
-
-        $current = $_POST['font_styles'];
-
-        $refreshed_list = array_filter($fonts, function ($font_style) use ($current) {
-            return in_array($font_style['font_id'], $current);
-        });
-
-        update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $refreshed_list);
-
-        OMGF_Admin_Notice::set_notice(count($fonts) - count($refreshed_list) . ' ' . __('fonts removed from list. If you haven\'t already, you can now <strong>download</strong> the <strong>fonts</strong>. Otherwise, just (re-)<strong>generate</strong> the <strong>stylesheet</strong>.', 'host-webfonts-local'));
     }
 
     /**

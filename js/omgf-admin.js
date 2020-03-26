@@ -17,8 +17,7 @@ jQuery(document).ready(function ($) {
     var omgf_admin = {
         // XHR
         search_fonts_xhr: false,
-        preload_font_style_xhr: false,
-        refresh_font_style_list_xhr: false,
+        process_font_styles_xhr: false,
         download_fonts_xhr: false,
         generate_stylesheet_xhr: false,
         empty_cache_directory_xhr: false,
@@ -29,7 +28,7 @@ jQuery(document).ready(function ($) {
         font_style_list: [],
 
         // Settings screen elements
-        $nav: $('.omgf-nav span'),
+        $nav: $('.omgf-nav a'),
         $nav_generate_stylesheet: $('.generate-stylesheet'),
         $nav_advanced_settings: $('.advanced-settings'),
         $generate_stylesheet_form: $('#omgf-generate-stylesheet-form'),
@@ -39,8 +38,7 @@ jQuery(document).ready(function ($) {
         $loader: $('.omgf-loading'),
         $font_families: $('.omgf-subset-font-family'),
         $subsets: $('.omgf-subset'),
-        $preload_font_styles: $('.omgf-font-preload'),
-        $removed_font_style: $('.omgf-font-remove'),
+        $manage_font_styles: $('.omgf-font-preload, .omgf-font-remove'),
 
         /**
          * Initialize all on click events.
@@ -50,16 +48,17 @@ jQuery(document).ready(function ($) {
             this.$nav.on('click', this.toggle_section);
 
             // Manage queues
+            /**
+             * TODO: Save state on pageload, to prevent display of apply-button when current selection matches saved state.
+             */
             this.$subsets.on('click', this.manage_subset_queue);
-            this.$preload_font_styles.on('click', this.manage_preload_queue);
-            this.$removed_font_style.on('click', this.manage_removal_queue);
+            this.$manage_font_styles.on('click', this.manage_font_styles_queues);
 
             // Buttons
             $('#omgf-search-subsets').on('click', this.click_search);
             $('#omgf-auto-detect, .help.auto-detect').on('click', this.enable_auto_detect);
             $('.omgf-apply.font-styles-search').on('click', this.search_google_fonts);
-            $('.omgf-apply.remove').on('click', this.process_removal_queue);
-            $('.omgf-apply.preload').on('click', this.preload_font_style);
+            $('.omgf-apply.font-styles').on('click', this.process_font_styles_queue);
             $('#omgf-download, .help.download-fonts').on('click', this.download_fonts);
             $('#omgf-generate, .help.generate-stylesheet').on('click', this.generate_stylesheet);
             $('#omgf-empty').on('click', this.empty_cache_directory);
@@ -69,8 +68,8 @@ jQuery(document).ready(function ($) {
          * Toggle settings sections.
          */
         toggle_section: function () {
-            omgf_admin.$nav.removeClass('selected');
-            $(this).addClass('selected');
+            omgf_admin.$nav.removeClass('nav-tab-active');
+            $(this).addClass('nav-tab-active');
 
             if (this.classList.contains('generate-stylesheet')) {
                 omgf_admin.$generate_stylesheet_form.fadeIn();
@@ -93,42 +92,31 @@ jQuery(document).ready(function ($) {
         },
 
         /**
+         *
+         */
+        manage_font_styles_queues: function () {
+            if (this.classList.contains('omgf-font-preload')) {
+                omgf_admin.manage_preload_queue();
+            } else {
+                omgf_admin.manage_removal_queue(this);
+            }
+        },
+
+        /**
          * If any fonts are checked for preload, display Preload apply button.
          */
         manage_preload_queue: function () {
-            omgf_admin.toggle_button($('.omgf-font-preload:checked'), $('.omgf-apply.preload'), $('#omgf-font-styles-list'));
+            omgf_admin.toggle_stylesheet_apply_button();
         },
 
         /**
          * Enqueue for removal or undo removal of current item.
          */
-        manage_removal_queue: function () {
-            if (this.classList.contains('notice-dismiss')) {
-                omgf_admin.enqueue_for_removal(this);
+        manage_removal_queue: function (element) {
+            if (element.classList.contains('notice-dismiss')) {
+                omgf_admin.enqueue_for_removal(element);
             } else {
-                omgf_admin.undo_removal(this);
-            }
-        },
-
-        /**
-         * @param conditional
-         * @param button
-         * @param section
-         */
-        toggle_button: function(conditional, button, section) {
-            help_text = section.find('.omgf-apply.help');
-            buttons   = section.find('.omgf-apply.button');
-
-            if (conditional.length > 0) {
-                button.show();
-            } else {
-                button.hide();
-            }
-
-            if (buttons.is(':visible')) {
-                help_text.show();
-            } else {
-                help_text.hide();
+                omgf_admin.undo_removal(element);
             }
         },
 
@@ -148,7 +136,7 @@ jQuery(document).ready(function ($) {
             $(item).removeClass('notice-dismiss');
             $(row).removeClass('omgf-font-style');
 
-            omgf_admin.toggle_button($('.dashicons-undo'), $('.omgf-apply.remove'), $('#omgf-font-styles-list'));
+            omgf_admin.toggle_stylesheet_apply_button();
         },
 
         /**
@@ -167,7 +155,32 @@ jQuery(document).ready(function ($) {
             $(item).addClass('notice-dismiss');
             $(row).addClass('omgf-font-style');
 
-            omgf_admin.toggle_button($('.dashicons-undo'), $('.omgf-apply.remove'), $('#omgf-font-styles-list'));
+            omgf_admin.toggle_stylesheet_apply_button();
+        },
+
+        /**
+         *
+         */
+        toggle_stylesheet_apply_button: function () {
+            omgf_admin.toggle_button($('.dashicons-undo, .omgf-font-preload:checked'), $('.omgf-apply.button.font-styles'), $('#omgf-font-styles-list'));
+        },
+
+        /**
+         * @param conditional
+         * @param button
+         * @param section
+         */
+        toggle_button: function(conditional, button, section) {
+            help_text = section.find('.omgf-apply.help');
+            buttons   = section.find('.omgf-apply.button');
+
+            if (conditional.length > 0) {
+                button.show();
+                help_text.show();
+            } else {
+                button.hide();
+                help_text.hide();
+            }
         },
 
         /**
@@ -223,6 +236,7 @@ jQuery(document).ready(function ($) {
 
         /**
          * Triggered on Search
+         * TODO: Refactor to more sensible names.
          */
         search_google_fonts: function () {
             if (omgf_admin.search_fonts_xhr) {
@@ -261,70 +275,34 @@ jQuery(document).ready(function ($) {
         },
 
         /**
-         * Processes the removal queue.
+         *
          */
-        process_removal_queue: function() {
-            row = '#' + $(this).data('row');
-
-            omgf_admin.show_loader(row);
-            $(row).removeClass('omgf-font-style');
-
-            setTimeout(omgf_admin.refresh_font_style_list, this.timeout);
-        },
-
-        /**
-         * Triggered after remove to sync data to backend.
-         */
-        refresh_font_style_list: function () {
-            if (omgf_admin.refresh_font_style_list_xhr) {
-                omgf_admin.refresh_font_style_list_xhr.abort();
+        process_font_styles_queue: function () {
+            if (omgf_admin.process_font_styles_xhr) {
+                omgf_admin.process_font_styles_xhr.abort();
             }
 
             omgf_admin.font_style_list = $('.omgf-font-style').map(function () {
                 return $(this).data('font-id');
             }).get();
 
-            omgf_admin.refresh_font_style_list_xhr = $.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: {
-                    action: 'omgf_ajax_refresh_font_style_list',
-                    font_styles: omgf_admin.font_style_list
-                },
-                dataType: 'json',
-                beforeSend: function() {
-                    omgf_admin.show_loader('#omgf-font-styles-list');
-                },
-                success: function() {
-                    location.reload();
-                }
-            });
-        },
-
-        /**
-         * Triggered when preload is checked. If multiple are checked, all are processed at once.
-         */
-        preload_font_style: function() {
-            if (omgf_admin.preload_font_style_xhr) {
-                omgf_admin.preload_font_style_xhr.abort();
-            }
-
             omgf_admin.preload_font_styles = $('.omgf-font-preload:checked').map(function () {
                 return $(this).data('preload');
             }).get();
 
-            omgf_admin.preload_font_style_xhr = $.ajax({
+            omgf_admin.process_font_styles_xhr = $.ajax({
                 type: 'POST',
                 url: ajaxurl,
                 data: {
-                    action: 'omgf_ajax_preload_font_style',
+                    action: 'omgf_ajax_process_font_styles_queue',
+                    font_styles: omgf_admin.font_style_list,
                     preload_font_styles: omgf_admin.preload_font_styles
                 },
                 dataType: 'json',
                 beforeSend: function() {
                     omgf_admin.show_loader('#omgf-font-styles-list');
                 },
-                success: function () {
+                success: function() {
                     location.reload();
                 }
             });
@@ -358,7 +336,11 @@ jQuery(document).ready(function ($) {
          * Generate stylesheet and refresh window.
          */
         generate_stylesheet: function () {
-            $.ajax({
+            if (omgf_admin.generate_stylesheet_xhr) {
+                omgf_admin.generate_stylesheet_xhr.abort();
+            }
+
+            omgf_admin.generate_stylesheet_xhr = $.ajax({
                 type: 'POST',
                 url: ajaxurl,
                 data: {
