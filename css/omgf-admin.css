@@ -79,13 +79,15 @@
   width: 360px;
   padding: 3px 10px;
 }
-.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-remove {
+.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-remove,
+.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-no-remove {
   cursor: pointer;
   padding: 0 0 0 20px;
   position: relative;
   display: inline-block;
 }
-.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-remove:before {
+.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-remove:before,
+.omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-no-remove:before {
   position: absolute;
   left: 0;
 }

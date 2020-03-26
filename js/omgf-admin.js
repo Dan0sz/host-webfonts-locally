@@ -22,6 +22,11 @@ jQuery(document).ready(function ($) {
         generate_stylesheet_xhr: false,
         empty_cache_directory_xhr: false,
 
+        // Saved State
+        subsets_state: 0,
+        preload_state: 0,
+        font_style_state: 0,
+
         // Data
         font_families: [],
         preload_font_styles: [],
@@ -37,10 +42,12 @@ jQuery(document).ready(function ($) {
          * Initialize all on click events.
          */
         init: function () {
+            // Current queue states
+            this.subsets_state    = $('.omgf-subset:checked').length;
+            this.preload_state    = $('.omgf-font-preload:checked').length;
+            this.font_style_state = $('.omgf-font-style').length;
+
             // Manage queues
-            /**
-             * TODO: Save state on pageload, to prevent display of apply-button when current selection matches saved state.
-             */
             this.$subsets.on('click', this.manage_subset_queue);
             this.$manage_font_styles.on('click', this.manage_font_styles_queues);
 
@@ -55,18 +62,23 @@ jQuery(document).ready(function ($) {
         },
 
         /**
-         * If any subsets are checked for search.
+         * Show apply button, if any changes are made to the list of subsets.
          */
         manage_subset_queue: function () {
             section = $('#omgf-subsets');
             colspan = section.find("tr:first td").length - 1;
             $('.omgf-subsets-search').attr('colspan', colspan);
+            subset_length = $('.omgf-subset:checked').length;
 
-            omgf_admin.toggle_button($('.omgf-subset:checked'), $('.omgf-apply.font-styles-search'), section);
+            if (subset_length !== omgf_admin.subsets_state) {
+                omgf_admin.show_button($('.omgf-apply.font-styles-search'), section);
+            } else {
+                omgf_admin.hide_button($('.omgf-apply.font-styles-search'), section);
+            }
         },
 
         /**
-         *
+         * Trigger the appropriate queue manager.
          */
         manage_font_styles_queues: function () {
             if (this.classList.contains('omgf-font-preload')) {
@@ -77,17 +89,17 @@ jQuery(document).ready(function ($) {
         },
 
         /**
-         * If any fonts are checked for preload, display Preload apply button.
+         * If any changes are made to the preload queue, display apply button.
          */
         manage_preload_queue: function () {
-            omgf_admin.toggle_stylesheet_apply_button();
+            omgf_admin.toggle_font_styles_apply_button();
         },
 
         /**
          * Enqueue for removal or undo removal of current item.
          */
         manage_removal_queue: function (element) {
-            if (element.classList.contains('notice-dismiss')) {
+            if (element.classList.contains('omgf-font-remove')) {
                 omgf_admin.enqueue_for_removal(element);
             } else {
                 omgf_admin.undo_removal(element);
@@ -106,11 +118,11 @@ jQuery(document).ready(function ($) {
                 'opacity': '0.5'
             });
 
-            $(item).addClass('dashicons-before dashicons-undo');
-            $(item).removeClass('notice-dismiss');
+            $(item).addClass('omgf-font-no-remove dashicons-before dashicons-undo');
+            $(item).removeClass('omgf-font-remove notice-dismiss');
             $(row).removeClass('omgf-font-style');
 
-            omgf_admin.toggle_stylesheet_apply_button();
+            omgf_admin.toggle_font_styles_apply_button();
         },
 
         /**
@@ -125,36 +137,47 @@ jQuery(document).ready(function ($) {
                 'opacity': '1'
             });
 
-            $(item).removeClass('dashicons-before dashicons-undo');
-            $(item).addClass('notice-dismiss');
+            $(item).removeClass('omgf-font-no-remove dashicons-before dashicons-undo');
+            $(item).addClass('omgf-font-remove notice-dismiss');
             $(row).addClass('omgf-font-style');
 
-            omgf_admin.toggle_stylesheet_apply_button();
+            omgf_admin.toggle_font_styles_apply_button();
         },
 
         /**
          *
          */
-        toggle_stylesheet_apply_button: function () {
-            omgf_admin.toggle_button($('.dashicons-undo, .omgf-font-preload:checked'), $('.omgf-apply.button.font-styles'), $('#omgf-font-styles-list'));
+        toggle_font_styles_apply_button: function () {
+            font_style_length = $('.omgf-font-style').length;
+            preload_length    = $('.omgf-font-preload:checked').length;
+
+            if (font_style_length !== omgf_admin.font_style_state || preload_length !== omgf_admin.preload_state) {
+                omgf_admin.show_button($('.omgf-apply.button.font-styles'), $('#omgf-font-styles-list'));
+            } else {
+                omgf_admin.hide_button($('.omgf-apply.button.font-styles'), $('#omgf-font-styles-list'));
+            }
         },
 
         /**
-         * @param conditional
          * @param button
          * @param section
          */
-        toggle_button: function(conditional, button, section) {
+        show_button: function(button, section) {
             help_text = section.find('.omgf-apply.help');
-            buttons   = section.find('.omgf-apply.button');
 
-            if (conditional.length > 0) {
-                button.show();
-                help_text.show();
-            } else {
-                button.hide();
-                help_text.hide();
-            }
+            button.show();
+            help_text.show();
+        },
+
+        /**
+         * @param button
+         * @param section
+         */
+        hide_button: function(button, section) {
+            help_text = section.find('.omgf-apply.help');
+
+            button.hide();
+            help_text.hide();
         },
 
         /**
