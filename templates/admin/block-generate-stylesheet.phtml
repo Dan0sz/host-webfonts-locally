@@ -50,7 +50,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                         <?php foreach ($subsetFont['available_subsets'] as $availableSubset): ?>
                             <td>
                                 <label>
-                                    <?php $checked = in_array($availableSubset, $subsetFont['selected_subsets']) ? 'checked="checked"' : ''; ?>
+                                    <?php $checked = in_array($availableSubset, $subsetFont['selected_subsets']) ? 'checked' : ''; ?>
                                     <input class="omgf-subset" data-subset-font-family="<?= $subsetFont['subset_font']; ?>" value="<?= $availableSubset; ?>" type="checkbox" <?= $checked; ?> />
                                     <?= $availableSubset; ?>
                                 </label>
