@@ -18,10 +18,8 @@ defined('ABSPATH') || exit;
 
 $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
 ?>
-<div class="">
-    <p class="description">
-        <strong><?= __('Make sure you\'ve saved your settings, before generating the stylesheet!', 'host-webfonts-local'); ?></strong>
-    </p>
+<div>
+    <h3><?= __('Advanced Settings', 'host-webfonts-local'); ?></h3>
     <p class="description">
         <?php _e('* <strong>Generate stylesheet</strong> after changing this setting.', 'host-webfonts-local'); ?>
     </p>
@@ -31,12 +29,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
     <table class="form-table">
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS; ?>">
                     <?php _e('Remove Google Fonts (experimental)', 'host-webfonts-local'); ?>
                 </label>
             </th>
             <td>
-                <input class="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" id="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS; ?>" <?= OMGF_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
+                <input class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS; ?>" id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS; ?>" <?= OMGF_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
                     <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, your theme and/or plugin(s) are using unconventional methods (or Web Font Loader) to load Google Fonts. <a href="%s" target="_blank">Hire me</a> for a custom integration or <a href="%s" target="_blank">contact me</a> when in doubt.', 'host-webfonts-local'), 'https://woosh.dev/wordpress-services/omgf-expert-configuration/' . $utmTags, OMGF_SITE_URL . '/contact/' . $utmTags); ?>
                 </p>
@@ -44,12 +42,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_DISPLAY_OPTION; ?>">
                     <?php _e('Font-display option', 'host-webfonts-local'); ?> *
                 </label>
             </th>
             <td>
-                <select id="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>" name="<?= OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION; ?>">
+                <select id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_DISPLAY_OPTION; ?>" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_DISPLAY_OPTION; ?>">
                     <?php foreach (OMGF_Admin_Settings::OMGF_FONT_DISPLAY_OPTIONS as $label => $value): ?>
                         <option value="<?= $value; ?>" <?= $value == OMGF_DISPLAY_OPTION ? 'selected' : ''; ?>><?php _e($label, 'host-webfonts-local'); ?></option>
                     <?php endforeach; ?>
@@ -63,12 +61,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH; ?>">
                     <?php _e('Save font files to...', 'host-webfonts-local'); ?> *
                 </label>
             </th>
             <td>
-                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH; ?>" placeholder="<?= __('e.g. /cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_PATH; ?>"/>
+                <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH; ?>" placeholder="<?= __('e.g. /cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_PATH; ?>"/>
                 <p class="description">
                     <?php _e("The folder (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/cache/omgf-webfonts</code>. Folder will be created if it doesn't exist and existing files will be moved automatically.", 'host-webfonts-local'); ?>
                 </p>
@@ -76,12 +74,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI; ?>">
                     <?php _e('Serve font files from...', 'host-webfonts-local'); ?> *
                 </label>
             </th>
             <td>
-                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI; ?>" placeholder="<?= __('e.g. /app/cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_URI; ?>" />
+                <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI; ?>" placeholder="<?= __('e.g. /app/cache/omgf-webfonts', 'host-webfonts-local'); ?>" value="<?= OMGF_CACHE_URI; ?>" />
                 <p class="description">
                     <?php _e('The relative path to serve font files from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the cache directory specified above will be used.', 'host-webfonts-local'); ?>
                 </p>
@@ -89,12 +87,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL; ?>">
                     <?php _e('Use Relative URLs?', 'host-webfonts-local'); ?> **
                 </label>
             </th>
             <td>
-                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL; ?>" <?= OMGF_RELATIVE_URL ? "checked ='checked'" : ''; ?> />
+                <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL; ?>" <?= OMGF_RELATIVE_URL ? "checked ='checked'" : ''; ?> />
                 <p class="description">
                     <?php _e('Use relative instead of absolute (full) URLs to generate the stylesheet. <strong>Warning!</strong> This disables the CDN URL!', 'host-webfonts-local'); ?>
                 </p>
@@ -102,12 +100,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL; ?>">
                     <?php _e('Serve fonts from CDN', 'host-webfonts-local'); ?> **
                 </label>
             </th>
             <td>
-                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_SETTING_CDN_URL; ?>" placeholder="<?= __('e.g. cdn.mydomain.com', 'host-webfonts-local'); ?>" value="<?= OMGF_CDN_URL; ?>" <?= OMGF_RELATIVE_URL ? 'disabled' : ''; ?> />
+                <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL; ?>" placeholder="<?= __('e.g. cdn.mydomain.com', 'host-webfonts-local'); ?>" value="<?= OMGF_CDN_URL; ?>" <?= OMGF_RELATIVE_URL ? 'disabled' : ''; ?> />
                 <p class="description">
                     <?php _e("Are you using a CDN? Then enter the URL here.", 'host-webfonts-local'); ?>
                 </p>
@@ -115,12 +113,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_WEB_FONT_LOADER; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER; ?>">
                     <?php _e('Use Web Font Loader?', 'host-webfonts-local'); ?>
                 </label>
             </th>
             <td>
-                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_WEB_FONT_LOADER; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_WEB_FONT_LOADER; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_WEB_FONT_LOADER; ?>" <?= OMGF_WEB_FONT_LOADER ? "checked = 'checked'" : ""; ?> />
+                <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER; ?>" <?= OMGF_WEB_FONT_LOADER ? "checked = 'checked'" : ""; ?> />
                 <p class="description">
                     <?php _e('Use Typekit\'s Web Font Loader to load fonts asynchronously. <strong>Caution:</strong> while this might raise your Pagespeed Score, it could temporarily cause fonts to be displayed unstyled.', 'host-webfonts-local'); ?>
                 </p>
@@ -128,12 +126,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_VERSION; ?>">
                     <?php _e('Remove version parameter?', 'host-webfonts-local'); ?>
                 </label>
             </th>
             <td>
-                <input id="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION; ?>" class="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION; ?>" <?= OMGF_REMOVE_VERSION ? "checked = 'checked'" : ""; ?> />
+                <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_VERSION; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_VERSION; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_VERSION; ?>" <?= OMGF_REMOVE_VERSION ? "checked = 'checked'" : ""; ?> />
                 <p class="description">
                     <?php _e('This removes the <code>?ver=x.x.x</code> parameter from the Stylesheet\'s (<code>fonts.css</code>) request. ', 'host-webfonts-local'); ?>
                 </p>
@@ -141,12 +139,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_ENABLE_PRELOAD; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_ENABLE_PRELOAD; ?>">
                     <?php _e('Enable preload for stylesheet (experimental)', 'host-webfonts-local'); ?>
                 </label>
             </th>
             <td>
-                <input class="<?= OMGF_Admin_Settings::OMGF_SETTING_ENABLE_PRELOAD; ?>" id="<?= OMGF_Admin_Settings::OMGF_SETTING_ENABLE_PRELOAD; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_ENABLE_PRELOAD; ?>" <?= OMGF_PRELOAD == 'on' ? 'checked = "checked"' : ''; ?> />
+                <input class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_ENABLE_PRELOAD; ?>" id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_ENABLE_PRELOAD; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_ENABLE_PRELOAD; ?>" <?= OMGF_PRELOAD == 'on' ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
                     <?php _e('Leave this disabled if you\'re using a CSS minification plugin, such as Autoptimize or W3 Total Cache, or when using Web Font Loader.', 'host-webfonts-local'); ?>
                     <a target="_blank" href="https://developers.google.com/web/fundamentals/performance/resource-prioritization#preload"><?php _e('Read more', 'host-webfonts-local'); ?></a>
@@ -155,12 +153,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER; ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER; ?>">
                     <?php _e('Change enqueue order of stylesheet? (experimental)', 'host-webfonts-local'); ?>
                 </label>
             </th>
             <td>
-                <input type="number" name="<?= OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER; ?>" id="<?= OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER ?>" min="0" value="<?= OMGF_ENQUEUE_ORDER; ?>" />
+                <input type="number" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER; ?>" id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER ?>" min="0" value="<?= OMGF_ENQUEUE_ORDER; ?>" />
                 <p class="description">
                     <?php _e('Lower this value if the generated stylesheet (<code>fonts.css</code>) is not captured by your CSS minification/combining plugin. Doesn\'t work with Web Font Loader enabled.', 'host-webfonts-local'); ?>
                 </p>
@@ -168,12 +166,12 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
-                <label for="<?= OMGF_Admin_Settings::OMGF_SETTING_UNINSTALL ?>">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL ?>">
                     <?php _e('Remove settings and files at uninstall?', 'host-webfonts-local'); ?>
                 </label>
             </th>
             <td>
-                <input class="<?= OMGF_Admin_Settings::OMGF_SETTING_UNINSTALL ?>" id="<?= OMGF_Admin_Settings::OMGF_SETTING_UNINSTALL ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_SETTING_UNINSTALL ?>" <?= OMGF_UNINSTALL == 'on' ? 'checked = "checked"' : '' ?> />
+                <input class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL ?>" id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL ?>" <?= OMGF_UNINSTALL == 'on' ? 'checked = "checked"' : '' ?> />
                 <p class="description">
                     <?php _e('Warning! This will remove all settings and cached fonts upon plugin deletion.', 'host-webfonts-local'); ?>
                 </p>

@@ -55,20 +55,20 @@ class OMGF
         define('OMGF_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com/api/fonts/');
         define('OMGF_FILENAME', 'fonts.css');
         define('OMGF_AUTO_DETECT_ENABLED', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, false)));
-        define('OMGF_CACHE_PATH', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_CACHE_PATH)) ?: '/cache/omgf-webfonts');
-        define('OMGF_CACHE_URI', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_CACHE_URI)) ?: '');
-        define('OMGF_RELATIVE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_RELATIVE_URL)));
-        define('OMGF_CDN_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_CDN_URL)));
-        define('OMGF_WEB_FONT_LOADER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_WEB_FONT_LOADER)));
-        define('OMGF_REMOVE_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_REMOVE_VERSION)));
+        define('OMGF_CACHE_PATH', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH)) ?: '/cache/omgf-webfonts');
+        define('OMGF_CACHE_URI', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI)) ?: '');
+        define('OMGF_RELATIVE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL)));
+        define('OMGF_CDN_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL)));
+        define('OMGF_WEB_FONT_LOADER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER)));
+        define('OMGF_REMOVE_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_VERSION)));
         define('OMGF_CURRENT_BLOG_ID', get_current_blog_id());
         define('OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH);
         define('OMGF_FONTS_URL', $this->get_fonts_url());
-        define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_DISPLAY_OPTION)) ?: 'auto');
-        define('OMGF_REMOVE_GFONTS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_REMOVE_GOOGLE_FONTS)));
-        define('OMGF_PRELOAD', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_ENABLE_PRELOAD)));
-        define('OMGF_ENQUEUE_ORDER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_ENQUEUE_ORDER, 100)));
-        define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_UNINSTALL)));
+        define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_DISPLAY_OPTION)) ?: 'auto');
+        define('OMGF_REMOVE_GFONTS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS)));
+        define('OMGF_PRELOAD', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENABLE_PRELOAD)));
+        define('OMGF_ENQUEUE_ORDER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER, 100)));
+        define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
     }
 
     /**

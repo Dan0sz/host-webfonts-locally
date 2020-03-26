@@ -27,13 +27,6 @@ jQuery(document).ready(function ($) {
         preload_font_styles: [],
         font_style_list: [],
 
-        // Settings screen elements
-        $nav: $('.omgf-nav a'),
-        $nav_generate_stylesheet: $('.generate-stylesheet'),
-        $nav_advanced_settings: $('.advanced-settings'),
-        $generate_stylesheet_form: $('#omgf-generate-stylesheet-form'),
-        $advanced_settings_form: $('#omgf-advanced-settings-form'),
-
         // Selectors
         $loader: $('.omgf-loading'),
         $font_families: $('.omgf-subset-font-family'),
@@ -44,9 +37,6 @@ jQuery(document).ready(function ($) {
          * Initialize all on click events.
          */
         init: function () {
-            // Nav
-            this.$nav.on('click', this.toggle_section);
-
             // Manage queues
             /**
              * TODO: Save state on pageload, to prevent display of apply-button when current selection matches saved state.
@@ -62,22 +52,6 @@ jQuery(document).ready(function ($) {
             $('#omgf-download, .help.download-fonts').on('click', this.download_fonts);
             $('#omgf-generate, .help.generate-stylesheet').on('click', this.generate_stylesheet);
             $('#omgf-empty').on('click', this.empty_cache_directory);
-        },
-
-        /**
-         * Toggle settings sections.
-         */
-        toggle_section: function () {
-            omgf_admin.$nav.removeClass('nav-tab-active');
-            $(this).addClass('nav-tab-active');
-
-            if (this.classList.contains('generate-stylesheet')) {
-                omgf_admin.$generate_stylesheet_form.fadeIn();
-                omgf_admin.$advanced_settings_form.fadeOut(100);
-            } else {
-                omgf_admin.$advanced_settings_form.fadeIn();
-                omgf_admin.$generate_stylesheet_form.fadeOut(100);
-            }
         },
 
         /**

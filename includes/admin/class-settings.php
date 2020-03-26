@@ -18,7 +18,14 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings extends OMGF_Admin
 {
+    /**
+     * Settings Fields
+     */
     const OMGF_SETTINGS_FIELD_ADVANCED        = 'omgf-advanced-settings';
+
+    /**
+     * Option Values
+     */
     const OMGF_FONT_DISPLAY_OPTIONS           = array(
         'Auto (default)' => 'auto',
         'Block'          => 'block',
@@ -26,22 +33,30 @@ class OMGF_Admin_Settings extends OMGF_Admin
         'Fallback'       => 'fallback',
         'Optional'       => 'optional'
     );
-    const OMGF_SETTING_AUTO_DETECTION_ENABLED = 'omgf_auto_detection_enabled';
-    const OMGF_SETTING_SUBSETS                = 'omgf_subsets';
-    const OMGF_SETTING_FONTS                  = 'omgf_fonts';
-    const OMGF_SETTING_DETECTED_FONTS         = 'omgf_detected_fonts';
-    const OMGF_SETTING_CACHE_PATH             = 'omgf_cache_dir';
-    const OMGF_SETTING_CACHE_URI              = 'omgf_cache_uri';
-    const OMGF_SETTING_CDN_URL                = 'omgf_cdn_url';
-    const OMGF_SETTING_WEB_FONT_LOADER        = 'omgf_web_font_loader';
-    const OMGF_SETTING_REMOVE_VERSION         = 'omgf_remove_version';
-    const OMGF_SETTING_DISPLAY_OPTION         = 'omgf_display_option';
-    const OMGF_SETTING_REMOVE_GOOGLE_FONTS    = 'omgf_remove_gfonts';
-    const OMGF_SETTING_ENABLE_PRELOAD         = 'omgf_preload';
-    const OMGF_SETTING_DB_VERSION             = 'omgf_db_version';
-    const OMGF_SETTING_UNINSTALL              = 'omgf_uninstall';
-    const OMGF_SETTING_ENQUEUE_ORDER          = 'omgf_enqueue_order';
-    const OMGF_SETTING_RELATIVE_URL           = 'omgf_relative_url';
+
+    /**
+     * Generate Stylesheet
+     */
+    const OMGF_SETTING_DB_VERSION              = 'omgf_db_version';
+    const OMGF_SETTING_AUTO_DETECTION_ENABLED  = 'omgf_auto_detection_enabled';
+    const OMGF_SETTING_DETECTED_FONTS          = 'omgf_detected_fonts';
+    const OMGF_SETTING_SUBSETS                 = 'omgf_subsets';
+    const OMGF_SETTING_FONTS                   = 'omgf_fonts';
+
+    /**
+     * Advanced Settings
+     */
+    const OMGF_ADV_SETTING_CACHE_PATH          = 'omgf_cache_dir';
+    const OMGF_ADV_SETTING_CACHE_URI           = 'omgf_cache_uri';
+    const OMGF_ADV_SETTING_CDN_URL             = 'omgf_cdn_url';
+    const OMGF_ADV_SETTING_WEB_FONT_LOADER     = 'omgf_web_font_loader';
+    const OMGF_ADV_SETTING_REMOVE_VERSION      = 'omgf_remove_version';
+    const OMGF_ADV_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
+    const OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS = 'omgf_remove_gfonts';
+    const OMGF_ADV_SETTING_ENABLE_PRELOAD      = 'omgf_preload';
+    const OMGF_ADV_SETTING_UNINSTALL           = 'omgf_uninstall';
+    const OMGF_ADV_SETTING_ENQUEUE_ORDER       = 'omgf_enqueue_order';
+    const OMGF_ADV_SETTING_RELATIVE_URL        = 'omgf_relative_url';
 
     private $active_tab;
 
@@ -50,17 +65,17 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function __construct()
     {
+        $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'generate-stylesheet';
+
         // @formatter:off
-        add_action('admin_menu', array($this, 'create_menu'));
-
-        $caosLink = plugin_basename(OMGF_PLUGIN_FILE);
-
-        add_filter("plugin_action_links_$caosLink", array($this, 'create_settings_link'));
+        add_action('admin_menu', [$this, 'create_menu']);
+        add_action('omgf_settings_tab', [$this, 'generate_stylesheet_tab'], 1);
+        add_action('omgf_settings_tab', [$this, 'advanced_settings_tab'], 2);
+        add_action('omgf_settings_content', [$this, 'generate_stylesheet_content'], 1);
+        add_action('omgf_settings_content', [$this, 'advanced_settings_content'], 2);
+        add_filter("plugin_action_links_" . plugin_basename(OMGF_PLUGIN_FILE), [$this, 'create_settings_link']);
         add_filter('whitelist_options', [$this, 'remove_settings_from_whitelist'], 100);
         // @formatter:on
-
-        // TODO: implement tab param to follow WordPress conventions.
-        $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'generate-stylesheet';
 
         parent::__construct();
     }
@@ -103,28 +118,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
             <div class="settings-column left">
                 <h2 class="omgf-nav nav-tab-wrapper">
-                    <a class="nav-tab generate-stylesheet dashicons-before dashicons-admin-appearance nav-tab-active"><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></a>
-                    <a class="nav-tab advanced-settings dashicons-before dashicons-admin-settings"><?php _e('Advanced Settings', 'host-webfonts-local'); ?></a>
+                    <?php do_action('omgf_settings_tab'); ?>
                 </h2>
 
-                <form id="omgf-generate-stylesheet-form" name="omgf-generate-stylesheet-form" style="display: block;">
-                    <?php
-                    $this->get_template('generate-stylesheet');
-                    ?>
-                </form>
-
-                <form id="omgf-advanced-settings-form" name="omgf-settings-form" method="post" action="options.php" style="display: none;">
-                    <?php
-                    settings_fields(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
-                    do_settings_sections(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
-
-                    $this->get_template('advanced-settings');
-
-                    do_action('omgf_after_settings_form_settings');
-
-                    submit_button();
-                    ?>
-                </form>
+                <?php do_action('omgf_settings_content'); ?>
             </div>
 
             <div class="settings-column right">
@@ -153,42 +150,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
     }
 
     /**
-     * Adds the 'settings' link to the Plugin overview.
-     *
-     * @return mixed
-     */
-    public function create_settings_link($links)
-    {
-        $adminUrl     = admin_url() . 'options-general.php?page=optimize-webfonts';
-        $settingsLink = "<a href='$adminUrl'>" . __('Settings') . "</a>";
-        array_push($links, $settingsLink);
-
-        return $links;
-    }
-
-    /**
-     * Preserve fonts and subsets when saving changes.
-     *
-     * @param $options
-     *
-     * @return array
-     */
-    public function remove_settings_from_whitelist($options)
-    {
-        if (!isset($options[self::OMGF_SETTINGS_FIELD_ADVANCED])) {
-            return $options;
-        }
-
-        foreach ($options[self::OMGF_SETTINGS_FIELD_ADVANCED] as $key => &$setting) {
-            if ($setting == self::OMGF_SETTING_FONTS || $setting == self::OMGF_SETTING_SUBSETS) {
-                unset($options[self::OMGF_SETTINGS_FIELD_ADVANCED][$key]);
-            }
-        }
-
-        return $options;
-    }
-
-    /**
      * Get all settings using the constants in this class.
      *
      * @return array
@@ -202,9 +163,104 @@ class OMGF_Admin_Settings extends OMGF_Admin
         return array_filter(
             $constants,
             function ($key) {
-                return strpos($key, 'OMGF_SETTING') !== false;
+                return strpos($key, 'OMGF_ADV_SETTING') !== false;
             },
             ARRAY_FILTER_USE_KEY
         );
+    }
+
+    /**
+     * Add Generate Stylesheet Tab to Settings Screen.
+     */
+    public function generate_stylesheet_tab()
+    {
+        $this->generate_tab('generate-stylesheet', 'dashicons-admin-appearance', __('Generate Stylesheet', 'host-webfonts-local'));
+    }
+
+    /**
+     * Add Advanced Settings Tab to Settings Screen.
+     */
+    public function advanced_settings_tab()
+    {
+        $this->generate_tab('advanced-settings', 'dashicons-admin-settings', __('Advanced Settings', 'host-webfonts-local'));
+    }
+
+    /**
+     * @param      $id
+     * @param null $icon
+     * @param null $label
+     */
+    private function generate_tab($id, $icon = null, $label = null)
+    {
+        ?>
+        <a class="nav-tab dashicons-before <?= $icon; ?> <?= $this->active_tab == $id ? 'nav-tab-active' : ''; ?>" href="<?= $this->generate_tab_link($id);?>">
+            <?= $label; ?>
+        </a>
+        <?php
+    }
+
+    /**
+     * @param $tab
+     *
+     * @return string
+     */
+    private function generate_tab_link($tab)
+    {
+        return admin_url("options-general.php?page=optimize-webfonts&tab=$tab");
+    }
+
+    /**
+     * Render Generate Stylesheet
+     */
+    public function generate_stylesheet_content()
+    {
+        if ($this->active_tab != 'generate-stylesheet') {
+            return;
+        }
+        ?>
+        <form id="omgf-generate-stylesheet-form" name="omgf-generate-stylesheet-form">
+            <?php
+            $this->get_template('generate-stylesheet');
+            ?>
+        </form>
+        <?php
+    }
+
+    /**
+     * Render Advanced Settings
+     */
+    public function advanced_settings_content()
+    {
+        if ($this->active_tab != 'advanced-settings') {
+            return;
+        }
+        ?>
+        <form id="omgf-advanced-settings-form" name="omgf-settings-form" method="post" action="options.php">
+            <?php
+            settings_fields(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
+            do_settings_sections(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
+
+            $this->get_template('advanced-settings');
+
+            do_action('omgf_after_settings_form_settings');
+
+            submit_button();
+            ?>
+        </form>
+        <?php
+    }
+
+    /**
+     * Adds the 'settings' link to the Plugin overview.
+     *
+     * @return mixed
+     */
+    public function create_settings_link($links)
+    {
+        $adminUrl     = admin_url() . 'options-general.php?page=optimize-webfonts';
+        $settingsLink = "<a href='$adminUrl'>" . __('Settings') . "</a>";
+        array_push($links, $settingsLink);
+
+        return $links;
     }
 }
