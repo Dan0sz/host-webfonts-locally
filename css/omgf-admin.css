@@ -16,187 +16,147 @@
  * Navigation
  */
 .omgf-nav {
-    padding: 1em 0 1.5em;
+  padding: 1em 0 1.5em;
 }
-
-.omgf-nav span {
-    color: #23282d;
-    font-size: 1.3em;
-    margin-right: 1.5em;
-    font-weight: 600;
+.omgf-nav a {
+  cursor: pointer;
 }
-
-.omgf-nav span:hover {
-    cursor: pointer;
-}
-
-.omgf-nav span:not(.selected) {
-    opacity: 0.85;
-}
-
-.omgf-nav .selected,
-.omgf-nav span:hover {
-    border-bottom: 1px dashed #23282d;
-    padding: 3px 0;
-}
-
 .omgf-nav .dashicons-before:before {
-    margin-right: 0.25em;
+  margin-right: 0.25em;
+  line-height: 1.15em;
 }
-
 /**
  * Sections
  */
 .settings-column {
-    display: inline-block;
+  display: inline-block;
 }
-
 .settings-column.left {
-    float: left;
-    width: 66%;
+  float: left;
+  width: 66%;
 }
-
 .settings-column.right {
-    float: right;
-    width: 21.75%;
+  float: right;
+  width: 21.75%;
 }
-
 /**
  * Welcome block
  */
 #omgf-welcome-panel {
-    padding: 20px 10px 5px;
+  padding: 20px 10px 5px;
 }
-
 #omgf-welcome-panel h3 > .dashicons {
-    line-height: 1.4;
+  line-height: 1.4;
 }
-
 /**
  * Generate Stylesheet-form
  */
 .omgf-generate-stylesheet table {
-    margin-top: 0.66em;
+  margin-top: 0.66em;
 }
-
 .omgf-generate-stylesheet .omgf-search-section {
-    max-width: 640px;
-    margin-top: 1em;
+  max-width: 640px;
+  margin-top: 1em;
 }
-
+.omgf-generate-stylesheet .omgf-search-section a.omgf-apply.button {
+  width: 85px;
+}
 .omgf-generate-stylesheet .omgf-search-section a.omgf-apply span:before {
-    line-height: 1.4;
-    width: 16px;
+  line-height: 1.4;
+  width: 16px;
 }
-
 .omgf-generate-stylesheet .omgf-search-section caption {
-    text-align: left;
-    font-size: 1.2em;
-    font-weight: 600;
-    margin: 0.66em 0 0.33em;
+  text-align: left;
+  font-size: 1.2em;
+  font-weight: 600;
+  margin: 0.66em 0 0.33em;
 }
-
 .omgf-generate-stylesheet .omgf-search-section span.omgf-apply.font-styles-search {
-    width: 75%;
+  width: 75%;
 }
-
 .omgf-generate-stylesheet .omgf-search-section #omgf-search {
-    line-height: 38px;
-    width: 360px;
-    padding: 3px 10px;
+  line-height: 38px;
+  width: 360px;
+  padding: 3px 10px;
 }
-
 .omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-remove {
-    cursor: pointer;
-    padding: 0 0 0 20px;
-    position: relative;
-    display: inline-block;
+  cursor: pointer;
+  padding: 0 0 0 20px;
+  position: relative;
+  display: inline-block;
 }
-
 .omgf-generate-stylesheet .omgf-search-section #omgf-font-styles .omgf-font-remove:before {
-    position: absolute;
-    left: 0;
+  position: absolute;
+  left: 0;
 }
-
 .omgf-generate-stylesheet .omgf-search-section #omgf-font-styles #font-styles-nav.sticky {
-    background: #f1f1f1;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-    width: 565px;
+  background: #f1f1f1;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  width: 565px;
 }
-
 .omgf-generate-stylesheet #omgf-control-panel {
-    margin-top: 1em;
+  margin-top: 1em;
 }
-
 .omgf-generate-stylesheet #omgf-control-panel .button-cancel {
-    color: #a00;
-    text-decoration: none;
-    border-color: transparent;
-    box-shadow: none;
-    background: 0 0;
-    border-radius: 3px;
-    white-space: nowrap;
-    padding: 1px 10px !important;
+  color: #a00;
+  text-decoration: none;
+  border-color: transparent;
+  box-shadow: none;
+  background: 0 0;
+  border-radius: 3px;
+  white-space: nowrap;
+  padding: 1px 10px !important;
 }
-
 .omgf-generate-stylesheet #omgf-control-panel .button-cancel:hover {
-    cursor: pointer;
-    background: #d54e21;
-    color: #fff;
-    border-color: #d54e21;
+  cursor: pointer;
+  background: #d54e21;
+  color: #fff;
+  border-color: #d54e21;
 }
-
 /**
  * Loader
  */
 .omgf-loading {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    right: 0;
-    top: 0;
-    text-align: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  text-align: center;
 }
-
 .omgf-loading .spinner {
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    -ms-transform: translate(0, -70%);
-    transform: translate(0, -70%);
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  -ms-transform: translate(0, -70%);
+  transform: translate(0, -70%);
 }
-
 /**
  * Sticky elements.
  */
 .sticky {
-    position: -webkit-sticky;
-    position: sticky;
-    overflow: visible;
+  position: -webkit-sticky;
+  position: sticky;
+  overflow: visible;
 }
-
 .sticky.top {
-    top: 25px;
+  top: 25px;
 }
-
 .sticky.bottom {
-    bottom: 0;
+  bottom: 0;
 }
-
 /**
  * Responsiveness
  */
 @media only screen and (max-width: 1024px) {
-    .settings-column {
-        display: block;
-        float: none;
-    }
-
-    .settings-column.left,
-    .settings-column.right {
-        width: 100%;
-    }
+  .settings-column {
+    display: block;
+    float: none;
+  }
+  .settings-column.left,
+  .settings-column.right {
+    width: 100%;
+  }
 }
-
 /*# sourceMappingURL=omgf-admin.css.map */

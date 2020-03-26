@@ -43,6 +43,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
     const OMGF_SETTING_ENQUEUE_ORDER          = 'omgf_enqueue_order';
     const OMGF_SETTING_RELATIVE_URL           = 'omgf_relative_url';
 
+    private $active_tab;
+
     /**
      * OMGF_Admin_Settings constructor.
      */
@@ -56,6 +58,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
         add_filter("plugin_action_links_$caosLink", array($this, 'create_settings_link'));
         add_filter('whitelist_options', [$this, 'remove_settings_from_whitelist'], 100);
         // @formatter:on
+
+        // TODO: implement tab param to follow WordPress conventions.
+        $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'generate-stylesheet';
 
         parent::__construct();
     }
@@ -97,10 +102,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
             </p>
 
             <div class="settings-column left">
-                <div class="omgf-nav">
-                    <span class="generate-stylesheet dashicons-before dashicons-admin-appearance selected"><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></span>
-                    <span class="advanced-settings dashicons-before dashicons-admin-settings"><?php _e('Advanced Settings', 'host-webfonts-local'); ?></span>
-                </div>
+                <h2 class="omgf-nav nav-tab-wrapper">
+                    <a class="nav-tab generate-stylesheet dashicons-before dashicons-admin-appearance nav-tab-active"><?php _e('Generate Stylesheet', 'host-webfonts-local'); ?></a>
+                    <a class="nav-tab advanced-settings dashicons-before dashicons-admin-settings"><?php _e('Advanced Settings', 'host-webfonts-local'); ?></a>
+                </h2>
 
                 <form id="omgf-generate-stylesheet-form" name="omgf-generate-stylesheet-form" style="display: block;">
                     <?php

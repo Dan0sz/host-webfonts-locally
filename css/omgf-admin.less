@@ -19,29 +19,13 @@
 .omgf-nav {
   padding: 1em 0 1.5em;
 
-  span {
-    color: #23282d;
-    font-size: 1.3em;
-    margin-right: 1.5em;
-    font-weight: 600;
-
-    &:hover {
-      cursor: pointer;
-    }
-
-    &:not(.selected) {
-      opacity: 0.85;
-    }
-  }
-
-  .selected,
-  span:hover {
-    border-bottom: 1px dashed #23282d;
-    padding: 3px 0;
+  a {
+    cursor: pointer;
   }
 
   .dashicons-before:before {
     margin-right: .25em;
+    line-height: 1.15em;
   }
 }
 
@@ -87,6 +71,10 @@
 
     a {
       &.omgf-apply {
+        &.button {
+          width: 85px;
+        }
+
         span:before {
           line-height: 1.4;
           width: 16px;
