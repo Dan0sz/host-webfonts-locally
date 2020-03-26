@@ -58,6 +58,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     const OMGF_ADV_SETTING_ENQUEUE_ORDER       = 'omgf_enqueue_order';
     const OMGF_ADV_SETTING_RELATIVE_URL        = 'omgf_relative_url';
 
+    /** @var string $active_tab */
     private $active_tab;
 
     /**
@@ -73,8 +74,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
         add_action('omgf_settings_tab', [$this, 'advanced_settings_tab'], 2);
         add_action('omgf_settings_content', [$this, 'generate_stylesheet_content'], 1);
         add_action('omgf_settings_content', [$this, 'advanced_settings_content'], 2);
-        add_filter("plugin_action_links_" . plugin_basename(OMGF_PLUGIN_FILE), [$this, 'create_settings_link']);
-        add_filter('whitelist_options', [$this, 'remove_settings_from_whitelist'], 100);
+        add_filter('plugin_action_links_' . plugin_basename(OMGF_PLUGIN_FILE), [$this, 'create_settings_link']);
         // @formatter:on
 
         parent::__construct();
@@ -106,7 +106,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     public function create_settings_page()
     {
         if (!current_user_can('manage_options')) {
-            wp_die(__("You're not cool enough to access this page."));
+            wp_die(__("You're not cool enough to access this page.", 'host-webfonts-local'));
         }
         ?>
         <div class="wrap">
