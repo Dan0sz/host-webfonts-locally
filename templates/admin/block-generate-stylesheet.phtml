@@ -51,7 +51,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                             <td>
                                 <label>
                                     <?php $checked = in_array($availableSubset, $subsetFont['selected_subsets']) ? 'checked' : ''; ?>
-                                    <input class="omgf-subset" data-subset-font-family="<?= $subsetFont['subset_font']; ?>" value="<?= $availableSubset; ?>" type="checkbox" <?= $checked; ?> />
+                                    <input class="omgf-subset" data-subset-font-family="<?= $subsetFont['subset_font']; ?>" autocomplete="off" value="<?= $availableSubset; ?>" type="checkbox" <?= $checked; ?> />
                                     <?= $availableSubset; ?>
                                 </label>
                             </td>
@@ -121,9 +121,13 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                     </tr>
                 <?php endforeach; ?>
                     <!-- The navbar at the bottom of the table. -->
-                    <tr id="font-styles-nav" class="sticky bottom" align="right">
-                        <td colspan="3"><span class="omgf-apply help font-styles" style="display: none;"><strong><?= __('Apply Changes', 'host-webfonts-local'); ?></strong></span></td>
-                        <td align="left" colspan="2" style="width: 100px"><a class="button-primary omgf-apply button font-styles" href="#" style="display: none;"><span class="dashicons-before dashicons-yes"></span> <?= __('Apply', 'host-webfonts-local'); ?></a></td>
+                    <tr id="font-styles-nav" class="sticky bottom">
+                        <td colspan="3" align="right">
+                            <span class="omgf-apply help font-styles" style="display: none;"><strong><?= __('Apply Changes', 'host-webfonts-local'); ?></strong></span>
+                        </td>
+                        <td colspan="2" style="width: 100px">
+                            <a class="button-primary omgf-apply button font-styles" href="#" style="display: none;"><span class="dashicons-before dashicons-yes"></span> <?= __('Apply', 'host-webfonts-local'); ?></a>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="5">

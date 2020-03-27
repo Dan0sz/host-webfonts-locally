@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,12 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.3.1 =
+* Use WordPress' tabs system for navigation to comply with Plugin Conventions.
+* Fixed bug which caused preload font styles to be saved incorrectly.
+* Replaced separate apply buttons with one apply button, which handles the entire queue for removal as well as preload at once.
+* Known bug: 'Apply' button isn't clickable when sticky. Available workaround: scroll to the bottom of the list and click 'Apply'.
 
 = 3.3.0 =
 * Introduced a queueing system for font-styles search, preload and remove for easier management. The 'Apply' buttons now process all your changes at once.
