@@ -109,11 +109,12 @@ class OMGF_Admin_AutoDetect
              * Skip over default Admin WordPress fonts; Noto Serif and Open Sans, which are always detected first (as far as I know.)
              * We check on iteration value, to make sure these fonts are still returned if they are also used in the theme.
              */
-            if (($i == 0 && strpos($parts['query'], 'Open+Sans') !== false) || ($i == 0 && strpos($parts['query'], 'Noto+Serif') !== false)) {
+            if (($i == 0 && strpos($parts['query'], 'Open+Sans') !== false) || ($i == 1 && strpos($parts['query'], 'Noto+Serif') !== false)) {
+                $i++;
                 continue;
             }
 
-            parse_str($parts['query'], $font_properties[]);
+            parse_str($parts['query'], $font_properties[$i]);
 
             /**
              * Some themes (like Twenty Sixteen) do chained requests using a pipe (|).
