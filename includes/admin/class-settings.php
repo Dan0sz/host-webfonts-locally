@@ -61,20 +61,32 @@ class OMGF_Admin_Settings extends OMGF_Admin
     /** @var string $active_tab */
     private $active_tab;
 
+    /** @var string $page */
+    private $page;
+
     /**
      * OMGF_Admin_Settings constructor.
      */
     public function __construct()
     {
         $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'generate-stylesheet';
+        $this->page       = isset($_GET['page']) ? $_GET['page'] : '';
 
         // @formatter:off
         add_action('admin_menu', [$this, 'create_menu']);
+        add_filter('plugin_action_links_' . plugin_basename(OMGF_PLUGIN_FILE), [$this, 'create_settings_link']);
+
+        if (!$this->page == 'optimize-webfonts') {
+            return;
+        }
+
+        // Tabs
         add_action('omgf_settings_tab', [$this, 'generate_stylesheet_tab'], 1);
         add_action('omgf_settings_tab', [$this, 'advanced_settings_tab'], 2);
+
+        // Content
         add_action('omgf_settings_content', [$this, 'generate_stylesheet_content'], 1);
         add_action('omgf_settings_content', [$this, 'advanced_settings_content'], 2);
-        add_filter('plugin_action_links_' . plugin_basename(OMGF_PLUGIN_FILE), [$this, 'create_settings_link']);
         // @formatter:on
 
         parent::__construct();
@@ -95,6 +107,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
                 'create_settings_page'
             )
         );
+
         // @formatter:off
         add_action('admin_init', array($this, 'register_settings'));
         // @formatter:on
