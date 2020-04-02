@@ -1,9 +1,9 @@
 === OMGF | Host Google Fonts Locally ===
 Contributors: DaanvandenBergh
-Tags: google, fonts, preload, font-display, webfonts, subsets, remove, minimize, external, requests, leverage, browser, cache
+Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.3.2
+Stable tag: 3.3.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,10 @@ With only 2 clicks of a button, OMGF automagically downloads your Google Fonts y
 
 == Description ==
 
-Leverage Browser Cache and Minimize DNS requests with OMGF (Optimize My Google Fonts, formerly known as CAOS for Webfonts).
+> How could using fonts via Google's service possibly run afoul of GDPR? The fact of the matter is that, when a font is requested by the user's browser, their IP is logged by Google and used for analytics.
+> — Lifehacker
+
+Leverage Browser Cache, Minimize DNS requests and serve your Google Fonts in a 100% GDPR compliant way with OMGF!
 
 OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with CSS and JS optimizing/minification plugins like Autoptimize or W3 Total Cache. OMGF can efficiently remove any requests to external Google Fonts (loaded from fonts.gstatic.com or fonts.googleapies.com).
 
@@ -104,6 +107,9 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.3.3 =
+Added error handling for API-calls.
 
 = 3.3.2 =
 * Auto Detect is now compatible with Newspaper theme.

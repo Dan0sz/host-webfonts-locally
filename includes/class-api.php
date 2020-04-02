@@ -25,13 +25,17 @@ class OMGF_API
      */
     public function get_subsets($query)
     {
-        $request    = wp_remote_get(OMGF_HELPER_URL . $query)['body'];
+        $request = wp_remote_get(OMGF_HELPER_URL . $query);
+
+        if (is_wp_error($request)) {
+            OMGF_Admin_Notice::set_notice($request->get_error_message(), true, 'error', $request->get_error_code());
+        }
 
         if ($request == 'Not found') {
             return [];
         }
 
-        $result     = json_decode($request);
+        $result = json_decode($request['body']);
 
         return [
             'subset_family'     => $result->family,
@@ -49,8 +53,13 @@ class OMGF_API
      */
     public function get_font_styles($font_family, $selected_subsets)
     {
-        $request          = wp_remote_get(OMGF_HELPER_URL . $font_family . '?subsets=' . $selected_subsets);
-        $result           = json_decode($request['body']);
+        $request = wp_remote_get(OMGF_HELPER_URL . $font_family . '?subsets=' . $selected_subsets);
+
+        if (is_wp_error($request)) {
+            OMGF_Admin_Notice::set_notice($request->get_error_message(), true, 'error', $request->get_error_code());
+        }
+
+        $result = json_decode($request['body']);
 
         foreach ($result->variants as $variant) {
             $fonts[] = [
