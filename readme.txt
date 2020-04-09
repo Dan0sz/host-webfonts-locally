@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.3.3
+Stable tag: 3.3.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -108,8 +108,11 @@ N/A
 
 == Changelog ==
 
+= 3.3.4 =
+* Fixed bug in preload.
+
 = 3.3.3 =
-Added error handling for API-calls.
+* Added error handling for API-calls.
 
 = 3.3.2 =
 * Auto Detect is now compatible with Newspaper theme.

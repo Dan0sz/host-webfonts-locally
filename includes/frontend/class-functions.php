@@ -200,7 +200,7 @@ class OMGF_Frontend_Functions
 
         foreach ($preload_fonts as $font) {
             $font_urls[] = array_values(array_filter((array) $font, function ($properties) {
-                return strpos($properties, 'woff2') !== false;
+                return strpos($properties, 'woff2_local') !== false;
             }, ARRAY_FILTER_USE_KEY));
         }
 
