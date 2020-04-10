@@ -67,7 +67,7 @@ class OMGF_API
                 'font_family' => $variant->fontFamily,
                 'font_weight' => $variant->fontWeight,
                 'font_style'  => $variant->fontStyle,
-                'local'       => implode(',', $variant->local),
+                'local'       => implode(',', $variant->local ?? []),
                 'preload'     => 0,
                 'downloaded'  => 0,
                 'url_ttf'     => $variant->ttf,
