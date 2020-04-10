@@ -103,6 +103,10 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
             $fontSources = $fontSources + (isset($font['url_ttf_local']) ? array('truetype' => esc_url_raw($font['url_ttf_local'])) : array());
             $locals      = explode(',', sanitize_text_field($font['local']));
 
+            if (empty($fontSources)) {
+                OMGF_Admin_Notice::set_notice(__('<strong>Download Fonts</strong> before generating the stylesheet.', 'host-webfonts-local'), true, 'error');
+            }
+
             $this->fonts[$i] = "@font-face { \n";
             $this->fonts[$i] .= $this->build_property('font-family', $font['font_family']);
             $this->fonts[$i] .= $this->build_property('font-display', $fontDisplay);
