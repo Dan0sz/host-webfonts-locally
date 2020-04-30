@@ -165,7 +165,7 @@ class OMGF_Frontend_Functions
         /** Do not add 'preload' if Minification plugins are enabled. */
         if ($style) {
             $source = $style->src . ($style->ver ? "?ver={$style->ver}" : "");
-            echo "<link rel='preload' href='{$source}' as='style' />\n";
+            echo "<link rel='preload' href='{$source}' as='style' crossorigin='anonymous'/>\n";
         }
     }
 
@@ -207,7 +207,7 @@ class OMGF_Frontend_Functions
         $urls = array_reduce($font_urls, 'array_merge', []);
 
         foreach ($urls as $url) {
-            echo "<link rel='preload' href='$url' as='font' type='font/" . pathinfo($url, PATHINFO_EXTENSION) . "' crossorigin>\n";
+            echo "<link rel='preload' href='$url' as='font' type='font/" . pathinfo($url, PATHINFO_EXTENSION) . "' crossorigin='anonymous'>\n";
         }
     }
 }
