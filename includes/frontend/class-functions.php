@@ -207,7 +207,8 @@ class OMGF_Frontend_Functions
         $urls = array_reduce($font_urls, 'array_merge', []);
 
         foreach ($urls as $url) {
-            echo "<link rel='preload' href='$url' as='font' type='font/" . pathinfo($url, PATHINFO_EXTENSION) . "' crossorigin='anonymous'>\n";
+            $path = parse_url($url)['path'];
+            echo "<link rel='preload' href='$path' as='font' type='font/" . pathinfo($url, PATHINFO_EXTENSION) . "' crossorigin='anonymous'>\n";
         }
     }
 }
