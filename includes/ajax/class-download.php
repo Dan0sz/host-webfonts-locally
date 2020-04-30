@@ -115,7 +115,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
      */
     private function download_file($localFile, $remoteFile)
     {
-        $file = wp_remote_get($remoteFile, $localFile);
+        $file = wp_remote_get($remoteFile);
 
         if (is_wp_error($file)) {
             OMGF_Admin_Notice::set_notice($file->get_error_message(), true, 'error', $file->get_error_code());
