@@ -78,6 +78,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             ?>
             <?php if ($savedFonts && $subsetFonts): ?>
                 <thead align="center">
+                <th></th>
                 <th>
                     <?= __('Font Family', 'host-webfonts-local'); ?>
                 </th>
@@ -97,6 +98,9 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                     $fontId = $font['font_id'];
                     ?>
                     <tr class="omgf-font-style" data-font-id="<?= $fontId; ?>" id="row-<?= $fontId; ?>">
+                        <td align="center" style="width: 20px;">
+                            <span class="omgf-font-downloaded dashicons-before <?= isset($font['downloaded']) && $font['downloaded'] == 1 ? 'dashicons-yes' : ''; ?>"></span>
+                        </td>
                         <td style="width: 195px;">
                             <input readonly type="text" value="<?= $font['font_family']; ?>" />
                         </td>
@@ -122,7 +126,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                 <?php endforeach; ?>
                     <!-- The navbar at the bottom of the table. -->
                     <tr id="font-styles-nav" class="sticky bottom">
-                        <td colspan="3" align="right">
+                        <td colspan="4" align="right">
                             <span class="omgf-apply help font-styles" style="display: none;"><strong><?= __('Apply Changes', 'host-webfonts-local'); ?></strong></span>
                         </td>
                         <td colspan="2" style="width: 100px">
