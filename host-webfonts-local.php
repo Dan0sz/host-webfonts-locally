@@ -81,4 +81,4 @@ function omgf_init()
     return $omgf;
 }
 
-omgf_init();
+add_action('plugins_loaded', 'omgf_init');
