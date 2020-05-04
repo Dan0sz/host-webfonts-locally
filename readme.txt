@@ -110,9 +110,9 @@ N/A
 
 = 3.4.0 =
 * Added 'Downloaded' indicator in 'Generate Stylesheet' tab.
-* Added 'Also optimize fonts for logged in users?' option. This means that Administrators and Editors
-  will from now on only see the optimizations when this option is checked, or when they view the
-  results in a private/incognito browser session.
+* Added 'Also optimize fonts for logged in users?' option. This means that all users with editor
+  capabilities will (from now on) only view the optimizations when this option is checked, or when
+  they view the frontend of the website in a private/incognito browser session.
 
 = 3.3.6 =
 * Modified preload feature to comply with Mozilla's regulations for the crossorigin attribute.
