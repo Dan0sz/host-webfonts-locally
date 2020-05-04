@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.3.6
+Stable tag: 3.4.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -107,6 +107,12 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.4.0 =
+* Added 'Downloaded' indicator in 'Generate Stylesheet' tab.
+* Added 'Also optimize fonts for logged in users?' option. This means that Administrators and Editors
+  will from now on only see the optimizations when this option is checked, or when they view the
+  results in a private/incognito browser session.
 
 = 3.3.6 =
 * Modified preload feature to comply with Mozilla's regulations for the crossorigin attribute.
