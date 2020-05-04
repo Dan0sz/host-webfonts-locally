@@ -164,6 +164,19 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES ?>">
+                    <?php _e('Optimize fonts for logged in editors/administrators?', 'host-webfonts-local'); ?>
+                </label>
+            </th>
+            <td>
+                <input class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES ?>" id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES ?>" <?= OMGF_OPTIMIZE_EDIT_ROLES == 'on' ? 'checked = "checked"' : '' ?> />
+                <p class="description">
+                    <?php _e('Should only be used for debugging/testing purposes. Leave disabled when e.g. using a page builder or switching themes.', 'host-webfonts-local'); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL ?>">
                     <?php _e('Remove settings and files at uninstall?', 'host-webfonts-local'); ?>
                 </label>

@@ -68,6 +68,7 @@ class OMGF
         define('OMGF_REMOVE_GFONTS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS)));
         define('OMGF_PRELOAD', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENABLE_PRELOAD)));
         define('OMGF_ENQUEUE_ORDER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER, 10)));
+        define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES)));
         define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
     }
 

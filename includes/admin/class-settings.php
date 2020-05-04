@@ -54,6 +54,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     const OMGF_ADV_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
     const OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS = 'omgf_remove_gfonts';
     const OMGF_ADV_SETTING_ENABLE_PRELOAD      = 'omgf_preload';
+    const OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
     const OMGF_ADV_SETTING_UNINSTALL           = 'omgf_uninstall';
     const OMGF_ADV_SETTING_ENQUEUE_ORDER       = 'omgf_enqueue_order';
     const OMGF_ADV_SETTING_RELATIVE_URL        = 'omgf_relative_url';

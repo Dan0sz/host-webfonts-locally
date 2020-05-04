@@ -29,6 +29,8 @@ class OMGF_Frontend_Functions
     /** @var string */
     private $stylesheet_url;
 
+    private $do_optimize;
+
     /**
      * OMGF_Frontend_Functions constructor.
      */
@@ -36,6 +38,7 @@ class OMGF_Frontend_Functions
     {
         $this->stylesheet_file = OMGF_FONTS_DIR . '/' . OMGF_FILENAME;
         $this->stylesheet_url  = OMGF_FONTS_URL . '/' . OMGF_FILENAME;
+        $this->do_optimize     = $this->maybe_optimize_fonts();
 
         // @formatter:off
         add_action('wp_print_styles', array($this, 'is_remove_google_fonts_enabled'), PHP_INT_MAX - 1000);
@@ -63,6 +66,10 @@ class OMGF_Frontend_Functions
      */
     public function is_remove_google_fonts_enabled()
     {
+        if (!$this->do_optimize) {
+            return;
+        }
+
         if (OMGF_REMOVE_GFONTS == 'on' && !is_admin()) {
             // @formatter:off
             add_action('wp_print_styles', array($this, 'remove_google_fonts'), PHP_INT_MAX - 500);
@@ -70,6 +77,20 @@ class OMGF_Frontend_Functions
             add_filter('avf_output_google_webfonts_script', function() { return false; });
             // @formatter:on
         }
+    }
+
+    /**
+     * Should we optimize for logged in editors/administrators?
+     *
+     * @return bool
+     */
+    private function maybe_optimize_fonts()
+    {
+        if (!OMGF_OPTIMIZE_EDIT_ROLES && current_user_can('edit_pages')) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -124,6 +145,10 @@ class OMGF_Frontend_Functions
      */
     public function enqueue_stylesheet()
     {
+        if (!$this->do_optimize) {
+            return;
+        }
+
         if (OMGF_WEB_FONT_LOADER) {
             $this->get_template('web-font-loader');
         } else {
@@ -144,6 +169,10 @@ class OMGF_Frontend_Functions
      */
     public function is_preload_enabled()
     {
+        if (!$this->do_optimize) {
+            return;
+        }
+
         if (OMGF_PRELOAD == 'on') {
             // @formatter:off
             add_action('wp_enqueue_scripts', array($this, 'add_stylesheet_preload'), 0);
@@ -192,6 +221,10 @@ class OMGF_Frontend_Functions
      */
     public function preload_fonts()
     {
+        if (!$this->do_optimize) {
+            return;
+        }
+
         $preload_fonts = $this->db->get_preload_fonts();
 
         if (!$preload_fonts) {
