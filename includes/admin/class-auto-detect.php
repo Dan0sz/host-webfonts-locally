@@ -174,6 +174,12 @@ class OMGF_Admin_AutoDetect
     private function process_used_styles($used_styles, $available_styles)
     {
         foreach ($used_styles as &$style) {
+            if (empty($style)) {
+                $used_styles = $this->process_available_styles($available_styles);
+
+                break;
+            }
+
             $fontWeight = preg_replace('/[^0-9]/', '', $style);
             $fontStyle  = preg_replace('/[^a-zA-Z]/', '', $style);
 
@@ -192,5 +198,24 @@ class OMGF_Admin_AutoDetect
                 return in_array($fontStyle, $used_styles);
             }
         );
+    }
+
+    /**
+     * Some themes requests font families without specifying font styles. While this is inadvisable, OMGF should be able
+     * to deal with this. That's why, when no font styles are detected, all available font styles are returned.
+     *
+     * @param array $styles
+     *
+     * @return array
+     */
+    private function process_available_styles(array $styles)
+    {
+        foreach ($styles as $style) {
+            $font_style = $style['font_style'] !== 'normal' ? $style['font_style'] : '';
+
+            $used_styles[] = $style['font_weight'] . $font_style;
+        }
+
+        return $used_styles;
     }
 }
