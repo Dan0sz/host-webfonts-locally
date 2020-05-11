@@ -31,12 +31,17 @@ class OMGF
 
         if (is_admin()) {
             $this->do_settings();
-            add_action('plugin_loaded', array($this, 'do_setup'));
+            $this->add_ajax_hooks();
 
+            /**
+             * If auto detect can't finish properly, due to e.g. an invalid API response, OMGF's settings page crashes.
+             * This will prevent it from crashing the entire admin area.
+             */
             if ($this->page == 'optimize-webfonts') {
                 $this->do_auto_detect();
-                $this->add_ajax_hooks();
             }
+
+            add_action('plugin_loaded', array($this, 'do_setup'));
         }
 
         if (!is_admin()) {
