@@ -25,17 +25,15 @@ class OMGF_API
      */
     public function get_subsets($query)
     {
-        $request = wp_remote_get(OMGF_HELPER_URL . $query);
+        $response = wp_remote_get(OMGF_HELPER_URL . $query);
 
-        if (is_wp_error($request)) {
-            OMGF_Admin_Notice::set_notice($request->get_error_message(), true, 'error', $request->get_error_code());
-        }
+        if (wp_remote_retrieve_response_code($response) != 200) {
+            $this->throw_error($response, $query);
 
-        if ($request == 'Not found') {
             return [];
         }
 
-        $result = json_decode($request['body']);
+        $result = json_decode(wp_remote_retrieve_body($response));
 
         return [
             'subset_family'     => $result->family,
@@ -53,15 +51,19 @@ class OMGF_API
      */
     public function get_font_styles($font_family, $selected_subsets)
     {
-        $request = wp_remote_get(OMGF_HELPER_URL . $font_family . '?subsets=' . $selected_subsets);
+        if (empty($font_family)) {
+            return [];
+        }
 
-        if (wp_remote_retrieve_body($request) == 'Not found') {
-            OMGF_Admin_Notice::set_notice(wp_remote_retrieve_response_message($request) . ': ' . $font_family, false, 'error', wp_remote_retrieve_response_code($request));
+        $response = wp_remote_get(OMGF_HELPER_URL . $font_family . '?subsets=' . $selected_subsets);
+
+        if (wp_remote_retrieve_response_code($response) != 200) {
+            $this->throw_error($response, $font_family);
 
             return [];
         }
 
-        $result = json_decode($request['body']);
+        $result = json_decode(wp_remote_retrieve_body($response));
 
         foreach ($result->variants as $variant) {
             $fonts[] = [
@@ -80,5 +82,18 @@ class OMGF_API
         }
 
         return $fonts;
+    }
+
+    /**
+     * Throw error based on response
+     *
+     * @param $response
+     * @param $query
+     */
+    private function throw_error($response, $query)
+    {
+        $message = wp_remote_retrieve_response_message($response);
+        $code    = wp_remote_retrieve_response_code($response);
+        OMGF_Admin_Notice::set_notice(sprintf(__('An error occurred while searching for %s: %s', 'host-webfonts-local'), $query, $message), false, 'error', $code);
     }
 }
