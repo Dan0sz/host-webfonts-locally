@@ -18,18 +18,25 @@ defined('ABSPATH') || exit;
 
 class OMGF
 {
+    /** @var string */
+    private $page = '';
+
     /**
      * OMGF constructor.
      */
     public function __construct()
     {
         $this->define_constants();
+        $this->page = isset($_GET['page']) ?: '';
 
         if (is_admin()) {
-            $this->do_auto_detect();
             $this->do_settings();
-            $this->add_ajax_hooks();
             add_action('plugin_loaded', array($this, 'do_setup'));
+
+            if ($this->page == 'optimize-webfonts') {
+                $this->do_auto_detect();
+                $this->add_ajax_hooks();
+            }
         }
 
         if (!is_admin()) {
