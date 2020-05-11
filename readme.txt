@@ -17,7 +17,7 @@ With only 2 clicks of a button, OMGF automagically downloads your Google Fonts y
 
 Leverage Browser Cache, Minimize DNS requests and serve your Google Fonts in a 100% GDPR compliant way with OMGF!
 
-OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with CSS and JS optimizing/minification plugins like Autoptimize or W3 Total Cache. OMGF can efficiently remove any requests to external Google Fonts (loaded from fonts.gstatic.com or fonts.googleapies.com).
+OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with CSS and JS optimizing/minification plugins like Autoptimize or W3 Total Cache. OMGF can efficiently remove any requests to external Google Fonts (loaded from fonts.gstatic.com or fonts.googleapis.com).
 
 That's it. You're done!
 
