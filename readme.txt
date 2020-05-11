@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.4.1
+Stable tag: 3.4.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -107,6 +107,9 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.4.2 =
+* OMGF now returns a readable error if Auto Detect detects a misformatted fonts URL.
 
 = 3.4.1 =
 * 'Optimize fonts for logged in users?' should be on by default, cause it causes to much confusion.
