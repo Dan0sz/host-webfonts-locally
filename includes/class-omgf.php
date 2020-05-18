@@ -47,11 +47,6 @@ class OMGF
         if (!is_admin()) {
             $this->do_frontend();
         }
-
-        // @formatter:off
-        register_activation_hook(OMGF_PLUGIN_FILE, array($this, 'create_cache_dir'));
-        register_deactivation_hook(OMGF_PLUGIN_FILE, array($this, 'dequeue_css_js'));
-        // @formatter:on
     }
 
     /**
@@ -131,17 +126,6 @@ class OMGF
     }
 
     /**
-     * Create cache dir upon plugin (re-)activation.
-     */
-    public function create_cache_dir()
-    {
-        $uploadDir = OMGF_FONTS_DIR;
-        if (!is_dir($uploadDir)) {
-            wp_mkdir_p($uploadDir);
-        }
-    }
-
-    /**
      * Returns the configured name of WordPress' content directory.
      *
      * @return mixed
@@ -176,16 +160,6 @@ class OMGF
         }
 
         return $uploadUrl;
-    }
-
-    /**
-     * Removes all static files upon plugin deactivation.
-     */
-    public function dequeue_css_js()
-    {
-        wp_dequeue_script(OMGF_Admin::OMGF_ADMIN_JS_HANDLE);
-        wp_dequeue_style(OMGF_Admin::OMGF_ADMIN_CSS_HANDLE);
-        wp_dequeue_style(OMGF_Frontend_Functions::OMGF_STYLE_HANDLE);
     }
 
     /**
