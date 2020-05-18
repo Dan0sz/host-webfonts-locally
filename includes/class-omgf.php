@@ -18,6 +18,14 @@ defined('ABSPATH') || exit;
 
 class OMGF
 {
+    /**
+     * @var array These cache plugins empty the entire cache-folder, instead of just removing
+     *            its own files.
+     */
+    const OMGF_EVIL_PLUGINS = [
+        'WP Super Cache' => 'wp-super-cache/wp-cache.php'
+    ];
+
     /** @var string */
     private $page = '';
 
@@ -45,8 +53,10 @@ class OMGF
         }
 
         if (!is_admin()) {
-            $this->do_frontend();
+            add_action('plugins_loaded', [$this, 'do_frontend']);
         }
+
+        register_activation_hook(OMGF_PLUGIN_FILE, [$this, 'check_cache_plugins']);
     }
 
     /**
@@ -98,21 +108,13 @@ class OMGF
     /**
      * @return OMGF_Admin_AutoDetect
      */
-    private function do_auto_detect()
+    public function do_auto_detect()
     {
         $fonts = json_decode(get_option(OMGF_Admin_Settings::OMGF_SETTING_DETECTED_FONTS));
 
         if (OMGF_AUTO_DETECT_ENABLED && $fonts) {
             return new OMGF_Admin_AutoDetect($fonts);
         }
-    }
-
-    /**
-     * @return OMGF_Frontend_Functions
-     */
-    private function do_frontend()
-    {
-        return new OMGF_Frontend_Functions();
     }
 
     /**
@@ -123,6 +125,33 @@ class OMGF
         register_uninstall_hook(OMGF_PLUGIN_FILE, 'OMGF::do_uninstall');
 
         return new OMGF_Setup();
+    }
+
+    /**
+     * @return OMGF_Frontend_Functions
+     */
+    public function do_frontend()
+    {
+        return new OMGF_Frontend_Functions();
+    }
+
+    /**
+     * Throw a warning if any of the Evil Cache Plugins are used.
+     */
+    public function check_cache_plugins()
+    {
+        if (strpos(OMGF_CACHE_PATH, '/cache/') === false) {
+            return;
+        }
+
+        $cache_path = OMGF_CACHE_PATH;
+        $admin_url  = admin_url('options-general.php?page=optimize-webfonts&tab=advanced-settings');
+
+        foreach (self::OMGF_EVIL_PLUGINS as $name => $basename) {
+            if (is_plugin_active($basename)) {
+                OMGF_Admin_Notice::set_notice(sprintf(__("It looks like <strong>you're using %s</strong>. This plugin empties the entire <code>wp-content/cache</code> folder after a cache flush. To prevent this, <strong>move OMGF's fonts</strong> by changing the <em>Save font files to...</em> option under OMGF's <a href='%s'>Advanced Settings</a> from <code>%s</code> to something else, e.g. <code>/omgf-cache</code>.", 'host-webfonts-local'), $name, $admin_url, $cache_path), false, 'warning');
+            }
+        }
     }
 
     /**

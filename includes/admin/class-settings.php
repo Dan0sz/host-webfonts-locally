@@ -70,6 +70,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'generate-stylesheet';
         $this->page       = isset($_GET['page']) ? $_GET['page'] : '';
 
@@ -89,8 +91,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
         add_action('omgf_settings_content', [$this, 'generate_stylesheet_content'], 1);
         add_action('omgf_settings_content', [$this, 'advanced_settings_content'], 2);
         // @formatter:on
-
-        parent::__construct();
     }
 
     /**
