@@ -57,6 +57,9 @@ class OMGF_Setup
         $this->drop_tables();
     }
 
+    /**
+     *
+     */
     private function migrate_db()
     {
         $current_fonts = $this->wpdb->get_results("SELECT * FROM " . OMGF_DB_TABLENAME);
