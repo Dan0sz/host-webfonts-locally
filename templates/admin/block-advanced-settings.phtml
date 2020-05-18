@@ -105,7 +105,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <td>
                 <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL; ?>" placeholder="<?= __('e.g. cdn.mydomain.com', 'host-webfonts-local'); ?>" value="<?= OMGF_CDN_URL; ?>" <?= OMGF_RELATIVE_URL ? 'disabled' : ''; ?> />
                 <p class="description">
-                    <?php _e("Are you using a CDN? Then enter the URL here.", 'host-webfonts-local'); ?>
+                    <?php _e("Are you using a CDN? Then enter the URL here. Leave empty when using CloudFlare.", 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
