@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.4.4
+Stable tag: 3.4.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -108,10 +108,14 @@ N/A
 
 == Changelog ==
 
+= 3.4.5 =
+* Preload path should include absolute url, instead of relative, to prevent issues with CDN usage.
+
 = 3.4.4 =
 * OMGF is now loaded inline with other plugins, not last. And,
 * only Auto Detect is now triggered (if enabled) after all other plugins are loaded.
 * An 'Evil Cache Plugin' warning is now thrown, when OMGF is activated and one of the Evil Cache Plugins are installed, prompting the user to move the webfonts-folder **outside** of the `wp-content/cache` folder.
+  * 'Evil Cache Plugins' aren't necessarily evil. They just empty the entire cache folder (include OMGF's fonts) when a cache flush is triggered.
 * Fixed bug where Pre Update functions weren't triggered anymore, e.g. move fonts after cache path change.
 * Minor code optimizations/clean up.
 
