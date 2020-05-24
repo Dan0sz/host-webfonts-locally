@@ -23,7 +23,8 @@ class OMGF
      *            its own files.
      */
     const OMGF_EVIL_PLUGINS = [
-        'WP Super Cache' => 'wp-super-cache/wp-cache.php'
+        'WP Super Cache' => 'wp-super-cache/wp-cache.php',
+        'WP Rocket'      => 'wp-rocket/wp-rocket.php'
     ];
 
     /** @var string */
