@@ -85,6 +85,19 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         </tr>
         <tr valign="top">
             <th scope="row">
+                <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL; ?>">
+                    <?php _e('Force SSL?', 'host-webfonts-local'); ?> **
+                </label>
+            </th>
+            <td>
+                <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL; ?>" <?= OMGF_FORCE_SSL ? "checked ='checked'" : ''; ?> />
+                <p class="description">
+                    <?php _e('Some plugins mess up WordPress\' URL structure, which can cause OMGF to generate incorrect URLs in the stylesheet. If OMGF is generating non-SSL (<code>http://...</code>) URLs in the stylesheet, and you have the <strong>Site</strong> and <strong>WordPress Address</strong> (in <strong>Settings</strong> > <strong>General</strong>) set to SSL (<code>https://...</code>), then enable this option.', 'host-webfonts-local'); ?>
+                </p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL; ?>">
                     <?php _e('Use Relative URLs?', 'host-webfonts-local'); ?> **
                 </label>

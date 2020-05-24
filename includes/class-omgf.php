@@ -74,6 +74,7 @@ class OMGF
         define('OMGF_AUTO_DETECT_ENABLED', esc_attr(get_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, false)));
         define('OMGF_CACHE_PATH', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH)) ?: '/cache/omgf-webfonts');
         define('OMGF_CACHE_URI', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI)) ?: '');
+        define('OMGF_FORCE_SSL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL)));
         define('OMGF_RELATIVE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL)));
         define('OMGF_CDN_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL)));
         define('OMGF_WEB_FONT_LOADER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER)));
@@ -186,6 +187,10 @@ class OMGF
             $uploadUrl = get_site_url(OMGF_CURRENT_BLOG_ID, OMGF_CACHE_URI);
         } else {
             $uploadUrl = get_site_url(OMGF_CURRENT_BLOG_ID, $this->get_content_dir() . OMGF_CACHE_PATH);
+        }
+
+        if (OMGF_FORCE_SSL) {
+            $uploadUrl = str_replace('http://', 'https://', $uploadUrl);
         }
 
         return $uploadUrl;

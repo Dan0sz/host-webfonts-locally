@@ -57,6 +57,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     const OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
     const OMGF_ADV_SETTING_UNINSTALL           = 'omgf_uninstall';
     const OMGF_ADV_SETTING_ENQUEUE_ORDER       = 'omgf_enqueue_order';
+    const OMGF_ADV_SETTING_FORCE_SSL           = 'omgf_force_ssl';
     const OMGF_ADV_SETTING_RELATIVE_URL        = 'omgf_relative_url';
 
     /** @var string $active_tab */
