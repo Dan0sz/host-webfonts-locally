@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.4.5
+Stable tag: 3.5.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -107,6 +107,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.5.0 =
+* Added Force SSL option, to force the usage of SSL while generating the stylesheet.
+* Added WP Rocket to list of Evil Plugins, because it empties the entire wp-content/cache folder instead of just its own files.
 
 = 3.4.5 =
 * Preload path should include absolute url, instead of relative, to prevent issues with CDN usage.
