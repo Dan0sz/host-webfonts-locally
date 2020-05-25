@@ -90,7 +90,7 @@ OMGF enqueues the stylesheet into WordPress' head. If the stylesheet isn't loade
 Yes, it does. When using subdomains, however, you might run into CORS related issues. To get around this, you should configure each site separately. Do the following:
 
 - Go to the site's own dashboard,
-- Change OMGF's cache directory (*Save webfonts to...*) to something unique, e.g. `/cache/site1/omgf`,
+- Change OMGF's cache directory (*Save webfonts to...*) to something unique, e.g. `/uploads/site1/omgf`,
 - Click 'Save Changes',
 - If you haven't already, find the fonts you want to use,
 - Click 'Download Fonts' and wait for the process to finish,
