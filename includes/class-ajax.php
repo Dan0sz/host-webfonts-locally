@@ -18,7 +18,34 @@ defined('ABSPATH') || exit;
 
 class OMGF_AJAX
 {
+    /**
+     * A list of themes which use unconventional methods to load Google Fonts.
+     */
+    const OMGF_INCOMPATIBLE_THEMES = [
+        'thrive-theme'
+    ];
+
+    /**
+     * A list of frameworks (plugins) for themes which use unconventional methods to load Google Fonts.
+     */
+    const OMGF_INCOMPATIBLE_FRAMEWORKS = [
+        'redux-framework' => [
+            'title'    => 'Redux Framework',
+            'basename' => 'redux-framework/redux-framework.php'
+        ]
+    ];
+
+    /** @var string $addon_url */
+    private $addon_url = 'https://woosh.dev/wordpress-plugins/omgf-%s-compatibility/';
+
+    /** @var string $addon_slug */
+    private $addon_slug = 'omgf-%s-compatibility';
+
+    /** @var OMGF_DB $db */
     protected $db;
+
+    /** @var string $plugin_text_domain */
+    private $plugin_text_domain = 'host-webfonts-local';
 
     /**
      * OMGF_AJAX constructor.
@@ -49,7 +76,7 @@ class OMGF_AJAX
 
 
         if (!($query = $_POST['search_query'])) {
-            OMGF_Admin_Notice::set_notice(__('Search query not found.', 'host-webfonts-local'), true, 'warning');
+            OMGF_Admin_Notice::set_notice(__('Search query not found.', $this->plugin_text_domain), true, 'warning');
         }
 
         $query         = strtolower(str_replace(', ', ',', $query));
@@ -63,7 +90,7 @@ class OMGF_AJAX
 
             // If subset search comes back empty. Add a notice and skip to the next one.
             if (empty($subsets)) {
-                OMGF_Admin_Notice::set_notice(sprintf(__('Font %s not found. Are you sure it\'s a Google Font?', 'host-webfonts-local'), $searchQuery), false, 'error');
+                OMGF_Admin_Notice::set_notice(sprintf(__('Font %s not found. Are you sure it\'s a Google Font?', $this->plugin_text_domain), $searchQuery), false, 'error');
 
                 continue;
             }
@@ -75,7 +102,7 @@ class OMGF_AJAX
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_SUBSETS, $option_subsets);
 
-        OMGF_Admin_Notice::set_notice(__('Subset search complete. Select subsets to generate a list of available font styles.', 'host-webfonts-local'));
+        OMGF_Admin_Notice::set_notice(__('Subset search complete. Select subsets to generate a list of available font styles.', $this->plugin_text_domain));
     }
 
     /**
@@ -83,11 +110,49 @@ class OMGF_AJAX
      */
     public function enable_auto_detect()
     {
+        $this->check_theme_compatibility();
+
+        $this->check_framework_compatibility();
+
         update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, true);
 
         $url = get_permalink(get_posts()[0]->ID);
 
-        OMGF_Admin_Notice::set_notice(__("Auto Detect enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page.", "host-webfonts-local"));
+        OMGF_Admin_Notice::set_notice(__("Auto Detect enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page.", $this->plugin_text_domain));
+    }
+
+    /**
+     * Throw a warning if an incompatible theme is used.
+     */
+    private function check_theme_compatibility()
+    {
+        $theme = wp_get_theme();
+        $template = $theme->get_template();
+
+        $this->plugin_text_domain = 'host-webfonts-local';
+        if (in_array($template, self::OMGF_INCOMPATIBLE_THEMES)) {
+            $name = $theme->get('Name');
+            $url  = sprintf($this->addon_url, $template);
+
+            OMGF_Admin_Notice::set_notice(sprintf(__("Your theme <strong>$name</strong> is not compatible with OMGF by default. To enable <em>Auto Detect</em> (and <em>automatic Google Fonts removal</em>) for this theme, an add-on is required which can be purchased <a href='%s' target='_blank'>here</a>.", $this->plugin_text_domain), $url), true, 'warning');
+        }
+    }
+
+    /**
+     * Throw a warning if an incompatible framework is used.
+     */
+    private function check_framework_compatibility()
+    {
+        foreach (self::OMGF_INCOMPATIBLE_FRAMEWORKS as $slug => $info) {
+            $compatibility_addon = sprintf($this->addon_slug, $info['slug']) . '/' . sprintf($this->addon_slug, $info['slug']) . '.php';
+
+            if (is_plugin_active($info['basename']) && !is_plugin_active($compatibility_addon)) {
+                $name = $info['title'];
+                $url  = sprintf($this->addon_url, $info['slug']);
+
+                OMGF_Admin_Notice::set_notice(sprintf(__("Your theme is built upon <strong>$name</strong> and is not compatible with OMGF by default. To enable <em>Auto Detect</em> (and <em>automatic Google Fonts removal</em>) for this theme, an add-on is required which can be purchased <a href='%s' target='_blank'>here</a>.", $this->plugin_text_domain), $url), true, 'warning');
+            }
+        }
     }
 
     /**
@@ -134,7 +199,7 @@ class OMGF_AJAX
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $fonts);
 
-        OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Trim the list to your needs and click <strong>Download Fonts</strong>.', 'host-webfonts-local'));
+        OMGF_Admin_Notice::set_notice(count($fonts) . ' ' . __('font styles found. Trim the list to your needs and click <strong>Download Fonts</strong>.', $this->plugin_text_domain));
     }
 
     /**
@@ -160,7 +225,7 @@ class OMGF_AJAX
 
         update_option(OMGF_Admin_Settings::OMGF_SETTING_FONTS, $selected_fonts);
 
-        OMGF_Admin_Notice::set_notice(count($current_fonts) - count($selected_fonts) . ' ' . __('fonts removed from list and', 'host-webfonts-local') . ' ' . count($to_be_preloaded) . ' ' . __('fonts set to preload. If you haven\'t already, you can now <strong>download</strong> the <strong>fonts</strong>. Otherwise, just (re-)<strong>generate</strong> the <strong>stylesheet</strong>.', 'host-webfonts-local'), false);
+        OMGF_Admin_Notice::set_notice(count($current_fonts) - count($selected_fonts) . ' ' . __('fonts removed from list and', $this->plugin_text_domain) . ' ' . count($to_be_preloaded) . ' ' . __('fonts set to preload. If you haven\'t already, you can now <strong>download</strong> the <strong>fonts</strong>. Otherwise, just (re-)<strong>generate</strong> the <strong>stylesheet</strong>.', $this->plugin_text_domain), false);
     }
 
     /**
@@ -190,9 +255,9 @@ class OMGF_AJAX
 
             array_map('unlink', array_filter((array) glob(OMGF_FONTS_DIR . '/*')));
 
-            OMGF_Admin_Notice::set_notice(__('Cache directory successfully emptied.', 'host-webfonts-local'));
+            OMGF_Admin_Notice::set_notice(__('Cache directory successfully emptied.', $this->plugin_text_domain));
         } catch (\Exception $e) {
-            OMGF_Admin_Notice::set_notice(__('Something went wrong while emptying the cache directory: ', 'host-webfonts-local') . $e->getMessage(), true, 'error', $e->getCode());
+            OMGF_Admin_Notice::set_notice(__('Something went wrong while emptying the cache directory: ', $this->plugin_text_domain) . $e->getMessage(), true, 'error', $e->getCode());
         }
     }
 }

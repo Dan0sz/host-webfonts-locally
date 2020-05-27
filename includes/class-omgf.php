@@ -108,7 +108,7 @@ class OMGF
     }
 
     /**
-     * @return OMGF_Admin_AutoDetect
+     * @return OMGF_Admin_AutoDetect|void
      */
     public function do_auto_detect()
     {
