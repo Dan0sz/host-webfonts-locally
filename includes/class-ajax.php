@@ -130,11 +130,13 @@ class OMGF_AJAX
         $template = $theme->get_template();
 
         $this->plugin_text_domain = 'host-webfonts-local';
-        if (in_array($template, self::OMGF_INCOMPATIBLE_THEMES)) {
+        $compatibility_addon = sprintf($this->addon_slug, $template) . '/' . sprintf($this->addon_slug, $template) . '.php';
+
+        if (in_array($template, self::OMGF_INCOMPATIBLE_THEMES) && !is_plugin_active($compatibility_addon)) {
             $name = $theme->get('Name');
             $url  = sprintf($this->addon_url, $template);
 
-            OMGF_Admin_Notice::set_notice(sprintf(__("Your theme <strong>$name</strong> is not compatible with OMGF by default. To enable <em>Auto Detect</em> (and <em>automatic Google Fonts removal</em>) for this theme, an add-on is required which can be purchased <a href='%s' target='_blank'>here</a>.", $this->plugin_text_domain), $url), true, 'warning');
+            OMGF_Admin_Notice::set_notice(sprintf(__("For OMGF's <em>Auto Detect</em> (and <em>automatic Google Fonts removal</em>) to properly work with <strong>$name</strong> a premium add-on is required. Click <a href='%s' target='_blank'>here</a> for more information.", $this->plugin_text_domain), $url), true, 'warning');
         }
     }
 
