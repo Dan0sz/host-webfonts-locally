@@ -136,7 +136,7 @@ class OMGF_AJAX
             $name = $theme->get('Name');
             $url  = sprintf($this->addon_url, $template);
 
-            OMGF_Admin_Notice::set_notice(sprintf(__("Your theme, <strong>$name</strong>, uses unconventional methods to load Google Fonts. For OMGF to work properly with this $name, a premium add-on is required. Click <a href='%s' target='_blank'>here</a> for more information.", $this->plugin_text_domain), $url), true, 'warning');
+            OMGF_Admin_Notice::set_notice(sprintf(__("Your theme, <strong>$name</strong>, uses unconventional methods to load Google Fonts. For OMGF to work properly with this $name, a premium add-on <em>(starting at € 39, -)</em> is required. Click <a href='%s' target='_blank'>here</a> for more information.", $this->plugin_text_domain), $url), true, 'warning');
         }
     }
 
@@ -152,7 +152,7 @@ class OMGF_AJAX
                 $name = $info['title'];
                 $url  = sprintf($this->addon_url, $slug);
 
-                OMGF_Admin_Notice::set_notice(sprintf(__("Your theme's framework, <strong>$name</strong>, uses unconventional methods to load Google Fonts. For OMGF to work properly with $name, a premium add-on is required. Click <a href='%s' target='_blank'>here</a> for more information.", $this->plugin_text_domain), $url), true, 'warning');
+                OMGF_Admin_Notice::set_notice(sprintf(__("Your theme's framework, <strong>$name</strong>, uses unconventional methods to load Google Fonts. For OMGF to work properly with $name, a premium add-on <em>(starting at € 39, -)</em> is required. Click <a href='%s' target='_blank'>here</a> for more information.", $this->plugin_text_domain), $url), true, 'warning');
             }
         }
     }
