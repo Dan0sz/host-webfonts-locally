@@ -146,11 +146,11 @@ class OMGF_AJAX
     private function check_framework_compatibility()
     {
         foreach (self::OMGF_INCOMPATIBLE_FRAMEWORKS as $slug => $info) {
-            $compatibility_addon = sprintf($this->addon_slug, $info['slug']) . '/' . sprintf($this->addon_slug, $info['slug']) . '.php';
+            $compatibility_addon = sprintf($this->addon_slug, $slug) . '/' . sprintf($this->addon_slug, $slug) . '.php';
 
             if (is_plugin_active($info['basename']) && !is_plugin_active($compatibility_addon)) {
                 $name = $info['title'];
-                $url  = sprintf($this->addon_url, $info['slug']);
+                $url  = sprintf($this->addon_url, $slug);
 
                 OMGF_Admin_Notice::set_notice(sprintf(__("Your theme is built upon <strong>$name</strong> and is not compatible with OMGF by default. To enable <em>Auto Detect</em> (and <em>automatic Google Fonts removal</em>) for this theme, an add-on is required which can be purchased <a href='%s' target='_blank'>here</a>.", $this->plugin_text_domain), $url), true, 'warning');
             }
