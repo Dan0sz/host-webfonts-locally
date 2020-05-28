@@ -101,7 +101,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     {
         add_options_page(
             'OMGF',
-            'Optimize Webfonts',
+            'Optimize Google Fonts',
             'manage_options',
             'optimize-webfonts',
             array(
