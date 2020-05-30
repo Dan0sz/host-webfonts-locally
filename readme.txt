@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.5.0
+Stable tag: 3.6.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -107,6 +107,12 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.6.0 =
+* OMGF now supports add-ons to extend its Auto Detect and Auto Removal feature.
+* From now on, a notice containing a link to the required add-on will be thrown for known themes and frameworks which follow unconventional methods to include Google Fonts.
+  * This list now contains Thrive Themes and Redux Framework, but other themes (I'm researching Avada) will be added in the near future.
+* Generated stylesheets and downloaded fonts are now be saved to the 'uploads/omgf' folder by default.
 
 = 3.5.0 =
 * Added Force SSL option, to force the usage of SSL while generating the stylesheet.
