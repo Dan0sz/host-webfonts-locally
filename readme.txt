@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -61,6 +61,10 @@ This could be for several reasons:
 1. Have you checked if your font is available on Google Fonts?
 1. Is your font listed as an open source font, or is it a premium font? For obvious reasons, OMGF only has access to open source fonts.
 
+= Does this plugin remove resource hints, e.g. preconnect, preload or dns-prefetch? =
+
+No, to automatically remove resource hints pointing to fonts.googleapis.com or fonts.gstatic.com, [upgrade to OMGF Pro](https://woosh.dev/wordpress-plugins/host-google-fonts-pro/).
+
 = Can I serve the fonts from my CDN? =
 
 Yes, you can. Enter the url of your CDN and re-download and re-generate the stylesheet. Then the fonts will be saved to and served from your CDN.
@@ -75,7 +79,7 @@ This must be, because you're still loading the externally hosted Google Fonts, b
 
 = I have 'Remove Google Fonts' enabled, but the fonts from fonts.gstatic.com|fonts.googleapis.com are still loaded. What's going on? =
 
-The option in OMGF removes any fonts that are loaded in the conventional way. However, if it doesn't work for you and you're using a popular theme, I'd love to help and make OMGF compatible. So don't hesitate to [contact](https://daan.dev/contact/) me.
+The option in OMGF removes any fonts that are loaded in the conventional way. However, if it doesn't work for you you're theme is either using an unconventional method or WebFont Loader to add Google Fonts. [Upgrade to OMGF Pro](https://woosh.dev/wordpress-plugins/host-google-fonts-pro/) to automatically replace these fonts with a locally hosted version.
 
 = Does this plugin edit template files? =
 
@@ -83,7 +87,7 @@ No, it does not. It creates a CSS Stylesheet which will be automatically added t
 
 = The stylesheet isn't loaded? What's going on? =
 
-OMGF enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function into it's header section.
+OMGF enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function correctly in its header section.
 
 = Does this plugin support Multi Site? I'm getting CORS errors! =
 
@@ -107,6 +111,12 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.6.1 =
+* Fixed bug in Auto Detect where duplicate fonts would override the earlier detected font styles. Newer styles are now appended to the list.
+* Added multiple filters and action hooks to prepare OMGF for the release of OMGF Pro.
+* Removed the code to detect incompatible themes/plugins, because an upgrade to OMGF Pro will solve all of your problems :)
+  * *OMGF Pro is able to detect, replace and remove all Google Fonts (incl. WebFont Loader) regardless of how they are added by the theme or plugin, incl. dns prefetch, preconnect and preload resource hint headers.*
 
 = 3.6.0 =
 * OMGF now supports add-ons to extend its Auto Detect and Auto Removal feature.
