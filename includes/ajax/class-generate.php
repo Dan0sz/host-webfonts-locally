@@ -63,7 +63,7 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
 
             $count  = count($selectedFonts);
             $review = apply_filters('omgf_generate_stylesheet_review_link', 'https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post');
-            $tweet  = apply_filters('omgf_generate_stylesheet_tweet_link', "https://twitter.com/intent/tweet?text=I+just+optimized+$count+Google+Fonts+with+OMGF+for+@WordPress!+Try+it+for+yourself:&via=Dan0sz&hashtags=GoogleFonts,WordPress,Pagespeed,Insights&url=https://wordpress.org/plugins/host-webfonts-local/");
+            $tweet  = apply_filters('omgf_generate_stylesheet_tweet_link', "https://twitter.com/intent/tweet?text=I+just+optimized+$count+Google+Fonts+with+OMGF+for+@WordPress!+Try+it+for+yourself:&via=Dan0sz&hashtags=GoogleFonts,WordPress,Pagespeed,Insights&url=https://wordpress.org/plugins/host-webfonts-local/", $count);
 
             OMGF_Admin_Notice::set_notice(sprintf(__('OMGF has optimized %s fonts. Enjoy your performance boost! Would you like to <a href="%s" target="_blank">write a review</a> or <a href="%s" target="_blank">tweet about it</a>?', 'host-webfonts-local'), $count, $review, $tweet), true, 'info');
         } catch (Exception $e) {
