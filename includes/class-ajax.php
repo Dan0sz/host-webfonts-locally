@@ -18,29 +18,6 @@ defined('ABSPATH') || exit;
 
 class OMGF_AJAX
 {
-    /**
-     * A list of themes which use unconventional methods to load Google Fonts.
-     */
-    const OMGF_INCOMPATIBLE_THEMES = [
-        'thrive-theme'
-    ];
-
-    /**
-     * A list of frameworks (plugins) for themes which use unconventional methods to load Google Fonts.
-     */
-    const OMGF_INCOMPATIBLE_FRAMEWORKS = [
-        'redux-framework' => [
-            'title'    => 'Redux Framework',
-            'basename' => 'redux-framework/redux-framework.php'
-        ]
-    ];
-
-    /** @var string $addon_url */
-    private $addon_url = 'https://woosh.dev/wordpress-plugins/omgf-%s-compatibility/';
-
-    /** @var string $addon_slug */
-    private $addon_slug = 'omgf-%s-compatibility';
-
     /** @var OMGF_DB $db */
     protected $db;
 
@@ -110,51 +87,11 @@ class OMGF_AJAX
      */
     public function enable_auto_detect()
     {
-        $this->check_theme_compatibility();
-
-        $this->check_framework_compatibility();
-
         update_option(OMGF_Admin_Settings::OMGF_SETTING_AUTO_DETECTION_ENABLED, true);
 
         $url = get_permalink(get_posts()[0]->ID);
 
         OMGF_Admin_Notice::set_notice(__("Auto Detect enabled. Open any page on your frontend (e.g. your <a href='$url' target='_blank'>latest post</a>). After the page is fully loaded, return here and <a href='javascript:location.reload()'>click here</a> to refresh this page.", $this->plugin_text_domain));
-    }
-
-    /**
-     * Throw a warning if an incompatible theme is used.
-     */
-    private function check_theme_compatibility()
-    {
-        $theme = wp_get_theme();
-        $template = $theme->get_template();
-
-        $this->plugin_text_domain = 'host-webfonts-local';
-        $compatibility_addon = sprintf($this->addon_slug, $template) . '/' . sprintf($this->addon_slug, $template) . '.php';
-
-        if (in_array($template, self::OMGF_INCOMPATIBLE_THEMES) && !is_plugin_active($compatibility_addon)) {
-            $name = $theme->get('Name');
-            $url  = sprintf($this->addon_url, $template);
-
-            OMGF_Admin_Notice::set_notice(sprintf(__("Your theme, <strong>$name</strong>, uses unconventional methods to load Google Fonts. For OMGF to work properly with $name, a premium add-on <em>(starting at € 39, -)</em> is required. Click <a href='%s' target='_blank'>here</a> for more information.", $this->plugin_text_domain), $url), true, 'warning');
-        }
-    }
-
-    /**
-     * Throw a warning if an incompatible framework is used.
-     */
-    private function check_framework_compatibility()
-    {
-        foreach (self::OMGF_INCOMPATIBLE_FRAMEWORKS as $slug => $info) {
-            $compatibility_addon = sprintf($this->addon_slug, $slug) . '/' . sprintf($this->addon_slug, $slug) . '.php';
-
-            if (is_plugin_active($info['basename']) && !is_plugin_active($compatibility_addon)) {
-                $name = $info['title'];
-                $url  = sprintf($this->addon_url, $slug);
-
-                OMGF_Admin_Notice::set_notice(sprintf(__("Your theme's framework, <strong>$name</strong>, uses unconventional methods to load Google Fonts. For OMGF to work properly with $name, a premium add-on <em>(starting at € 39, -)</em> is required. Click <a href='%s' target='_blank'>here</a> for more information.", $this->plugin_text_domain), $url), true, 'warning');
-            }
-        }
     }
 
     /**
