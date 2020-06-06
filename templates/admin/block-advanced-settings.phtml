@@ -28,13 +28,13 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
         <tr valign="top">
             <th scope="row">
                 <label for="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS; ?>">
-                    <?php _e('Remove Google Fonts (experimental)', 'host-webfonts-local'); ?>
+                    <?php _e('Remove Google Fonts', 'host-webfonts-local'); ?>
                 </label>
             </th>
             <td>
                 <input class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS; ?>" id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS; ?>" <?= OMGF_REMOVE_GFONTS == 'on' ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
-                    <?= sprintf(__('Enabling this option will attempt to remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work for you, your theme and/or plugin(s) are using unconventional methods (or Web Font Loader) to load Google Fonts. <a href="%s" target="_blank">Hire me</a> for a custom integration or <a href="%s" target="_blank">contact me</a> when in doubt.', 'host-webfonts-local'), 'https://woosh.dev/wordpress-services/omgf-expert-configuration/' . $utmTags, OMGF_SITE_URL . '/contact/' . $utmTags); ?>
+                    <?= sprintf(__('Remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work, your theme and/or plugin(s) are using unconventional methods or Web Font Loader to load Google Fonts. <a href="%s" target="_blank">Upgrade to OMGF Pro</a> to automatically remove Google Fonts incl. resource hints (e.g. <code>dns-prefetch</code>, <code>preconnect</code> and <code>preload</code>).', 'host-webfonts-local'), 'https://woosh.dev/wordpress-plugins/host-google-fonts-pro/' . $utmTags); ?>
                 </p>
             </td>
         </tr>
@@ -52,7 +52,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
                 </select>
                 <br/>
                 <p class="description">
-                    <?php _e('Select which font-display strategy to use. Defaults to \'Auto\'.', 'host-webfonts-local'); ?>
+                    <?php _e('Select which font-display strategy to use. Defaults to \'Auto\'. \'Swap\' is recommended.', 'host-webfonts-local'); ?>
                     <a target="_blank" href="https://developers.google.com/web/updates/2016/02/font-display"><?php _e('Read more', 'host-webfonts-local'); ?></a>
                 </p>
             </td>
@@ -92,7 +92,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
             <td>
                 <input id="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL; ?>" class="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL; ?>" type="checkbox" name="<?= OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL; ?>" <?= OMGF_FORCE_SSL ? "checked ='checked'" : ''; ?> />
                 <p class="description">
-                    <?php _e('Some plugins mess up WordPress\' URL structure, which can cause OMGF to generate incorrect URLs in the stylesheet. If OMGF is generating non-SSL (<code>http://...</code>) URLs in the stylesheet, and you have the <strong>Site</strong> and <strong>WordPress Address</strong> (in <strong>Settings</strong> > <strong>General</strong>) set to SSL (<code>https://...</code>), then enable this option.', 'host-webfonts-local'); ?>
+                    <?php _e('Some plugins mess up WordPress\' URL structure, which can cause OMGF to generate incorrect URLs in the stylesheet. If OMGF is generating non-SSL (<code>http://...</code>) URLs in the stylesheet, and you have the <strong>Site</strong> and <strong>WordPress Address</strong> (in <strong>Settings</strong> > <strong>General</strong>) set to SSL (<code>https://</code>), then enable this option.', 'host-webfonts-local'); ?>
                 </p>
             </td>
         </tr>
