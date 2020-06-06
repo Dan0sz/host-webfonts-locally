@@ -203,6 +203,10 @@ class OMGF_Frontend_Functions
      */
     public function auto_detect_fonts()
     {
+        if (apply_filters('omgf_pro_auto_detect_enabled', false)) {
+            return;
+        }
+
         global $wp_styles;
 
         $registered = $wp_styles->registered;
