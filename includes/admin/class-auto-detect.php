@@ -54,6 +54,7 @@ class OMGF_Admin_AutoDetect
 
             $font_styles[$font['subset_font']] = $this->api->get_font_styles($font['subset_font'], implode(',', $font['selected_subsets']));
 
+            // If subset was already detected, replace styles instead of overwriting them.
             if (isset($subsets[$font['subset_font']])) {
                 $subsets[$font['subset_font']] = array_replace_recursive($subsets[$font['subset_font']], $font);
             } else {
