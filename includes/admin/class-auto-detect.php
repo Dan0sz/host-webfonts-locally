@@ -53,8 +53,13 @@ class OMGF_Admin_AutoDetect
             }
 
             $font_styles[$font['subset_font']] = $this->api->get_font_styles($font['subset_font'], implode(',', $font['selected_subsets']));
-            // TODO: Merge subsets instead of overwriting. If some font is requested twice, some styles may be lost.
-            $subsets[$font['subset_font']] = $font;
+
+            if (isset($subsets[$font['subset_font']])) {
+                $subsets[$font['subset_font']] = array_replace_recursive($subsets[$font['subset_font']], $font);
+            } else {
+                $subsets[$font['subset_font']] = $font;
+            }
+
             unset($subsets[$index]);
         }
 
