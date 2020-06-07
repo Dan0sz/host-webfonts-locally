@@ -100,6 +100,10 @@ class OMGF_Frontend_Functions
      */
     public function remove_google_fonts()
     {
+        if (apply_filters('omgf_pro_auto_remove_enabled', false)) {
+            return;
+        }
+
         global $wp_styles;
 
         $registered = $wp_styles->registered;
