@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.6.1
+Stable tag: 3.6.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -111,6 +111,9 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.6.2 =
+* Added filter so Auto Remove can be disabled by other plugins (OMGF Pro, in this case.)
 
 = 3.6.1 =
 * Fixed bug in Auto Detect where duplicate fonts would override the earlier detected font styles. Newer styles are now appended to the list.
