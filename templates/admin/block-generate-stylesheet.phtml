@@ -30,8 +30,8 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
     <div class="omgf-search-section">
         <div class="omgf-search-box">
             <input type="text" id="omgf-search" class="form-input-tip ui-autocomplete-input" placeholder="<?php _e('Search... [e.g. Roboto, Open Sans, Poppins]', 'host-webfonts-local'); ?>" />
-            <input type="button" id="omgf-search-subsets" class="button button-primary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
-            <input type="button" id="omgf-auto-detect" class="button button-secondary button-hero" value="<?= __('Auto Detect', 'host-webfonts-local'); ?>" />
+            <input type="button" id="omgf-search-subsets" class="button button-secondary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
+            <input type="button" id="omgf-auto-detect" class="button button-primary button-hero" value="<?= apply_filters('omgf_generate_stylesheet_auto_detect_title', __('Auto Detect', 'host-webfonts-local')); ?>" />
         </div>
         <table>
             <caption><?php _e('Available subsets', 'host-webfonts-local'); ?></caption>
