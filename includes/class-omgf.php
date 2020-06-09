@@ -83,9 +83,8 @@ class OMGF
         define('OMGF_CURRENT_BLOG_ID', get_current_blog_id());
         define('OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH);
         define('OMGF_FONTS_URL', $this->get_fonts_url());
-        define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_DISPLAY_OPTION)) ?: 'auto');
+        define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
         define('OMGF_REMOVE_GFONTS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS)));
-        define('OMGF_PRELOAD', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENABLE_PRELOAD)));
         define('OMGF_ENQUEUE_ORDER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER, 10)));
         define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
         define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));

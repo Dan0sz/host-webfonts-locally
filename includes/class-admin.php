@@ -34,6 +34,9 @@ class OMGF_Admin
         // @formatter:off
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         add_action('admin_notices', [$this, 'add_notice']);
+
+        $this->do_advanced_settings();
+
         add_filter('pre_update_option_omgf_cache_dir', [$this, 'cache_dir_changed'], 10, 2);
         add_filter('pre_update_option_omgf_cache_uri', [$this, 'serve_uri_changed'], 10, 2);
         add_filter('pre_update_option_omgf_relative_url', [$this, 'relative_url_changed'], 10, 2);
@@ -77,6 +80,11 @@ class OMGF_Admin
     public function add_notice()
     {
         OMGF_Admin_Notice::print_notice();
+    }
+
+    private function do_advanced_settings()
+    {
+        return new OMGF_Admin_Settings_Advanced();
     }
 
     /**

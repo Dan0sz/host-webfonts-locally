@@ -26,13 +26,13 @@ class OMGF_Admin_Settings extends OMGF_Admin
     /**
      * Option Values
      */
-    const OMGF_FONT_DISPLAY_OPTIONS           = array(
-        'Auto (default)' => 'auto',
-        'Block'          => 'block',
-        'Swap'           => 'swap',
-        'Fallback'       => 'fallback',
-        'Optional'       => 'optional'
-    );
+    const OMGF_FONT_DISPLAY_OPTIONS           = [
+        'swap'     => 'Swap (recommended)',
+        'auto'     => 'Auto',
+        'block'    => 'Block',
+        'fallback' => 'Fallback',
+        'optional' => 'Optional'
+    ];
 
     /**
      * Generate Stylesheet
@@ -53,7 +53,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
     const OMGF_ADV_SETTING_REMOVE_VERSION      = 'omgf_remove_version';
     const OMGF_ADV_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
     const OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS = 'omgf_remove_gfonts';
-    const OMGF_ADV_SETTING_ENABLE_PRELOAD      = 'omgf_preload';
     const OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
     const OMGF_ADV_SETTING_UNINSTALL           = 'omgf_uninstall';
     const OMGF_ADV_SETTING_ENQUEUE_ORDER       = 'omgf_enqueue_order';
@@ -125,7 +124,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
         }
         ?>
         <div class="wrap">
-            <h1><?php _e('OMGF | Optimize My Google Fonts', 'host-webfonts-local'); ?></h1>
+            <h1><?= apply_filters('omgf_settings_page_title', __('OMGF | Optimize My Google Fonts', 'host-webfonts-local')); ?></h1>
 
             <p>
                 <?= get_plugin_data(OMGF_PLUGIN_FILE)['Description']; ?>
@@ -255,7 +254,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
             settings_fields(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
             do_settings_sections(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
 
-            $this->get_template('advanced-settings');
+            do_action('omgf_before_settings_form_settings');
+
+            echo apply_filters('omgf_' . str_replace('-', '_', $this->active_tab) . '_content', '');
 
             do_action('omgf_after_settings_form_settings');
 

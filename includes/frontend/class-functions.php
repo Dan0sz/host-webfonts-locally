@@ -51,10 +51,6 @@ class OMGF_Frontend_Functions
             add_action('wp_print_styles', array($this, 'auto_detect_fonts'), PHP_INT_MAX - 10000);
         }
 
-        if (!OMGF_WEB_FONT_LOADER) {
-            add_action('init', array($this, 'is_preload_enabled'));
-        }
-
         $this->db = new OMGF_DB();
         // Needs to be loaded before stylesheet.
         add_action('wp_enqueue_scripts', array($this, 'preload_fonts'), 0);
@@ -166,40 +162,6 @@ class OMGF_Frontend_Functions
     public function get_template($name)
     {
         include OMGF_PLUGIN_DIR . 'templates/frontend-' . $name . '.phtml';
-    }
-
-    /**
-     * Check if the Preload option is enabled.
-     */
-    public function is_preload_enabled()
-    {
-        if (!$this->do_optimize) {
-            return;
-        }
-
-        if (OMGF_PRELOAD == 'on') {
-            // @formatter:off
-            add_action('wp_enqueue_scripts', array($this, 'add_stylesheet_preload'), 0);
-            // @formatter:on
-        }
-    }
-
-    /**
-     * Prioritize the loading of fonts by adding a resource hint to the document head.
-     *
-     * Does not work with Web Font Loader enabled.
-     */
-    public function add_stylesheet_preload()
-    {
-        global $wp_styles;
-
-        $style = isset($wp_styles->registered[self::OMGF_STYLE_HANDLE]) ? $wp_styles->registered[self::OMGF_STYLE_HANDLE] : null;
-
-        /** Do not add 'preload' if Minification plugins are enabled. */
-        if ($style) {
-            $source = $style->src . ($style->ver ? "?ver={$style->ver}" : "");
-            echo "<link rel='preload' href='{$source}' as='style' crossorigin />\n";
-        }
     }
 
     /**
