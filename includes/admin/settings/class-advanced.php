@@ -73,10 +73,10 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
     public function do_remove_google_fonts()
     {
         $this->do_checkbox(
-            __('Remove Google Fonts', $this->plugin_text_domain),
+            __('Auto Remove', $this->plugin_text_domain),
             OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS,
             OMGF_REMOVE_GFONTS,
-            sprintf(__('Remove any externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work, your theme and/or plugin(s) are using unconventional methods or Web Font Loader to load Google Fonts. <a href="%s" target="_blank">Upgrade to OMGF Pro</a> to automatically remove Google Fonts incl. resource hints (e.g. <code>dns-prefetch</code>, <code>preconnect</code> and <code>preload</code>).', $this->plugin_text_domain), 'https://woosh.dev/wordpress-plugins/host-google-fonts-pro/' . $this->utmTags)
+            sprintf(__('Remove any requests to externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work, your theme and/or plugin(s) are using unconventional methods or Web Font Loader to load Google Fonts. <a href="%s" target="_blank">Upgrade to OMGF Pro</a> to automatically remove Google Fonts incl. resource hints (e.g. <code>dns-prefetch</code>, <code>preconnect</code> and <code>preload</code>).', $this->plugin_text_domain), 'https://woosh.dev/wordpress-plugins/host-google-fonts-pro/' . $this->utmTags)
         );
     }
 
