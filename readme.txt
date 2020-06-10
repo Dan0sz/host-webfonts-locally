@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.4
-Stable tag: 3.6.2
+Stable tag: 3.7.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -111,6 +111,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.7.0 =
+* OMGF settings screen is now easily extendable: added filters, actions, etc.
+* Overall performance improvements and reduced code footprint.
 
 = 3.6.2 =
 * Added filter so Auto Remove can be disabled by other plugins (OMGF Pro, in this case.)
