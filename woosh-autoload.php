@@ -42,10 +42,12 @@ class Woosh_Autoloader
         $this->file = '';
 
         if (count($path) == 1) {
-            $this->file = 'class-' . strtolower(str_replace('_', '-', $this->class)) . '.php';
-        } elseif (count($path) == 2) {
-            array_shift($path);
-            $this->file = 'class-' . strtolower($path[0]) . '.php';
+            if (ctype_upper($path[0])) {
+                $this->file = 'class-' . strtolower(str_replace('_', '-', $this->class)) . '.php';
+            } else {
+                $parts = preg_split('/(?=[A-Z])/', lcfirst($path[0]));
+                $this->file = 'class-' . strtolower(implode('-', $parts)) . '.php';
+            }
         } else {
             array_shift($path);
             end($path);
@@ -56,7 +58,13 @@ class Woosh_Autoloader
                 $i++;
             }
 
-            $pieces = preg_split('/(?=[A-Z])/', lcfirst($path[$i]));
+            // If entire part of path is written uppercase, we don't want to split.
+            if (ctype_upper($path[$i])) {
+                $pieces[] = $path[$i];
+                // Words like OmgfPro or SuperStealth should be split up.
+            } else {
+                $pieces = preg_split('/(?=[A-Z])/', lcfirst($path[$i]));
+            }
 
             $this->file .= 'class-' . strtolower(implode('-', $pieces)) . '.php';
         }
