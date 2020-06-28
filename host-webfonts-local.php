@@ -38,29 +38,13 @@ function omgf_autoload($class)
         return;
     }
 
-    $filename = '';
-
-    if (count($path) == 1) {
-        $filename = 'class-' . strtolower(str_replace('_', '-', $class)) . '.php';
-    } elseif (count($path) == 2) {
-        array_shift($path);
-        $filename = 'class-' . strtolower($path[0]) . '.php';
-    } else {
-        array_shift($path);
-        end($path);
-        $i = 0;
-
-        while ($i < key($path)) {
-            $filename .= strtolower($path[$i]) . '/';
-            $i++;
-        }
-
-        $pieces = preg_split('/(?=[A-Z])/', lcfirst($path[$i]));
-
-        $filename .= 'class-' . strtolower(implode('-', $pieces)) . '.php';
+    if (!class_exists('Woosh_Autoloader')) {
+        require_once(OMGF_PLUGIN_DIR . 'woosh-autoload.php');
     }
 
-    return include OMGF_PLUGIN_DIR . 'includes/' . $filename;
+    $autoload = new Woosh_Autoloader($class);
+
+    return include OMGF_PLUGIN_DIR . 'includes/' . $autoload->load();
 }
 
 spl_autoload_register('omgf_autoload');
