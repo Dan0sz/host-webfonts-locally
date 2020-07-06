@@ -29,6 +29,7 @@ class OMGF_Frontend_Functions
     /** @var string */
     private $stylesheet_url;
 
+    /** @var bool $do_optimize */
     private $do_optimize;
 
     /**
@@ -41,19 +42,19 @@ class OMGF_Frontend_Functions
         $this->do_optimize     = $this->maybe_optimize_fonts();
 
         // @formatter:off
-        add_action('wp_print_styles', array($this, 'is_remove_google_fonts_enabled'), PHP_INT_MAX - 1000);
+        add_action('wp_print_styles', [$this, 'is_remove_google_fonts_enabled'], PHP_INT_MAX - 1000);
 
         if (file_exists($this->stylesheet_file)) {
-            add_action('wp_enqueue_scripts', array($this, 'enqueue_stylesheet'), OMGF_ENQUEUE_ORDER);
+            add_action('wp_enqueue_scripts', [$this, 'enqueue_stylesheet'], OMGF_ENQUEUE_ORDER);
         }
 
         if (OMGF_AUTO_DETECT_ENABLED) {
-            add_action('wp_print_styles', array($this, 'auto_detect_fonts'), PHP_INT_MAX - 10000);
+            add_action('wp_print_styles', [$this, 'auto_detect_fonts'], PHP_INT_MAX - 10000);
         }
 
         $this->db = new OMGF_DB();
         // Needs to be loaded before stylesheet.
-        add_action('wp_enqueue_scripts', array($this, 'preload_fonts'), 0);
+        add_action('wp_head', [$this, 'preload_fonts'], 1);
         // @formatter:on
     }
 
@@ -68,7 +69,7 @@ class OMGF_Frontend_Functions
 
         if (OMGF_REMOVE_GFONTS == 'on' && !is_admin()) {
             // @formatter:off
-            add_action('wp_print_styles', array($this, 'remove_google_fonts'), PHP_INT_MAX - 500);
+            add_action('wp_print_styles', [$this, 'remove_google_fonts'], PHP_INT_MAX - 500);
             // Theme: Enfold
             add_filter('avf_output_google_webfonts_script', function() { return false; });
             // @formatter:on
