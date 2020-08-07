@@ -22,6 +22,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
      * Settings Fields
      */
     const OMGF_SETTINGS_FIELD_ADVANCED        = 'omgf-advanced-settings';
+    const OMGF_SETTINGS_FIELD_EXTENSIONS      = 'omgf-extensions-settings';
 
     /**
      * Option Values
@@ -65,6 +66,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
     /** @var string $page */
     private $page;
 
+    /** @var string $plugin_text_domain */
+    private $plugin_text_domain = 'host-webfonts-local';
+
     /**
      * OMGF_Admin_Settings constructor.
      */
@@ -86,10 +90,12 @@ class OMGF_Admin_Settings extends OMGF_Admin
         // Tabs
         add_action('omgf_settings_tab', [$this, 'generate_stylesheet_tab'], 1);
         add_action('omgf_settings_tab', [$this, 'advanced_settings_tab'], 2);
+        add_action('omgf_settings_tab', [$this, 'extensions_settings_tab'], 3);
 
         // Content
         add_action('omgf_settings_content', [$this, 'generate_stylesheet_content'], 1);
         add_action('omgf_settings_content', [$this, 'advanced_settings_content'], 2);
+        add_action('omgf_settings_content', [$this, 'extensions_settings_content'], 3);
         // @formatter:on
     }
 
@@ -120,11 +126,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
     public function create_settings_page()
     {
         if (!current_user_can('manage_options')) {
-            wp_die(__("You're not cool enough to access this page.", 'host-webfonts-local'));
+            wp_die(__("You're not cool enough to access this page.", $this->plugin_text_domain));
         }
         ?>
         <div class="wrap">
-            <h1><?= apply_filters('omgf_settings_page_title', __('OMGF | Optimize My Google Fonts', 'host-webfonts-local')); ?></h1>
+            <h1><?= apply_filters('omgf_settings_page_title', __('OMGF | Optimize My Google Fonts', $this->plugin_text_domain)); ?></h1>
 
             <p>
                 <?= get_plugin_data(OMGF_PLUGIN_FILE)['Description']; ?>
@@ -171,13 +177,18 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function get_settings()
     {
-        $reflection     = new ReflectionClass($this);
-        $constants      = $reflection->getConstants();
+        $reflection = new ReflectionClass($this);
+        $constants  = $reflection->getConstants();
+        $needle     = 'OMGF_ADV_SETTING';
+
+        if ($this->active_tab == self::OMGF_SETTINGS_FIELD_EXTENSIONS) {
+            $needle = 'OMGF_EXT_SETTING';
+        }
 
         return array_filter(
             $constants,
-            function ($key) {
-                return strpos($key, 'OMGF_ADV_SETTING') !== false;
+            function ($key) use ($needle) {
+                return strpos($key, $needle) !== false;
             },
             ARRAY_FILTER_USE_KEY
         );
@@ -188,7 +199,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function generate_stylesheet_tab()
     {
-        $this->generate_tab('generate-stylesheet', 'dashicons-admin-appearance', __('Generate Stylesheet', 'host-webfonts-local'));
+        $this->generate_tab('generate-stylesheet', 'dashicons-admin-appearance', __('Generate Stylesheet', $this->plugin_text_domain));
     }
 
     /**
@@ -196,7 +207,15 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function advanced_settings_tab()
     {
-        $this->generate_tab('advanced-settings', 'dashicons-admin-settings', __('Advanced Settings', 'host-webfonts-local'));
+        $this->generate_tab('advanced-settings', 'dashicons-admin-settings', __('Advanced Settings', $this->plugin_text_domain));
+    }
+
+    /**
+     * Add Extensions tab to Settings Screen.
+     */
+    public function extensions_settings_tab()
+    {
+        $this->generate_tab('extensions-settings', 'dashicons-admin-plugins', __('Extensions', $this->plugin_text_domain));
     }
 
     /**
@@ -241,22 +260,39 @@ class OMGF_Admin_Settings extends OMGF_Admin
     }
 
     /**
-     * Render Advanced Settings
+     * Render Advanced Settings content
      */
     public function advanced_settings_content()
     {
-        if ($this->active_tab != 'advanced-settings') {
+        $this->do_settings_content('advanced-settings', self::OMGF_SETTINGS_FIELD_ADVANCED);
+    }
+
+    /**
+     * Render Extensions content
+     */
+    public function extensions_settings_content()
+    {
+        $this->do_settings_content('extensions-settings', self::OMGF_SETTINGS_FIELD_EXTENSIONS);
+    }
+
+    /**
+     * @param $id
+     * @param $field
+     */
+    private function do_settings_content($id, $field)
+    {
+        if ($this->active_tab != $id) {
             return;
         }
         ?>
-        <form id="omgf-advanced-settings-form" name="omgf-settings-form" method="post" action="options.php">
+        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="options.php">
             <?php
-            settings_fields(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
-            do_settings_sections(OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED);
+            settings_fields($field);
+            do_settings_sections($field);
 
             do_action('omgf_before_settings_form_settings');
 
-            echo apply_filters('omgf_' . str_replace('-', '_', $this->active_tab) . '_content', '');
+            echo apply_filters('omgf_' . str_replace('-', '_', $id) . '_content', '');
 
             do_action('omgf_after_settings_form_settings');
 
