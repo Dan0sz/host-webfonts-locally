@@ -33,6 +33,8 @@ jQuery(document).ready(function ($) {
         font_style_list: [],
 
         // Selectors
+        $search_box: $('#omgf-search'),
+        $search_button: $('#omgf-search-subsets'),
         $loader: $('.omgf-loading'),
         $font_families: $('.omgf-subset-font-family'),
         $subsets: $('.omgf-subset'),
@@ -50,6 +52,14 @@ jQuery(document).ready(function ($) {
             // Manage queues
             this.$subsets.on('click', this.manage_subset_queue);
             this.$manage_font_styles.on('click', this.manage_font_styles_queues);
+
+            // Pressing enter in the search box redirects to WordPress' General Options? Let's NOT.
+            this.$search_box.on('keyup, keydown', function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    omgf_admin.$search_button.click();
+                }
+            });
 
             // Buttons
             $('#omgf-search-subsets').on('click', this.click_search);
