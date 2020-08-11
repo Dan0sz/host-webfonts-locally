@@ -111,7 +111,7 @@ class OMGF_Frontend_Functions
             $registered, function ($contents) use ($fonts) {
             return !empty(array_intersect(array_keys($fonts), $contents->deps))
                    && $contents->handle !== 'wp-block-editor';
-        }
+            }
         );
 
         foreach ($fonts as $font) {
@@ -120,8 +120,12 @@ class OMGF_Frontend_Functions
         }
 
         foreach ($dependencies as $dependency) {
-            wp_register_style('omgf-dep-' . $dependency->handle, $dependency->src);
-            wp_enqueue_style('omgf-dep-' . $dependency->handle, $dependency->src);
+            $deps = array_diff($dependency->deps, array_keys($fonts));
+            wp_deregister_style($dependency->handle);
+            wp_dequeue_style($dependency->handle);
+
+            wp_register_style($dependency->handle, $dependency->src, $deps + [ 'omgf-fonts' ]);
+            wp_enqueue_style($dependency->handle, $dependency->src, $deps + [ 'omgf-fonts' ]);
         }
     }
 
