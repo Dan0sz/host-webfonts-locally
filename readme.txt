@@ -112,11 +112,18 @@ N/A
 
 == Changelog ==
 
-= 3.7.0 =
+= 3.8.0 =
+* Improved re-enqueueing of stylesheets, if a stylesheet depends on the removed Google Font stylesheet.
+* Fixed bug where pressing 'enter' would open WordPress' General Settings (Weird!)
+* Developers can now easily add functionalities to OMGF by using the Extensions tab.
+* If OMGF is used along with other WoOSH! plugins (e.g. CAOS) the same class loader is used, significantly increasing performance.
+* Added dates to changelog :)
+
+= 3.7.0 | June 10th, 2020 =
 * OMGF settings screen is now easily extendable: added filters, actions, etc.
 * Overall performance improvements and reduced code footprint.
 
-= 3.6.2 =
+= 3.6.2 | June 7th, 2020 =
 * Added filter so Auto Remove can be disabled by other plugins (OMGF Pro, in this case.)
 
 = 3.6.1 =
@@ -125,17 +132,17 @@ N/A
 * Removed the code to detect incompatible themes/plugins, because an upgrade to OMGF Pro will solve all of your problems :)
   * *OMGF Pro is able to detect, replace and remove all Google Fonts (incl. WebFont Loader) regardless of how they are added by the theme or plugin, incl. dns prefetch, preconnect and preload resource hint headers.*
 
-= 3.6.0 =
+= 3.6.0 | May 30th, 2020 =
 * OMGF now supports add-ons to extend its Auto Detect and Auto Removal feature.
 * From now on, a notice containing a link to the required add-on will be thrown for known themes and frameworks which follow unconventional methods to include Google Fonts.
   * This list now contains Thrive Themes and Redux Framework, but other themes (I'm researching Avada) will be added in the near future.
 * Generated stylesheets and downloaded fonts are now be saved to the 'uploads/omgf' folder by default.
 
-= 3.5.0 =
+= 3.5.0 | May 24th, 2020 =
 * Added Force SSL option, to force the usage of SSL while generating the stylesheet.
 * Added WP Rocket to list of Evil Plugins, because it empties the entire wp-content/cache folder instead of just its own files.
 
-= 3.4.5 =
+= 3.4.5 | May 21st, 2020 =
 * Preload path should include absolute url, instead of relative, to prevent issues with CDN usage.
 
 = 3.4.4 =
@@ -157,7 +164,7 @@ N/A
 * 'Optimize fonts for logged in users?' should be on by default, cause it causes to much confusion.
 * Fixed bug where Auto Detect would fail if no font styles were specified in the Google Font URL.
 
-= 3.4.0 =
+= 3.4.0 | May 4th, 2020  =
 * Added 'Downloaded' indicator in 'Generate Stylesheet' tab.
 * Added 'Also optimize fonts for logged in users?' option. This means that all users with editor
   capabilities will (from now on) only view the optimizations when this option is checked, or when
@@ -184,7 +191,7 @@ N/A
 * Replaced separate apply buttons with one apply button, which handles the entire queue for removal as well as preload at once.
 * Known bug: 'Apply' button isn't clickable when sticky. Available workaround: scroll to the bottom of the list and click 'Apply'.
 
-= 3.3.0 =
+= 3.3.0 | March 25th, 2020 =
 * Introduced a queueing system for font-styles search, preload and remove for easier management. The 'Apply' buttons now process all your changes at once.
 * The 'Apply' buttons are sticky, so they're visible for long lists.
 
@@ -192,7 +199,7 @@ N/A
 * Fixes in responsiveness of admin screen.
 * Fixed links in Quick Start and Support block.
 
-= 3.2.0 =
+= 3.2.0 | March 24th, 2020 =
 * Fonts are now automatically updated and font files and stylesheet are automatically moved after the 'Serve fonts from...' or 'Save fonts to...' options are changed.
 * Added several reminder notices to improve UX and reduce the level of complexity.
 * Notices/warnings/errors are now grouped.
@@ -209,7 +216,7 @@ N/A
 * Fixed bug in Web Font Loader.
 * Fixed bug where sometimes stylesheet would still be enqueued, even though the file didn't exist.
 
-= 3.1.0 =
+= 3.1.0 | March 21st, 2020 =
 * OMGF can now rewrite the URI from where fonts are served using the 'Serve webfonts from...' setting. This is particularly useful when using seurity through obscurity plugins (e.g. WP Hide.)
 * Fixed bug where clicking 'save changes' would remove listed fonts and subsets.
 * Gave some settings more accurate descriptions.
@@ -230,7 +237,7 @@ N/A
 * Search now works bug free.
 * WordPress' default admin fonts no longer show up as results.
 
-= 2.5.0 =
+= 2.5.0 | January 30st, 2020 =
 Updated Welcome-panel with WoOSH!-services.
 Preload can now be used for certain fonts only (also combined with Web Font Loader).
 
