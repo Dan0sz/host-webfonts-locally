@@ -258,7 +258,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function generate_stylesheet_content()
     {
-        if ($this->active_tab != 'generate-stylesheet') {
+        if ($this->active_tab != self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET) {
             return;
         }
         ?>
