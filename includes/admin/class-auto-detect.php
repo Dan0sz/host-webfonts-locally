@@ -84,7 +84,7 @@ class OMGF_Admin_AutoDetect
         if (empty($subsets)) {
             OMGF_Admin_Notice::set_notice(__('Auto Detect completed successfully, but no Google Fonts were found.', 'host-webfonts-local'), false, 'warning');
 
-            OMGF_Admin_Notice::set_notice(sprintf(__('Your theme and/or plugins are using unconventional methods (or Web Font Loader) to load Google Fonts. <strong>Upgrade to OMGF Pro</strong> (<em>starting at € 29, -</em>) to automatically detect and replace Google Fonts for your theme and plugins. <a href="%s" target="_blank">Purchase OMGF Pro</a>.', 'host-webfonts-local'), 'https://woosh.dev/wordpress-plugins/host-google-fonts-pro'), false, 'info');
+            OMGF_Admin_Notice::set_notice(sprintf(__('Your theme and/or plugins are using unconventional methods (or Web Font Loader) to load Google Fonts. <strong>Upgrade to OMGF Pro</strong> (<em>starting at € 29, -</em>) to automatically detect and replace Google Fonts for your theme and plugins. <a href="%s" target="_blank">Purchase OMGF Pro</a>.', 'host-webfonts-local'), OMGF_Admin_Settings_Builder::WOOSH_WORDPRESS_PLUGINS_HOST_GOOGLE_FONTS_PRO), false, 'info');
         } else {
             $count_fonts   = count($subsets);
             $count_subsets = 0;

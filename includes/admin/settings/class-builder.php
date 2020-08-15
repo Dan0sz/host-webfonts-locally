@@ -18,6 +18,8 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings_Builder
 {
+    const WOOSH_WORDPRESS_PLUGINS_HOST_GOOGLE_FONTS_PRO = 'https://woosh.dev/wordpress-plugins/host-google-fonts-pro/#get-omgf-pro';
+
     /** @var string $plugin_text_domain */
     protected $plugin_text_domain = 'host-webfonts-local';
 
@@ -144,13 +146,13 @@ class OMGF_Admin_Settings_Builder
      * @param $checked
      * @param $description
      */
-    public function do_checkbox($label, $name, $checked, $description, $update_required = false)
+    public function do_checkbox($label, $name, $checked, $description, $update_required = false, $disabled = false)
     {
         ?>
         <tr>
             <th scope="row"><?= apply_filters($name . '_setting_label', $label); ?> <?= $update_required ?: ''; ?></th>
             <td>
-                <input type="checkbox" class="<?= str_replace('_' , '-' , $name); ?>" name="<?= $name; ?>"
+                <input type="checkbox" <?= $disabled ? 'disabled' : ''; ?> class="<?= str_replace('_' , '-' , $name); ?>" name="<?= $name; ?>"
                     <?= $checked == "on" ? 'checked = "checked"' : ''; ?> />
                 <p class="description">
                     <?= apply_filters($name . '_setting_description', $description); ?>
