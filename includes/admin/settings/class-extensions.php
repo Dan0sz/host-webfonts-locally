@@ -94,7 +94,7 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
     {
         $this->do_checkbox(
             __('Remove WebFont Loader (Pro)', $this->plugin_text_domain),
-            'omgf_pro_remove_inline_styles',
+            'omgf_pro_remove_webfont_loader',
             defined('OMGF_PRO_REMOVE_WEBFONT_LOADER') ? OMGF_PRO_REMOVE_WEBFONT_LOADER : false,
             sprintf(__('Remove any WebFont Loader (<code>webfont.js</code>) libraries and the corresponding configuration defining which Google Fonts to load (WebFont Config). <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::WOOSH_WORDPRESS_PLUGINS_HOST_GOOGLE_FONTS_PRO),
             false,
