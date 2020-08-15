@@ -184,6 +184,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function get_settings()
     {
+        if ($this->active_tab == self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET) {
+            return [];
+        }
+
         $reflection = new ReflectionClass($this);
         $constants  = $reflection->getConstants();
         $needle     = 'OMGF_ADV_SETTING';
