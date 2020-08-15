@@ -160,10 +160,15 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function register_settings()
     {
+        if ($this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED
+            && $this->active_tab !== self::OMGF_SETTINGS_FIELD_EXTENSIONS) {
+            $this->active_tab = self::OMGF_SETTINGS_FIELD_ADVANCED;
+        }
+
         foreach ($this->get_settings() as $constant => $value)
         {
             register_setting(
-                OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_ADVANCED,
+                $this->active_tab,
                 $value
             );
         }
