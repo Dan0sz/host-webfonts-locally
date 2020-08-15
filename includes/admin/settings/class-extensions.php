@@ -35,7 +35,7 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
         add_filter('omgf_extensions_settings_content', [$this, 'do_promo_remove_stylesheets'], 30);
         add_filter('omgf_extensions_settings_content', [$this, 'do_promo_remove_inline_styles'], 40);
         add_filter('omgf_extensions_settings_content', [$this, 'do_promo_remove_webfont_loader'], 50);
-        add_filter('omgf_extensions_settings_content', [$this, 'do_promo_remove_preconnect'], 60);
+        add_filter('omgf_extensions_settings_content', [$this, 'do_promo_remove_resource_hints'], 60);
 
         // Close
         add_filter('omgf_extensions_settings_content', [$this, 'do_after'], 100);
@@ -49,7 +49,10 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
     {
         ?>
         <p>
-
+            <?= __('Fine tune and enhance the functionality of OMGF using extensions.', $this->plugin_text_domain); ?>
+        </p>
+        <p>
+            <?= sprintf(__('For a list of available plugins, click <a target="_blank" href="%s">here</a>.', $this->plugin_text_domain), 'https://woosh.dev/wordpress-plugins/'); ?>
         </p>
         <?php
     }
@@ -102,12 +105,12 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
     /**
      *
      */
-    public function do_promo_remove_preconnect()
+    public function do_promo_remove_resource_hints()
     {
         $this->do_checkbox(
-            __('Remove Preconnects (Pro)', $this->plugin_text_domain),
-            'omgf_pro_remove_preconnect',
-            defined('OMGF_PRO_REMOVE_PRECONNECT') ? OMGF_PRO_REMOVE_PRECONNECT : false,
+            __('Remove Resource Hints (Pro)', $this->plugin_text_domain),
+            'omgf_pro_remove_resource_hints',
+            defined('OMGF_PRO_REMOVE_RESOURCE_HINTS') ? OMGF_PRO_REMOVE_RESOURCE_HINTS : false,
             sprintf(__('Remove all <code>link</code> elements with a <code>rel</code> attribute value of <code>dns-prefetch</code>, <code>preload</code> or <code>preconnect</code>. <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::WOOSH_WORDPRESS_PLUGINS_HOST_GOOGLE_FONTS_PRO),
             false,
             true
