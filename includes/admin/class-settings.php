@@ -296,7 +296,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
             return;
         }
         ?>
-        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="options.php">
+        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="options.php?tab=<?= $this->active_tab; ?>">
             <?php
             settings_fields($field);
             do_settings_sections($field);
