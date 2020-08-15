@@ -76,14 +76,14 @@ class OMGF_Admin_Settings extends OMGF_Admin
     {
         parent::__construct();
 
-        $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'generate-stylesheet';
+        $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'omgf-generate-stylesheet';
         $this->page       = isset($_GET['page']) ? $_GET['page'] : '';
 
         // @formatter:off
         add_action('admin_menu', [$this, 'create_menu']);
         add_filter('plugin_action_links_' . plugin_basename(OMGF_PLUGIN_FILE), [$this, 'create_settings_link']);
 
-        if (!$this->page == 'optimize-webfonts') {
+        if ($this->page !== 'optimize-webfonts') {
             return;
         }
 
