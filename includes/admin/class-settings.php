@@ -21,9 +21,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
     /**
      * Settings Fields
      */
-    const OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET = 'generate-stylesheet';
-    const OMGF_SETTINGS_FIELD_ADVANCED            = 'advanced-settings';
-    const OMGF_SETTINGS_FIELD_EXTENSIONS          = 'extensions-settings';
+    const OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET = 'omgf-generate-stylesheet';
+    const OMGF_SETTINGS_FIELD_ADVANCED            = 'omgf-advanced-settings';
+    const OMGF_SETTINGS_FIELD_EXTENSIONS          = 'omgf-extensions-settings';
 
     /**
      * Option Values
@@ -35,15 +35,16 @@ class OMGF_Admin_Settings extends OMGF_Admin
         'fallback' => 'Fallback',
         'optional' => 'Optional'
     ];
+
     /**
      * Generate Stylesheet
      */
     const OMGF_SETTING_DB_VERSION              = 'omgf_db_version';
     const OMGF_SETTING_AUTO_DETECTION_ENABLED  = 'omgf_auto_detection_enabled';
     const OMGF_SETTING_DETECTED_FONTS          = 'omgf_detected_fonts';
-
     const OMGF_SETTING_SUBSETS                 = 'omgf_subsets';
     const OMGF_SETTING_FONTS                   = 'omgf_fonts';
+
     /**
      * Advanced Settings
      */
@@ -270,7 +271,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function advanced_settings_content()
     {
-        $this->do_settings_content('advanced-settings', self::OMGF_SETTINGS_FIELD_ADVANCED);
+        $this->do_settings_content(self::OMGF_SETTINGS_FIELD_ADVANCED);
     }
 
     /**
@@ -278,16 +279,16 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function extensions_settings_content()
     {
-        $this->do_settings_content('extensions-settings', self::OMGF_SETTINGS_FIELD_EXTENSIONS);
+        $this->do_settings_content(self::OMGF_SETTINGS_FIELD_EXTENSIONS);
     }
 
     /**
      * @param $id
      * @param $field
      */
-    private function do_settings_content($id, $field)
+    private function do_settings_content($field)
     {
-        if ($this->active_tab != $id) {
+        if ($this->active_tab != $field) {
             return;
         }
         ?>
@@ -298,7 +299,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
             do_action('omgf_before_settings_form_settings');
 
-            echo apply_filters('omgf_' . str_replace('-', '_', $id) . '_content', '');
+            echo apply_filters(str_replace('-', '_', $field) . '_content', '');
 
             do_action('omgf_after_settings_form_settings');
 
