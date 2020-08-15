@@ -21,8 +21,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
     /**
      * Settings Fields
      */
-    const OMGF_SETTINGS_FIELD_ADVANCED        = 'omgf-advanced-settings';
-    const OMGF_SETTINGS_FIELD_EXTENSIONS      = 'omgf-extensions-settings';
+    const OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET = 'generate-stylesheet';
+    const OMGF_SETTINGS_FIELD_ADVANCED            = 'advanced-settings';
+    const OMGF_SETTINGS_FIELD_EXTENSIONS          = 'extensions-settings';
 
     /**
      * Option Values
@@ -34,16 +35,15 @@ class OMGF_Admin_Settings extends OMGF_Admin
         'fallback' => 'Fallback',
         'optional' => 'Optional'
     ];
-
     /**
      * Generate Stylesheet
      */
     const OMGF_SETTING_DB_VERSION              = 'omgf_db_version';
     const OMGF_SETTING_AUTO_DETECTION_ENABLED  = 'omgf_auto_detection_enabled';
     const OMGF_SETTING_DETECTED_FONTS          = 'omgf_detected_fonts';
+
     const OMGF_SETTING_SUBSETS                 = 'omgf_subsets';
     const OMGF_SETTING_FONTS                   = 'omgf_fonts';
-
     /**
      * Advanced Settings
      */
@@ -76,7 +76,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
     {
         parent::__construct();
 
-        $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'omgf-generate-stylesheet';
+        $this->active_tab = isset($_GET['tab']) ? $_GET['tab'] : self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET;
         $this->page       = isset($_GET['page']) ? $_GET['page'] : '';
 
         // @formatter:off
@@ -160,9 +160,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function register_settings()
     {
-        if ($this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED
+        if ($this->active_tab !== self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET
+            && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED
             && $this->active_tab !== self::OMGF_SETTINGS_FIELD_EXTENSIONS) {
-            $this->active_tab = self::OMGF_SETTINGS_FIELD_ADVANCED;
+            $this->active_tab = self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET;
         }
 
         foreach ($this->get_settings() as $constant => $value)
@@ -204,7 +205,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function generate_stylesheet_tab()
     {
-        $this->generate_tab('generate-stylesheet', 'dashicons-admin-appearance', __('Generate Stylesheet', $this->plugin_text_domain));
+        $this->generate_tab(self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET, 'dashicons-admin-appearance', __('Generate Stylesheet', $this->plugin_text_domain));
     }
 
     /**
@@ -212,7 +213,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function advanced_settings_tab()
     {
-        $this->generate_tab('advanced-settings', 'dashicons-admin-settings', __('Advanced Settings', $this->plugin_text_domain));
+        $this->generate_tab(self::OMGF_SETTINGS_FIELD_ADVANCED, 'dashicons-admin-settings', __('Advanced Settings', $this->plugin_text_domain));
     }
 
     /**
@@ -220,7 +221,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
      */
     public function extensions_settings_tab()
     {
-        $this->generate_tab('extensions-settings', 'dashicons-admin-plugins', __('Extensions', $this->plugin_text_domain));
+        $this->generate_tab(self::OMGF_SETTINGS_FIELD_EXTENSIONS, 'dashicons-admin-plugins', __('Extensions', $this->plugin_text_domain));
     }
 
     /**
