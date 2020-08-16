@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 3.7.0
+Stable tag: 3.8.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -112,11 +112,13 @@ N/A
 
 == Changelog ==
 
-= 3.8.0 =
+= 3.8.0 | August 16th, 2020 =
+* Tested with WP 5.5.
+* Cleaned up the sidebar.
 * Improved re-enqueueing of stylesheets, if a stylesheet depends on the removed Google Font stylesheet.
-* Fixed bug where pressing 'enter' would open WordPress' General Settings (Weird!)
-* Developers can now easily add functionalities to OMGF by using the Extensions tab.
-* If OMGF is used along with other WoOSH! plugins (e.g. CAOS) the same class loader is used, significantly increasing performance.
+* Pressing Enter in the Search Bar triggers search now.
+* Developers can now easily add functionalities to OMGF's brand new Extensions tab, using several new filters and actions.
+* If OMGF is used along with other WoOSH! plugins (e.g. CAOS, OMGF Pro, etc.) the same class loader is used, significantly increasing performance.
 * Added dates to changelog :)
 
 = 3.7.0 | June 10th, 2020 =
