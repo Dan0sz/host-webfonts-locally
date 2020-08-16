@@ -110,10 +110,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
             'Optimize Google Fonts',
             'manage_options',
             'optimize-webfonts',
-            array(
-                $this,
-                'create_settings_page'
-            )
+            [$this, 'create_settings_page']
         );
 
         // @formatter:off
@@ -189,7 +186,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
         }
 
         $reflection = new ReflectionClass($this);
-        $constants  = $reflection->getConstants();
+        $constants  = apply_filters('omgf_settings_constants', $reflection->getConstants());
         $needle     = 'OMGF_ADV_SETTING';
 
         if ($this->active_tab == self::OMGF_SETTINGS_FIELD_EXTENSIONS) {
