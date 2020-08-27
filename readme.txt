@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 3.8.1
+Stable tag: 3.8.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -111,6 +111,9 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 3.8.2 =
+* Fixed notice: invalid operand type.
 
 = 3.8.1 | August 27th, 2020 =
 * Bugfix: if Auto Remove was enabled, but no stylesheet was yet generated, this would break some themes' stylesheet.
