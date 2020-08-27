@@ -122,7 +122,7 @@ class OMGF_Frontend_Functions
              * If Remove Google Fonts is enabled, but no stylesheet is generated, there's no need to add OMGF's stylesheet
              * as a dependency.
              */
-            $deps = array_diff($dependency->deps, array_keys($fonts)) + ($registered['omgf-fonts'] ?? []);
+            $deps = array_diff($dependency->deps, array_keys($fonts)) + (isset($registered['omgf-fonts']) ? ['omgf-fonts'] : []);
             wp_deregister_style($dependency->handle);
             wp_dequeue_style($dependency->handle);
 
