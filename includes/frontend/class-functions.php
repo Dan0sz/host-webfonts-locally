@@ -103,15 +103,13 @@ class OMGF_Frontend_Functions
 
         global $wp_styles;
 
-        $registered = $wp_styles->registered;
-
-        $fonts = $this->detect_registered_google_fonts($registered);
-
+        $registered   = $wp_styles->registered;
+        $fonts        = $this->detect_registered_google_fonts($registered);
         $dependencies = array_filter(
             $registered, function ($contents) use ($fonts) {
             return !empty(array_intersect(array_keys($fonts), $contents->deps))
                    && $contents->handle !== 'wp-block-editor';
-            }
+        }
         );
 
         foreach ($fonts as $font) {
@@ -120,12 +118,16 @@ class OMGF_Frontend_Functions
         }
 
         foreach ($dependencies as $dependency) {
-            $deps = array_diff($dependency->deps, array_keys($fonts));
+            /**
+             * If Remove Google Fonts is enabled, but no stylesheet is generated, there's no need to add OMGF's stylesheet
+             * as a dependency.
+             */
+            $deps = array_diff($dependency->deps, array_keys($fonts)) + ($registered['omgf-fonts'] ?? []);
             wp_deregister_style($dependency->handle);
             wp_dequeue_style($dependency->handle);
 
-            wp_register_style($dependency->handle, $dependency->src, $deps + [ 'omgf-fonts' ]);
-            wp_enqueue_style($dependency->handle, $dependency->src, $deps + [ 'omgf-fonts' ]);
+            wp_register_style($dependency->handle, $dependency->src, $deps);
+            wp_enqueue_style($dependency->handle, $dependency->src, $deps);
         }
     }
 
