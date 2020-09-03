@@ -12,7 +12,7 @@
  * @license  : GPL2v2 or later
  * * * * * * * * * * * * * * * * * * * * * */
 
-class Woosh_Autoloader
+class FFWP_Autoloader
 {
     /** @var string $class */
     private $class;
@@ -21,7 +21,7 @@ class Woosh_Autoloader
     private $file;
 
     /**
-     * Woosh_Autoloader constructor.
+     * FFWP_Autoloader constructor.
      *
      * @param $class
      */
