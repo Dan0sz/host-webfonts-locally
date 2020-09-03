@@ -52,7 +52,7 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
             <?= __('Fine tune and enhance the functionality of OMGF using extensions.', $this->plugin_text_domain); ?>
         </p>
         <p>
-            <?= sprintf(__('For a list of available plugins, click <a target="_blank" href="%s">here</a>.', $this->plugin_text_domain), 'https://woosh.dev/wordpress-plugins/'); ?>
+            <?= sprintf(__('For a list of available plugins, click <a target="_blank" href="%s">here</a>.', $this->plugin_text_domain), 'https://ffwp.dev/wordpress-plugins/'); ?>
         </p>
         <?php
     }

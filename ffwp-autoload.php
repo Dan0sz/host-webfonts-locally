@@ -7,7 +7,7 @@
  *  |__/|__/\____/\____//____/_/ /_(_)
  *
  * @author   : Daan van den Bergh
- * @url      : https://woosh.dev/wordpress-plugins/
+ * @url      : https://ffwp.dev/wordpress-plugins/
  * @copyright: (c) 2020 Daan van den Bergh
  * @license  : GPL2v2 or later
  * * * * * * * * * * * * * * * * * * * * * */
