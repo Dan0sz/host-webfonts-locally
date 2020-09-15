@@ -112,7 +112,7 @@ N/A
 
 == Changelog ==
 
-= 3.8.3 =
+= 3.8.3 | September 15th, 2020 =
 * Performance improvements for Class autoloader.
 
 = 3.8.2 =
