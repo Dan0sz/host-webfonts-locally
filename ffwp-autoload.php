@@ -23,8 +23,6 @@ class FFWP_Autoloader
         $class
     ) {
         $this->class = $class;
-
-        $this->load();
     }
 
     /**
@@ -32,37 +30,47 @@ class FFWP_Autoloader
      */
     public function load()
     {
-        $path = explode('_', $this->class);
+        $path       = explode('_', $this->class);
         $this->file = '';
+        $i          = 0;
 
-        if (count($path) == 1) {
-            if (ctype_upper($path[0])) {
-                $this->file = 'class-' . strtolower(str_replace('_', '-', $this->class)) . '.php';
-            } else {
-                $parts = preg_split('/(?=[A-Z])/', lcfirst($path[0]));
-                $this->file = 'class-' . strtolower(implode('-', $parts)) . '.php';
-            }
-        } else {
+        if (count($path) > 1) {
             array_shift($path);
-            end($path);
-            $i = 0;
+        }
+        end($path);
 
-            while ($i < key($path)) {
-                $this->file .= strtolower($path[$i]) . '/';
-                $i++;
-            }
+        /**
+         * Build directory path.
+         */
+        while ($i < key($path)) {
+            $this->build($path[$i], '', '/');
 
-            // If entire part of path is written uppercase, we don't want to split.
-            if (ctype_upper($path[$i])) {
-                $pieces[] = $path[$i];
-                // Words like OmgfPro or SuperStealth should be split up.
-            } else {
-                $pieces = preg_split('/(?=[A-Z])/', lcfirst($path[$i]));
-            }
-
-            $this->file .= 'class-' . strtolower(implode('-', $pieces)) . '.php';
+            $i++;
         }
 
+        /**
+         * Build filename.
+         */
+        $this->build($path[$i], 'class', '.php');
+
         return $this->file;
+    }
+
+    /**
+     * Checks if $path is written uppercase entirely, otherwise it'll split $path up and build a string glued with
+     * dashes.
+     *
+     * @param        $path
+     * @param string $prefix
+     * @param string $suffix
+     */
+    private function build($path, $prefix = '', $suffix = '/')
+    {
+        if (ctype_upper($path)) {
+            $this->file .= ($prefix ? $prefix . '-' : '') . strtolower($path) . $suffix;
+        } else {
+            $parts = preg_split('/(?=[A-Z])/', lcfirst($path));
+            $this->file .= ($prefix ? $prefix . '-' : '') . strtolower(implode('-', $parts)) . $suffix;
+        }
     }
 }
