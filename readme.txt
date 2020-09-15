@@ -23,7 +23,7 @@ That's it. You're done!
 
 This will *decrease your pageload times*, *leverage browser cache*, *minimize DNS requests* and effectively bring you a perfect score on *Pagespeed Insights* and *Pingdom*, without taking toll on the performance of your webserver.
 
-Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://woosh.dev/wordpress-services/omgf-expert-configuration/).
+Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffwp.dev/wordpress-services/omgf-expert-configuration/).
 
 == Features ==
 - *Automatically detect* which Google Fonts your theme is using or,
@@ -63,7 +63,7 @@ This could be for several reasons:
 
 = Does this plugin remove resource hints, e.g. preconnect, preload or dns-prefetch? =
 
-No, to automatically remove resource hints pointing to fonts.googleapis.com or fonts.gstatic.com, [upgrade to OMGF Pro](https://woosh.dev/wordpress-plugins/host-google-fonts-pro/).
+No, to automatically remove resource hints pointing to fonts.googleapis.com or fonts.gstatic.com, [upgrade to OMGF Pro](https://ffwp.dev/wordpress-plugins/host-google-fonts-pro/).
 
 = Can I serve the fonts from my CDN? =
 
@@ -79,7 +79,7 @@ This must be, because you're still loading the externally hosted Google Fonts, b
 
 = I have 'Remove Google Fonts' enabled, but the fonts from fonts.gstatic.com|fonts.googleapis.com are still loaded. What's going on? =
 
-The option in OMGF removes any fonts that are loaded in the conventional way. However, if it doesn't work for you you're theme is either using an unconventional method or WebFont Loader to add Google Fonts. [Upgrade to OMGF Pro](https://woosh.dev/wordpress-plugins/host-google-fonts-pro/) to automatically replace these fonts with a locally hosted version.
+The option in OMGF removes any fonts that are loaded in the conventional way. However, if it doesn't work for you you're theme is either using an unconventional method or WebFont Loader to add Google Fonts. [Upgrade to OMGF Pro](https://ffwp.dev/wordpress-plugins/host-google-fonts-pro/) to automatically replace these fonts with a locally hosted version.
 
 = Does this plugin edit template files? =
 
@@ -124,7 +124,7 @@ N/A
 * Improved re-enqueueing of stylesheets, if a stylesheet depends on the removed Google Font stylesheet.
 * Pressing Enter in the Search Bar triggers search now.
 * Developers can now easily add functionalities to OMGF's brand new Extensions tab, using several new filters and actions.
-* If OMGF is used along with other WoOSH! plugins (e.g. CAOS, OMGF Pro, etc.) the same class loader is used, significantly increasing performance.
+* If OMGF is used along with other Fast FW Press plugins (e.g. CAOS, OMGF Pro, etc.) the same class loader is used, significantly increasing performance.
 * Added dates to changelog :)
 
 = 3.7.0 | June 10th, 2020 =
@@ -246,7 +246,7 @@ N/A
 * WordPress' default admin fonts no longer show up as results.
 
 = 2.5.0 | January 30st, 2020 =
-Updated Welcome-panel with WoOSH!-services.
+Updated Welcome-panel with Fast FW Press-services.
 Preload can now be used for certain fonts only (also combined with Web Font Loader).
 
 = 2.4.1 =
