@@ -63,7 +63,6 @@ jQuery(document).ready(function ($) {
 
             // Buttons
             $('#omgf-search-subsets').on('click', this.click_search);
-            $('#omgf-auto-detect, .help.auto-detect').on('click', this.enable_auto_detect);
             $('.omgf-apply.font-styles-search').on('click', this.search_google_fonts);
             $('.omgf-apply.font-styles').on('click', this.process_font_styles_queue);
             $('#omgf-download, .help.download-fonts').on('click', this.download_fonts);
@@ -216,26 +215,6 @@ jQuery(document).ready(function ($) {
                     omgf_admin.show_loader('.omgf-search-box');
                 },
                 complete: function() {
-                    location.reload();
-                }
-            });
-        },
-
-        /**
-         * Enable Auto Detect.
-         */
-        enable_auto_detect: function () {
-            $.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: {
-                    action: 'omgf_ajax_enable_auto_detect'
-                },
-                dataType: 'json',
-                beforeSend: function () {
-                    omgf_admin.show_loader('.omgf-search-box');
-                },
-                complete: function () {
                     location.reload();
                 }
             });
