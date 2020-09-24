@@ -56,8 +56,8 @@ class OMGF
         if (!is_admin()) {
             add_action('plugins_loaded', [$this, 'do_frontend']);
         }
-
-        register_activation_hook(OMGF_PLUGIN_FILE, [$this, 'check_cache_plugins']);
+	
+	    add_action('rest_api_init', [$this, 'register_routes']);
     }
 
     /**
@@ -135,25 +135,16 @@ class OMGF
     {
         return new OMGF_Frontend_Functions();
     }
-
-    /**
-     * Throw a warning if any of the Evil Cache Plugins are used.
-     */
-    public function check_cache_plugins()
-    {
-        if (strpos(OMGF_CACHE_PATH, '/cache/') === false) {
-            return;
-        }
-
-        $cache_path = OMGF_CACHE_PATH;
-        $admin_url  = admin_url('options-general.php?page=optimize-webfonts&tab=advanced-settings');
-
-        foreach (self::OMGF_EVIL_PLUGINS as $name => $basename) {
-            if (is_plugin_active($basename)) {
-                OMGF_Admin_Notice::set_notice(sprintf(__("It looks like <strong>you're using %s</strong>. This plugin empties the entire <code>wp-content/cache</code> folder after a cache flush. To prevent this, <strong>move OMGF's fonts</strong> by changing the <em>Save font files to...</em> option under OMGF's <a href='%s'>Advanced Settings</a> from <code>%s</code> to something else, e.g. <code>/omgf-cache</code>.", 'host-webfonts-local'), $name, $admin_url, $cache_path), false, 'warning');
-            }
-        }
-    }
+	
+	/**
+	 * Register CAOS Proxy so endpoint can be used.
+	 * For using Stealth mode, SSL is required.
+	 */
+	public function register_routes()
+	{
+		$proxy = new OMGF_API_Download();
+		$proxy->register_routes();
+	}
 
     /**
      * Returns the configured name of WordPress' content directory.
