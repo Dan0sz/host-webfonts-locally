@@ -65,7 +65,7 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
         $this->do_checkbox(
                 __('Remove Stylesheets (Pro)', $this->plugin_text_domain),
                 'omgf_pro_remove_stylesheets',
-                defined('OMGF_PRO_REMOVE_STYLESHEETS') ? OMGF_PRO_REMOVE_STYLESHEETS : false,
+                defined('OMGF_PRO_REMOVE_STYLESHEETS') ? OMGF_PRO_PROCESS_STYLESHEETS : false,
                 sprintf(__('Remove all stylesheets loaded from <code>fonts.googleapis.com</code> or <code>fonts.gstatic.com</code>. <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO),
                 false,
                 true
@@ -80,7 +80,7 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
         $this->do_checkbox(
             __('Remove Inline Styles (Pro)', $this->plugin_text_domain),
             'omgf_pro_remove_inline_styles',
-            defined('OMGF_PRO_REMOVE_INLINE_STYLES') ? OMGF_PRO_REMOVE_INLINE_STYLES : false,
+            defined('OMGF_PRO_REMOVE_INLINE_STYLES') ? OMGF_PRO_PROCESS_INLINE_STYLES : false,
             sprintf(__('Remove all <code>@font-face</code> and <code>@import</code> rules loading Google Fonts. <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO),
             false,
             true
@@ -95,7 +95,7 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
         $this->do_checkbox(
             __('Remove WebFont Loader (Pro)', $this->plugin_text_domain),
             'omgf_pro_remove_webfont_loader',
-            defined('OMGF_PRO_REMOVE_WEBFONT_LOADER') ? OMGF_PRO_REMOVE_WEBFONT_LOADER : false,
+            defined('OMGF_PRO_REMOVE_WEBFONT_LOADER') ? OMGF_PRO_PROCESS_WEBFONT_LOADER : false,
             sprintf(__('Remove any WebFont Loader (<code>webfont.js</code>) libraries and the corresponding configuration defining which Google Fonts to load (WebFont Config). <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO),
             false,
             true
@@ -110,7 +110,7 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
         $this->do_checkbox(
             __('Remove Resource Hints (Pro)', $this->plugin_text_domain),
             'omgf_pro_remove_resource_hints',
-            defined('OMGF_PRO_REMOVE_RESOURCE_HINTS') ? OMGF_PRO_REMOVE_RESOURCE_HINTS : false,
+            defined('OMGF_PRO_REMOVE_RESOURCE_HINTS') ? OMGF_PRO_PROCESS_RESOURCE_HINTS : false,
             sprintf(__('Remove all <code>link</code> elements with a <code>rel</code> attribute value of <code>dns-prefetch</code>, <code>preload</code> or <code>preconnect</code>. <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO),
             false,
             true
