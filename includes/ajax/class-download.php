@@ -67,7 +67,7 @@ class OMGF_AJAX_Download extends OMGF_AJAX
         $selectedFonts = $this->db->get_total_fonts();
 
         if (empty($selectedFonts)) {
-            OMGF_Admin_Notice::set_notice(__('Hmmm... Seems like there\'s nothing to do here. Have you tried using <strong>search</strong> or <strong>auto detect</strong>?', 'host-webfonts-local'), true, 'error');
+            OMGF_Admin_Notice::set_notice(__('Hmmm... Seems like there\'s nothing to do here. Have you tried using <strong>search</strong>?', 'host-webfonts-local'), true, 'error');
         }
 
         foreach ($selectedFonts as $id => &$font) {
