@@ -21,10 +21,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Settings Fields
 	 */
-	const OMGF_SETTINGS_FIELD_BASIC               = 'omgf-basic-settings';
-	const OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET = 'omgf-generate-stylesheet';
-	const OMGF_SETTINGS_FIELD_ADVANCED            = 'omgf-advanced-settings';
-	const OMGF_SETTINGS_FIELD_EXTENSIONS          = 'omgf-extensions-settings';
+	const OMGF_SETTINGS_FIELD_BASIC         = 'omgf-basic-settings';
+	const OMGF_SETTINGS_FIELD_ADVANCED      = 'omgf-advanced-settings';
+	const OMGF_SETTINGS_FIELD_EXTENSIONS    = 'omgf-extensions-settings';
+	const OMGF_SETTINGS_FIELD_INSTALL_FONTS = 'omgf-install-fonts';
 	
 	/**
 	 * Option Values
@@ -49,7 +49,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
 	
 	/**
-	 * Generate Stylesheet
+	 * Install Fonts
 	 */
 	const OMGF_SETTING_DB_VERSION = 'omgf_db_version';
 	const OMGF_SETTING_SUBSETS    = 'omgf_subsets';
@@ -83,7 +83,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	public function __construct () {
 		parent::__construct();
 		
-		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET;
+		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : self::OMGF_SETTINGS_FIELD_INSTALL_FONTS;
 		$this->page       = isset( $_GET['page'] ) ? $_GET['page'] : '';
 		
 		add_action( 'admin_menu', [ $this, 'create_menu' ] );
@@ -102,7 +102,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		// Content
 		add_action( 'omgf_settings_content', [ $this, 'basic_settings_content' ], 0 );
 		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 1 );
-		add_action( 'omgf_settings_content', [ $this, 'generate_stylesheet_content' ], 2 );
+		add_action( 'omgf_settings_content', [ $this, 'install_fonts_content' ], 2 );
 		add_action( 'omgf_settings_content', [ $this, 'extensions_settings_content' ], 3 );
 	}
 	
@@ -162,7 +162,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function register_settings () {
 		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_BASIC
-		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET
+		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_INSTALL_FONTS
 		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED
 		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_EXTENSIONS ) {
 			$this->active_tab = self::OMGF_SETTINGS_FIELD_BASIC;
@@ -183,7 +183,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * @throws ReflectionException
 	 */
 	public function get_settings () {
-		if ( $this->active_tab == self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET ) {
+		if ( $this->active_tab == self::OMGF_SETTINGS_FIELD_INSTALL_FONTS ) {
 			return [];
 		}
 		
@@ -222,9 +222,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function generate_stylesheet_tab () {
 		$this->generate_tab(
-			self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET,
+			self::OMGF_SETTINGS_FIELD_INSTALL_FONTS,
 			'dashicons-admin-appearance',
-			__( 'Generate Stylesheet', $this->plugin_text_domain )
+			__( 'Install Fonts', $this->plugin_text_domain )
 		);
 	}
 	
@@ -275,14 +275,14 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Render Generate Stylesheet
 	 */
-	public function generate_stylesheet_content () {
-		if ( $this->active_tab != self::OMGF_SETTINGS_FIELD_GENERATE_STYLESHEET ) {
+	public function install_fonts_content () {
+		if ( $this->active_tab != self::OMGF_SETTINGS_FIELD_INSTALL_FONTS ) {
 			return;
 		}
 		?>
-        <form id="omgf-generate-stylesheet-form" name="omgf-generate-stylesheet-form">
+        <form id="omgf-install-fonts-form" name="omgf-install-fonts-form">
 			<?php
-			$this->get_template( 'generate-stylesheet' );
+			$this->get_template( 'install-fonts' );
 			?>
         </form>
 		<?php
