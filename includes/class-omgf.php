@@ -57,6 +57,7 @@ class OMGF
         define('OMGF_FILENAME', 'fonts.css');
         define('OMGF_FONT_PROCESSING', esc_attr(get_option(OMGF_Admin_Settings::OMGF_BASIC_SETTING_FONT_PROCESSING, 'replace')));
 	    define('OMGF_DISPLAY_OPTION', esc_attr(get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
+	    define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
 	    define('OMGF_CACHE_PATH', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH)) ?: '/uploads/omgf');
 	    define('OMGF_CACHE_URI', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI)) ?: '');
 	    define('OMGF_FORCE_SSL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL)));
@@ -67,8 +68,7 @@ class OMGF
 	    define('OMGF_CURRENT_BLOG_ID', get_current_blog_id());
 	    define('OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH);
 	    define('OMGF_FONTS_URL', $this->get_fonts_url());
-        define('OMGF_ENQUEUE_ORDER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER, 10)));
-        define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
+	    define('OMGF_ENQUEUE_ORDER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER, 10)));
         define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
     }
 

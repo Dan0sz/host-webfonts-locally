@@ -44,29 +44,29 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Basic Settings
 	 */
-	const OMGF_BASIC_SETTING_FONT_PROCESSING = 'omgf_font_processing';
-	const OMGF_BASIC_SETTING_DISPLAY_OPTION  = 'omgf_display_option';
+	const OMGF_BASIC_SETTING_FONT_PROCESSING     = 'omgf_font_processing';
+	const OMGF_BASIC_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
+	const OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
 	
 	/**
 	 * Generate Stylesheet
 	 */
-	const OMGF_SETTING_DB_VERSION             = 'omgf_db_version';
-	const OMGF_SETTING_SUBSETS                = 'omgf_subsets';
-	const OMGF_SETTING_FONTS                  = 'omgf_fonts';
+	const OMGF_SETTING_DB_VERSION = 'omgf_db_version';
+	const OMGF_SETTING_SUBSETS    = 'omgf_subsets';
+	const OMGF_SETTING_FONTS      = 'omgf_fonts';
 	
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_CACHE_PATH            = 'omgf_cache_dir';
-	const OMGF_ADV_SETTING_CACHE_URI             = 'omgf_cache_uri';
-	const OMGF_ADV_SETTING_CDN_URL               = 'omgf_cdn_url';
-	const OMGF_ADV_SETTING_WEB_FONT_LOADER       = 'omgf_web_font_loader';
-	const OMGF_ADV_SETTING_REMOVE_VERSION        = 'omgf_remove_version';
-	const OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
-	const OMGF_ADV_SETTING_UNINSTALL             = 'omgf_uninstall';
-	const OMGF_ADV_SETTING_ENQUEUE_ORDER         = 'omgf_enqueue_order';
-	const OMGF_ADV_SETTING_FORCE_SSL             = 'omgf_force_ssl';
-	const OMGF_ADV_SETTING_RELATIVE_URL          = 'omgf_relative_url';
+	const OMGF_ADV_SETTING_CACHE_PATH      = 'omgf_cache_dir';
+	const OMGF_ADV_SETTING_CACHE_URI       = 'omgf_cache_uri';
+	const OMGF_ADV_SETTING_CDN_URL         = 'omgf_cdn_url';
+	const OMGF_ADV_SETTING_WEB_FONT_LOADER = 'omgf_web_font_loader';
+	const OMGF_ADV_SETTING_REMOVE_VERSION  = 'omgf_remove_version';
+	const OMGF_ADV_SETTING_UNINSTALL       = 'omgf_uninstall';
+	const OMGF_ADV_SETTING_ENQUEUE_ORDER   = 'omgf_enqueue_order';
+	const OMGF_ADV_SETTING_FORCE_SSL       = 'omgf_force_ssl';
+	const OMGF_ADV_SETTING_RELATIVE_URL    = 'omgf_relative_url';
 	
 	/** @var string $active_tab */
 	private $active_tab;
