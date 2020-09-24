@@ -42,9 +42,8 @@ class OMGF_Frontend_Functions
 		$this->stylesheet_file = OMGF_FONTS_DIR . '/' . OMGF_FILENAME;
 		$this->stylesheet_url  = OMGF_FONTS_URL . '/' . OMGF_FILENAME;
 		$this->do_optimize     = $this->maybe_optimize_fonts();
-		$this->action          = apply_filters( 'omgf_google_fonts_processing', 'wp_print_styles' );
 		
-		add_action( $this->action, [ $this, 'process_fonts' ], PHP_INT_MAX - 1000 );
+		add_action( 'wp_print_styles', [ $this, 'process_fonts' ], PHP_INT_MAX - 1000 );
 		
 		if ( file_exists( $this->stylesheet_file ) ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_stylesheet' ], OMGF_ENQUEUE_ORDER );
@@ -77,6 +76,10 @@ class OMGF_Frontend_Functions
 			return;
 		}
 		
+		if ( apply_filters( 'omgf_pro_auto_processing_enabled', false ) ) {
+			return;
+		}
+		
 		if ( is_admin() ) {
 			return;
 		}
@@ -96,8 +99,8 @@ class OMGF_Frontend_Functions
 	public function remove_fonts () {
 		global $wp_styles;
 		
-		$registered = $wp_styles->registered;
-		$fonts = $this->detect_registered_google_fonts( $registered );
+		$registered   = $wp_styles->registered;
+		$fonts        = apply_filters( 'omgf_auto_remove', $this->detect_registered_google_fonts( $registered ) );
 		$dependencies = array_filter(
 			$registered,
 			function ( $contents ) use ( $fonts ) {
@@ -132,7 +135,7 @@ class OMGF_Frontend_Functions
 		global $wp_styles;
 		
 		$registered = $wp_styles->registered;
-		$fonts      = $this->detect_registered_google_fonts( $registered );
+		$fonts      = apply_filters( 'omgf_auto_replace', $this->detect_registered_google_fonts( $registered ) );
 		
 		foreach ( $fonts as $handle => $font ) {
 			$cached_file = OMGF_CACHE_PATH . '/' . $handle . "/$handle.css";
@@ -143,7 +146,7 @@ class OMGF_Frontend_Functions
 				continue;
 			}
 			
-			$wp_styles->registered[ $handle ]->src = str_replace('https://fonts.googleapis.com/', site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$handle";
+			$wp_styles->registered[ $handle ]->src = str_replace( 'https://fonts.googleapis.com/', site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$handle";
 		}
 	}
 	
