@@ -76,8 +76,10 @@ class OMGF_API_Download extends WP_REST_Controller
 		$this->path = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
 		
 		unset( $params['handle'] );
-		$query = '?' . http_build_query( $params );
-		$url   = self::OMGF_GOOGLE_FONTS_API_URL . $query;
+		
+		$params['display'] = get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_DISPLAY_OPTION );
+		$query             = '?' . http_build_query( $params );
+		$url               = self::OMGF_GOOGLE_FONTS_API_URL . $query;
 		
 		$response = wp_remote_get(
 			$url,
@@ -111,7 +113,16 @@ class OMGF_API_Download extends WP_REST_Controller
 			wp_send_json_success( 'New stylesheet equals updated stylesheet. No reason to write.', 200 );
 		}
 		
-		file_put_contents( $this->path . '/' . $this->handle . '.css', $updated_stylesheet );
+		$local_file = $this->path . '/' . $this->handle . '.css';
+		
+		file_put_contents( $local_file, $updated_stylesheet );
+		
+		header( 'Content-Type: text/css' );
+		header( "Content-Transfer-Encoding: Binary" );
+		header( 'Content-Length: ' . filesize( $local_file ) );
+		flush();
+		readfile( $local_file );
+		die();
 	}
 	
 	/**
