@@ -22,7 +22,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
 <div class="omgf-generate-stylesheet">
     <h3><?= __('Generate Stylesheet', 'host-webfonts-local'); ?></h3>
     <p>
-        <?= __('<strong>Search</strong> returns all available subsets and font styles for each font family. <strong>Auto Detect</strong> only returns subsets and font styles that\'re used by your installed theme and plugins.', 'host-webfonts-local'); ?>
+        <?= __('<strong>Search</strong> returns all available subsets and font styles for each font family.', 'host-webfonts-local'); ?>
     </p>
     <p>
         <?= __('You can <strong>Search</strong> by either using a comma separated list (e.g. Open Sans, Poppins, Roboto) or by searching for each font family one by one.', 'host-webfonts-local'); ?>
@@ -30,8 +30,7 @@ $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
     <div class="omgf-search-section">
         <div class="omgf-search-box">
             <input type="text" id="omgf-search" class="form-input-tip ui-autocomplete-input" placeholder="<?php _e('Search... [e.g. Roboto, Open Sans, Poppins]', 'host-webfonts-local'); ?>" />
-            <input type="button" id="omgf-search-subsets" class="button button-secondary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
-            <input type="button" id="omgf-auto-detect" class="button button-primary button-hero" value="<?= apply_filters('omgf_generate_stylesheet_auto_detect_title', __('Auto Detect', 'host-webfonts-local')); ?>" />
+            <input type="button" id="omgf-search-subsets" class="button button-primary button-hero" value="<?php _e('Search', 'host-webfonts-local'); ?>"/>
         </div>
         <table>
             <caption><?php _e('Available subsets', 'host-webfonts-local'); ?></caption>
