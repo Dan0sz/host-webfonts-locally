@@ -239,7 +239,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Add Extensions tab to Settings Screen.
 	 */
 	public function extensions_settings_tab () {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_EXTENSIONS, 'dashicons-admin-plugins', __( 'Extensions', $this->plugin_text_domain ) );
+		$this->generate_tab( self::OMGF_SETTINGS_FIELD_EXTENSIONS, 'dashicons-admin-plugins', __( 'Extensions (Pro)', $this->plugin_text_domain ) );
 	}
 	
 	/**
