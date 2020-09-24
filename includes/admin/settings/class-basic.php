@@ -23,6 +23,7 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 		
 		// Open
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_title' ], 10 );
+		add_filter( 'omgf_basic_settings_content', [ $this, 'do_description' ], 15 );
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_before' ], 20 );
 		
 		// Settings
@@ -32,6 +33,20 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 		
 		// Close
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_after' ], 100 );
+	}
+	
+	/**
+	 * Description
+	 */
+	public function do_description () {
+		?>
+        <p>
+			* <?= __( 'If you\'re looking to replace your Google Fonts for locally hosted copies, then the default settings will suffice. OMGF will run silently in the background and download any Google Fonts while you and/or your visitors are browsing your site.', $this->plugin_text_domain ); ?>
+        </p>
+        <p>
+            <?= __('If <strong>Google Font Processing</strong> is set to Replace, loading the locally hosted stylesheet for the first time (or after emptying the OMGF\'s cache directory) might take some time. This depends on your server\'s capacity and the size of the stylesheet. This is because OMGF\'s Download API captures the request and automatically downloads the fonts, before serving the local copy. Once the stylesheet and fonts are downloaded, every consecutive request will be fast again.', $this->plugin_text_domain); ?>
+        </p>
+		<?php
 	}
 	
 	/**
