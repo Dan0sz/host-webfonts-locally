@@ -51,8 +51,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Generate Stylesheet
 	 */
 	const OMGF_SETTING_DB_VERSION             = 'omgf_db_version';
-	const OMGF_SETTING_AUTO_DETECTION_ENABLED = 'omgf_auto_detection_enabled';
-	const OMGF_SETTING_DETECTED_FONTS         = 'omgf_detected_fonts';
 	const OMGF_SETTING_SUBSETS                = 'omgf_subsets';
 	const OMGF_SETTING_FONTS                  = 'omgf_fonts';
 	
@@ -64,7 +62,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_ADV_SETTING_CDN_URL               = 'omgf_cdn_url';
 	const OMGF_ADV_SETTING_WEB_FONT_LOADER       = 'omgf_web_font_loader';
 	const OMGF_ADV_SETTING_REMOVE_VERSION        = 'omgf_remove_version';
-	const OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS   = 'omgf_remove_gfonts';
 	const OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
 	const OMGF_ADV_SETTING_UNINSTALL             = 'omgf_uninstall';
 	const OMGF_ADV_SETTING_ENQUEUE_ORDER         = 'omgf_enqueue_order';
