@@ -35,6 +35,7 @@ class OMGF_Admin
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
         add_action('admin_notices', [$this, 'add_notice']);
 
+        $this->do_basic_settings();
         $this->do_advanced_settings();
         $this->do_extensions_settings();
 
@@ -81,6 +82,14 @@ class OMGF_Admin
     public function add_notice()
     {
         OMGF_Admin_Notice::print_notice();
+    }
+	
+	/**
+	 * @return OMGF_Admin_Settings_Basic
+	 */
+    private function do_basic_settings()
+    {
+    	return new OMGF_Admin_Settings_Basic();
     }
 
     /**

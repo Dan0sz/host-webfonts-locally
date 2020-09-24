@@ -29,14 +29,11 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
         $this->title = __('Advanced Settings', $this->plugin_text_domain);
 
         // Open
-        // @formatter:off
         add_filter('omgf_advanced_settings_content', [$this, 'do_title'], 10);
         add_filter('omgf_advanced_settings_content', [$this, 'do_description'], 15);
         add_filter('omgf_advanced_settings_content', [$this, 'do_before'], 20);
 
         // Settings
-        add_filter('omgf_advanced_settings_content', [$this, 'do_remove_google_fonts'], 25);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_display_option'], 30);
         add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 35);
         add_filter('omgf_advanced_settings_content', [$this, 'do_cache_uri'], 40);
         add_filter('omgf_advanced_settings_content', [$this, 'do_force_ssl'], 45);
@@ -45,12 +42,10 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
         add_filter('omgf_advanced_settings_content', [$this, 'do_webfont_loader'], 60);
         add_filter('omgf_advanced_settings_content', [$this, 'do_remove_version'], 65);
         add_filter('omgf_advanced_settings_content', [$this, 'do_enqueue_order'], 70);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_optimize_edit_roles'], 75);
         add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 80);
 
         // Close
         add_filter('omgf_advanced_settings_content', [$this, 'do_after'], 100);
-        // @formatter:on
     }
 
     /**
@@ -65,34 +60,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
             <?php _e('** <strong>Download Fonts</strong> and <strong>Generate Stylesheet</strong> after changing this setting.', $this->plugin_text_domain); ?>
         </p>
         <?php
-    }
-
-    /**
-     *
-     */
-    public function do_remove_google_fonts()
-    {
-        $this->do_checkbox(
-            __('Auto Remove', $this->plugin_text_domain),
-            OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_GOOGLE_FONTS,
-            OMGF_REMOVE_GFONTS,
-            sprintf(__('Remove any requests to externally hosted Google Fonts-stylesheets from your WordPress-blog. If it doesn\'t work, your theme and/or plugin(s) are using unconventional methods or Web Font Loader to load Google Fonts. <a href="%s" target="_blank">Upgrade to OMGF Pro</a> to automatically remove Google Fonts incl. resource hints (e.g. <code>dns-prefetch</code>, <code>preconnect</code> and <code>preload</code>).', $this->plugin_text_domain), self::FFWP_WORDPRESS_PLUGINS_HOST_GOOGLE_FONTS_PRO . $this->utmTags)
-        );
-    }
-
-    /**
-     *
-     */
-    public function do_display_option()
-    {
-        $this->do_select(
-            __('Font-display option', $this->plugin_text_domain),
-            OMGF_Admin_Settings::OMGF_ADV_SETTING_DISPLAY_OPTION,
-            OMGF_Admin_Settings::OMGF_FONT_DISPLAY_OPTIONS,
-            OMGF_DISPLAY_OPTION,
-            __('Select which font-display strategy to use. Defaults to Swap (recommended).', $this->plugin_text_domain),
-            '*'
-        );
     }
 
     /**
@@ -205,19 +172,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
             OMGF_ENQUEUE_ORDER,
             __('Lower this value if the generated stylesheet (<code>fonts.css</code>) is not captured by your CSS minification/combining plugin. Doesn\'t work with Web Font Loader enabled.', $this->plugin_text_domain),
             0
-        );
-    }
-
-    /**
-     *
-     */
-    public function do_optimize_edit_roles()
-    {
-        $this->do_checkbox(
-            __('Optimize fonts for logged in editors/administrators?', $this->plugin_text_domain),
-            OMGF_Admin_Settings::OMGF_ADV_SETTING_OPTIMIZE_EDIT_ROLES,
-            OMGF_OPTIMIZE_EDIT_ROLES,
-            __('Should only be used for debugging/testing purposes. Leave disabled when e.g. using a page builder or switching themes.', $this->plugin_text_domain)
         );
     }
 

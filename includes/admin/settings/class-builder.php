@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings_Builder
 {
-    const FFWP_WORDPRESS_PLUGINS_HOST_GOOGLE_FONTS_PRO = 'https://ffwp.dev/wordpress-plugins/host-google-fonts-pro/#get-omgf-pro';
+    const FFWP_WORDPRESS_PLUGINS_OMGF_PRO = 'https://ffwp.dev/wordpress/omgf-pro/';
 
     /** @var string $plugin_text_domain */
     protected $plugin_text_domain = 'host-webfonts-local';
