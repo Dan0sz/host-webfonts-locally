@@ -101,19 +101,10 @@ class OMGF_API_Download extends WP_REST_Controller
 			wp_send_json_error( 'No valid URLs found.', 406 );
 		}
 		
-		$downloaded_fonts = $this->download( $font_urls[0] );
-		
-		if ( $downloaded_fonts == 0 ) {
-			wp_send_json_success( 'All fonts are downloaded before.', 200 );
-		}
+		$this->download( $font_urls[0] );
 		
 		$updated_stylesheet = $this->update( $stylesheet, $font_urls[0] );
-		
-		if ( $stylesheet == $updated_stylesheet ) {
-			wp_send_json_success( 'New stylesheet equals updated stylesheet. No reason to write.', 200 );
-		}
-		
-		$local_file = $this->path . '/' . $this->handle . '.css';
+		$local_file         = $this->path . '/' . $this->handle . '.css';
 		
 		file_put_contents( $local_file, $updated_stylesheet );
 		
