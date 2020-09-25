@@ -108,6 +108,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		file_put_contents( $local_file, $updated_stylesheet );
 		
+		// After downloading it, serve it.
 		header( 'Content-Type: text/css' );
 		header( "Content-Transfer-Encoding: Binary" );
 		header( 'Content-Length: ' . filesize( $local_file ) );
