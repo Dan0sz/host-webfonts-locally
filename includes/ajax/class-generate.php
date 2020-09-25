@@ -97,11 +97,11 @@ class OMGF_AJAX_Generate extends OMGF_AJAX
 		$i = 1;
 		
 		foreach ( $fonts as $font ) {
-			$fontUrlEot = isset( $font['url_eot_local'] ) ? [ 0 => esc_url_raw( $font['url_eot_local'] ) ] : [];
+			$fontUrlEot  = isset( $font['url_eot_local'] ) ? [ 0 => esc_url_raw( $font['url_eot_local'] ) ] : [];
 			$fontSources = isset( $font['url_woff2_local'] ) ? [ 'woff2' => esc_url_raw( $font['url_woff2_local'] ) ] : [];
 			$fontSources = $fontSources + ( isset( $font['url_woff_local'] ) ? [ 'woff' => esc_url_raw( $font['url_woff_local'] ) ] : [] );
 			$fontSources = $fontSources + ( isset( $font['url_ttf_local'] ) ? [ 'truetype' => esc_url_raw( $font['url_ttf_local'] ) ] : [] );
-			$locals = explode( ',', sanitize_text_field( $font['local'] ) );
+			$locals      = explode( ',', sanitize_text_field( $font['local'] ) );
 			
 			if ( empty( $fontSources ) ) {
 				OMGF_Admin_Notice::set_notice(
