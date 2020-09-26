@@ -68,7 +68,6 @@ class OMGF
 	    define('OMGF_CURRENT_BLOG_ID', get_current_blog_id());
 	    define('OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH);
 	    define('OMGF_FONTS_URL', $this->get_fonts_url());
-	    define('OMGF_ENQUEUE_ORDER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER, 10)));
         define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
     }
 

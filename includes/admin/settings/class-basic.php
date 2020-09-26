@@ -30,7 +30,8 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_process_google_fonts' ], 30 );
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_display_option' ], 40 );
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_combine_requests' ], 50 );
-		add_filter( 'omgf_basic_settings_content', [ $this, 'do_optimize_edit_roles' ], 60 );
+		add_filter( 'omgf_basic_settings_content', [ $this, 'do_cache_dir' ], 60 );
+		add_filter( 'omgf_basic_settings_content', [ $this, 'do_optimize_edit_roles' ], 70 );
 		
 		// Close
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_after' ], 100 );
@@ -87,6 +88,20 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 			sprintf( __( 'Combine multiple font requests into one request. This feature is enabled by default in OMGF Pro. <a target="_blank" href="%s">Upgrade now</a>.', $this->plugin_text_domain ), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO ),
 			false,
 			true
+		);
+	}
+	
+	/**
+	 *
+	 */
+	public function do_cache_dir () {
+		$this->do_text(
+			__( 'Save font files to...', $this->plugin_text_domain ),
+			OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH,
+			__( 'e.g. /uploads/omgf', $this->plugin_text_domain ),
+			OMGF_CACHE_PATH,
+			__( "The folder (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/uploads/omgf</code>. After changing this setting, the folder will be created if it doesn't exist and existing files will be moved automatically.", $this->plugin_text_domain ),
+			'**'
 		);
 	}
 	

@@ -34,14 +34,12 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
         add_filter('omgf_advanced_settings_content', [$this, 'do_before'], 20);
 
         // Settings
-        add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 35);
         add_filter('omgf_advanced_settings_content', [$this, 'do_cache_uri'], 40);
         add_filter('omgf_advanced_settings_content', [$this, 'do_force_ssl'], 45);
         add_filter('omgf_advanced_settings_content', [$this, 'do_relative_url'], 50);
         add_filter('omgf_advanced_settings_content', [$this, 'do_cdn_url'], 55);
         add_filter('omgf_advanced_settings_content', [$this, 'do_webfont_loader'], 60);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_remove_version'], 65);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_enqueue_order'], 70);
+        add_filter('omgf_advanced_settings_content', [$this, 'do_remove_version'], 70);
         add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 80);
 
         // Close
@@ -60,21 +58,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
             <?php _e('** <strong>Download Fonts</strong> and <strong>Generate Stylesheet</strong> after changing this setting.', $this->plugin_text_domain); ?>
         </p>
         <?php
-    }
-
-    /**
-     *
-     */
-    public function do_cache_dir()
-    {
-        $this->do_text(
-            __('Save font files to...', $this->plugin_text_domain),
-            OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH,
-            __('e.g. /uploads/omgf', $this->plugin_text_domain),
-            OMGF_CACHE_PATH,
-            __("The folder (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/uploads/omgf</code>. After changing this setting, the folder will be created if it doesn't exist and existing files will be moved automatically.", $this->plugin_text_domain),
-            '**'
-        );
     }
 
     /**
@@ -158,20 +141,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
             OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_VERSION,
             OMGF_REMOVE_VERSION,
             __('This removes the <code>?ver=x.x.x</code> parameter from the Stylesheet\'s (<code>fonts.css</code>) request. ', $this->plugin_text_domain)
-        );
-    }
-
-    /**
-     *
-     */
-    public function do_enqueue_order()
-    {
-        $this->do_number(
-            __('Change enqueue order of stylesheet? (experimental)', $this->plugin_text_domain),
-            OMGF_Admin_Settings::OMGF_ADV_SETTING_ENQUEUE_ORDER,
-            OMGF_ENQUEUE_ORDER,
-            __('Lower this value if the generated stylesheet (<code>fonts.css</code>) is not captured by your CSS minification/combining plugin. Doesn\'t work with Web Font Loader enabled.', $this->plugin_text_domain),
-            0
         );
     }
 

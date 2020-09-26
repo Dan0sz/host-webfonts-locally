@@ -46,7 +46,7 @@ class OMGF_Frontend_Functions
 		add_action( 'wp_print_styles', [ $this, 'process_fonts' ], PHP_INT_MAX - 1000 );
 		
 		if ( file_exists( $this->stylesheet_file ) ) {
-			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_stylesheet' ], OMGF_ENQUEUE_ORDER );
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_stylesheet' ], 10 );
 		}
 		
 		$this->db = new OMGF_DB();

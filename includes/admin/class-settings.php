@@ -64,7 +64,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_ADV_SETTING_WEB_FONT_LOADER = 'omgf_web_font_loader';
 	const OMGF_ADV_SETTING_REMOVE_VERSION  = 'omgf_remove_version';
 	const OMGF_ADV_SETTING_UNINSTALL       = 'omgf_uninstall';
-	const OMGF_ADV_SETTING_ENQUEUE_ORDER   = 'omgf_enqueue_order';
 	const OMGF_ADV_SETTING_FORCE_SSL       = 'omgf_force_ssl';
 	const OMGF_ADV_SETTING_RELATIVE_URL    = 'omgf_relative_url';
 	
