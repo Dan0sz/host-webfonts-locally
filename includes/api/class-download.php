@@ -144,7 +144,13 @@ class OMGF_API_Download extends WP_REST_Controller
 		return array_filter(
 			$available_variants,
 			function ( $font ) use ( $variants ) {
-				return in_array( $font->id, $variants );
+				$id = $font->id;
+				
+				if ($id == 'regular' || $id == 'italic') {
+					$id = '400';
+				}
+				
+				return in_array( $id, $variants );
 			}
 		);
 	}
