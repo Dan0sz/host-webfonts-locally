@@ -34,13 +34,14 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
         add_filter('omgf_advanced_settings_content', [$this, 'do_before'], 20);
 
         // Settings
-        add_filter('omgf_advanced_settings_content', [$this, 'do_cache_uri'], 40);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_force_ssl'], 45);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_relative_url'], 50);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_cdn_url'], 55);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_webfont_loader'], 60);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_remove_version'], 70);
-        add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 80);
+        add_filter('omgf_advanced_settings_content', [$this, 'do_force_subsets'], 25);
+	    add_filter('omgf_advanced_settings_content', [$this, 'do_cdn_url'], 30);
+	    add_filter('omgf_advanced_settings_content', [$this, 'do_cache_uri'], 40);
+	    add_filter('omgf_advanced_settings_content', [$this, 'do_relative_url'], 50);
+	    add_filter('omgf_advanced_settings_content', [$this, 'do_webfont_loader'], 60);
+	    add_filter('omgf_advanced_settings_content', [$this, 'do_force_ssl'], 70);
+        add_filter('omgf_advanced_settings_content', [$this, 'do_remove_version'], 80);
+        add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 90);
 
         // Close
         add_filter('omgf_advanced_settings_content', [$this, 'do_after'], 100);
@@ -53,11 +54,21 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
     {
         ?>
         <p>
-            <?php _e('* <strong>Generate stylesheet</strong> after changing this setting.', $this->plugin_text_domain); ?>
-            <br/>
-            <?php _e('** <strong>Download Fonts</strong> and <strong>Generate Stylesheet</strong> after changing this setting.', $this->plugin_text_domain); ?>
         </p>
         <?php
+    }
+    
+    public function do_force_subsets()
+    {
+        $this->do_select(
+            __('Force Subsets', $this->plugin_text_domain),
+            'omgf_pro_force_subsets',
+            OMGF_Admin_Settings::OMGF_FORCE_SUBSETS_OPTIONS,
+            defined( 'OMGF_PRO_FORCE_SUBSETS' ) ? OMGF_PRO_FORCE_SUBSETS : false,
+            __('', $this->plugin_text_domain),
+            true,
+            true
+        );
     }
 
     /**
@@ -70,8 +81,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
             OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI,
             __('e.g. /app/uploads/omgf', $this->plugin_text_domain),
             OMGF_CACHE_URI,
-            __('The relative path to serve font files from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the cache directory specified above will be used.', $this->plugin_text_domain),
-            '**'
+            __('The relative path to serve font files from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the cache directory specified above will be used.', $this->plugin_text_domain)
         );
     }
 
@@ -84,8 +94,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
             __('Force SSL?', $this->plugin_text_domain),
             OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL,
             OMGF_FORCE_SSL,
-            __('Some plugins mess up WordPress\' URL structure, which can cause OMGF to generate incorrect URLs in the stylesheet. If OMGF is generating non-SSL (<code>http://...</code>) URLs in the stylesheet, and you have the <strong>Site</strong> and <strong>WordPress Address</strong> (in <strong>Settings</strong> > <strong>General</strong>) set to SSL (<code>https://</code>), then enable this option.', $this->plugin_text_domain),
-            '**'
+            __('Some plugins mess up WordPress\' URL structure, which can cause OMGF to generate incorrect URLs in the stylesheet. If OMGF is generating non-SSL (<code>http://...</code>) URLs in the stylesheet, and you have the <strong>Site</strong> and <strong>WordPress Address</strong> (in <strong>Settings</strong> > <strong>General</strong>) set to SSL (<code>https://</code>), then enable this option.', $this->plugin_text_domain)
         );
     }
 
@@ -98,8 +107,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
             __('Use Relative URLs?', $this->plugin_text_domain),
             OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL,
             OMGF_RELATIVE_URL,
-            __('Use relative instead of absolute (full) URLs to generate the stylesheet. <strong>Warning!</strong> This disables the CDN URL!', $this->plugin_text_domain),
-            '**'
+            __('Use relative instead of absolute (full) URLs to generate the stylesheet. <strong>Warning!</strong> This disables the CDN URL!', $this->plugin_text_domain)
         );
     }
 
@@ -113,8 +121,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
             OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL,
             __('e.g. cdn.mydomain.com', $this->plugin_text_domain),
             OMGF_CDN_URL,
-            __("Are you using a CDN? Then enter the URL here. Leave empty when using CloudFlare.", $this->plugin_text_domain),
-            '**'
+            __("Are you using a CDN? Then enter the URL here. Leave empty when using CloudFlare.", $this->plugin_text_domain)
         );
     }
 

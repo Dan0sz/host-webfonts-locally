@@ -40,12 +40,43 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		'fallback' => 'Fallback',
 		'optional' => 'Optional'
 	];
+	const OMGF_FORCE_SUBSETS_OPTIONS   = [
+		'arabic'              => 'Arabic',
+		'bengali'             => 'Bengali',
+		'chinese-hongkong'    => 'Chinese (Hong Kong)',
+		'chinese-simplified'  => 'Chinese (Simplified)',
+		'chinese-traditional' => 'Chinese (Traditional)',
+		'cyrillic'            => 'Cyrillic',
+		'cyrillic-ext'        => 'Cyrillic Extended',
+		'devanagari'          => 'Devanagari',
+		'greek'               => 'Greek',
+		'greek-ext'           => 'Greek Extended',
+		'gujarati'            => 'Gujarati',
+		'gurmukhi'            => 'Gurmukhi',
+		'hebrew'              => 'Hebrew',
+		'japanese'            => 'Japanese',
+		'kannada'             => 'Kannada',
+		'khmer'               => 'Khmer',
+		'korean'              => 'Korean',
+		'latin'               => 'Latin',
+		'latin-ext'           => 'Latin Extended',
+		'malayalam'           => 'Malayalam',
+		'myanmar'             => 'Myanmar',
+		'oriya'               => 'Oriya',
+		'sinhala'             => 'Sinhala',
+		'tamil'               => 'Tamil',
+		'telugu'              => 'Telugu',
+		'thai'                => 'Thai',
+		'tibetan'             => 'Tibetan',
+		'vietnamese'          => 'Vietnamese'
+	];
 	
 	/**
 	 * Basic Settings
 	 */
 	const OMGF_BASIC_SETTING_FONT_PROCESSING     = 'omgf_font_processing';
 	const OMGF_BASIC_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
+	const OMGF_BASIC_SETTING_CACHE_PATH          = 'omgf_cache_dir';
 	const OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
 	
 	/**
@@ -58,7 +89,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_CACHE_PATH      = 'omgf_cache_dir';
 	const OMGF_ADV_SETTING_CACHE_URI       = 'omgf_cache_uri';
 	const OMGF_ADV_SETTING_CDN_URL         = 'omgf_cdn_url';
 	const OMGF_ADV_SETTING_WEB_FONT_LOADER = 'omgf_web_font_loader';

@@ -67,7 +67,6 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
                 'omgf_pro_process_stylesheets',
                 defined('OMGF_PRO_PROCESS_STYLESHEETS') ? OMGF_PRO_PROCESS_STYLESHEETS : false,
                 sprintf(__('Remove all stylesheets loaded from <code>fonts.googleapis.com</code> or <code>fonts.gstatic.com</code>. <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO),
-                false,
                 true
         );
     }
@@ -82,7 +81,6 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
             'omgf_pro_process_inline_styles',
             defined('OMGF_PRO_PROCESS_INLINE_STYLES') ? OMGF_PRO_PROCESS_INLINE_STYLES : false,
             sprintf(__('Remove all <code>@font-face</code> and <code>@import</code> rules loading Google Fonts. <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO),
-            false,
             true
         );
     }
@@ -97,7 +95,6 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
             'omgf_pro_process_webfont_loader',
             defined('OMGF_PRO_PROCESS_WEBFONT_LOADER') ? OMGF_PRO_PROCESS_WEBFONT_LOADER : false,
             sprintf(__('Remove any WebFont Loader (<code>webfont.js</code>) libraries and the corresponding configuration defining which Google Fonts to load (WebFont Config). <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO),
-            false,
             true
         );
     }
@@ -112,7 +109,6 @@ class OMGF_Admin_Settings_Extensions extends OMGF_Admin_Settings_Builder
             'omgf_pro_process_resource_hints',
             defined('OMGF_PRO_PROCESS_RESOURCE_HINTS') ? OMGF_PRO_PROCESS_RESOURCE_HINTS : false,
             sprintf(__('Remove all <code>link</code> elements with a <code>rel</code> attribute value of <code>dns-prefetch</code>, <code>preload</code> or <code>preconnect</code>. <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO),
-            false,
             true
         );
     }

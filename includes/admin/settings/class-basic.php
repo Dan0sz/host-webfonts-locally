@@ -86,7 +86,6 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 			'omgf_pro_combine_requests',
 			defined( 'OMGF_PRO_COMBINE_REQUESTS' ) ? true : false,
 			sprintf( __( 'Combine multiple font requests into one request. This feature is enabled by default in OMGF Pro. <a target="_blank" href="%s">Upgrade now</a>.', $this->plugin_text_domain ), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO ),
-			false,
 			true
 		);
 	}
@@ -97,11 +96,10 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 	public function do_cache_dir () {
 		$this->do_text(
 			__( 'Save font files to...', $this->plugin_text_domain ),
-			OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH,
+			OMGF_Admin_Settings::OMGF_BASIC_SETTING_CACHE_PATH,
 			__( 'e.g. /uploads/omgf', $this->plugin_text_domain ),
 			OMGF_CACHE_PATH,
-			__( "The folder (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/uploads/omgf</code>. After changing this setting, the folder will be created if it doesn't exist and existing files will be moved automatically.", $this->plugin_text_domain ),
-			'**'
+			__( "The folder (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/uploads/omgf</code>. After changing this setting, the folder will be created if it doesn't exist and existing files will be moved automatically.", $this->plugin_text_domain )
 		);
 	}
 	

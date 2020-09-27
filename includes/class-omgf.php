@@ -58,7 +58,7 @@ class OMGF
         define('OMGF_FONT_PROCESSING', esc_attr(get_option(OMGF_Admin_Settings::OMGF_BASIC_SETTING_FONT_PROCESSING, 'replace')));
 	    define('OMGF_DISPLAY_OPTION', esc_attr(get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
 	    define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
-	    define('OMGF_CACHE_PATH', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH)) ?: '/uploads/omgf');
+	    define('OMGF_CACHE_PATH', esc_attr(get_option(OMGF_Admin_Settings::OMGF_BASIC_SETTING_CACHE_PATH)) ?: '/uploads/omgf');
 	    define('OMGF_CACHE_URI', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI)) ?: '');
 	    define('OMGF_FORCE_SSL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL)));
 	    define('OMGF_RELATIVE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL)));
