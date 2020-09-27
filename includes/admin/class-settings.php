@@ -23,7 +23,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	const OMGF_SETTINGS_FIELD_BASIC         = 'omgf-basic-settings';
 	const OMGF_SETTINGS_FIELD_ADVANCED      = 'omgf-advanced-settings';
-	const OMGF_SETTINGS_FIELD_EXTENSIONS    = 'omgf-extensions-settings';
 	const OMGF_SETTINGS_FIELD_INSTALL_FONTS = 'omgf-install-fonts';
 	
 	/**
@@ -126,13 +125,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		add_action( 'omgf_settings_tab', [ $this, 'basic_settings_tab' ], 0 );
 		add_action( 'omgf_settings_tab', [ $this, 'advanced_settings_tab' ], 1 );
 		add_action( 'omgf_settings_tab', [ $this, 'generate_stylesheet_tab' ], 2 );
-		add_action( 'omgf_settings_tab', [ $this, 'extensions_settings_tab' ], 3 );
 		
 		// Content
 		add_action( 'omgf_settings_content', [ $this, 'basic_settings_content' ], 0 );
 		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 1 );
 		add_action( 'omgf_settings_content', [ $this, 'install_fonts_content' ], 2 );
-		add_action( 'omgf_settings_content', [ $this, 'extensions_settings_content' ], 3 );
 	}
 	
 	/**
@@ -192,8 +189,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	public function register_settings () {
 		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_BASIC
 		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_INSTALL_FONTS
-		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED
-		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_EXTENSIONS ) {
+		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED ) {
 			$this->active_tab = self::OMGF_SETTINGS_FIELD_BASIC;
 		}
 		
@@ -223,9 +219,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			case ( self::OMGF_SETTINGS_FIELD_BASIC ):
 				$needle = 'OMGF_BASIC_SETTING_';
 				break;
-			case ( self::OMGF_SETTINGS_FIELD_EXTENSIONS ):
-				$needle = 'OMGF_EXT_SETTING';
-				break;
 			default:
 				$needle = 'OMGF_ADV_SETTING';
 		}
@@ -247,17 +240,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	}
 	
 	/**
-	 * Add Generate Stylesheet Tab to Settings Screen.
-	 */
-	public function generate_stylesheet_tab () {
-		$this->generate_tab(
-			self::OMGF_SETTINGS_FIELD_INSTALL_FONTS,
-			'dashicons-admin-appearance',
-			__( 'Install Fonts', $this->plugin_text_domain )
-		);
-	}
-	
-	/**
 	 * Add Advanced Settings Tab to Settings Screen.
 	 */
 	public function advanced_settings_tab () {
@@ -265,10 +247,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	}
 	
 	/**
-	 * Add Extensions tab to Settings Screen.
+	 * Add Generate Stylesheet Tab to Settings Screen.
 	 */
-	public function extensions_settings_tab () {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_EXTENSIONS, 'dashicons-admin-plugins', __( 'Extensions (Pro)', $this->plugin_text_domain ) );
+	public function generate_stylesheet_tab () {
+		$this->generate_tab( self::OMGF_SETTINGS_FIELD_INSTALL_FONTS, 'dashicons-admin-appearance', __( 'Install Fonts', $this->plugin_text_domain )
+		);
 	}
 	
 	/**
@@ -322,13 +305,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function advanced_settings_content () {
 		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_ADVANCED );
-	}
-	
-	/**
-	 * Render Extensions content
-	 */
-	public function extensions_settings_content () {
-		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_EXTENSIONS );
 	}
 	
 	/**

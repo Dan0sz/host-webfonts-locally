@@ -35,7 +35,6 @@ class OMGF_Admin
 		
 		$this->do_basic_settings();
 		$this->do_advanced_settings();
-		$this->do_extensions_settings();
 		
 		add_filter( 'pre_update_option_omgf_cache_dir', [ $this, 'cache_dir_changed' ], 10, 2 );
 		add_filter( 'pre_update_option_omgf_cache_uri', [ $this, 'serve_uri_changed' ], 10, 2 );
@@ -89,13 +88,6 @@ class OMGF_Admin
 	 */
 	private function do_advanced_settings () {
 		return new OMGF_Admin_Settings_Advanced();
-	}
-	
-	/**
-	 * @return OMGF_Admin_Settings_Extensions
-	 */
-	private function do_extensions_settings () {
-		return new OMGF_Admin_Settings_Extensions();
 	}
 	
 	/**

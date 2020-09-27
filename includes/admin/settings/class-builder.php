@@ -146,11 +146,10 @@ class OMGF_Admin_Settings_Builder
         <tr>
             <th scope="row"><?= apply_filters( $name . '_setting_label', $label ); ?></th>
             <td>
-                <input type="checkbox" <?= apply_filters( $name . '_setting_disabled', $disabled ) ? 'disabled' : ''; ?> class="<?= str_replace( '_', '-', $name ); ?>" name="<?= $name; ?>"
-					<?= $checked == "on" ? 'checked = "checked"' : ''; ?> />
-                <p class="description">
-					<?= apply_filters( $name . '_setting_description', $description ); ?>
-                </p>
+                <label for="<?= $name; ?>">
+                    <input id="<?= $name; ?>" type="checkbox" <?= apply_filters( $name . '_setting_disabled', $disabled ) ? 'disabled' : ''; ?> class="<?= str_replace( '_', '-', $name ); ?>" name="<?= $name; ?>" <?= $checked == "on" ? 'checked = "checked"' : ''; ?> />
+	                <?= apply_filters( $name . '_setting_description', $description ); ?>
+                </label>
             </td>
         </tr>
 		<?php
