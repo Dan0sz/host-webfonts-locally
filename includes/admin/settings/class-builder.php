@@ -90,12 +90,19 @@ class OMGF_Admin_Settings_Builder
 				<?= apply_filters( $name . '_setting_label', $label ); ?>
             </th>
             <td>
-                <select name="<?= $name; ?><?= $is_multiselect ? '[]' : ''; ?>" class="<?= str_replace( '_', '-', $name ); ?>" <?= $is_multiselect ? 'size="10" multiple' : ''; ?> <?= apply_filters( $name . '_setting_disabled', $disabled ) ? 'disabled' : ''; ?>>
+                <select name="<?= $name; ?><?= $is_multiselect ? '[]' : ''; ?>" class="<?= str_replace( '_', '-', $name ); ?>" <?= $is_multiselect ? 'size="10" multiple="multiple"' : ''; ?> <?= apply_filters( $name . '_setting_disabled', $disabled ) ? 'disabled' : ''; ?>>
 					<?php
 					$options = apply_filters( $name . '_setting_options', $options );
 					?>
 					<?php foreach ( $options as $option => $option_label ): ?>
-                        <option value="<?= $option; ?>" <?= ( $selected == $option ) ? 'selected' : ''; ?>><?= $option_label; ?></option>
+                    <?php
+                    if (is_array($selected)) {
+                        $is_selected = in_array($option, $selected);
+                    } else {
+                        $is_selected = $selected == $option;
+                    }
+                    ?>
+                    <option value="<?= $option; ?>" <?= $is_selected ? 'selected="selected"' : ''; ?>><?= $option_label; ?></option>
 					<?php endforeach; ?>
                 </select>
                 <p class="description">

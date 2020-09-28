@@ -134,7 +134,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			__( 'Force Subsets (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_force_subsets',
 			OMGF_Admin_Settings::OMGF_FORCE_SUBSETS_OPTIONS,
-			defined( 'OMGF_PRO_FORCE_SUBSETS' ) ? OMGF_PRO_FORCE_SUBSETS : false,
+			defined( 'OMGF_PRO_FORCE_SUBSETS' ) ? OMGF_PRO_FORCE_SUBSETS : [],
 			__( 'If a theme or plugin loads subsets you don\'t need, use this option to force all Google Fonts to be loaded in the selected subsets.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true,
 			true
