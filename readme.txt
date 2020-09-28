@@ -104,6 +104,7 @@ N/A
 
 = 4.0.0 | October 1st, 2020 =
 * OMGF now runs fully automatic to replace/remove Google Fonts from your pages using OMGF's Download API. No initial configuration required!
+* HUGE performance increase in OMGF's automatic replacing/removing methods.
 * Major overhaul of Settings Page:
   * Removed Extensions Tab
   * Some settings were moved to a new tab, called Basic Settings.
@@ -111,6 +112,7 @@ N/A
   * Improved Welcome and Documentation tab.
   * Clarified option descriptions.
 * Using Web Font Loader option is now deprecated and will be removed in a future release.
+* Removed 'Remove Version Parameter' option, since the new detection method uses the initial scripts version, if set.
 
 = 3.8.3 | September 15th, 2020 =
 * Performance improvements for Class autoloader.
