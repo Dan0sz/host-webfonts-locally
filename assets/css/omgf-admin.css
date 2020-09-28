@@ -64,6 +64,9 @@
 #omgf-welcome-panel h3 > .dashicons {
   line-height: 1.4;
 }
+#omgf-welcome-panel .welcome-icon:before {
+  padding: 0;
+}
 /**
  * Generate Stylesheet-form
  */
