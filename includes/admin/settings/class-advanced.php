@@ -25,7 +25,9 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	 * OMGF_Admin_Settings_Advanced constructor.
 	 */
 	public function __construct () {
-		$this->title = __( 'Advanced Settings', $this->plugin_text_domain );
+		parent::__construct();
+		
+	    $this->title = __( 'Advanced Settings', $this->plugin_text_domain );
 		
 		// Open
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_title' ], 10 );
@@ -33,9 +35,9 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_before' ], 20 );
 		
 		// Settings
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_font_processing' ], 25 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_processing' ], 25 );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_process_resource_hints' ], 30 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_force_subsets' ], 35 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_force_subsets' ], 35 );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_cdn_url' ], 40 );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_cache_uri' ], 50 );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_relative_url' ], 60 );
@@ -55,6 +57,39 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		?>
         <p>
         </p>
+		<?php
+	}
+	
+	/**
+	 *
+	 */
+	public function do_promo_fonts_processing () {
+		?>
+        <tr>
+            <th scope="row"><?= __( 'Google Fonts Processing (Pro)', $this->plugin_text_domain ); ?></th>
+            <td>
+                <fieldset id="" class="scheme-list">
+					<?php foreach ( $this->fonts_processing_pro_options() as $name => $data ): ?>
+						<?php
+						$checked  = defined( strtoupper( $name ) ) ? constant( strtoupper( $name ) ) : false;
+						$disabled = apply_filters( $name . '_setting_disabled', true ) ? 'disabled' : '';
+						?>
+                        <label for="<?= $name; ?>">
+                            <input type="checkbox" name="<?= $name; ?>" <?= $checked ? 'checked="checked"' : ''; ?> <?= $disabled; ?> /><?= $data['label']; ?>
+                            &nbsp;
+                        </label>
+					<?php endforeach; ?>
+                </fieldset>
+                <p class="description">
+                <?= $this->promo; ?>
+                <ul>
+					<?php foreach ( $this->fonts_processing_pro_options() as $name => $data ): ?>
+                        <li><strong><?= $data['label']; ?></strong>: <?= $data['description']; ?></li>
+					<?php endforeach; ?>
+                </ul>
+                </p>
+            </td>
+        </tr>
 		<?php
 	}
 	
@@ -81,43 +116,12 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function do_font_processing () {
-		?>
-        <tr>
-            <th scope="row"><?= __( 'Google Fonts Processing (Pro)', $this->plugin_text_domain ); ?></th>
-            <td>
-                <fieldset id="" class="scheme-list">
-					<?php foreach ( $this->fonts_processing_pro_options() as $name => $data ): ?>
-						<?php
-						$checked  = defined( strtoupper( $name ) ) ? constant( strtoupper( $name ) ) : false;
-						$disabled = apply_filters( $name . '_setting_disabled', true ) ? 'disabled' : '';
-						?>
-                        <label for="<?= $name; ?>">
-                            <input type="checkbox" name="<?= $name; ?>" <?= $checked ? 'checked="checked"' : ''; ?> <?= $disabled; ?> /><?= $data['label']; ?>&nbsp;
-                        </label>
-					<?php endforeach; ?>
-                </fieldset>
-                <p class="description">
-                    <ul>
-					<?php foreach ( $this->fonts_processing_pro_options() as $name => $data ): ?>
-                        <li><strong><?= $data['label']; ?></strong>: <?= $data['description']; ?></li>
-					<?php endforeach; ?>
-                    </ul>
-                </p>
-            </td>
-        </tr>
-		<?php
-	}
-	
-	/**
-	 *
-	 */
 	public function do_promo_process_resource_hints () {
 		$this->do_checkbox(
 			__( 'Remove Resource Hints (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_process_resource_hints',
 			defined( 'OMGF_PRO_PROCESS_RESOURCE_HINTS' ) ? OMGF_PRO_PROCESS_RESOURCE_HINTS : false,
-			sprintf( __( 'Remove all <code>link</code> elements with a <code>rel</code> attribute value of <code>dns-prefetch</code>, <code>preload</code> or <code>preconnect</code>. <a href="%s" target="_blank">Purchase OMGF Pro</a> to enable this option.', $this->plugin_text_domain ), OMGF_Admin_Settings_Builder::FFWP_WORDPRESS_PLUGINS_OMGF_PRO ),
+			__( 'Remove all <code>link</code> elements with a <code>rel</code> attribute value of <code>dns-prefetch</code>, <code>preload</code> or <code>preconnect</code>.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true
 		);
 	}
@@ -125,13 +129,13 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function do_force_subsets () {
+	public function do_promo_force_subsets () {
 		$this->do_select(
 			__( 'Force Subsets (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_force_subsets',
 			OMGF_Admin_Settings::OMGF_FORCE_SUBSETS_OPTIONS,
 			defined( 'OMGF_PRO_FORCE_SUBSETS' ) ? OMGF_PRO_FORCE_SUBSETS : false,
-			__( '', $this->plugin_text_domain ),
+			__( 'If a theme or plugin loads subsets you don\'t need, use this option to force all Google Fonts to be loaded in the selected subsets.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true,
 			true
 		);

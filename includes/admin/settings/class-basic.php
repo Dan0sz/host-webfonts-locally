@@ -19,7 +19,9 @@ defined( 'ABSPATH' ) || exit;
 class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 {
 	public function __construct () {
-		$this->title = __( 'Basic Settings', $this->plugin_text_domain );
+		parent::__construct();
+		
+	    $this->title = __( 'Basic Settings', $this->plugin_text_domain );
 		
 		// Open
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_title' ], 10 );
@@ -28,10 +30,11 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 		
 		// Settings
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_process_google_fonts' ], 30 );
-		add_filter( 'omgf_basic_settings_content', [ $this, 'do_display_option' ], 40 );
-		add_filter( 'omgf_basic_settings_content', [ $this, 'do_combine_requests' ], 50 );
-		add_filter( 'omgf_basic_settings_content', [ $this, 'do_cache_dir' ], 60 );
-		add_filter( 'omgf_basic_settings_content', [ $this, 'do_optimize_edit_roles' ], 70 );
+		add_filter( 'omgf_basic_settings_content', [ $this, 'do_promo_advanced_processing' ], 40 );
+		add_filter( 'omgf_basic_settings_content', [ $this, 'do_display_option' ], 50 );
+		add_filter( 'omgf_basic_settings_content', [ $this, 'do_promo_combine_requests' ], 60 );
+		add_filter( 'omgf_basic_settings_content', [ $this, 'do_cache_dir' ], 70 );
+		add_filter( 'omgf_basic_settings_content', [ $this, 'do_optimize_edit_roles' ], 80 );
 		
 		// Close
 		add_filter( 'omgf_basic_settings_content', [ $this, 'do_after' ], 100 );
@@ -60,7 +63,20 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_BASIC_SETTING_FONT_PROCESSING,
 			OMGF_Admin_Settings::OMGF_FONT_PROCESSING_OPTIONS,
 			OMGF_FONT_PROCESSING,
-			sprintf( __( "Choose whether OMGF should (find, download and) <strong>replace</strong> all Google Fonts, or just <strong>remove</strong> them. Choosing Remove will force WordPress to fallback to system fonts. OMGF only scans for Google Fonts which are enqueued in WordPress' <code>head</code>. Upgrade to <a href='%s' target='_blank'>OMGF Pro</a> to process all fonts. E.g. fonts that're loaded using Web Font Loader and/or in WP's <code>footer</code>.", $this->plugin_text_domain ), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO )
+			sprintf( __( "Choose whether OMGF should (find, download and) <strong>replace</strong> all Google Fonts, or just <strong>remove</strong> them. Choosing Remove will force WordPress to fallback to system fonts or install your own.", $this->plugin_text_domain ), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO )
+		);
+	}
+	
+	/**
+	 *
+	 */
+	public function do_promo_advanced_processing () {
+		$this->do_checkbox(
+			__( 'Enable Advanced Processing (Pro)', $this->plugin_text_domain ),
+			'omgf_pro_advanced_processing',
+			defined( 'OMGF_PRO_ADVANCED_PROCESSING' ) ? true : false,
+			__( 'By default, OMGF scans for Google Fonts which are registered/enqueued in WordPress\' header (<code>wp_head()</code>). Advanced Processing will process all Google Fonts throughout the entire document.', $this->plugin_text_domain ) . ' ' . $this->promo,
+			true
 		);
 	}
 	
@@ -80,12 +96,12 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function do_combine_requests () {
+	public function do_promo_combine_requests () {
 		$this->do_checkbox(
 			__( 'Combine & Dedupe Google Fonts (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_combine_requests',
 			defined( 'OMGF_PRO_COMBINE_REQUESTS' ) ? true : false,
-			sprintf( __( 'Combine and deduplicate multiple font requests into one request. This feature is enabled by default in OMGF Pro. <a target="_blank" href="%s">Upgrade now</a>.', $this->plugin_text_domain ), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO ),
+			__( 'Combine and deduplicate multiple font requests into one request. This feature is enabled by default in OMGF Pro.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true
 		);
 	}

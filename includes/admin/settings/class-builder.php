@@ -26,6 +26,26 @@ class OMGF_Admin_Settings_Builder
 	/** @var $title */
 	protected $title;
 	
+	/** @var $promo string */
+	protected $promo;
+	
+	/**
+     * Only sets the promo string on settings load.
+     *
+	 * OMGF_Admin_Settings_Builder constructor.
+	 */
+	public function __construct () {
+	    add_filter('omgf_basic_settings_content', [ $this, 'do_promo' ]);
+	    add_filter('omgf_advanced_settings_content', [ $this, 'do_promo' ]);
+    }
+	
+	/**
+	 *
+	 */
+    public function do_promo () {
+	    $this->promo = apply_filters('omgf_pro_promo', sprintf(__('<a href="%s" target="_blank">Upgrade to Pro</a> to enable this option.', $this->plugin_text_domain), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO));
+    }
+	
 	/**
 	 *
 	 */
