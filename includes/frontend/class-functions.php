@@ -155,7 +155,7 @@ class OMGF_Frontend_Functions
 		if ( OMGF_WEB_FONT_LOADER ) {
 			$this->get_template( 'web-font-loader' );
 		} else {
-			wp_enqueue_style( self::OMGF_STYLE_HANDLE, OMGF_FONTS_URL . '/' . OMGF_FILENAME, [], ( OMGF_REMOVE_VERSION ? null : OMGF_STATIC_VERSION ) );
+			wp_enqueue_style( self::OMGF_STYLE_HANDLE, OMGF_FONTS_URL . '/' . OMGF_FILENAME, []);
 		}
 	}
 	

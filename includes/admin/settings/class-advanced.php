@@ -206,18 +206,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function do_remove_version () {
-		$this->do_checkbox(
-			__( 'Remove version parameter?', $this->plugin_text_domain ),
-			OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_VERSION,
-			OMGF_REMOVE_VERSION,
-			__( 'This removes the <code>?ver=x.x.x</code> parameter from the request to <code>fonts.css</code>. ', $this->plugin_text_domain )
-		);
-	}
-	
-	/**
-	 *
-	 */
 	public function do_uninstall () {
 		$this->do_checkbox(
 			__( 'Remove settings and files at uninstall?', $this->plugin_text_domain ),

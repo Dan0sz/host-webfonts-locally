@@ -64,7 +64,6 @@ class OMGF
 	    define('OMGF_RELATIVE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL)));
 	    define('OMGF_CDN_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL)));
 	    define('OMGF_WEB_FONT_LOADER', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER)));
-	    define('OMGF_REMOVE_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_REMOVE_VERSION)));
 	    define('OMGF_CURRENT_BLOG_ID', get_current_blog_id());
 	    define('OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH);
 	    define('OMGF_FONTS_URL', $this->get_fonts_url());
