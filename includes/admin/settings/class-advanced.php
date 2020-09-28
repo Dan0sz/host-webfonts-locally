@@ -27,7 +27,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	public function __construct () {
 		parent::__construct();
 		
-	    $this->title = __( 'Advanced Settings', $this->plugin_text_domain );
+		$this->title = __( 'Advanced Settings', $this->plugin_text_domain );
 		
 		// Open
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_title' ], 10 );
@@ -81,7 +81,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 					<?php endforeach; ?>
                 </fieldset>
                 <p class="description">
-                <?= $this->promo; ?>
+					<?= $this->promo; ?>
                 <ul>
 					<?php foreach ( $this->fonts_processing_pro_options() as $name => $data ): ?>
                         <li><strong><?= $data['label']; ?></strong>: <?= $data['description']; ?></li>
@@ -196,10 +196,10 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	 */
 	public function do_webfont_loader () {
 		$this->do_checkbox(
-			__( 'Use Web Font Loader?', $this->plugin_text_domain ),
+			__( 'Use Web Font Loader? (Deprecated)', $this->plugin_text_domain ),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER,
 			OMGF_WEB_FONT_LOADER,
-			__( 'Use Typekit\'s Web Font Loader to load fonts asynchronously.', $this->plugin_text_domain )
+			__( 'Use Typekit\'s Web Font Loader to load fonts asynchronously. Only works with fonts added through \'Install Fonts\' and will be removed in the future, because using Web Font Loader increases Cumulative Layout Shift in Google PageSpeed Insights.', $this->plugin_text_domain )
 		);
 	}
 	

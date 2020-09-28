@@ -28,7 +28,6 @@ Please keep in mind that, although I try to make the configuration of this plugi
 - Automatically remove registered/enqueued Google Fonts from wp_head(),
 - Install additional Google Fonts and host them locally,
 - Leverage the font-display (swap) option,
-- Use Typekit's Web Font Loader to load your locally hosted fonts asynchronously,
 - Serve fonts from CDN,
 - Use OMGF with *security through obscurity* plugins.
 
@@ -71,10 +70,6 @@ No, to automatically remove resource hints pointing to fonts.googleapis.com or f
 
 Yes, you can. Enter the url of your CDN and empty OMGF's cache directory.
 
-= How can I make sure the fonts load asynchronously AKA non-render blocking?
-
-Enable Typekit's Web Font Loader in the settings and OMGF will take care of it for you!
-
 = I have Google Fonts Processing set to Replace/Remove but the fonts from fonts.gstatic.com|fonts.googleapis.com are still loaded. What's going on? =
 
 The free version of OMGF removes any fonts that are loaded in the conventional way: wp_enqueue_scripts(). If it doesn't work for you, you're theme or plugins using other methods to load Google Fonts, e.g. in the footer, WebFont Loader, etc. [Upgrade to OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/) to automatically replace these fonts with a locally hosted version.
@@ -115,6 +110,7 @@ N/A
   * Generate Stylesheet is now only used to install additional fonts and is no longer part of the main configuration.
   * Improved Welcome and Documentation tab.
   * Clarified option descriptions.
+* Using Web Font Loader option is now deprecated and will be removed in a future release.
 
 = 3.8.3 | September 15th, 2020 =
 * Performance improvements for Class autoloader.
