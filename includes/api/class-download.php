@@ -35,6 +35,10 @@ class OMGF_API_Download extends WP_REST_Controller
 	/** @var string $path */
 	private $path = '';
 	
+	public function __construct () {
+		add_filter( 'content_url', [ $this, 'rewrite_url' ], 10, 2 );
+	}
+	
 	/**
 	 *
 	 */
@@ -80,10 +84,10 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		foreach ( $font_families as $font_family ) {
 			list( $family, $variants ) = explode( ':', $font_family );
-			$family           = str_replace( '  ', '-', strtolower( $family ) );
+			$family = str_replace( '  ', '-', strtolower( $family ) );
 			
-			if (defined('OMGF_PRO_FORCE_SUBSETS') && !empty(OMGF_PRO_FORCE_SUBSETS)) {
-				$query['subsets'] = implode(',', OMGF_PRO_FORCE_SUBSETS);
+			if ( defined( 'OMGF_PRO_FORCE_SUBSETS' ) && ! empty( OMGF_PRO_FORCE_SUBSETS ) ) {
+				$query['subsets'] = implode( ',', OMGF_PRO_FORCE_SUBSETS );
 			} else {
 				$query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
 			}
@@ -151,7 +155,7 @@ class OMGF_API_Download extends WP_REST_Controller
 			function ( $font ) use ( $variants ) {
 				$id = $font->id;
 				
-				if ($id == 'regular' || $id == 'italic') {
+				if ( $id == 'regular' || $id == 'italic' ) {
 					$id = '400';
 				}
 				
@@ -184,6 +188,40 @@ class OMGF_API_Download extends WP_REST_Controller
 		@unlink( $tmp );
 		
 		return content_url( $file_uri );
+	}
+	
+	/**
+	 * @param $url
+	 * @param $path
+	 *
+	 * @return mixed
+	 */
+	public function rewrite_url ( $url, $path ) {
+		/**
+		 * Exit early if this isn't requested by OMGF.
+		 */
+		if ( strpos( $url, OMGF_CACHE_PATH ) === false ) {
+			return $url;
+		}
+		
+		/**
+		 * If Relative URLs is enabled, overwrite URL with Path and continue execution.
+		 */
+		if ( OMGF_RELATIVE_URL ) {
+			$content_dir = str_replace(site_url(), '', content_url());
+			
+			$url = $content_dir . $path;
+		}
+		
+		if ( OMGF_CDN_URL ) {
+			$url = str_replace( site_url(), OMGF_CDN_URL, $url );
+		}
+		
+		if ( OMGF_CACHE_URI ) {
+			$url = str_replace( OMGF_CACHE_PATH, OMGF_CACHE_URI, $url );
+		}
+		
+		return $url;
 	}
 	
 	/**

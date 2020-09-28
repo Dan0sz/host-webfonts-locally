@@ -142,7 +142,7 @@ class OMGF
         }
 
         if (OMGF_CDN_URL) {
-            $uploadUrl = '//' . OMGF_CDN_URL . '/' . $this->get_content_dir() . OMGF_CACHE_PATH;
+            $uploadUrl = OMGF_CDN_URL . '/' . $this->get_content_dir() . OMGF_CACHE_PATH;
         } elseif (OMGF_CACHE_URI) {
             $uploadUrl = get_site_url(OMGF_CURRENT_BLOG_ID, OMGF_CACHE_URI);
         } else {

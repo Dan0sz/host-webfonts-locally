@@ -150,7 +150,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI,
 			__( 'e.g. /app/uploads/omgf', $this->plugin_text_domain ),
 			OMGF_CACHE_URI,
-			__( 'The relative path to serve font files from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the cache directory specified above will be used.', $this->plugin_text_domain )
+			__( 'The relative path to serve font files from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the cache directory specified under Basic Settings will be used.', $this->plugin_text_domain )
 		);
 	}
 	
@@ -185,9 +185,9 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		$this->do_text(
 			__( 'Serve fonts from CDN', $this->plugin_text_domain ),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL,
-			__( 'e.g. cdn.mydomain.com', $this->plugin_text_domain ),
+			__( 'e.g. https://cdn.mydomain.com', $this->plugin_text_domain ),
 			OMGF_CDN_URL,
-			__( "Are you using a CDN? Then enter the URL here. Leave empty when using CloudFlare.", $this->plugin_text_domain )
+			__( "If you're using a CDN, enter the URL here incl. protocol (e.g. <code>https://</code>.) Leave empty when using CloudFlare.", $this->plugin_text_domain )
 		);
 	}
 	
