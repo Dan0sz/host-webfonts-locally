@@ -13,6 +13,25 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 /**
+ * General
+ */
+.omgf .button-cancel {
+  color: #a00;
+  text-decoration: none;
+  border-color: transparent;
+  box-shadow: none;
+  background: 0 0;
+  border-radius: 3px;
+  white-space: nowrap;
+  padding: 1px 10px !important;
+}
+.omgf .button-cancel:hover {
+  cursor: pointer;
+  background: #d54e21;
+  color: #fff;
+  border-color: #d54e21;
+}
+/**
  * Navigation
  */
 .omgf-nav {
@@ -95,22 +114,6 @@
 }
 .omgf-generate-stylesheet #omgf-control-panel {
   margin-top: 1em;
-}
-.omgf-generate-stylesheet #omgf-control-panel .button-cancel {
-  color: #a00;
-  text-decoration: none;
-  border-color: transparent;
-  box-shadow: none;
-  background: 0 0;
-  border-radius: 3px;
-  white-space: nowrap;
-  padding: 1px 10px !important;
-}
-.omgf-generate-stylesheet #omgf-control-panel .button-cancel:hover {
-  cursor: pointer;
-  background: #d54e21;
-  color: #fff;
-  border-color: #d54e21;
 }
 /**
  * Loader
