@@ -81,7 +81,12 @@ class OMGF_API_Download extends WP_REST_Controller
 		foreach ( $font_families as $font_family ) {
 			list( $family, $variants ) = explode( ':', $font_family );
 			$family           = str_replace( '  ', '-', strtolower( $family ) );
-			$query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
+			
+			if (defined('OMGF_PRO_FORCE_SUBSETS') && !empty(OMGF_PRO_FORCE_SUBSETS)) {
+				$query['subsets'] = implode(',', OMGF_PRO_FORCE_SUBSETS);
+			} else {
+				$query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
+			}
 			
 			$response = wp_remote_get(
 				sprintf( $url, $family ) . '?' . http_build_query( $query )
