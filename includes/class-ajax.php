@@ -186,7 +186,11 @@ class OMGF_AJAX
 			delete_option( OMGF_Admin_Settings::OMGF_SETTING_SUBSETS );
 			delete_option( OMGF_Admin_Settings::OMGF_SETTING_FONTS );
 			
-			array_map( 'unlink', array_filter( (array) glob( OMGF_FONTS_DIR . '/*' ) ) );
+			$entries = array_filter( (array) glob( OMGF_FONTS_DIR . '/*' ) );
+			
+			foreach ( $entries as $entry ) {
+				$this->delete( $entry );
+			}
 			
 			OMGF_Admin_Notice::set_notice( __( 'Cache directory successfully emptied.', $this->plugin_text_domain ) );
 		} catch ( \Exception $e ) {
@@ -196,6 +200,25 @@ class OMGF_AJAX
 				'error',
 				$e->getCode()
 			);
+		}
+	}
+	
+	/**
+	 * @param $entry
+	 */
+	public function delete ( $entry ) {
+		if ( is_dir( $entry ) ) {
+			$file = new \FilesystemIterator( $entry );
+			
+			// If dir is empty, valid() returns false.
+			while ( $file->valid() ) {
+				$this->delete( $file->getPathName() );
+				$file->next();
+			}
+			
+			rmdir( $entry );
+		} else {
+			unlink( $entry );
 		}
 	}
 }
