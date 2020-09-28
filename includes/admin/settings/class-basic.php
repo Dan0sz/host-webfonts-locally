@@ -101,7 +101,7 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 			__( 'Combine & Dedupe Google Fonts (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_combine_requests',
 			defined( 'OMGF_PRO_COMBINE_REQUESTS' ) ? true : false,
-			__( 'Combine and deduplicate multiple font requests into one request. This feature is enabled by default in OMGF Pro and can\'t be disabled.', $this->plugin_text_domain ) . ' ' . $this->promo,
+			__( 'Combine and deduplicate multiple font requests into one request. This feature is always on in OMGF Pro and can\'t be disabled.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true
 		);
 	}
