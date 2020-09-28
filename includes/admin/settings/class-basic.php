@@ -82,10 +82,10 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 	 */
 	public function do_combine_requests () {
 		$this->do_checkbox(
-			__( 'Combine Google Fonts Requests (Pro)', $this->plugin_text_domain ),
+			__( 'Combine & Dedupe Google Fonts (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_combine_requests',
 			defined( 'OMGF_PRO_COMBINE_REQUESTS' ) ? true : false,
-			sprintf( __( 'Combine multiple font requests into one request. This feature is enabled by default in OMGF Pro. <a target="_blank" href="%s">Upgrade now</a>.', $this->plugin_text_domain ), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO ),
+			sprintf( __( 'Combine and deduplicate multiple font requests into one request. This feature is enabled by default in OMGF Pro. <a target="_blank" href="%s">Upgrade now</a>.', $this->plugin_text_domain ), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO ),
 			true
 		);
 	}
