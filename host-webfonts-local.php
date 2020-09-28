@@ -3,7 +3,7 @@
  * @formatter:off
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
- * Description: Minimize DNS requests and leverage browser cache by easily saving Google Fonts to your server and removing the external Google Fonts.
+ * Description: Minimize DNS requests and leverage browser cache by automatically saving Google Fonts to your server and removing the external Google Fonts.
  * Version: 3.8.3
  * Author: Daan (from Fast FW Press)
  * Author URI: https://ffwp.dev
