@@ -157,7 +157,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			wp_die( __( "You're not cool enough to access this page.", $this->plugin_text_domain ) );
 		}
 		?>
-        <div class="wrap">
+        <div class="wrap omgf">
             <h1><?= apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', $this->plugin_text_domain ) ); ?></h1>
 
             <p>
@@ -327,8 +327,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			
 			do_action( 'omgf_after_settings_form_settings' );
 			
-			submit_button();
+			submit_button(__('Save Changes', $this->plugin_text_domain), 'primary', 'submit', false);
 			?>
+            <a id="omgf-empty" class="button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
         </form>
 		<?php
 	}
