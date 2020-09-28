@@ -76,7 +76,7 @@ class OMGF_Frontend_Functions
 			return;
 		}
 		
-		if ( apply_filters( 'omgf_pro_auto_processing_enabled', false ) ) {
+		if ( apply_filters( 'omgf_pro_advanced_processing_enabled', false ) ) {
 			return;
 		}
 		
