@@ -121,7 +121,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			__( 'Remove Resource Hints (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_process_resource_hints',
 			defined( 'OMGF_PRO_PROCESS_RESOURCE_HINTS' ) ? OMGF_PRO_PROCESS_RESOURCE_HINTS : false,
-			__( 'Remove all <code>link</code> elements with a <code>rel</code> attribute value of <code>dns-prefetch</code>, <code>preload</code> or <code>preconnect</code>.', $this->plugin_text_domain ) . ' ' . $this->promo,
+			__( 'Remove all <code>link</code> elements with a <code>rel</code> attribute value of <code>dns-prefetch</code>, <code>preload</code> or <code>preconnect</code> pointing to <code>fonts.googleapis.com</code> or <code>fonts.gstatic.com</code>.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true
 		);
 	}

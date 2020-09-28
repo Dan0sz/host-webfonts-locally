@@ -75,7 +75,7 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 			__( 'Enable Advanced Processing (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_advanced_processing',
 			defined( 'OMGF_PRO_ADVANCED_PROCESSING' ) ? true : false,
-			__( 'By default, OMGF scans for Google Fonts which are registered/enqueued in WordPress\' header (<code>wp_head()</code>). Advanced Processing will process all Google Fonts throughout the entire document.', $this->plugin_text_domain ) . ' ' . $this->promo,
+			__( 'By default, OMGF scans for Google Fonts which are registered/enqueued in the <code>wp_enqueue_scripts()</code> action in WordPress\' header (<code>wp_head()</code>). Advanced Processing will process all Google Fonts throughout the entire document. This setting can be tweaked further under Advanced Settings.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true
 		);
 	}
@@ -101,7 +101,7 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 			__( 'Combine & Dedupe Google Fonts (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_combine_requests',
 			defined( 'OMGF_PRO_COMBINE_REQUESTS' ) ? true : false,
-			__( 'Combine and deduplicate multiple font requests into one request. This feature is enabled by default in OMGF Pro.', $this->plugin_text_domain ) . ' ' . $this->promo,
+			__( 'Combine and deduplicate multiple font requests into one request. This feature is enabled by default in OMGF Pro and can\'t be disabled.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true
 		);
 	}
