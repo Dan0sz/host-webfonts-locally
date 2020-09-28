@@ -61,11 +61,24 @@
 #omgf-welcome-panel {
   padding: 20px 10px 5px;
 }
+#omgf-welcome-panel .welcome-panel-content {
+  margin-left: 0;
+  padding: 0 15px;
+}
 #omgf-welcome-panel h3 > .dashicons {
   line-height: 1.4;
 }
+#omgf-welcome-panel .dashicons.ffwp-heart:before {
+  color: #FF4136;
+}
 #omgf-welcome-panel .welcome-icon:before {
   padding: 0;
+}
+#omgf-welcome-panel .signature {
+  text-align: center;
+}
+#omgf-welcome-panel .signature-image {
+  max-width: 90%;
 }
 /**
  * Generate Stylesheet-form

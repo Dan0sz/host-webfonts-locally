@@ -73,12 +73,31 @@
 #omgf-welcome-panel {
   padding: 20px 10px 5px;
 
+  .welcome-panel-content {
+    margin-left: 0;
+    padding: 0 15px;
+  }
+
   h3 > .dashicons {
     line-height: 1.4;
   }
 
+  .dashicons {
+    &.ffwp-heart:before {
+      color: #FF4136;
+    }
+  }
+
   .welcome-icon:before {
     padding: 0;
+  }
+
+  .signature {
+    text-align: center;
+  }
+
+  .signature-image {
+    max-width: 90%;
   }
 }
 

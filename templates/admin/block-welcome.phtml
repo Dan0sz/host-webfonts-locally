@@ -66,7 +66,7 @@ $tweetUrl           = 'https://twitter.com/intent/tweet?text=I+just+optimized+my
             </p>
             <?php else:; ?>
             <h2>
-                <?= __('Do you <span class="dashicons dashicons-heart"></span> OMGF Pro?', $plugin_text_domain) ;?>
+                <?= __('Do you <span class="dashicons dashicons-heart ffwp-heart"></span> OMGF Pro?', $plugin_text_domain) ;?>
             </h2>
             <p>
                 <?= __('Click the button below and receive a unique discount code for 10% off your next purchase!'); ?>
@@ -93,6 +93,11 @@ $tweetUrl           = 'https://twitter.com/intent/tweet?text=I+just+optimized+my
                 <li><a target="_blank" href="https://ffwp.dev/contact/"><?= __('Contact', $plugin_text_domain); ?></a></li>
             </ul>
             <?php endif; ?>
+            <hr />
+            <h4 class="signature"><?= sprintf(__('Coded with %s in The Netherlands.', $plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>'); ?></h4>
+            <p class="signature">
+                <img class="signature-image" alt="<?= __('Visit FFWP.dev', $plugin_text_domain); ?>" src="https://ffwp.dev/wp-content/uploads/2020/09/logo-color-full@05x.png" />
+            </p>
         </div>
     </div>
 </div>
