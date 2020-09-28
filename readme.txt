@@ -3,12 +3,12 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 3.8.3
+Stable tag: 4.0.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-With only 2 clicks of a button, OMGF automagically downloads your Google Fonts you want to WordPress' content-folder, generates a stylesheet for it and enqueues it in your theme's header.
+OMGF automagically caches the Google Fonts used by your theme/plugins locally. No configuration (or brains) required!
 
 == Description ==
 
@@ -17,25 +17,27 @@ With only 2 clicks of a button, OMGF automagically downloads your Google Fonts y
 
 Leverage Browser Cache, Minimize DNS requests and serve your Google Fonts in a 100% GDPR compliant way with OMGF!
 
-OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with CSS and JS optimizing/minification plugins like Autoptimize or W3 Total Cache. OMGF can efficiently remove any requests to external Google Fonts (loaded from fonts.gstatic.com or fonts.googleapis.com).
+OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automatically cache the fonts your theme and plugins use. If you're a webdeveloper/-designer yourself, you can use the Search bar to install additional fonts to include in your CSS.
 
-That's it. You're done!
+After installing the plugin, OMGF runs silently in the background. It captures any requests made to fonts.googleapis.com or fonts.gstatic.com and copies the fonts over to your server. Then it generates a stylesheet for your fonts including EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
 
-This will *decrease your pageload times*, *leverage browser cache*, *minimize DNS requests* and effectively bring you a perfect score on *Pagespeed Insights* and *Pingdom*, without taking toll on the performance of your webserver.
-
-Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffwp.dev/wordpress-services/omgf-expert-configuration/).
+Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffwp.dev/wordpress/omgf-expert-configuration/).
 
 == Features ==
-- *Automatically detect* which Google Fonts your theme is using or,
-- Easily find fonts in multiple subsets,
-- Download them and generate a stylesheet, which is automatically added to your header using WordPress' wp_head()-function,
-- Change the caching path (where the fonts and stylesheet are saved) for increased compatibility with Multisite environments and Caching- and Security-plugins, such as WP Super Cache, Autoptimize and WordFence,
-- Serve your fonts from your CDN,
-- Enable Typekit's [Web Font Loader](https://github.com/typekit/webfontloader) to load your fonts asynchronously and further increase your Pagespeed Insights score (!),
-- Preload the entire stylesheet or just fonts loaded above-the-fold,
-- Control font performance by adding font-display property,
-- Auto-generates the local source for webfonts,
-- Automatically remove any fonts loaded from fonts.gstatic.com or fonts.googleapis.com.
+- Automatically replace registered/enqueued Google Fonts in wp_head() with local copies,
+- Automatically remove registered/enqueued Google Fonts from wp_head(),
+- Install additional Google Fonts and host them locally,
+- Leverage the font-display (swap) option,
+- Use Typekit's Web Font Loader to load your locally hosted fonts asynchronously,
+- Serve fonts from CDN,
+- Use OMGF with *security through obscurity* plugins.
+
+== Features in the PRO version ==
+- Automatically remove/replace all Google Fonts throughout the entire document (webpage),
+- Combine all Google Fonts (made by your theme and/or plugins) requests into one file,
+- Deduplicate Google Fonts requests,
+- Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
+- Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
 
 == Installation ==
 
@@ -63,44 +65,37 @@ This could be for several reasons:
 
 = Does this plugin remove resource hints, e.g. preconnect, preload or dns-prefetch? =
 
-No, to automatically remove resource hints pointing to fonts.googleapis.com or fonts.gstatic.com, [upgrade to OMGF Pro](https://ffwp.dev/wordpress-plugins/host-google-fonts-pro/).
+No, to automatically remove resource hints pointing to fonts.googleapis.com or fonts.gstatic.com, [upgrade to OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/).
 
 = Can I serve the fonts from my CDN? =
 
-Yes, you can. Enter the url of your CDN and re-download and re-generate the stylesheet. Then the fonts will be saved to and served from your CDN.
+Yes, you can. Enter the url of your CDN and empty OMGF's cache directory.
 
 = How can I make sure the fonts load asynchronously AKA non-render blocking?
 
 Enable Typekit's Web Font Loader in the settings and OMGF will take care of it for you!
 
-= I'm getting a 'Load resources from a consistent URL' after installing and configuring this plugin. What's going on? =
+= I have Google Fonts Processing set to Replace/Remove but the fonts from fonts.gstatic.com|fonts.googleapis.com are still loaded. What's going on? =
 
-This must be, because you're still loading the externally hosted Google Fonts, besides the fonts you downloaded using OMGF. Try checking the option 'Remove Google Fonts' and see if that helps. If it doesn't consider using a child theme to 'dequeue' any external requests. If you don't know how to do that, please [contact](https://daan.dev/contact/) me.
-
-= I have 'Remove Google Fonts' enabled, but the fonts from fonts.gstatic.com|fonts.googleapis.com are still loaded. What's going on? =
-
-The option in OMGF removes any fonts that are loaded in the conventional way. However, if it doesn't work for you you're theme is either using an unconventional method or WebFont Loader to add Google Fonts. [Upgrade to OMGF Pro](https://ffwp.dev/wordpress-plugins/host-google-fonts-pro/) to automatically replace these fonts with a locally hosted version.
+The free version of OMGF removes any fonts that are loaded in the conventional way: wp_enqueue_scripts(). If it doesn't work for you, you're theme or plugins using other methods to load Google Fonts, e.g. in the footer, WebFont Loader, etc. [Upgrade to OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/) to automatically replace these fonts with a locally hosted version.
 
 = Does this plugin edit template files? =
 
-No, it does not. It creates a CSS Stylesheet which will be automatically added to your theme's header using a built-in WordPress queueing system.
+No, it does not. It creates a CSS Stylesheet which will be automatically added to your theme's header using WordPress built-in queueing system.
 
 = The stylesheet isn't loaded? What's going on? =
 
-OMGF enqueues the stylesheet into WordPress' head. If the stylesheet isn't loaded, this probably means your theme isn't implementing the wp_head() function correctly in its header section.
+The free version of OMGF enqueues the stylesheet into WordPress' head using wp_enqueue_scripts(). If the stylesheet isn't loaded, this probably means your theme isn't implementing wp_head() correctly. [Upgrade to OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/) to automatically add the stylesheet into WordPress' head.
 
 = Does this plugin support Multi Site? I'm getting CORS errors! =
 
 Yes, it does. When using subdomains, however, you might run into CORS related issues. To get around this, you should configure each site separately. Do the following:
 
 - Go to the site's own dashboard,
-- Change OMGF's cache directory (*Save webfonts to...*) to something unique, e.g. `/uploads/site1/omgf`,
-- Click 'Save Changes',
-- If you haven't already, find the fonts you want to use,
-- Click 'Download Fonts' and wait for the process to finish,
-- Click 'Generate stylesheet'.
+- Change OMGF's cache directory (*Save font files to...*) to something unique, e.g. `/uploads/site1/omgf`,
+- Click 'Save Changes'.
 
-Repeat this for every site you want to use with OMGF. A new stylesheet, using the corresponding site's Home-URL and cache directory for each font, has been generated. Bypassing any Cross-Origin Resource Sharing (CORS) issues you might run into.
+Repeat this for every site you want to use with OMGF. A new stylesheet, using the corresponding site's Home-URL and cache directory for each font, will be generated. Bypassing any Cross-Origin Resource Sharing (CORS) issues you might run into.
 
 = Is this plugin compatible with WPML? =
 
@@ -111,6 +106,15 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 4.0.0 | October 1st, 2020 =
+* OMGF now runs fully automatic to replace/remove Google Fonts from your pages using OMGF's Download API. No initial configuration required!
+* Major overhaul of Settings Page:
+  * Removed Extensions Tab
+  * Some settings were moved to a new tab, called Basic Settings.
+  * Generate Stylesheet is now only used to install additional fonts and is no longer part of the main configuration.
+  * Improved Welcome and Documentation tab.
+  * Clarified option descriptions.
 
 = 3.8.3 | September 15th, 2020 =
 * Performance improvements for Class autoloader.
