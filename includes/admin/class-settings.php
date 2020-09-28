@@ -111,7 +111,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	public function __construct () {
 		parent::__construct();
 		
-		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : self::OMGF_SETTINGS_FIELD_INSTALL_FONTS;
+		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : self::OMGF_SETTINGS_FIELD_BASIC;
 		$this->page       = isset( $_GET['page'] ) ? $_GET['page'] : '';
 		
 		add_action( 'admin_menu', [ $this, 'create_menu' ] );
