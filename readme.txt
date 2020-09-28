@@ -112,7 +112,7 @@ N/A
   * Improved Welcome and Documentation tab.
   * Clarified option descriptions.
 * Using Web Font Loader option is now deprecated and will be removed in a future release.
-* Removed 'Remove Version Parameter' option, since the new detection method uses the initial scripts version, if set.
+* Removed 'Remove Version Parameter' option, since the new detection method uses the initial scripts' version, if set.
 
 = 3.8.3 | September 15th, 2020 =
 * Performance improvements for Class autoloader.
