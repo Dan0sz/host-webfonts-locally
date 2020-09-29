@@ -20,15 +20,15 @@ When the fonts are downloaded and the stylesheet is generated, it rewrites every
 Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffwp.dev/wordpress/omgf-expert-configuration/).
 
 ### Features
-- Automatically replace registered/enqueued Google Fonts in wp_head() with local copies,
-- Automatically remove registered/enqueued Google Fonts from wp_head(),
+- Automatically replace registered/enqueued Google Fonts in `wp_head()` with local copies,
+- Automatically remove registered/enqueued Google Fonts from `wp_head()`,
 - Leverage the font-display (swap) option,
 - Serve fonts from CDN,
 - Use OMGF with *security through obscurity* plugins.
 
 ### Features in the PRO version
 Everything in the free version, plus:
-- Automatically remove/replace all Google Fonts throughout the entire document/page,
+- Automatically remove/replace all Google Fonts throughout the entire HTML document,
 - Combine all Google Fonts (made by your theme and/or plugins) requests into one file,
 - Deduplicate Google Fonts requests,
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
