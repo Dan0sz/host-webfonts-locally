@@ -1,14 +1,41 @@
 # OMGF | Host Google Fonts Locally
 
-With only 2 clicks of a button, OMGF automagically downloads your Google Fonts you want to WordPress' content-folder, generates a stylesheet for it and enqueues it in your theme's header.
+OMGF automagically caches the Google Fonts used by your theme/plugins locally. No configuration (or brains) required!
 
 ## Description
 
-OMGF (Optimize My Google Fonts) is written with performance in mind. Other plugins make repeated requests to your Blog's database to replace/remove requests to external Webfonts source (e.g. Google Fonts) on-the-fly. This might be user-friendly, but it's a performance killer, because locally hosting your Google Webfonts should be a set-and-forget feature. The source of your webfonts should be replaced once and kept that way.
+> How could using fonts via Google's service possibly run afoul of GDPR? The fact of the matter is that, when a font is requested by the user's browser, their IP is logged by Google and used for analytics.
+> — Lifehacker
 
-That's why I kept OMGF small and useful. It uses the Google Fonts Helper API to automagically download the fonts you want to WordPress' contents folder and generate a stylesheet for it. The stylesheet is automatically included to your site's header and 100% compatible with plugins like Autoptimize or W3 Total Cache. After that, all you need to do is remove any mention of requests to external webfont sources (using e.g. a child theme) and you're done!
+Leverage Browser Cache, Minimize DNS requests and serve your Google Fonts in a 100% GDPR compliant way with OMGF!
 
-This will *decrease your pageload times*, *leverage browser cache*, *minimize DNS requests* and effectively bring you a perfect score on *Pagespeed Insights* and *Pingdom*, without taking toll on the performance of your webserver.
+OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automatically cache the fonts your theme and plugins use to **minimize DNS requests** and speed up your WordPress website.
+
+## How Does It Work?
+
+After installing the plugin, OMGF runs silently in the background and captures any requests made to fonts.googleapis.com or fonts.gstatic.com. When a webpage is first loaded, it reroutes these requests to its own Download API and copies the fonts over to your server. Then it generates a stylesheet for your fonts including EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
+
+When the fonts are downloaded and the stylesheet is generated, it rewrites every URL pointing to fonts.googleapis.com or fonts.gstatic.com to the locally hosted variant.
+
+Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffwp.dev/wordpress/omgf-expert-configuration/).
+
+### Features
+- Automatically replace registered/enqueued Google Fonts in wp_head() with local copies,
+- Automatically remove registered/enqueued Google Fonts from wp_head(),
+- Leverage the font-display (swap) option,
+- Serve fonts from CDN,
+- Use OMGF with *security through obscurity* plugins.
+
+### Features in the PRO version
+Everything in the free version, plus:
+- Automatically remove/replace all Google Fonts throughout the entire document/page,
+- Combine all Google Fonts (made by your theme and/or plugins) requests into one file,
+- Deduplicate Google Fonts requests,
+- Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
+- Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
+
+*Click [here](https://ffwp.dev/wordpress/omgf-pro/) for more information and to purchase OMGF Pro.*
+
 
 ## Installation
 
@@ -25,8 +52,6 @@ This will *decrease your pageload times*, *leverage browser cache*, *minimize DN
 1. Click 'Activate'
 
 ## Frequently Asked Questions
-
-**Can I buy you a beer?**
 
 Visit the [FAQ at Wordpress.org](https://wordpress.org/plugins/host-webfonts-local/#faq)
 
