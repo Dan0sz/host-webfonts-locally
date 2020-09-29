@@ -42,6 +42,8 @@ Everything in the free version, plus:
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
 - Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
 
+*Click [here](https://ffwp.dev/wordpress/omgf-pro/) for more information and to purchase OMGF Pro.*
+
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/host-webfonts-local` directory, or install the plugin through the WordPress plugins screen directly.
