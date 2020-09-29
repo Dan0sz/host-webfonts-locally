@@ -20,7 +20,6 @@ defined( 'ABSPATH' ) || exit;
 define( 'OMGF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OMGF_PLUGIN_FILE', __FILE__ );
 define( 'OMGF_STATIC_VERSION', '3.4.0' );
-define( 'OMGF_WEB_FONT_LOADER_VERSION', '1.6.26' );
 
 /**
  * Takes care of loading classes on demand.
