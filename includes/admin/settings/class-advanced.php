@@ -18,9 +18,6 @@ defined( 'ABSPATH' ) || exit;
 
 class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 {
-	/** @var string $utmTags */
-	private $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=settings';
-	
 	/**
 	 * OMGF_Admin_Settings_Advanced constructor.
 	 */
@@ -35,15 +32,13 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_before' ], 20 );
 		
 		// Settings
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_processing' ], 25 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_process_resource_hints' ], 30 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_force_subsets' ], 35 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_cdn_url' ], 40 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_cache_uri' ], 50 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_relative_url' ], 60 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_webfont_loader' ], 70 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_force_ssl' ], 80 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 100 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_processing' ], 50 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_process_resource_hints' ], 60 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo_force_subsets' ], 70 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_cdn_url' ], 80 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_cache_uri' ], 90 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_relative_url' ], 100 );
+		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 110 );
 		
 		// Close
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_after' ], 200 );
@@ -156,18 +151,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function do_force_ssl () {
-		$this->do_checkbox(
-			__( 'Force SSL?', $this->plugin_text_domain ),
-			OMGF_Admin_Settings::OMGF_ADV_SETTING_FORCE_SSL,
-			OMGF_FORCE_SSL,
-			__( 'Some plugins mess up WordPress\' URL structure, which can cause OMGF to generate incorrect URLs in the stylesheet. If OMGF is generating non-SSL (<code>http://...</code>) URLs in the stylesheet, and you have the <strong>Site</strong> and <strong>WordPress Address</strong> (in <strong>Settings</strong> > <strong>General</strong>) set to SSL (<code>https://</code>), then enable this option.', $this->plugin_text_domain )
-		);
-	}
-	
-	/**
-	 *
-	 */
 	public function do_relative_url () {
 		$this->do_checkbox(
 			__( 'Use Relative URLs?', $this->plugin_text_domain ),
@@ -187,18 +170,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			__( 'e.g. https://cdn.mydomain.com', $this->plugin_text_domain ),
 			OMGF_CDN_URL,
 			__( "If you're using a CDN, enter the URL here incl. protocol (e.g. <code>https://</code>.) Leave empty when using CloudFlare.", $this->plugin_text_domain )
-		);
-	}
-	
-	/**
-	 *
-	 */
-	public function do_webfont_loader () {
-		$this->do_checkbox(
-			__( 'Use Web Font Loader? (Deprecated)', $this->plugin_text_domain ),
-			OMGF_Admin_Settings::OMGF_ADV_SETTING_WEB_FONT_LOADER,
-			OMGF_WEB_FONT_LOADER,
-			__( 'Use Typekit\'s Web Font Loader to load fonts asynchronously. Only works with fonts added through \'Install Fonts\' and will be removed in the future, because using Web Font Loader increases Cumulative Layout Shift in Google PageSpeed Insights.', $this->plugin_text_domain )
 		);
 	}
 	

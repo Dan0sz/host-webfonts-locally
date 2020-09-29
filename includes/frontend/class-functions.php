@@ -20,39 +20,16 @@ class OMGF_Frontend_Functions
 {
 	const OMGF_STYLE_HANDLE = 'omgf-fonts';
 	
-	/** @var OMGF_DB */
-	private $db;
-	
-	/** @var string */
-	private $stylesheet_file;
-	
-	/** @var string */
-	private $stylesheet_url;
-	
 	/** @var bool $do_optimize */
 	private $do_optimize;
-	
-	/** @var mixed|void $action */
-	private $action;
 	
 	/**
 	 * OMGF_Frontend_Functions constructor.
 	 */
 	public function __construct () {
-		$this->stylesheet_file = OMGF_FONTS_DIR . '/' . OMGF_FILENAME;
-		$this->stylesheet_url  = OMGF_FONTS_URL . '/' . OMGF_FILENAME;
-		$this->do_optimize     = $this->maybe_optimize_fonts();
+		$this->do_optimize = $this->maybe_optimize_fonts();
 		
 		add_action( 'wp_print_styles', [ $this, 'process_fonts' ], PHP_INT_MAX - 1000 );
-		
-		if ( file_exists( $this->stylesheet_file ) ) {
-			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_stylesheet' ], 10 );
-		}
-		
-		$this->db = new OMGF_DB();
-		
-		// Needs to be loaded before stylesheet.
-		add_action( 'wp_head', [ $this, 'preload_fonts' ], 1 );
 	}
 	
 	/**
@@ -99,8 +76,8 @@ class OMGF_Frontend_Functions
 	public function remove_registered_fonts () {
 		global $wp_styles;
 		
-		$registered   = $wp_styles->registered;
-		$fonts        = apply_filters( 'omgf_auto_remove', $this->detect_registered_google_fonts( $registered ) );
+		$registered = $wp_styles->registered;
+		$fonts      = apply_filters( 'omgf_auto_remove', $this->detect_registered_google_fonts( $registered ) );
 		
 		foreach ( $fonts as $handle => $font ) {
 			$wp_styles->registered [ $handle ]->src = '';
@@ -145,57 +122,9 @@ class OMGF_Frontend_Functions
 	}
 	
 	/**
-	 * Once the stylesheet is generated. We can enqueue it.
-	 */
-	public function enqueue_stylesheet () {
-		if ( ! $this->do_optimize ) {
-			return;
-		}
-		
-		if ( OMGF_WEB_FONT_LOADER ) {
-			$this->get_template( 'web-font-loader' );
-		} else {
-			wp_enqueue_style( self::OMGF_STYLE_HANDLE, OMGF_FONTS_URL . '/' . OMGF_FILENAME, []);
-		}
-	}
-	
-	/**
 	 * @param $name
 	 */
 	public function get_template ( $name ) {
 		include OMGF_PLUGIN_DIR . 'templates/frontend-' . $name . '.phtml';
-	}
-	
-	/**
-	 * Collect and render preload fonts in wp_head().
-	 */
-	public function preload_fonts () {
-		if ( ! $this->do_optimize ) {
-			return;
-		}
-		
-		$preload_fonts = $this->db->get_preload_fonts();
-		
-		if ( ! $preload_fonts ) {
-			return;
-		}
-		
-		foreach ( $preload_fonts as $font ) {
-			$font_urls[] = array_values(
-				array_filter(
-					(array) $font,
-					function ( $properties ) {
-						return strpos( $properties, 'woff2_local' ) !== false;
-					},
-					ARRAY_FILTER_USE_KEY
-				)
-			);
-		}
-		
-		$urls = array_reduce( $font_urls, 'array_merge', [] );
-		
-		foreach ( $urls as $url ) {
-			echo "<link rel='preload' href='$url' as='font' type='font/" . pathinfo( $url, PATHINFO_EXTENSION ) . "' crossorigin />\n";
-		}
 	}
 }

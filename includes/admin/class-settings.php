@@ -23,7 +23,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	const OMGF_SETTINGS_FIELD_BASIC         = 'omgf-basic-settings';
 	const OMGF_SETTINGS_FIELD_ADVANCED      = 'omgf-advanced-settings';
-	const OMGF_SETTINGS_FIELD_INSTALL_FONTS = 'omgf-install-fonts';
 	
 	/**
 	 * Option Values
@@ -79,20 +78,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
 	
 	/**
-	 * Install Fonts
-	 */
-	const OMGF_SETTING_DB_VERSION = 'omgf_db_version';
-	const OMGF_SETTING_SUBSETS    = 'omgf_subsets';
-	const OMGF_SETTING_FONTS      = 'omgf_fonts';
-	
-	/**
 	 * Advanced Settings
 	 */
 	const OMGF_ADV_SETTING_CACHE_URI       = 'omgf_cache_uri';
 	const OMGF_ADV_SETTING_CDN_URL         = 'omgf_cdn_url';
-	const OMGF_ADV_SETTING_WEB_FONT_LOADER = 'omgf_web_font_loader';
 	const OMGF_ADV_SETTING_UNINSTALL       = 'omgf_uninstall';
-	const OMGF_ADV_SETTING_FORCE_SSL       = 'omgf_force_ssl';
 	const OMGF_ADV_SETTING_RELATIVE_URL    = 'omgf_relative_url';
 	
 	/** @var string $active_tab */
@@ -123,12 +113,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		// Tabs
 		add_action( 'omgf_settings_tab', [ $this, 'basic_settings_tab' ], 0 );
 		add_action( 'omgf_settings_tab', [ $this, 'advanced_settings_tab' ], 1 );
-		add_action( 'omgf_settings_tab', [ $this, 'generate_stylesheet_tab' ], 2 );
 		
 		// Content
 		add_action( 'omgf_settings_content', [ $this, 'basic_settings_content' ], 0 );
 		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 1 );
-		add_action( 'omgf_settings_content', [ $this, 'install_fonts_content' ], 2 );
 	}
 	
 	/**
@@ -187,7 +175,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function register_settings () {
 		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_BASIC
-		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_INSTALL_FONTS
 		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED ) {
 			$this->active_tab = self::OMGF_SETTINGS_FIELD_BASIC;
 		}
@@ -207,10 +194,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * @throws ReflectionException
 	 */
 	public function get_settings () {
-		if ( $this->active_tab == self::OMGF_SETTINGS_FIELD_INSTALL_FONTS ) {
-			return [];
-		}
-		
 		$reflection = new ReflectionClass( $this );
 		$constants  = apply_filters( 'omgf_settings_constants', $reflection->getConstants() );
 		
@@ -246,14 +229,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	}
 	
 	/**
-	 * Add Generate Stylesheet Tab to Settings Screen.
-	 */
-	public function generate_stylesheet_tab () {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_INSTALL_FONTS, 'dashicons-admin-appearance', __( 'Install Fonts', $this->plugin_text_domain )
-		);
-	}
-	
-	/**
 	 * @param      $id
 	 * @param null $icon
 	 * @param null $label
@@ -281,22 +256,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function basic_settings_content () {
 		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_BASIC );
-	}
-	
-	/**
-	 * Render Generate Stylesheet
-	 */
-	public function install_fonts_content () {
-		if ( $this->active_tab != self::OMGF_SETTINGS_FIELD_INSTALL_FONTS ) {
-			return;
-		}
-		?>
-        <form id="omgf-install-fonts-form" name="omgf-install-fonts-form">
-			<?php
-			$this->get_template( 'install-fonts' );
-			?>
-        </form>
-		<?php
 	}
 	
 	/**
