@@ -48,7 +48,6 @@ class OMGF
     {
         define('OMGF_SITE_URL', 'https://daan.dev');
         define('OMGF_HELPER_URL', 'https://google-webfonts-helper.herokuapp.com/api/fonts/');
-        define('OMGF_FILENAME', 'fonts.css');
         define('OMGF_FONT_PROCESSING', esc_attr(get_option(OMGF_Admin_Settings::OMGF_BASIC_SETTING_FONT_PROCESSING, 'replace')));
 	    define('OMGF_DISPLAY_OPTION', esc_attr(get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
 	    define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
