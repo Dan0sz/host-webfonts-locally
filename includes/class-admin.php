@@ -105,7 +105,7 @@ class OMGF_Admin
 		
 		if ( $value != $old_value ) {
 			OMGF_Admin_Notice::set_notice(
-				__('Settings changed. <a href="#" id="omgf-empty">Click here</a> to flush OMGF\'s cache.', $this->plugin_text_domain),
+				__('Settings changed. <a href="#" class="omgf-empty">Click here</a> to flush OMGF\'s cache.', $this->plugin_text_domain),
 				false
 			);
 		}

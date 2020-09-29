@@ -22,7 +22,7 @@ jQuery(document).ready(function ($) {
          */
         init: function () {
             // Buttons
-            $('#omgf-empty').on('click', this.empty_cache_directory);
+            $('.omgf-empty').on('click', this.empty_cache_directory);
         },
 
         /**

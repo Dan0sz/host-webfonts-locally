@@ -287,7 +287,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			
 			submit_button(__('Save Changes', $this->plugin_text_domain), 'primary', 'submit', false);
 			?>
-            <a id="omgf-empty" class="button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
+            <a id="omgf-empty" class="omgf-empty button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
         </form>
 		<?php
 	}
