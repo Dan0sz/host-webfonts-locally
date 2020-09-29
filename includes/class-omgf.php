@@ -18,16 +18,12 @@ defined('ABSPATH') || exit;
 
 class OMGF
 {
-    /** @var string */
-    private $page = '';
-
     /**
      * OMGF constructor.
      */
     public function __construct()
     {
         $this->define_constants();
-        $this->page = isset($_GET['page']) ?: '';
 
         if (is_admin()) {
             $this->do_settings();
