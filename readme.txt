@@ -19,11 +19,15 @@ Leverage Browser Cache, Minimize DNS requests and serve your Google Fonts in a 1
 
 OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automatically cache the fonts your theme and plugins use. If you're a webdeveloper/-designer yourself, you can use the Search bar to install additional fonts to include in your CSS.
 
-After installing the plugin, OMGF runs silently in the background. It captures any requests made to fonts.googleapis.com or fonts.gstatic.com and copies the fonts over to your server. Then it generates a stylesheet for your fonts including EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
+= How Does It Work? =
+
+After installing the plugin, OMGF runs silently in the background and captures any requests made to fonts.googleapis.com or fonts.gstatic.com. When a webpage is first loaded, it reroutes these requests to its own Download API and copies the fonts over to your server. Then it generates a stylesheet for your fonts including EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
+
+When the fonts are downloaded and the stylesheet is generated, it rewrites every URL pointing to fonts.googleapis.com or fonts.gstatic.com to the locally hosted variant.
 
 Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffwp.dev/wordpress/omgf-expert-configuration/).
 
-== Features ==
+= Features =
 - Automatically replace registered/enqueued Google Fonts in wp_head() with local copies,
 - Automatically remove registered/enqueued Google Fonts from wp_head(),
 - Install additional Google Fonts and host them locally,
@@ -31,8 +35,8 @@ Please keep in mind that, although I try to make the configuration of this plugi
 - Serve fonts from CDN,
 - Use OMGF with *security through obscurity* plugins.
 
-== Features in the PRO version ==
-- Automatically remove/replace all Google Fonts throughout the entire document (webpage),
+= Features in the PRO version =
+- Automatically remove/replace all Google Fonts throughout the entire document/page,
 - Combine all Google Fonts (made by your theme and/or plugins) requests into one file,
 - Deduplicate Google Fonts requests,
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
