@@ -35,6 +35,7 @@ Please keep in mind that, although I try to make the configuration of this plugi
 - Use OMGF with *security through obscurity* plugins.
 
 = Features in the PRO version =
+Everything in the free version, plus:
 - Automatically remove/replace all Google Fonts throughout the entire document/page,
 - Combine all Google Fonts (made by your theme and/or plugins) requests into one file,
 - Deduplicate Google Fonts requests,
