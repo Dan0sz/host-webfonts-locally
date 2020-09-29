@@ -12,16 +12,16 @@
  * @formatter:on
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Define constants.
  */
-define('OMGF_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('OMGF_PLUGIN_FILE', __FILE__);
-define('OMGF_DB_VERSION', '3.0.0'); // Legacy
-define('OMGF_STATIC_VERSION', '3.4.0');
-define('OMGF_WEB_FONT_LOADER_VERSION', '1.6.26');
+define( 'OMGF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'OMGF_PLUGIN_FILE', __FILE__ );
+define( 'OMGF_DB_VERSION', '3.0.0' ); // Legacy
+define( 'OMGF_STATIC_VERSION', '3.4.0' );
+define( 'OMGF_WEB_FONT_LOADER_VERSION', '1.6.26' );
 
 /**
  * Takes care of loading classes on demand.
@@ -30,39 +30,37 @@ define('OMGF_WEB_FONT_LOADER_VERSION', '1.6.26');
  *
  * @return mixed|void
  */
-function omgf_autoload($class)
-{
-    $path = explode('_', $class);
-
-    if ($path[0] != 'OMGF') {
-        return;
-    }
-
-    if (!class_exists('FFWP_Autoloader')) {
-        require_once(OMGF_PLUGIN_DIR . 'ffwp-autoload.php');
-    }
-
-    $autoload = new FFWP_Autoloader($class);
-
-    return include OMGF_PLUGIN_DIR . 'includes/' . $autoload->load();
+function omgf_autoload ( $class ) {
+	$path = explode( '_', $class );
+	
+	if ( $path[0] != 'OMGF' ) {
+		return;
+	}
+	
+	if ( ! class_exists( 'FFWP_Autoloader' ) ) {
+		require_once( OMGF_PLUGIN_DIR . 'ffwp-autoload.php' );
+	}
+	
+	$autoload = new FFWP_Autoloader( $class );
+	
+	return include OMGF_PLUGIN_DIR . 'includes/' . $autoload->load();
 }
 
-spl_autoload_register('omgf_autoload');
+spl_autoload_register( 'omgf_autoload' );
 
 /**
  * All systems GO!!!
  *
  * @return OMGF
  */
-function omgf_init()
-{
-    static $omgf = null;
-
-    if ($omgf === null) {
-        $omgf = new OMGF();
-    }
-
-    return $omgf;
+function omgf_init () {
+	static $omgf = null;
+	
+	if ( $omgf === null ) {
+		$omgf = new OMGF();
+	}
+	
+	return $omgf;
 }
 
-omgf_init();
+add_action( 'plugins_loaded', 'omgf_init', 15 );
