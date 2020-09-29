@@ -86,17 +86,17 @@ class OMGF_Frontend_Functions
 		
 		switch ( OMGF_FONT_PROCESSING ) {
 			case 'remove':
-				add_action( 'wp_print_styles', [ $this, 'remove_fonts' ], PHP_INT_MAX - 500 );
+				add_action( 'wp_print_styles', [ $this, 'remove_registered_fonts' ], PHP_INT_MAX - 500 );
 				break;
 			default:
-				add_action( 'wp_print_styles', [ $this, 'replace_fonts' ], PHP_INT_MAX - 500 );
+				add_action( 'wp_print_styles', [ $this, 'replace_registered_fonts' ], PHP_INT_MAX - 500 );
 		}
 	}
 	
 	/**
 	 * This function contains a nice little hack, to avoid messing with potential dependency issues. We simply set the source to an empty string!
 	 */
-	public function remove_fonts () {
+	public function remove_registered_fonts () {
 		global $wp_styles;
 		
 		$registered   = $wp_styles->registered;
@@ -110,7 +110,7 @@ class OMGF_Frontend_Functions
 	/**
 	 * Retrieve stylesheets from Google Fonts' API and modify the stylesheet for local storage.
 	 */
-	public function replace_fonts () {
+	public function replace_registered_fonts () {
 		global $wp_styles;
 		
 		$registered = $wp_styles->registered;
