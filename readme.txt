@@ -106,7 +106,7 @@ N/A
 == Changelog ==
 
 = 4.0.0 | September 30th, 2020 =
-* OMGF now runs fully automatic to replace/remove Google Fonts from your pages using OMGF's Download API. No initial configuration required!
+* OMGF now runs fully automatic to replace/remove Google Fonts from your pages using new OMGF's Download API. No initial configuration required!
 * HUGE performance increase in OMGF's automatic replacing/removing methods.
 * Major overhaul of Settings Page:
   * Removed Extensions Tab
