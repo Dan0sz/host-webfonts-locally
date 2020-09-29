@@ -11,7 +11,7 @@ Leverage Browser Cache, Minimize DNS requests and serve your Google Fonts in a 1
 
 OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automatically cache the fonts your theme and plugins use to **minimize DNS requests** and speed up your WordPress website.
 
-## How Does It Work?
+### How Does It Work?
 
 After installing the plugin, OMGF runs silently in the background and captures any requests made to fonts.googleapis.com or fonts.gstatic.com. When a webpage is first loaded, it reroutes these requests to its own Download API and copies the fonts over to your server. Then it generates a stylesheet for your fonts including EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
 
