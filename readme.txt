@@ -51,6 +51,10 @@ For a more comprehensive guide for configuration, click [here](https://daan.dev/
 
 == Frequently Asked Questions ==
 
+= Why do my fonts load slow the first time? =
+
+That's because OMGF's download API is capturing the request and immediately downloading all the fonts. After the fonts are downloaded and the stylesheet is generated, the stylesheet will load just as fast as any other file request.
+
 = I don't know what I'm doing! Can you help? =
 
 Of course :) But first calm down and read this [comprehensive guide on how to configure OMGF](https://daan.dev/wordpress/host-google-fonts-locally/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
