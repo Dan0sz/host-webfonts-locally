@@ -96,7 +96,7 @@ class OMGF_API_Download extends WP_REST_Controller
 				sprintf( $url, $family ) . '?' . http_build_query( $query )
 			);
 			
-			if ( ! is_wp_error( $response ) ) {
+			if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) == 200 ) {
 				$fonts[] = json_decode( wp_remote_retrieve_body( $response ) );
 			}
 		}
@@ -208,7 +208,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		 * If Relative URLs is enabled, overwrite URL with Path and continue execution.
 		 */
 		if ( OMGF_RELATIVE_URL ) {
-			$content_dir = str_replace(site_url(), '', content_url());
+			$content_dir = str_replace( site_url(), '', content_url() );
 			
 			$url = $content_dir . $path;
 		}
