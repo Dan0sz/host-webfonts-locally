@@ -43,7 +43,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_relative_url' ], 60 );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_webfont_loader' ], 70 );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_force_ssl' ], 80 );
-		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_remove_version' ], 90 );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 100 );
 		
 		// Close
