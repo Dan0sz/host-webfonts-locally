@@ -40,7 +40,7 @@ class OMGF_AJAX
 				$this->delete( $entry );
 			}
 			
-			update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
+			set_transient( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
 			
 			OMGF_Admin_Notice::set_notice( __( 'Cache directory successfully emptied.', $this->plugin_text_domain ) );
 		} catch ( \Exception $e ) {
@@ -91,7 +91,7 @@ class OMGF_AJAX
 		
 		$urls     = [];
 		$document = new DOMDocument();
-		$document->loadHtml( wp_remote_retrieve_body( $front_html ) );
+		@$document->loadHtml( wp_remote_retrieve_body( $front_html ) );
 		
 		foreach ( $document->getElementsByTagName( 'link' ) as $link ) {
 			/** @var $link DOMElement */
@@ -126,7 +126,7 @@ class OMGF_AJAX
 			);
 			
 			if ( is_wp_error( $download ) ) {
-				update_option( 'omgf_optimization_complete', false );
+				set_transient( OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO, false );
 				
 				OMGF_Admin_Notice::set_notice(
 					__( 'Something went wrong while downloading Google Fonts', $this->plugin_text_domain ) . ': ' . $download->get_error_message(),
@@ -138,7 +138,7 @@ class OMGF_AJAX
 			}
 		}
 		
-		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
+		set_transient( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
 		
 		OMGF_Admin_Notice::set_notice(
 			__( 'OMGF has finished optimizing your Google Fonts. Enjoy! :-)', $this->plugin_text_domain ),
