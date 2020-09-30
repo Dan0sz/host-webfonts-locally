@@ -61,4 +61,4 @@ function omgf_init () {
 	return $omgf;
 }
 
-add_action( 'plugins_loaded', 'omgf_init', 15 );
+add_action( 'plugins_loaded', 'omgf_init', 50 );
