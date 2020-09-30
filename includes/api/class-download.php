@@ -113,10 +113,12 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		foreach ( $fonts as &$font ) {
 			foreach ( $font->variants as &$variant ) {
-				$variant->woff  = $this->download( $variant->woff );
-				$variant->woff2 = $this->download( $variant->woff2 );
-				$variant->eot   = $this->download( $variant->eot );
-				$variant->ttf   = $this->download( $variant->ttf );
+				$font_family    = trim($variant->fontFamily, '\'"');
+				$filename       = strtolower( $font_family . '-' . $variant->fontStyle . '-' . $variant->fontWeight );
+				$variant->woff  = $this->download( $variant->woff, $filename );
+				$variant->woff2 = $this->download( $variant->woff2, $filename );
+				$variant->eot   = $this->download( $variant->eot, $filename );
+				$variant->ttf   = $this->download( $variant->ttf, $filename );
 			}
 		}
 		
@@ -169,14 +171,14 @@ class OMGF_API_Download extends WP_REST_Controller
 	 *
 	 * @return bool
 	 */
-	private function download ( $url ) {
+	private function download ( $url, $filename ) {
 		if ( ! function_exists( 'download_url' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
 		
 		wp_mkdir_p( $this->path );
 		
-		$file     = $this->path . '/' . basename( $url );
+		$file     = $this->path . '/' . $filename . '.' . pathinfo($url, PATHINFO_EXTENSION);
 		$file_uri = str_replace( WP_CONTENT_DIR, '', $file );
 		
 		if ( file_exists( $file ) ) {
