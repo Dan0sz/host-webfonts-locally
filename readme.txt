@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 4.0.2
+Stable tag: 4.1.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -111,6 +111,14 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 4.1.0 =
+* Added some on-boarding to ease the use of the new interface.
+  * OMGF will now show a notice in the admin area, if the optimization never ran, to increase UX.
+  * Added a loader when any of the following actions are triggered:
+    * Empty Cache Directory
+    * Start Optimization
+* Minor tweaks and optimizations.
 
 = 4.0.2 =
 * Fixed bug where OMGF would trigger too late for the requests to fonts.googleapis.com to be captured.
