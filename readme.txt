@@ -112,6 +112,9 @@ N/A
 
 == Changelog ==
 
+= 4.0.2 =
+* Fixed bug where OMGF would trigger too late for the requests to fonts.googleapis.com to be captured.
+
 = 4.0.1 =
 * The tiniest bugfix ever: one space too much in a str_replace() caused Font Names with spaces (e.g. Roboto Condensed, or Open Sans) to not be captured correctly.
 

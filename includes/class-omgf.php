@@ -31,7 +31,7 @@ class OMGF
         }
 
         if (!is_admin()) {
-            add_action('plugins_loaded', [$this, 'do_frontend']);
+            $this->do_frontend();
         }
 	
 	    add_action('rest_api_init', [$this, 'register_routes']);

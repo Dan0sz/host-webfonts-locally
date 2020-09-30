@@ -102,7 +102,7 @@ class OMGF_Frontend_Functions
 				continue;
 			}
 			
-			$wp_styles->registered[ $handle ]->src = str_replace( 'https://fonts.googleapis.com/', site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$handle";
+			$wp_styles->registered[ $handle ]->src = str_replace( [ 'https://fonts.googleapis.com/', '//fonts.googleapis.com/' ], site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$handle";
 		}
 	}
 	
