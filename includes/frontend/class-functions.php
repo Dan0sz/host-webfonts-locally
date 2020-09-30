@@ -120,11 +120,4 @@ class OMGF_Frontend_Functions
 			}
 		);
 	}
-	
-	/**
-	 * @param $name
-	 */
-	public function get_template ( $name ) {
-		include OMGF_PLUGIN_DIR . 'templates/frontend-' . $name . '.phtml';
-	}
 }
