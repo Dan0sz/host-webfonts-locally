@@ -46,6 +46,7 @@ class OMGF_Admin
 		
 		$this->do_basic_settings();
 		$this->do_advanced_settings();
+		$this->show_optimize_notice();
 		
 		add_filter( 'pre_update_option', [ $this, 'settings_changed' ], 10, 3 );
 	}
@@ -56,10 +57,8 @@ class OMGF_Admin
 	 * @param $hook
 	 */
 	public function enqueue_admin_scripts ( $hook ) {
-		if ( $hook == 'settings_page_optimize-webfonts' ) {
-			wp_enqueue_script( self::OMGF_ADMIN_JS_HANDLE, plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-admin.js', [ 'jquery' ], OMGF_STATIC_VERSION, true );
-			wp_enqueue_style( self::OMGF_ADMIN_CSS_HANDLE, plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/css/omgf-admin.css', [], OMGF_STATIC_VERSION );
-		}
+		wp_enqueue_script( self::OMGF_ADMIN_JS_HANDLE, plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-admin.js', [ 'jquery' ], OMGF_STATIC_VERSION, true );
+		wp_enqueue_style( self::OMGF_ADMIN_CSS_HANDLE, plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/css/omgf-admin.css', [], OMGF_STATIC_VERSION );
 	}
 	
 	/**
@@ -105,11 +104,27 @@ class OMGF_Admin
 		
 		if ( $value != $old_value ) {
 			OMGF_Admin_Notice::set_notice(
-				__('Settings changed. <a href="#" class="omgf-empty">Click here</a> to flush OMGF\'s cache.', $this->plugin_text_domain),
+				__('Settings changed. <a href="#" class="omgf-empty">Click here</a> to empty OMGF\'s cache.', $this->plugin_text_domain),
+				'omgf-settings-changed',
 				false
 			);
 		}
 		
 		return $value;
+	}
+	
+	/**
+	 *
+	 */
+	private function show_optimize_notice () {
+		if (get_option(OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE)) {
+			return;
+		}
+		
+		OMGF_Admin_Notice::set_notice(
+			__('OMGF is ready to optimize your Google Fonts. <a href="#" id="omgf-optimize">Start optimization</a>.', $this->plugin_text_domain),
+			'omgf-optimize',
+			false
+		);
 	}
 }

@@ -18,8 +18,6 @@ defined( 'ABSPATH' ) || exit;
 
 class OMGF_Admin_Settings_Builder
 {
-	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO = 'https://ffwp.dev/wordpress/omgf-pro/';
-	
 	/** @var string $plugin_text_domain */
 	protected $plugin_text_domain = 'host-webfonts-local';
 	
@@ -44,7 +42,7 @@ class OMGF_Admin_Settings_Builder
 	 */
     public function do_promo () {
         if (apply_filters('apply_omgf_pro_promo', true)) {
-	        $this->promo = apply_filters('omgf_pro_promo', sprintf(__('<a href="%s" target="_blank">Upgrade to Pro</a> to enable this option.', $this->plugin_text_domain), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO));
+	        $this->promo = apply_filters('omgf_pro_promo', sprintf( __('<a href="%s" target="_blank">Upgrade to Pro</a> to enable this option.', $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO ));
         }
     }
 	

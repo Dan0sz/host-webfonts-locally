@@ -18,11 +18,13 @@ defined( 'ABSPATH' ) || exit;
 
 class OMGF_Admin_Settings extends OMGF_Admin
 {
+	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO = 'https://ffwp.dev/wordpress/omgf-pro/';
+	
 	/**
 	 * Settings Fields
 	 */
-	const OMGF_SETTINGS_FIELD_BASIC         = 'omgf-basic-settings';
-	const OMGF_SETTINGS_FIELD_ADVANCED      = 'omgf-advanced-settings';
+	const OMGF_SETTINGS_FIELD_BASIC    = 'omgf-basic-settings';
+	const OMGF_SETTINGS_FIELD_ADVANCED = 'omgf-advanced-settings';
 	
 	/**
 	 * Option Values
@@ -70,6 +72,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	];
 	
 	/**
+	 *
+	 */
+	const OMGF_OPTIMIZATION_COMPLETE = 'omgf_optimization_complete';
+	
+	/**
 	 * Basic Settings
 	 */
 	const OMGF_BASIC_SETTING_FONT_PROCESSING     = 'omgf_font_processing';
@@ -80,10 +87,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_CACHE_URI       = 'omgf_cache_uri';
-	const OMGF_ADV_SETTING_CDN_URL         = 'omgf_cdn_url';
-	const OMGF_ADV_SETTING_UNINSTALL       = 'omgf_uninstall';
-	const OMGF_ADV_SETTING_RELATIVE_URL    = 'omgf_relative_url';
+	const OMGF_ADV_SETTING_CACHE_URI      = 'omgf_cache_uri';
+	const OMGF_ADV_SETTING_CDN_URL        = 'omgf_cdn_url';
+	const OMGF_ADV_SETTING_UNINSTALL      = 'omgf_uninstall';
+	const OMGF_ADV_SETTING_RELATIVE_URL   = 'omgf_relative_url';
 	
 	/** @var string $active_tab */
 	private $active_tab;
@@ -273,7 +280,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			return;
 		}
 		?>
-        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="<?= admin_url('options.php?tab=' . $this->active_tab); ?>">
+        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="<?= admin_url( 'options.php?tab=' . $this->active_tab ); ?>">
 			<?php
 			settings_fields( $field );
 			do_settings_sections( $field );
@@ -284,9 +291,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			
 			do_action( 'omgf_after_settings_form_settings' );
 			
-			submit_button(__('Save Changes', $this->plugin_text_domain), 'primary', 'submit', false);
+			submit_button( __( 'Save Changes', $this->plugin_text_domain ), 'primary', 'submit', false );
 			?>
-            <a id="omgf-empty" class="omgf-empty button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
+            <a id="omgf-empty" class="omgf-empty button-cancel"><?php _e( 'Empty Cache Directory', $this->plugin_text_domain ); ?></a>
         </form>
 		<?php
 	}

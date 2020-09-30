@@ -31,9 +31,9 @@ class OMGF_Admin_Notice
 	 * @param bool   $json
 	 * @param int    $code
 	 */
-	public static function set_notice ( $message, $die = true, $type = 'success', $code = 200, $screen_id = 'all' ) {
+	public static function set_notice ( $message, $message_id = '', $die = true, $type = 'success', $code = 200, $screen_id = 'all' ) {
 		self::$notices                          = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
-		self::$notices[ $screen_id ][ $type ][] = $message;
+		self::$notices[ $screen_id ][ $type ][ $message_id ] = $message;
 		
 		set_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices, self::OMGF_ADMIN_NOTICE_EXPIRATION );
 		

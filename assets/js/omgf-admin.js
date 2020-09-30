@@ -16,6 +16,7 @@
 jQuery(document).ready(function ($) {
     var omgf_admin = {
         empty_cache_directory_xhr: false,
+        optimize_xhr: false,
 
         /**
          * Initialize all on click events.
@@ -23,6 +24,7 @@ jQuery(document).ready(function ($) {
         init: function () {
             // Buttons
             $('.omgf-empty').on('click', this.empty_cache_directory);
+            $('#omgf-optimize').on('click', this.optimize);
         },
 
         /**
@@ -39,11 +41,49 @@ jQuery(document).ready(function ($) {
                 data: {
                     action: 'omgf_ajax_empty_dir'
                 },
+                beforeSend: function () {
+                    omgf_admin.show_loader();
+                },
                 complete: function() {
                     location.reload();
                 }
             });
         },
+    
+        /**
+         *
+         */
+        optimize: function () {
+            if (omgf_admin.optimize_xhr) {
+                omgf_admin.optimize_xhr.abort();
+            }
+            
+            omgf_admin.optimize_xhr = $.ajax({
+                type: 'GET',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_ajax_optimize'
+                },
+                beforeSend: function() {
+                    omgf_admin.show_loader();
+                },
+                complete: function() {
+                    $('.omgf-loading').html('<span>All done!</span>');
+                    
+                    setTimeout(
+                        location.reload(),
+                        3000
+                    )
+                }
+            });
+        },
+    
+        /**
+         *
+         */
+        show_loader: function () {
+            $('#wpcontent').append('<div class="omgf-loading"><span class="spinner is-active"></span></div>');
+        }
     };
 
     omgf_admin.init();

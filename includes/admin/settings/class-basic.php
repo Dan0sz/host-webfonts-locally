@@ -63,7 +63,7 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_BASIC_SETTING_FONT_PROCESSING,
 			OMGF_Admin_Settings::OMGF_FONT_PROCESSING_OPTIONS,
 			OMGF_FONT_PROCESSING,
-			sprintf( __( "Choose whether OMGF should (find, download and) <strong>replace</strong> all Google Fonts, or just <strong>remove</strong> them. Choosing Remove will force WordPress to fallback to system fonts or install your own.", $this->plugin_text_domain ), self::FFWP_WORDPRESS_PLUGINS_OMGF_PRO )
+			sprintf( __( "Choose whether OMGF should (find, download and) <strong>replace</strong> all Google Fonts, or just <strong>remove</strong> them. Choosing Remove will force WordPress to fallback to system fonts or install your own.", $this->plugin_text_domain ), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO )
 		);
 	}
 	

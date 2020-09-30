@@ -81,6 +81,24 @@
   max-width: 90%;
 }
 /**
+ * Loader
+ */
+.omgf-loading {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  text-align: center;
+}
+.omgf-loading .spinner {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  -ms-transform: translate(0, -70%);
+  transform: translate(0, -70%);
+}
+/**
  * Responsiveness
  */
 @media only screen and (max-width: 1024px) {
