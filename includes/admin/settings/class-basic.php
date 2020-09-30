@@ -49,7 +49,7 @@ class OMGF_Admin_Settings_Basic extends OMGF_Admin_Settings_Builder
             * <?= __( 'If you\'re looking to replace your Google Fonts for locally hosted copies, then the default settings will suffice. OMGF will run silently in the background and download any Google Fonts while you and/or your visitors are browsing your site.', $this->plugin_text_domain ); ?>
         </p>
         <p>
-			<?= __( 'If <strong>Google Fonts Processing</strong> is set to Replace, loading the locally hosted stylesheet for the first time (or after emptying the OMGF\'s cache directory) might take a few seconds. This depends on your server\'s capacity and the size of the stylesheet. This is because OMGF\'s Download API captures the request and automatically downloads the fonts, before serving the local copy. Once the stylesheet and fonts are downloaded, every consecutive request will be fast again.', $this->plugin_text_domain ); ?>
+			<?= __( 'If <strong>Google Fonts Processing</strong> is set to Replace, loading the locally hosted stylesheet for the first time (or after emptying OMGF\'s cache directory) might take a few seconds. This depends on your server\'s capacity and the size of the stylesheet. This is because OMGF\'s Download API captures the request and automatically downloads the fonts, before serving the local copy. Once the stylesheet and fonts are downloaded, every consecutive request will be fast again.', $this->plugin_text_domain ); ?>
         </p>
 		<?php
 	}
