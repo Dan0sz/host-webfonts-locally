@@ -113,16 +113,18 @@ N/A
 == Changelog ==
 
 = 4.0.0 | September 30th, 2020 =
-* OMGF now runs fully automatic to replace/remove Google Fonts from your pages using new OMGF's Download API. No initial configuration required!
+* OMGF now runs fully automatic to replace/remove Google Fonts from your pages using OMGF's new Download API. No initial configuration required!
+  * This means that if you use different fonts on different pages, all of them will be cached and served locally.
 * HUGE performance increase in OMGF's automatic replacing/removing methods.
 * Major overhaul of Settings Page:
   * Removed Extensions Tab
   * Some settings were moved to a new tab: Basic Settings.
   * Improved Welcome and Documentation tab.
   * Clarified option descriptions.
-* Using Web Font Loader option is now deprecated and will be removed in a future release.
-* Removed Generate Stylesheet tab, which'll be released in a separate (free) add-on plugin soon.
-* Removed 'Remove Version Parameter' option, since the new detection method uses the initial script's version, if set.
+* Removed 'Generate Stylesheet' tab, which'll be released in a separate (free) add-on plugin soon.
+* Removed 'Use Web Font Loader?' option, because it causes Cumulative Layout Shift and will not work with OMGF's new Auto Replace feature.
+* Removed 'Remove Version Parameter' option, because it has become obsolete. The new detection method uses the initial script's version, if set.
+* Font Preloading is temporarily removed and will be re-introduced (in a different form, along with new features) in a later release.
 
 = 3.8.3 | September 15th, 2020 =
 * Performance improvements for Class autoloader.
