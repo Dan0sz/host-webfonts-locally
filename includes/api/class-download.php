@@ -84,7 +84,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		foreach ( $font_families as $font_family ) {
 			list( $family, $variants ) = explode( ':', $font_family );
-			$family = str_replace( '  ', '-', strtolower( $family ) );
+			$family = strtolower(str_replace( ' ', '-', $family ) );
 			
 			if ( defined( 'OMGF_PRO_FORCE_SUBSETS' ) && ! empty( OMGF_PRO_FORCE_SUBSETS ) ) {
 				$query['subsets'] = implode( ',', OMGF_PRO_FORCE_SUBSETS );
