@@ -72,7 +72,7 @@ class OMGF_Admin_Notice
 			unset ( self::$notices [ $screen_id ] [ $type ] );
 		}
 		
-		set_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices );
+		set_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices, self::OMGF_ADMIN_NOTICE_EXPIRATION );
 	}
 	
 	/**

@@ -85,6 +85,8 @@ class OMGF_AJAX
 		);
 		
 		if ( is_wp_error( $front_html ) ) {
+			update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
+			
 			OMGF_Admin_Notice::set_notice(
 				__( 'OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain ) . ': ' . $front_html->get_error_message(),
 				'omgf-fetch-failed',
@@ -115,6 +117,10 @@ class OMGF_AJAX
 			} else {
 				$info .= ' ' . sprintf( __( '<a target="_blank" href="%s">send me a support ticket</a>.', $this->plugin_text_domain ), 'https://ffwp.dev/contact/' );
 			}
+			
+			OMGF_Admin_Notice::unset_notice('omgf-optimize', 'success');
+			OMGF_Admin_Notice::unset_notice('omgf-optimize-plugin-notice');
+			OMGF_Admin_Notice::unset_notice('omgf-optimize-background');
 			
 			OMGF_Admin_Notice::set_notice(
 				$message,
