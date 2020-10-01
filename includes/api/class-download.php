@@ -249,8 +249,10 @@ class OMGF_API_Download extends WP_REST_Controller
 				
 				$local_src = '';
 				
-				foreach ( $variant->local as $local ) {
-					$local_src .= "local('$local'), ";
+				if (is_array($variant->local)) {
+					foreach ( $variant->local as $local ) {
+						$local_src .= "local('$local'), ";
+					}
 				}
 				
 				$stylesheet .= "    src: $local_src\n";
