@@ -51,6 +51,25 @@ class OMGF_Admin_Notice
 	}
 	
 	/**
+	 * @param string $message_id
+	 * @param string $type
+	 * @param string $screen_id
+	 */
+	public static function unset_notice ( $message_id = '', $type = 'info', $screen_id = 'all' ) {
+		self::$notices = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
+		
+		if ( isset( self::$notices [ $screen_id ][ $type ][ $message_id ] ) ) {
+			unset( self::$notices [ $screen_id ][ $type ][ $message_id ] );
+		}
+		
+		if ( is_array( self::$notices ) && empty( self::$notices [ $screen_id ] [ $type ] ) ) {
+			unset ( self::$notices [ $screen_id ] [ $type ] );
+		}
+		
+		set_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices );
+	}
+	
+	/**
 	 * Prints notice (if any) grouped by type.
 	 */
 	public static function print_notices () {
@@ -83,10 +102,6 @@ class OMGF_Admin_Notice
 	 *
 	 */
 	public static function optimization_finished () {
-		if ( get_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE ) ) {
-			return;
-		}
-		
 		OMGF_Admin_Notice::set_notice(
 			__( 'OMGF has finished optimizing your Google Fonts. Enjoy! :-)', self::$plugin_text_domain ),
 			'omgf-optimize',
@@ -106,7 +121,5 @@ class OMGF_Admin_Notice
 			false,
 			'info'
 		);
-		
-		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
 	}
 }

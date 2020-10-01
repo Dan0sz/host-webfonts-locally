@@ -78,9 +78,9 @@ class OMGF_AJAX
 	 */
 	public function optimize () {
 		$front_html = wp_remote_get(
-			site_url(),
+			$this->no_cache( site_url() ),
 			[
-				'timeout' => 10
+				'timeout' => 30
 			]
 		);
 		
@@ -107,13 +107,8 @@ class OMGF_AJAX
 		
 		if ( empty( $urls ) ) {
 			$message = __( 'No Google Fonts found to optimize. <a href="#" class="omgf-empty">Empty the Cache Directory</a> to start over.', $this->plugin_text_domain );
-			
-			if ( apply_filters( 'apply_omgf_pro_promo', true ) ) {
-				$message .= ' ' . sprintf( __( 'Or <a target="_blank" href="%s">Upgrade to OMGF Pro</a> to capture requests throughout the entire HTML document.', $this->plugin_text_domain ), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO );
-			}
-			
-			$info = sprintf( __( 'If you believe this is an error. <a href="%s" target="_blank">Click here</a> to load your frontend manually.', $this->plugin_text_domain ), site_url() );
-			$info .= ' ' . __( 'If this message keeps appearing,', $this->plugin_text_domain );
+			$info    = sprintf( __( 'If you believe this is an error, <a href="%s" target="_blank">click here</a> to trigger the optimization manually in your site\'s frontend.', $this->plugin_text_domain ), $this->no_cache( site_url() ) );
+			$info    .= ' ' . __( 'If this message keeps appearing,', $this->plugin_text_domain );
 			
 			if ( apply_filters( 'apply_omgf_pro_promo', true ) ) {
 				$info .= ' ' . sprintf( __( 'head over to the Support Forum and <a target="_blank" href="%s">shoot me a ticket</a>.', $this->plugin_text_domain ), 'https://wordpress.org/support/plugin/host-webfonts-local/' );
@@ -139,9 +134,9 @@ class OMGF_AJAX
 		
 		foreach ( $urls as $url ) {
 			$download = wp_remote_get(
-				add_query_arg( [ 'nocache' => substr( md5( microtime() ), rand( 0, 26 ), 5 ) ], $url ),
+				$this->no_cache( $url ),
 				[
-					'timeout' => 10
+					'timeout' => 30
 				]
 			);
 			
@@ -159,5 +154,14 @@ class OMGF_AJAX
 		}
 		
 		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
+	}
+	
+	/**
+	 * @param $url
+	 *
+	 * @return string
+	 */
+	private function no_cache ( $url ) {
+		return add_query_arg( [ 'nocache' => substr( md5( microtime() ), rand( 0, 26 ), 5 ) ], $url );
 	}
 }

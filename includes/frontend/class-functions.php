@@ -83,7 +83,7 @@ class OMGF_Frontend_Functions
 			$wp_styles->registered [ $handle ]->src = '';
 		}
 		
-		OMGF_Admin_Notice::optimization_finished();
+		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
 	}
 	
 	/**
@@ -107,7 +107,7 @@ class OMGF_Frontend_Functions
 			$wp_styles->registered[ $handle ]->src = str_replace( [ 'https://fonts.googleapis.com/', '//fonts.googleapis.com/' ], site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$handle";
 		}
 		
-		OMGF_Admin_Notice::optimization_finished();
+		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
 	}
 	
 	/**
