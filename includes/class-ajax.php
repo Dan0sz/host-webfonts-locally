@@ -143,8 +143,8 @@ class OMGF_AJAX
 		OMGF_Admin_Notice::set_notice(
 			__( 'OMGF has finished optimizing your Google Fonts. Enjoy! :-)', $this->plugin_text_domain ),
 			'omgf-optimize',
-			false,
-			);
+			false
+		);
 		
 		OMGF_Admin_Notice::set_notice(
 			'<em>' . __( 'If you\'re using any CSS minify/combine and/or Full Page Caching plugins, don\'t forget to flush their caches.', $this->plugin_text_domain ) . '</em>',
