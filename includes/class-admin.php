@@ -52,7 +52,6 @@ class OMGF_Admin
 		
 		add_action( 'admin_init', [ $this, 'maybe_show_optimize_notice' ] );
 		add_filter( 'pre_update_option', [ $this, 'settings_changed' ], 10, 3 );
-		add_filter( 'update_option_' . OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, [ $this, 'optimization_finished' ], 10, 2 );
 	}
 	
 	/**
@@ -115,16 +114,6 @@ class OMGF_Admin
 		}
 		
 		return $value;
-	}
-	
-	/**
-	 * @param $old_value
-	 * @param $new_value
-	 */
-	public function optimization_finished ( $old_value, $new_value ) {
-		if ( $old_value == false && $new_value == true ) {
-			OMGF_Admin_Notice::optimization_finished();
-		}
 	}
 	
 	/**

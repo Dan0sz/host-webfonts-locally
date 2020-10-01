@@ -84,6 +84,8 @@ class OMGF_Frontend_Functions
 		}
 		
 		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
+		
+		OMGF_Admin_Notice::optimization_finished();
 	}
 	
 	/**
@@ -108,6 +110,8 @@ class OMGF_Frontend_Functions
 		}
 		
 		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
+		
+		OMGF_Admin_Notice::optimization_finished();
 	}
 	
 	/**
