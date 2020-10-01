@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  */
 define( 'OMGF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OMGF_PLUGIN_FILE', __FILE__ );
-define( 'OMGF_STATIC_VERSION', '3.4.0' );
+define( 'OMGF_STATIC_VERSION', '4.1.3' );
 
 /**
  * Takes care of loading classes on demand.
