@@ -80,7 +80,6 @@ class OMGF_AJAX
 		$front_html = wp_remote_get(
 			site_url(),
 			[
-				'sslverify' => false,
 				'timeout'   => 10
 			]
 		);
@@ -120,7 +119,6 @@ class OMGF_AJAX
 			$download = wp_remote_get(
 				add_query_arg( [ 'nocache' => substr( md5( microtime() ), rand( 0, 26 ), 5 ) ], $url ),
 				[
-					'sslverify' => false,
 					'timeout'   => 10
 				]
 			);
