@@ -40,12 +40,12 @@ class OMGF_AJAX
 				$this->delete( $entry );
 			}
 			
-			set_transient( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
+			update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
 			
 			OMGF_Admin_Notice::set_notice( __( 'Cache directory successfully emptied.', $this->plugin_text_domain ) );
 		} catch ( \Exception $e ) {
 			OMGF_Admin_Notice::set_notice(
-				__( 'Something went wrong while emptying the cache directory: ', $this->plugin_text_domain ) . $e->getMessage(),
+				__( 'OMGF encountered an error while emptying the cache directory: ', $this->plugin_text_domain ) . $e->getMessage(),
 				'omgf-cache-error',
 				true,
 				'error',
@@ -80,12 +80,18 @@ class OMGF_AJAX
 		$front_html = wp_remote_get(
 			site_url(),
 			[
-				'timeout'   => 10
+				'timeout' => 10
 			]
 		);
 		
 		if ( is_wp_error( $front_html ) ) {
-			return;
+			OMGF_Admin_Notice::set_notice(
+				__( 'OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain ) . ': ' . $front_html->get_error_message(),
+				'omgf-fetch-failed',
+				true,
+				'error',
+				$front_html->get_error_code()
+			);
 		}
 		
 		$urls     = [];
@@ -106,12 +112,28 @@ class OMGF_AJAX
 				$message .= ' ' . sprintf( __( 'Or <a target="_blank" href="%s">Upgrade to OMGF Pro</a> to capture requests throughout the entire HTML document.', $this->plugin_text_domain ), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO );
 			}
 			
+			$info = sprintf( __( 'If you believe this is an error. <a href="%s" target="_blank">Click here</a> to load your frontend manually.', $this->plugin_text_domain ), site_url() );
+			$info .= ' ' . __( 'If this message keeps appearing,', $this->plugin_text_domain );
+			
+			if ( apply_filters( 'apply_omgf_pro_promo', true ) ) {
+				$info .= ' ' . sprintf( __( 'head over to the Support Forum and <a target="_blank" href="%s">shoot me a ticket</a>.', $this->plugin_text_domain ), 'https://wordpress.org/support/plugin/host-webfonts-local/' );
+			} else {
+				$info .= ' ' . sprintf( __( '<a target="_blank" href="%s">send me a support ticket</a>.', $this->plugin_text_domain ), 'https://ffwp.dev/contact/' );
+			}
+			
 			OMGF_Admin_Notice::set_notice(
 				$message,
 				'omgf-fonts-not-found',
-				true,
+				false,
 				'error',
 				404
+			);
+			
+			OMGF_Admin_Notice::set_notice(
+				$info,
+				'omgf-support-info',
+				true,
+				'info'
 			);
 		}
 		
@@ -119,15 +141,15 @@ class OMGF_AJAX
 			$download = wp_remote_get(
 				add_query_arg( [ 'nocache' => substr( md5( microtime() ), rand( 0, 26 ), 5 ) ], $url ),
 				[
-					'timeout'   => 10
+					'timeout' => 10
 				]
 			);
 			
 			if ( is_wp_error( $download ) ) {
-				set_transient( OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO, false );
+				update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
 				
 				OMGF_Admin_Notice::set_notice(
-					__( 'Something went wrong while downloading Google Fonts', $this->plugin_text_domain ) . ': ' . $download->get_error_message(),
+					__( 'OMGF encountered an error while downloading Google Fonts', $this->plugin_text_domain ) . ': ' . $download->get_error_message(),
 					'omgf-download-failed',
 					true,
 					'error',
@@ -136,26 +158,6 @@ class OMGF_AJAX
 			}
 		}
 		
-		set_transient( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
-		
-		OMGF_Admin_Notice::set_notice(
-			__( 'OMGF has finished optimizing your Google Fonts. Enjoy! :-)', $this->plugin_text_domain ),
-			'omgf-optimize',
-			false
-		);
-		
-		OMGF_Admin_Notice::set_notice(
-			'<em>' . __( 'If you\'re using any CSS minify/combine and/or Full Page Caching plugins, don\'t forget to flush their caches.', $this->plugin_text_domain ) . '</em>',
-			'omgf-optimize-plugin-notice',
-			false,
-			'info'
-		);
-		
-		OMGF_Admin_Notice::set_notice(
-			__( 'OMGF will keep running silently in the background and will generate additional stylesheets when other Google Fonts are found on any of your pages.', $this->plugin_text_domain ),
-			'omgf-optimize-background',
-			true,
-			'info'
-		);
+		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
 	}
 }

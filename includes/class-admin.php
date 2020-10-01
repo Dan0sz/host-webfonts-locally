@@ -117,7 +117,7 @@ class OMGF_Admin
 	 *
 	 */
 	private function show_optimize_notice () {
-		if (get_transient(OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE)) {
+		if (get_option(OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE)) {
 			return;
 		}
 		

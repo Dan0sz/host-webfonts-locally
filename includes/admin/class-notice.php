@@ -19,10 +19,12 @@ defined( 'ABSPATH' ) || exit;
 class OMGF_Admin_Notice
 {
 	const OMGF_ADMIN_NOTICE_TRANSIENT  = 'omgf_admin_notice';
-	const OMGF_ADMIN_NOTICE_EXPIRATION = 30;
+	const OMGF_ADMIN_NOTICE_EXPIRATION = 60;
 	
 	/** @var array $notices */
 	public static $notices = [];
+	
+	private static $plugin_text_domain = 'host-webfonts-local';
 	
 	/**
 	 * @param        $message
@@ -32,7 +34,7 @@ class OMGF_Admin_Notice
 	 * @param int    $code
 	 */
 	public static function set_notice ( $message, $message_id = '', $die = true, $type = 'success', $code = 200, $screen_id = 'all' ) {
-		self::$notices                          = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
+		self::$notices                                       = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
 		self::$notices[ $screen_id ][ $type ][ $message_id ] = $message;
 		
 		set_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices, self::OMGF_ADMIN_NOTICE_EXPIRATION );
@@ -75,5 +77,36 @@ class OMGF_Admin_Notice
 		}
 		
 		delete_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
+	}
+	
+	/**
+	 *
+	 */
+	public static function optimization_finished () {
+		if ( get_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE ) ) {
+			return;
+		}
+		
+		OMGF_Admin_Notice::set_notice(
+			__( 'OMGF has finished optimizing your Google Fonts. Enjoy! :-)', self::$plugin_text_domain ),
+			'omgf-optimize',
+			false
+		);
+		
+		OMGF_Admin_Notice::set_notice(
+			'<em>' . __( 'If you\'re using any CSS minify/combine and/or Full Page Caching plugins, don\'t forget to flush their caches.', self::$plugin_text_domain ) . '</em>',
+			'omgf-optimize-plugin-notice',
+			false,
+			'info'
+		);
+		
+		OMGF_Admin_Notice::set_notice(
+			__( 'OMGF will keep running silently in the background and will generate additional stylesheets when other Google Fonts are found on any of your pages.', self::$plugin_text_domain ),
+			'omgf-optimize-background',
+			false,
+			'info'
+		);
+		
+		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
 	}
 }
