@@ -35,6 +35,9 @@ class OMGF_API_Download extends WP_REST_Controller
 	/** @var string $path */
 	private $path = '';
 	
+	/**
+	 * OMGF_API_Download constructor.
+	 */
 	public function __construct () {
 		add_filter( 'content_url', [ $this, 'rewrite_url' ], 10, 2 );
 	}
