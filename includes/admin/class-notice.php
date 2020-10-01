@@ -24,6 +24,7 @@ class OMGF_Admin_Notice
 	/** @var array $notices */
 	public static $notices = [];
 	
+	/** @var string $plugin_text_domain */
 	private static $plugin_text_domain = 'host-webfonts-local';
 	
 	/**
@@ -34,7 +35,12 @@ class OMGF_Admin_Notice
 	 * @param int    $code
 	 */
 	public static function set_notice ( $message, $message_id = '', $die = true, $type = 'success', $code = 200, $screen_id = 'all' ) {
-		self::$notices                                       = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
+		self::$notices = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
+		
+		if ( ! self::$notices ) {
+			self::$notices = [];
+		}
+		
 		self::$notices[ $screen_id ][ $type ][ $message_id ] = $message;
 		
 		set_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices, self::OMGF_ADMIN_NOTICE_EXPIRATION );
