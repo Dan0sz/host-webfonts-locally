@@ -110,7 +110,7 @@ class OMGF_Admin_Notice
 	public static function optimization_finished () {
 		self::set_notice(
 			__( 'OMGF has finished optimizing your Google Fonts. Enjoy! :-)', self::$plugin_text_domain ),
-			'omgf-optimize',
+			'omgf-finished-optimizing',
 			false
 		);
 		
