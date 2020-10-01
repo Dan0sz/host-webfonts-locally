@@ -112,14 +112,19 @@ N/A
 
 == Changelog ==
 
+= 4.1.3 =
+* Fixed bug which would continuously show 'No fonts founds' notice in admin, among others.
+* Increased compatibility with caching plugins, which would cause static pages to be served and block OMGF from pointing requests to its Download API.
+* Added some notices (which disappear ;-)) for manual optimization process in admin area, making it clear when optimization is finished.
+
 = 4.1.2 =
-* Attempt to fix syntax error (unexpected ')' on line 147).
+* Fixed syntax error (unexpected ')' on line 147).
 
 = 4.1.1 =
 * Use transients instead of options.
 * Fixed some minor notices and warnings.
 
-= 4.1.0 =
+= 4.1.0 | October 1st, 2020 =
 * Added some on-boarding to ease the use of the new interface.
   * OMGF will now show a notice in the admin area, if the optimization never ran, to increase UX.
   * Added a loader when any of the following actions are triggered:
