@@ -21,7 +21,7 @@ class OMGF_API_Download extends WP_REST_Controller
 	const OMGF_GOOGLE_FONTS_API_URL = 'https://google-webfonts-helper.herokuapp.com';
 	
 	/** @var array $endpoints */
-	private $endpoints = [ 'css' ];
+	private $endpoints = [ 'css', 'css2' ];
 	
 	/** @var string $namespace */
 	protected $namespace = 'omgf/v1';
@@ -34,13 +34,6 @@ class OMGF_API_Download extends WP_REST_Controller
 	
 	/** @var string $path */
 	private $path = '';
-	
-	/**
-	 * OMGF_API_Download constructor.
-	 */
-	public function __construct () {
-		add_filter( 'content_url', [ $this, 'rewrite_url' ], 10, 2 );
-	}
 	
 	/**
 	 *
@@ -70,9 +63,13 @@ class OMGF_API_Download extends WP_REST_Controller
 	}
 	
 	/**
-	 * @param $request
+	 * @param $request WP_Rest_Request
 	 */
 	public function process ( $request ) {
+		if ( strpos( $request->get_route(), 'css2' ) !== false ) {
+			$this->convert_css2( $request );
+		}
+		
 		$params       = $request->get_params();
 		$this->handle = $params['handle'] ?? '';
 		
@@ -87,7 +84,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		foreach ( $font_families as $font_family ) {
 			list( $family, $variants ) = explode( ':', $font_family );
-			$family = strtolower(str_replace( ' ', '-', $family ) );
+			$family = strtolower( str_replace( ' ', '-', $family ) );
 			
 			if ( defined( 'OMGF_PRO_FORCE_SUBSETS' ) && ! empty( OMGF_PRO_FORCE_SUBSETS ) ) {
 				$query['subsets'] = implode( ',', OMGF_PRO_FORCE_SUBSETS );
@@ -116,7 +113,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		foreach ( $fonts as &$font ) {
 			foreach ( $font->variants as &$variant ) {
-				$font_family    = trim($variant->fontFamily, '\'"');
+				$font_family    = trim( $variant->fontFamily, '\'"' );
 				$filename       = strtolower( $font_family . '-' . $variant->fontStyle . '-' . $variant->fontWeight );
 				$variant->woff  = $this->download( $variant->woff, $filename );
 				$variant->woff2 = $this->download( $variant->woff2, $filename );
@@ -138,6 +135,50 @@ class OMGF_API_Download extends WP_REST_Controller
 		flush();
 		readfile( $local_file );
 		die();
+	}
+	
+	/**
+	 * Converts requests to OMGF's Download/CSS2 API to a format readable by the regular API.
+	 *
+	 * @param $request WP_Rest_Request
+	 */
+	private function convert_css2 ( &$request ) {
+		$query         = $this->get_query_from_request();
+		$params        = explode( '&', $query );
+		$font_families = [];
+		$fonts         = [];
+		
+		foreach ( $params as $param ) {
+			if ( strpos( $param, 'family' ) === false ) {
+				continue;
+			}
+			
+			parse_str( $param, $parts );
+			
+			$font_families[] = $parts;
+		}
+		
+		foreach ( $font_families as $font_family ) {
+			list( $family, $weights ) = explode( ':', reset( $font_family ) );
+			
+			/**
+			 * @return array [ '300', '400', '500', etc. ]
+			 */
+			$weights = explode( ';', substr( $weights, strpos( $weights, '@' ) + 1 ) );
+			
+			$fonts[] = $family . ':' . implode( ',', $weights );
+		}
+		
+		$request->set_param( 'family', implode( '|', $fonts ) );
+	}
+	
+	/**
+	 * Since Google Fonts' variable fonts API uses the same name for each parameter ('family') we need to parse the url manually.
+	 *
+	 * @return mixed
+	 */
+	private function get_query_from_request () {
+		return parse_url( $_SERVER['REQUEST_URI'] )['query'];
 	}
 	
 	/**
@@ -181,7 +222,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		wp_mkdir_p( $this->path );
 		
-		$file     = $this->path . '/' . $filename . '.' . pathinfo($url, PATHINFO_EXTENSION);
+		$file     = $this->path . '/' . $filename . '.' . pathinfo( $url, PATHINFO_EXTENSION );
 		$file_uri = str_replace( WP_CONTENT_DIR, '', $file );
 		
 		if ( file_exists( $file ) ) {
@@ -193,40 +234,6 @@ class OMGF_API_Download extends WP_REST_Controller
 		@unlink( $tmp );
 		
 		return content_url( $file_uri );
-	}
-	
-	/**
-	 * @param $url
-	 * @param $path
-	 *
-	 * @return mixed
-	 */
-	public function rewrite_url ( $url, $path ) {
-		/**
-		 * Exit early if this isn't requested by OMGF.
-		 */
-		if ( strpos( $url, OMGF_CACHE_PATH ) === false ) {
-			return $url;
-		}
-		
-		/**
-		 * If Relative URLs is enabled, overwrite URL with Path and continue execution.
-		 */
-		if ( OMGF_RELATIVE_URL ) {
-			$content_dir = str_replace( site_url(), '', content_url() );
-			
-			$url = $content_dir . $path;
-		}
-		
-		if ( OMGF_CDN_URL ) {
-			$url = str_replace( site_url(), OMGF_CDN_URL, $url );
-		}
-		
-		if ( OMGF_CACHE_URI ) {
-			$url = str_replace( OMGF_CACHE_PATH, OMGF_CACHE_URI, $url );
-		}
-		
-		return $url;
 	}
 	
 	/**
@@ -252,7 +259,7 @@ class OMGF_API_Download extends WP_REST_Controller
 				
 				$local_src = '';
 				
-				if (is_array($variant->local)) {
+				if ( is_array( $variant->local ) ) {
 					foreach ( $variant->local as $local ) {
 						$local_src .= "local('$local'), ";
 					}
