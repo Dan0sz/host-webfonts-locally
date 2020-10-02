@@ -114,7 +114,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		foreach ( $fonts as &$font ) {
 			foreach ( $font->variants as &$variant ) {
 				$font_family    = trim( $variant->fontFamily, '\'"' );
-				$filename       = strtolower( $font_family . '-' . $variant->fontStyle . '-' . $variant->fontWeight );
+				$filename       = strtolower( str_replace( ' ', '-', $font_family ) . '-' . $variant->fontStyle . '-' . $variant->fontWeight );
 				$variant->woff  = $this->download( $variant->woff, $filename );
 				$variant->woff2 = $this->download( $variant->woff2, $filename );
 				$variant->eot   = $this->download( $variant->eot, $filename );
