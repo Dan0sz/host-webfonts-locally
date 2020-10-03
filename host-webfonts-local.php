@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
  */
 define( 'OMGF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OMGF_PLUGIN_FILE', __FILE__ );
+define( 'OMGF_PLUGIN_BASENAME', plugin_basename(OMGF_PLUGIN_FILE));
 define( 'OMGF_STATIC_VERSION', '4.1.3' );
 
 /**

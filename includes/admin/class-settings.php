@@ -23,12 +23,17 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Settings Fields
 	 */
+	const OMGF_SETTINGS_FIELD_OPTIMIZE = 'omgf-optimize-settings';
 	const OMGF_SETTINGS_FIELD_BASIC    = 'omgf-basic-settings';
 	const OMGF_SETTINGS_FIELD_ADVANCED = 'omgf-advanced-settings';
 	
 	/**
 	 * Option Values
 	 */
+	const OMGF_OPTIMIZATION_MODE       = [
+		'manual' => 'Manual (default)',
+		'auto'   => 'Automatic'
+	];
 	const OMGF_FONT_PROCESSING_OPTIONS = [
 		'replace' => 'Replace (default)',
 		'remove'  => 'Remove only'
@@ -76,6 +81,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	const OMGF_OPTIMIZATION_COMPLETE = 'omgf_optimization_complete';
 	
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE   = 'omgf_optimization_mode';
+	const OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL = 'omgf_manual_optimize_url';
+	
 	/**
 	 * Basic Settings
 	 */
@@ -87,10 +95,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_CACHE_URI      = 'omgf_cache_uri';
-	const OMGF_ADV_SETTING_CDN_URL        = 'omgf_cdn_url';
-	const OMGF_ADV_SETTING_UNINSTALL      = 'omgf_uninstall';
-	const OMGF_ADV_SETTING_RELATIVE_URL   = 'omgf_relative_url';
+	const OMGF_ADV_SETTING_CACHE_URI    = 'omgf_cache_uri';
+	const OMGF_ADV_SETTING_CDN_URL      = 'omgf_cdn_url';
+	const OMGF_ADV_SETTING_UNINSTALL    = 'omgf_uninstall';
+	const OMGF_ADV_SETTING_RELATIVE_URL = 'omgf_relative_url';
 	
 	/** @var string $active_tab */
 	private $active_tab;
@@ -107,7 +115,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	public function __construct () {
 		parent::__construct();
 		
-		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : self::OMGF_SETTINGS_FIELD_BASIC;
+		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : self::OMGF_SETTINGS_FIELD_OPTIMIZE;
 		$this->page       = isset( $_GET['page'] ) ? $_GET['page'] : '';
 		
 		add_action( 'admin_menu', [ $this, 'create_menu' ] );
@@ -118,12 +126,14 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		}
 		
 		// Tabs
-		add_action( 'omgf_settings_tab', [ $this, 'basic_settings_tab' ], 0 );
-		add_action( 'omgf_settings_tab', [ $this, 'advanced_settings_tab' ], 1 );
+		add_action( 'omgf_settings_tab', [ $this, 'optimize_fonts_tab' ], 0 );
+		add_action( 'omgf_settings_tab', [ $this, 'basic_settings_tab' ], 1 );
+		add_action( 'omgf_settings_tab', [ $this, 'advanced_settings_tab' ], 2 );
 		
 		// Content
-		add_action( 'omgf_settings_content', [ $this, 'basic_settings_content' ], 0 );
-		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 1 );
+		add_action( 'omgf_settings_content', [ $this, 'optimize_fonts_content' ], 0 );
+		add_action( 'omgf_settings_content', [ $this, 'basic_settings_content' ], 1 );
+		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 2 );
 	}
 	
 	/**
@@ -181,9 +191,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * @throws ReflectionException
 	 */
 	public function register_settings () {
-		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_BASIC
-		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED ) {
-			$this->active_tab = self::OMGF_SETTINGS_FIELD_BASIC;
+		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE
+		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_BASIC
+		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED
+		) {
+			$this->active_tab = self::OMGF_SETTINGS_FIELD_OPTIMIZE;
 		}
 		
 		foreach ( $this->get_settings() as $constant => $value ) {
@@ -208,8 +220,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			case ( self::OMGF_SETTINGS_FIELD_BASIC ):
 				$needle = 'OMGF_BASIC_SETTING_';
 				break;
+			case ( self::OMGF_SETTINGS_FIELD_ADVANCED ):
+				$needle = 'OMGF_ADV_SETTING_';
+				break;
 			default:
-				$needle = 'OMGF_ADV_SETTING';
+				$needle = 'OMGF_OPTIMIZE_SETTING_';
 		}
 		
 		return array_filter(
@@ -219,6 +234,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			},
 			ARRAY_FILTER_USE_KEY
 		);
+	}
+	
+	public function optimize_fonts_tab () {
+		$this->generate_tab( self::OMGF_SETTINGS_FIELD_OPTIMIZE, 'dashicons-performance', __( 'Optimize Fonts', $this->plugin_text_domain ) );
 	}
 	
 	/**
@@ -256,6 +275,13 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	private function generate_tab_link ( $tab ) {
 		return admin_url( "options-general.php?page=optimize-webfonts&tab=$tab" );
+	}
+	
+	/**
+	 *
+	 */
+	public function optimize_fonts_content () {
+		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_OPTIMIZE );
 	}
 	
 	/**

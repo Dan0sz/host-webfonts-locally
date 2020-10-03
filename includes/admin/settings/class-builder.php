@@ -74,6 +74,36 @@ class OMGF_Admin_Settings_Builder
 	}
 	
 	/**
+	 * Generate radio setting
+	 *
+	 * @param $label
+	 * @param $inputs
+	 * @param $name
+	 * @param $checked
+	 * @param $description
+	 */
+	public function do_radio($label, $inputs, $name, $checked, $description)
+	{
+		?>
+        <tr>
+            <th scope="row"><?= $label; ?></th>
+            <td>
+				<?php foreach ($inputs as $option => $option_label): ?>
+                    <label>
+                        <input type="radio" class="<?= str_replace('_', '-', $name . '_' . $option); ?>" name="<?= $name; ?>" value="<?= $option; ?>" <?= $option == $checked ? 'checked="checked"' : ''; ?> />
+						<?= $option_label; ?>
+                    </label>
+                    <br/>
+				<?php endforeach; ?>
+                <p class="description">
+					<?= $description; ?>
+                </p>
+            </td>
+        </tr>
+		<?php
+	}
+	
+	/**
 	 * Generate select setting
 	 *
 	 * @param      $label

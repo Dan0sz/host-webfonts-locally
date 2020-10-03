@@ -47,10 +47,10 @@ class OMGF_Admin
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
 		add_action( 'admin_notices', [ $this, 'print_notices' ] );
 		
+		$this->do_optimize_settings();
 		$this->do_basic_settings();
 		$this->do_advanced_settings();
 		
-		add_action( 'admin_init', [ $this, 'maybe_show_optimize_notice' ] );
 		add_filter( 'pre_update_option', [ $this, 'settings_changed' ], 10, 3 );
 	}
 	
@@ -78,6 +78,13 @@ class OMGF_Admin
 	 */
 	public function print_notices () {
 		OMGF_Admin_Notice::print_notices();
+	}
+	
+	/**
+	 * @return OMGF_Admin_Settings_Optimize
+	 */
+	private function do_optimize_settings () {
+		return new OMGF_Admin_Settings_Optimize();
 	}
 	
 	/**
@@ -114,23 +121,5 @@ class OMGF_Admin
 		}
 		
 		return $value;
-	}
-	
-	/**
-	 *
-	 */
-	public function maybe_show_optimize_notice () {
-		if ( get_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE ) ) {
-			// If any notices were set in a previous run, unset them.
-			OMGF_Admin_Notice::unset_notice( 'omgf-optimize' , 'success' );
-			
-			return;
-		}
-		
-		OMGF_Admin_Notice::set_notice(
-			__( 'OMGF is ready to optimize your Google Fonts. <a href="#" id="omgf-optimize">Start optimization</a>.', $this->plugin_text_domain ),
-			'omgf-optimize',
-			false
-		);
 	}
 }

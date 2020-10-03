@@ -36,6 +36,7 @@ class OMGF
 		}
 		
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+		register_activation_hook(OMGF_PLUGIN_BASENAME, [ $this, 'show_activation_notice']);
 	}
 	
 	/**
@@ -43,6 +44,8 @@ class OMGF
 	 */
 	public function define_constants () {
 		define( 'OMGF_SITE_URL', 'https://daan.dev' );
+		define( 'OMGF_OPTIMIZATION_MODE', esc_attr( get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE, 'manual' ) ) );
+		define( 'OMGF_MANUAL_OPTIMIZE_URL', esc_attr( get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL, site_url() ) ) );
 		define( 'OMGF_FONT_PROCESSING', esc_attr( get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_FONT_PROCESSING, 'replace' ) ) );
 		define( 'OMGF_DISPLAY_OPTION', esc_attr( get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_DISPLAY_OPTION, 'swap' ) ) ?: 'swap' );
 		define( 'OMGF_OPTIMIZE_EDIT_ROLES', esc_attr( get_option( OMGF_Admin_Settings::OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES, 'on' ) ) );
@@ -81,6 +84,17 @@ class OMGF
 	public function register_routes () {
 		$proxy = new OMGF_API_Download();
 		$proxy->register_routes();
+	}
+	
+	/**
+	 *
+	 */
+	public function show_activation_notice () {
+		OMGF_Admin_Notice::set_notice(
+			__( 'OMGF is ready to optimize your Google Fonts. <a href="#" id="omgf-optimize">Start optimization</a>.', $this->plugin_text_domain ),
+			'omgf-optimize',
+			false
+		);
 	}
 	
 	/**

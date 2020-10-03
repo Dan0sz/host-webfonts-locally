@@ -55,6 +55,42 @@
   float: right;
   width: 21.75%;
 }
+.omgf-optimize-fonts-container {
+  text-align: center;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-description {
+  padding: 0 15px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-pros {
+  margin-right: 10px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-pros,
+.omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-cons {
+  text-align: left;
+  width: 48%;
+  display: inline-block;
+  vertical-align: top;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-pros span:before,
+.omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-cons span:before {
+  vertical-align: -4px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-description label {
+  font-size: 18px;
+  font-weight: bold;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-description #omgf_manual_optimize_url {
+  font-size: 18px;
+  padding: 0 15px;
+  margin-left: 10px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-tooltip {
+  padding: 0 15px 5px;
+}
+.omgf-optimize-fonts-container p,
+.omgf-optimize-fonts-container ul {
+  text-align: justify;
+}
 /**
  * Welcome block
  */
