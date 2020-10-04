@@ -103,29 +103,4 @@ class OMGF_Admin_Notice
 		
 		delete_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
 	}
-	
-	/**
-	 *
-	 */
-	public static function optimization_finished () {
-		self::set_notice(
-			__( 'OMGF has finished optimizing your Google Fonts. Enjoy! :-)', self::$plugin_text_domain ),
-			'omgf-finished-optimizing',
-			false
-		);
-		
-		self::set_notice(
-			'<em>' . __( 'If you\'re using any CSS minify/combine and/or Full Page Caching plugins, don\'t forget to flush their caches.', self::$plugin_text_domain ) . '</em>',
-			'omgf-optimize-plugin-notice',
-			false,
-			'info'
-		);
-		
-		self::set_notice(
-			__( 'OMGF will keep running silently in the background and will generate additional stylesheets when other Google Fonts are found on any of your pages.', self::$plugin_text_domain ),
-			'omgf-optimize-background',
-			false,
-			'info'
-		);
-	}
 }
