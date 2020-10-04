@@ -31,6 +31,7 @@ class OMGF_Frontend_Functions
 		
 		add_filter( 'content_url', [ $this, 'rewrite_url' ], 10, 2 );
 		add_action( 'wp_print_styles', [ $this, 'process_fonts' ], PHP_INT_MAX - 1000 );
+		// TODO: Add Preload Fonts. Filter optimized fonts option by the selected preload fonts. Then get the woff2 URL for those fonts and preload them.
 	}
 	
 	/**
