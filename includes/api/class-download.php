@@ -102,6 +102,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		}
 		
 		foreach ( $fonts as &$font ) {
+			// TODO: Filter wanted variants as set in admin area.
 			$font_request   = array_filter(
 				$font_families,
 				function ( $value ) use ( $font ) {
@@ -127,6 +128,16 @@ class OMGF_API_Download extends WP_REST_Controller
 		$local_file = $this->path . '/' . $this->handle . '.css';
 		
 		file_put_contents( $local_file, $stylesheet );
+		
+		$optimized_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) ?: [];
+		$current_font    = [ $this->handle => $fonts ];
+		
+		/**
+		 * If handle was already detected before, there's no need of saving it to OMGF's options.
+		 */
+		if ( ! isset( $optimized_fonts[ $this->handle ] ) ) {
+			update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts + $current_font );
+		}
 		
 		// After downloading it, serve it.
 		header( 'Content-Type: text/css' );

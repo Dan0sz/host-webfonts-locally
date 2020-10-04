@@ -51,6 +51,7 @@ class OMGF_Admin
 		$this->do_basic_settings();
 		$this->do_advanced_settings();
 		
+		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'decode_option' ], 10, 3);
 		add_filter( 'pre_update_option', [ $this, 'settings_changed' ], 10, 3 );
 	}
 	
@@ -99,6 +100,10 @@ class OMGF_Admin
 	 */
 	private function do_advanced_settings () {
 		return new OMGF_Admin_Settings_Advanced();
+	}
+	
+	public function decode_option ( $old_value, $value, $option_name ) {
+		return $value;
 	}
 	
 	/**

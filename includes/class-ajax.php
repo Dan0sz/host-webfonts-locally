@@ -40,7 +40,7 @@ class OMGF_AJAX
 				$this->delete( $entry );
 			}
 			
-			update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
+			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
 			
 			OMGF_Admin_Notice::set_notice( __( 'Cache directory successfully emptied.', $this->plugin_text_domain ) );
 		} catch ( \Exception $e ) {
@@ -118,9 +118,9 @@ class OMGF_AJAX
 				$info .= ' ' . sprintf( __( '<a target="_blank" href="%s">send me a support ticket</a>.', $this->plugin_text_domain ), 'https://ffwp.dev/contact/' );
 			}
 			
-			OMGF_Admin_Notice::unset_notice('omgf-optimize', 'success');
-			OMGF_Admin_Notice::unset_notice('omgf-optimize-plugin-notice');
-			OMGF_Admin_Notice::unset_notice('omgf-optimize-background');
+			OMGF_Admin_Notice::unset_notice( 'omgf-optimize', 'success' );
+			OMGF_Admin_Notice::unset_notice( 'omgf-optimize-plugin-notice' );
+			OMGF_Admin_Notice::unset_notice( 'omgf-optimize-background' );
 			
 			OMGF_Admin_Notice::set_notice(
 				$message,

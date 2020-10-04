@@ -29,7 +29,10 @@ jQuery(document).ready(function($) {
             $('.omgf-empty').on('click', this.empty_cache_directory);
             $('#omgf-optimize').on('click', this.optimize);
         },
-        
+    
+        /**
+         *
+         */
         toggle_optimization_mode_content : function() {
             if (this.value == 'manual') {
                 $('.omgf-optimize-fonts-manual').show();

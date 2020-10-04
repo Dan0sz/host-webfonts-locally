@@ -57,9 +57,35 @@
 }
 .omgf-optimize-fonts-container {
   text-align: center;
+  padding: 20px;
 }
-.omgf-optimize-fonts-container .omgf-optimize-fonts-description {
-  padding: 0 15px;
+.omgf-optimize-fonts-container h3 {
+  font-size: 1.3em;
+  margin-top: 0;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage {
+  text-align: left;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table thead th {
+  width: 100px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody {
+  border: 1px solid #ccd0d4;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody th {
+  padding: 5px 0 0 10px;
+  width: 40%;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody th .handle {
+  font-weight: 400;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td {
+  padding-bottom: 5px;
+  width: 100px;
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-pros {
   margin-right: 10px;

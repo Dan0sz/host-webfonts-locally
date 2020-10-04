@@ -95,6 +95,7 @@ class OMGF_Frontend_Functions
 		
 		$registered = $wp_styles->registered;
 		$fonts      = apply_filters( 'omgf_auto_replace', $this->detect_registered_google_fonts( $registered ) );
+		$mode       = esc_attr( $_GET['optimization_mode'] ?? '' );
 		
 		foreach ( $fonts as $handle => $font ) {
 			$cached_file = OMGF_CACHE_PATH . '/' . $handle . "/$handle.css";
@@ -105,7 +106,9 @@ class OMGF_Frontend_Functions
 				continue;
 			}
 			
-			$wp_styles->registered[ $handle ]->src = str_replace( [ 'https://fonts.googleapis.com/', '//fonts.googleapis.com/' ], site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$handle";
+			if ( OMGF_OPTIMIZATION_MODE == 'auto' || ( OMGF_OPTIMIZATION_MODE == 'manual' && isset( $_GET['omgf_optimize'] ) && $_GET['omgf_optimize'] == 1 ) ) {
+				$wp_styles->registered[ $handle ]->src = str_replace( [ 'https://fonts.googleapis.com/', '//fonts.googleapis.com/' ], site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$handle&optimization_mode=$mode";
+			}
 		}
 		
 		$this->maybe_show_optimization_finished_notice();

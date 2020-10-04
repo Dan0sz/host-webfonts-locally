@@ -36,7 +36,8 @@ class OMGF
 		}
 		
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
-		register_activation_hook(OMGF_PLUGIN_BASENAME, [ $this, 'show_activation_notice']);
+		add_action( 'admin_init', [ $this, 'do_optimize' ] );
+		register_activation_hook( OMGF_PLUGIN_BASENAME, [ $this, 'show_activation_notice' ] );
 	}
 	
 	/**
@@ -55,6 +56,13 @@ class OMGF
 		define( 'OMGF_CDN_URL', esc_attr( get_option( OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL ) ) );
 		define( 'OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH );
 		define( 'OMGF_UNINSTALL', esc_attr( get_option( OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL ) ) );
+	}
+	
+	/**
+	 * @return mixed|void
+	 */
+	public static function optimized_fonts () {
+		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
 	}
 	
 	/**
@@ -84,6 +92,13 @@ class OMGF
 	public function register_routes () {
 		$proxy = new OMGF_API_Download();
 		$proxy->register_routes();
+	}
+	
+	/**
+	 * @return OMGF_Optimize
+	 */
+	public function do_optimize () {
+		return new OMGF_Optimize();
 	}
 	
 	/**
