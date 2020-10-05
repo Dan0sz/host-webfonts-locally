@@ -30,8 +30,8 @@ class OMGF_Frontend_Functions
 		$this->do_optimize = $this->maybe_optimize_fonts();
 		
 		add_filter( 'content_url', [ $this, 'rewrite_url' ], 10, 2 );
+		add_action( 'wp_head', [ $this, 'add_preloads' ], 3 );
 		add_action( 'wp_print_styles', [ $this, 'process_fonts' ], PHP_INT_MAX - 1000 );
-		// TODO: Add Preload Fonts. Filter optimized fonts option by the selected preload fonts. Then get the woff2 URL for those fonts and preload them.
 	}
 	
 	/**
@@ -48,14 +48,77 @@ class OMGF_Frontend_Functions
 	}
 	
 	/**
+	 * @param $url
+	 * @param $path
+	 *
+	 * @return mixed
+	 */
+	public function rewrite_url ( $url, $path ) {
+		/**
+		 * Exit early if this isn't requested by OMGF.
+		 */
+		if ( strpos( $url, OMGF_CACHE_PATH ) === false ) {
+			return $url;
+		}
+		
+		/**
+		 * If Relative URLs is enabled, overwrite URL with Path and continue execution.
+		 */
+		if ( OMGF_RELATIVE_URL ) {
+			$content_dir = str_replace( site_url(), '', content_url() );
+			
+			$url = $content_dir . $path;
+		}
+		
+		if ( OMGF_CDN_URL ) {
+			$url = str_replace( site_url(), OMGF_CDN_URL, $url );
+		}
+		
+		if ( OMGF_CACHE_URI ) {
+			$url = str_replace( OMGF_CACHE_PATH, OMGF_CACHE_URI, $url );
+		}
+		
+		return $url;
+	}
+	
+	/**
+	 *
+	 */
+	public function add_preloads () {
+		$preloaded_fonts = omgf_init()::preloaded_fonts();
+		
+		if (!$preloaded_fonts) {
+			return;
+		}
+		
+		$stylesheets = omgf_init()::optimized_fonts();
+		
+		foreach ($stylesheets as $stylesheet) {
+			foreach ($stylesheet as $font) {
+				if (!in_array($font->id, array_keys($preloaded_fonts))) {
+					continue;
+				}
+				
+				$font_id          = $font->id;
+				$preload_variants = array_filter($font->variants, function ($variant) use ($preloaded_fonts, $font_id) {
+					return in_array($variant->id, $preloaded_fonts[$font_id]);
+				});
+			}
+			
+			foreach ($preload_variants as $variant) {
+				$url = $variant->woff2;
+				echo "<link id='omgf-preload' rel='preload' href='$url' />\n";
+			}
+		}
+	}
+	
+	/**
 	 * Check if the Remove Google Fonts option is enabled.
 	 */
 	public function process_fonts () {
 		if ( ! $this->do_optimize ) {
 			return;
 		}
-		
-		// TODO: Add preload here.
 		
 		if ( apply_filters( 'omgf_pro_advanced_processing_enabled', false ) ) {
 			return;
@@ -131,39 +194,5 @@ class OMGF_Frontend_Functions
 				       || strpos( $contents->src, 'fonts.gstatic.com' ) !== false;
 			}
 		);
-	}
-	
-	/**
-	 * @param $url
-	 * @param $path
-	 *
-	 * @return mixed
-	 */
-	public function rewrite_url ( $url, $path ) {
-		/**
-		 * Exit early if this isn't requested by OMGF.
-		 */
-		if ( strpos( $url, OMGF_CACHE_PATH ) === false ) {
-			return $url;
-		}
-		
-		/**
-		 * If Relative URLs is enabled, overwrite URL with Path and continue execution.
-		 */
-		if ( OMGF_RELATIVE_URL ) {
-			$content_dir = str_replace( site_url(), '', content_url() );
-			
-			$url = $content_dir . $path;
-		}
-		
-		if ( OMGF_CDN_URL ) {
-			$url = str_replace( site_url(), OMGF_CDN_URL, $url );
-		}
-		
-		if ( OMGF_CACHE_URI ) {
-			$url = str_replace( OMGF_CACHE_PATH, OMGF_CACHE_URI, $url );
-		}
-		
-		return $url;
 	}
 }

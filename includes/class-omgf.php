@@ -73,6 +73,13 @@ class OMGF
 	}
 	
 	/**
+	 * @return array
+	 */
+	public static function preloaded_fonts () {
+		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
+	}
+	
+	/**
 	 * @return OMGF_Admin_Settings
 	 */
 	private function do_settings () {
