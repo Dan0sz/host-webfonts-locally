@@ -87,6 +87,9 @@
   padding-bottom: 5px;
   width: 100px;
 }
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody tr:last-child td {
+  padding-bottom: 10px;
+}
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-pros {
   margin-right: 10px;
 }
