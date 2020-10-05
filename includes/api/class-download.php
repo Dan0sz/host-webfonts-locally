@@ -81,57 +81,29 @@ class OMGF_API_Download extends WP_REST_Controller
 		$url           = self::OMGF_GOOGLE_FONTS_API_URL . '/api/fonts/%s';
 		$font_families = explode( '|', $params['family'] );
 		
+		if ( defined( 'OMGF_PRO_FORCE_SUBSETS' ) && ! empty( OMGF_PRO_FORCE_SUBSETS ) ) {
+			$query['subsets'] = implode( ',', OMGF_PRO_FORCE_SUBSETS );
+		} else {
+			$query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
+		}
+		
 		foreach ( $font_families as $font_family ) {
-			list( $family, $variants ) = explode( ':', $font_family );
-			$family = strtolower( str_replace( ' ', '-', $family ) );
-			
-			if ( defined( 'OMGF_PRO_FORCE_SUBSETS' ) && ! empty( OMGF_PRO_FORCE_SUBSETS ) ) {
-				$query['subsets'] = implode( ',', OMGF_PRO_FORCE_SUBSETS );
-			} else {
-				$query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
-			}
-			
-			$response = wp_remote_get(
-				sprintf( $url, $family ) . '?' . http_build_query( $query )
-			);
-			
-			if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) == 200 ) {
-				$fonts[] = json_decode( wp_remote_retrieve_body( $response ) );
-			}
+			$fonts[] = $this->grab_font_family( $font_family, $url, $query);
 		}
 		
 		foreach ( $fonts as $font_key => &$font ) {
-			$font_request = array_filter(
-				$font_families,
-				function ( $value ) use ( $font ) {
-					return strpos( $value, $font->family ) !== false;
-				}
-			);
-			
-			$font_request = reset( $font_request );
+			$font_request = $this->filter_font_families($font_families, $font);
 			
 			if ( $unloaded_fonts = omgf_init()::unloaded_fonts() ) {
 				list ( $family, $variants ) = explode( ':', $font_request );
 				
-				$variants = array_filter( explode( ',', $variants ) );
-				
-				// This means by default all fonts are requested, so we need to fill up the queue, before unloading the unwanted variants.
-				if ( count( $variants ) == 0 ) {
-					foreach ( $font->variants as $variant ) {
-						$variants[] = $variant->id;
-					}
-				}
+				$variants = $this->process_variants($variants, $font);
 				
 				$font_id = $font->id;
 				
 				// Now we're sure we got 'em all. We can safely unload those we don't want.
 				if ( isset( $unloaded_fonts[ $font_id ] ) ) {
-					$variants = array_filter(
-						$variants,
-						function ( $value ) use ( $unloaded_fonts, $font_id ) {
-							return ! in_array( $value, $unloaded_fonts[ $font_id ] );
-						}
-					);
+					$variants = $this->dequeue_unloaded_fonts($variants, $unloaded_fonts, $font->id);
 					
 					$font_request = $family . ':' . implode( ',', $variants );
 				}
@@ -184,6 +156,22 @@ class OMGF_API_Download extends WP_REST_Controller
 	}
 	
 	/**
+	 * @param $variants
+	 * @param $unloaded_fonts
+	 * @param $font_id
+	 *
+	 * @return array
+	 */
+	private function dequeue_unloaded_fonts( $variants, $unloaded_fonts, $font_id) {
+		return array_filter(
+			$variants,
+			function ( $value ) use ( $unloaded_fonts, $font_id ) {
+				return ! in_array( $value, $unloaded_fonts[ $font_id ] );
+			}
+		);
+	}
+	
+	/**
 	 * Converts requests to OMGF's Download/CSS2 API to a format readable by the regular API.
 	 *
 	 * @param $request WP_Rest_Request
@@ -225,6 +213,60 @@ class OMGF_API_Download extends WP_REST_Controller
 	 */
 	private function get_query_from_request () {
 		return parse_url( $_SERVER['REQUEST_URI'] )['query'];
+	}
+	
+	/**
+	 * @param $font_family
+	 * @param $url
+	 * @param $query
+	 *
+	 * @return mixed|void
+	 */
+	private function grab_font_family( $font_family, $url, $query) {
+		list( $family, $variants ) = explode( ':', $font_family );
+		$family = strtolower( str_replace( ' ', '-', $family ) );
+		
+		$response = wp_remote_get(
+			sprintf( $url, $family ) . '?' . http_build_query( $query )
+		);
+		
+		if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) == 200 ) {
+			return json_decode( wp_remote_retrieve_body( $response ) );
+		}
+	}
+	
+	/**
+	 * @param $font_families
+	 * @param $font
+	 *
+	 * @return mixed
+	 */
+	private function filter_font_families ($font_families, $font) {
+		$font_request = array_filter(
+			$font_families,
+			function ( $value ) use ( $font ) {
+				return strpos( $value, $font->family ) !== false;
+			}
+		);
+		
+		return reset( $font_request );
+	}
+	
+	/**
+	 * @param $variants
+	 * @param $font
+	 */
+	private function process_variants($variants, $font) {
+		$variants = array_filter( explode( ',', $variants ) );
+		
+		// This means by default all fonts are requested, so we need to fill up the queue, before unloading the unwanted variants.
+		if ( count( $variants ) == 0 ) {
+			foreach ( $font->variants as $variant ) {
+				$variants[] = $variant->id;
+			}
+		}
+		
+		return $variants;
 	}
 	
 	/**
