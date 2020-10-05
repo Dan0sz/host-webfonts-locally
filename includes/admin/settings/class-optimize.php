@@ -30,12 +30,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		$this->title = __( 'Optimize Google Fonts', $this->plugin_text_domain );
 		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_title' ], 10 );
-		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_description' ], 15 );
+		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 20 );
-		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_optimization_mode' ], 30 );
-		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 100 );
 		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 200 );
