@@ -87,25 +87,27 @@ class OMGF_Frontend_Functions
 	public function add_preloads () {
 		$preloaded_fonts = omgf_init()::preloaded_fonts();
 		
-		if (!$preloaded_fonts) {
+		if ( ! $preloaded_fonts ) {
 			return;
 		}
 		
 		$stylesheets = omgf_init()::optimized_fonts();
 		
-		foreach ($stylesheets as $stylesheet) {
-			foreach ($stylesheet as $font) {
-				if (!in_array($font->id, array_keys($preloaded_fonts))) {
+		foreach ( $stylesheets as $stylesheet ) {
+			foreach ( $stylesheet as $font ) {
+				if ( ! in_array( $font->id, array_keys( $preloaded_fonts ) ) ) {
 					continue;
 				}
 				
 				$font_id          = $font->id;
-				$preload_variants = array_filter($font->variants, function ($variant) use ($preloaded_fonts, $font_id) {
-					return in_array($variant->id, $preloaded_fonts[$font_id]);
-				});
+				$preload_variants = array_filter(
+					$font->variants, function ( $variant ) use ( $preloaded_fonts, $font_id ) {
+					return in_array( $variant->id, $preloaded_fonts[ $font_id ] );
+				}
+				);
 			}
 			
-			foreach ($preload_variants as $variant) {
+			foreach ( $preload_variants as $variant ) {
 				$url = $variant->woff2;
 				echo "<link id='omgf-preload' rel='preload' href='$url' />\n";
 			}
@@ -164,7 +166,7 @@ class OMGF_Frontend_Functions
 			$updated_handle = $handle;
 			
 			if ( $unloaded_fonts = omgf_init()::unloaded_fonts() ) {
-				$updated_handle = $handle . '-' . strlen(json_encode($unloaded_fonts));
+				$updated_handle = $handle . '-' . strlen( json_encode( $unloaded_fonts ) );
 			}
 			
 			$cached_file = OMGF_CACHE_PATH . '/' . $updated_handle . "/$updated_handle.css";
