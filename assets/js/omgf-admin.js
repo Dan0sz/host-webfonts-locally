@@ -27,7 +27,7 @@ jQuery(document).ready(function($) {
             
             // Buttons
             $('.omgf-empty').on('click', this.empty_cache_directory);
-            $(document).on('click', '#omgf-optimize-settings-form', this.show_loader_before_submit);
+            $('#omgf-optimize-settings-form').submit(this.show_loader_before_submit);
         },
     
         /**
