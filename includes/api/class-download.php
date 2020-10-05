@@ -94,11 +94,11 @@ class OMGF_API_Download extends WP_REST_Controller
 		foreach ( $fonts as $font_key => &$font ) {
 			$font_request = $this->filter_font_families($font_families, $font);
 			
+			list ( $family, $variants ) = explode( ':', $font_request );
+			
+			$variants = $this->process_variants($variants, $font);
+			
 			if ( $unloaded_fonts = omgf_init()::unloaded_fonts() ) {
-				list ( $family, $variants ) = explode( ':', $font_request );
-				
-				$variants = $this->process_variants($variants, $font);
-				
 				$font_id = $font->id;
 				
 				// Now we're sure we got 'em all. We can safely unload those we don't want.
