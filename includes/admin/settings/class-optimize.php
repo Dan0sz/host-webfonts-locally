@@ -81,7 +81,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	public function do_optimize_fonts_contents () {
 		$this->optimized_fonts = omgf_init()::optimized_fonts();
 		?>
-        <h3><?= $this->optimized_fonts ? sprintf( __( 'OMGF found %s fonts', $this->plugin_text_domain ), count( $this->optimized_fonts ) ) : __( 'Are you ready to Optimize your Google Fonts?', $this->plugin_text_domain ); ?></h3>
+        <h3><?= $this->optimized_fonts ? 'Manage Optimized Google Fonts' : __( 'Are you ready to Optimize your Google Fonts?', $this->plugin_text_domain ); ?></h3>
 		<?php if ( $this->optimized_fonts ): ?>
 			<?= $this->do_optimized_fonts_manager(); ?>
 		<?php else: ?>
