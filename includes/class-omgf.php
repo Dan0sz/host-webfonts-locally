@@ -59,10 +59,17 @@ class OMGF
 	}
 	
 	/**
-	 * @return mixed|void
+	 * @return array
 	 */
 	public static function optimized_fonts () {
 		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
+	}
+	
+	/**
+	 * @return array
+	 */
+	public static function unloaded_fonts () {
+		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
 	}
 	
 	/**

@@ -130,12 +130,12 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
                                     <td>
                                         <input type="checkbox"
                                                name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS; ?>[<?= $font->id; ?>][<?= $variant->id; ?>]"
-                                               value="1" <?= $preload ? 'checked="checked"' : ''; ?> />
+                                               value="<?= $variant->id; ?>" <?= $preload ? 'checked="checked"' : ''; ?> />
                                     </td>
                                     <td>
                                         <input type="checkbox"
                                                name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS; ?>[<?= $font->id; ?>][<?= $variant->id; ?>]"
-                                               value="1" <?= $unload ? 'checked="checked"' : ''; ?> />
+                                               value="<?= $variant->id; ?>" <?= $unload ? 'checked="checked"' : ''; ?> />
                                     </td>
                                 </tr>
 	                        <?php endforeach; ?>

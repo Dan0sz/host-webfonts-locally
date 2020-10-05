@@ -77,8 +77,7 @@ class OMGF_API_Download extends WP_REST_Controller
 			wp_send_json_error( 'Handle not provided.', 406 );
 		}
 		
-		$this->path = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
-		
+		$this->path    = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
 		$url           = self::OMGF_GOOGLE_FONTS_API_URL . '/api/fonts/%s';
 		$font_families = explode( '|', $params['family'] );
 		
@@ -101,15 +100,50 @@ class OMGF_API_Download extends WP_REST_Controller
 			}
 		}
 		
-		foreach ( $fonts as &$font ) {
-			// TODO: Filter wanted variants as set in admin area.
-			$font_request   = array_filter(
+		foreach ( $fonts as $font_key => &$font ) {
+			$font_request = array_filter(
 				$font_families,
 				function ( $value ) use ( $font ) {
 					return strpos( $value, $font->family ) !== false;
 				}
 			);
-			$font->variants = $this->filter_variants( $font->variants, reset( $font_request ) );
+			
+			$font_request = reset( $font_request );
+			
+			if ( $unloaded_fonts = omgf_init()::unloaded_fonts() ) {
+				list ( $family, $variants ) = explode( ':', $font_request );
+				
+				$variants = array_filter( explode( ',', $variants ) );
+				
+				// This means by default all fonts are requested, so we need to fill up the queue, before unloading the unwanted variants.
+				if ( count( $variants ) == 0 ) {
+					foreach ( $font->variants as $variant ) {
+						$variants[] = $variant->id;
+					}
+				}
+				
+				$font_id = $font->id;
+				
+				// Now we're sure we got 'em all. We can safely unload those we don't want.
+				if ( isset( $unloaded_fonts[ $font_id ] ) ) {
+					$variants = array_filter(
+						$variants,
+						function ( $value ) use ( $unloaded_fonts, $font_id ) {
+							return ! in_array( $value, $unloaded_fonts[ $font_id ] );
+						}
+					);
+					
+					$font_request = $family . ':' . implode( ',', $variants );
+				}
+			}
+			
+			// If any variants are left after unloading, filter them.
+			if ( ! empty( $variants ) ) {
+				$font->variants = $this->filter_variants( $font->variants, $font_request );
+				// Otherwise, remove the entire font from the download queue.
+			} else {
+				unset( $fonts[ $font_key ] );
+			}
 		}
 		
 		foreach ( $fonts as &$font ) {
@@ -131,11 +165,12 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		$optimized_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) ?: [];
 		$current_font    = [ $this->handle => $fonts ];
+		$original_handle = $request->get_param( 'original_handle' );
 		
 		/**
 		 * If handle was already detected before, there's no need of saving it to OMGF's options.
 		 */
-		if ( ! isset( $optimized_fonts[ $this->handle ] ) ) {
+		if ( ! isset( $optimized_fonts[ $original_handle ] ) ) {
 			update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts + $current_font );
 		}
 		
@@ -212,8 +247,8 @@ class OMGF_API_Download extends WP_REST_Controller
 			function ( $font ) use ( $variants ) {
 				$id = $font->id;
 				
-				if ( $id == 'regular' || $id == 'italic' ) {
-					$id = '400';
+				if ( $id == 'regular' || $id == '400' ) {
+					return in_array( '400', $variants ) || in_array( 'regular', $variants );
 				}
 				
 				return in_array( $id, $variants );

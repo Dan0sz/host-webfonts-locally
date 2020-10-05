@@ -24,9 +24,6 @@ class OMGF_Optimize
 	/** @var mixed|string $optimization_mode */
 	private $optimization_mode = '';
 	
-	/** @var array $optimized_fonts */
-	private $optimized_fonts = [];
-	
 	/**
 	 * OMGF_Optimize constructor.
 	 */
@@ -42,7 +39,8 @@ class OMGF_Optimize
 		// Will die when it fails.
 		check_admin_referer( 'omgf-optimize-settings-options' );
 		
-		$this->optimized_fonts = OMGF_OPTIMIZED_FONTS;
+		update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, $_POST[OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS]);
+		update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, $_POST[OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS]);
 		
 		if ( $this->optimization_mode == 'manual' ) {
 			$this->run_manual();
@@ -60,7 +58,7 @@ class OMGF_Optimize
 		$url = esc_url_raw( $_POST[ OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL ] );
 		
 		$front_html = wp_remote_get(
-			$this->no_cache_optimize_url( $url, $this->optimization_mode ),
+			$this->no_cache_optimize_url( $url ),
 			[
 				'timeout' => 30
 			]
@@ -76,7 +74,7 @@ class OMGF_Optimize
 		
 		foreach ( $document->getElementsByTagName( 'link' ) as $link ) {
 			/** @var $link DOMElement */
-			if ( $link->hasAttribute( 'href' ) && strpos( $link->getAttribute( 'href' ), '/omgf/v1/download/css' ) ) {
+			if ( $link->hasAttribute( 'href' ) && strpos( $link->getAttribute( 'href' ), '/omgf/v1/download/' ) ) {
 				$urls[] = $link->getAttribute( 'href' );
 			}
 		}
@@ -87,7 +85,7 @@ class OMGF_Optimize
 		
 		foreach ( $urls as $url ) {
 			$download = wp_remote_get(
-				$this->no_cache_optimize_url( $url, $this->optimization_mode ),
+				$this->no_cache_optimize_url( $url ),
 				[
 					'timeout' => 30
 				]
@@ -166,7 +164,7 @@ class OMGF_Optimize
 	 *
 	 * @return string
 	 */
-	private function no_cache_optimize_url ( $url, $mode ) {
-		return add_query_arg( [ 'omgf_optimize' => 1, 'optimization_mode' => $mode, 'nocache' => substr( md5( microtime() ), rand( 0, 26 ), 5 ) ], $url );
+	private function no_cache_optimize_url ( $url ) {
+		return add_query_arg( [ 'omgf_optimize' => 1, 'nocache' => substr( md5( microtime() ), rand( 0, 26 ), 5 ) ], $url );
 	}
 }

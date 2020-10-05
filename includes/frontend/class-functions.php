@@ -55,6 +55,8 @@ class OMGF_Frontend_Functions
 			return;
 		}
 		
+		// TODO: Add preload here.
+		
 		if ( apply_filters( 'omgf_pro_advanced_processing_enabled', false ) ) {
 			return;
 		}
@@ -94,10 +96,15 @@ class OMGF_Frontend_Functions
 		
 		$registered = $wp_styles->registered;
 		$fonts      = apply_filters( 'omgf_auto_replace', $this->detect_registered_google_fonts( $registered ) );
-		$mode       = esc_attr( $_GET['optimization_mode'] ?? '' );
 		
 		foreach ( $fonts as $handle => $font ) {
-			$cached_file = OMGF_CACHE_PATH . '/' . $handle . "/$handle.css";
+			$updated_handle = $handle;
+			
+			if ( $unloaded_fonts = omgf_init()::unloaded_fonts() ) {
+				$updated_handle = $handle . '-' . strlen(json_encode($unloaded_fonts));
+			}
+			
+			$cached_file = OMGF_CACHE_PATH . '/' . $updated_handle . "/$updated_handle.css";
 			
 			if ( file_exists( WP_CONTENT_DIR . $cached_file ) ) {
 				$wp_styles->registered[ $handle ]->src = content_url( $cached_file );
@@ -105,8 +112,8 @@ class OMGF_Frontend_Functions
 				continue;
 			}
 			
-			if ( OMGF_OPTIMIZATION_MODE == 'auto' || ( OMGF_OPTIMIZATION_MODE == 'manual' && isset( $_GET['omgf_optimize'] ) && $_GET['omgf_optimize'] == 1 ) ) {
-				$wp_styles->registered[ $handle ]->src = str_replace( [ 'https://fonts.googleapis.com/', '//fonts.googleapis.com/' ], site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$handle&optimization_mode=$mode";
+			if ( OMGF_OPTIMIZATION_MODE == 'auto' || ( OMGF_OPTIMIZATION_MODE == 'manual' && isset( $_GET['omgf_optimize'] ) ) ) {
+				$wp_styles->registered[ $handle ]->src = str_replace( [ 'https://fonts.googleapis.com/', '//fonts.googleapis.com/' ], site_url( '/wp-json/omgf/v1/download/' ), $font->src ) . "&handle=$updated_handle&original_handle=$handle";
 			}
 		}
 	}
