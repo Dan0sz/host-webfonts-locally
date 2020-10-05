@@ -75,6 +75,13 @@ class OMGF
 	/**
 	 * @return array
 	 */
+	public static function unloaded_stylesheets () {
+		return get_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS, [] );
+	}
+	
+	/**
+	 * @return array
+	 */
 	public static function preloaded_fonts () {
 		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
 	}

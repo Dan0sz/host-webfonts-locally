@@ -77,15 +77,18 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	];
 	
 	/**
-	 *
+	 * Optimize Fonts
 	 */
-	const OMGF_OPTIMIZATION_COMPLETE = 'omgf_optimization_complete';
-	
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE   = 'omgf_optimization_mode';
 	const OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL = 'omgf_manual_optimize_url';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS     = 'omgf_optimized_fonts';
 	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS       = 'omgf_preload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS        = 'omgf_unload_fonts';
+	
+	/**
+	 *
+	 */
+	const OMGF_UNLOAD_STYLESHEETS = 'omgf_unload_stylesheets';
 	
 	/**
 	 * Basic Settings

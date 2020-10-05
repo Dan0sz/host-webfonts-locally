@@ -68,8 +68,6 @@ class OMGF_AJAX
 		);
 		
 		if ( is_wp_error( $front_html ) ) {
-			update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
-			
 			OMGF_Admin_Notice::set_notice(
 				__( 'OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain ) . ': ' . $front_html->get_error_message(),
 				'omgf-fetch-failed',
@@ -130,8 +128,6 @@ class OMGF_AJAX
 			);
 			
 			if ( is_wp_error( $download ) ) {
-				update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, false );
-				
 				OMGF_Admin_Notice::set_notice(
 					__( 'OMGF encountered an error while downloading Google Fonts', $this->plugin_text_domain ) . ': ' . $download->get_error_message(),
 					'omgf-download-failed',
@@ -141,8 +137,6 @@ class OMGF_AJAX
 				);
 			}
 		}
-		
-		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZATION_COMPLETE, true );
 	}
 	
 	/**

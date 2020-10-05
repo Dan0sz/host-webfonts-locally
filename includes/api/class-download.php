@@ -70,8 +70,9 @@ class OMGF_API_Download extends WP_REST_Controller
 			$this->convert_css2( $request );
 		}
 		
-		$params       = $request->get_params();
-		$this->handle = $params['handle'] ?? '';
+		$params          = $request->get_params();
+		$this->handle    = $params['handle'] ?? '';
+		$original_handle = $request->get_param( 'original_handle' );
 		
 		if ( ! $this->handle ) {
 			wp_send_json_error( 'Handle not provided.', 406 );
@@ -109,11 +110,27 @@ class OMGF_API_Download extends WP_REST_Controller
 				}
 			}
 			
-			// If any variants are left after unloading, filter them.
+			$unloaded_stylesheets = get_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS ) ?: [];
+			
+			/**
+			 * If any variants are left after unloading, filter them. Otherwise, remove the entire font from the download queue
+			 * and mark the handle to be unloaded on pageload.
+			 */
 			if ( ! empty( $variants ) ) {
+				/**
+				 * Because the stylesheet should be loaded, we should remove its mark for unloading, if it's set.
+				 */
+				if ( ( $key = array_search( $original_handle, $unloaded_stylesheets ) ) !== false ) {
+					unset( $unloaded_stylesheets[ $key ] );
+					update_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS, $unloaded_stylesheets );
+				}
+				
 				$font->variants = $this->filter_variants( $font->variants, $font_request );
-				// Otherwise, remove the entire font from the download queue.
 			} else {
+				if ( ! in_array( $original_handle, $unloaded_stylesheets ) ) {
+					update_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS, $unloaded_stylesheets + [ $original_handle ] );
+				}
+				
 				unset( $fonts[ $font_key ] );
 			}
 		}
@@ -136,7 +153,6 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		$optimized_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) ?: [];
 		$current_font    = [ $this->handle => $fonts ];
-		$original_handle = $request->get_param( 'original_handle' );
 		
 		/**
 		 * If handle was already detected before, there's no need of saving it to OMGF's options.
