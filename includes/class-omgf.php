@@ -126,4 +126,23 @@ class OMGF
 	public static function do_uninstall () {
 		return new OMGF_Uninstall();
 	}
+	
+	/**
+	 * @param $entry
+	 */
+	public static function delete ( $entry ) {
+		if ( is_dir( $entry ) ) {
+			$file = new \FilesystemIterator( $entry );
+			
+			// If dir is empty, valid() returns false.
+			while ( $file->valid() ) {
+				self::delete( $file->getPathName() );
+				$file->next();
+			}
+			
+			rmdir( $entry );
+		} else {
+			unlink( $entry );
+		}
+	}
 }

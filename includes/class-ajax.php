@@ -37,7 +37,7 @@ class OMGF_AJAX
 			$entries = array_filter( (array) glob( OMGF_FONTS_DIR . '/*' ) );
 			
 			foreach ( $entries as $entry ) {
-				$this->delete( $entry );
+				OMGF::delete( $entry );
 			}
 			
 			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
@@ -53,25 +53,6 @@ class OMGF_AJAX
 				'error',
 				$e->getCode()
 			);
-		}
-	}
-	
-	/**
-	 * @param $entry
-	 */
-	public function delete ( $entry ) {
-		if ( is_dir( $entry ) ) {
-			$file = new \FilesystemIterator( $entry );
-			
-			// If dir is empty, valid() returns false.
-			while ( $file->valid() ) {
-				$this->delete( $file->getPathName() );
-				$file->next();
-			}
-			
-			rmdir( $entry );
-		} else {
-			unlink( $entry );
 		}
 	}
 	

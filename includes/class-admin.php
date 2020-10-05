@@ -51,7 +51,8 @@ class OMGF_Admin
 		$this->do_basic_settings();
 		$this->do_advanced_settings();
 		
-		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'decode_option' ], 10, 3);
+		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'decode_option' ], 10, 3 );
+		add_filter( 'pre_update_option_omgf_unload_fonts', [ $this, 'clean_up_cache' ], 10, 3 );
 		add_filter( 'pre_update_option', [ $this, 'settings_changed' ], 10, 3 );
 	}
 	
@@ -102,7 +103,41 @@ class OMGF_Admin
 		return new OMGF_Admin_Settings_Advanced();
 	}
 	
+	/**
+	 * @param $old_value
+	 * @param $value
+	 * @param $option_name
+	 *
+	 * @return mixed
+	 */
 	public function decode_option ( $old_value, $value, $option_name ) {
+		return $value;
+	}
+	
+	/**
+	 * Triggered when preload settings is changed, cleans up old cache files.
+	 *
+	 * @param $old_value
+	 * @param $value
+	 * @param $option_name
+	 */
+	public function clean_up_cache ( $value, $old_value, $option_name ) {
+		if ( $value == $old_value ) {
+			return $value;
+		}
+		
+		$uniq_id = '';
+		
+		if (omgf_init()::unloaded_fonts()) {
+			$uniq_id = strlen( json_encode( $old_value ) );
+		}
+		
+		$entries = array_filter( (array) glob( OMGF_FONTS_DIR . "/*$uniq_id" ) );
+		
+		foreach ($entries as $entry) {
+			OMGF::delete($entry);
+		}
+		
 		return $value;
 	}
 	
