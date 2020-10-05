@@ -163,8 +163,10 @@ class OMGF_Frontend_Functions
 		$fonts      = apply_filters( 'omgf_auto_replace', $this->detect_registered_google_fonts( $registered ) );
 		
 		foreach ( $fonts as $handle => $font ) {
-			// If this stylesheet has been marked for unload, we can skip out early.
+			// If this stylesheet has been marked for unload, empty the src and skip out early.
 			if (in_array($handle, omgf_init()::unloaded_stylesheets())) {
+				$wp_styles->registered[ $handle ]->src = '';
+				
 				continue;
 			}
 			
