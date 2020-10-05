@@ -312,7 +312,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			return;
 		}
 		?>
-        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="<?= admin_url( 'options.php?tab=' . $this->active_tab ); ?>">
+        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="<?= admin_url( 'options.php?tab=' . $this->active_tab ); ?>" autocomplete="off">
 			<?php
 			settings_fields( $field );
 			do_settings_sections( $field );

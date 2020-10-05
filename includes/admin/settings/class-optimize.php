@@ -236,7 +236,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
             <div class="omgf-optimize-fonts-tooltip">
                 <p>
                     <span class="dashicons-before dashicons-info-outline"></span>
-                    <em><?= __( "After saving your changes, this section will be populated with all captured fonts, font styles and available options as your site's frontend is visited by you or others.", $this->plugin_text_domain ); ?></em>
+                    <em><?= __( "After saving your changes, this section will be populated with all captured fonts, font styles and available options as your site's frontend is visited by you or others. You will be able to manage your fonts at a later point.", $this->plugin_text_domain ); ?></em>
                 </p>
             </div>
         </div>
