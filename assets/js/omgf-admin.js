@@ -69,34 +69,6 @@ jQuery(document).ready(function($) {
         /**
          *
          */
-        optimize : function() {
-            if (omgf_admin.optimize_xhr) {
-                omgf_admin.optimize_xhr.abort();
-            }
-            
-            omgf_admin.optimize_xhr = $.ajax({
-                type : 'GET',
-                url : ajaxurl,
-                data : {
-                    action : 'omgf_ajax_optimize'
-                },
-                beforeSend : function() {
-                    omgf_admin.show_loader();
-                },
-                complete : function() {
-                    $('.omgf-loading').html('<span>All done!</span>');
-                    
-                    setTimeout(
-                        location.reload(),
-                        3000
-                    );
-                }
-            });
-        },
-        
-        /**
-         *
-         */
         show_loader : function() {
             $('#wpcontent').append('<div class="omgf-loading"><span class="spinner is-active"></span></div>');
         }
