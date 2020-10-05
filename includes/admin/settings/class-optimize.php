@@ -51,7 +51,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	public function do_description () {
 		?>
         <p>
-            Testing testing 1, 2, 3...
+            <?= __( 'If you\'re simply looking to replace your Google Fonts for locally hosted copies, then the default settings will suffice.', $this->plugin_text_domain ); ?>
+        </p>
+        <p>
+            <?= __('<strong>Manual</strong> processing mode is best suited for configurations, which use a fixed number of fonts across the entire site. <strong>Automatic</strong> processing mode is best suited for configurations using e.g. page builders, which load different fonts on certain pages.', $this->plugin_text_domain); ?>
         </p>
 		<?php
 	}
