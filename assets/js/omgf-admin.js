@@ -27,7 +27,7 @@ jQuery(document).ready(function($) {
             
             // Buttons
             $('.omgf-empty').on('click', this.empty_cache_directory);
-            $('#omgf-optimize').on('click', this.optimize);
+            $(document).on('click', '#omgf-optimize-settings-form', this.show_loader_before_submit);
         },
     
         /**
@@ -42,6 +42,8 @@ jQuery(document).ready(function($) {
                 $('.omgf-optimize-fonts-manual').hide();
             }
         },
+        
+        
         
         /**
          * Empty queue, db and cache directory.
@@ -64,6 +66,10 @@ jQuery(document).ready(function($) {
                     location.reload();
                 }
             });
+        },
+    
+        show_loader_before_submit: function(e) {
+            omgf_admin.show_loader();
         },
         
         /**
