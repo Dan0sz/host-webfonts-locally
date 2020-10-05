@@ -39,6 +39,9 @@ class OMGF_AJAX
 				OMGF::delete( $entry );
 			}
 			
+			/**
+			 * Empty related options.
+			 */
 			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
 			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
 			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
