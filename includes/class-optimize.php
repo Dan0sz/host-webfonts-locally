@@ -141,7 +141,7 @@ class OMGF_Optimize
 	 */
 	private function no_urls_found () {
 		OMGF_Admin_Notice::set_notice(
-			__( 'No (additional) Google Fonts found to optimize. Did you run it already?', $this->plugin_text_domain ),
+			__( 'No (additional) Google Fonts found to optimize.', $this->plugin_text_domain ),
 			'omgf-no-urls-found',
 			false,
 			'warning'
