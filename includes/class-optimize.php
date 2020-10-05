@@ -144,7 +144,7 @@ class OMGF_Optimize
 			__( 'No (additional) Google Fonts found to optimize.', $this->plugin_text_domain ),
 			'omgf-no-urls-found',
 			false,
-			'warning'
+			'info'
 		);
 	}
 	
