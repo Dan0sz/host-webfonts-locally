@@ -69,7 +69,7 @@ $tweetUrl           = 'https://twitter.com/intent/tweet?text=I+just+optimized+my
                 <?= __('Do you <span class="dashicons dashicons-heart ffwp-heart"></span> OMGF Pro?', $plugin_text_domain) ;?>
             </h2>
             <p>
-                <?= __('Click the button below and receive a unique discount code for 10% off your next purchase!'); ?>
+                <?= __('Click the button below and receive a personal discount code for 10% off your next purchase!'); ?>
             </p>
             <p>
                 <a target="_blank" class="button button-primary button-hero" href="<?= OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO . '#edd-reviews-title'; ?>"><span class="dashicons-before dashicons-star-filled"> <?php _e( 'Review', $plugin_text_domain); ?></span></a>
@@ -80,20 +80,12 @@ $tweetUrl           = 'https://twitter.com/intent/tweet?text=I+just+optimized+my
             <h3>
                 <?php _e('Need Help?', $plugin_text_domain); ?>
             </h3>
-	        <?php if (apply_filters('apply_omgf_pro_promo', true)): ?>
-            <p>
-		        <?= sprintf(__('%sClick here%s for a comprehensive guide.', $plugin_text_domain), '<a target="_blank" href="' . OMGF_SITE_URL . '/wordpress/host-google-fonts-locally/' . $utmTags . '">', '</a>'); ?>
-            </p>
-            <p>
-                <?= sprintf(__('Visit the %sFAQ%s and %sSupport Forum%s to see if your question has already been answered. If not, ask a question on the Support Forum.', $plugin_text_domain), '<a href="https://wordpress.org/plugins/host-webfonts-local/#description" target="_blank">', '</a>', '<a href="https://wordpress.org/support/plugin/host-webfonts-local">', '</a>'); ?>
-            </p>
-            <?php else: ?>
             <ul>
-                <li><a target="_blank" href="https://ffwp.dev/docs/omgf-pro/quick-start/"><?= __('Quick Start Guide', $plugin_text_domain); ?></a></li>
-                <li><a target="_blank" href="https://ffwp.dev/docs/omgf-pro/faq/"><?= __('FAQ', $plugin_text_domain); ?></a></li>
-                <li><a target="_blank" href="https://ffwp.dev/contact/"><?= __('Contact', $plugin_text_domain); ?></a></li>
+                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_quick_start', 'https://ffwp.dev/docs/omgf-pro/quick-start/'); ?>"><?= __('Quick Start Guide', $plugin_text_domain); ?></a></li>
+                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_user_manual', 'https://ffwp.dev/docs/omgf-pro/user-manual/'); ?>"><?= __('User Manual', $plugin_text_domain); ?></a></li>
+                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_faq_link', 'https://wordpress.org/plugins/host-webfonts-local/#description'); ?>"><?= __('FAQ', $plugin_text_domain); ?></a></li>
+                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_get_support_link', 'https://wordpress.org/support/plugin/host-webfonts-local'); ?>"><?= __('Get Support', $plugin_text_domain); ?></a></li>
             </ul>
-            <?php endif; ?>
             <hr />
             <h4 class="signature"><?= sprintf(__('Coded with %s in The Netherlands.', $plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>'); ?></h4>
             <p class="signature">
