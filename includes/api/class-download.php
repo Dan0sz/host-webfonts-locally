@@ -72,6 +72,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		$params          = $request->get_params();
 		$this->handle    = $params['handle'] ?? '';
+		// Fallback to default handle, if original handle is not set, because original handle isn't relevant for OMGF Pro.
 		$original_handle = $request->get_param( 'original_handle' ) ?: $this->handle;
 		
 		if ( ! $this->handle ) {
