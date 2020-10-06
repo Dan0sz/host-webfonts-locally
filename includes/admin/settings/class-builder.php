@@ -33,7 +33,7 @@ class OMGF_Admin_Settings_Builder
 	 * OMGF_Admin_Settings_Builder constructor.
 	 */
 	public function __construct () {
-	    add_filter('omgf_basic_settings_content', [ $this, 'do_promo' ]);
+	    add_filter('omgf_detection_settings_content', [ $this, 'do_promo' ]);
 	    add_filter('omgf_advanced_settings_content', [ $this, 'do_promo' ]);
     }
 	
@@ -120,7 +120,7 @@ class OMGF_Admin_Settings_Builder
 				<?= apply_filters( $name . '_setting_label', $label ); ?>
             </th>
             <td>
-                <select name="<?= $name; ?><?= $is_multiselect ? '[]' : ''; ?>" class="<?= str_replace( '_', '-', $name ); ?>" <?= $is_multiselect ? 'size="10" multiple="multiple"' : ''; ?> <?= apply_filters( $name . '_setting_disabled', $disabled ) ? 'disabled' : ''; ?>>
+                <select name="<?= $name; ?><?= $is_multiselect ? '[]' : ''; ?>" class="<?= str_replace( '_', '-', $name ); ?>" <?= $is_multiselect ? 'size="8" multiple="multiple"' : ''; ?> <?= apply_filters( $name . '_setting_disabled', $disabled ) ? 'disabled' : ''; ?>>
 					<?php
 					$options = apply_filters( $name . '_setting_options', $options );
 					?>

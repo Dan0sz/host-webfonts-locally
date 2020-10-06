@@ -21,9 +21,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Settings Fields
 	 */
-	const OMGF_SETTINGS_FIELD_OPTIMIZE = 'omgf-optimize-settings';
-	const OMGF_SETTINGS_FIELD_BASIC    = 'omgf-basic-settings';
-	const OMGF_SETTINGS_FIELD_ADVANCED = 'omgf-advanced-settings';
+	const OMGF_SETTINGS_FIELD_OPTIMIZE  = 'omgf-optimize-settings';
+	const OMGF_SETTINGS_FIELD_DETECTION = 'omgf-detection-settings';
+	const OMGF_SETTINGS_FIELD_ADVANCED  = 'omgf-advanced-settings';
 	
 	/**
 	 * Option Values
@@ -77,9 +77,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Optimize Fonts
 	 */
-	const OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE   = 'omgf_optimization_mode';
+	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
 	const OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL = 'omgf_manual_optimize_url';
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE   = 'omgf_optimization_mode';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS     = 'omgf_optimized_fonts';
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
 	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS       = 'omgf_preload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS        = 'omgf_unload_fonts';
 	
@@ -89,16 +91,14 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_UNLOAD_STYLESHEETS = 'omgf_unload_stylesheets';
 	
 	/**
-	 * Basic Settings
+	 * Detection Settings
 	 */
-	const OMGF_BASIC_SETTING_FONT_PROCESSING     = 'omgf_font_processing';
-	const OMGF_BASIC_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
-	const OMGF_BASIC_SETTING_CACHE_PATH          = 'omgf_cache_dir';
-	const OMGF_BASIC_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
+	const OMGF_DETECTION_SETTING_FONT_PROCESSING = 'omgf_font_processing';
 	
 	/**
 	 * Advanced Settings
 	 */
+	const OMGF_ADV_SETTING_CACHE_PATH   = 'omgf_cache_dir';
 	const OMGF_ADV_SETTING_CACHE_URI    = 'omgf_cache_uri';
 	const OMGF_ADV_SETTING_CDN_URL      = 'omgf_cdn_url';
 	const OMGF_ADV_SETTING_UNINSTALL    = 'omgf_uninstall';
@@ -137,12 +137,12 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		
 		// Tabs
 		add_action( 'omgf_settings_tab', [ $this, 'optimize_fonts_tab' ], 0 );
-		add_action( 'omgf_settings_tab', [ $this, 'basic_settings_tab' ], 1 );
+		add_action( 'omgf_settings_tab', [ $this, 'detection_settings_tab' ], 1 );
 		add_action( 'omgf_settings_tab', [ $this, 'advanced_settings_tab' ], 2 );
 		
 		// Content
 		add_action( 'omgf_settings_content', [ $this, 'optimize_fonts_content' ], 0 );
-		add_action( 'omgf_settings_content', [ $this, 'basic_settings_content' ], 1 );
+		add_action( 'omgf_settings_content', [ $this, 'detection_settings_content' ], 1 );
 		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 2 );
 	}
 	
@@ -202,7 +202,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function register_settings () {
 		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE
-		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_BASIC
+		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_DETECTION
 		     && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED
 		) {
 			$this->active_tab = self::OMGF_SETTINGS_FIELD_OPTIMIZE;
@@ -227,8 +227,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		$constants  = apply_filters( 'omgf_settings_constants', $reflection->getConstants() );
 		
 		switch ( $this->active_tab ) {
-			case ( self::OMGF_SETTINGS_FIELD_BASIC ):
-				$needle = 'OMGF_BASIC_SETTING_';
+			case ( self::OMGF_SETTINGS_FIELD_DETECTION ):
+				$needle = 'OMGF_DETECTION_SETTING_';
 				break;
 			case ( self::OMGF_SETTINGS_FIELD_ADVANCED ):
 				$needle = 'OMGF_ADV_SETTING_';
@@ -253,8 +253,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Add Basic Settings Tab to Settings Screen.
 	 */
-	public function basic_settings_tab () {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_BASIC, 'dashicons-analytics', __( 'Basic Settings', $this->plugin_text_domain ) );
+	public function detection_settings_tab () {
+		$this->generate_tab( self::OMGF_SETTINGS_FIELD_DETECTION, 'dashicons-search', __( 'Detection Settings', $this->plugin_text_domain ) );
 	}
 	
 	/**
@@ -297,8 +297,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Render Basic Settings content
 	 */
-	public function basic_settings_content () {
-		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_BASIC );
+	public function detection_settings_content () {
+		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_DETECTION );
 	}
 	
 	/**

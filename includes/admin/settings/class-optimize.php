@@ -34,13 +34,18 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 20 );
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_optimization_mode' ], 30 );
+		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_promo_combine_requests' ], 40 );
+		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 50 );
+		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_promo_force_subsets' ], 60 );
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 100 );
 		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 200 );
-		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_contents' ], 250 );
-		
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'close_optimize_fonts_container' ], 300 );
+		
+		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 350 );
+		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_optimize_edit_roles' ], 375 );
+		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 400 );
 	}
 	
 	/**
@@ -49,10 +54,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	public function do_description () {
 		?>
         <p>
-            <?= __( 'If you\'re simply looking to replace your Google Fonts for locally hosted copies, then the default settings will suffice.', $this->plugin_text_domain ); ?>
-        </p>
-        <p>
-            <?= __('<strong>Manual</strong> processing mode is best suited for configurations, which use a fixed number of fonts across the entire site. <strong>Automatic</strong> processing mode is best suited for configurations using e.g. page builders, which load different fonts on certain pages.', $this->plugin_text_domain); ?>
+			<?= __( 'These settings affect the fonts OMGF downloads and the stylesheet it generates. If you\'re simply looking to replace your Google Fonts for locally hosted copies, the default settings should suffice.', $this->plugin_text_domain ); ?>
         </p>
 		<?php
 	}
@@ -63,7 +65,48 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_OPTIMIZATION_MODE,
 			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE,
 			OMGF_OPTIMIZATION_MODE,
-			__( '<strong>Manual</strong> gives you all control and allows you to grab stylesheets yourself by specifying pages. <strong>Automatic</strong> will run silently in the background and optimize stylesheets (if necessary) as pages are requested.', $this->plugin_text_domain )
+			__( '<strong>Manual</strong> processing mode is best suited for configurations, which use a fixed number of fonts across the entire site. <strong>Automatic</strong> processing mode is best suited for configurations using e.g. page builders, which load different fonts on certain pages.', $this->plugin_text_domain )
+		);
+	}
+	
+	/**
+	 *
+	 */
+	public function do_promo_combine_requests () {
+		$this->do_checkbox(
+			__( 'Combine & Dedupe Google Fonts (Pro)', $this->plugin_text_domain ),
+			'omgf_pro_combine_requests',
+			defined( 'OMGF_PRO_COMBINE_REQUESTS' ) ? true : false,
+			__( 'Combine and deduplicate multiple font requests into one request. This feature is always on in OMGF Pro.', $this->plugin_text_domain ) . ' ' . $this->promo,
+			true
+		);
+	}
+	
+	/**
+	 *
+	 */
+	public function do_display_option () {
+		$this->do_select(
+			__( 'Font-display option', $this->plugin_text_domain ),
+			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION,
+			OMGF_Admin_Settings::OMGF_FONT_DISPLAY_OPTIONS,
+			OMGF_DISPLAY_OPTION,
+			__( 'Select which font-display strategy to use. Defaults to Swap (recommended).', $this->plugin_text_domain )
+		);
+	}
+	
+	/**
+	 *
+	 */
+	public function do_promo_force_subsets () {
+		$this->do_select(
+			__( 'Force Subsets (Pro)', $this->plugin_text_domain ),
+			'omgf_pro_force_subsets',
+			OMGF_Admin_Settings::OMGF_FORCE_SUBSETS_OPTIONS,
+			defined( 'OMGF_PRO_FORCE_SUBSETS' ) ? OMGF_PRO_FORCE_SUBSETS : [],
+			__( 'If a theme or plugin loads subsets you don\'t need, use this option to force all Google Fonts to be loaded in the selected subsets. You can also use this option to force the loading of additional subsets, if a theme/plugin doesn\'t allow you to configure the loaded subsets.', $this->plugin_text_domain ) . ' ' . $this->promo,
+			true,
+			true
 		);
 	}
 	
@@ -117,15 +160,15 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
                     </thead>
 					<?php foreach ( $this->optimized_fonts as $handle => $fonts ): ?>
                         <tbody class="stylesheet" id="<?= $handle; ?>">
-                        <?php foreach ( $fonts as $font ): ?>
+						<?php foreach ( $fonts as $font ): ?>
                             <th><?= $font->family; ?> <span class="handle">(<?= $handle; ?>)</span></th>
-	                        <?php foreach ( $font->variants as $variant ): ?>
+							<?php foreach ( $font->variants as $variant ): ?>
                                 <tr>
                                     <td></td>
-			                        <?php
-			                        $preload = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS )[ $font->id ][ $variant->id ] ?? '';
-			                        $unload  = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )[ $font->id ][ $variant->id ] ?? '';
-			                        ?>
+									<?php
+									$preload = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS )[ $font->id ][ $variant->id ] ?? '';
+									$unload  = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )[ $font->id ][ $variant->id ] ?? '';
+									?>
                                     <td><?= $variant->fontStyle; ?></td>
                                     <td><?= $variant->fontWeight; ?></td>
                                     <td>
@@ -139,8 +182,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
                                                value="<?= $variant->id; ?>" <?= $unload ? 'checked="checked"' : ''; ?> />
                                     </td>
                                 </tr>
-	                        <?php endforeach; ?>
-                        <?php endforeach; ?>
+							<?php endforeach; ?>
+						<?php endforeach; ?>
                         </tbody>
 					<?php endforeach; ?>
                 </table>
@@ -250,5 +293,17 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		?>
         </div>
 		<?php
+	}
+	
+	/**
+	 *
+	 */
+	public function do_optimize_edit_roles () {
+		$this->do_checkbox(
+			__( 'Optimize fonts for logged in editors/administrators?', $this->plugin_text_domain ),
+			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES,
+			OMGF_OPTIMIZE_EDIT_ROLES,
+			__( 'Should only be disabled while debugging/testing, e.g. using a page builder or switching themes.', $this->plugin_text_domain )
+		);
 	}
 }

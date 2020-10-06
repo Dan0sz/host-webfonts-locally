@@ -37,7 +37,7 @@ class OMGF_Admin
 		$this->show_notice = apply_filters(
 			'omgf_admin_options_show_notice',
 			[
-				OMGF_Admin_Settings::OMGF_BASIC_SETTING_CACHE_PATH,
+				OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH,
 				OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI,
 				OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL,
 				OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL
@@ -48,7 +48,7 @@ class OMGF_Admin
 		add_action( 'admin_notices', [ $this, 'print_notices' ] );
 		
 		$this->do_optimize_settings();
-		$this->do_basic_settings();
+		$this->do_detection_settings();
 		$this->do_advanced_settings();
 		
 		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'decode_option' ], 10, 3 );
@@ -90,10 +90,10 @@ class OMGF_Admin
 	}
 	
 	/**
-	 * @return OMGF_Admin_Settings_Basic
+	 * @return OMGF_Admin_Settings_Detection
 	 */
-	private function do_basic_settings () {
-		return new OMGF_Admin_Settings_Basic();
+	private function do_detection_settings () {
+		return new OMGF_Admin_Settings_Detection();
 	}
 	
 	/**
