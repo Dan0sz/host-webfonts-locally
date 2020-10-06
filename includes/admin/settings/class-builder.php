@@ -33,8 +33,9 @@ class OMGF_Admin_Settings_Builder
 	 * OMGF_Admin_Settings_Builder constructor.
 	 */
 	public function __construct () {
-	    add_filter('omgf_detection_settings_content', [ $this, 'do_promo' ]);
-	    add_filter('omgf_advanced_settings_content', [ $this, 'do_promo' ]);
+		add_filter('omgf_optimize_settings_content', [ $this, 'do_promo' ]);
+		add_filter('omgf_detection_settings_content', [ $this, 'do_promo' ]);
+		add_filter('omgf_advanced_settings_content', [ $this, 'do_promo' ]);
     }
 	
 	/**
