@@ -89,6 +89,8 @@ class OMGF_API_Download extends WP_REST_Controller
 			$query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
 		}
 		
+		$fonts = [];
+		
 		foreach ( $font_families as $font_family ) {
 			$fonts[] = $this->grab_font_family( $font_family, $url, $query );
 		}
@@ -271,6 +273,8 @@ class OMGF_API_Download extends WP_REST_Controller
 	/**
 	 * @param $variants
 	 * @param $font
+	 *
+	 * @return array
 	 */
 	private function process_variants ( $variants, $font ) {
 		$variants = array_filter( explode( ',', $variants ) );
@@ -319,9 +323,10 @@ class OMGF_API_Download extends WP_REST_Controller
 	}
 	
 	/**
-	 * @param $urls
+	 * @param $url
+	 * @param $filename
 	 *
-	 * @return bool
+	 * @return string
 	 */
 	private function download ( $url, $filename ) {
 		if ( ! function_exists( 'download_url' ) ) {
@@ -390,7 +395,7 @@ class OMGF_API_Download extends WP_REST_Controller
 	/**
 	 * @param        $sources
 	 * @param string $type
-	 * @param bool   $endSemiColon
+	 * @param bool   $end_semi_colon
 	 *
 	 * @return string
 	 */

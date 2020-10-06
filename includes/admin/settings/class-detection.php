@@ -74,12 +74,12 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
                 </fieldset>
                 <p class="description">
 					<?= $this->promo; ?>
+                </p>
                 <ul>
 					<?php foreach ( $this->fonts_processing_pro_options() as $name => $data ): ?>
                         <li><strong><?= $data['label']; ?></strong>: <?= $data['description']; ?></li>
 					<?php endforeach; ?>
                 </ul>
-                </p>
             </td>
         </tr>
 		<?php
