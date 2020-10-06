@@ -24,9 +24,6 @@ class OMGF_Admin_Notice
 	/** @var array $notices */
 	public static $notices = [];
 	
-	/** @var string $plugin_text_domain */
-	private static $plugin_text_domain = 'host-webfonts-local';
-	
 	/**
 	 * @param        $message
 	 * @param string $type (info|warning|error|success)

@@ -128,14 +128,14 @@ class OMGF_Admin
 		
 		$uniq_id = '';
 		
-		if (omgf_init()::unloaded_fonts()) {
+		if ( omgf_init()::unloaded_fonts() ) {
 			$uniq_id = strlen( json_encode( $old_value ) );
 		}
 		
 		$entries = array_filter( (array) glob( OMGF_FONTS_DIR . "/*$uniq_id" ) );
 		
-		foreach ($entries as $entry) {
-			OMGF::delete($entry);
+		foreach ( $entries as $entry ) {
+			OMGF::delete( $entry );
 		}
 		
 		return $value;
@@ -153,11 +153,13 @@ class OMGF_Admin
 		}
 		
 		if ( $value != $old_value ) {
-			OMGF_Admin_Notice::set_notice(
-				__( 'Settings changed. <a href="#" class="omgf-empty">Click here</a> to empty OMGF\'s cache.', $this->plugin_text_domain ),
-				'omgf-settings-changed',
-				false
-			);
+			global $wp_settings_errors;
+			
+			if ( ! empty ($wp_settings_errors ) ) {
+				$wp_settings_errors = [];
+			}
+			
+			add_settings_error( 'general', 'omgf_settings_changed', __( 'Settings changed. <a href="#" class="omgf-empty">Click here</a> to empty OMGF\'s cache.', $this->plugin_text_domain ), 'success' );
 		}
 		
 		return $value;

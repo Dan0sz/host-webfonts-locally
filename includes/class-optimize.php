@@ -103,49 +103,28 @@ class OMGF_Optimize
 	 *
 	 */
 	private function optimization_succeeded () {
-		OMGF_Admin_Notice::set_notice(
-			__( 'Manual optimization completed successfully.', $this->plugin_text_domain ),
-			'omgf-optimization-success',
-			false
-		);
+		add_settings_error( 'general', 'omgf_optimization_success', __( 'Optimization completed successfully.' ), 'success' );
 	}
 	
 	/**
 	 * @param $download WP_Error
 	 */
 	private function download_failed ( $download ) {
-		OMGF_Admin_Notice::set_notice(
-			__( 'OMGF encountered an error while downloading Google Fonts', $this->plugin_text_domain ) . ': ' . $download->get_error_message(),
-			'omgf-download-failed',
-			false,
-			'error',
-			$download->get_error_code()
-		);
+		add_settings_error( 'general', 'omgf_download_failed', __( 'OMGF encountered an error while downloading Google Fonts', $this->plugin_text_domain ) . ': ' . $download->get_error_code() . ' - ' . $download->get_error_message(), 'error' );
 	}
 	
 	/**
 	 * @param $front_html WP_Error
 	 */
 	private function frontend_fetch_failed ( $front_html ) {
-		OMGF_Admin_Notice::set_notice(
-			__( 'OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain ) . ': ' . $front_html->get_error_message(),
-			'omgf-frontend-fetch-failed',
-			false,
-			'error',
-			$front_html->get_error_code()
-		);
+		add_settings_error( 'general', 'omgf_frontend_fetch_failed', __( 'OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain ) . ': ' . $front_html->get_error_code() . ' - ' . $front_html->get_error_message(), 'error' );
 	}
 	
 	/**
 	 *
 	 */
 	private function no_urls_found () {
-		OMGF_Admin_Notice::set_notice(
-			__( 'No (additional) Google Fonts found to optimize.', $this->plugin_text_domain ),
-			'omgf-no-urls-found',
-			false,
-			'info'
-		);
+		add_settings_error( 'general', 'omgf_no_urls_found', __( 'No (additional) Google Fonts found to optimize.', $this->plugin_text_domain ), 'info' );
 	}
 	
 	/**
