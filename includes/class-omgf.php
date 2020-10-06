@@ -18,8 +18,6 @@ defined( 'ABSPATH' ) || exit;
 
 class OMGF
 {
-	private $plugin_text_domain = 'host-webfonts-local';
-	
 	/**
 	 * OMGF constructor.
 	 */
@@ -37,7 +35,6 @@ class OMGF
 		
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 		add_action( 'admin_init', [ $this, 'do_optimize' ] );
-		register_activation_hook( OMGF_PLUGIN_BASENAME, [ $this, 'show_activation_notice' ] );
 	}
 	
 	/**
@@ -120,17 +117,6 @@ class OMGF
 	 */
 	public function do_optimize () {
 		return new OMGF_Optimize();
-	}
-	
-	/**
-	 *
-	 */
-	public function show_activation_notice () {
-		OMGF_Admin_Notice::set_notice(
-			__( 'OMGF is ready to optimize your Google Fonts. <a href="#" id="omgf-optimize">Start optimization</a>.', $this->plugin_text_domain ),
-			'omgf-optimize',
-			false
-		);
 	}
 	
 	/**

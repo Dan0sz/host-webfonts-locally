@@ -18,8 +18,6 @@ defined( 'ABSPATH' ) || exit;
 
 class OMGF_Admin_Settings extends OMGF_Admin
 {
-	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO = 'https://ffwp.dev/wordpress/omgf-pro/';
-	
 	/**
 	 * Settings Fields
 	 */
@@ -105,6 +103,12 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_ADV_SETTING_CDN_URL      = 'omgf_cdn_url';
 	const OMGF_ADV_SETTING_UNINSTALL    = 'omgf_uninstall';
 	const OMGF_ADV_SETTING_RELATIVE_URL = 'omgf_relative_url';
+	
+	/**
+	 * Miscellaneous
+	 */
+	const OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS = 'options-general.php?page=optimize-webfonts';
+	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://ffwp.dev/wordpress/omgf-pro/';
 	
 	/** @var string $active_tab */
 	private $active_tab;
@@ -280,7 +284,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * @return string
 	 */
 	private function generate_tab_link ( $tab ) {
-		return admin_url( "options-general.php?page=optimize-webfonts&tab=$tab" );
+		return admin_url( self::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS . "&tab=$tab" );
 	}
 	
 	/**
@@ -312,7 +316,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			return;
 		}
 		?>
-        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="<?= admin_url( 'options.php?tab=' . $this->active_tab ); ?>" autocomplete="off">
+        <form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="<?= admin_url( 'options.php?tab=' . $this->active_tab ); ?>"
+              autocomplete="off">
 			<?php
 			settings_fields( $field );
 			do_settings_sections( $field );
@@ -336,7 +341,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * @return mixed
 	 */
 	public function create_settings_link ( $links ) {
-		$adminUrl     = admin_url() . 'options-general.php?page=optimize-webfonts';
+		$adminUrl     = admin_url() . self::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS;
 		$settingsLink = "<a href='$adminUrl'>" . __( 'Settings' ) . "</a>";
 		array_push( $links, $settingsLink );
 		
