@@ -172,14 +172,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
                                     <td><?= $variant->fontStyle; ?></td>
                                     <td><?= $variant->fontWeight; ?></td>
                                     <td>
-                                        <input type="checkbox"
-                                               name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS; ?>[<?= $font->id; ?>][<?= $variant->id; ?>]"
-                                               value="<?= $variant->id; ?>" <?= $preload ? 'checked="checked"' : ''; ?> />
+                                        <input type="checkbox" class="preload" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS; ?>[<?= $font->id; ?>][<?= $variant->id; ?>]" value="<?= $variant->id; ?>" <?= $preload ? 'checked="checked"' : ''; ?> />
                                     </td>
                                     <td>
-                                        <input type="checkbox"
-                                               name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS; ?>[<?= $font->id; ?>][<?= $variant->id; ?>]"
-                                               value="<?= $variant->id; ?>" <?= $unload ? 'checked="checked"' : ''; ?> />
+                                        <input type="checkbox" class="unload" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS; ?>[<?= $font->id; ?>][<?= $variant->id; ?>]" value="<?= $variant->id; ?>" <?= $unload ? 'checked="checked"' : ''; ?> />
                                     </td>
                                 </tr>
 							<?php endforeach; ?>
@@ -200,10 +196,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<?php endif; ?>
                     </p>
                 </div>
-                <input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>"
-                       value="<?= serialize( $this->optimized_fonts ); ?>"/>
-                <input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>"
-                       value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>"/>
+                <input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?= serialize( $this->optimized_fonts ); ?>"/>
+                <input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>"/>
+                <input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= OMGF_UNLOAD_STYLESHEETS; ?>" />
             </div>
 		<?php endif;
 	}

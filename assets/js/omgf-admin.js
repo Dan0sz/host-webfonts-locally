@@ -24,12 +24,13 @@ jQuery(document).ready(function($) {
         init : function() {
             // Settings
             $('input[name="omgf_optimization_mode"]').on('click', this.toggle_optimization_mode_content);
+            $('tbody input.unload').on('change', this.unload_stylesheets);
             
             // Buttons
             $('.omgf-empty').on('click', this.empty_cache_directory);
             $('#omgf-optimize-settings-form').submit(this.show_loader_before_submit);
         },
-    
+        
         /**
          *
          */
@@ -42,8 +43,34 @@ jQuery(document).ready(function($) {
                 $('.omgf-optimize-fonts-manual').hide();
             }
         },
-        
-        
+    
+        /**
+         * Populates the omgf_unload_stylesheets hidden field.
+         */
+        unload_stylesheets : function() {
+            var handle = $(this).closest('tbody');
+            var id = handle[0].id;
+            var checked = $('tbody' + '#' + id + ' input.unload:checked').length;
+            var total = $('tbody' + '#' + id + ' input.unload').length;
+            var unloaded_stylesheets_option = $('#omgf_unload_stylesheets');
+            var unloaded_stylesheets = unloaded_stylesheets_option.val().split(',');
+            
+            if (checked === total) {
+                if (unloaded_stylesheets.indexOf(id) === -1) {
+                    unloaded_stylesheets.push(id);
+                }
+                
+                unloaded_stylesheets.join();
+                
+                unloaded_stylesheets_option.val(unloaded_stylesheets);
+            } else {
+                position = unloaded_stylesheets.indexOf(id);
+                
+                if ( ~position ) unloaded_stylesheets.splice(position, 1);
+                
+                unloaded_stylesheets_option.val(unloaded_stylesheets);
+            }
+        },
         
         /**
          * Empty queue, db and cache directory.
@@ -67,8 +94,8 @@ jQuery(document).ready(function($) {
                 }
             });
         },
-    
-        show_loader_before_submit: function(e) {
+        
+        show_loader_before_submit : function(e) {
             omgf_admin.show_loader();
         },
         

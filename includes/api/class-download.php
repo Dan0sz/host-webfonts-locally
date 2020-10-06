@@ -113,7 +113,7 @@ class OMGF_API_Download extends WP_REST_Controller
 				}
 			}
 			
-			$unloaded_stylesheets = get_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS ) ?: [];
+			$unloaded_stylesheets = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) ?: [];
 			
 			/**
 			 * If any variants are left after unloading, filter them. Otherwise, remove the entire font from the download queue
@@ -125,13 +125,13 @@ class OMGF_API_Download extends WP_REST_Controller
 				 */
 				if ( ( $key = array_search( $original_handle, $unloaded_stylesheets ) ) !== false ) {
 					unset( $unloaded_stylesheets[ $key ] );
-					update_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS, $unloaded_stylesheets );
+					update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $unloaded_stylesheets );
 				}
 				
 				$font->variants = $this->filter_variants( $font->variants, $font_request );
 			} else {
 				if ( ! in_array( $original_handle, $unloaded_stylesheets ) ) {
-					update_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS, $unloaded_stylesheets + [ $original_handle ] );
+					update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $unloaded_stylesheets + [ $original_handle ] );
 				}
 				
 				unset( $fonts[ $font_key ] );

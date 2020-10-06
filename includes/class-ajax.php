@@ -45,7 +45,7 @@ class OMGF_AJAX
 			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
 			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
 			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
-			delete_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS );
+			delete_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS );
 			
 			OMGF_Admin_Notice::set_notice( __( 'Cache directory successfully emptied.', $this->plugin_text_domain ) );
 		} catch ( \Exception $e ) {

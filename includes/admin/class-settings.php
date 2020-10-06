@@ -84,11 +84,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
 	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS       = 'omgf_preload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS        = 'omgf_unload_fonts';
-	
-	/**
-	 *
-	 */
-	const OMGF_UNLOAD_STYLESHEETS = 'omgf_unload_stylesheets';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS  = 'omgf_unload_stylesheets';
 	
 	/**
 	 * Detection Settings

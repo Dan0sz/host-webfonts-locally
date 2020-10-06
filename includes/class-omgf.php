@@ -53,6 +53,7 @@ class OMGF
 		define( 'OMGF_CDN_URL', esc_attr( get_option( OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL ) ) );
 		define( 'OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH );
 		define( 'OMGF_UNINSTALL', esc_attr( get_option( OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL ) ) );
+		define( 'OMGF_UNLOAD_STYLESHEETS', esc_attr( get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) ) );
 	}
 	
 	/**
@@ -73,7 +74,7 @@ class OMGF
 	 * @return array
 	 */
 	public static function unloaded_stylesheets () {
-		return get_option( OMGF_Admin_Settings::OMGF_UNLOAD_STYLESHEETS, [] );
+		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, [] );
 	}
 	
 	/**
