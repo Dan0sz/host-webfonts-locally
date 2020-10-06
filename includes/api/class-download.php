@@ -309,6 +309,10 @@ class OMGF_API_Download extends WP_REST_Controller
 					return in_array( '400', $variants ) || in_array( 'regular', $variants );
 				}
 				
+				if ( $id == 'italic' ) {
+					return in_array( '400italic', $variants ) || in_array( 'italic', $variants );
+				}
+				
 				return in_array( $id, $variants );
 			}
 		);
