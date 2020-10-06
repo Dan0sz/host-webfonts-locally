@@ -121,7 +121,7 @@ class OMGF_API_Download extends WP_REST_Controller
 			 */
 			if ( ! empty( $variants ) ) {
 				/**
-				 * Because the stylesheet should be loaded, we should remove its mark for unloading, if it's set.
+				 * Because the stylesheet should be loaded, we shouldn't unload it anymore.
 				 */
 				if ( ( $key = array_search( $original_handle, $unloaded_stylesheets ) ) !== false ) {
 					unset( $unloaded_stylesheets[ $key ] );
@@ -184,6 +184,10 @@ class OMGF_API_Download extends WP_REST_Controller
 		return array_filter(
 			$variants,
 			function ( $value ) use ( $unloaded_fonts, $font_id ) {
+				if ( $value == '400' ) {
+					return ! in_array ( 'regular', $unloaded_fonts [ $font_id ] ) || ! in_array ( $value, $unloaded_fonts [ $font_id ] );
+				}
+				
 				return ! in_array( $value, $unloaded_fonts[ $font_id ] );
 			}
 		);
