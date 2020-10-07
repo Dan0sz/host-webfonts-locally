@@ -93,23 +93,25 @@ class OMGF_Frontend_Functions
 		
 		$stylesheets = omgf_init()::optimized_fonts();
 		
-		foreach ( $stylesheets as $stylesheet ) {
-			foreach ( $stylesheet as $font ) {
-				if ( ! in_array( $font->id, array_keys( $preloaded_fonts ) ) ) {
+		foreach ( $stylesheets as $stylesheet => $fonts ) {
+			foreach ( $fonts as $font ) {
+				if ( ! in_array( $font->id, array_keys( $preloaded_fonts [ $stylesheet ] ) ) ) {
 					continue;
 				}
 				
-				$font_id          = $font->id;
-				$preload_variants = array_filter(
-					$font->variants, function ( $variant ) use ( $preloaded_fonts, $font_id ) {
-					return in_array( $variant->id, $preloaded_fonts[ $font_id ] );
-				}
+				$font_id             = $font->id;
+				$preloads_stylesheet = $preloaded_fonts [ $stylesheet ];
+				$preload_variants    = array_filter(
+					$font->variants,
+					function ( $variant ) use ( $preloads_stylesheet, $font_id ) {
+						return in_array( $variant->id, $preloads_stylesheet[ $font_id ] );
+					}
 				);
-			}
-			
-			foreach ( $preload_variants as $variant ) {
-				$url = $variant->woff2;
-				echo "<link id='omgf-preload' rel='preload' href='$url' />\n";
+				
+				foreach ( $preload_variants as $variant ) {
+					$url = $variant->woff2;
+					echo "<link id='omgf-preload' rel='preload' href='$url' />\n";
+				}
 			}
 		}
 	}
