@@ -60,23 +60,39 @@ class OMGF
 	 * @return array
 	 */
 	public static function optimized_fonts () {
-		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
+		static $optimized_fonts = null;
+		
+		if ( $optimized_fonts === null ) {
+			$optimized_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
+		}
+		
+		return $optimized_fonts;
 	}
 	
 	/**
 	 * @return array
 	 */
 	public static function unloaded_fonts () {
-		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
+		static $unloaded_fonts = null;
+		
+		if ( $unloaded_fonts === null ) {
+			$unloaded_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
+		}
+		
+		return $unloaded_fonts;
 	}
 	
 	/**
 	 * @return array
 	 */
 	public static function unloaded_stylesheets () {
-		$unloaded_stylesheets = explode(',', get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ));
+		static $unloaded_stylesheets = null;
 		
-		return array_filter($unloaded_stylesheets);
+		if ( $unloaded_stylesheets === null ) {
+			$unloaded_stylesheets = explode( ',', get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
+		}
+		
+		return array_filter( $unloaded_stylesheets );
 	}
 	
 	/**
