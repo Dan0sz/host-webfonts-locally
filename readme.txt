@@ -123,7 +123,7 @@ No, not yet. But I will definitely try to make it compatible in the future!
 == Changelog ==
 
 = 4.2.0 | The What-4.0-should've-been Edition | October 7th, 2020 =
-* Added CSS2 compatiblity,
+* Added CSS2 (Variable Fonts) compatiblity,
 * No more spaces in filenames of downloaded fonts,
 * Added Optimize Fonts tab, which resembles the 'Generate Stylesheet' tab from v3, and features,
   * Optimization Mode: Manual or Automatic,
@@ -136,6 +136,7 @@ No, not yet. But I will definitely try to make it compatible in the future!
   * Advanced Settings.
 * OMGF will now throw a notice when a settings is changed which requires the cache to be flushed.
 * Several tweaks and fixes in OMGF's Auto Detection mechanism and Fonts Download API.
+* Fixed issue where OMGF wouldn't detect fonts in weight 400 (and 400 italic).
 * Major UX improvements,
   * Pros and Cons of each Optimization Mode are outlined upon selection,
   * Show loaded while actions are taking place,
