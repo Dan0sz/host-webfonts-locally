@@ -123,6 +123,7 @@ No, not yet. But I will definitely try to make it compatible in the future!
 == Changelog ==
 
 = 4.2.0 | The What-4.0-should've-been Edition | October 7th, 2020 =
+* **IMPORTANT NOTICE: If you're upgrading from v4.x.x it's required to Empty your Cache Directory. Otherwise the Optimized Google Fonts Overview will not work.**
 * Added CSS2 (Variable Fonts) compatiblity,
 * No more spaces in filenames of downloaded fonts,
 * Added Optimize Fonts tab, which resembles the 'Generate Stylesheet' tab from v3, and features,
