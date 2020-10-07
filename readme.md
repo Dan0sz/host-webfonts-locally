@@ -22,6 +22,9 @@ Please keep in mind that, although I try to make the configuration of this plugi
 ### Features
 - Automatically replace registered/enqueued Google Fonts in `wp_head()` with local copies,
 - Automatically remove registered/enqueued Google Fonts from `wp_head()`,
+- Manage Optimized Google Fonts,
+  - Preload above the fold fonts,
+  - Don't load certain fonts or entire stylesheets.
 - Leverage the font-display (swap) option,
 - Serve fonts from CDN,
 - Use OMGF with *security through obscurity* plugins.
@@ -34,7 +37,7 @@ Everything in the free version, plus:
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
 - Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
 
-*Click [here](https://ffwp.dev/wordpress/omgf-pro/) for more information and to purchase OMGF Pro.*
+**[Documentation](https://ffwp.dev/docs/omgf-pro/) | [Purchase OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/)**
 
 
 ## Installation

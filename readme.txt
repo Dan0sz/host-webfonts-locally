@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 4.1.3
+Stable tag: 4.2.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -21,15 +21,22 @@ OMGF is written with performance and user-friendliness in mind. It uses the Goog
 
 = How Does It Work? =
 
-After installing the plugin, OMGF runs silently in the background and captures any requests made to fonts.googleapis.com or fonts.gstatic.com. When a webpage is first loaded, it reroutes these requests to its own Download API and copies the fonts over to your server. Then it generates a stylesheet for your fonts including EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
+After installing the plugin, choose your Optimization Mode: Manual (default) or Automatic.
 
-When the fonts are downloaded and the stylesheet is generated, it rewrites every URL pointing to fonts.googleapis.com or fonts.gstatic.com to the locally hosted variant.
+When *Manual* is selected, you can simply configure OMGF to work in the way you want, and run its detection mechanism on an address of your choosing.
+
+In *Automatic* Mode, OMGF runs silently in the background and captures any requests made to fonts.googleapis.com or fonts.gstatic.com. When a webpage is first loaded, it reroutes these requests to its own Download API and copies the fonts over to your server. Then it generates a stylesheet for your fonts including EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
+
+When the fonts are downloaded and the stylesheet is generated, it rewrites every URL (pointing to fonts.googleapis.com or fonts.gstatic.com) to the locally hosted variant.
 
 Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffwp.dev/wordpress/omgf-expert-configuration/).
 
 = Features =
 - Automatically replace registered/enqueued Google Fonts in wp_head() with local copies,
 - Automatically remove registered/enqueued Google Fonts from wp_head(),
+- Manage Optimized Google Fonts,
+  - Preload above the fold fonts,
+  - Don't load certain fonts or entire stylesheets.
 - Leverage the font-display (swap) option,
 - Serve fonts from CDN,
 - Use OMGF with *security through obscurity* plugins.
@@ -42,7 +49,7 @@ Everything in the free version, plus:
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
 - Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
 
-*Click [here](https://ffwp.dev/wordpress/omgf-pro/) for more information and to purchase OMGF Pro.*
+*[Purchase OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/) | [Documentation](https://ffwp.dev/docs/omgf-pro/).*
 
 == Installation ==
 
@@ -111,6 +118,26 @@ No, not yet. But I will definitely try to make it compatible in the future!
 N/A
 
 == Changelog ==
+
+= 4.2.0 | The What-4.0-should've-been Edition | October 7th, 2020 =
+* Added CSS2 compatiblity,
+* No more spaces in filenames of downloaded fonts,
+* Added Optimize Fonts tab, which resembles the 'Generate Stylesheet' tab from v3, and features,
+  * Optimization Mode: Manual or Automatic,
+    * If Manual is selected, the URL can be specified which should be scanned for Google Fonts,
+  * A complete overview of all detected fonts, grouped by stylesheet,
+  * Options to preload or unload for each font.
+* Move settings to more sensible places and re-grouped them in 3 groups:
+  * Optimize Fonts,
+  * Detection Settings,
+  * Advanced Settings.
+* OMGF will now throw a notice when a settings is changed which requires the cache to be flushed.
+* Several tweaks and fixes in OMGF's Auto Detection mechanism and Fonts Download API.
+* Major UX improvements,
+  * Pros and Cons of each Optimization Mode are outlined upon selection,
+  * Show loaded while actions are taking place,
+  * Cleaned up sidebar and added a clear overview of available documentation.
+* Several tweaks and optimizations in overall performance.
 
 = 4.1.3 =
 * Fixed bug which would continuously show 'No fonts founds' notice in admin, among others.
