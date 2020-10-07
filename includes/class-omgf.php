@@ -74,7 +74,9 @@ class OMGF
 	 * @return array
 	 */
 	public static function unloaded_stylesheets () {
-		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, [] );
+		$unloaded_stylesheets = explode(',', get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ));
+		
+		return array_filter($unloaded_stylesheets);
 	}
 	
 	/**

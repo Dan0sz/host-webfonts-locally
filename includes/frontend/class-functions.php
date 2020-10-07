@@ -159,12 +159,13 @@ class OMGF_Frontend_Functions
 	public function replace_registered_fonts () {
 		global $wp_styles;
 		
-		$registered = $wp_styles->registered;
-		$fonts      = apply_filters( 'omgf_auto_replace', $this->detect_registered_google_fonts( $registered ) );
+		$registered           = $wp_styles->registered;
+		$fonts                = apply_filters( 'omgf_auto_replace', $this->detect_registered_google_fonts( $registered ) );
+		$unloaded_stylesheets = omgf_init()::unloaded_stylesheets();
 		
 		foreach ( $fonts as $handle => $font ) {
 			// If this stylesheet has been marked for unload, empty the src and skip out early.
-			if (in_array($handle, omgf_init()::unloaded_stylesheets())) {
+			if ( in_array( $handle, $unloaded_stylesheets ) ) {
 				$wp_styles->registered[ $handle ]->src = '';
 				
 				continue;

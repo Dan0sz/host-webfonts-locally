@@ -70,8 +70,8 @@ class OMGF_API_Download extends WP_REST_Controller
 			$this->convert_css2( $request );
 		}
 		
-		$params          = $request->get_params();
-		$this->handle    = $params['handle'] ?? '';
+		$params       = $request->get_params();
+		$this->handle = $params['handle'] ?? '';
 		// Fallback to default handle, if original handle is not set, because original handle isn't relevant for OMGF Pro.
 		$original_handle = $request->get_param( 'original_handle' ) ?: $this->handle;
 		
@@ -107,35 +107,12 @@ class OMGF_API_Download extends WP_REST_Controller
 				
 				// Now we're sure we got 'em all. We can safely unload those we don't want.
 				if ( isset( $unloaded_fonts[ $font_id ] ) ) {
-					$variants = $this->dequeue_unloaded_fonts( $variants, $unloaded_fonts, $font->id );
-					
+					$variants     = $this->dequeue_unloaded_fonts( $variants, $unloaded_fonts, $font->id );
 					$font_request = $family . ':' . implode( ',', $variants );
 				}
 			}
 			
-			$unloaded_stylesheets = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) ?: [];
-			
-			/**
-			 * If any variants are left after unloading, filter them. Otherwise, remove the entire font from the download queue
-			 * and mark the handle to be unloaded on pageload.
-			 */
-			if ( ! empty( $variants ) ) {
-				/**
-				 * Because the stylesheet should be loaded, we shouldn't unload it anymore.
-				 */
-				if ( ( $key = array_search( $original_handle, $unloaded_stylesheets ) ) !== false ) {
-					unset( $unloaded_stylesheets[ $key ] );
-					update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $unloaded_stylesheets );
-				}
-				
-				$font->variants = $this->filter_variants( $font->variants, $font_request );
-			} else {
-				if ( ! in_array( $original_handle, $unloaded_stylesheets ) ) {
-					update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $unloaded_stylesheets + [ $original_handle ] );
-				}
-				
-				unset( $fonts[ $font_key ] );
-			}
+			$font->variants = $this->filter_variants( $font->variants, $font_request );
 		}
 		
 		foreach ( $fonts as &$font ) {
@@ -185,7 +162,7 @@ class OMGF_API_Download extends WP_REST_Controller
 			$variants,
 			function ( $value ) use ( $unloaded_fonts, $font_id ) {
 				if ( $value == '400' ) {
-					return ! in_array ( 'regular', $unloaded_fonts [ $font_id ] ) || ! in_array ( $value, $unloaded_fonts [ $font_id ] );
+					return ! in_array( 'regular', $unloaded_fonts [ $font_id ] ) || ! in_array( $value, $unloaded_fonts [ $font_id ] );
 				}
 				
 				return ! in_array( $value, $unloaded_fonts[ $font_id ] );
