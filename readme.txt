@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -121,6 +121,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.2.1 =
+* OMGF now checks secure (https://) and non-secure (http://) requests to Google Fonts, because apparently some themes still do that, even though it's 2020, but whatever.
+  * Tested with Divi and Bridge Theme. Works.
 
 = 4.2.0 | The What-4.0-should've-been Edition | October 7th, 2020 =
 * **IMPORTANT NOTICE: If you're upgrading from v4.x.x it's required to Empty your Cache Directory. Otherwise the Optimized Google Fonts Overview will not work.**
