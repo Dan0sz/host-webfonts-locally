@@ -115,7 +115,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 
 == Screenshots ==
 
-N/A
+1. OMGF's Optimize Fonts screen. These settings affect the downloaded files and generated stylesheet(s).
+2. After you've saved your changes, the Manage Optimized Google Fonts overview will show a list of detected fonts and will allow you to tweak it as you wish.
+3. Tweak how OMGF's detection mechanism will work and how it'll treat detected fonts.
+4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
 
