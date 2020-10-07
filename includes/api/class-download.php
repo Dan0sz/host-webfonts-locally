@@ -110,8 +110,8 @@ class OMGF_API_Download extends WP_REST_Controller
 				$font_id = $font->id;
 				
 				// Now we're sure we got 'em all. We can safely unload those we don't want.
-				if ( isset( $unloaded_fonts[ $font_id ] ) ) {
-					$variants     = $this->dequeue_unloaded_fonts( $variants, $unloaded_fonts, $font->id );
+				if ( isset( $unloaded_fonts[ $original_handle ][ $font_id ] ) ) {
+					$variants     = $this->dequeue_unloaded_fonts( $variants, $unloaded_fonts[ $original_handle ], $font->id );
 					$font_request = $family . ':' . implode( ',', $variants );
 				}
 			}
@@ -166,7 +166,8 @@ class OMGF_API_Download extends WP_REST_Controller
 			$variants,
 			function ( $value ) use ( $unloaded_fonts, $font_id ) {
 				if ( $value == '400' ) {
-					return ! in_array( 'regular', $unloaded_fonts [ $font_id ] ) || ! in_array( $value, $unloaded_fonts [ $font_id ] );
+					// Sometimes the font is defined as 'regular', so we need to check both.
+					return ! in_array( 'regular', $unloaded_fonts [ $font_id ] ) && ! in_array( $value, $unloaded_fonts [ $font_id ] );
 				}
 				
 				return ! in_array( $value, $unloaded_fonts[ $font_id ] );
