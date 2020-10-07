@@ -20,6 +20,8 @@ class OMGF_API_Download extends WP_REST_Controller
 {
 	const OMGF_GOOGLE_FONTS_API_URL = 'https://google-webfonts-helper.herokuapp.com';
 	
+	private $plugin_text_domain = 'host-webfonts-local';
+	
 	/** @var array $endpoints */
 	private $endpoints = [ 'css', 'css2' ];
 	
@@ -93,6 +95,9 @@ class OMGF_API_Download extends WP_REST_Controller
 		foreach ( $font_families as $font_family ) {
 			$fonts[] = $this->grab_font_family( $font_family, $url, $query );
 		}
+		
+		// Filter out empty element, i.e. failed requests.
+		$fonts = array_filter($fonts);
 		
 		foreach ( $fonts as $font_key => &$font ) {
 			$font_request = $this->filter_font_families( $font_families, $font );
@@ -227,6 +232,21 @@ class OMGF_API_Download extends WP_REST_Controller
 		$response = wp_remote_get(
 			sprintf( $url, $family ) . '?' . http_build_query( $query )
 		);
+		
+		$response_code = $response['response']['code'] ?? '';
+		
+		if ( $response_code !== 200) {
+			$message = sprintf( __( '<strong>%s</strong> could not be found using the current configuration. The API returned the following error: %s', $this->plugin_text_domain ), ucfirst( $family), wp_remote_retrieve_body( $response));
+			
+			OMGF_Admin_Notice::set_notice(
+				$message,
+				'omgf_api_error',
+				false,
+				'error'
+			);
+			
+			return [];
+		}
 		
 		if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) == 200 ) {
 			return json_decode( wp_remote_retrieve_body( $response ) );
