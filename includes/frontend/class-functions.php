@@ -188,8 +188,14 @@ class OMGF_Frontend_Functions
 			}
 			
 			if ( OMGF_OPTIMIZATION_MODE == 'auto' || ( OMGF_OPTIMIZATION_MODE == 'manual' && isset( $_GET['omgf_optimize'] ) ) ) {
-				$api_url                               = str_replace( [ 'http:', 'https:' ], '', site_url( '/wp-json/omgf/v1/download/' ) );
-				$wp_styles->registered[ $handle ]->src = str_replace( '//fonts.googleapis.com/', $api_url, $font->src ) . "&handle=$updated_handle&original_handle=$handle";
+				$api_url  = str_replace( [ 'http:', 'https:' ], '', site_url( '/wp-json/omgf/v1/download/' ) );
+				$protocol = '';
+				
+				if ( substr( $font->src, 0, 2 ) == '//' ) {
+					$protocol = 'https:';
+				}
+				
+				$wp_styles->registered[ $handle ]->src = $protocol . str_replace( '//fonts.googleapis.com/', $api_url, $font->src ) . "&handle=$updated_handle&original_handle=$handle";
 			}
 		}
 	}
