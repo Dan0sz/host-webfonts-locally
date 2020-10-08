@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 4.2.1
+Stable tag: 4.2.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,7 +49,7 @@ Everything in the free version, plus:
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
 - Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
 
-*[Purchase OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/) | [Documentation](https://ffwp.dev/docs/omgf-pro/).*
+*[Purchase OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/) | [Documentation](https://ffwp.dev/docs/omgf-pro/) | [Tested Plugins & Themes](https://ffwp.dev/docs/omgf-pro/troubleshooting/compatibility/)*
 
 == Installation ==
 
@@ -121,6 +121,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.2.2 =
+* Small fix for themes/page builders which requests Google Fonts with protocol relative URI i.e. '//fonts.googleapis.com' instead of 'https://fonts.googleapis.com'.
+  * Tested with Elementor. Works.
 
 = 4.2.1 =
 * OMGF now checks secure (https://) and non-secure (http://) requests to Google Fonts, because apparently some themes still do that, even though it's 2020, but whatever.
