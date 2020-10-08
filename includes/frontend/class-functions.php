@@ -95,13 +95,14 @@ class OMGF_Frontend_Functions
 		
 		foreach ( $stylesheets as $stylesheet => $fonts ) {
 			foreach ( $fonts as $font ) {
-				if ( ! in_array( $font->id, array_keys( $preloaded_fonts [ $stylesheet ] ) ) ) {
+				$preloads_stylesheet = $preloaded_fonts [ $stylesheet ] ?? [];
+				
+				if ( ! in_array( $font->id, array_keys( $preloads_stylesheet ) ) ) {
 					continue;
 				}
 				
-				$font_id             = $font->id;
-				$preloads_stylesheet = $preloaded_fonts [ $stylesheet ];
-				$preload_variants    = array_filter(
+				$font_id          = $font->id;
+				$preload_variants = array_filter(
 					$font->variants,
 					function ( $variant ) use ( $preloads_stylesheet, $font_id ) {
 						return in_array( $variant->id, $preloads_stylesheet[ $font_id ] );
@@ -110,7 +111,7 @@ class OMGF_Frontend_Functions
 				
 				foreach ( $preload_variants as $variant ) {
 					$url = $variant->woff2;
-					echo "<link id='omgf-preload' rel='preload' href='$url' />\n";
+					echo "<link id='omgf-preload' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n";
 				}
 			}
 		}
