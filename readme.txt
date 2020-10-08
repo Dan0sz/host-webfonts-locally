@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 4.2.2
+Stable tag: 4.2.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -121,6 +121,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.2.3 =
+* Fixed invalid preload header,
+* Fixed warning: `array_keys() expects parameter 1 to be array, null given` when multiple stylesheets are loaded, but preloads are only enabled for one of them.
 
 = 4.2.2 =
 * Small fix for themes/page builders which requests Google Fonts with protocol relative URI i.e. '//fonts.googleapis.com' instead of 'https://fonts.googleapis.com'.
