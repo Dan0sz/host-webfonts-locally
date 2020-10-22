@@ -135,7 +135,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		file_put_contents( $local_file, $stylesheet );
 		
-		$optimized_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) ?: [];
+		$optimized_fonts = omgf_init()::optimized_fonts();
 		$current_font    = [ $this->handle => $fonts ];
 		
 		/**

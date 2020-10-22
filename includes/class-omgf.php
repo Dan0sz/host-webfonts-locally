@@ -60,9 +60,9 @@ class OMGF
 	 * @return array
 	 */
 	public static function optimized_fonts () {
-		static $optimized_fonts = null;
+		static $optimized_fonts = [];
 		
-		if ( $optimized_fonts === null ) {
+		if ( empty ( $optimized_fonts ) ) {
 			$optimized_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
 		}
 		
@@ -72,10 +72,23 @@ class OMGF
 	/**
 	 * @return array
 	 */
-	public static function unloaded_fonts () {
-		static $unloaded_fonts = null;
+	public static function preloaded_fonts () {
+		static $preloaded_fonts = [];
 		
-		if ( $unloaded_fonts === null ) {
+		if ( empty( $preloaded_fonts ) ) {
+			$preloaded_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
+		}
+		
+		return $preloaded_fonts;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public static function unloaded_fonts () {
+		static $unloaded_fonts = [];
+		
+		if ( empty( $unloaded_fonts ) ) {
 			$unloaded_fonts = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
 		}
 		
@@ -86,20 +99,13 @@ class OMGF
 	 * @return array
 	 */
 	public static function unloaded_stylesheets () {
-		static $unloaded_stylesheets = null;
+		static $unloaded_stylesheets = [];
 		
-		if ( $unloaded_stylesheets === null ) {
+		if ( empty( $unloaded_stylesheets ) ) {
 			$unloaded_stylesheets = explode( ',', get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
 		}
 		
 		return array_filter( $unloaded_stylesheets );
-	}
-	
-	/**
-	 * @return array
-	 */
-	public static function preloaded_fonts () {
-		return get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
 	}
 	
 	/**
