@@ -112,7 +112,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 		$this->do_checkbox(
 			__( 'Advanced Processing (Pro)', $this->plugin_text_domain ),
 			'omgf_pro_advanced_processing',
-			defined( 'OMGF_PRO_ADVANCED_PROCESSING' ) ? true : false,
+			defined( 'OMGF_PRO_ADVANCED_PROCESSING' ) ? OMGF_PRO_ADVANCED_PROCESSING : false,
 			__( 'By default, OMGF scans for Google Fonts which are registered/enqueued in the <code>wp_enqueue_scripts()</code> action in WordPress\' header (<code>wp_head()</code>). Advanced Processing will process all Google Fonts throughout the entire document. This setting can be tweaked further under Advanced Settings.', $this->plugin_text_domain ) . ' ' . $this->promo,
 			true
 		);
