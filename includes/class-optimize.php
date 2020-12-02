@@ -39,6 +39,7 @@ class OMGF_Optimize
 		// Will die when it fails.
 		check_admin_referer( 'omgf-optimize-settings-options' );
 		
+		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, $_POST[ OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ] );
 		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, $_POST[ OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ] );
 		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, $_POST[ OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ] );
 		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $_POST[ OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ] );

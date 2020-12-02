@@ -85,6 +85,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS       = 'omgf_preload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS        = 'omgf_unload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS  = 'omgf_unload_stylesheets';
+	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS          = 'omgf_cache_keys';
 	
 	/**
 	 * Detection Settings

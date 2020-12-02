@@ -143,64 +143,77 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 */
 	private function do_optimized_fonts_manager () {
 		?>
-		<?php if ( $this->optimized_fonts ): ?>
-            <div class="omgf-optimize-fonts-manage">
-                <p>
+        <div class="omgf-optimize-fonts-manage">
+            <p>
 
-                </p>
-                <table>
-                    <thead>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <th><?= __( 'Style', $this->plugin_text_domain ); ?></th>
-                        <th><?= __( 'Weight', $this->plugin_text_domain ); ?></th>
-                        <th class="preload"><?= __( 'Preload', $this->plugin_text_domain ); ?></th>
-                        <th class="unload"><?= __( 'Do not load', $this->plugin_text_domain ); ?></th>
-                    </tr>
-                    </thead>
-					<?php foreach ( $this->optimized_fonts as $handle => $fonts ): ?>
-                        <tbody class="stylesheet" id="<?= $handle; ?>">
-						<?php foreach ( $fonts as $font ): ?>
-                            <th><?= $font->family; ?> <span class="handle">(<?= $handle; ?>)</span></th>
-							<?php foreach ( $font->variants as $variant ): ?>
-                                <tr>
-                                    <td></td>
-									<?php
-									$preload = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS )[ $handle ][ $font->id ][ $variant->id ] ?? '';
-									$unload  = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )[ $handle ][ $font->id ][ $variant->id ] ?? '';
-									?>
-                                    <td><?= $variant->fontStyle; ?></td>
-                                    <td><?= $variant->fontWeight; ?></td>
-                                    <td>
-                                        <input autocomplete="off" type="checkbox" class="preload" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS; ?>[<?= $handle; ?>][<?= $font->id; ?>][<?= $variant->id; ?>]" value="<?= $variant->id; ?>" <?= $preload ? 'checked="checked"' : ''; ?> />
-                                    </td>
-                                    <td>
-                                        <input autocomplete="off" type="checkbox" class="unload" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS; ?>[<?= $handle; ?>][<?= $font->id; ?>][<?= $variant->id; ?>]" value="<?= $variant->id; ?>" <?= $unload ? 'checked="checked"' : ''; ?> />
-                                    </td>
-                                </tr>
-							<?php endforeach; ?>
+            </p>
+            <table>
+                <thead>
+                <tr>
+                    <td>&nbsp;</td>
+                    <th><?= __( 'Style', $this->plugin_text_domain ); ?></th>
+                    <th><?= __( 'Weight', $this->plugin_text_domain ); ?></th>
+                    <th class="preload"><?= __( 'Preload', $this->plugin_text_domain ); ?></th>
+                    <th class="unload"><?= __( 'Do not load', $this->plugin_text_domain ); ?></th>
+                </tr>
+                </thead>
+                <?php
+                $cache_handles = [];
+                ?>
+				<?php foreach ( $this->optimized_fonts as $handle => $fonts ): ?>
+                    <?php
+                    $cache_handles[] = $handle;
+                    ?>
+                    <tbody class="stylesheet" id="<?= $handle; ?>">
+					<?php foreach ( $fonts as $font ): ?>
+						<?php if (count($font->variants) <= 0) continue; ?>
+                        <th><?= $font->family; ?> <span class="handle">(<?= $handle; ?>)</span></th>
+						<?php foreach ( $font->variants as $variant ): ?>
+                            <tr>
+                                <td></td>
+								<?php
+								$preload = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS )[ $handle ][ $font->id ][ $variant->id ] ?? '';
+								$unload  = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )[ $handle ][ $font->id ][ $variant->id ] ?? '';
+								?>
+                                <td><?= $variant->fontStyle; ?></td>
+                                <td><?= $variant->fontWeight; ?></td>
+                                <td>
+                                    <input data-handle="<?= $handle; ?>" autocomplete="off" type="checkbox" class="preload"
+                                           name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS; ?>[<?= $handle; ?>][<?= $font->id; ?>][<?= $variant->id; ?>]"
+                                           value="<?= $variant->id; ?>" <?= $preload ? 'checked="checked"' : ''; ?> />
+                                </td>
+                                <td>
+                                    <input data-handle="<?= $handle; ?>" autocomplete="off" type="checkbox" class="unload"
+                                           name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS; ?>[<?= $handle; ?>][<?= $font->id; ?>][<?= $variant->id; ?>]"
+                                           value="<?= $variant->id; ?>" <?= $unload ? 'checked="checked"' : ''; ?> />
+                                </td>
+                            </tr>
 						<?php endforeach; ?>
-                        </tbody>
 					<?php endforeach; ?>
-                </table>
-                <div class="omgf-optimize-fonts-tooltip">
-                    <p>
-                        <span class="dashicons-before dashicons-info-outline"></span>
-						<?php if ( OMGF_OPTIMIZATION_MODE == 'manual' ): ?>
-                            <em><?= sprintf( __( "This list is populated with all Google Fonts captured from <strong>%s</strong>. Optimizations will be applied on every page using these fonts. If you want to optimize additional Google Fonts from other pages, temporarily switch to <strong>Automatic</strong> and visit the pages containing the stylesheets you'd like to optimize. This list will automatically be populated with the captured fonts. When you feel the list is complete, switch back to <strong>Manual</strong>.", $this->plugin_text_domain ), OMGF_MANUAL_OPTIMIZE_URL ); ?></em>
-						<?php else: ?>
-							<?php
-							$no_cache_param = '?omgf_optimize=' . substr( md5( microtime() ), rand( 0, 26 ), 5 );
-							?>
-                            <em><?= sprintf( __( "This list is automatically populated with Google Fonts throughout your entire site. Optimizations will be applied on every page using these fonts. <strong>Automatic</strong> mode might not work when a Full Page Cache plugin is activated. If this list is not being populated with Google Fonts, you could try to visit your frontend and append the following parameter to the URL: <strong>%s</strong>", $this->plugin_text_domain ), $no_cache_param ); ?></em>
-						<?php endif; ?>
-                    </p>
-                </div>
-                <input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?= serialize( $this->optimized_fonts ); ?>"/>
-                <input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>"/>
-                <input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= OMGF_UNLOAD_STYLESHEETS; ?>" />
+                    </tbody>
+				<?php endforeach; ?>
+            </table>
+            <div class="omgf-optimize-fonts-tooltip">
+                <p>
+                    <span class="dashicons-before dashicons-info-outline"></span>
+					<?php if ( OMGF_OPTIMIZATION_MODE == 'manual' ): ?>
+                        <em><?= sprintf( __( "This list is populated with all Google Fonts captured from <strong>%s</strong>. Optimizations will be applied on every page using these fonts. If you want to optimize additional Google Fonts from other pages, temporarily switch to <strong>Automatic</strong> and visit the pages containing the stylesheets you'd like to optimize. This list will automatically be populated with the captured fonts. When you feel the list is complete, switch back to <strong>Manual</strong>.", $this->plugin_text_domain ), OMGF_MANUAL_OPTIMIZE_URL ); ?></em>
+					<?php else: ?>
+						<?php
+						$no_cache_param = '?omgf_optimize=' . substr( md5( microtime() ), rand( 0, 26 ), 5 );
+						?>
+                        <em><?= sprintf( __( "This list is automatically populated with Google Fonts throughout your entire site. Optimizations will be applied on every page using these fonts. <strong>Automatic</strong> mode might not work when a Full Page Cache plugin is activated. If this list is not being populated with Google Fonts, you could try to visit your frontend and append the following parameter to the URL: <strong>%s</strong>", $this->plugin_text_domain ), $no_cache_param ); ?></em>
+					<?php endif; ?>
+                </p>
             </div>
-		<?php endif;
+            <input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?= serialize( $this->optimized_fonts ); ?>"/>
+            <input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>"/>
+            <input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden"
+                   name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= OMGF_UNLOAD_STYLESHEETS; ?>"/>
+            <input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" type="hidden"
+                   name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" value="<?= OMGF_CACHE_KEYS ?: implode(',', $cache_handles); ?>" />
+        </div>
+		<?php
 	}
 	
 	/**

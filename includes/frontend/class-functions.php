@@ -178,7 +178,7 @@ class OMGF_Frontend_Functions
 			$updated_handle = $handle;
 			
 			if ( $unloaded_fonts ) {
-				$updated_handle = $handle . '-' . strlen( json_encode( $unloaded_fonts ) );
+				$updated_handle = omgf_init()::get_cache_key($handle);
 			}
 			
 			$cached_file = OMGF_CACHE_PATH . '/' . $updated_handle . "/$updated_handle.css";

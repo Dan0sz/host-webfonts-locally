@@ -54,6 +54,7 @@ class OMGF
 		define( 'OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH );
 		define( 'OMGF_UNINSTALL', esc_attr( get_option( OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL ) ) );
 		define( 'OMGF_UNLOAD_STYLESHEETS', esc_attr( get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) ) );
+		define( 'OMGF_CACHE_KEYS', esc_attr( get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) ) );
 	}
 	
 	/**
@@ -106,6 +107,36 @@ class OMGF
 		}
 		
 		return array_filter( $unloaded_stylesheets );
+	}
+	
+	/**
+	 * @return array
+	 */
+	public static function cache_keys () {
+		static $cache_keys = [];
+		
+		if ( empty( $cache_keys ) ) {
+			$cache_keys = explode( ',', get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) );
+		}
+		
+		return array_filter( $cache_keys );
+	}
+	
+	/**
+	 * @param $handle
+	 *
+	 * @return string
+	 */
+	public static function get_cache_key ($handle) {
+		$cache_keys = self::cache_keys();
+		
+		foreach ($cache_keys as $index => $key) {
+			if (strpos($key, $handle) !== false) {
+				return $key;
+			}
+		}
+		
+		return '';
 	}
 	
 	/**

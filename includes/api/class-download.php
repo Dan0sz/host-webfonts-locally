@@ -72,11 +72,11 @@ class OMGF_API_Download extends WP_REST_Controller
 			$this->convert_css2( $request );
 		}
 		
-		$params       = $request->get_params();
-		$this->handle = $params['handle'] ?? '';
+		$params          = $request->get_params();
+		$this->handle    = $params['handle'] ?? '';
 		$original_handle = $request->get_param( 'original_handle' );
 		
-		if ( ! $this->handle  || ! $original_handle ) {
+		if ( ! $this->handle || ! $original_handle ) {
 			wp_send_json_error( 'Handle not provided.', 406 );
 		}
 		
@@ -97,7 +97,7 @@ class OMGF_API_Download extends WP_REST_Controller
 		}
 		
 		// Filter out empty element, i.e. failed requests.
-		$fonts = array_filter($fonts);
+		$fonts = array_filter( $fonts );
 		
 		foreach ( $fonts as $font_key => &$font ) {
 			$font_request = $this->filter_font_families( $font_families, $font );
@@ -116,6 +116,7 @@ class OMGF_API_Download extends WP_REST_Controller
 				}
 			}
 			
+			// TODO: Filtered variants are no longer displayed in settings. How to resolve?
 			$font->variants = $this->filter_variants( $font->variants, $font_request );
 		}
 		
@@ -136,14 +137,9 @@ class OMGF_API_Download extends WP_REST_Controller
 		file_put_contents( $local_file, $stylesheet );
 		
 		$optimized_fonts = omgf_init()::optimized_fonts();
-		$current_font    = [ $this->handle => $fonts ];
+		$current_font    = [ $original_handle => $fonts ];
 		
-		/**
-		 * If handle was already detected before, there's no need of saving it to OMGF's options.
-		 */
-		if ( ! isset( $optimized_fonts[ $original_handle ] ) ) {
-			update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts + $current_font );
-		}
+		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, array_replace_recursive( $optimized_fonts, $current_font ) );
 		
 		// After downloading it, serve it.
 		header( 'Content-Type: text/css' );
@@ -236,8 +232,8 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		$response_code = $response['response']['code'] ?? '';
 		
-		if ( $response_code !== 200) {
-			$message = sprintf( __( '<strong>%s</strong> could not be found using the current configuration. The API returned the following error: %s', $this->plugin_text_domain ), ucfirst( $family), wp_remote_retrieve_body( $response));
+		if ( $response_code !== 200 ) {
+			$message = sprintf( __( '<strong>%s</strong> could not be found using the current configuration. The API returned the following error: %s', $this->plugin_text_domain ), ucfirst( $family ), wp_remote_retrieve_body( $response ) );
 			
 			OMGF_Admin_Notice::set_notice(
 				$message,

@@ -52,7 +52,7 @@ class OMGF_Admin
 		$this->do_advanced_settings();
 		
 		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'decode_option' ], 10, 3 );
-		add_filter( 'pre_update_option_omgf_unload_fonts', [ $this, 'clean_up_cache' ], 10, 3 );
+		add_filter( 'pre_update_option_omgf_cache_keys', [ $this, 'clean_up_cache' ], 10, 3 );
 		add_filter( 'pre_update_option', [ $this, 'settings_changed' ], 10, 3 );
 	}
 	
@@ -115,27 +115,31 @@ class OMGF_Admin
 	}
 	
 	/**
-	 * Triggered when preload settings is changed, cleans up old cache files.
+	 * Triggered when unload settings is changed, cleans up old cache files.
+	 *
+	 * TODO: Clean up doesn't work on 2nd run?
 	 *
 	 * @param $old_value
 	 * @param $value
 	 * @param $option_name
 	 */
-	public function clean_up_cache ( $value, $old_value, $option_name ) {
-		if ( $value == $old_value ) {
+	public function clean_up_cache ( $value, $old_value ) {
+		if ( $old_value == $value ) {
 			return $value;
 		}
 		
-		$uniq_id = '';
-		
-		if ( omgf_init()::unloaded_fonts() ) {
-			$uniq_id = strlen( json_encode( $old_value ) );
+		if ( $old_value == null ) {
+			return $value;
 		}
 		
-		$entries = array_filter( (array) glob( OMGF_FONTS_DIR . "/*$uniq_id" ) );
+		$cache_keys = explode( ',', $old_value );
 		
-		foreach ( $entries as $entry ) {
-			OMGF::delete( $entry );
+		foreach ( $cache_keys as $key ) {
+			$entries = array_filter( (array) glob( OMGF_FONTS_DIR . "/*$key" ) );
+			
+			foreach ( $entries as $entry ) {
+				OMGF::delete( $entry );
+			}
 		}
 		
 		return $value;
@@ -155,7 +159,7 @@ class OMGF_Admin
 		if ( $value != $old_value ) {
 			global $wp_settings_errors;
 			
-			if ( ! empty ($wp_settings_errors ) ) {
+			if ( ! empty ( $wp_settings_errors ) ) {
 				$wp_settings_errors = [];
 			}
 			
