@@ -27,6 +27,8 @@ jQuery(document).ready(function ($) {
             $('input[name="omgf_optimization_mode"]').on('click', this.toggle_optimization_mode_content);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.unload_stylesheets);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.generate_cache_key);
+            $('.omgf-optimize-fonts-manage .unload').on('change', this.toggle_preload);
+            $('.omgf-optimize-fonts-manage .preload').on('change', this.toggle_unload);
             
             // Buttons
             $('.omgf-empty').on('click', this.empty_cache_directory);
@@ -74,6 +76,9 @@ jQuery(document).ready(function ($) {
             }
         },
         
+        /**
+         * Generate a new cache key upon each unload change.
+         */
         generate_cache_key: function () {
             var current_handle       = $(this).data('handle'),
                 cache_keys_input     = $('#omgf_cache_keys'),
@@ -108,7 +113,7 @@ jQuery(document).ready(function ($) {
                         var parts        = key.split(omgf_admin.cache_prefix),
                             last_part    = omgf_admin.get_last_element_index(parts);
                         parts[last_part] = Math.random().toString(36).substring(2, 7);
-                        key           = parts[0];
+                        key              = parts[0];
                         cache_key        = omgf_admin.cache_prefix + parts[last_part];
                     }
                     
@@ -119,6 +124,42 @@ jQuery(document).ready(function ($) {
             cache_keys_input.val(cache_keys.join());
         },
         
+        /**
+         * Toggle preload option associated with this unload option.
+         */
+        toggle_preload: function () {
+            omgf_admin.toggle(this, 'preload');
+        },
+    
+        /**
+         * Toggle unload option associated with the current preload option.
+         */
+        toggle_unload: function () {
+            omgf_admin.toggle(this, 'unload');
+        },
+    
+        /**
+         * Toggle a checkbox.
+         *
+         * @param elem
+         * @param option
+         */
+        toggle: function (elem, option) {
+            var this_option = $(elem);
+            var unload_option = $('.' + option + '-' + this_option.data('handle') + '-' + this_option.val() + ' .' + option);
+    
+            if (elem.checked) {
+                unload_option.attr('disabled', true);
+            } else {
+                unload_option.attr('disabled', false);
+            }
+        },
+        
+        /**
+         *
+         * @param array
+         * @returns {number}
+         */
         get_last_element_index: function (array) {
             return array.length - 1;
         },

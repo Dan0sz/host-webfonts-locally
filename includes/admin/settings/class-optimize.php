@@ -174,18 +174,19 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 								<?php
 								$preload = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS )[ $handle ][ $font->id ][ $variant->id ] ?? '';
 								$unload  = get_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )[ $handle ][ $font->id ][ $variant->id ] ?? '';
+								$class   = $handle . '-' . $variant->id;
 								?>
                                 <td><?= $variant->fontStyle; ?></td>
                                 <td><?= $variant->fontWeight; ?></td>
-                                <td>
+                                <td class="preload-<?= $class; ?>">
                                     <input data-handle="<?= $handle; ?>" autocomplete="off" type="checkbox" class="preload"
                                            name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS; ?>[<?= $handle; ?>][<?= $font->id; ?>][<?= $variant->id; ?>]"
-                                           value="<?= $variant->id; ?>" <?= $preload ? 'checked="checked"' : ''; ?> />
+                                           value="<?= $variant->id; ?>" <?= $preload ? 'checked="checked"' : ''; ?> <?= $unload ? 'disabled' : ''; ?> />
                                 </td>
-                                <td>
+                                <td class="unload-<?= $class; ?>">
                                     <input data-handle="<?= $handle; ?>" autocomplete="off" type="checkbox" class="unload"
                                            name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS; ?>[<?= $handle; ?>][<?= $font->id; ?>][<?= $variant->id; ?>]"
-                                           value="<?= $variant->id; ?>" <?= $unload ? 'checked="checked"' : ''; ?> />
+                                           value="<?= $variant->id; ?>" <?= $unload ? 'checked="checked"' : ''; ?> <?= $preload ? 'disabled' : ''; ?> />
                                 </td>
                             </tr>
 						<?php endforeach; ?>
