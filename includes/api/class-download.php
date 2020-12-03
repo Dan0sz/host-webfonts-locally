@@ -136,10 +136,21 @@ class OMGF_API_Download extends WP_REST_Controller
 		
 		file_put_contents( $local_file, $stylesheet );
 		
-		$optimized_fonts = omgf_init()::optimized_fonts();
 		$current_font    = [ $original_handle => $fonts ];
+		$optimized_fonts = omgf_init()::optimized_fonts();
 		
-		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, array_replace_recursive( $optimized_fonts, $current_font ) );
+		// At first run, simply override the optimized_fonts array.
+		if ( empty( $optimized_fonts ) ) {
+			$optimized_fonts = $current_font;
+			// When a new font is detected, add it to the list.
+		} elseif ( ! isset( $optimized_fonts[ $original_handle ] ) ) {
+			$optimized_fonts = $optimized_fonts + $current_font;
+			// Unload is probably used. Let's rewrite the variants still in use.
+		} else {
+			$optimized_fonts = $this->rewrite_variants( $optimized_fonts, $current_font );
+		}
+		
+		update_option( OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts );
 		
 		// After downloading it, serve it.
 		header( 'Content-Type: text/css' );
@@ -387,6 +398,34 @@ class OMGF_API_Download extends WP_REST_Controller
 		}
 		
 		return $stylesheet;
+	}
+	
+	/**
+	 * When unload is used, insert the cache key for the variants still in use.
+	 *
+	 * @param $stylesheets
+	 * @param $current_font
+	 *
+	 * @return mixed
+	 */
+	private function rewrite_variants ( $stylesheets, $current_font ) {
+		foreach ( $stylesheets as $stylesheet => &$fonts ) {
+			foreach ( $fonts as $index => &$font ) {
+				if ( empty( (array) $font->variants ) ) {
+					continue;
+				}
+				
+				foreach ( $font->variants as $variant_index => &$variant ) {
+					$replace_variant = $current_font[ $stylesheet ][ $index ]->variants[ $variant_index ] ?? (object) [];
+					
+					if ( ! empty( (array) $replace_variant ) ) {
+						$variant = $replace_variant;
+					}
+				}
+			}
+		}
+		
+		return $stylesheets;
 	}
 	
 	/**
