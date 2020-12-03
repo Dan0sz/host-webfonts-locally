@@ -22,38 +22,11 @@ $tweetUrl           = 'https://twitter.com/intent/tweet?text=I+just+optimized+my
 ?>
 <div class="welcome-panel-content">
     <div class="welcome-panel-column-container">
-        <?php if (apply_filters('apply_omgf_pro_promo', true)): ?>
-        <div class="welcome-panel-column" style="width: 100%; margin-right: 15px;">
-            <h2><?php _e('Why upgrade to OMGF Pro?', $plugin_text_domain); ?></h2>
-            <ul>
-                <li class="welcome-icon dashicons-before dashicons-yes">
-		            <?= __('Automatically Replace/Remove Google Fonts throughout the entire document.', $plugin_text_domain); ?>
-                </li>
-                <li class="welcome-icon dashicons-before dashicons-yes">
-                    <?= __('Combine and de-duplicate Google Fonts into one request.', $plugin_text_domain); ?>
-                </li>
-                <li class="welcome-icon dashicons-before dashicons-yes">
-                    <?= __('Performance Fine Tuning', $plugin_text_domain); ?>
-                </li>
-                <li class="welcome-icon dashicons-before dashicons-yes">
-                    <?= __('Automatically remove Resource Hints pointing to Google\'s Servers.', $plugin_text_domain); ?>
-                </li>
-                <li class="welcome-icon dashicons-before dashicons-yes">
-                    <?= __('Reduce Page Size and Load Time using Subset Forcing.', $plugin_text_domain); ?>
-                </li>
-            </ul>
-            <p>
-                <a class="button button-hero button-primary" href="https://ffwp.dev/wordpress/omgf-pro"><span class="dashicons-before dashicons-cart"> <?= __('Buy now'); ?></span></a>
-                <span><?= __('Starting at € 29,-', $plugin_text_domain); ?></span>
-            </p>
-            <hr/>
-        </div>
-        <?php endif; ?>
-        <div class="welcome-panel-column welcome-panel-last" style="width: 100%;">
+        <div class="welcome-panel-column" style="width: 100%;">
 	        <?php if (apply_filters('apply_omgf_pro_promo', true)): ?>
-            <h3>
+            <h2>
                 <?php _e('Support OMGF by Spreading the Word!', $plugin_text_domain); ?>
-            </h3>
+            </h2>
             <p>
                 <?= __('Just because this plugin\'s free, doesn\'t mean there\'s nothing you can do to support me! :)', $plugin_text_domain); ?>
             </p>
