@@ -130,14 +130,14 @@ jQuery(document).ready(function ($) {
         toggle_preload: function () {
             omgf_admin.toggle(this, 'preload');
         },
-    
+        
         /**
          * Toggle unload option associated with the current preload option.
          */
         toggle_unload: function () {
             omgf_admin.toggle(this, 'unload');
         },
-    
+        
         /**
          * Toggle a checkbox.
          *
@@ -145,13 +145,13 @@ jQuery(document).ready(function ($) {
          * @param option
          */
         toggle: function (elem, option) {
-            var this_option = $(elem);
-            var unload_option = $('.' + option + '-' + this_option.data('handle') + '-' + this_option.val() + ' .' + option);
-    
+            var this_option  = $(elem);
+            var other_option = $('.' + option + '-' + this_option.data('handle') + '-' + this_option.data('font-id') + '-' + this_option.val() + ' .' + option);
+            
             if (elem.checked) {
-                unload_option.attr('disabled', true);
+                other_option.attr('disabled', true);
             } else {
-                unload_option.attr('disabled', false);
+                other_option.attr('disabled', false);
             }
         },
         
