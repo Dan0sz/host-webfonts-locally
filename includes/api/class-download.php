@@ -116,7 +116,6 @@ class OMGF_API_Download extends WP_REST_Controller
 				}
 			}
 			
-			// TODO: Filtered variants are no longer displayed in settings. How to resolve?
 			$font->variants = $this->filter_variants( $font->variants, $font_request );
 		}
 		
