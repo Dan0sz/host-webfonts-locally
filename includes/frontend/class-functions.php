@@ -125,11 +125,11 @@ class OMGF_Frontend_Functions
 			return;
 		}
 		
-		if ( apply_filters( 'omgf_pro_advanced_processing_enabled', false ) ) {
+		if ( is_admin() ) {
 			return;
 		}
 		
-		if ( is_admin() ) {
+		if ( apply_filters( 'omgf_pro_advanced_processing_enabled', false ) ) {
 			return;
 		}
 		
