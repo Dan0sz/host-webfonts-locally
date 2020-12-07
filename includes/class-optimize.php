@@ -134,7 +134,7 @@ class OMGF_Optimize
 	 */
 	private function run_auto () {
 		OMGF_Admin_Notice::set_notice(
-			__( 'OMGF Optimization is silently running in the background. After visiting a few pages, return here to manage the captured Google Fonts.' ),
+			__( 'OMGF Optimization is silently running in the background. After visiting a few pages, return here to manage the captured Google Fonts.', $this->plugin_text_domain ),
 			'omgf-auto-running',
 			false
 		);
