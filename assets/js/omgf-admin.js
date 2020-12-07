@@ -78,8 +78,6 @@ jQuery(document).ready(function ($) {
         
         /**
          * Generate a new cache key upon each unload change.
-         *
-         * TODO: Reset cache_key back to default (without random key) when no unload checkboxes are selected.
          */
         generate_cache_key: function () {
             var current_handle   = $(this).data('handle'),
