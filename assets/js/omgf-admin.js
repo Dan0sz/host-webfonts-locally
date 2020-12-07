@@ -17,7 +17,7 @@ jQuery(document).ready(function ($) {
     var omgf_admin = {
         empty_cache_directory_xhr: false,
         optimize_xhr: false,
-        cache_prefix: '--omgf-',
+        cache_prefix: '-ul-',
         
         /**
          * Initialize all on click events.
@@ -78,48 +78,55 @@ jQuery(document).ready(function ($) {
         
         /**
          * Generate a new cache key upon each unload change.
+         *
+         * TODO: Reset cache_key back to default (without random key) when no unload checkboxes are selected.
          */
         generate_cache_key: function () {
-            var current_handle       = $(this).data('handle'),
-                cache_keys_input     = $('#omgf_cache_keys'),
-                cache_keys           = cache_keys_input.val().split(','),
-                unloaded_stylesheets = $('#omgf_unload_stylesheets').val().split(',');
+            var current_handle   = $(this).data('handle'),
+                cache_keys_input = $('#omgf_cache_keys'),
+                cache_keys       = cache_keys_input.val().split(','),
+                checked          = $('#' + current_handle + ' input.unload:checked').length,
+                total            = $('#' + current_handle + ' input.unload').length,
+                cache_key_index  = cache_keys.findIndex((key, index) => {
+                    if (key.indexOf(current_handle) !== -1) {
+                        return true;
+                    }
+                }),
+                no_cache_key     = false;
             
             /**
-             * If this handle's stylesheet is unloaded, we do not have to generate a cache key for it.
+             * If no or all boxes are checked, (re-)set cache key to default (without random string).
              */
-            var is_unloaded = false;
+            if (checked === 0 || checked === total) {
+                cache_keys[cache_key_index] = current_handle;
+                
+                no_cache_key = true;
+            }
             
-            unloaded_stylesheets.forEach(function (handle, index) {
-                if (handle.indexOf(current_handle) !== -1) {
-                    handle_index             = cache_keys.findIndex(function (handle) { return handle.indexOf(current_handle) !== -1; });
-                    cache_keys[handle_index] = current_handle.split(omgf_admin.cache_prefix)[0];
-                    
-                    is_unloaded = true;
-                }
-            });
-            
-            if (is_unloaded === true) {
+            if (no_cache_key === true) {
                 cache_keys_input.val(cache_keys.join());
                 
                 return;
             }
             
-            cache_keys.forEach(function (key, index) {
-                if (key.indexOf(current_handle) !== -1) {
-                    var cache_key = omgf_admin.cache_prefix + Math.random().toString(36).substring(2, 7);
-                    
-                    if (key.indexOf(omgf_admin.cache_prefix) !== -1) {
-                        var parts        = key.split(omgf_admin.cache_prefix),
-                            last_part    = omgf_admin.get_last_element_index(parts);
-                        parts[last_part] = Math.random().toString(36).substring(2, 7);
-                        key              = parts[0];
-                        cache_key        = omgf_admin.cache_prefix + parts[last_part];
-                    }
-                    
-                    cache_keys[index] = key + cache_key;
+            /**
+             * Generate a unique cache key if some of this stylesheet's fonts are unloaded.
+             */
+            if (cache_key_index !== -1) {
+                var current_cache_key = cache_keys[cache_key_index];
+                
+                var cache_key = omgf_admin.cache_prefix + Math.random().toString(36).substring(2, 7);
+                
+                if (current_cache_key.indexOf(omgf_admin.cache_prefix) !== -1) {
+                    var parts         = current_cache_key.split(omgf_admin.cache_prefix),
+                        last_part     = omgf_admin.get_last_element_index(parts);
+                    parts[last_part]  = Math.random().toString(36).substring(2, 7);
+                    current_cache_key = parts[0];
+                    cache_key         = omgf_admin.cache_prefix + parts[last_part];
                 }
-            });
+                
+                cache_keys[cache_key_index] = current_cache_key + cache_key;
+            }
             
             cache_keys_input.val(cache_keys.join());
         },

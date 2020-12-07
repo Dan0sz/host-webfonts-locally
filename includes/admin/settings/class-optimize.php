@@ -158,11 +158,13 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
                 </tr>
                 </thead>
                 <?php
-                $cache_handles = [];
+                $cache_handles = omgf_init()::cache_keys();
                 ?>
 				<?php foreach ( $this->optimized_fonts as $handle => $fonts ): ?>
                     <?php
-                    $cache_handles[] = $handle;
+                    if (!omgf_init()::get_cache_key($handle)) {
+	                    $cache_handles[] = $handle;
+                    }
                     ?>
                     <tbody class="stylesheet" id="<?= $handle; ?>">
 					<?php foreach ( $fonts as $font ): ?>
@@ -212,7 +214,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
             <input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden"
                    name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= OMGF_UNLOAD_STYLESHEETS; ?>"/>
             <input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" type="hidden"
-                   name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" value="<?= OMGF_CACHE_KEYS ?: implode(',', $cache_handles); ?>" />
+                   name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" value="<?= implode(',', $cache_handles); ?>" />
         </div>
 		<?php
 	}
