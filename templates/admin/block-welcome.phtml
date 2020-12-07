@@ -51,13 +51,26 @@ $tweetUrl           = 'https://twitter.com/intent/tweet?text=I+just+optimized+my
             <?php endif; ?>
             <hr/>
             <h3>
+                <?= __('Did you upgrade from OMGF v3 to v4?', $plugin_text_domain); ?>
+            </h3>
+            <p>
+                <?= __('First off, thank you! :)', $plugin_text_domain); ?>
+            </p>
+            <p>
+                <?= __('No features were moved from Free to Pro during this upgrade.', $plugin_text_domain); ?>
+            </p>
+            <p>
+                <?= sprintf(__('However, if you find anything that broke after the upgrade. Please send me a <a href="%s">support ticket</a>.', $plugin_text_domain), 'https://wordpress.org/support/plugin/host-webfonts-local/#new-post'); ?>
+            </p>
+            <hr/>
+            <h3>
                 <?php _e('Need Help?', $plugin_text_domain); ?>
             </h3>
             <ul>
                 <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_quick_start', 'https://ffwp.dev/docs/omgf-pro/quick-start/'); ?>"><?= __('Quick Start Guide', $plugin_text_domain); ?></a></li>
                 <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_user_manual', 'https://ffwp.dev/docs/omgf-pro/user-manual/'); ?>"><?= __('User Manual', $plugin_text_domain); ?></a></li>
                 <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_faq_link', 'https://wordpress.org/plugins/host-webfonts-local/#description'); ?>"><?= __('FAQ', $plugin_text_domain); ?></a></li>
-                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_get_support_link', 'https://wordpress.org/support/plugin/host-webfonts-local'); ?>"><?= __('Get Support', $plugin_text_domain); ?></a></li>
+                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_get_support_link', 'https://wordpress.org/support/plugin/host-webfonts-local/#new-post'); ?>"><?= __('Get Support', $plugin_text_domain); ?></a></li>
             </ul>
             <hr />
             <h4 class="signature"><?= sprintf(__('Coded with %s in The Netherlands.', $plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>'); ?></h4>
