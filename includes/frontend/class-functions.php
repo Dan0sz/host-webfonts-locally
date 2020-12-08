@@ -82,7 +82,8 @@ class OMGF_Frontend_Functions
 	}
 	
 	/**
-	 *
+	 * TODO: When setting all preloads at once (different stylesheet handles) combined with unloads, not all URLs are rewritten with their cache keys properly.
+	 *       When configured handle by handle, it works fine. PHP multi-threading issues?
 	 */
 	public function add_preloads () {
 		$preloaded_fonts = omgf_init()::preloaded_fonts();
