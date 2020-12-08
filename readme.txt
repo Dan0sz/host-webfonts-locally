@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.5
-Stable tag: 4.2.3
+Stable tag: 4.2.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -121,6 +121,14 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.2.4 | December 8th, 2020 =
+* Cache keys are now fixed values instead of dynamically generated. This fixes the bug where preloads wouldn't load properly when combined with unloaded fonts of the same stylesheet.
+  * **IMPORTANT**: To fix any bugs with preloads/unloads, emptying the cache directory is required.
+* Cleaned up the sidebar and added a notification to reassure people that no features were moved from Free to Pro after upgrading to v4.
+* Advanced Processing can now be disabled even when OMGF Pro is active. Before it was always on (accidentally).
+* When preload is enabled for a font style, its associated unload checkbox is disabled and vice versa.
+* Minor fixes, increased usability and optimizations.
 
 = 4.2.3 =
 * Fixed invalid preload header,
