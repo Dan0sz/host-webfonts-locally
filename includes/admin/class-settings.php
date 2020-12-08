@@ -116,6 +116,9 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/** @var string $plugin_text_domain */
 	private $plugin_text_domain = 'host-webfonts-local';
 	
+	/** @var string|null  */
+	private $submit_button_text = null;
+	
 	/**
 	 * OMGF_Admin_Settings constructor.
 	 */
@@ -131,6 +134,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		if ( $this->page !== 'optimize-webfonts' ) {
 			return;
 		}
+		
+		if ($this->active_tab == self::OMGF_SETTINGS_FIELD_OPTIMIZE) {
+		    $this->submit_button_text = __('Save & Optimize', $this->plugin_text_domain);
+        }
 		
 		// Tabs
 		add_action( 'omgf_settings_tab', [ $this, 'optimize_fonts_tab' ], 0 );
@@ -325,7 +332,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			
 			do_action( 'omgf_after_settings_form_settings' );
 			
-			submit_button( __( 'Save & Optimize', $this->plugin_text_domain ), 'primary', 'submit', false );
+			submit_button( $this->submit_button_text, 'primary', 'submit', false );
 			?>
             <a id="omgf-empty" class="omgf-empty button-cancel"><?php _e( 'Empty Cache Directory', $this->plugin_text_domain ); ?></a>
         </form>
