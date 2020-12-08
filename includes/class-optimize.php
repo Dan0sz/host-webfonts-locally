@@ -108,7 +108,7 @@ class OMGF_Optimize
 		add_settings_error( 'general', 'omgf_optimization_success', __( 'Optimization completed successfully.' ), 'success' );
 		
 		OMGF_Admin_Notice::set_notice(
-			__('If you\'re using any 3rd party optimization plugins (e.g. WP Rocket, Autoptimize, W3 Total Cache, etc.) make sure to flush their caches for the changes to take effect.', $this->plugin_text_domain),
+			__('If you\'re using any 3rd party optimization plugins (e.g. WP Rocket, Autoptimize, W3 Total Cache, etc.) make sure to flush their caches for OMGF\'s optimizations to take effect.', $this->plugin_text_domain),
 			'omgf-cache-notice',
 			false,
 			'warning'
