@@ -244,7 +244,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 				$needle = 'OMGF_ADV_SETTING_';
 				break;
 			default:
-				$needle = 'OMGF_OPTIMIZE_SETTING_';
+				$needle = apply_filters('omgf_settings_needle', 'OMGF_OPTIMIZE_SETTING_');
 		}
 
 		return array_filter(
