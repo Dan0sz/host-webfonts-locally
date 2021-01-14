@@ -30,7 +30,6 @@ class OMGF_Frontend_Functions
 	{
 		$this->do_optimize = $this->maybe_optimize_fonts();
 
-		add_filter('content_url', [$this, 'rewrite_url'], 10, 2);
 		add_action('wp_head', [$this, 'add_preloads'], 3);
 		add_action('wp_print_styles', [$this, 'process_fonts'], PHP_INT_MAX - 1000);
 	}
@@ -47,41 +46,6 @@ class OMGF_Frontend_Functions
 		}
 
 		return true;
-	}
-
-	/**
-	 * @param $url
-	 * @param $path
-	 *
-	 * @return mixed
-	 */
-	public function rewrite_url($url, $path)
-	{
-		/**
-		 * Exit early if this isn't requested by OMGF.
-		 */
-		if (strpos($url, OMGF_CACHE_PATH) === false) {
-			return $url;
-		}
-
-		/**
-		 * If Relative URLs is enabled, overwrite URL with Path and continue execution.
-		 */
-		if (OMGF_RELATIVE_URL) {
-			$content_dir = str_replace(site_url(), '', content_url());
-
-			$url = $content_dir . $path;
-		}
-
-		if (OMGF_CDN_URL) {
-			$url = str_replace(site_url(), OMGF_CDN_URL, $url);
-		}
-
-		if (OMGF_CACHE_URI) {
-			$url = str_replace(OMGF_CACHE_PATH, OMGF_CACHE_URI, $url);
-		}
-
-		return $url;
 	}
 
 	/**
