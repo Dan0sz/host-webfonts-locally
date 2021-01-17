@@ -54,13 +54,13 @@ class OMGF_Frontend_Functions
 	 */
 	public function add_preloads()
 	{
-		$preloaded_fonts = omgf_init()::preloaded_fonts();
+		$preloaded_fonts = apply_filters('omgf_frontend_preloaded_fonts', omgf_init()::preloaded_fonts());
 
 		if (!$preloaded_fonts) {
 			return;
 		}
 
-		$stylesheets = omgf_init()::optimized_fonts();
+		$stylesheets = apply_filters('omgf_frontend_optimized_fonts', omgf_init()::optimized_fonts());
 
 		$i = 0;
 
