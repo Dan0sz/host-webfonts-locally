@@ -165,7 +165,7 @@ class OMGF_Frontend_Functions
 			}
 
 			if (OMGF_OPTIMIZATION_MODE == 'auto' || (OMGF_OPTIMIZATION_MODE == 'manual' && isset($_GET['omgf_optimize']))) {
-				$api_url  = str_replace(['http:', 'https:'], '', site_url('/wp-json/omgf/v1/download/'));
+				$api_url  = str_replace(['http:', 'https:'], '', home_url('/wp-json/omgf/v1/download/'));
 				$protocol = '';
 
 				if (substr($font->src, 0, 2) == '//') {
