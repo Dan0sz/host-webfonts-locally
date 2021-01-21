@@ -32,8 +32,10 @@ class OMGF_Optimize
         $option_page             = $_POST['option_page'] ?? '';
         $this->optimization_mode = $_POST[OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE] ?? '';
 
-        if (OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE != $option_page
-             && !$this->optimization_mode) {
+        if (
+            OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE != $option_page
+            && !$this->optimization_mode
+        ) {
             return;
         }
 
@@ -131,7 +133,7 @@ class OMGF_Optimize
 
     private function no_urls_found()
     {
-        add_settings_error('general', 'omgf_no_urls_found', __('No (additional) Google Fonts found to optimize.', $this->plugin_text_domain), 'info');
+        add_settings_error('general', 'omgf_no_urls_found', sprintf(__('No (additional) Google Fonts found to optimize. If you believe this is an error, please refer to the %stroubleshooting%s section of the documentation for possible solutions.', $this->plugin_text_domain), '<a href="https://ffw.press/docs/omgf-pro/troubleshooting">', '</a>'), 'info');
     }
 
     private function run_auto()

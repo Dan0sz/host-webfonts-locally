@@ -2,7 +2,7 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
-Tested up to: 5.5
+Tested up to: 5.6
 Stable tag: 4.2.4
 Requires PHP: 7.0
 License: GPLv2 or later
