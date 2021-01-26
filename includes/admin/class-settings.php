@@ -10,7 +10,7 @@
  *
  * @package  : OMGF
  * @author   : Daan van den Bergh
- * @copyright: (c) 2020 Daan van den Bergh
+ * @copyright: (c) 2021 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
@@ -105,7 +105,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Miscellaneous
 	 */
 	const OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS = 'options-general.php?page=optimize-webfonts';
-	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://ffwp.dev/wordpress/omgf-pro/';
+	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://ffw.press/wordpress/omgf-pro/';
 
 	/** @var string $active_tab */
 	private $active_tab;

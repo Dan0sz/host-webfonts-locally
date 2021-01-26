@@ -1,8 +1,8 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * *
  * @author   : Daan van den Bergh
- * @url      : https://ffwp.dev/wordpress-plugins/
- * @copyright: (c) 2020 Daan van den Bergh
+ * @url      : https://ffw.press/wordpress-plugins/
+ * @copyright: (c) 2021 Daan van den Bergh
  * @license  : GPL2v2 or later
  * * * * * * * * * * * * * * * * * * * * * */
 

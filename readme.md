@@ -17,7 +17,7 @@ After installing the plugin, OMGF runs silently in the background and captures a
 
 When the fonts are downloaded and the stylesheet is generated, it rewrites every URL pointing to fonts.googleapis.com or fonts.gstatic.com to the locally hosted variant.
 
-Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffwp.dev/wordpress/omgf-expert-configuration/).
+Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffw.press/wordpress/omgf-expert-configuration/).
 
 ### Features
 - Automatically replace registered/enqueued Google Fonts in `wp_head()` with local copies,
@@ -37,7 +37,7 @@ Everything in the free version, plus:
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
 - Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
 
-**[Documentation](https://ffwp.dev/docs/omgf-pro/) | [Purchase OMGF Pro](https://ffwp.dev/wordpress/omgf-pro/)**
+**[Documentation](https://ffw.press/docs/omgf-pro/) | [Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/)**
 
 
 ## Installation

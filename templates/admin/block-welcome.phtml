@@ -10,7 +10,7 @@
  *
  * @package  : OMGF
  * @author   : Daan van den Bergh
- * @copyright: (c) 2020 Daan van den Bergh
+ * @copyright: (c) 2021 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
@@ -23,33 +23,33 @@ $tweetUrl           = 'https://twitter.com/intent/tweet?text=I+just+optimized+my
 <div class="welcome-panel-content">
     <div class="welcome-panel-column-container">
         <div class="welcome-panel-column" style="width: 100%;">
-	        <?php if (apply_filters('apply_omgf_pro_promo', true)): ?>
-            <h2>
-                <?php _e('Support OMGF by Spreading the Word!', $plugin_text_domain); ?>
-            </h2>
-            <p>
-                <?= __('Just because this plugin\'s free, doesn\'t mean there\'s nothing you can do to support me! :)', $plugin_text_domain); ?>
-            </p>
-            <p>
-                <?= sprintf(__('Please help me spread the word by leaving a %s5-star review%s on Wordpress.org or sending a %sTweet%s about OMGF.', $plugin_text_domain), '<a target="_blank" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post">', '</a>', "<a href='$tweetUrl'>", '</a>'); ?>
-            </p>
-            <p>
-                <a target="_blank" class="button button-secondary button-hero" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post"><span class="dashicons-before dashicons-star-filled"> <?php _e('Review', $plugin_text_domain); ?></span></a>
-                <a target="_blank" class="button button-secondary button-hero" href="<?= $tweetUrl; ?>"><span class="dashicons-before dashicons-twitter"> <?php _e('Tweet', $plugin_text_domain); ?></span></a>
-            </p>
-            <?php else: ?>
-            <h2>
-                <?= __('Do you <span class="dashicons dashicons-heart ffwp-heart"></span> OMGF Pro?', $plugin_text_domain) ;?>
-            </h2>
-            <p>
-                <?= __('Click the button below and receive a personal discount code for 10% off your next purchase!'); ?>
-            </p>
-            <p>
-                <a target="_blank" class="button button-primary button-hero" href="<?= OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO . '#edd-reviews-title'; ?>"><span class="dashicons-before dashicons-star-filled"> <?php _e( 'Review', $plugin_text_domain); ?></span></a>
-                <span><?= __('(login required)', $plugin_text_domain); ?></span>
-            </p>
+            <?php if (apply_filters('apply_omgf_pro_promo', true)) : ?>
+                <h2>
+                    <?php _e('Support OMGF by Spreading the Word!', $plugin_text_domain); ?>
+                </h2>
+                <p>
+                    <?= __('Just because this plugin\'s free, doesn\'t mean there\'s nothing you can do to support me! :)', $plugin_text_domain); ?>
+                </p>
+                <p>
+                    <?= sprintf(__('Please help me spread the word by leaving a %s5-star review%s on Wordpress.org or sending a %sTweet%s about OMGF.', $plugin_text_domain), '<a target="_blank" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post">', '</a>', "<a href='$tweetUrl'>", '</a>'); ?>
+                </p>
+                <p>
+                    <a target="_blank" class="button button-secondary button-hero" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post"><span class="dashicons-before dashicons-star-filled"> <?php _e('Review', $plugin_text_domain); ?></span></a>
+                    <a target="_blank" class="button button-secondary button-hero" href="<?= $tweetUrl; ?>"><span class="dashicons-before dashicons-twitter"> <?php _e('Tweet', $plugin_text_domain); ?></span></a>
+                </p>
+            <?php else : ?>
+                <h2>
+                    <?= __('Do you <span class="dashicons dashicons-heart ffwp-heart"></span> OMGF Pro?', $plugin_text_domain); ?>
+                </h2>
+                <p>
+                    <?= __('Click the button below and receive a personal discount code for 10% off your next purchase!'); ?>
+                </p>
+                <p>
+                    <a target="_blank" class="button button-primary button-hero" href="<?= OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO . '#edd-reviews-title'; ?>"><span class="dashicons-before dashicons-star-filled"> <?php _e('Review', $plugin_text_domain); ?></span></a>
+                    <span><?= __('(login required)', $plugin_text_domain); ?></span>
+                </p>
             <?php endif; ?>
-            <hr/>
+            <hr />
             <h3>
                 <?= __('Did you upgrade from OMGF v3 to v4?', $plugin_text_domain); ?>
             </h3>
@@ -62,20 +62,20 @@ $tweetUrl           = 'https://twitter.com/intent/tweet?text=I+just+optimized+my
             <p>
                 <?= sprintf(__('However, if you find anything that broke after the upgrade. Please send me a <a target="_blank" href="%s">support ticket</a>.', $plugin_text_domain), 'https://wordpress.org/support/plugin/host-webfonts-local/#new-post'); ?>
             </p>
-            <hr/>
+            <hr />
             <h3>
                 <?php _e('Need Help?', $plugin_text_domain); ?>
             </h3>
             <ul>
-                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_quick_start', 'https://ffwp.dev/docs/omgf-pro/quick-start/'); ?>"><?= __('Quick Start Guide', $plugin_text_domain); ?></a></li>
-                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_user_manual', 'https://ffwp.dev/docs/omgf-pro/user-manual/'); ?>"><?= __('User Manual', $plugin_text_domain); ?></a></li>
+                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_quick_start', 'https://ffw.press/docs/omgf-pro/quick-start/'); ?>"><?= __('Quick Start Guide', $plugin_text_domain); ?></a></li>
+                <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_user_manual', 'https://ffw.press/docs/omgf-pro/user-manual/'); ?>"><?= __('User Manual', $plugin_text_domain); ?></a></li>
                 <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_faq_link', 'https://wordpress.org/plugins/host-webfonts-local/#description'); ?>"><?= __('FAQ', $plugin_text_domain); ?></a></li>
                 <li><a target="_blank" href="<?= apply_filters('omgf_settings_sidebar_get_support_link', 'https://wordpress.org/support/plugin/host-webfonts-local/#new-post'); ?>"><?= __('Get Support', $plugin_text_domain); ?></a></li>
             </ul>
             <hr />
             <h4 class="signature"><?= sprintf(__('Coded with %s in The Netherlands.', $plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>'); ?></h4>
             <p class="signature">
-                <a target="_blank" title="<?= __('Visit FFWP.dev', $plugin_text_domain); ?>" href="https://ffwp.dev/wordpress-plugins/"><img class="signature-image" alt="<?= __('Visit FFWP.dev', $plugin_text_domain); ?>" src="https://ffwp.dev/wp-content/uploads/2020/09/logo-color-full@05x.png" /></a>
+                <a target="_blank" title="<?= __('Visit FFW Press', $plugin_text_domain); ?>" href="https://ffw.press/wordpress-plugins/"><img class="signature-image" alt="<?= __('Visit FFW Press', $plugin_text_domain); ?>" src="https://ffw.press/wp-content/uploads/2020/09/logo-color-full@05x.png" /></a>
             </p>
         </div>
     </div>
