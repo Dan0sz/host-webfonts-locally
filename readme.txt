@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.6
-Stable tag: 4.2.4
+Stable tag: 4.2.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -121,6 +121,13 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.2.5 | January 27th, 2021 =
+* Improved compatibility with WordPress subdirectory installs.
+* Implemented some actions/filters needed for upcoming release of OMGF Additional Fonts.
+* Fixed duplicate preload ID's issue.
+* Fixed some notices/warnings.
+* Minor UX improvements.
 
 = 4.2.4 | December 8th, 2020 =
 * Cache keys are now fixed values instead of dynamically generated. This fixes the bug where preloads wouldn't load properly when combined with unloaded fonts of the same stylesheet.
