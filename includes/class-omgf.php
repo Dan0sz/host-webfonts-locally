@@ -68,7 +68,7 @@ class OMGF
 		static $optimized_fonts = [];
 
 		if (empty($optimized_fonts)) {
-			$optimized_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, []);
+			$optimized_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, []) ?: [];
 		}
 
 		return $optimized_fonts;
@@ -82,7 +82,7 @@ class OMGF
 		static $preloaded_fonts = [];
 
 		if (empty($preloaded_fonts)) {
-			$preloaded_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, []);
+			$preloaded_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, []) ?: [];
 		}
 
 		return $preloaded_fonts;
@@ -96,7 +96,7 @@ class OMGF
 		static $unloaded_fonts = [];
 
 		if (empty($unloaded_fonts)) {
-			$unloaded_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, []);
+			$unloaded_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, []) ?: [];
 		}
 
 		return $unloaded_fonts;
