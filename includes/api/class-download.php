@@ -153,12 +153,12 @@ class OMGF_API_Download extends WP_REST_Controller
 
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
 
-        // After downloading it, serve it.
+        // After generating it, serve it.
         header('Content-Type: text/css');
         header('Content-Length: ' . filesize($local_file));
         flush();
         readfile($local_file);
-        wp_die();
+        exit();
     }
 
     /**

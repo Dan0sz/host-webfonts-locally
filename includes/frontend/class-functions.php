@@ -74,7 +74,7 @@ class OMGF_Frontend_Functions
 
 				$font_id          = $font->id;
 				$preload_variants = array_filter(
-					$font->variants,
+					(array) $font->variants,
 					function ($variant) use ($preloads_stylesheet, $font_id) {
 						return in_array($variant->id, $preloads_stylesheet[$font_id]);
 					}
