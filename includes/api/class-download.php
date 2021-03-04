@@ -106,7 +106,7 @@ class OMGF_API_Download extends WP_REST_Controller
 
             list($family, $variants) = explode(':', $font_request);
 
-            $variants = $this->process_variants($variants, $font);
+            $variants = $this->parse_requested_variants($variants, $font);
 
             if ($unloaded_fonts = omgf_init()::unloaded_fonts()) {
                 $font_id = $font->id;
@@ -118,7 +118,7 @@ class OMGF_API_Download extends WP_REST_Controller
                 }
             }
 
-            $font->variants = $this->filter_variants($font->variants, $font_request);
+            $font->variants = $this->filter_unwanted_variants($font->variants, $font_request);
         }
 
         foreach ($fonts as &$font) {
@@ -308,23 +308,25 @@ class OMGF_API_Download extends WP_REST_Controller
     }
 
     /**
-     * @param $variants
+     * @param $request
      * @param $font
      *
      * @return array
      */
-    private function process_variants($variants, $font)
+    private function parse_requested_variants($request, $font)
     {
-        $variants = array_filter(explode(',', $variants));
+        $variants_array = array_filter(explode(',', $request));
 
-        // This means by default all fonts are requested, so we need to fill up the queue, before unloading the unwanted variants.
-        if (count($variants) == 0) {
+        /**
+         * This means by default all fonts are requested, so we need to fill up the queue, before unloading the unwanted variants.
+         */
+        if (count($variants_array) == 0) {
             foreach ($font->variants as $variant) {
-                $variants[] = $variant->id;
+                $requested_variants[] = $variant->id;
             }
         }
 
-        return $variants;
+        return $requested_variants;
     }
 
     /**
@@ -333,18 +335,14 @@ class OMGF_API_Download extends WP_REST_Controller
      *
      * @return array
      */
-    private function filter_variants($available_variants, $wanted)
+    private function filter_unwanted_variants($available, $wanted)
     {
         list($family, $variants) = explode(':', $wanted);
-
-        if (!$variants) {
-            return $available_variants;
-        }
 
         $variants = explode(',', $variants);
 
         return array_filter(
-            $available_variants,
+            $available,
             function ($font) use ($variants) {
                 $id = $font->id;
 
