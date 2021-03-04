@@ -32,7 +32,6 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 		// Settings
 		add_filter('omgf_detection_settings_content', [$this, 'do_process_google_fonts'], 30);
 		add_filter('omgf_detection_settings_content', [$this, 'do_promo_advanced_processing'], 40);
-		add_filter('omgf_detection_settings_content', [$this, 'do_promo_early_access'], 50);
 		add_filter('omgf_detection_settings_content', [$this, 'do_promo_fonts_processing'], 60);
 		add_filter('omgf_detection_settings_content', [$this, 'do_promo_process_resource_hints'], 70);
 
