@@ -2,8 +2,8 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
-Tested up to: 5.6
-Stable tag: 4.2.5
+Tested up to: 5.7
+Stable tag: 4.2.6
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,8 +44,9 @@ Please keep in mind that, although I try to make the configuration of this plugi
 = Features in the PRO version =
 Everything in the free version, plus:
 - Automatically remove/replace all Google Fonts throughout the entire document/page,
-- Combine all Google Fonts (made by your theme and/or plugins) requests into one file,
-- Deduplicate Google Fonts requests,
+  - Also supports WebFont Loader (webfont.js) and Early Access Google Fonts.
+- Combine all Google Fonts (made by your theme and/or plugins) stylesheets into one file,
+- Deduplicate Google Fonts stylesheets,
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
 - Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
 
@@ -121,6 +122,13 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.2.6 | March 5th, 2021 =
+* Tested with WP 5.7
+* [FIX] All fonts would be loaded, when all fonts of one font-family were checked for unloading.
+* [FIX] Fixed some notices and warnings.
+* Added compatibility for OMGF Pro's Early Access compatibility.
+* OMGF's admin JS is now only loaded on OMGF's settings screens.
 
 = 4.2.5 | January 27th, 2021 =
 * Improved compatibility with WordPress subdirectory installs.
