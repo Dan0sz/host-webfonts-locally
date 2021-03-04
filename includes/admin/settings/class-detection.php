@@ -32,8 +32,9 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 		// Settings
 		add_filter('omgf_detection_settings_content', [$this, 'do_process_google_fonts'], 30);
 		add_filter('omgf_detection_settings_content', [$this, 'do_promo_advanced_processing'], 40);
-		add_filter('omgf_detection_settings_content', [$this, 'do_promo_fonts_processing'], 50);
-		add_filter('omgf_detection_settings_content', [$this, 'do_promo_process_resource_hints'], 60);
+		add_filter('omgf_detection_settings_content', [$this, 'do_promo_early_access'], 50);
+		add_filter('omgf_detection_settings_content', [$this, 'do_promo_fonts_processing'], 60);
+		add_filter('omgf_detection_settings_content', [$this, 'do_promo_process_resource_hints'], 70);
 
 		// Close
 		add_filter('omgf_detection_settings_content', [$this, 'do_after'], 100);
@@ -105,6 +106,10 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			'omgf_pro_process_webfont_loader' => [
 				'label'       => __('Process Webfont Loader', $this->plugin_text_domain),
 				'description' => __('Process <code>webfont.js</code> libraries and the corresponding configuration defining which Google Fonts to load.', $this->plugin_text_domain)
+			],
+			'omgf_pro_process_early_access'   => [
+				'label'       => __('Process Early Access', $this->plugin_text_domain),
+				'description' => __('Process stylesheets loaded from <code>fonts.googleapis.com/earlyaccess</code> or <code>fonts.gstatic.com/ea</code>.', $this->plugin_text_domain)
 			]
 		];
 	}
@@ -118,7 +123,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			__('Advanced Processing (Pro)', $this->plugin_text_domain),
 			'omgf_pro_advanced_processing',
 			defined('OMGF_PRO_ADVANCED_PROCESSING') ? OMGF_PRO_ADVANCED_PROCESSING : false,
-			__('By default, OMGF scans for Google Fonts which are registered/enqueued in the <code>wp_enqueue_scripts()</code> action in WordPress\' header (<code>wp_head()</code>). Advanced Processing will process all Google Fonts throughout the entire document. This setting can be tweaked further under Advanced Settings.', $this->plugin_text_domain) . ' ' . $this->promo,
+			__('By default, OMGF scans for Google Fonts which are registered/enqueued using the <code>wp_enqueue_scripts()</code> action in WordPress\' header (<code>wp_head()</code>). Enabling this option will process all Google Fonts throughout the entire document. This setting can be fine-tuned using the settings below.', $this->plugin_text_domain) . ' ' . $this->promo,
 			true
 		);
 	}

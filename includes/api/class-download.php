@@ -37,6 +37,9 @@ class OMGF_API_Download extends WP_REST_Controller
     /** @var string */
     private $path = '';
 
+    /**
+     * @return void 
+     */
     public function register_routes()
     {
         foreach ($this->endpoints as $endpoint) {
@@ -77,11 +80,10 @@ class OMGF_API_Download extends WP_REST_Controller
         $original_handle = $request->get_param('original_handle');
 
         if (!$this->handle || !$original_handle) {
-            wp_send_json_error('Handle not provided.', 406);
+            wp_die(__('Handle not provided.', $this->plugin_text_domain), 406);
         }
 
         $this->path    = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
-        $url           = self::OMGF_GOOGLE_FONTS_API_URL . '/api/fonts/%s';
         $font_families = explode('|', $params['family']);
 
         if (defined('OMGF_PRO_FORCE_SUBSETS') && !empty(OMGF_PRO_FORCE_SUBSETS)) {
@@ -93,7 +95,7 @@ class OMGF_API_Download extends WP_REST_Controller
         $fonts = [];
 
         foreach ($font_families as $font_family) {
-            $fonts[] = $this->grab_font_family($font_family, $url, $query);
+            $fonts[] = $this->grab_font_family($font_family, $query);
         }
 
         // Filter out empty element, i.e. failed requests.
@@ -153,11 +155,10 @@ class OMGF_API_Download extends WP_REST_Controller
 
         // After downloading it, serve it.
         header('Content-Type: text/css');
-        header('Content-Transfer-Encoding: Binary');
         header('Content-Length: ' . filesize($local_file));
         flush();
         readfile($local_file);
-        die();
+        wp_die();
     }
 
     /**
@@ -235,13 +236,33 @@ class OMGF_API_Download extends WP_REST_Controller
      *
      * @return mixed|void
      */
-    private function grab_font_family($font_family, $url, $query)
+    private function grab_font_family($font_family, $query)
     {
+        $url = self::OMGF_GOOGLE_FONTS_API_URL . '/api/fonts/%s';
+
         list($family, $variants) = explode(':', $font_family);
         $family                  = strtolower(str_replace(' ', '-', $family));
 
+        /**
+         * Add fonts to the request's $_GET 'family' parameter. Then pass an array to 'omgf_alternate_fonts' 
+         * filter. Then pass an alternate API url to the 'omgf_alternate_api_url' filter to fetch fonts from 
+         * an alternate API.
+         */
+        $alternate_fonts = apply_filters('omgf_alternate_fonts', []);
+
+        if (in_array($family, array_keys($alternate_fonts))) {
+            $url = apply_filters('omgf_alternate_api_url', $url);
+            unset($query);
+        }
+
+        $query_string = '';
+
+        if ($query) {
+            $query_string = '?' . http_build_query($query);
+        }
+
         $response = wp_remote_get(
-            sprintf($url, $family) . '?' . http_build_query($query)
+            sprintf($url, $family) . $query_string
         );
 
         $response_code = $response['response']['code'] ?? '';
@@ -275,6 +296,10 @@ class OMGF_API_Download extends WP_REST_Controller
         $font_request = array_filter(
             $font_families,
             function ($value) use ($font) {
+                if (isset($font->early_access)) {
+                    return strpos($value, strtolower(str_replace(' ', '', $font->family))) !== false;
+                }
+
                 return strpos($value, $font->family) !== false;
             }
         );
@@ -355,6 +380,10 @@ class OMGF_API_Download extends WP_REST_Controller
 
         if (file_exists($file)) {
             return content_url($file_uri);
+        }
+
+        if (strpos($url, '//') == 0) {
+            $url = 'https:' . $url;
         }
 
         $tmp = download_url($url);

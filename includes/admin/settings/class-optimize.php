@@ -177,7 +177,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						?>
 						<tbody class="stylesheet" id="<?= $handle; ?>">
 							<?php foreach ($fonts as $font) : ?>
-								<?php if (count($font->variants) <= 0) continue; ?>
+								<?php if (count((array) $font->variants) <= 0) continue; ?>
 								<th><?= $font->family; ?> <span class="handle">(<?= $handle; ?>)</span></th>
 								<?php foreach ($font->variants as $variant) : ?>
 									<tr>
