@@ -6,7 +6,7 @@
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Minimize DNS requests, leverage browser cache and speed up WordPress by saving Google Fonts to your server and removing external Google Fonts requests.
  * Version: 4.2.5
- * Author: Daan (from FFW.Press)
+ * Author: Daan from FFW.Press
  * Author URI: https://ffw.press
  * License: GPL2v2 or later
  * Text Domain: host-webfonts-local
