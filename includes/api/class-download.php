@@ -118,7 +118,7 @@ class OMGF_API_Download extends WP_REST_Controller
                 }
             }
 
-            $font->variants = $this->filter_unwanted_variants($font->variants, $font_request);
+            $font->variants = $this->filter_unwanted_variants($font->id, $font->variants, $font_request, $original_handle);
         }
 
         foreach ($fonts as &$font) {
@@ -176,6 +176,11 @@ class OMGF_API_Download extends WP_REST_Controller
                 if ($value == '400') {
                     // Sometimes the font is defined as 'regular', so we need to check both.
                     return !in_array('regular', $unloaded_fonts[$font_id]) && !in_array($value, $unloaded_fonts[$font_id]);
+                }
+
+                if ($value == '400italic') {
+                    // Sometimes the font is defined as 'italic', so we need to check both.
+                    return !in_array('italic', $unloaded_fonts[$font_id]) && !in_array($value, $unloaded_fonts[$font_id]);
                 }
 
                 return !in_array($value, $unloaded_fonts[$font_id]);
@@ -315,12 +320,12 @@ class OMGF_API_Download extends WP_REST_Controller
      */
     private function parse_requested_variants($request, $font)
     {
-        $variants_array = array_filter(explode(',', $request));
+        $requested_variants = array_filter(explode(',', $request));
 
         /**
          * This means by default all fonts are requested, so we need to fill up the queue, before unloading the unwanted variants.
          */
-        if (count($variants_array) == 0) {
+        if (count($requested_variants) == 0) {
             foreach ($font->variants as $variant) {
                 $requested_variants[] = $variant->id;
             }
@@ -330,16 +335,29 @@ class OMGF_API_Download extends WP_REST_Controller
     }
 
     /**
-     * @param $available_variants
-     * @param $wanted
-     *
-     * @return array
+     * 
+     * @param mixed $font_id 
+     * @param mixed $available 
+     * @param mixed $wanted 
+     * @param mixed $stylesheet_handle 
+     * @return mixed 
      */
-    private function filter_unwanted_variants($available, $wanted)
+    private function filter_unwanted_variants($font_id, $available, $wanted, $stylesheet_handle)
     {
         list($family, $variants) = explode(':', $wanted);
 
-        $variants = explode(',', $variants);
+        /**
+         * Build array and filter out empty elements.
+         */
+        $variants = array_filter(explode(',', $variants));
+
+        /**
+         * If $variants is empty and this is the first run, i.e. there are no unloaded fonts (yet)
+         * return all available variants.
+         */
+        if (empty($variants) && !isset(omgf::unloaded_fonts()[$stylesheet_handle][$font_id])) {
+            return $available;
+        }
 
         return array_filter(
             $available,
