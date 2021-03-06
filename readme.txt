@@ -129,6 +129,7 @@ No, not yet. But I will definitely try to make it compatible in the future!
 * [FIX] Fixed some notices and warnings.
 * Added compatibility for OMGF Pro's Early Access compatibility.
 * OMGF's admin JS is now only loaded on OMGF's settings screens.
+* [FIX] Fixed bug where Italic 400 fonts couldn't be unloaded.
 
 = 4.2.5 | January 27th, 2021 =
 * Improved compatibility with WordPress subdirectory installs.
