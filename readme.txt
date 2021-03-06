@@ -123,7 +123,7 @@ No, not yet. But I will definitely try to make it compatible in the future!
 
 == Changelog ==
 
-= 4.2.6 | March 5th, 2021 =
+= 4.2.6 | March 6th, 2021 =
 * Tested with WP 5.7
 * [FIX] All fonts would be loaded, when all fonts of one font-family were checked for unloading.
 * [FIX] Fixed some notices and warnings.
