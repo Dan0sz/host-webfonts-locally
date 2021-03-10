@@ -41,6 +41,13 @@ class OMGF_Frontend_Functions
 	 */
 	private function maybe_optimize_fonts()
 	{
+		/**
+		 * Allows us to quickly bypass fonts optimization.
+		 */
+		if (isset($_GET['nomgf'])) {
+			return false;
+		}
+
 		if (!OMGF_OPTIMIZE_EDIT_ROLES && current_user_can('edit_pages')) {
 			return false;
 		}
