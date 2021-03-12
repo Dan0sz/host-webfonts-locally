@@ -246,7 +246,7 @@ class OMGF_API_Download extends WP_REST_Controller
         $url = self::OMGF_GOOGLE_FONTS_API_URL . '/api/fonts/%s';
 
         list($family, $variants) = explode(':', $font_family);
-        $family                  = strtolower(str_replace(' ', '-', $family));
+        $family                  = strtolower(str_replace([' ', '+'], '-', $family));
 
         /**
          * Add fonts to the request's $_GET 'family' parameter. Then pass an array to 'omgf_alternate_fonts' 
