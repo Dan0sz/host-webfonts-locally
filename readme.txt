@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.7
-Stable tag: 4.2.7
+Stable tag: 4.2.8
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,9 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.2.8 | March 12th, 2021 =
+* [FIX] Strings with a + instead of a space would returned errors in the API.
 
 = 4.2.7 | March 10th, 2021 =
 * Addding ?nomgf=1 to any URL will now temporarily bypass fonts optimization, which allows for easier debugging.
