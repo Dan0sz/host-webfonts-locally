@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.7
-Stable tag: 4.2.8
+Stable tag: 4.3.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,11 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.3.0 | March 17th, 2021 =
+* [FEAT] Renamed fonts will now be captured using their new name (e.g. Mulish), but remain in the stylesheet with their old name (e.g. Muli) to prevent manual changes to the stylesheet after optimization.
+* [FEAT] Added Load WOFF2 Only option.
+* Small code optimizations in Download API's code.
 
 = 4.2.8 | March 12th, 2021 =
 * [FIX] Strings with a + instead of a space would returned errors in the API.
