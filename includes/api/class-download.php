@@ -83,16 +83,10 @@ class OMGF_API_Download extends WP_REST_Controller
             wp_die(__('Handle not provided.', $this->plugin_text_domain), 406);
         }
 
-        $this->path    = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
-        $font_families = explode('|', $params['family']);
-
-        if (defined('OMGF_PRO_FORCE_SUBSETS') && !empty(OMGF_PRO_FORCE_SUBSETS)) {
-            $query['subsets'] = implode(',', OMGF_PRO_FORCE_SUBSETS);
-        } else {
-            $query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
-        }
-
-        $fonts = [];
+        $this->path       = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
+        $font_families    = explode('|', $params['family']);
+        $query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
+        $fonts            = [];
 
         foreach ($font_families as $font_family) {
             $fonts[] = $this->grab_font_family($font_family, $query);
