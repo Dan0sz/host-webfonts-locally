@@ -129,8 +129,16 @@ class OMGF_API_Download extends WP_REST_Controller
 
             foreach ($font->variants as &$variant) {
                 $filename       = strtolower($font_id . '-' . $variant->fontStyle . '-' . $variant->fontWeight);
-                $variant->woff  = $this->download($variant->woff, $filename);
                 $variant->woff2 = $this->download($variant->woff2, $filename);
+
+                /**
+                 * If Load .woff2 only is enabled, there's no need to continue here.
+                 */
+                if (OMGF_WOFF2_ONLY) {
+                    continue;
+                }
+
+                $variant->woff  = $this->download($variant->woff, $filename);
                 $variant->eot   = $this->download($variant->eot, $filename);
                 $variant->ttf   = $this->download($variant->ttf, $filename);
             }
@@ -448,7 +456,13 @@ class OMGF_API_Download extends WP_REST_Controller
                 $stylesheet .= "    font-style: $font_style;\n";
                 $stylesheet .= "    font-weight: $font_weight;\n";
                 $stylesheet .= "    font-display: $font_display;\n";
-                $stylesheet .= "    src: url('" . $variant->eot . "');\n";
+
+                /**
+                 * If WOFF2 Only is disabled, add EOT to the stylesheet for IE compatibility.
+                 */
+                if (!OMGF_WOFF2_ONLY) {
+                    $stylesheet .= "    src: url('" . $variant->eot . "');\n";
+                }
 
                 $local_src = '';
 
@@ -461,8 +475,14 @@ class OMGF_API_Download extends WP_REST_Controller
                 $stylesheet .= "    src: $local_src\n";
 
                 $font_src_url = isset($variant->woff2) ? ['woff2' => $variant->woff2] : [];
-                $font_src_url = $font_src_url + (isset($variant->woff) ? ['woff' => $variant->woff] : []);
-                $font_src_url = $font_src_url + (isset($variant->ttf) ? ['ttf' => $variant->ttf] : []);
+
+                /**
+                 * If WOFF2 only is disabled, add WOFF and TTF to the source stack.
+                 */
+                if (!OMGF_WOFF2_ONLY) {
+                    $font_src_url = $font_src_url + (isset($variant->woff) ? ['woff' => $variant->woff] : []);
+                    $font_src_url = $font_src_url + (isset($variant->ttf) ? ['ttf' => $variant->ttf] : []);
+                }
 
                 $stylesheet .= $this->build_source_string($font_src_url);
                 $stylesheet .= "}\n";

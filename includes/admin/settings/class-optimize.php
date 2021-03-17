@@ -37,7 +37,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimization_mode'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_combine_requests'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_subsets'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_woff2_only'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_subsets'], 70);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -97,6 +98,21 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_FONT_DISPLAY_OPTIONS,
 			OMGF_DISPLAY_OPTION,
 			__('Select which font-display strategy to use. Defaults to Swap (recommended).', $this->plugin_text_domain)
+		);
+	}
+
+	/**
+	 * Display WOFF2 Only
+	 * 
+	 * @return void 
+	 */
+	public function do_woff2_only()
+	{
+		$this->do_checkbox(
+			__('Load <code>.woff2</code> Only', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_WOFF2_ONLY,
+			OMGF_WOFF2_ONLY,
+			__('Loading <code>.woff2</code> files only will result in a smaller stylesheet, but will make the stylesheet slightly less Cross Browser compatible. <code>.woff2</code> is supported by ~95% of browsers used by internet users globally.', $this->plugin_text_domain)
 		);
 	}
 
