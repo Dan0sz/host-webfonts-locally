@@ -20,6 +20,15 @@ class OMGF_API_Download extends WP_REST_Controller
 {
     const OMGF_GOOGLE_FONTS_API_URL = 'https://google-webfonts-helper.herokuapp.com';
 
+    /**
+     * If a font changed names recently, this array will map the old name (key) to the new name (value).
+     * 
+     * The key of an element should be dashed (no spaces) if necessary, e.g. open-sans.
+     */
+    const OMGF_RENAMED_GOOGLE_FONTS   = [
+        'muli' => 'mulish'
+    ];
+
     private $plugin_text_domain = 'host-webfonts-local';
 
     /** @var array */
@@ -116,9 +125,10 @@ class OMGF_API_Download extends WP_REST_Controller
         }
 
         foreach ($fonts as &$font) {
+            $font_id = $font->id;
+
             foreach ($font->variants as &$variant) {
-                $font_family    = trim($variant->fontFamily, '\'"');
-                $filename       = strtolower(str_replace(' ', '-', $font_family) . '-' . $variant->fontStyle . '-' . $variant->fontWeight);
+                $filename       = strtolower($font_id . '-' . $variant->fontStyle . '-' . $variant->fontWeight);
                 $variant->woff  = $this->download($variant->woff, $filename);
                 $variant->woff2 = $this->download($variant->woff2, $filename);
                 $variant->eot   = $this->download($variant->eot, $filename);
@@ -258,6 +268,13 @@ class OMGF_API_Download extends WP_REST_Controller
 
         if ($query) {
             $query_string = '?' . http_build_query($query);
+        }
+
+        /**
+         * If a font changed names recently, map their old name to the new name, before triggering the API request.
+         */
+        if (in_array($family, array_keys(self::OMGF_RENAMED_GOOGLE_FONTS))) {
+            $family = self::OMGF_RENAMED_GOOGLE_FONTS[$family];
         }
 
         $response = wp_remote_get(
@@ -414,8 +431,16 @@ class OMGF_API_Download extends WP_REST_Controller
         $font_display = OMGF_DISPLAY_OPTION;
 
         foreach ($fonts as $font) {
+            /**
+             * If Font Family's name was recently renamed, the old name should be used so no manual changes have to be made 
+             * to the stylesheet after processing.
+             */
+            $renamed_font_family = in_array($font->id, self::OMGF_RENAMED_GOOGLE_FONTS)
+                ? array_search($font->id, self::OMGF_RENAMED_GOOGLE_FONTS)
+                : '';
+
             foreach ($font->variants as $variant) {
-                $font_family = $variant->fontFamily;
+                $font_family = $renamed_font_family ? '\'' . ucfirst($renamed_font_family) . '\'' : $variant->fontFamily;
                 $font_style  = $variant->fontStyle;
                 $font_weight = $variant->fontWeight;
                 $stylesheet .= "@font-face {\n";
