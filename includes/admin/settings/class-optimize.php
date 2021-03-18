@@ -197,7 +197,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 								<?php
 								$aka = in_array($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS) ? array_search($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS) : '';
 								?>
-								<th><?= $font->family; ?> <span class="handle">(<em><?= $aka ? sprintf(__('previously known as <strong>%s</strong>', $this->plugin_text_domain), ucfirst($aka)) . ' -- ' : ''; ?><?= __('Stylesheet handle', $this->plugin_text_domain); ?>: <strong><?= $handle; ?></strong></em>)</span></th>
+								<th><?= $font->family; ?> <span class="handle">(<em><?= $aka ? sprintf(__('formerly known as <strong>%s</strong>', $this->plugin_text_domain), ucfirst($aka)) . ' -- ' : ''; ?><?= __('Stylesheet handle', $this->plugin_text_domain); ?>: <strong><?= $handle; ?></strong></em>)</span></th>
 								<?php foreach ($font->variants as $variant) : ?>
 									<tr>
 										<td></td>
