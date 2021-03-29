@@ -26,7 +26,8 @@ class OMGF_API_Download extends WP_REST_Controller
      * The key of an element should be dashed (no spaces) if necessary, e.g. open-sans.
      */
     const OMGF_RENAMED_GOOGLE_FONTS   = [
-        'muli' => 'mulish'
+        'ek-mukta' => 'mukta',
+        'muli'     => 'mulish'
     ];
 
     private $plugin_text_domain = 'host-webfonts-local';
