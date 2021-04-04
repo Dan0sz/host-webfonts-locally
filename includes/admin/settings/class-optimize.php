@@ -69,7 +69,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_OPTIMIZATION_MODE,
 			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE,
 			OMGF_OPTIMIZATION_MODE,
-			__('<strong>Manual</strong> processing mode is best suited for configurations, which use a fixed number of fonts across the entire site. <strong>Automatic</strong> processing mode is best suited for configurations using e.g. page builders, which load different fonts on certain pages.', $this->plugin_text_domain)
+			__('<strong>Manual</strong> processing mode is best suited for configurations, which use a fixed number of fonts across the entire site. When in manual mode, the generated stylesheet is forced throughout the entire site.<strong>Automatic</strong> processing mode is best suited for configurations using e.g. page builders, which load different fonts on certain pages.', $this->plugin_text_domain)
 		);
 	}
 
