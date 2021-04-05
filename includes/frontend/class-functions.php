@@ -73,9 +73,20 @@ class OMGF_Frontend_Functions
 
 		$optimized_fonts = apply_filters('omgf_frontend_optimized_fonts', omgf_init()::optimized_fonts());
 
+		/**
+		 * When OMGF Pro is enabled and set to Automatic mode, the merged handle is used to only load selected
+		 * preloads for the currently used stylesheet.
+		 */
+		$id         = get_queried_object_id();
+		$pro_handle = apply_filters('omgf_pro_merged_handle', '', $id);
+
 		$i = 0;
 
 		foreach ($optimized_fonts as $stylesheet_handle => $font_faces) {
+			if ($pro_handle && $stylesheet_handle != $pro_handle) {
+				continue;
+			}
+
 			foreach ($font_faces as $font_face) {
 				$preloads_stylesheet = $preloaded_fonts[$stylesheet_handle] ?? [];
 
