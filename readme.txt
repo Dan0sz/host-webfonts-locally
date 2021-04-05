@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.7
-Stable tag: 4.3.1
+Stable tag: 4.3.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,11 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.3.2 | April 5th, 2021 =
+* Fixed MIME type (`X-Content-Type-Options: nosniff`) related errors when using Download API.
+* When site is not using SSL, sslverify is disabled when contacting the Download API.
+* When OMGF Pro is running in Automatic Mode, only preloads for the currently used stylesheet are loaded.
 
 = 4.3.1 | March 29th, 2021 =
 * Added Mukta (FKA Ek Mukta) to list of renamed Google Fonts.
