@@ -60,12 +60,7 @@ class OMGF_Optimize
     {
         $url = esc_url_raw($_POST[OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL]);
 
-        $front_html = wp_remote_get(
-            $this->no_cache_optimize_url($url),
-            [
-                'timeout' => 30,
-            ]
-        );
+        $front_html = $this->remote_get($url);
 
         if (is_wp_error($front_html)) {
             $this->frontend_fetch_failed($front_html);
@@ -88,12 +83,7 @@ class OMGF_Optimize
         }
 
         foreach ($urls as $url) {
-            $download = wp_remote_get(
-                $this->no_cache_optimize_url($url),
-                [
-                    'timeout' => 30
-                ]
-            );
+            $download = $this->remote_get($url);
 
             if (is_wp_error($download)) {
                 $this->download_failed($download);
@@ -143,6 +133,34 @@ class OMGF_Optimize
             'omgf-auto-running',
             false
         );
+    }
+
+    /**
+     * Wrapper for wp_remote_get() with preset params.
+     * 
+     * @param mixed $url 
+     * @return array|WP_Error 
+     */
+    private function remote_get($url)
+    {
+        return wp_remote_get(
+            $this->no_cache_optimize_url($url),
+            [
+                'timeout' => 30,
+                'sslverify' => $this->verify_ssl($url)
+            ]
+        );
+    }
+
+    /**
+     * If URL is non-SSL, return false.
+     * 
+     * @param mixed $url 
+     * @return bool 
+     */
+    private function verify_ssl($url)
+    {
+        return strpos($url, 'https:') !== false;
     }
 
     /**
