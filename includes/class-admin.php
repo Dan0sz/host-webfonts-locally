@@ -52,6 +52,7 @@ class OMGF_Admin
 		$this->do_optimize_settings();
 		$this->do_detection_settings();
 		$this->do_advanced_settings();
+		$this->do_help();
 
 		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'decode_option'], 10, 3);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
@@ -69,16 +70,6 @@ class OMGF_Admin
 			wp_enqueue_script(self::OMGF_ADMIN_JS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/js/omgf-admin.js', ['jquery'], OMGF_STATIC_VERSION, true);
 			wp_enqueue_style(self::OMGF_ADMIN_CSS_HANDLE, plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/css/omgf-admin.css', [], OMGF_STATIC_VERSION);
 		}
-	}
-
-	/**
-	 * @param $name
-	 *
-	 * @return mixed
-	 */
-	protected function get_template($name)
-	{
-		return include OMGF_PLUGIN_DIR . 'templates/admin/block-' . $name . '.phtml';
 	}
 
 	/**
@@ -111,6 +102,16 @@ class OMGF_Admin
 	private function do_advanced_settings()
 	{
 		return new OMGF_Admin_Settings_Advanced();
+	}
+
+	/**
+	 * Add filters for Help section.
+	 * 
+	 * @return OMGF_Admin_Settings_Help 
+	 */
+	private function do_help()
+	{
+		return new OMGF_Admin_Settings_Help();
 	}
 
 	/**

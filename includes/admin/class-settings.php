@@ -24,6 +24,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_SETTINGS_FIELD_OPTIMIZE  = 'omgf-optimize-settings';
 	const OMGF_SETTINGS_FIELD_DETECTION = 'omgf-detection-settings';
 	const OMGF_SETTINGS_FIELD_ADVANCED  = 'omgf-advanced-settings';
+	const OMGF_SETTINGS_FIELD_HELP      = 'omgf-help';
 
 	/**
 	 * Option Values
@@ -141,15 +142,20 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			$this->submit_button_text = __('Save & Optimize', $this->plugin_text_domain);
 		}
 
+		// Footer Text
+		add_filter('admin_footer_text', [$this, 'footer_text_left']);
+
 		// Tabs
 		add_action('omgf_settings_tab', [$this, 'optimize_fonts_tab'], 0);
 		add_action('omgf_settings_tab', [$this, 'detection_settings_tab'], 1);
 		add_action('omgf_settings_tab', [$this, 'advanced_settings_tab'], 2);
+		add_action('omgf_settings_tab', [$this, 'help_tab'], 3);
 
 		// Content
 		add_action('omgf_settings_content', [$this, 'optimize_fonts_content'], 0);
 		add_action('omgf_settings_content', [$this, 'detection_settings_content'], 1);
 		add_action('omgf_settings_content', [$this, 'advanced_settings_content'], 2);
+		add_action('omgf_settings_content', [$this, 'help_content'], 3);
 	}
 
 	/**
@@ -186,18 +192,12 @@ class OMGF_Admin_Settings extends OMGF_Admin
 				<?= get_plugin_data(OMGF_PLUGIN_FILE)['Description']; ?>
 			</p>
 
-			<div class="settings-column left">
+			<div class="settings-column">
 				<h2 class="omgf-nav nav-tab-wrapper">
 					<?php do_action('omgf_settings_tab'); ?>
 				</h2>
 
 				<?php do_action('omgf_settings_content'); ?>
-			</div>
-
-			<div class="settings-column right">
-				<div id="omgf-welcome-panel" class="welcome-panel">
-					<?php $this->get_template('welcome'); ?>
-				</div>
 			</div>
 		</div>
 	<?php
@@ -214,6 +214,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			$this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE
 			&& $this->active_tab !== self::OMGF_SETTINGS_FIELD_DETECTION
 			&& $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED
+			&& $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP
 		) {
 			$this->active_tab = apply_filters('omgf_admin_settings_active_tab', self::OMGF_SETTINGS_FIELD_OPTIMIZE);
 		}
@@ -244,6 +245,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			case (self::OMGF_SETTINGS_FIELD_ADVANCED):
 				$needle = 'OMGF_ADV_SETTING_';
 				break;
+			case (self::OMGF_SETTINGS_FIELD_HELP):
+				$needle = 'OMGF_HELP_SETTING_';
 			default:
 				$needle = apply_filters('omgf_settings_needle', 'OMGF_OPTIMIZE_SETTING_');
 		}
@@ -276,6 +279,16 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	public function advanced_settings_tab()
 	{
 		$this->generate_tab(self::OMGF_SETTINGS_FIELD_ADVANCED, 'dashicons-admin-settings', __('Advanced Settings', $this->plugin_text_domain));
+	}
+
+	/**
+	 * Add Help Tab to Settings Screen.
+	 * 
+	 * @return void 
+	 */
+	public function help_tab()
+	{
+		$this->generate_tab(self::OMGF_SETTINGS_FIELD_HELP, 'dashicons-editor-help', __('Help', $this->plugin_text_domain));
 	}
 
 	/**
@@ -327,6 +340,16 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	}
 
 	/**
+	 * Render Help content
+	 * 
+	 * @return void 
+	 */
+	public function help_content()
+	{
+		$this->do_settings_content(self::OMGF_SETTINGS_FIELD_HELP);
+	}
+
+	/**
 	 * @param $field
 	 */
 	private function do_settings_content($field)
@@ -346,9 +369,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
 			do_action('omgf_after_settings_form_settings');
 
-			submit_button($this->submit_button_text, 'primary', 'submit', false);
 			?>
-			<a id="omgf-empty" class="omgf-empty button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
+			<?php if ($this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP) : ?>
+				<?php submit_button($this->submit_button_text, 'primary', 'submit', false); ?>
+				<a id="omgf-empty" class="omgf-empty button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
+			<?php endif; ?>
 		</form>
 <?php
 	}
@@ -365,5 +390,18 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		array_push($links, $settingsLink);
 
 		return $links;
+	}
+
+	/**
+	 * Changes footer text.
+	 * 
+	 * @return string 
+	 */
+	public function footer_text_left()
+	{
+		$logo = '<a target="_blank" title="Visit FFW Press" href="https://ffw.press/wordpress-plugins/"><img class="signature-image" alt="Visit FFW Press" src="https://ffw.press/wp-content/uploads/2021/01/logo-color-full@025x.png"></a>';
+		$text = sprintf(__('Coded with %s in The Netherlands.', $this->plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>');
+
+		return '<span id="footer-thankyou">' . $logo . ' ' . $text . '</span>';
 	}
 }

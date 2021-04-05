@@ -149,7 +149,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	{
 		$this->optimized_fonts = omgf_init()::optimized_fonts();
 		?>
-			<h3><?= $this->optimized_fonts ? 'Manage Optimized Google Fonts' : __('Are you ready to Optimize your Google Fonts?', $this->plugin_text_domain); ?></h3>
+			<span class="option-title"><?= __('Manage Optimized Fonts', $this->plugin_text_domain); ?></span>
 			<?php if ($this->optimized_fonts) : ?>
 				<?= $this->do_optimized_fonts_manager(); ?>
 			<?php else : ?>
@@ -229,12 +229,12 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
 						<?php if (OMGF_OPTIMIZATION_MODE == 'manual') : ?>
-							<em><?= sprintf(__("This list is populated with all Google Fonts captured from <strong>%s</strong>. Optimizations will be applied on every page using these fonts. If you want to optimize additional Google Fonts from other pages, temporarily switch to <strong>Automatic</strong> and visit the pages containing the stylesheets you'd like to optimize. This list will automatically be populated with the captured fonts. When you feel the list is complete, switch back to <strong>Manual</strong>.", $this->plugin_text_domain), OMGF_MANUAL_OPTIMIZE_URL); ?></em>
+							<em><?= sprintf(__("This list is populated with all Google Fonts captured and downloaded from <strong>%s</strong>. Optimizations will be applied on every page using these fonts. If you want to optimize additional Google Fonts from other pages, temporarily switch to <strong>Automatic</strong> and visit the pages containing the stylesheets you'd like to optimize. This list will automatically be populated with the captured fonts. When you feel the list is complete, switch back to <strong>Manual</strong>.", $this->plugin_text_domain), OMGF_MANUAL_OPTIMIZE_URL); ?></em>
 						<?php else : ?>
 							<?php
 							$no_cache_param = '?omgf_optimize=' . substr(md5(microtime()), rand(0, 26), 5);
 							?>
-							<em><?= sprintf(__("This list is automatically populated with Google Fonts throughout your entire site. Optimizations will be applied on every page using these fonts. <strong>Automatic</strong> mode might not work when a Full Page Cache plugin is activated. If this list is not being populated with Google Fonts, you could try to visit your frontend and append the following parameter to the URL: <strong>%s</strong>", $this->plugin_text_domain), $no_cache_param); ?></em>
+							<em><?= sprintf(__("This list is automatically populated with Google Fonts captured throughout your entire site. Optimizations will be applied on every page using these fonts. <strong>Automatic</strong> mode might not work when a Full Page Cache plugin is activated. If this list is not being populated with Google Fonts, you could try to visit your frontend and append the following parameter to the URL: <strong>%s</strong>", $this->plugin_text_domain), $no_cache_param); ?></em>
 						<?php endif; ?>
 					</p>
 				</div>
@@ -261,7 +261,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<span class="dashicons-before dashicons-yes"></span> <?= __('Pros:', $this->plugin_text_domain); ?>
 					</h3>
 					<ul>
-						<li><?= __('A small performance boost, because no calls to OMGF\'s Download API are made in the frontend.', $this->plugin_text_domain); ?></li>
+						<li><?= __('A small initial performance boost, because no calls to OMGF\'s Download API are made in the frontend.', $this->plugin_text_domain); ?></li>
+						<li><?= __('Force one stylesheet to be used throughout the site.', $this->plugin_text_domain); ?></li>
 					</ul>
 				</div>
 				<div class="omgf-optimize-fonts-cons">
@@ -269,7 +270,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<span class="dashicons-before dashicons-no"></span> <?= __('Cons', $this->plugin_text_domain); ?>
 					</h3>
 					<ul>
-						<li><?= __('High maintenance if you use a lot of different fonts on different pages.', $this->plugin_text_domain); ?></li>
+						<li><?= __('A font that is only used on a few pages might be lost if one of those URLs isn\'t scanned for fonts.', $this->plugin_text_domain); ?></li>
 					</ul>
 				</div>
 				<p>
@@ -312,7 +313,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<span class="dashicons-before dashicons-no"></span> <?= __('Cons', $this->plugin_text_domain); ?>
 					</h3>
 					<ul>
-						<li><?= __("Visitors might experience slow loading times, the 1st time they land on a page containing unoptimized Google Fonts. Every subsequent request to that page (and other pages using that same stylesheet) will be fast.", $this->plugin_text_domain); ?></li>
+						<li><?= __("The first time an unoptimized Google Fonts stylesheet is found, the API will be triggered in the frontend, which might cause the page to load slower than usual. All subsequent pageviews for that page (and all pages using that same stylesheet will load just as fast as when Manual mode is used.", $this->plugin_text_domain); ?></li>
 					</ul>
 				</div>
 				<div class="omgf-optimize-fonts-tooltip">

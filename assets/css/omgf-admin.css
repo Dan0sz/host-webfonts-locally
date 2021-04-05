@@ -44,20 +44,21 @@
   margin-right: 0.25em;
   line-height: 1.15em;
 }
-/**
- * Sections
- */
-.settings-column.left {
-  float: left;
-  width: 66%;
-}
-.settings-column.right {
-  float: right;
-  width: 21.75%;
-}
 .omgf-optimize-fonts-container {
   text-align: center;
   padding: 25px 50px;
+  max-width: 1024px;
+  margin: 20px auto 0 220px;
+  overflow: visible;
+  position: relative;
+}
+.omgf-optimize-fonts-container .option-title {
+  position: absolute;
+  left: -220px;
+  top: 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1d2327;
 }
 .omgf-optimize-fonts-container h3 {
   font-size: 1.3em;
@@ -121,30 +122,15 @@
 .omgf-optimize-fonts-container ul {
   text-align: justify;
 }
-/**
- * Welcome block
- */
-#omgf-welcome-panel {
-  padding: 20px 10px 5px;
-}
-#omgf-welcome-panel .welcome-panel-content {
-  margin-left: 0;
-  padding: 0 15px;
-}
-#omgf-welcome-panel h3 > .dashicons {
-  line-height: 1.4;
-}
-#omgf-welcome-panel .dashicons.ffwp-heart:before {
-  color: #FF4136;
-}
-#omgf-welcome-panel .welcome-icon:before {
-  padding: 0;
-}
-#omgf-welcome-panel .signature {
-  text-align: center;
-}
-#omgf-welcome-panel .signature-image {
-  max-width: 90%;
+@media only screen and (max-width: 782px) {
+  .omgf-optimize-fonts-container {
+    margin: 20px 0;
+  }
+  .omgf-optimize-fonts-container .option-title {
+    position: relative;
+    left: initial;
+    top: initial;
+  }
 }
 /**
  * Loader
@@ -165,16 +151,18 @@
   transform: translate(0, -70%);
 }
 /**
- * Responsiveness
+ * Welcome Block
  */
-@media only screen and (max-width: 1024px) {
-  .settings-column {
-    display: block;
-    float: none;
-  }
-  .settings-column.left,
-  .settings-column.right {
-    width: 100%;
-  }
+#footer-thankyou a {
+  vertical-align: -0.65em;
+}
+#footer-thankyou .dashicons.ffwp-heart {
+  vertical-align: middle;
+}
+#footer-thankyou .dashicons.ffwp-heart:before {
+  color: #FF4136;
+}
+#footer-thankyou .signature-image {
+  width: 96px;
 }
 /*# sourceMappingURL=./omgf-admin.css.map */

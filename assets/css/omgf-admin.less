@@ -52,24 +52,22 @@
   }
 }
 
-/**
- * Sections
- */
-.settings-column {
-  &.left {
-    float: left;
-    width: 66%;
-  }
-
-  &.right {
-    float: right;
-    width: 21.75%;
-  }
-}
-
 .omgf-optimize-fonts-container {
   text-align: center;
   padding: 25px 50px;
+  max-width: 1024px;
+  margin: 20px auto 0 220px; 
+  overflow: visible;
+  position: relative;
+
+  .option-title {
+    position: absolute;
+    left: -220px;
+    top: 0;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1d2327;
+  }
 
   h3 {
     font-size: 1.3em;
@@ -155,37 +153,15 @@
   }
 }
 
-/**
- * Welcome block
- */
-#omgf-welcome-panel {
-  padding: 20px 10px 5px;
+@media only screen and (max-width: 782px) {
+  .omgf-optimize-fonts-container {
+    margin: 20px 0;
 
-  .welcome-panel-content {
-    margin-left: 0;
-    padding: 0 15px;
-  }
-
-  h3 > .dashicons {
-    line-height: 1.4;
-  }
-
-  .dashicons {
-    &.ffwp-heart:before {
-      color: #FF4136;
+    .option-title {
+      position: relative;
+      left: initial;
+      top: initial;
     }
-  }
-
-  .welcome-icon:before {
-    padding: 0;
-  }
-
-  .signature {
-    text-align: center;
-  }
-
-  .signature-image {
-    max-width: 90%;
   }
 }
 
@@ -210,16 +186,24 @@
 }
 
 /**
- * Responsiveness
+ * Welcome Block
  */
-@media only screen and (max-width: 1024px) {
-  .settings-column {
-    display: block;
-    float: none;
+ #footer-thankyou {
+  a {
+    vertical-align: -.65em;
+  }
 
-    &.left,
-    &.right {
-      width: 100%;
+  .dashicons {
+    &.ffwp-heart {
+      vertical-align: middle;
     }
+    
+    &.ffwp-heart:before {
+      color: #FF4136;
+    }
+  }
+
+  .signature-image {
+    width: 96px;
   }
 }
