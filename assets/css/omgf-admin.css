@@ -80,12 +80,13 @@
   padding: 5px 0 0 10px;
   width: 40%;
 }
-.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody th .handle {
-  font-weight: 400;
-}
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td {
   padding-bottom: 5px;
   width: 100px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .family {
+  padding: 0 10px 0;
+  font-weight: 600;
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody tr:last-child td {
   padding-bottom: 10px;

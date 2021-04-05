@@ -192,12 +192,17 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						}
 						?>
 						<tbody class="stylesheet" id="<?= $handle; ?>">
+							<tr>
+								<th colspan="5"><?= sprintf(__('Stylesheet handle: %s', $this->plugin_text_domain), $handle); ?></th>
+							</tr>
 							<?php foreach ($fonts as $font) : ?>
 								<?php if (count((array) $font->variants) <= 0) continue; ?>
 								<?php
 								$aka = in_array($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS) ? array_search($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS) : '';
 								?>
-								<th><?= $font->family; ?> <span class="handle">(<em><?= $aka ? sprintf(__('formerly known as <strong>%s</strong>', $this->plugin_text_domain), ucfirst($aka)) . ' -- ' : ''; ?><?= __('Stylesheet handle', $this->plugin_text_domain); ?>: <strong><?= $handle; ?></strong></em>)</span></th>
+								<tr>
+									<td colspan="5"><span class="family"><em><?= $font->family; ?><?= $aka ? ' (' . sprintf(__('formerly known as <strong>%s</strong>', $this->plugin_text_domain) . ')', ucfirst($aka)) : ''; ?></em></span></td>
+								</tr>
 								<?php foreach ($font->variants as $variant) : ?>
 									<tr>
 										<td></td>
