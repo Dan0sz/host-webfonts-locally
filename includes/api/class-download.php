@@ -229,7 +229,12 @@ class OMGF_API_Download extends WP_REST_Controller
         }
 
         foreach ($font_families as $font_family) {
-            list($family, $weights) = explode(':', reset($font_family));
+            if (strpos($font_family, ':') !== false) {
+                list($family, $weights) = explode(':', reset($font_family));
+            } else {
+                $family  = $font_family;
+                $weights = '';
+            }
 
             /**
              * @return array [ '300', '400', '500', etc. ]
@@ -370,9 +375,9 @@ class OMGF_API_Download extends WP_REST_Controller
     private function filter_variants($font_id, $available, $wanted, $stylesheet_handle)
     {
         if (strpos($wanted, ':') !== false) {
-            list($family, $variants) = explode(':', $wanted);
+            // We don't need the first variable.
+            list(, $variants) = explode(':', $wanted);
         } else {
-            $family   = $wanted;
             $variants = '';
         }
 
