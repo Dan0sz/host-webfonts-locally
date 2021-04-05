@@ -108,7 +108,12 @@ class OMGF_API_Download extends WP_REST_Controller
         foreach ($fonts as $font_key => &$font) {
             $fonts_request = $this->build_fonts_request($font_families, $font);
 
-            list($family, $variants) = explode(':', $fonts_request);
+            if (strpos($fonts_request, ':') != false) {
+                list($family, $variants) = explode(':', $fonts_request);
+            } else {
+                $family   = $fonts_request;
+                $variants = '';
+            }
 
             $variants = $this->parse_requested_variants($variants, $font);
 
@@ -258,8 +263,8 @@ class OMGF_API_Download extends WP_REST_Controller
     {
         $url = self::OMGF_GOOGLE_FONTS_API_URL . '/api/fonts/%s';
 
-        list($family, $variants) = explode(':', $font_family);
-        $family                  = strtolower(str_replace([' ', '+'], '-', $family));
+        list($family) = explode(':', $font_family);
+        $family       = strtolower(str_replace([' ', '+'], '-', $family));
 
         /**
          * Add fonts to the request's $_GET 'family' parameter. Then pass an array to 'omgf_alternate_fonts' 
@@ -364,7 +369,12 @@ class OMGF_API_Download extends WP_REST_Controller
      */
     private function filter_variants($font_id, $available, $wanted, $stylesheet_handle)
     {
-        list($family, $variants) = explode(':', $wanted);
+        if (strpos($wanted, ':') !== false) {
+            list($family, $variants) = explode(':', $wanted);
+        } else {
+            $family   = $wanted;
+            $variants = '';
+        }
 
         /**
          * Build array and filter out empty elements.
