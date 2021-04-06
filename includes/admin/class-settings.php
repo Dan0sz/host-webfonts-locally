@@ -18,6 +18,8 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings extends OMGF_Admin
 {
+	const OMGF_ADMIN_PAGE = 'optimize-webfonts';
+
 	/**
 	 * Settings Fields
 	 */
@@ -134,7 +136,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		add_action('admin_menu', [$this, 'create_menu']);
 		add_filter('plugin_action_links_' . plugin_basename(OMGF_PLUGIN_FILE), [$this, 'create_settings_link']);
 
-		if ($this->page !== 'optimize-webfonts') {
+		if ($this->page !== self::OMGF_ADMIN_PAGE) {
 			return;
 		}
 
@@ -167,13 +169,11 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			'OMGF',
 			'Optimize Google Fonts',
 			'manage_options',
-			'optimize-webfonts',
+			self::OMGF_ADMIN_PAGE,
 			[$this, 'create_settings_page']
 		);
 
-		// @formatter:off
 		add_action('admin_init', [$this, 'register_settings']);
-		// @formatter:on
 	}
 
 	/**
