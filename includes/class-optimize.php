@@ -47,7 +47,7 @@ class OMGF_Optimize
     {
         if (
             OMGF_Admin_Settings::OMGF_ADMIN_PAGE != $this->settings_page
-            && !$this->settings_updated
+            || !$this->settings_updated
         ) {
             return;
         }
