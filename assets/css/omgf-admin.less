@@ -92,22 +92,28 @@
 
         th {
           padding: 5px 0 0 10px;
-          width: 40%;
+          width: 40%; 
         }
 
         td {
           padding-bottom: 5px;
           width: 100px;
 
+          .unload-mass-action {
+            font-size: .9em;
+          }
+
           .family {
-            padding: 0 10px 0;
+            padding: 0 10px 0; 
             font-weight: 600;
           }
         }
 
-        tr:last-child {
-          td {
-            padding-bottom: 10px;
+        tr {
+          &:last-child {
+            td {
+              padding-bottom: 10px;
+            }
           }
         }
       }

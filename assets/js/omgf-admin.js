@@ -29,6 +29,9 @@ jQuery(document).ready(function ($) {
             $('.omgf-optimize-fonts-manage .unload').on('change', this.generate_cache_key);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.toggle_preload);
             $('.omgf-optimize-fonts-manage .preload').on('change', this.toggle_unload);
+            $('.omgf-optimize-fonts-manage .unload-italics').on('click', this.unload_italics);
+            $('.omgf-optimize-fonts-manage .unload-all').on('click', this.unload_all);
+            $('.omgf-optimize-fonts-manage .uncheck-all').on('click', this.uncheck_all);
 
             // Buttons
             $('.omgf-empty').on('click', this.empty_cache_directory);
@@ -141,6 +144,54 @@ jQuery(document).ready(function ($) {
          */
         toggle_unload: function () {
             omgf_admin.toggle(this, 'unload');
+        },
+
+        /**
+         * Unload all italic styles for current font family.
+         */
+        unload_italics: function (e) {
+            e.preventDefault();
+
+            var id = $(this).parents('.font-family').data('id');
+            var unloads = $('.unload');
+
+            unloads.each(function (index, item) {
+                if (item.value.includes('italic') && item.dataset.fontId == id) {
+                    item.checked = true;
+                }
+            });
+        },
+
+        /**
+         * Unload all fonts for current font family.
+         */
+        unload_all: function (e) {
+            e.preventDefault();
+
+            var id = $(this).parents('.font-family').data('id');
+            var unloads = $('.unload');
+
+            unloads.each(function (index, item) {
+                if (item.dataset.fontId == id) {
+                    item.checked = true;
+                }
+            });
+        },
+
+        /**
+         * Uncheck all unload checkboxes for the current font family.
+         */
+        uncheck_all: function (e) {
+            e.preventDefault();
+
+            var id = $(this).parents('.font-family').data('id');
+            var unloads = $('.unload');
+
+            unloads.each(function (index, item) {
+                if (item.dataset.fontId == id) {
+                    item.checked = false;
+                }
+            });
         },
 
         /**
