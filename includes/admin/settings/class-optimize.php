@@ -201,14 +201,14 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 								$aka = in_array($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS) ? array_search($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS) : '';
 								?>
 								<tr class="font-family" data-id="<?= $font->id; ?>">
-									<td colspan="5"><span class="family"><em><?= $font->family; ?><?= $aka ? ' (' . sprintf(__('formerly known as <strong>%s</strong>', $this->plugin_text_domain) . ')', ucfirst($aka)) : ''; ?></em></span> <span class="unload-mass-action">(<a href="#" class="unload-italics"><?= __('Unload italics', $this->plugin_text_domain); ?></a> | <a href="#" class="unload-all"><?= __('Unload all', $this->plugin_text_domain); ?></a> | <a href="#" class="uncheck-all"><?= __('Uncheck all', $this->plugin_text_domain); ?></a>)</span></td>
+									<td colspan="5"><span class="family"><em><?= $font->family; ?><?= $aka ? ' (' . sprintf(__('formerly known as <strong>%s</strong>', $this->plugin_text_domain) . ')', ucfirst($aka)) : ''; ?></em></span> <span class="unload-mass-action">(<a href="#" class="unload-italics"><?= __('Unload italics', $this->plugin_text_domain); ?></a> | <a href="#" class="unload-all"><?= __('Unload all', $this->plugin_text_domain); ?></a> | <a href="#" class="load-all"><?= __('Load all', $this->plugin_text_domain); ?></a>)</span></td>
 								</tr>
 								<?php foreach ($font->variants as $variant) : ?>
 									<tr>
 										<td></td>
 										<?php
-										$preload = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS)[$handle][$font->id][$variant->id] ?? '';
-										$unload  = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS)[$handle][$font->id][$variant->id] ?? '';
+										$preload = OMGF::preloaded_fonts()[$handle][$font->id][$variant->id] ?? '';
+										$unload  = OMGF::unloaded_fonts()[$handle][$font->id][$variant->id] ?? '';
 										$class   = $handle . '-' . $font->id . '-' . $variant->id;
 										?>
 										<td><?= $variant->fontStyle; ?></td>
