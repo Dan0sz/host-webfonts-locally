@@ -156,8 +156,8 @@ jQuery(document).ready(function ($) {
             var unloads = $('.unload');
 
             unloads.each(function (index, item) {
-                if (item.value.includes('italic') && item.dataset.fontId == id) {
-                    item.checked = true;
+                if (item.value.includes('italic') && item.dataset.fontId == id && item.checked == false) {
+                    item.click();
                 }
             });
         },
@@ -172,8 +172,8 @@ jQuery(document).ready(function ($) {
             var unloads = $('.unload');
 
             unloads.each(function (index, item) {
-                if (item.dataset.fontId == id) {
-                    item.checked = true;
+                if (item.dataset.fontId == id && item.checked == false) {
+                    item.click();
                 }
             });
         },
@@ -188,8 +188,8 @@ jQuery(document).ready(function ($) {
             var unloads = $('.unload');
 
             unloads.each(function (index, item) {
-                if (item.dataset.fontId == id) {
-                    item.checked = false;
+                if (item.dataset.fontId == id && item.checked == true) {
+                    item.click();
                 }
             });
         },
