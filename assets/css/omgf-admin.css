@@ -71,6 +71,33 @@
   width: 100%;
   border-collapse: collapse;
 }
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip {
+  position: relative;
+  font-size: 16px;
+  line-height: 25px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip .tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  top: 100%;
+  left: 100%;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.75);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 0.8em;
+  color: #fff;
+  line-height: 1.5;
+  width: 250px;
+  padding: 10px;
+  margin-left: -125px;
+  border-radius: 3px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip .tooltip-text .illustration {
+  margin-top: 10px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip:hover .tooltip-text {
+  visibility: visible;
+}
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table thead th {
   width: 100px;
 }
@@ -87,30 +114,6 @@
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .unload-mass-action {
   font-size: 0.9em;
-}
-.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .unload-mass-action .tooltip {
-  position: relative;
-  font-size: 16px;
-  line-height: 25px;
-}
-.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .unload-mass-action .tooltip .tooltip-text {
-  visibility: hidden;
-  position: absolute;
-  top: 100%;
-  left: 100%;
-  z-index: 10000;
-  background-color: rgba(0, 0, 0, 0.75);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  font-size: 0.8em;
-  color: #fff;
-  line-height: 1.5;
-  width: 180px;
-  padding: 10px;
-  margin-left: -90px;
-  border-radius: 3px;
-}
-.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .unload-mass-action .tooltip:hover .tooltip-text {
-  visibility: visible;
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .family {
   padding: 0 10px 0;

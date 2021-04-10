@@ -81,6 +81,37 @@
       width: 100%;
       border-collapse: collapse;
 
+      .tooltip {
+        position: relative;
+        font-size: 16px;
+        line-height: 25px;
+
+        .tooltip-text {
+          visibility: hidden;
+          position: absolute;
+          top: 100%;
+          left: 100%;
+          z-index: 10000;
+          background-color: rgba(0, 0, 0, 0.75);
+          font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+          font-size: .8em;
+          color: #fff;
+          line-height: 1.5;
+          width: 250px;
+          padding: 10px;
+          margin-left: -125px;
+          border-radius: 3px;
+
+          .illustration {
+            margin-top: 10px;
+          }
+        }
+
+        &:hover .tooltip-text {
+          visibility: visible;
+        }
+      }
+
       thead {
         th {
           width: 100px;
@@ -101,33 +132,6 @@
 
           .unload-mass-action {
             font-size: .9em;
-
-            .tooltip {
-              position: relative;
-              font-size: 16px;
-              line-height: 25px;
-
-              .tooltip-text {
-                visibility: hidden;
-                position: absolute;
-                top: 100%;
-                left: 100%;
-                z-index: 10000;
-                background-color: rgba(0, 0, 0, 0.75);
-                font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-                font-size: .8em;
-                color: #fff;
-                line-height: 1.5;
-                width: 180px;
-                padding: 10px;
-                margin-left: -90px;
-                border-radius: 3px;
-              }
-
-              &:hover .tooltip-text {
-                visibility: visible;
-              }
-            }
           }
 
           .family {

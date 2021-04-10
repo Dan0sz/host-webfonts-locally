@@ -178,7 +178,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							<td>&nbsp;</td>
 							<th><?= __('Style', $this->plugin_text_domain); ?></th>
 							<th><?= __('Weight', $this->plugin_text_domain); ?></th>
-							<th><?= __('Preload', $this->plugin_text_domain); ?></th>
+							<th><?= __('Preload', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?= __('Preload font files (before everything else) so they will be available as soon as they are required for the rendering of the page. Only use preload for font files that are used above the fold.', $this->plugin_text_domain); ?></span><img width="230" class="illustration" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/above-the-fold.png'; ?>" /></span></span></th>
 							<th><?= __('Do not load', $this->plugin_text_domain); ?></th>
 						</tr>
 					</thead>
