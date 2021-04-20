@@ -399,7 +399,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function footer_text_left()
 	{
-		$logo = '<a target="_blank" title="Visit FFW Press" href="https://ffw.press/wordpress-plugins/"><img class="signature-image" alt="Visit FFW Press" src="https://ffw.press/wp-content/uploads/2021/01/logo-color-full@025x.png"></a>';
+		$logo_url = plugin_dir_url(OMGF_PLUGIN_BASENAME) . 'assets/images/ffw-press-logo.png';
+		$logo = "<a target='_blank' title='Visit FFW Press' href='https://ffw.press/wordpress-plugins/'><img class='signature-image' alt='Visit FFW Press' src='$logo_url'></a>";
 		$text = sprintf(__('Coded with %s in The Netherlands.', $this->plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>');
 
 		return '<span id="footer-thankyou">' . $logo . ' ' . $text . '</span>';
