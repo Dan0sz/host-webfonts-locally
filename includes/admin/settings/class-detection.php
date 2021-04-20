@@ -18,6 +18,8 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 {
+	const FFW_PRESS_OMGF_AF_URL = 'https://ffw.press/wordpress/omgf-additional-fonts/';
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -32,6 +34,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 		// Settings
 		add_filter('omgf_detection_settings_content', [$this, 'do_process_google_fonts'], 30);
 		add_filter('omgf_detection_settings_content', [$this, 'do_promo_advanced_processing'], 40);
+		add_filter('omgf_detection_settings_content', [$this, 'do_promo_safe_mode'], 50);
 		add_filter('omgf_detection_settings_content', [$this, 'do_promo_fonts_processing'], 60);
 		add_filter('omgf_detection_settings_content', [$this, 'do_promo_process_resource_hints'], 70);
 
@@ -49,7 +52,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			<?= __('These settings affect OMGF\'s automatic detection mechanism and how it treats the Google Fonts your theme and plugins use. If you want to use OMGF to remove the Google Fonts your WordPress configuration currently uses, set <strong>Google Fonts Processing</strong> to Remove.', $this->plugin_text_domain); ?>
 		</p>
 		<p>
-			<?= sprintf(__('To install additional Google Fonts, a (free) add-on is required, which can be downloaded <a href="%s">here</a> (coming soon).', $this->plugin_text_domain), '#'); ?>
+			<?= sprintf(__('To install additional Google Fonts, a (free) add-on is required, which can be downloaded <a href="%s" target="blank">here</a>.', $this->plugin_text_domain), self::FFW_PRESS_OMGF_AF_URL); ?>
 		</p>
 	<?php
 	}
@@ -123,6 +126,22 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			'omgf_pro_advanced_processing',
 			defined('OMGF_PRO_ADVANCED_PROCESSING') ? OMGF_PRO_ADVANCED_PROCESSING : false,
 			__('By default, OMGF scans for Google Fonts which are registered/enqueued using the <code>wp_enqueue_scripts()</code> action in WordPress\' header (<code>wp_head()</code>). Enabling this option will process all Google Fonts throughout the entire document. This setting can be fine-tuned using the settings below.', $this->plugin_text_domain) . ' ' . $this->promo,
+			true
+		);
+	}
+
+	/**
+	 * Add option for Safe Mode (Pro)
+	 * 
+	 * @return void 
+	 */
+	public function do_promo_safe_mode()
+	{
+		$this->do_checkbox(
+			__('Safe Mode (Pro)', $this->plugin_text_domain),
+			'omgf_pro_safe_mode',
+			defined('OMGF_PRO_SAFE_MODE') ? OMGF_PRO_SAFE_MODE : false,
+			__('Enable Safe Mode if Advanced Processing (Pro) breaks styling of certain pages.'),
 			true
 		);
 	}
