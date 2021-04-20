@@ -18,8 +18,6 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 {
-	const FFW_PRESS_OMGF_AF_URL = 'https://ffw.press/wordpress/omgf-additional-fonts/';
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -50,9 +48,6 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 ?>
 		<p>
 			<?= __('These settings affect OMGF\'s automatic detection mechanism and how it treats the Google Fonts your theme and plugins use. If you want to use OMGF to remove the Google Fonts your WordPress configuration currently uses, set <strong>Google Fonts Processing</strong> to Remove.', $this->plugin_text_domain); ?>
-		</p>
-		<p>
-			<?= sprintf(__('To install additional Google Fonts, a (free) add-on is required, which can be downloaded <a href="%s" target="blank">here</a>.', $this->plugin_text_domain), self::FFW_PRESS_OMGF_AF_URL); ?>
 		</p>
 	<?php
 	}

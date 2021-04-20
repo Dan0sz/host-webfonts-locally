@@ -18,6 +18,8 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 {
+	const FFW_PRESS_OMGF_AF_URL = 'https://ffw.press/wordpress/omgf-additional-fonts/';
+
 	/** @var array $optimized_fonts */
 	private $optimized_fonts;
 
@@ -58,6 +60,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 ?>
 		<p>
 			<?= __('These settings affect the fonts OMGF downloads and the stylesheet it generates. If you\'re simply looking to replace your Google Fonts for locally hosted copies, the default settings should suffice.', $this->plugin_text_domain); ?>
+		</p>
+		<p>
+			<?= sprintf(__('To install additional Google Fonts, a (free) add-on is required, which can be downloaded <a href="%s" target="blank">here</a>.', $this->plugin_text_domain), self::FFW_PRESS_OMGF_AF_URL); ?>
 		</p>
 	<?php
 	}
