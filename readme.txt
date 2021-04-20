@@ -123,6 +123,11 @@ No, not yet. But I will definitely try to make it compatible in the future!
 
 == Changelog ==
 
+= 4.4.1 | April 23rd, 2021 =
+* Fixed footer logo (load from local source instead of external URL).
+* Added tooltip for preload option.
+* Added link to OMGF Additional Fonts 
+
 = 4.4.0 | April 10th, 2021 =
 * Moved sidebar to its own 'Help' tab to clean up the interface.
 * Manage Optimize Fonts panel is now shown inline with other options (and has its own label).
