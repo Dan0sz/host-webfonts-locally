@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.7
-Stable tag: 4.4.0
+Stable tag: 4.4.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -126,12 +126,12 @@ No, not yet. But I will definitely try to make it compatible in the future!
 = 4.4.1 | April 23rd, 2021 =
 * Fixed footer logo (load from local source instead of external URL).
 * Added tooltip for preload option.
-* Added link to OMGF Additional Fonts 
+* Added link to OMGF Additional Fonts under Optimize tab.
 
 = 4.4.0 | April 10th, 2021 =
 * Moved sidebar to its own 'Help' tab to clean up the interface.
 * Manage Optimize Fonts panel is now shown inline with other options (and has its own label).
-* Each stylesheet's handle is now more prominently visible and the font family is better readable.
+* Each stylesheet's handle is now more prominently visible and the font family is more readable.
 * Added mass actions to each font family for easier management of each stylesheet.
 * Took a different approach to deal with SSL/Non-SSL for local Dev environments.
 * Performance improvements to manual detection mode (decreased risk of timeouts!)
