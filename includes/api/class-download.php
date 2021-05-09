@@ -99,11 +99,19 @@ class OMGF_API_Download extends WP_REST_Controller
         $fonts            = [];
 
         foreach ($font_families as $font_family) {
+            if (empty($font_family)) {
+                continue;
+            }
+
             $fonts[] = $this->grab_font_family($font_family, $query);
         }
 
         // Filter out empty elements, i.e. failed requests.
         $fonts = array_filter($fonts);
+
+        if (empty($fonts)) {
+            exit();
+        }
 
         foreach ($fonts as $font_key => &$font) {
             $fonts_request = $this->build_fonts_request($font_families, $font);
