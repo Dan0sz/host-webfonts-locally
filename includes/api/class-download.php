@@ -303,8 +303,9 @@ class OMGF_API_Download extends WP_REST_Controller
         $response_code = $response['response']['code'] ?? '';
 
         if ($response_code !== 200) {
-            $font_family = str_replace('-', ' ', $family);
-            $message = sprintf(__('<strong>%s</strong> could not be found. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), wp_remote_retrieve_body($response));
+            $font_family   = str_replace('-', ' ', $family);
+            $error_message = wp_remote_retrieve_body($response);
+            $message       = sprintf(__('<strong>%s</strong> could not be found. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $error_message);
 
             OMGF_Admin_Notice::set_notice(
                 $message,
@@ -313,9 +314,17 @@ class OMGF_API_Download extends WP_REST_Controller
                 'error'
             );
 
-            $message = sprintf(__('Please check if %s is still listed on <a href="%s" target="_blank">Google Fonts</a> as a free font. Otherwise try using the <strong>Force Subsets</strong> option (available in OMGF Pro) to force loading %s in the correct subset.', $this->plugin_text_domain), ucwords($font_family), 'https://fonts.google.com/?query=' . str_replace('-', '+', $family), ucwords($font_family));
+            if ($error_message == 'Not found') {
+                $message = sprintf(__('Please verify that %s is available for free at Google Fonts by doing <a href="%s" target="_blank">a manual search</a>. Maybe it\'s a Premium font?', $this->plugin_text_domain), ucwords($font_family), 'https://fonts.google.com/?query=' . str_replace('-', '+', $family));
 
-            OMGF_Admin_Notice::set_notice($message, 'omgf_api_info', false, 'info');
+                OMGF_Admin_Notice::set_notice($message, 'omgf_api_info_not_found', false, 'info');
+            }
+
+            if ($error_message == 'Internal Server Error') {
+                $message = sprintf(__('Try using the Force Subsets option (available in OMGF Pro) to force loading %s in a subset in which it\'s actually available. Use the Language filter <a href="%s" target="_blank">here</a> to verify which subsets are available for %s.', $this->plugin_text_domain), ucwords($font_family), 'https://fonts.google.com/?query=' . str_replace('-', '+', $family), ucwords($font_family));
+
+                OMGF_Admin_Notice::set_notice($message, 'omgf_api_info_internal_server_error', false, 'info');
+            }
 
             return [];
         }
