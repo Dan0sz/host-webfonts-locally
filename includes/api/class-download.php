@@ -303,7 +303,8 @@ class OMGF_API_Download extends WP_REST_Controller
         $response_code = $response['response']['code'] ?? '';
 
         if ($response_code !== 200) {
-            $message = sprintf(__('<strong>%s</strong> could not be found using the current configuration. The API returned the following error: %s', $this->plugin_text_domain), ucfirst($family), wp_remote_retrieve_body($response));
+            $font_family = str_replace('-', ' ', $family);
+            $message = sprintf(__('<strong>%s</strong> could not be found. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), wp_remote_retrieve_body($response));
 
             OMGF_Admin_Notice::set_notice(
                 $message,
@@ -311,6 +312,10 @@ class OMGF_API_Download extends WP_REST_Controller
                 false,
                 'error'
             );
+
+            $message = sprintf(__('Please check if %s is still listed on <a href="%s" target="_blank">Google Fonts</a> as a free font. Otherwise try using the <strong>Force Subsets</strong> option (available in OMGF Pro) to force loading %s in the correct subset.', $this->plugin_text_domain), ucwords($font_family), 'https://fonts.google.com/?query=' . str_replace('-', '+', $family), ucwords($font_family));
+
+            OMGF_Admin_Notice::set_notice($message, 'omgf_api_info', false, 'info');
 
             return [];
         }

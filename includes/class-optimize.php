@@ -25,6 +25,9 @@ class OMGF_Optimize
     private $settings_page = '';
 
     /** @var string */
+    private $settings_tab = '';
+
+    /** @var string */
     private $settings_updated = '';
 
     /**
@@ -33,6 +36,7 @@ class OMGF_Optimize
     public function __construct()
     {
         $this->settings_page    = $_GET['page'] ?? '';
+        $this->settings_tab     = $_GET['tab'] ?? OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE;
         $this->settings_updated = $_GET['settings-updated'] ?? '';
 
         $this->init();
@@ -47,8 +51,12 @@ class OMGF_Optimize
     {
         if (
             OMGF_Admin_Settings::OMGF_ADMIN_PAGE != $this->settings_page
-            || !$this->settings_updated
+            && OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE != $this->settings_tab
         ) {
+            return;
+        }
+
+        if (!$this->settings_updated) {
             return;
         }
 
