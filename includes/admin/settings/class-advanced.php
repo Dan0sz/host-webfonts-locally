@@ -106,7 +106,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			__('Use Relative URLs?', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL,
 			OMGF_RELATIVE_URL,
-			__('Use relative instead of absolute (full) URLs to generate the stylesheet.', $this->plugin_text_domain)
+			__('Use relative instead of absolute (full) URLs to generate the stylesheet. <em><strong>Warning!</strong> This will disable the CDN URL.</em>', $this->plugin_text_domain)
 		);
 	}
 
