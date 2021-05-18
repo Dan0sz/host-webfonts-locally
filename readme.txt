@@ -251,7 +251,7 @@ No, not yet. But I will definitely try to make it compatible in the future!
   * Some settings were moved to a new tab: Basic Settings.
   * Improved Welcome and Documentation tab.
   * Clarified option descriptions.
-* Removed 'Generate Stylesheet' tab, which'll be released in a separate (free) add-on plugin soon.
+* Removed 'Generate Stylesheet' tab, which'll be released in a separate add-on plugin soon.
 * Removed 'Use Web Font Loader?' option, because it causes Cumulative Layout Shift and will not work with OMGF's new Auto Replace feature.
 * Removed 'Remove Version Parameter' option, because it has become obsolete. The new detection method uses the initial script's version, if set.
 * Font Preloading is temporarily removed and will be re-introduced (in a different form, along with new features) in a later release.
