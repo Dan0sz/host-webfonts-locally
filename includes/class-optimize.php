@@ -49,10 +49,11 @@ class OMGF_Optimize
      */
     private function init()
     {
-        if (
-            OMGF_Admin_Settings::OMGF_ADMIN_PAGE != $this->settings_page
-            && OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE != $this->settings_tab
-        ) {
+        if (OMGF_Admin_Settings::OMGF_ADMIN_PAGE != $this->settings_page) {
+            return;
+        }
+
+        if (OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE != $this->settings_tab) {
             return;
         }
 
@@ -69,6 +70,22 @@ class OMGF_Optimize
         if ('auto' == OMGF_OPTIMIZATION_MODE) {
             $this->run_auto();
         }
+    }
+
+    /**
+     * If this site is non-SSL it makes no sense to verify its SSL certificates.
+     *
+     * Settings sslverify to false will set CURLOPT_SSL_VERIFYPEER and CURLOPT_SSL_VERIFYHOST
+     * to 0 further down the road.
+     *
+     * @param mixed $url
+     * @return bool
+     */
+    public function verify_ssl($args)
+    {
+        $args['sslverify'] = strpos(home_url(), 'https:') !== false;
+
+        return $args;
     }
 
     /**
@@ -176,22 +193,6 @@ class OMGF_Optimize
                 'timeout' => 30
             ]
         );
-    }
-
-    /**
-     * If this site is non-SSL it makes no sense to verify its SSL certificates.
-     *
-     * Settings sslverify to false will set CURLOPT_SSL_VERIFYPEER and CURLOPT_SSL_VERIFYHOST
-     * to 0 further down the road.
-     *
-     * @param mixed $url
-     * @return bool
-     */
-    public function verify_ssl($args)
-    {
-        $args['sslverify'] = strpos(home_url(), 'https:') !== false;
-
-        return $args;
     }
 
     /**
