@@ -96,13 +96,13 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 				'label'       => __('Process External Stylesheets', $this->plugin_text_domain),
 				'description' => __('Process stylesheets loaded from <code>fonts.googleapis.com</code> or <code>fonts.gstatic.com</code>.', $this->plugin_text_domain)
 			],
-			'omgf_pro_process_local_stylesheets' => [
-				'label'		  => __('Process Local Stylesheets', $this->plugin_text_domain),
-				'description' => __('Scan stylesheets loaded by your theme and plugins for Google Fonts and process them.', $this->plugin_text_domain)
+			'omgf_pro_process_imported_stylesheets' => [
+				'label'		  => __('Process Imported Stylesheets', $this->plugin_text_domain),
+				'description' => __('Scan local stylesheets for <code>@import</code> statements loading Google Fonts and process them.', $this->plugin_text_domain)
 			],
 			'omgf_pro_process_inline_styles'  => [
 				'label'       => __('Process Inline Styles', $this->plugin_text_domain),
-				'description' => __('Process all <code>@font-face</code> and <code>@import</code> rules loading Google Fonts.', $this->plugin_text_domain)
+				'description' => __('Process all inline <code>@font-face</code> and <code>@import</code> rules loading Google Fonts.', $this->plugin_text_domain)
 			],
 			'omgf_pro_process_webfont_loader' => [
 				'label'       => __('Process Webfont Loader', $this->plugin_text_domain),
