@@ -308,7 +308,11 @@ class OMGF_API_Download extends WP_REST_Controller
             sprintf($url, $family) . $query_string
         );
 
-        $response_code = $response['response']['code'] ?? '';
+        if (is_wp_error($response)) {
+            OMGF_Admin_Notice::set_notice(sprintf(__('An error occurred while trying to fetch fonts: %s', $this->plugin_text_domain), $response->get_error_message()), $response->get_error_code(), true, 'error', 500);
+        }
+
+        $response_code = wp_remote_retrieve_response_code($response);
 
         if ($response_code !== 200) {
             $font_family   = str_replace('-', ' ', $family);
@@ -337,9 +341,7 @@ class OMGF_API_Download extends WP_REST_Controller
             return [];
         }
 
-        if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) == 200) {
-            return json_decode(wp_remote_retrieve_body($response));
-        }
+        return json_decode(wp_remote_retrieve_body($response));
     }
 
     /**
