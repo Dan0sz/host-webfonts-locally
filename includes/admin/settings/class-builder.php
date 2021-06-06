@@ -183,13 +183,13 @@ class OMGF_Admin_Settings_Builder
 	 * @param string $description
 	 * @param bool   $update_required
 	 */
-	public function do_text($label, $name, $placeholder, $value, $description = '', $update_required = false, $visible = true)
+	public function do_text($label, $name, $placeholder, $value, $description = '', $disabled = false)
 	{
 	?>
-		<tr class="<?= str_replace('_', '-', $name); ?>-row" <?= $visible ? '' : 'style="display: none;"'; ?>>
-			<th scope="row"><?= apply_filters($name . '_setting_label', $label); ?> <?= $update_required ?: ''; ?></th>
+		<tr class="<?= str_replace('_', '-', $name); ?>-row">
+			<th scope="row"><?= apply_filters($name . '_setting_label', $label); ?></th>
 			<td>
-				<input class="<?= str_replace('_', '-', $name); ?>" type="text" name="<?= $name; ?>" placeholder="<?= $placeholder; ?>" value="<?= $value; ?>" />
+				<input <?= apply_filters($name . '_setting_disabled', $disabled) ? 'disabled' : ''; ?> class="<?= str_replace('_', '-', $name); ?>" type="text" name="<?= $name; ?>" placeholder="<?= $placeholder; ?>" value="<?= $value; ?>" />
 				<p class="description">
 					<?= apply_filters($name . 'setting_description', $description); ?>
 				</p>

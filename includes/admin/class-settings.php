@@ -99,6 +99,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
+	const OMGF_ADV_SETTING_EXCLUDED_IDS = 'omgf_excluded_ids';
 	const OMGF_ADV_SETTING_CACHE_PATH   = 'omgf_cache_dir';
 	const OMGF_ADV_SETTING_CACHE_URI    = 'omgf_cache_uri';
 	const OMGF_ADV_SETTING_CDN_URL      = 'omgf_cdn_url';

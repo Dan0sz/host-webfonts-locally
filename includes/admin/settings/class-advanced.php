@@ -33,6 +33,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_advanced_settings_content', [$this, 'do_before'], 20);
 
 		// Settings
+		add_filter('omgf_advanced_settings_content', [$this, 'do_exclude_posts'], 50);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 70);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cdn_url'], 80);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_uri'], 90);
@@ -56,16 +57,33 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	}
 
 	/**
+	 * Excluded Post/Page IDs (Pro)
+	 * 
+	 * @return void 
+	 */
+	public function do_exclude_posts()
+	{
+		$this->do_text(
+			__('Excluded Post/Page IDs (Pro)', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_ADV_SETTING_EXCLUDED_IDS,
+			__('e.g. 1,2,5,21,443'),
+			OMGF_EXCLUDED_IDS,
+			__('A comma separated list of post/page IDs where OMGF Pro shouldn\'t run.', $this->plugin_text_domain),
+			true
+		);
+	}
+
+	/**
 	 *
 	 */
 	public function do_cache_dir()
 	{
 		$this->do_text(
-			__('Save font files to...', $this->plugin_text_domain),
+			__('Fonts Cache Directory', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH,
 			__('e.g. /uploads/omgf', $this->plugin_text_domain),
 			OMGF_CACHE_PATH,
-			__("The folder (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/uploads/omgf</code>. After changing this setting, the folder will be created if it doesn't exist and existing files will be moved automatically.", $this->plugin_text_domain)
+			__("The directory (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/uploads/omgf</code>. After changing this setting, the directory will be created if it doesn't exist and existing files will be moved automatically.", $this->plugin_text_domain)
 		);
 	}
 
@@ -75,7 +93,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	public function do_cdn_url()
 	{
 		$this->do_text(
-			__('Serve fonts from CDN', $this->plugin_text_domain),
+			__('CDN URL', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL,
 			__('e.g. https://cdn.mydomain.com', $this->plugin_text_domain),
 			OMGF_CDN_URL,
@@ -89,11 +107,11 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	public function do_cache_uri()
 	{
 		$this->do_text(
-			__('Serve font files from...', $this->plugin_text_domain),
+			__('Alternative Relative Path', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI,
 			__('e.g. /app/uploads/omgf', $this->plugin_text_domain),
 			OMGF_CACHE_URI,
-			__('The relative path to serve font files from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the cache directory specified in <strong>Save font files to...</strong> will be used.', $this->plugin_text_domain)
+			__('An alternative elative path to serve font files from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the <strong>Fonts Cache Directory</strong> will be used.', $this->plugin_text_domain)
 		);
 	}
 
@@ -103,7 +121,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	public function do_relative_url()
 	{
 		$this->do_checkbox(
-			__('Use Relative URLs?', $this->plugin_text_domain),
+			__('Use Relative URLs', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL,
 			OMGF_RELATIVE_URL,
 			__('Use relative instead of absolute (full) URLs to generate the stylesheet. <em><strong>Warning!</strong> This will disable the CDN URL.</em>', $this->plugin_text_domain)
@@ -116,7 +134,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	public function do_uninstall()
 	{
 		$this->do_checkbox(
-			__('Remove settings and files at uninstall?', $this->plugin_text_domain),
+			__('Remove Settings/Files At Uninstall', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL,
 			OMGF_UNINSTALL,
 			__('Warning! This will remove all settings and cached fonts upon plugin deletion.', $this->plugin_text_domain)
