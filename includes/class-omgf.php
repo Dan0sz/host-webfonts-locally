@@ -34,9 +34,19 @@ class OMGF
 			$this->do_frontend();
 		}
 
-		add_action('rest_api_init', [$this, 'register_routes']);
 		add_action('admin_init', [$this, 'do_optimize']);
+		add_action('rest_api_init', [$this, 'register_routes']);
+
+		/**
+		 * Proper rewrite URLs
+		 */
 		add_filter('content_url', [$this, 'rewrite_url'], 10, 2);
+		add_filter('content_url', [$this, 'force_ssl'], 1000, 2);
+
+		/**
+		 * Render plugin update messages.
+		 */
+		add_action('in_plugin_update_message-' . OMGF_PLUGIN_BASENAME, [$this, 'render_update_notice'], 11, 2);
 	}
 
 	/**
@@ -191,6 +201,33 @@ class OMGF
 	}
 
 	/**
+	 * Render update notices if available.
+	 * 
+	 * @param mixed $plugin 
+	 * @param mixed $response 
+	 * @return void 
+	 */
+	public function render_update_notice($plugin, $response)
+	{
+		$current_version = $plugin['Version'];
+		$new_version     = $plugin['new_version'];
+
+		if (version_compare($current_version, $new_version, '<')) {
+			$response       = wp_remote_get('https://daan.dev/omgf-update-notices.json');
+			$update_notices = (array) json_decode(wp_remote_retrieve_body($response));
+
+			if (!isset($update_notices[$new_version])) {
+				return;
+			}
+
+			printf(
+				' <strong>' . __('This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.') . '</strong>',
+				$update_notices[$new_version]->url
+			);
+		}
+	}
+
+	/**
 	 * @param $url
 	 * @param $path
 	 *
@@ -209,17 +246,46 @@ class OMGF
 		 * If Relative URLs is enabled, overwrite URL with Path and continue execution.
 		 */
 		if (OMGF_RELATIVE_URL) {
-			$content_dir = str_replace(site_url(), '', content_url());
+			$content_dir = str_replace(home_url(), '', content_url());
 
 			$url = $content_dir . $path;
 		}
 
 		if (OMGF_CDN_URL) {
-			$url = str_replace(site_url(), OMGF_CDN_URL, $url);
+			$url = str_replace(home_url(), OMGF_CDN_URL, $url);
 		}
 
 		if (OMGF_CACHE_URI) {
 			$url = str_replace(OMGF_CACHE_PATH, OMGF_CACHE_URI, $url);
+		}
+
+		return $url;
+	}
+
+	/**
+	 * content_url() uses is_ssl() to detect whether SSL is used. This fails for servers behind
+	 * load balancers and/or reverse proxies. So, we double check with this filter.
+	 * 
+	 * @since v4.4.4
+	 * 
+	 * @param mixed $url 
+	 * @param mixed $path 
+	 * @return mixed 
+	 */
+	public function force_ssl($url, $path)
+	{
+		/**
+		 * Only rewrite URLs requested by this plugin. We don't want to interfere with other plugins.
+		 */
+		if (strpos($url, OMGF_CACHE_PATH) === false) {
+			return $url;
+		}
+
+		/**
+		 * If the user entered https:// in the Home URL option, it's safe to assume that SSL is used.
+		 */
+		if (!is_ssl() && strpos(home_url(), 'https://') !== false) {
+			$url = str_replace('http://', 'https://', $url);
 		}
 
 		return $url;
