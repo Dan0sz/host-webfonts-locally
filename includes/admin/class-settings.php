@@ -77,8 +77,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		'vietnamese'          => 'Vietnamese'
 	];
 	const OMGF_AMP_HANDLING_OPTIONS = [
-		'disable' => 'Disable (default)',
-		'insert'  => 'Enable'
+		'fallback' => 'Fallback (default)',
+		'disable'  => 'Disable'
 	];
 
 	/**

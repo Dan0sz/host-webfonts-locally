@@ -64,7 +64,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			'omgf_pro_amp_handling',
 			OMGF_Admin_Settings::OMGF_AMP_HANDLING_OPTIONS,
 			defined('OMGF_PRO_AMP_HANDLING') ? OMGF_PRO_AMP_HANDLING : '',
-			sprintf(__("Decide how OMGF Pro should behave on AMP pages. AMP pages have a limit of 75kb of CSS; when this limit is reached by your theme and/or other plugins, <strong>disable</strong> OMGF Pro on AMP pages, otherwise <strong>enable</strong> it.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO) . ' ' . $this->promo,
+			sprintf(__("Decide how OMGF Pro should behave on AMP pages. Only select <strong>enable</strong> if the custom CSS limit of 75kb is not already reached by your theme and/or other plugins and no other <code>amp-custom</code> tag is present on your pages.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO) . ' ' . $this->promo,
 			false,
 			true
 		);

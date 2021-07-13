@@ -67,6 +67,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	<?php
 	}
 
+	/**
+	 * 
+	 * @return void 
+	 */
 	public function do_optimization_mode()
 	{
 		$this->do_radio(
