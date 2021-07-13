@@ -63,13 +63,13 @@ class OMGF_Optimize
 
         add_filter('http_request_args', [$this, 'verify_ssl']);
 
-        if ('manual' == OMGF_OPTIMIZATION_MODE) {
-            $this->run_manual();
+        $optimization_mode = apply_filters('omgf_optimization_mode', OMGF_OPTIMIZATION_MODE);
+
+        if ('manual' == $optimization_mode) {
+            add_action('omgf_run_optimization', [$this, 'run_manual']);
         }
 
-        if ('auto' == OMGF_OPTIMIZATION_MODE) {
-            $this->run_auto();
-        }
+        do_action('omgf_run_optimization');
     }
 
     /**
@@ -165,18 +165,6 @@ class OMGF_Optimize
     private function no_urls_found()
     {
         add_settings_error('general', 'omgf_no_urls_found', sprintf(__('No (additional) Google Fonts found to optimize. If you believe this is an error, please refer to the %stroubleshooting%s section of the documentation for possible solutions.', $this->plugin_text_domain), '<a href="https://ffw.press/docs/omgf-pro/troubleshooting">', '</a>'), 'info');
-    }
-
-    /**
-     *
-     */
-    private function run_auto()
-    {
-        OMGF_Admin_Notice::set_notice(
-            __('OMGF Optimization is silently running in the background. After visiting a few pages, return here to manage the captured Google Fonts.', $this->plugin_text_domain),
-            'omgf-auto-running',
-            false
-        );
     }
 
     /**

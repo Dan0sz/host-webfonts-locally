@@ -33,7 +33,8 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_advanced_settings_content', [$this, 'do_before'], 20);
 
 		// Settings
-		add_filter('omgf_advanced_settings_content', [$this, 'do_exclude_posts'], 50);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_amp_handling'], 40);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_exclude_posts'], 50);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 70);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cdn_url'], 80);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_uri'], 90);
@@ -56,19 +57,32 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 <?php
 	}
 
+	public function do_promo_amp_handling()
+	{
+		$this->do_select(
+			__('AMP handling (Pro)', $this->plugin_text_domain),
+			'omgf_pro_amp_handling',
+			OMGF_Admin_Settings::OMGF_AMP_HANDLING_OPTIONS,
+			defined('OMGF_PRO_AMP_HANDLING') ? OMGF_PRO_AMP_HANDLING : '',
+			sprintf(__("Decide how OMGF Pro should behave on AMP pages. AMP pages have a limit of 75kb of CSS; when this limit is reached by your theme and/or other plugins, <strong>disable</strong> OMGF Pro on AMP pages, otherwise <strong>enable</strong> it.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO) . ' ' . $this->promo,
+			false,
+			true
+		);
+	}
+
 	/**
 	 * Excluded Post/Page IDs (Pro)
 	 * 
 	 * @return void 
 	 */
-	public function do_exclude_posts()
+	public function do_promo_exclude_posts()
 	{
 		$this->do_text(
 			__('Excluded Post/Page IDs (Pro)', $this->plugin_text_domain),
 			'omgf_pro_excluded_ids',
 			__('e.g. 1,2,5,21,443'),
 			defined('OMGF_PRO_EXCLUDED_IDS') ? OMGF_PRO_EXCLUDED_IDS : '',
-			__('A comma separated list of post/page IDs where OMGF Pro shouldn\'t run.', $this->plugin_text_domain),
+			__('A comma separated list of post/page IDs where OMGF Pro shouldn\'t run.', $this->plugin_text_domain) . ' ' . $this->promo,
 			true
 		);
 	}

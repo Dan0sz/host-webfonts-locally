@@ -140,13 +140,13 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			__('Safe Mode (Pro)', $this->plugin_text_domain),
 			'omgf_pro_safe_mode',
 			defined('OMGF_PRO_SAFE_MODE') ? OMGF_PRO_SAFE_MODE : false,
-			__('Enable Safe Mode if Advanced Processing (Pro) breaks styling of certain pages.'),
+			__('Enable Safe Mode if Advanced Processing (Pro) breaks styling of certain pages.', $this->plugin_text_domain) . ' ' . $this->promo,
 			true
 		);
 	}
 
 	/**
-	 *
+	 * Add promo options for Process Resource Hints
 	 */
 	public function do_promo_process_resource_hints()
 	{
