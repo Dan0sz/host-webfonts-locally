@@ -182,7 +182,7 @@ class OMGF_Frontend_Functions
 				continue;
 			}
 
-			if (OMGF_OPTIMIZATION_MODE == 'auto' || (OMGF_OPTIMIZATION_MODE == 'manual' && isset($_GET['omgf_optimize']))) {
+			if (OMGF_OPTIMIZATION_MODE == 'manual' && isset($_GET['omgf_optimize'])) {
 				$api_url  = str_replace(['http:', 'https:'], '', home_url('/wp-json/omgf/v1/download/'));
 				$protocol = '';
 

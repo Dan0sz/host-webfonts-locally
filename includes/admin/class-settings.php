@@ -33,7 +33,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	const OMGF_OPTIMIZATION_MODE       = [
 		'manual' => 'Manual (default)',
-		'auto'   => 'Automatic'
+		'auto'   => 'Automatic (Pro)'
 	];
 	const OMGF_FONT_PROCESSING_OPTIONS = [
 		'replace' => 'Replace (default)',
@@ -76,6 +76,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		'tibetan'             => 'Tibetan',
 		'vietnamese'          => 'Vietnamese'
 	];
+	const OMGF_AMP_HANDLING_OPTIONS = [
+		'fallback' => 'Fallback (default)',
+		'disable'  => 'Disable'
+	];
 
 	/**
 	 * Optimize Fonts
@@ -99,6 +103,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
+	const OMGF_ADV_SETTING_AMP_HANDLING = 'omgf_amp_handling';
 	const OMGF_ADV_SETTING_CACHE_PATH   = 'omgf_cache_dir';
 	const OMGF_ADV_SETTING_CACHE_URI    = 'omgf_cache_uri';
 	const OMGF_ADV_SETTING_CDN_URL      = 'omgf_cdn_url';
