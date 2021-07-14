@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @formatter:off
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress-plugins/host-google-fonts-locally
  * Description: Minimize DNS requests, leverage browser cache and speed up WordPress by saving Google Fonts to your server and removing external Google Fonts requests.
@@ -10,7 +9,6 @@
  * Author URI: https://ffw.press
  * License: GPL2v2 or later
  * Text Domain: host-webfonts-local
- * @formatter:on
  */
 
 defined('ABSPATH') || exit;
