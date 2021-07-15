@@ -110,9 +110,9 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			__('e.g. https://cdn.mydomain.com/alternate/relative-path', $this->plugin_text_domain),
 			defined('OMGF_PRO_SOURCE_URL') ? OMGF_PRO_SOURCE_URL : '',
 			sprintf(
-				__("Modify the <code>src</code> URL for each font file in the stylesheet. This can be anything, like an absolute URL (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>). Defaults to <code>%s</code>.", $this->plugin_text_domain),
-				str_replace(home_url(), 'https://your-cdn.com', content_url(OMGF_CACHE_PATH)),
-				content_url(OMGF_CACHE_PATH)
+				__("Modify the <code>src</code> URL for each font file in the stylesheet. This can be anything, like an absolute URL (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>). Make sure you include the full path to where OMGF's files are stored and/or served from. Defaults to <code>%s</code>.", $this->plugin_text_domain),
+				str_replace(home_url(), 'https://your-cdn.com', WP_CONTENT_URL . OMGF_CACHE_PATH),
+				WP_CONTENT_URL . OMGF_CACHE_PATH
 			) . ' ' . $this->promo,
 			true
 		);
