@@ -36,9 +36,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_amp_handling'], 40);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_exclude_posts'], 50);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 70);
-		add_filter('omgf_advanced_settings_content', [$this, 'do_cdn_url'], 80);
-		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_uri'], 90);
-		add_filter('omgf_advanced_settings_content', [$this, 'do_relative_url'], 100);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_fonts_source_url'], 80);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 110);
 
 		// Close
@@ -104,41 +102,19 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function do_cdn_url()
+	public function do_promo_fonts_source_url()
 	{
 		$this->do_text(
-			__('CDN URL', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL,
-			__('e.g. https://cdn.mydomain.com', $this->plugin_text_domain),
-			OMGF_CDN_URL,
-			__("If you're using a CDN, enter the URL here incl. protocol (e.g. <code>https://</code>.) Leave empty when using CloudFlare.", $this->plugin_text_domain)
-		);
-	}
-
-	/**
-	 *
-	 */
-	public function do_cache_uri()
-	{
-		$this->do_text(
-			__('Alternative Relative Path', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI,
-			__('e.g. /app/uploads/omgf', $this->plugin_text_domain),
-			OMGF_CACHE_URI,
-			__('An alternative elative path to serve font files from. Useful for when you\'re using security through obscurity plugins, such as WP Hide. If left empty, the <strong>Fonts Cache Directory</strong> will be used.', $this->plugin_text_domain)
-		);
-	}
-
-	/**
-	 *
-	 */
-	public function do_relative_url()
-	{
-		$this->do_checkbox(
-			__('Use Relative URLs', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL,
-			OMGF_RELATIVE_URL,
-			__('Use relative instead of absolute (full) URLs to generate the stylesheet. <em><strong>Warning!</strong> This will disable the CDN URL.</em>', $this->plugin_text_domain)
+			__('Fonts Source URL (Pro)', $this->plugin_text_domain),
+			'omgf_pro_source_url',
+			__('e.g. https://cdn.mydomain.com/alternate/relative-path', $this->plugin_text_domain),
+			defined('OMGF_PRO_SOURCE_URL') ? OMGF_PRO_SOURCE_URL : '',
+			sprintf(
+				__("Modify the <code>src</code> URL for each font file in the stylesheet. This can be anything, like an absolute URL (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>). Defaults to <code>%s</code>.", $this->plugin_text_domain),
+				str_replace(home_url(), 'https://your-cdn.com', content_url(OMGF_CACHE_PATH)),
+				content_url(OMGF_CACHE_PATH)
+			) . ' ' . $this->promo,
+			true
 		);
 	}
 

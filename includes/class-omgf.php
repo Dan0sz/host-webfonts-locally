@@ -36,11 +36,6 @@ class OMGF
 
 		add_action('admin_init', [$this, 'do_optimize']);
 		add_action('rest_api_init', [$this, 'register_routes']);
-
-		/**
-		 * Proper rewrite URLs
-		 */
-		add_filter('content_url', [$this, 'rewrite_url'], 10, 2);
 		add_filter('content_url', [$this, 'force_ssl'], 1000, 2);
 
 		/**
@@ -61,9 +56,6 @@ class OMGF
 		define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
 		define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
 		define('OMGF_CACHE_PATH', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH)) ?: '/uploads/omgf');
-		define('OMGF_CACHE_URI', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_URI)) ?: '');
-		define('OMGF_RELATIVE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_RELATIVE_URL)));
-		define('OMGF_CDN_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CDN_URL)));
 		define('OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH);
 		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
@@ -224,41 +216,6 @@ class OMGF
 				$update_notices[$new_version]->url
 			);
 		}
-	}
-
-	/**
-	 * @param $url
-	 * @param $path
-	 *
-	 * @return mixed
-	 */
-	public function rewrite_url($url, $path)
-	{
-		/**
-		 * Exit early if this isn't requested by OMGF.
-		 */
-		if (strpos($url, OMGF_CACHE_PATH) === false) {
-			return $url;
-		}
-
-		/**
-		 * If Relative URLs is enabled, overwrite URL with Path and continue execution.
-		 */
-		if (OMGF_RELATIVE_URL) {
-			$content_dir = str_replace(home_url(), '', content_url());
-
-			$url = $content_dir . $path;
-		}
-
-		if (OMGF_CDN_URL) {
-			$url = str_replace(home_url(), OMGF_CDN_URL, $url);
-		}
-
-		if (OMGF_CACHE_URI) {
-			$url = str_replace(OMGF_CACHE_PATH, OMGF_CACHE_URI, $url);
-		}
-
-		return $url;
 	}
 
 	/**
