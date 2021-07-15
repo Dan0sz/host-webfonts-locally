@@ -46,6 +46,12 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		'fallback' => 'Fallback',
 		'optional' => 'Optional'
 	];
+	const OMGF_FILE_TYPES_OPTIONS = [
+		'woff2' => 'Web Open Font Format 2.0 (WOFF2)',
+		'woff'  => 'Web Open Font Format (WOFF)',
+		'eot'   => 'Embedded OpenType (EOT)',
+		'ttf'   => 'TrueType Font (TTF)'
+	];
 	const OMGF_FORCE_SUBSETS_OPTIONS   = [
 		'arabic'              => 'Arabic',
 		'bengali'             => 'Bengali',
@@ -85,7 +91,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Optimize Fonts
 	 */
 	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
-	const OMGF_OPTIMIZE_SETTING_WOFF2_ONLY          = 'omgf_woff2_only';
 	const OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL = 'omgf_manual_optimize_url';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE   = 'omgf_optimization_mode';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS     = 'omgf_optimized_fonts';

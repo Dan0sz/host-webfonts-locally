@@ -39,7 +39,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimization_mode'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_combine_requests'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_woff2_only'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_include_file_types'], 60);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_subsets'], 70);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
@@ -115,13 +115,16 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 * 
 	 * @return void 
 	 */
-	public function do_woff2_only()
+	public function do_promo_include_file_types()
 	{
-		$this->do_checkbox(
-			__('<code>WOFF2</code> Only', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_WOFF2_ONLY,
-			OMGF_WOFF2_ONLY,
-			__('Loading <code>.woff2</code> files only will result in a smaller stylesheet, but will make the stylesheet slightly less Cross Browser compatible. <code>.woff2</code> is supported by ~95% of browsers used by internet users globally.', $this->plugin_text_domain)
+		$this->do_select(
+			__('Include File Types (Pro)', $this->plugin_text_domain),
+			'omgf_pro_file_types',
+			OMGF_Admin_Settings::OMGF_FILE_TYPES_OPTIONS,
+			defined('OMGF_PRO_FILE_TYPES') ? OMGF_PRO_FILE_TYPES : [],
+			__('Select which file types should be included in the stylesheet. Loading <strong>WOFF2</strong> files only will result in a smaller stylesheet, but will make the stylesheet slightly less Cross Browser compatible. Using <strong>WOFF</strong> and <strong>WOFF2</strong> together accounts for +98% of browsers. Add <strong>EOT</strong> for IE 6-10 and <strong>TTF</strong> for legacy Android/iOS browsers. <em>Use CTRL + click to select multiple values</em>.', $this->plugin_text_domain) . ' ' . $this->promo,
+			true,
+			true
 		);
 	}
 
@@ -135,7 +138,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			'omgf_pro_force_subsets',
 			OMGF_Admin_Settings::OMGF_FORCE_SUBSETS_OPTIONS,
 			defined('OMGF_PRO_FORCE_SUBSETS') ? OMGF_PRO_FORCE_SUBSETS : [],
-			__('If a theme or plugin loads subsets you don\'t need, use this option to force all Google Fonts to be loaded in the selected subsets. You can also use this option to force the loading of additional subsets, if a theme/plugin doesn\'t allow you to configure the loaded subsets.', $this->plugin_text_domain) . ' ' . $this->promo,
+			__('If a theme or plugin loads subsets you don\'t need, use this option to force all Google Fonts to be loaded in the selected subsets. You can also use this option to force the loading of additional subsets, if a theme/plugin doesn\'t allow you to configure the loaded subsets. <em>Use CTRL + click to select multiple values</em>.', $this->plugin_text_domain) . ' ' . $this->promo,
 			true,
 			true
 		);
