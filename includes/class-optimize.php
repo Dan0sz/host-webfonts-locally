@@ -66,10 +66,8 @@ class OMGF_Optimize
         $optimization_mode = apply_filters('omgf_optimization_mode', OMGF_OPTIMIZATION_MODE);
 
         if ('manual' == $optimization_mode) {
-            add_action('omgf_run_optimization', [$this, 'run_manual']);
+            $this->run_manual();
         }
-
-        do_action('omgf_run_optimization');
     }
 
     /**
