@@ -122,7 +122,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			'omgf_pro_file_types',
 			OMGF_Admin_Settings::OMGF_FILE_TYPES_OPTIONS,
 			defined('OMGF_PRO_FILE_TYPES') ? OMGF_PRO_FILE_TYPES : [],
-			__('Select which file types should be included in the stylesheet. Loading <strong>WOFF2</strong> files only will result in a smaller stylesheet, but will make the stylesheet slightly less Cross Browser compatible. Using <strong>WOFF</strong> and <strong>WOFF2</strong> together accounts for +98% of browsers. Add <strong>EOT</strong> for IE 6-10 and <strong>TTF</strong> for legacy Android/iOS browsers. <em>Use CTRL + click to select multiple values</em>.', $this->plugin_text_domain) . ' ' . $this->promo,
+			__('Select which file types should be included in the stylesheet. Loading <strong>WOFF2</strong> files only will result in a smaller stylesheet, but will make the stylesheet slightly less Cross Browser compatible. Using <strong>WOFF</strong> and <strong>WOFF2</strong> together (default) accounts for +98% of browsers. Add <strong>EOT</strong> for IE 6-10 and <strong>TTF</strong> and <strong>SVG</strong> for legacy Android/iOS browsers. <em>Use CTRL + click to select multiple values</em>.', $this->plugin_text_domain) . ' ' . $this->promo,
 			true,
 			true
 		);
