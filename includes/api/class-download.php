@@ -143,7 +143,7 @@ class OMGF_API_Download extends WP_REST_Controller
          * 
          * @since v4.5
          */
-        $file_types = apply_filters('omgf_download_file_types', ['woff2', 'woff', 'eot', 'ttf', 'svg']);
+        $file_types = apply_filters('omgf_include_file_types', ['woff2', 'woff', 'eot', 'ttf', 'svg']);
 
         foreach ($fonts as &$font) {
             $font_id = $font->id;
