@@ -153,7 +153,7 @@ class OMGF_API_Download extends WP_REST_Controller
 
                 foreach ($file_types as $file_type) {
                     if (isset($variant->$file_type)) {
-                        $variant->$file_type = $this->download($variant->$file_type, $filename);
+                        $variant->$file_type = $this->download($variant->$file_type, $filename, $file_type);
                     }
                 }
             }
@@ -438,12 +438,14 @@ class OMGF_API_Download extends WP_REST_Controller
     }
 
     /**
-     * @param $url
-     * @param $filename
-     *
-     * @return string
+     * @param mixed $url 
+     * @param mixed $filename 
+     * @param mixed $extension 
+     * @return string 
+     * @throws SodiumException 
+     * @throws TypeError 
      */
-    private function download($url, $filename)
+    private function download($url, $filename, $extension)
     {
         if (!function_exists('download_url')) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -451,8 +453,8 @@ class OMGF_API_Download extends WP_REST_Controller
 
         wp_mkdir_p($this->path);
 
-        $file     = $this->path . '/' . $filename . '.' . pathinfo($url, PATHINFO_EXTENSION);
-        $file_uri = str_replace(WP_CONTENT_DIR, '', $file);
+        $file      = $this->path . '/' . $filename . '.' . $extension;
+        $file_uri  = str_replace(WP_CONTENT_DIR, '', $file);
 
         if (file_exists($file)) {
             return content_url($file_uri);
