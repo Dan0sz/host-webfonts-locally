@@ -2,8 +2,8 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
-Tested up to: 5.7
-Stable tag: 4.4.4
+Tested up to: 5.8
+Stable tag: 4.5.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -123,9 +123,16 @@ No, not yet. But I will definitely try to make it compatible in the future!
 
 == Changelog ==
 
+= 4.5.0 | July 28th, 2021 =
+* [Removed] WOFF2 only option is superseded by Include File Types option, only available in OMGF Pro.
+* [Removed] CDN URL, Cache URI and Relative URL options are combined into Fonts Source URL option, only available in OMGF Pro.
+* [Removed] Optimization Mode > Automatic is only available in OMGF Pro.
+* Tested with WordPress 5.8
+* Several code optimizations.
+
 = 4.4.4 =
 * Fixed logo for Safari compatibility.
-* Added updaten notices for future important updates.
+* Added updater notices for future important updates.
 
 = 4.4.3 =
 * Fixed a few warnings/notices.
