@@ -41,14 +41,21 @@ Please keep in mind that, although I try to make the configuration of this plugi
 - Serve fonts from CDN,
 - Use OMGF with *security through obscurity* plugins.
 
-= Features in the PRO version =
+= Additional Features in OMGF Pro =
 Everything in the free version, plus:
 - Automatically remove/replace all Google Fonts throughout the entire document/page,
-  - Also supports WebFont Loader (webfont.js) and Early Access Google Fonts.
+  - Also supports WebFont Loader (webfont.js), Early Access Google Fonts and requests in stylesheets using @import (@font-face coming soon...).
+  - Automatically generate different stylesheets for pages with another configuration of Google Fonts.
 - Combine all Google Fonts (made by your theme and/or plugins) stylesheets into one file,
 - Deduplicate Google Fonts stylesheets,
+- Define file types to include in stylesheet (WOFF, WOFF2, EOT, TTF, SVG),
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
-- Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com.
+- Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com,
+- Modify `src` attribute for fonts in stylesheet using the Fonts Source URL option to fully integrate with your configuration,
+  - Use this to serve fonts and the stylesheets from your CDN, or
+  - To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide, etc.), or
+  - Anything you like!
+- Proper handling for AMP pages (Fallback to or remove Google Fonts).
 
 *[Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/) | [Documentation](https://ffw.press/docs/omgf-pro/) | [Tested Plugins & Themes](https://ffw.press/docs/omgf-pro/troubleshooting/compatibility/)*
 
