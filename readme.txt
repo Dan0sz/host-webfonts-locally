@@ -37,12 +37,12 @@ Please keep in mind that, although I try to make the configuration of this plugi
 - Manage Optimized Google Fonts,
   - Preload above the fold fonts,
   - Don't load certain fonts or entire stylesheets.
-- Leverage the font-display (swap) option,
-- Serve fonts from CDN,
-- Use OMGF with *security through obscurity* plugins.
+- Leverage the font-display (swap) option.
 
 = Additional Features in OMGF Pro =
+
 Everything in the free version, plus:
+
 - Automatically remove/replace all Google Fonts throughout the entire document/page,
   - Also supports WebFont Loader (webfont.js), Early Access Google Fonts and requests in stylesheets using @import (@font-face coming soon...).
   - Automatically generate different stylesheets for pages with another configuration of Google Fonts.
