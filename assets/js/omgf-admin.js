@@ -49,9 +49,9 @@ jQuery(document).ready(function ($) {
         loop_ticker_items: function () {
             omgf_admin.ticker_items.forEach(function (item, index) {
                 if (index == omgf_admin.ticker_index) {
-                    $(item).delay(110).fadeIn(500);
+                    $(item).fadeIn(500);
                 } else {
-                    $(item).fadeOut(100);
+                    $(item).hide(0);
                 }
             });
 
