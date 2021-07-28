@@ -204,7 +204,12 @@ class OMGF
 		$new_version     = $plugin['new_version'];
 
 		if (version_compare($current_version, $new_version, '<')) {
-			$response       = wp_remote_get('https://daan.dev/omgf-update-notices.json');
+			$response = wp_remote_get('https://daan.dev/omgf-update-notices.json');
+
+			if (is_wp_error($response)) {
+				return;
+			}
+
 			$update_notices = (array) json_decode(wp_remote_retrieve_body($response));
 
 			if (!isset($update_notices[$new_version])) {
