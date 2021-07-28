@@ -15,6 +15,8 @@
 
 jQuery(document).ready(function ($) {
     var omgf_admin = {
+        ticker_items: document.querySelectorAll('.ticker-item'),
+        ticker_index: 0,
         empty_cache_directory_xhr: false,
         optimize_xhr: false,
         cache_prefix: '-ul-',
@@ -36,6 +38,28 @@ jQuery(document).ready(function ($) {
             // Buttons
             $('.omgf-empty').on('click', this.empty_cache_directory);
             $('#omgf-optimize-settings-form').submit(this.show_loader_before_submit);
+
+            // Ticker
+            setInterval(this.loop_ticker_items, 4000);
+        },
+
+        /**
+         * 
+         */
+        loop_ticker_items: function () {
+            omgf_admin.ticker_items.forEach(function (item, index) {
+                if (index == omgf_admin.ticker_index) {
+                    $(item).delay(110).fadeIn(500);
+                } else {
+                    $(item).fadeOut(100);
+                }
+            });
+
+            omgf_admin.ticker_index++;
+
+            if (omgf_admin.ticker_index == omgf_admin.ticker_items.length) {
+                omgf_admin.ticker_index = 0;
+            }
         },
 
         /**

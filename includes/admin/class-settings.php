@@ -441,17 +441,17 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
 		if (!$xml) {
 			$response = wp_remote_get('https://daan.dev/tag/omgf/feed');
+
+			if (!is_wp_error($response)) {
+				$xml = wp_remote_retrieve_body($response);
+
+				// Refresh the feed once a day to prevent bashing of the API.
+				set_transient(self::OMGF_NEWS_REEL, $xml, DAY_IN_SECONDS);
+			}
 		}
 
-		if (!$response || is_wp_error($response)) {
-			return $text;
-		}
-
-		// Refresh the feed once a day and refresh if transient is expired.
 		if (!$xml) {
-			$xml = wp_remote_retrieve_body($response);
-
-			set_transient(self::OMGF_NEWS_REEL, $xml, DAY_IN_SECONDS);
+			return $text;
 		}
 
 		$xml = simplexml_load_string($xml);
@@ -460,12 +460,24 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			return $text;
 		}
 
-		$item = $xml->channel->item[0] ?? '';
+		$items = $xml->channel->item ?? [];
 
-		if (!$item) {
+		if (empty($items)) {
 			return $text;
 		}
 
-		return sprintf(__('Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on Daan.dev: <a target="_blank" href="%s"><em>%s</em></a>.', $this->plugin_text_domain), 'https://daan.dev/tag/omgf', $item->link, $item->title);
+		$text = sprintf(__('Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', $this->plugin_text_domain), 'https://daan.dev/tag/omgf') . ' ';
+		$text .= '<span id="omgf-ticker-wrap">';
+		$i    = 0;
+
+		foreach ($items as $item) {
+			$hide = $i > 0 ? 'style="display: none;"' : '';
+			$text .= "<span class='ticker-item' $hide>" . sprintf('<a target="_blank" href="%s"><em>%s</em></a>', $item->link, $item->title) . '</span>';
+			$i++;
+		}
+
+		$text .= "</span>";
+
+		return $text;
 	}
 }
