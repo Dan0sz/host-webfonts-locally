@@ -41,13 +41,16 @@ class OMGF_AJAX
 				OMGF::delete($entry);
 			}
 
-			/**
-			 * Empty related options.
-			 */
-			delete_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS);
-			delete_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS);
-			delete_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS);
-			delete_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS);
+			$clean_up_db = apply_filters('omgf_empty_cache_directory', [
+				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
+				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
+				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
+				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS
+			]);
+
+			foreach ($clean_up_db as $option) {
+				delete_option($option);
+			}
 
 			OMGF_Admin_Notice::set_notice(__('Cache directory successfully emptied.', $this->plugin_text_domain));
 		} catch (\Exception $e) {
@@ -59,5 +62,9 @@ class OMGF_AJAX
 				$e->getCode()
 			);
 		}
+	}
+
+	public function clean_up_db()
+	{
 	}
 }
