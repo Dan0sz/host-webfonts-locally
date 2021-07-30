@@ -35,20 +35,33 @@ class OMGF_AJAX
 	public function empty_directory()
 	{
 		try {
-			$entries = array_filter((array) glob(OMGF_FONTS_DIR . '/*'));
+			$section = $_POST['section'];
+			$entries = array_filter((array) glob(OMGF_FONTS_DIR . $section));
+
+			$instructions = apply_filters(
+				'omgf_clean_up_instructions',
+				[
+					'section' => $section,
+					'exclude' => [],
+					'queue'   => [
+						OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
+						OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
+						OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
+						OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS
+					]
+				]
+			);
 
 			foreach ($entries as $entry) {
+				if (in_array($entry, $instructions['exclude'])) {
+					continue;
+				}
+
 				OMGF::delete($entry);
 			}
 
-			$clean_up_db = apply_filters('omgf_empty_cache_directory', [
-				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
-				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
-				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
-				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS
-			]);
 
-			foreach ($clean_up_db as $option) {
+			foreach ($instructions['queue'] as $option) {
 				delete_option($option);
 			}
 

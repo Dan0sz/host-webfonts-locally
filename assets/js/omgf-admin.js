@@ -20,6 +20,7 @@ jQuery(document).ready(function ($) {
         empty_cache_directory_xhr: false,
         optimize_xhr: false,
         cache_prefix: '-ul-',
+        cache_section: $('.omgf-empty').data('cache-section'),
 
         /**
          * Initialize all on click events.
@@ -256,7 +257,8 @@ jQuery(document).ready(function ($) {
                 type: 'POST',
                 url: ajaxurl,
                 data: {
-                    action: 'omgf_ajax_empty_dir'
+                    action: 'omgf_ajax_empty_dir',
+                    section: omgf_admin.cache_section
                 },
                 beforeSend: function () {
                     omgf_admin.show_loader();
