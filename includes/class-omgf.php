@@ -171,6 +171,35 @@ class OMGF
 	}
 
 	/**
+	 * Download $url and save as $filename.$extension to $path.
+	 * 
+	 * @param mixed $url 
+	 * @param mixed $filename 
+	 * @param mixed $extension 
+	 * @param mixed $path 
+	 * 
+	 * @return string 
+	 */
+	public static function download($url, $filename, $extension, $path)
+	{
+		$download = new OMGF_Download($url, $filename, $extension, $path);
+
+		return $download->download();
+	}
+
+	/**
+	 * @param mixed $fonts 
+	 * 
+	 * @return string 
+	 */
+	public static function generate_stylesheet($fonts, $plugin = 'OMGF')
+	{
+		$generator = new OMGF_GenerateStylesheet($fonts, $plugin);
+
+		return $generator->generate();
+	}
+
+	/**
 	 * @return OMGF_Admin_Settings
 	 */
 	private function do_settings()
