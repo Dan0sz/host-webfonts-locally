@@ -76,8 +76,4 @@ class OMGF_AJAX
 			);
 		}
 	}
-
-	public function clean_up_db()
-	{
-	}
 }
