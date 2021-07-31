@@ -26,12 +26,11 @@ class OMGF
 		$this->define_constants();
 
 		if (is_admin()) {
-			$this->do_settings();
-			$this->add_ajax_hooks();
+			add_action('plugins_loaded', [$this, 'init_admin'], 50);
 		}
 
 		if (!is_admin()) {
-			$this->do_frontend();
+			add_action('plugins_loaded', [$this, 'init_frontend'], 50);
 		}
 
 		add_action('admin_init', [$this, 'do_optimize']);
@@ -60,6 +59,27 @@ class OMGF
 		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
 		define('OMGF_CACHE_KEYS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '')));
+	}
+
+	/**
+	 * Required in Admin.
+	 * 
+	 * @return void 
+	 */
+	public function init_admin()
+	{
+		$this->do_settings();
+		$this->add_ajax_hooks();
+	}
+
+	/**
+	 * Required in Frontend.
+	 * 
+	 * @return void 
+	 */
+	public function init_frontend()
+	{
+		$this->do_frontend();
 	}
 
 	/**
