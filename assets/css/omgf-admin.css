@@ -99,7 +99,7 @@
   visibility: visible;
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table thead th {
-  width: 100px;
+  width: 13%;
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody {
   border: 1px solid #ccd0d4;
@@ -110,7 +110,7 @@
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td {
   padding-bottom: 5px;
-  width: 100px;
+  width: 13%;
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .unload-mass-action {
   font-size: 0.9em;
