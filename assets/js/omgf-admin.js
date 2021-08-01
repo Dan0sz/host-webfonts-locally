@@ -123,7 +123,7 @@ jQuery(document).ready(function ($) {
             /**
              * If no or all boxes are checked, (re-)set cache key to default (without random string).
              */
-            if (checked === 0 || checked === total) {
+            if (this.nodeName !== 'SELECT' && (checked === 0 || checked === total)) {
                 cache_keys[cache_key_index] = current_handle;
 
                 no_cache_key = true;
