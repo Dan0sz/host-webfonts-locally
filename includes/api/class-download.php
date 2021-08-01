@@ -159,7 +159,7 @@ class OMGF_API_Download extends WP_REST_Controller
             }
         }
 
-        $stylesheet = OMGF::generate_stylesheet($fonts);
+        $stylesheet = OMGF::generate_stylesheet($fonts, $original_handle);
         $local_file = $this->path . '/' . $this->handle . '.css';
 
         file_put_contents($local_file, $stylesheet);
