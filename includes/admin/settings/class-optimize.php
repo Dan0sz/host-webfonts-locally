@@ -219,6 +219,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 									</td>
 									<td class="fallback-font-stack">
 										<select data-handle="<?= $handle; ?>" <?= apply_filters('omgf_pro_fallback_font_stack_setting_disabled', true) ? 'disabled' : ''; ?> name="omgf_pro_fallback_font_stack[<?= $handle; ?>][<?= $font->id; ?>]">
+											<option value=''><?= __('None (default)', $this->plugin_text_domain); ?></option>
 											<?php foreach (OMGF_Admin_Settings::OMGF_FALLBACK_FONT_STACKS_OPTIONS as $value => $label) : ?>
 												<option <?= defined('OMGF_PRO_FALLBACK_FONT_STACK') && isset(OMGF_PRO_FALLBACK_FONT_STACK[$handle][$font->id]) && OMGF_PRO_FALLBACK_FONT_STACK[$handle][$font->id] == $value ? 'selected' : ''; ?> value="<?= $value; ?>"><?= $label; ?></option>
 											<?php endforeach; ?>
