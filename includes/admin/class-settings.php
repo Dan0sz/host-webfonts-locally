@@ -157,6 +157,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Miscellaneous
 	 */
 	const OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS = 'options-general.php?page=optimize-webfonts';
+	const OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION      = 'plugin-install.php?tab=plugin-information&plugin=host-webfonts-local&TB_iframe=true&width=772&height=1015&section=changelog';
 	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://ffw.press/wordpress/omgf-pro/';
 
 	/** @var string $active_tab */
