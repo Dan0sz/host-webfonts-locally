@@ -15,19 +15,19 @@ OMGF automagically caches the Google Fonts used by your theme/plugins locally. N
 > How could using fonts via Google's service possibly run afoul of GDPR? The fact of the matter is that, when a font is requested by the user's browser, their IP is logged by Google and used for analytics.
 > — Lifehacker
 
-Leverage Browser Cache, Minimize DNS requests and serve your Google Fonts in a 100% GDPR compliant way with OMGF!
+Leverage Browser Cache, Minimize DNS requests, reduce Cumulative Layout Shift and serve your Google Fonts in a 100% GDPR compliant way with OMGF!
 
 OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automatically cache the fonts your theme and plugins use to **minimize DNS requests** and speed up your WordPress website.
 
 = How Does It Work? =
 
-After installing the plugin, choose your Optimization Mode: Manual (default) or Automatic.
+After installing the plugin, choose your Optimization Mode: Manual (default) or Automatic (only available in Pro).
 
-When *Manual* is selected, you can simply configure OMGF to work in the way you want, and run its detection mechanism on an address of your choosing.
+When *Manual* is selected, you can simply configure OMGF to work in the way you want, and run its detection mechanism on an address of your choosing. Tweak the stylesheet(s) as you wish and these will be used throughout your site.
 
-In *Automatic* Mode, OMGF runs silently in the background and captures any requests made to fonts.googleapis.com or fonts.gstatic.com. When a webpage is first loaded, it reroutes these requests to its own Download API and copies the fonts over to your server. Then it generates a stylesheet for your fonts including EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
+In *Automatic* (Pro) Mode, OMGF runs silently in the background and captures any requests made to fonts.googleapis.com or fonts.gstatic.com. When a webpage is first loaded, it reroutes these requests to its own Download API and copies the fonts over to your server. Then it generates a stylesheet for your fonts including SVG, EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
 
-When the fonts are downloaded and the stylesheet is generated, it rewrites every URL (pointing to fonts.googleapis.com or fonts.gstatic.com) to the locally hosted variant.
+When the fonts are downloaded and the stylesheet is generated, it rewrites every URL (pointing to fonts.googleapis.com or fonts.gstatic.com) to the locally hosted stylesheet and/or font.
 
 Please keep in mind that, although I try to make the configuration of this plugin as easy as possible, the concept of locally hosting a file or optimizing Google Fonts for *Pagespeed Insights* or *GT Metrix* has proven to be confusing for some people. If you're not sure of what your doing, please consult a SEO expert or Webdeveloper to help you with the configuration of this plugin or [hire me to do it for you](https://ffw.press/wordpress/omgf-expert-configuration/).
 
@@ -43,10 +43,11 @@ Please keep in mind that, although I try to make the configuration of this plugi
 
 Everything in the free version, plus:
 
+- Specify a Fallback Font Stack for every Google Font, to reduce Cumulative Layout Shift,
 - Automatically remove/replace all Google Fonts throughout the entire document/page,
   - Also supports WebFont Loader (webfont.js), Early Access Google Fonts and requests in stylesheets using @import (@font-face coming soon...).
   - Automatically generate different stylesheets for pages with another configuration of Google Fonts.
-- Combine all Google Fonts (made by your theme and/or plugins) stylesheets into one file,
+- Combine all Google Fonts stylesheets (requested by your theme and/or plugins) into one file,
 - Deduplicate Google Fonts stylesheets,
 - Define file types to include in stylesheet (WOFF, WOFF2, EOT, TTF, SVG),
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
@@ -62,30 +63,31 @@ Everything in the free version, plus:
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/host-webfonts-local` directory, or install the plugin through the WordPress plugins screen directly.
-1. Activate the plugin through the 'Plugins' screen in WordPress
-1. Use the Settings -> Optimize Google Fonts screen to configure the plugin
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Use the Settings -> Optimize Google Fonts screen to configure the plugin
 
-For a more comprehensive guide for configuration, click [here](https://daan.dev/wordpress/host-google-fonts-locally/).
+For a more comprehensive guide on configuring OMGF, check out the [user manual](https://ffw.press/docs/omgf-pro/user-manual/)
 
 == Frequently Asked Questions ==
 
 = Why do my fonts load slow the first time? =
 
-That's because OMGF's download API is capturing the request and immediately downloading all the fonts. After the fonts are downloaded and the stylesheet is generated, the stylesheet will load just as fast as any other file request.
+When OMGF runs in Automatic (Pro) mode, all requests to Google Fonts' API are rewritten and point to OMGF's on-premise download API. The API downloads the fonts and generates the stylesheet, which takes a while. When this is finished, the API will not be used anymore and the stylesheet and its fonts will be loaded directly, just like any other file.
 
 = I don't know what I'm doing! Can you help? =
 
-Of course :) But first calm down and read this [comprehensive guide on how to configure OMGF](https://daan.dev/wordpress/host-google-fonts-locally/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
+Of course :) But first calm down and read the [user manual](https://ffw.press/docs/omgf-pro/user-manual/). If you have any questions afterwards, visit the [Support Forum](https://wordpress.org/support/plugin/host-webfonts-local).
 
 = I have another file I want to host locally. Could you make a plugin? =
 
-Maintaining three plugins besides my daily 9-to-5 job is a handful, so no. If you're looking for a way to host analytics.js locally; please install [CAOS](https://wordpress.org/plugins/host-analyticsjs-local/). For anything else, please follow the steps in [this how-to](https://daan.dev/how-to/host-js-locally-crontab/).
+I already have my hands full with the plugins I maintain, so no. If you're looking for a way to host analytics.js locally; please install [CAOS](https://wordpress.org/plugins/host-analyticsjs-local/). For anything else, please follow the steps in [this how-to](https://daan.dev/how-to/host-js-locally-crontab/).
 
 = How come my font isn't available in OMGF? =
 
 This could be for several reasons:
 1. Have you checked if your font is available on Google Fonts?
-1. Is your font listed as an open source font, or is it a premium font? For obvious reasons, OMGF only has access to open source fonts.
+2. Is your font listed as an open source font, or is it a premium font? For obvious reasons, OMGF only has access to open source fonts.
+3. Your font's name was changed, if so, please send in a support ticket, so we can figure out the new name and I can add support for it to OMGF.
 
 = Does this plugin remove resource hints, e.g. preconnect, preload or dns-prefetch? =
 
@@ -93,7 +95,7 @@ No, to automatically remove resource hints pointing to fonts.googleapis.com or f
 
 = Can I serve the fonts from my CDN? =
 
-Yes, you can. Enter the url of your CDN and empty OMGF's cache directory.
+Yes, using the Fonts Source URL (Pro) feature, you can modify the source of the stylesheet and fonts to be served from your CDN. [Upgrade to OMGF Pro](https://ffw.press/wordpress/omgf-pro/).
 
 = I have Google Fonts Processing set to Replace/Remove but the fonts from fonts.gstatic.com|fonts.googleapis.com are still loaded. What's going on? =
 
@@ -124,20 +126,21 @@ No, not yet. But I will definitely try to make it compatible in the future!
 == Screenshots ==
 
 1. OMGF's Optimize Fonts screen. These settings affect the downloaded files and generated stylesheet(s).
-2. After you've saved your changes, the Manage Optimized Google Fonts overview will show a list of detected fonts and will allow you to tweak it as you wish.
+2. After you've saved your changes, the Manage Optimized Google Fonts overview will show a list of detected fonts and will allowing you to easily unload and preload fonts.
 3. Tweak how OMGF's detection mechanism will work and how it'll treat detected fonts.
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
 
 = 4.5.1 | August 2nd, 2021 =
+* Feature: Added post update notice to inform user of the plugin's database changes. The current notice is a test notice, so if you're reading this: Ha! Made you look! ;)
 * Feature: Added promo material for Fallback Font Stack (Pro) feature.
-* Enhancement: moved Stylesheet Generator to separate backend API.
-* Enhancement: moved Font Downloader to separate backend API.
+* Enhancement: moved Stylesheet Generator to its own backend API.
+* Enhancement: moved Font Downloader to its own backend API.
 * Enhancement: Updated description of Optimization Modes.
 * Fix: Fixed glitch in footer news ticker.
 * Enhancement: Added several filter and action hooks to allow a more seamless integration with OMGF Pro and OMGF Additional Fonts.
-* Overal code and performance optimizations.
+* Several code and performance optimizations.
 
 = 4.5.0 | July 28th, 2021 =
 * [Removed] WOFF2 only option is superseded by Include File Types option, only available in OMGF Pro.
