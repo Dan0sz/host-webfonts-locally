@@ -71,7 +71,7 @@ class OMGF_GenerateStylesheet
 				 * 
 				 * @since v4.5.1
 				 */
-				$font_family = apply_filters('omgf_stylesheet_font_family', $renamed_font_family ? ucfirst($renamed_font_family) : $variant->fontFamily);
+				$font_family = apply_filters('omgf_generate_stylesheet_font_family', $renamed_font_family ? ucfirst($renamed_font_family) : $variant->fontFamily);
 				$font_style  = $variant->fontStyle;
 				$font_weight = $variant->fontWeight;
 				$stylesheet .= "@font-face {\n";
