@@ -133,8 +133,8 @@ No, not yet. But I will definitely try to make it compatible in the future!
 == Changelog ==
 
 = 4.5.1 | August 2nd, 2021 =
-* Feature: Added post update notice to inform user of the plugin's database changes. The current notice is a test notice, so if you're reading this: Ha! Made you look! ;)
-* Feature: Added promo material for Fallback Font Stack (Pro) feature.
+* Enhancement: Added post update notice to inform user of the plugin's database changes. The current notice you were viewed was simply, because the current DB version wasn't logged yet on your system. So if you're reading this: Ha! Made you look! ;)
+* Pro Feature: Added promo material for Fallback Font Stack (Pro) feature.
 * Enhancement: moved Stylesheet Generator to its own backend API.
 * Enhancement: moved Font Downloader to its own backend API.
 * Enhancement: Updated description of Optimization Modes.
