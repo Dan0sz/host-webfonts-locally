@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
-class OMGF_GenerateStylesheet
+class OMGF_StylesheetGenerator
 {
 	/** @var $fonts */
 	private $fonts;
