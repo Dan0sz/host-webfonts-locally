@@ -252,7 +252,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
 						<?php if (OMGF_OPTIMIZATION_MODE == 'manual') : ?>
-							<em><?= sprintf(__("This list is populated with all Google Fonts captured and downloaded from <strong>%s</strong>. Optimizations will be applied on every page using these fonts. If you want to optimize additional Google Fonts from other pages, temporarily switch to <strong>Automatic</strong> and visit the pages containing the stylesheets you'd like to optimize. This list will automatically be populated with the captured fonts. When you feel the list is complete, switch back to <strong>Manual</strong>.", $this->plugin_text_domain), OMGF_MANUAL_OPTIMIZE_URL); ?></em>
+							<em><?= sprintf(__("This list is populated with all Google Fonts captured and downloaded from <strong>%s</strong>. Optimizations will be applied on every page using these fonts. If you want to optimize additional Google Fonts from other pages, switch to <strong>Automatic (Pro)</strong> and visit the pages containing the stylesheets you'd like to optimize. This list will automatically be populated with the captured fonts.", $this->plugin_text_domain), OMGF_MANUAL_OPTIMIZE_URL); ?></em>
 						<?php else : ?>
 							<?php
 							$no_cache_param = '?omgf_optimize=' . substr(md5(microtime()), rand(0, 26), 5);
