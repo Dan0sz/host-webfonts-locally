@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.8
-Stable tag: 4.5.0
+Stable tag: 4.5.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -129,6 +129,15 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.5.1 | August 2nd, 2021 =
+* Feature: Added promo material for Fallback Font Stack (Pro) feature.
+* Enhancement: moved Stylesheet Generator to separate backend API.
+* Enhancement: moved Font Downloader to separate backend API.
+* Enhancement: Updated description of Optimization Modes.
+* Fix: Fixed glitch in footer news ticker.
+* Enhancement: Added several filter and action hooks to allow a more seamless integration with OMGF Pro and OMGF Additional Fonts.
+* Overal code and performance optimizations.
 
 = 4.5.0 | July 28th, 2021 =
 * [Removed] WOFF2 only option is superseded by Include File Types option, only available in OMGF Pro.
