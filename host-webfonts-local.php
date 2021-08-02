@@ -20,6 +20,7 @@ define('OMGF_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OMGF_PLUGIN_FILE', __FILE__);
 define('OMGF_PLUGIN_BASENAME', plugin_basename(OMGF_PLUGIN_FILE));
 define('OMGF_STATIC_VERSION', '4.5.1');
+define('OMGF_DB_VERSION', '4.5.1');
 
 /**
  * Takes care of loading classes on demand.

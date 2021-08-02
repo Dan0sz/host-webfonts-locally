@@ -49,6 +49,7 @@ class OMGF
 	public function define_constants()
 	{
 		define('OMGF_SITE_URL', 'https://daan.dev');
+		define('OMGF_CURRENT_DB_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION)));
 		define('OMGF_OPTIMIZATION_MODE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE, 'manual')));
 		define('OMGF_MANUAL_OPTIMIZE_URL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL, site_url())));
 		define('OMGF_FONT_PROCESSING', esc_attr(get_option(OMGF_Admin_Settings::OMGF_DETECTION_SETTING_FONT_PROCESSING, 'replace')));

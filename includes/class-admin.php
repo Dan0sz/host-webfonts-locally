@@ -14,6 +14,8 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
+use function PHPSTORM_META\map;
+
 defined('ABSPATH') || exit;
 
 class OMGF_Admin
@@ -51,6 +53,7 @@ class OMGF_Admin
 		$this->do_detection_settings();
 		$this->do_advanced_settings();
 		$this->do_help();
+		$this->maybe_do_after_update_notice();
 
 		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'decode_option'], 10, 3);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
@@ -110,6 +113,26 @@ class OMGF_Admin
 	private function do_help()
 	{
 		return new OMGF_Admin_Settings_Help();
+	}
+
+	/**
+	 * Checks if an update notice should be displayed after updating.
+	 */
+	private function maybe_do_after_update_notice()
+	{
+		if (version_compare(OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<')) {
+			OMGF_Admin_Notice::set_notice(
+				sprintf(
+					__('Thank you for updating OMGF to v%s! This version contains database changes. <a href="%s">Verify your settings</a> and make sure everything is as you left it!', $this->plugin_text_domain),
+					OMGF_DB_VERSION,
+					admin_url(OMGF_Admin_Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS)
+				),
+				'omgf-post-update',
+				false
+			);
+
+			update_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION);
+		}
 	}
 
 	/**
