@@ -415,7 +415,7 @@ class OMGF_API_Download extends WP_REST_Controller
          * If $variants is empty and this is the first run, i.e. there are no unloaded fonts (yet)
          * return all available variants.
          */
-        if (empty($variants) && !isset(omgf::unloaded_fonts()[$stylesheet_handle][$font_id])) {
+        if (empty($variants) && !isset(OMGF::unloaded_fonts()[$stylesheet_handle][$font_id])) {
             return $available;
         }
 
