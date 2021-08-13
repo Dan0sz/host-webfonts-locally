@@ -19,7 +19,7 @@ jQuery(document).ready(function ($) {
         ticker_index: 0,
         empty_cache_directory_xhr: false,
         optimize_xhr: false,
-        cache_prefix: '-ul-',
+        cache_prefix: '-mod-',
         cache_section: $('.omgf-empty').data('cache-section'),
 
         /**
@@ -139,9 +139,8 @@ jQuery(document).ready(function ($) {
              * Generate a unique cache key if some of this stylesheet's fonts are unloaded.
              */
             if (cache_key_index !== -1) {
-                var current_cache_key = cache_keys[cache_key_index];
-
-                var cache_key = omgf_admin.cache_prefix + Math.random().toString(36).substring(2, 7);
+                var current_cache_key = cache_keys[cache_key_index],
+                    cache_key = omgf_admin.cache_prefix + Math.random().toString(36).substring(2, 7);
 
                 if (current_cache_key.indexOf(omgf_admin.cache_prefix) !== -1) {
                     var parts = current_cache_key.split(omgf_admin.cache_prefix),
@@ -282,12 +281,4 @@ jQuery(document).ready(function ($) {
     };
 
     omgf_admin.init();
-
-    $('#omgf_relative_url').click(function () {
-        if (this.checked === true) {
-            $('#omgf_cdn_url').prop('disabled', true);
-        } else {
-            $('#omgf_cdn_url').prop('disabled', false);
-        }
-    });
 });
