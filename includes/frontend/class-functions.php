@@ -77,8 +77,7 @@ class OMGF_Frontend_Functions
 		 * When OMGF Pro is enabled and set to Automatic mode, the merged handle is used to only load selected
 		 * preloads for the currently used stylesheet.
 		 */
-		$id         = get_queried_object_id();
-		$pro_handle = apply_filters('omgf_pro_merged_handle', '', $id);
+		$pro_handle = apply_filters('omgf_pro_merged_handle', '');
 
 		$i = 0;
 
