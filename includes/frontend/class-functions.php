@@ -65,13 +65,13 @@ class OMGF_Frontend_Functions
 	 */
 	public function add_preloads()
 	{
-		$preloaded_fonts = apply_filters('omgf_frontend_preloaded_fonts', omgf_init()::preloaded_fonts());
+		$preloaded_fonts = apply_filters('omgf_frontend_preloaded_fonts', OMGF::preloaded_fonts());
 
 		if (!$preloaded_fonts) {
 			return;
 		}
 
-		$optimized_fonts = apply_filters('omgf_frontend_optimized_fonts', omgf_init()::optimized_fonts());
+		$optimized_fonts = apply_filters('omgf_frontend_optimized_fonts', OMGF::optimized_fonts());
 
 		/**
 		 * When OMGF Pro is enabled and set to Automatic mode, the merged handle is used to only load selected

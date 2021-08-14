@@ -117,25 +117,25 @@ class OMGF_API_Download extends WP_REST_Controller
             $fonts_request = $this->build_fonts_request($font_families, $font);
 
             if (strpos($fonts_request, ':') != false) {
-                list($family, $variants) = explode(':', $fonts_request);
+                list($family, $requested_variants) = explode(':', $fonts_request);
             } else {
                 $family   = $fonts_request;
-                $variants = '';
+                $requested_variants = '';
             }
 
-            $variants = $this->parse_requested_variants($variants, $font);
+            $requested_variants = $this->parse_requested_variants($requested_variants, $font);
 
             if ($unloaded_fonts = omgf_init()::unloaded_fonts()) {
                 $font_id = $font->id;
 
-                // Now we're sure we got 'em all. We can safely unload those we don't want.
+                // Now we're sure we got 'em all. We can safely dequeue those we don't want.
                 if (isset($unloaded_fonts[$original_handle][$font_id])) {
-                    $variants      = $this->dequeue_unloaded_variants($variants, $unloaded_fonts[$original_handle], $font->id);
-                    $fonts_request = $family . ':' . implode(',', $variants);
+                    $requested_variants = $this->dequeue_unloaded_variants($requested_variants, $unloaded_fonts[$original_handle], $font->id);
+                    $fonts_request      = $family . ':' . implode(',', $requested_variants);
                 }
             }
 
-            $font->variants = $this->filter_variants($font->id, $font->variants, $fonts_request, $original_handle);
+            $font->variants = $this->process_unload_queue($font->id, $font->variants, $fonts_request, $original_handle);
         }
 
         /**
@@ -164,18 +164,18 @@ class OMGF_API_Download extends WP_REST_Controller
 
         file_put_contents($local_file, $stylesheet);
 
-        $current_font    = [$original_handle => $fonts];
-        $optimized_fonts = omgf_init()::optimized_fonts();
+        $current_fonts   = [$original_handle => $fonts];
+        $optimized_fonts = OMGF::optimized_fonts();
 
         // At first run, simply override the optimized_fonts array.
         if (empty($optimized_fonts)) {
-            $optimized_fonts = $current_font;
+            $optimized_fonts = $current_fonts;
             // When a new font is detected, add it to the list.
         } elseif (!isset($optimized_fonts[$original_handle])) {
-            $optimized_fonts = $optimized_fonts + $current_font;
+            $optimized_fonts = $optimized_fonts + $current_fonts;
             // Unload is probably used. Let's rewrite the variants still in use.
         } else {
-            $optimized_fonts = $this->rewrite_variants($optimized_fonts, $current_font);
+            $optimized_fonts = $this->rewrite_variants($optimized_fonts, $current_fonts);
         }
 
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
@@ -397,7 +397,7 @@ class OMGF_API_Download extends WP_REST_Controller
      * @param mixed $stylesheet_handle 
      * @return mixed 
      */
-    private function filter_variants($font_id, $available, $wanted, $stylesheet_handle)
+    private function process_unload_queue($font_id, $available, $wanted, $stylesheet_handle)
     {
         if (strpos($wanted, ':') !== false) {
             // We don't need the first variable.
