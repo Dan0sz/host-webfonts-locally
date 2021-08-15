@@ -203,7 +203,7 @@ class OMGF_Admin
 				$wp_settings_errors = [];
 			}
 
-			add_settings_error('general', 'omgf_settings_changed', __('Settings changed. <a href="#" class="omgf-empty">Click here</a> to empty OMGF\'s cache.', $this->plugin_text_domain), 'success');
+			add_settings_error('general', 'omgf_settings_changed', __('Settings changed. <a href="#" data-cache-section="/*" class="omgf-empty">Click here</a> to empty OMGF\'s cache.', $this->plugin_text_domain), 'success');
 		}
 
 		return $value;
