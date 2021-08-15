@@ -100,6 +100,10 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 				'label'		  => __('Process Stylesheet Imports', $this->plugin_text_domain),
 				'description' => __('Scan stylesheets loaded by your theme and plugins for <code>@import</code> statements loading Google Fonts and process them.', $this->plugin_text_domain)
 			],
+			'omgf_pro_process_stylesheet_font_faces' => [
+				'label'		  => __('Process Stylesheet Font Faces', $this->plugin_text_domain),
+				'description' => __('Scan stylesheets loaded by your theme and plugins for <code>@font-face</code> statements loading Google Fonts and process them.', $this->plugin_text_domain)
+			],
 			'omgf_pro_process_inline_styles'  => [
 				'label'       => __('Process Inline Styles', $this->plugin_text_domain),
 				'description' => __('Process all inline <code>@font-face</code> and <code>@import</code> rules loading Google Fonts.', $this->plugin_text_domain)
