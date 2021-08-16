@@ -45,7 +45,7 @@ Everything in the free version, plus:
 
 - Specify a Fallback Font Stack for every Google Font, to reduce Cumulative Layout Shift,
 - Automatically remove/replace all Google Fonts throughout the entire document/page,
-  - Also supports WebFont Loader (webfont.js), Early Access Google Fonts and requests in stylesheets using @import (@font-face coming soon...).
+  - Also supports WebFont Loader (webfont.js), Early Access Google Fonts and requests in stylesheets using @import and @font-face statements.
   - Automatically generate different stylesheets for pages with another configuration of Google Fonts.
 - Combine all Google Fonts stylesheets (requested by your theme and/or plugins) into one file,
 - Deduplicate Google Fonts stylesheets,
