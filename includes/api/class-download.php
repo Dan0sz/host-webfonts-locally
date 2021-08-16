@@ -86,8 +86,8 @@ class OMGF_API_Download extends WP_REST_Controller
         }
 
         $params          = $request->get_params();
-        $this->handle    = $params['handle'] ?? '';
-        $original_handle = $request->get_param('original_handle');
+        $this->handle    = sanitize_title_with_dashes($params['handle']) ?? '';
+        $original_handle = sanitize_title_with_dashes($request->get_param('original_handle'));
 
         if (!$this->handle || !$original_handle) {
             wp_die(__('Handle not provided.', $this->plugin_text_domain), 406);
