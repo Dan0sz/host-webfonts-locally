@@ -34,6 +34,8 @@ class OMGF_AJAX
 	 */
 	public function empty_directory()
 	{
+		check_ajax_referer(OMGF_Admin_Settings::OMGF_ADMIN_PAGE, 'nonce');
+
 		try {
 			$section = $_POST['section'];
 			$entries = array_filter((array) glob(OMGF_FONTS_DIR . $section));

@@ -21,6 +21,7 @@ jQuery(document).ready(function ($) {
         optimize_xhr: false,
         cache_prefix: '-mod-',
         cache_section: $('.omgf-empty').data('cache-section'),
+        nonce: $('.omgf-empty').data('nonce'),
 
         /**
          * Initialize all on click events.
@@ -257,6 +258,7 @@ jQuery(document).ready(function ($) {
                 url: ajaxurl,
                 data: {
                     action: 'omgf_ajax_empty_dir',
+                    nonce: omgf_admin.nonce,
                     section: omgf_admin.cache_section
                 },
                 beforeSend: function () {
