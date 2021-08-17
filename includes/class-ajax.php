@@ -26,6 +26,10 @@ class OMGF_AJAX
 	 */
 	public function __construct()
 	{
+		if (!current_user_can('manage_options')) {
+			wp_die(__("You're not cool enough to access this page.", $this->plugin_text_domain));
+		}
+
 		add_action('wp_ajax_omgf_ajax_empty_dir', [$this, 'empty_directory']);
 	}
 
