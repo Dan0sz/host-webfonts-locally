@@ -31,10 +31,20 @@ class OMGF_AJAX
 
 	/**
 	 * Empty cache directory.
+	 * 
+	 * @since v4.5.3: Hardened security.
 	 */
 	public function empty_directory()
 	{
 		check_ajax_referer(OMGF_Admin_Settings::OMGF_ADMIN_PAGE, 'nonce');
+
+		$section       = str_replace('*', '', $_POST['section']);
+		$set_path      = rtrim(OMGF_FONTS_DIR . $section, '/');
+		$resolved_path = realpath(OMGF_FONTS_DIR . $section);
+
+		if ($resolved_path != $set_path) {
+			wp_die(__('Attempted path traversal detected. Sorry, no script kiddies allowed!', $this->plugin_text_domain));
+		}
 
 		try {
 			$section = $_POST['section'];
