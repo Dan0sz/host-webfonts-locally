@@ -76,8 +76,10 @@ class OMGF_Frontend_Functions
 		/**
 		 * When OMGF Pro is enabled and set to Automatic mode, the merged handle is used to only load selected
 		 * preloads for the currently used stylesheet.
+		 * 
+		 * @since v4.5.3 Added 2nd dummy parameter, to prevent Fatal Errors after updating.
 		 */
-		$pro_handle = apply_filters('omgf_pro_merged_handle', '');
+		$pro_handle = apply_filters('omgf_pro_merged_handle', '', '');
 
 		$i = 0;
 
