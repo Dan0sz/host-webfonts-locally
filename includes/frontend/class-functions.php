@@ -191,7 +191,13 @@ class OMGF_Frontend_Functions
 					$protocol = 'https:';
 				}
 
-				$wp_styles->registered[$handle]->src = $protocol . str_replace('//fonts.googleapis.com/', $api_url, $font->src) . "&handle=$updated_handle&original_handle=$handle";
+				$params = http_build_query([
+					'handle' => $updated_handle,
+					'original_handle' => $handle,
+					'_wpnonce' => wp_create_nonce('wp_rest')
+				]);
+
+				$wp_styles->registered[$handle]->src = $protocol . str_replace('//fonts.googleapis.com/', $api_url, $font->src) . '&' . $params;
 			}
 		}
 	}
