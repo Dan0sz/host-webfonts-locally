@@ -69,11 +69,19 @@ class OMGF_API_Download extends WP_REST_Controller
     }
 
     /**
+     * Prevent CSRF.
+     * 
+     * @since v4.5.4
+     * 
      * @return bool
      */
     public function permissions_check()
     {
-        return true;
+        if (!isset($_REQUEST['_wpnonce'])) {
+            return false;
+        }
+
+        return wp_verify_nonce($_REQUEST['_wpnonce'], 'wp_rest') > 0;
     }
 
     /**
