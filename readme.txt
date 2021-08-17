@@ -134,6 +134,7 @@ No, not yet. But I will definitely try to make it compatible in the future!
 
 = 4.5.3 | August 17th, 2021 =
 * Fix: "Too few arguments to function OmgfPro_Frontend_AutoReplace::passthru_handle()" would occur if OMGF Pro was updated to v2.5.1 before OMGF was updated to v4.5.2.
+* Security: Added checks to prevent path traversal and CSRF in Empty Cache Directory AJAX call.
 
 = 4.5.2 | August 16th, 2021 = 
 * Pro Feature: Added promo material for @font-face detection in local stylesheets.
