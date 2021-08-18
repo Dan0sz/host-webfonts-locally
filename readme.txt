@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.8
-Stable tag: 4.5.3
+Stable tag: 4.5.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.5.4 | August 18th, 2021 =
+* Security: Access to the Download API now requires a valid nonce to prevent CSRF.
+* Security: Added authentication to Empty Cache Directory AJAX-call.
 
 = 4.5.3 | August 17th, 2021 =
 * Fix: "Too few arguments to function OmgfPro_Frontend_AutoReplace::passthru_handle()" would occur if OMGF Pro was updated to v2.5.1 before OMGF was updated to v4.5.2.
