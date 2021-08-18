@@ -26,10 +26,6 @@ class OMGF_AJAX
 	 */
 	public function __construct()
 	{
-		if (!current_user_can('manage_options')) {
-			wp_die(__("You're not cool enough to access this page.", $this->plugin_text_domain));
-		}
-
 		add_action('wp_ajax_omgf_ajax_empty_dir', [$this, 'empty_directory']);
 	}
 
@@ -41,6 +37,10 @@ class OMGF_AJAX
 	public function empty_directory()
 	{
 		check_ajax_referer(OMGF_Admin_Settings::OMGF_ADMIN_PAGE, 'nonce');
+
+		if (!current_user_can('manage_options')) {
+			wp_die(__("You're not cool enough to access this page.", $this->plugin_text_domain));
+		}
 
 		$section       = str_replace('*', '', $_POST['section']);
 		$set_path      = rtrim(OMGF_FONTS_DIR . $section, '/');
