@@ -33,6 +33,7 @@ class OMGF_AJAX
 	 * Empty cache directory.
 	 * 
 	 * @since v4.5.3: Hardened security.
+	 * @since v4.5.5: Added authentication.
 	 */
 	public function empty_directory()
 	{
