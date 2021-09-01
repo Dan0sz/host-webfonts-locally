@@ -117,7 +117,7 @@ class OMGF_Optimize
         foreach ($urls as $url) {
             $download = $this->remote_get($url);
 
-            if (is_wp_error($download)) {
+            if (is_wp_error($download) || wp_remote_retrieve_response_code($download) != 200) {
                 $this->download_failed($download);
             }
         }
