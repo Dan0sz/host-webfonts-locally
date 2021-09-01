@@ -77,7 +77,7 @@ class OMGF_Optimize
      * to 0 further down the road.
      *
      * @param mixed $url
-     * @return bool
+     * @return array
      */
     public function verify_ssl($args)
     {
@@ -91,11 +91,10 @@ class OMGF_Optimize
      */
     private function run_manual()
     {
-        $url = esc_url_raw(OMGF_MANUAL_OPTIMIZE_URL);
-
+        $url        = esc_url_raw(OMGF_MANUAL_OPTIMIZE_URL);
         $front_html = $this->remote_get($url);
 
-        if (is_wp_error($front_html)) {
+        if (is_wp_error($front_html) || wp_remote_retrieve_response_code($front_html) != 200) {
             $this->frontend_fetch_failed($front_html);
         }
 
@@ -142,19 +141,19 @@ class OMGF_Optimize
     }
 
     /**
-     * @param $download WP_Error
+     * @param $response WP_Error|array
      */
-    private function download_failed($download)
+    private function download_failed($response)
     {
-        add_settings_error('general', 'omgf_download_failed', __('OMGF encountered an error while downloading Google Fonts', $this->plugin_text_domain) . ': ' . $download->get_error_code() . ' - ' . $download->get_error_message(), 'error');
+        add_settings_error('general', 'omgf_download_failed', __('OMGF encountered an error while downloading Google Fonts', $this->plugin_text_domain) . ': ' . $this->get_error_code($response) . ' - ' . $this->get_error_message($response), 'error');
     }
 
     /**
-     * @param $front_html WP_Error
+     * @param $response WP_Error|array
      */
-    private function frontend_fetch_failed($front_html)
+    private function frontend_fetch_failed($response)
     {
-        add_settings_error('general', 'omgf_frontend_fetch_failed', __('OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain) . ': ' . $front_html->get_error_code() . ' - ' . $front_html->get_error_message(), 'error');
+        add_settings_error('general', 'omgf_frontend_fetch_failed', __('OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain) . ': ' . $this->get_error_code($response) . ' - ' . $this->get_error_message($response), 'error');
     }
 
     /**
@@ -189,5 +188,31 @@ class OMGF_Optimize
     private function no_cache_optimize_url($url)
     {
         return add_query_arg(['omgf_optimize' => 1, 'nocache' => substr(md5(microtime()), rand(0, 26), 5)], $url);
+    }
+
+    /**
+     * @param array|WP_Error $response 
+     * @return int|string 
+     */
+    private function get_error_code($response)
+    {
+        if (is_wp_error($response)) {
+            return $response->get_error_code();
+        }
+
+        return wp_remote_retrieve_response_code($response);
+    }
+
+    /**
+     * @param array|WP_Error $response 
+     * @return int|string 
+     */
+    private function get_error_message($response)
+    {
+        if (is_wp_error($response)) {
+            return $response->get_error_message();
+        }
+
+        return wp_remote_retrieve_response_message($response);
     }
 }
