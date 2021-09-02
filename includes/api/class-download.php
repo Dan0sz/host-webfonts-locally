@@ -93,8 +93,7 @@ class OMGF_API_Download extends WP_REST_Controller
             $this->convert_css2($request);
         }
 
-        $params          = $request->get_params();
-        $this->handle    = sanitize_title_with_dashes($params['handle']) ?? '';
+        $this->handle    = sanitize_title_with_dashes($request->get_param('handle'));
         $original_handle = sanitize_title_with_dashes($request->get_param('original_handle'));
 
         if (!$this->handle || !$original_handle) {
@@ -102,8 +101,8 @@ class OMGF_API_Download extends WP_REST_Controller
         }
 
         $this->path       = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
-        $font_families    = explode('|', $params['family']);
-        $query['subsets'] = $params['subset'] ?? 'latin,latin-ext';
+        $font_families    = explode('|', $request->get_param('family'));
+        $query['subsets'] = $request->get_param('subset') ?? 'latin,latin-ext';
         $fonts            = [];
 
         foreach ($font_families as $font_family) {
@@ -187,13 +186,6 @@ class OMGF_API_Download extends WP_REST_Controller
         }
 
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
-
-        // After generating it, serve it.
-        header('Content-Type: text/css');
-        header('Content-Length: ' . filesize($local_file));
-        flush();
-        readfile($local_file);
-        exit();
     }
 
     /**
