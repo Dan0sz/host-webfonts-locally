@@ -55,7 +55,6 @@ class OMGF_Admin
 		$this->do_help();
 		$this->maybe_do_after_update_notice();
 
-		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'decode_option'], 10, 3);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
 		add_filter('pre_update_option', [$this, 'settings_changed'], 10, 3);
 	}
@@ -134,18 +133,6 @@ class OMGF_Admin
 
 			update_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION);
 		}
-	}
-
-	/**
-	 * @param $old_value
-	 * @param $value
-	 * @param $option_name
-	 *
-	 * @return mixed
-	 */
-	public function decode_option($old_value, $value, $option_name)
-	{
-		return $value;
 	}
 
 	/**
