@@ -183,6 +183,11 @@ class OMGF_Frontend_Functions
 				continue;
 			}
 
+			/**
+			 * TODO: This logic should be moved to backend. There's no logical reason for the frontend to make internal API requests, like it's an external one.
+			 * 
+			 * Just use WP_REST_Request().
+			 */
 			if (OMGF_OPTIMIZATION_MODE == 'manual' && isset($_GET['omgf_optimize'])) {
 				$api_url  = str_replace(['http:', 'https:'], '', home_url('/wp-json/omgf/v1/download/'));
 				$protocol = '';
@@ -191,13 +196,19 @@ class OMGF_Frontend_Functions
 					$protocol = 'https:';
 				}
 
-				$params = http_build_query([
-					'handle' => $updated_handle,
-					'original_handle' => $handle,
-					'_wpnonce' => wp_create_nonce('wp_rest')
-				]);
+				$params = parse_url($font->src);
+				$query  = $params['query'] ?? '';
+				parse_str($query, $query_array);
 
-				$wp_styles->registered[$handle]->src = $protocol . str_replace('//fonts.googleapis.com/', $api_url, $font->src) . '&' . $params;
+				$params = http_build_query(
+					$query_array + [
+						'handle' => $updated_handle,
+						'original_handle' => $handle,
+						'_wpnonce' => wp_create_nonce('wp_rest')
+					]
+				);
+
+				$wp_styles->registered[$handle]->src = $protocol . str_replace('//fonts.googleapis.com/', $api_url, $font->src) . '?' . $params;
 			}
 		}
 	}
