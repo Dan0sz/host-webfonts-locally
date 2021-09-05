@@ -27,8 +27,8 @@ class OMGF_Optimize
     /** @var string */
     private $settings_tab = '';
 
-    /** @var string */
-    private $settings_updated = '';
+    /** @var bool */
+    private $settings_updated = false;
 
     /**
      * OMGF_Optimize constructor.
@@ -37,7 +37,7 @@ class OMGF_Optimize
     {
         $this->settings_page    = $_GET['page'] ?? '';
         $this->settings_tab     = $_GET['tab'] ?? OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE;
-        $this->settings_updated = $_GET['settings-updated'] ?? '';
+        $this->settings_updated = isset($_GET['settings-updated']);
 
         $this->init();
     }
