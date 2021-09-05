@@ -189,15 +189,9 @@ class OMGF_Frontend_Functions
 			 * Just use WP_REST_Request().
 			 */
 			if (OMGF_OPTIMIZATION_MODE == 'manual' && isset($_GET['omgf_optimize'])) {
-				$api_url  = str_replace(['http:', 'https:'], '', home_url('/wp-json/omgf/v1/download/'));
-				$protocol = '';
-
-				if (substr($font->src, 0, 2) == '//') {
-					$protocol = 'https:';
-				}
-
-				$params = parse_url($font->src);
-				$query  = $params['query'] ?? '';
+				$request = parse_url($font->src);
+				$query   = $request['query'] ?? '';
+				$path    = $request['path'] ?? '/css';
 				parse_str($query, $query_array);
 
 				$params = http_build_query(
@@ -208,7 +202,10 @@ class OMGF_Frontend_Functions
 					]
 				);
 
-				$wp_styles->registered[$handle]->src = $protocol . str_replace('//fonts.googleapis.com/', $api_url, $font->src) . '?' . $params;
+				/**
+				 * Use Home URL directly while building API request. This might prevent local development (non-SSL) issues.
+				 */
+				$wp_styles->registered[$handle]->src = home_url('/wp-json/omgf/v1/download') . $path . '?' . $params;
 			}
 		}
 	}
