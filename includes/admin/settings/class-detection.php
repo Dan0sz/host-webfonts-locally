@@ -68,7 +68,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 						$disabled = apply_filters($name . '_setting_disabled', true) ? 'disabled' : '';
 						?>
 						<label for="<?= $name; ?>">
-							<input type="checkbox" name="<?= $name; ?>" <?= $checked ? 'checked="checked"' : ''; ?> <?= $disabled; ?> /><?= $data['label']; ?>
+							<input type="checkbox" name="<?= $name; ?>" id="<?= $name; ?>" <?= $checked ? 'checked="checked"' : ''; ?> <?= $disabled; ?> /><?= $data['label']; ?>
 							&nbsp;
 						</label>
 					<?php endforeach; ?>
