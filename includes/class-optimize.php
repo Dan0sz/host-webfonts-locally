@@ -98,23 +98,24 @@ class OMGF_Optimize
             $this->frontend_fetch_failed($front_html);
         }
 
-        $urls     = [];
-        $document = new DOMDocument();
+        $api_request_urls = [];
+        $document         = new DOMDocument();
+
         libxml_use_internal_errors(true);
         @$document->loadHtml(wp_remote_retrieve_body($front_html));
 
         foreach ($document->getElementsByTagName('link') as $link) {
-            /** @var $link DOMElement */
+            /** @var DOMElement $link */
             if ($link->hasAttribute('href') && strpos($link->getAttribute('href'), '/omgf/v1/download/')) {
-                $urls[] = $link->getAttribute('href');
+                $api_request_urls[] = $link->getAttribute('href');
             }
         }
 
-        if (empty($urls)) {
+        if (empty($api_request_urls)) {
             $this->no_urls_found();
         }
 
-        foreach ($urls as $url) {
+        foreach ($api_request_urls as $url) {
             $download = $this->remote_get($url);
 
             if (is_wp_error($download) || wp_remote_retrieve_response_code($download) != 200) {

@@ -80,8 +80,7 @@ class OMGF_Frontend_Functions
 		 * @since v4.5.3 Added 2nd dummy parameter, to prevent Fatal Errors after updating.
 		 */
 		$pro_handle = apply_filters('omgf_pro_merged_handle', '', '');
-
-		$i = 0;
+		$i          = 0;
 
 		foreach ($optimized_fonts as $stylesheet_handle => $font_faces) {
 			if ($pro_handle && $stylesheet_handle != $pro_handle) {
@@ -130,7 +129,7 @@ class OMGF_Frontend_Functions
 				add_action('wp_print_styles', [$this, 'remove_registered_fonts'], PHP_INT_MAX - 500);
 				break;
 			default:
-				add_action('wp_print_styles', [$this, 'replace_registered_fonts'], PHP_INT_MAX - 500);
+				add_action('wp_print_styles', [$this, 'replace_registered_stylesheets'], PHP_INT_MAX - 500);
 		}
 	}
 
@@ -141,10 +140,10 @@ class OMGF_Frontend_Functions
 	{
 		global $wp_styles;
 
-		$registered = $wp_styles->registered;
-		$fonts      = apply_filters('omgf_auto_remove', $this->detect_registered_google_fonts($registered));
+		$registered  = $wp_styles->registered;
+		$stylesheets = apply_filters('omgf_remove_detected_stylesheets', $this->detect_registered_stylesheets($registered));
 
-		foreach ($fonts as $handle => $font) {
+		foreach ($stylesheets as $handle => $stylesheet) {
 			$wp_styles->registered[$handle]->src = '';
 		}
 	}
@@ -152,16 +151,16 @@ class OMGF_Frontend_Functions
 	/**
 	 * Retrieve stylesheets from Google Fonts' API and modify the stylesheet for local storage.
 	 */
-	public function replace_registered_fonts()
+	public function replace_registered_stylesheets()
 	{
 		global $wp_styles;
 
 		$registered           = $wp_styles->registered;
-		$fonts                = apply_filters('omgf_auto_replace', $this->detect_registered_google_fonts($registered));
+		$stylesheets          = apply_filters('omgf_replace_detected_stylesheets', $this->detect_registered_stylesheets($registered));
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		$unloaded_fonts       = OMGF::unloaded_fonts();
 
-		foreach ($fonts as $handle => $font) {
+		foreach ($stylesheets as $handle => $stylesheet) {
 			// If this stylesheet has been marked for unload, empty the src and skip out early.
 			if (in_array($handle, $unloaded_stylesheets)) {
 				$wp_styles->registered[$handle]->src = '';
@@ -184,15 +183,21 @@ class OMGF_Frontend_Functions
 			}
 
 			/**
-			 * TODO: This logic should be moved to backend. There's no logical reason for the frontend to make internal API requests, like it's an external one.
+			 * For future reference: this logic can't be moved to backend, because there's no other way to properly access the
+			 * 			             $wp_styles global.
 			 * 
-			 * Just use WP_REST_Request().
+			 * @see $wp_styles global
 			 */
 			if (OMGF_OPTIMIZATION_MODE == 'manual' && isset($_GET['omgf_optimize'])) {
-				$request = parse_url($font->src);
+				$request = parse_url($stylesheet->src);
 				$query   = $request['query'] ?? '';
 				$path    = $request['path'] ?? '/css';
+
 				parse_str($query, $query_array);
+
+				if (empty($query_array)) {
+					continue;
+				}
 
 				$params = http_build_query(
 					$query_array + [
@@ -215,7 +220,7 @@ class OMGF_Frontend_Functions
 	 *
 	 * @return array
 	 */
-	private function detect_registered_google_fonts($registered_styles)
+	private function detect_registered_stylesheets($registered_styles)
 	{
 		return array_filter(
 			$registered_styles,
