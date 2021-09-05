@@ -212,7 +212,7 @@ class OMGF_Frontend_Functions
 		return array_filter(
 			$registered_styles,
 			function ($contents) {
-				return strpos($contents->src, 'fonts.googleapis.com/css') !== false
+				return strpos($contents->src, 'fonts.googleapis.com/css') !== false;
 			}
 		);
 	}
