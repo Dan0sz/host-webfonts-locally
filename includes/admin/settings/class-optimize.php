@@ -159,7 +159,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 */
 	public function do_optimize_fonts_contents()
 	{
-		$this->optimized_fonts = omgf_init()::optimized_fonts();
+		$this->optimized_fonts = OMGF::optimized_fonts();
 		?>
 			<span class="option-title"><?= __('Manage Optimized Fonts', $this->plugin_text_domain); ?></span>
 			<?php if ($this->optimized_fonts) : ?>
@@ -196,11 +196,11 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						</tr>
 					</thead>
 					<?php
-					$cache_handles = omgf_init()::cache_keys();
+					$cache_handles = OMGF::cache_keys();
 					?>
 					<?php foreach ($this->optimized_fonts as $handle => $fonts) : ?>
 						<?php
-						if (!omgf_init()::get_cache_key($handle)) {
+						if (!OMGF::get_cache_key($handle)) {
 							$cache_handles[] = $handle;
 						}
 						?>
@@ -215,7 +215,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 								?>
 								<tr class="font-family" data-id="<?= $font->id; ?>">
 									<td colspan="5">
-										<span class="family"><em><?= $font->family; ?><?= $aka ? ' (' . sprintf(__('formerly known as <strong>%s</strong>', $this->plugin_text_domain) . ')', ucfirst($aka)) : ''; ?></em></span> <span class="unload-mass-action">(<a href="#" class="unload-italics"><?= __('Unload italics', $this->plugin_text_domain); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?= __('In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.', $this->plugin_text_domain); ?></span></span> | <a href="#" class="unload-all"><?= __('Unload all', $this->plugin_text_domain); ?></a> | <a href="#" class="load-all"><?= __('Load all', $this->plugin_text_domain); ?></a>)</span>
+										<span class="family"><em><?= rawurldecode($font->family); ?><?= $aka ? ' (' . sprintf(__('formerly known as <strong>%s</strong>', $this->plugin_text_domain) . ')', ucfirst($aka)) : ''; ?></em></span> <span class="unload-mass-action">(<a href="#" class="unload-italics"><?= __('Unload italics', $this->plugin_text_domain); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?= __('In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.', $this->plugin_text_domain); ?></span></span> | <a href="#" class="unload-all"><?= __('Unload all', $this->plugin_text_domain); ?></a> | <a href="#" class="load-all"><?= __('Load all', $this->plugin_text_domain); ?></a>)</span>
 									</td>
 									<td class="fallback-font-stack">
 										<select data-handle="<?= $handle; ?>" <?= apply_filters('omgf_pro_fallback_font_stack_setting_disabled', true) ? 'disabled' : ''; ?> name="omgf_pro_fallback_font_stack[<?= $handle; ?>][<?= $font->id; ?>]">
@@ -254,14 +254,12 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<?php if (OMGF_OPTIMIZATION_MODE == 'manual') : ?>
 							<em><?= sprintf(__("This list is populated with all Google Fonts captured and downloaded from <strong>%s</strong>. Optimizations will be applied on every page using these fonts. If you want to optimize additional Google Fonts from other pages, switch to <strong>Automatic (Pro)</strong> and visit the pages containing the stylesheets you'd like to optimize. This list will automatically be populated with the captured fonts.", $this->plugin_text_domain), OMGF_MANUAL_OPTIMIZE_URL); ?></em>
 						<?php else : ?>
-							<?php
-							$no_cache_param = '?omgf_optimize=' . substr(md5(microtime()), rand(0, 26), 5);
-							?>
+							<?php $no_cache_param = '?omgf_optimize=' . substr(md5(microtime()), rand(0, 26), 5); ?>
 							<em><?= sprintf(__("This list is automatically populated with Google Fonts captured throughout your entire site. Optimizations will be applied on every page using these fonts. <strong>Automatic</strong> mode might not work when a Full Page Cache plugin is activated. If this list is not being populated with Google Fonts, you could try to visit your frontend and append the following parameter to the URL: <strong>%s</strong>", $this->plugin_text_domain), $no_cache_param); ?></em>
 						<?php endif; ?>
 					</p>
 				</div>
-				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?= serialize($this->optimized_fonts); ?>" />
+				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value='<?= serialize($this->optimized_fonts); ?>' />
 				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= OMGF_UNLOAD_STYLESHEETS; ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" value="<?= implode(',', $cache_handles); ?>" />

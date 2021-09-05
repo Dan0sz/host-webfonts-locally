@@ -132,7 +132,7 @@ class OMGF_API_Download extends WP_REST_Controller
 
             $requested_variants = $this->parse_requested_variants($requested_variants, $font);
 
-            if ($unloaded_fonts = omgf_init()::unloaded_fonts()) {
+            if ($unloaded_fonts = OMGF::unloaded_fonts()) {
                 $font_id = $font->id;
 
                 // Now we're sure we got 'em all. We can safely dequeue those we don't want.
@@ -155,8 +155,22 @@ class OMGF_API_Download extends WP_REST_Controller
         foreach ($fonts as &$font) {
             $font_id = $font->id;
 
+            /**
+             * Sanitize font family, because it may contain spaces.
+             * 
+             * @since v4.5.6
+             */
+            $font->family = rawurlencode($font->family);
+
             foreach ($font->variants as &$variant) {
                 $filename = strtolower($font_id . '-' . $variant->fontStyle . '-' . $variant->fontWeight);
+
+                /**
+                 * Encode font family, because it may contain spaces.
+                 * 
+                 * @since v4.5.6
+                 */
+                $variant->fontFamily = rawurlencode($variant->fontFamily);
 
                 foreach ($file_types as $file_type) {
                     if (isset($variant->$file_type)) {

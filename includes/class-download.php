@@ -68,6 +68,6 @@ class OMGF_Download
 		copy($tmp, $file);
 		@unlink($tmp);
 
-		return content_url($file_uri);
+		return urlencode(content_url($file_uri));
 	}
 }

@@ -158,8 +158,8 @@ class OMGF_Frontend_Functions
 
 		$registered           = $wp_styles->registered;
 		$fonts                = apply_filters('omgf_auto_replace', $this->detect_registered_google_fonts($registered));
-		$unloaded_stylesheets = omgf_init()::unloaded_stylesheets();
-		$unloaded_fonts       = omgf_init()::unloaded_fonts();
+		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
+		$unloaded_fonts       = OMGF::unloaded_fonts();
 
 		foreach ($fonts as $handle => $font) {
 			// If this stylesheet has been marked for unload, empty the src and skip out early.
@@ -172,7 +172,7 @@ class OMGF_Frontend_Functions
 			$updated_handle = $handle;
 
 			if ($unloaded_fonts) {
-				$updated_handle = omgf_init()::get_cache_key($handle);
+				$updated_handle = OMGF::get_cache_key($handle);
 			}
 
 			$cached_file = OMGF_CACHE_PATH . '/' . $updated_handle . "/$updated_handle.css";

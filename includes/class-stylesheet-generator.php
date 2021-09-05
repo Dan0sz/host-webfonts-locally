@@ -71,7 +71,7 @@ class OMGF_StylesheetGenerator
 				 * 
 				 * @since v4.5.1
 				 */
-				$font_family = apply_filters('omgf_generate_stylesheet_font_family', $renamed_font_family ? ucfirst($renamed_font_family) : $variant->fontFamily);
+				$font_family = apply_filters('omgf_generate_stylesheet_font_family', $renamed_font_family ? ucfirst(rawurldecode($renamed_font_family)) : rawurldecode($variant->fontFamily));
 				$font_style  = $variant->fontStyle;
 				$font_weight = $variant->fontWeight;
 				$stylesheet .= "@font-face {\n";
@@ -84,7 +84,7 @@ class OMGF_StylesheetGenerator
 				 * For IE compatibility, EOT is added before the local family name is defined.
 				 */
 				if (in_array('eot', $file_types)) {
-					$stylesheet .= "    src: url('" . $variant->eot . "');\n";
+					$stylesheet .= "    src: url('" . urldecode($variant->eot) . "');\n";
 					$eot_key     = array_search('eot', $file_types);
 					unset($file_types[$eot_key]);
 				}
@@ -101,7 +101,7 @@ class OMGF_StylesheetGenerator
 				$font_src_url = [];
 
 				foreach ($file_types as $file_type) {
-					$font_src_url = $font_src_url + (isset($variant->$file_type) ? [$file_type => $variant->$file_type] : []);
+					$font_src_url = $font_src_url + (isset($variant->$file_type) ? [$file_type => urldecode($variant->$file_type)] : []);
 				}
 
 				$stylesheet .= $this->build_source_string($font_src_url);

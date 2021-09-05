@@ -94,6 +94,15 @@ class OMGF
 			$optimized_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, []) ?: [];
 		}
 
+		/**
+		 * get_option() should take care of this, but sometimes it doesn't.
+		 * 
+		 * @since v4.5.6
+		 */
+		if (is_string($optimized_fonts)) {
+			$optimized_fonts = unserialize($optimized_fonts);
+		}
+
 		return $optimized_fonts;
 	}
 
