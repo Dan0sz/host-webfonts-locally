@@ -40,9 +40,12 @@ class OMGF_OptimizationMode_Manual
     {
         $url        = esc_url_raw(OMGF_MANUAL_OPTIMIZE_URL);
         $front_html = $this->remote_get($url);
+        $error      = false;
 
         if (is_wp_error($front_html) || wp_remote_retrieve_response_code($front_html) != 200) {
             $this->frontend_fetch_failed($front_html);
+
+            $error = true;
         }
 
         $api_request_urls = [];
@@ -60,6 +63,8 @@ class OMGF_OptimizationMode_Manual
 
         if (empty($api_request_urls)) {
             $this->no_urls_found();
+
+            $error = true;
         }
 
         foreach ($api_request_urls as $url) {
@@ -67,10 +72,14 @@ class OMGF_OptimizationMode_Manual
 
             if (is_wp_error($download) || wp_remote_retrieve_response_code($download) != 200) {
                 $this->download_failed($download);
+
+                $error = true;
             }
         }
 
-        $this->optimization_succeeded();
+        if (!$error) {
+            $this->optimization_succeeded();
+        }
     }
 
     /**
