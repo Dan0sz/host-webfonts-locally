@@ -163,3 +163,4 @@ class OMGF_OptimizationMode_Manual
 
         return wp_remote_retrieve_response_message($response);
     }
+}
