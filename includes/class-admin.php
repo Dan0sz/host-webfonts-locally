@@ -55,6 +55,7 @@ class OMGF_Admin
 		$this->do_help();
 		$this->maybe_do_after_update_notice();
 
+		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'update_optimized_fonts'], 10, 2);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
 		add_filter('pre_update_option', [$this, 'settings_changed'], 10, 3);
 	}
@@ -133,6 +134,20 @@ class OMGF_Admin
 
 			update_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION);
 		}
+	}
+
+	/**
+	 * This fixes a bug where the admin screen wouldn't properly be updated after omgf_optimized_fonts 
+	 * was updated by the API.
+	 * 
+	 * @param $old_value
+	 * @param $value
+	 *
+	 * @return bool|array
+	 */
+	public function update_optimized_fonts($value, $old_value)
+	{
+		return $old_value;
 	}
 
 	/**
