@@ -103,7 +103,7 @@ class OMGF_Frontend_Functions
 				);
 
 				foreach ($preload_variants as $variant) {
-					$url = $variant->woff2;
+					$url = rawurldecode($variant->woff2);
 					echo "<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n";
 					$i++;
 				}
