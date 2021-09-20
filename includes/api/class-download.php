@@ -18,7 +18,8 @@ defined('ABSPATH') || exit;
 
 class OMGF_API_Download extends WP_REST_Controller
 {
-    const OMGF_GOOGLE_FONTS_API_URL = 'https://google-webfonts-helper.herokuapp.com';
+    const OMGF_GOOGLE_FONTS_API_URL = 'https://google-webfonts-helper.herokuapp.com/api/fonts/';
+    const OMGF_GOOGLE_FONTS_API_FALLBACK = 'https://n8n-google-fonts-helper.herokuapp.com/api/fonts/';
 
     /**
      * If a font changed names recently, this array will map the old name (key) to the new name (value).
@@ -289,7 +290,7 @@ class OMGF_API_Download extends WP_REST_Controller
      */
     private function grab_font_family($font_family, $query)
     {
-        $url = self::OMGF_GOOGLE_FONTS_API_URL . '/api/fonts/%s';
+        $url = $this->get_working_service_url();
 
         list($family) = explode(':', $font_family);
         $family       = strtolower(str_replace([' ', '+'], '-', $family));
@@ -320,7 +321,7 @@ class OMGF_API_Download extends WP_REST_Controller
         }
 
         $response = wp_remote_get(
-            sprintf($url, $family) . $query_string
+            sprintf($url . '%s', $family) . $query_string
         );
 
         if (is_wp_error($response)) {
@@ -359,6 +360,31 @@ class OMGF_API_Download extends WP_REST_Controller
         }
 
         return json_decode(wp_remote_retrieve_body($response));
+    }
+
+    /**
+     * Because the regular Google Webfonts Helper API tends to go offline sometimes, this function allows us
+     * to use fallback services.
+     * 
+     * TODO: Setup own mirror.
+     * 
+     * @return string Will return regular API if fallback API fails, too. Error handling later on will display a
+     *                proper message to the user.
+     */
+    private function get_working_service_url()
+    {
+        $url      = self::OMGF_GOOGLE_FONTS_API_URL;
+        $response = wp_remote_get($url);
+
+        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) != 200) {
+            $response = wp_remote_get(self::OMGF_GOOGLE_FONTS_API_FALLBACK);
+
+            if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) == 200) {
+                $url = self::OMGF_GOOGLE_FONTS_API_FALLBACK;
+            }
+        }
+
+        return $url;
     }
 
     /**
