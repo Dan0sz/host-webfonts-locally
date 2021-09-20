@@ -18,8 +18,9 @@ defined('ABSPATH') || exit;
 
 class OMGF_API_Download extends WP_REST_Controller
 {
-    const OMGF_GOOGLE_FONTS_API_URL = 'https://google-webfonts-helper.herokuapp.com/api/fonts/';
-    const OMGF_GOOGLE_FONTS_API_FALLBACK = 'https://n8n-google-fonts-helper.herokuapp.com/api/fonts/';
+    const OMGF_GOOGLE_FONTS_API_URL       = 'https://google-webfonts-helper.herokuapp.com/api/fonts/';
+    const OMGF_GOOGLE_FONTS_API_FALLBACK  = 'https://n8n-google-fonts-helper.herokuapp.com/api/fonts/';
+    const OMGF_USE_FALLBACK_API_TRANSIENT = 'omgf_use_fallback_api';
 
     /**
      * If a font changed names recently, this array will map the old name (key) to the new name (value).
@@ -368,15 +369,24 @@ class OMGF_API_Download extends WP_REST_Controller
      * 
      * TODO: Setup own mirror.
      * 
-     * @return string Will return regular API if fallback API fails, too. Error handling later on will display a
+     * @return string Will return regular API url if fallback API url fails, too. Error handling later on will display a
      *                proper message to the user.
      */
     private function get_working_service_url()
     {
+        /**
+         * If this transient returns true, then that means that the regular API has failed in the last 24 hours.
+         */
+        if (get_transient(self::OMGF_USE_FALLBACK_API_TRANSIENT)) {
+            return self::OMGF_GOOGLE_FONTS_API_FALLBACK;
+        }
+
         $url      = self::OMGF_GOOGLE_FONTS_API_URL;
         $response = wp_remote_get($url);
 
         if (is_wp_error($response) || wp_remote_retrieve_response_code($response) != 200) {
+            set_transient(self::OMGF_USE_FALLBACK_API_TRANSIENT, true, DAY_IN_SECONDS);
+
             $response = wp_remote_get(self::OMGF_GOOGLE_FONTS_API_FALLBACK);
 
             if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) == 200) {
