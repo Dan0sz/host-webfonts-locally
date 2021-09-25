@@ -282,5 +282,7 @@ jQuery(document).ready(function ($) {
         }
     };
 
+    omgf_show_loader = omgf_admin.show_loader;
+
     omgf_admin.init();
 });
