@@ -84,15 +84,17 @@ class OMGF
 	}
 
 	/**
+	 * This used to provide a static (cacheable) approach to avoid "excessive" database reads. But this caused
+	 * unexpected behavior if one page contained multiple stylesheets. For now we just take a fresh copy from
+	 * the database every time.
+	 * 
+	 * @since v4.5.7
+	 * 
 	 * @return array
 	 */
 	public static function optimized_fonts()
 	{
-		static $optimized_fonts = [];
-
-		if (empty($optimized_fonts)) {
-			$optimized_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, []) ?: [];
-		}
+		$optimized_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, []) ?: [];
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
