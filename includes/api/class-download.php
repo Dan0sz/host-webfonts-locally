@@ -492,21 +492,21 @@ class OMGF_API_Download extends WP_REST_Controller
     /**
      * When unload is used, insert the cache key in the font URLs for the variants still in use.
      *
-     * @param $stylesheets
-     * @param $current_font
+     * @param array $all_stylesheets    Contains all font styles, loaded and unloaded.
+     * @param array $current_stylesheet Contains just the loaded font styles of current stylesheet.
      *
      * @return mixed
      */
-    private function rewrite_variants($stylesheets, $current_font)
+    private function rewrite_variants($all_stylesheets, $current_stylesheet)
     {
-        foreach ($stylesheets as $stylesheet => &$fonts) {
+        foreach ($all_stylesheets as $stylesheet => &$fonts) {
             foreach ($fonts as $index => &$font) {
                 if (empty((array) $font->variants)) {
                     continue;
                 }
 
                 foreach ($font->variants as $variant_index => &$variant) {
-                    $replace_variant = $current_font[$stylesheet][$index]->variants[$variant_index] ?? (object) [];
+                    $replace_variant = $current_stylesheet[$stylesheet][$index]->variants[$variant_index] ?? (object) [];
 
                     if (!empty((array) $replace_variant)) {
                         $variant = $replace_variant;
@@ -515,6 +515,6 @@ class OMGF_API_Download extends WP_REST_Controller
             }
         }
 
-        return $stylesheets;
+        return $all_stylesheets;
     }
 }
