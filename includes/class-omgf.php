@@ -84,17 +84,27 @@ class OMGF
 	}
 
 	/**
-	 * This used to provide a static (cacheable) approach to avoid "excessive" database reads. But this caused
-	 * unexpected behavior if one page contained multiple stylesheets. For now we just take a fresh copy from
-	 * the database every time.
+	 * Manage Optimized Fonts to be displayed in the Optimized Fonts table.
+	 * 
+	 * Use a static variable to reduce database reads/writes.
 	 * 
 	 * @since v4.5.7
 	 * 
+	 * @param array $maybe_add If it doesn't exist, it's added to the cache layer.
+	 * 
 	 * @return array
 	 */
-	public static function optimized_fonts()
+	public static function optimized_fonts($maybe_add = [])
 	{
-		$optimized_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, []) ?: [];
+		/** @var array $optimized_fonts Cache layer */
+		static $optimized_fonts;
+
+		/**
+		 * Get a fresh copy from the database if $optimized_fonts is empty|null|false (on 1st run)
+		 */
+		if (empty($optimized_fonts)) {
+			$optimized_fonts = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, []) ?: [];
+		}
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
@@ -103,6 +113,13 @@ class OMGF
 		 */
 		if (is_string($optimized_fonts)) {
 			$optimized_fonts = unserialize($optimized_fonts);
+		}
+
+		/**
+		 * If $maybe_add doesn't exist in the cache layer yet, add it.
+		 */
+		if (!isset($optimized_fonts[key($maybe_add)])) {
+			$optimized_fonts = $optimized_fonts + $maybe_add;
 		}
 
 		return $optimized_fonts;
