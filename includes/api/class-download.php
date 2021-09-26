@@ -188,8 +188,18 @@ class OMGF_API_Download extends WP_REST_Controller
         file_put_contents($local_file, $stylesheet);
 
         $current_stylesheet = [$original_handle => $fonts];
-        $optimized_fonts    = OMGF::optimized_fonts($current_stylesheet);
-        $optimized_fonts    = $this->rewrite_variants($optimized_fonts, $current_stylesheet);
+        /**
+         * $current_stylesheet is added to temporary cache layer, if it isn't present in database.
+         * 
+         * @since v4.5.7
+         */
+        $optimized_fonts = OMGF::optimized_fonts($current_stylesheet);
+        /**
+         * When unload is used, this takes care of rewriting the font style URLs in the database.
+         * 
+         * @since v4.5.7
+         */
+        $optimized_fonts = $this->rewrite_variants($optimized_fonts, $current_stylesheet);
 
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
     }
