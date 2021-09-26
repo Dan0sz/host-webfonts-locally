@@ -39,7 +39,7 @@ class OMGF_OptimizationMode_Manual
     private function run()
     {
         $url        = esc_url_raw(OMGF_MANUAL_OPTIMIZE_URL);
-        $front_html = $this->remote_get($url);
+        $front_html = $this->get_front_html($url);
         $error      = false;
 
         if (is_wp_error($front_html) || wp_remote_retrieve_response_code($front_html) != 200) {
@@ -68,9 +68,9 @@ class OMGF_OptimizationMode_Manual
         }
 
         foreach ($api_request_urls as $url) {
-            $download = $this->remote_get($url);
+            $download = $this->do_rest_request($url);
 
-            if (is_wp_error($download) || wp_remote_retrieve_response_code($download) != 200) {
+            if (isset($download->status) && $download->status != 200) {
                 $this->download_failed($download);
 
                 $error = true;
@@ -80,6 +80,28 @@ class OMGF_OptimizationMode_Manual
         if (!$error) {
             $this->optimization_succeeded();
         }
+    }
+
+    /**
+     * 
+     */
+    private function do_rest_request($url)
+    {
+        $parsed_url = parse_url($url);
+        $request    = new WP_REST_Request('GET', str_replace('/wp-json', '', $parsed_url['path']));
+
+        parse_str($parsed_url['query'], $query_params);
+
+        if (isset($query_params['_wpnonce'])) {
+            unset($query_params['_wpnonce']);
+        }
+
+        $request->set_query_params($query_params);
+
+        // TODO: Find out proper WP way to add this param to request.
+        $_REQUEST['_wpnonce'] = wp_create_nonce('wp_rest');
+
+        return rest_do_request($request);
     }
 
     /**
@@ -127,7 +149,7 @@ class OMGF_OptimizationMode_Manual
      * @param mixed $url
      * @return array|WP_Error
      */
-    private function remote_get($url)
+    private function get_front_html($url)
     {
         return wp_remote_get(
             $this->no_cache_optimize_url($url),
