@@ -55,7 +55,8 @@ class OMGF_Admin
 		$this->do_help();
 		$this->maybe_do_after_update_notice();
 
-		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'update_optimized_fonts'], 10, 2);
+		// This used to fix a bug, but now it breaks stuff. Leave it here for the time being.
+		// add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'update_optimized_fonts'], 10, 2);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
 		add_filter('pre_update_option', [$this, 'settings_changed'], 10, 3);
 	}
