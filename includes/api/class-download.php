@@ -19,7 +19,7 @@ defined('ABSPATH') || exit;
 class OMGF_API_Download extends WP_REST_Controller
 {
     const OMGF_GOOGLE_FONTS_API_URL       = 'https://google-webfonts-helper.herokuapp.com/api/fonts/';
-    const OMGF_GOOGLE_FONTS_API_FALLBACK  = 'https://n8n-google-fonts-helper.herokuapp.com/api/fonts/';
+    const OMGF_GOOGLE_FONTS_API_FALLBACK  = 'https://omgf-google-fonts-api.herokuapp.com/api/fonts/';
     const OMGF_USE_FALLBACK_API_TRANSIENT = 'omgf_use_fallback_api';
 
     /**
@@ -326,7 +326,7 @@ class OMGF_API_Download extends WP_REST_Controller
         );
 
         if (is_wp_error($response)) {
-            OMGF_Admin_Notice::set_notice(sprintf(__('An error occurred while trying to fetch fonts: %s', $this->plugin_text_domain), $response->get_error_message()), $response->get_error_code(), true, 'error', 500);
+            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF encountered an error while trying to fetch fonts: %s', $this->plugin_text_domain), $response->get_error_message()), $response->get_error_code(), true, 'error', 500);
         }
 
         $response_code = wp_remote_retrieve_response_code($response);
@@ -335,12 +335,12 @@ class OMGF_API_Download extends WP_REST_Controller
             $font_family   = str_replace('-', ' ', $family);
             $error_body    = wp_remote_retrieve_body($response);
             $error_message = wp_remote_retrieve_response_message($response);
-            $message       = sprintf(__('<strong>%s</strong> could not be found. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $error_message);
+            $message       = sprintf(__('OMGF could not find <strong>%s</strong>. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $error_message);
 
             OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', false, 'error');
 
             if ($error_message == 'Service Unavailable') {
-                $message = __('Google Fonts Helper API is currently unavailable. Try again later.', $this->plugin_text_domain);
+                $message = __('OMGF\'s Google Fonts API is currently unavailable. Try again later.', $this->plugin_text_domain);
 
                 OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', true, 'error', $response_code);
             }
