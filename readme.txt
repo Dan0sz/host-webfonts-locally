@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.8
-Stable tag: 4.5.6
+Stable tag: 4.5.7
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -46,7 +46,7 @@ Everything in the free version, plus:
 - Specify a Fallback Font Stack for every Google Font, to reduce Cumulative Layout Shift,
 - Automatically remove/replace all Google Fonts throughout the entire document/page,
   - Also supports WebFont Loader (webfont.js), Early Access Google Fonts and requests in stylesheets using @import and @font-face statements.
-  - Automatically generate different stylesheets for pages with another configuration of Google Fonts.
+  - Automatically generate different stylesheets for pages with different Google Fonts configurations.
 - Combine all Google Fonts stylesheets (requested by your theme and/or plugins) into one file,
 - Deduplicate Google Fonts stylesheets,
 - Define file types to include in stylesheet (WOFF, WOFF2, EOT, TTF, SVG),
@@ -69,10 +69,6 @@ Everything in the free version, plus:
 For a more comprehensive guide on configuring OMGF, check out the [user manual](https://ffw.press/docs/omgf-pro/user-manual/)
 
 == Frequently Asked Questions ==
-
-= Why do my fonts load slow the first time? =
-
-When OMGF runs in Automatic (Pro) mode, all requests to Google Fonts' API are rewritten and point to OMGF's on-premise download API. The API downloads the fonts and generates the stylesheet, which takes a while. When this is finished, the API will not be used anymore and the stylesheet and its fonts will be loaded directly, just like any other file.
 
 = I don't know what I'm doing! Can you help? =
 
@@ -131,6 +127,17 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.5.7 | September 29th, 2021 = 
+* Enhancement: significantly reduced code running frontend.
+* Fix: internal requests to OMGF's Download API are no longer treated as 'remote'.
+* Fix: stylesheets are no longer skipped in some situations by the temp storage layer, before writing them to the database.
+* Fix: using the mass actions (e.g. unload all, unload italics) no longer affect font families with the same name in a stylesheet with a different handle.
+* Fix: Italic fonts are now properly detected by the API when CSS2 (variable fonts) API is used by themes and/or plugins.
+* Fix: Added my own self-managed fallback API mirror to prevent more Google Fonts API downtime.
+* Enhancement: reduced code in Download API by ~20%.
+* Dev: add-ons for OMGF can now use the show_loader() method.
+* Several UX and performance tweaks.
 
 = 4.5.6 =
 * Fix: Added Fallback API URL for when Google Fonts Helper is down.
