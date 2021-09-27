@@ -80,7 +80,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			'omgf_pro_excluded_ids',
 			__('e.g. 1,2,5,21,443'),
 			defined('OMGF_PRO_EXCLUDED_IDS') ? OMGF_PRO_EXCLUDED_IDS : '',
-			__('A comma separated list of post/page IDs where OMGF Pro shouldn\'t run.', $this->plugin_text_domain) . ' ' . $this->promo,
+			__('A comma separated list of post/page IDs where OMGF Pro shouldn\'t run. Only works when Advanced Proccessing is enabled under Detection Settings.', $this->plugin_text_domain) . ' ' . $this->promo,
 			true
 		);
 	}
