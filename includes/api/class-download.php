@@ -91,10 +91,6 @@ class OMGF_API_Download extends WP_REST_Controller
      */
     public function process($request)
     {
-        if (strpos($request->get_route(), 'css2') !== false) {
-            $this->convert_css2($request);
-        }
-
         $this->handle    = sanitize_title_with_dashes($request->get_param('handle'));
         $original_handle = sanitize_title_with_dashes($request->get_param('original_handle'));
 
@@ -229,57 +225,6 @@ class OMGF_API_Download extends WP_REST_Controller
                 return !in_array($value, $unloaded_fonts[$font_id]);
             }
         );
-    }
-
-    /**
-     * Converts requests to OMGF's Download/CSS2 API to a format readable by the regular API.
-     *
-     * @param $request WP_Rest_Request
-     */
-    private function convert_css2(&$request)
-    {
-        $query         = $this->get_query_from_request();
-        $params        = explode('&', $query);
-        $font_families = [];
-        $fonts         = [];
-
-        foreach ($params as $param) {
-            if (strpos($param, 'family') === false) {
-                continue;
-            }
-
-            parse_str($param, $parts);
-
-            $font_families[] = $parts;
-        }
-
-        foreach ($font_families as $font_family) {
-            if (strpos($font_family, ':') !== false) {
-                list($family, $weights) = explode(':', reset($font_family));
-            } else {
-                $family  = $font_family;
-                $weights = '';
-            }
-
-            /**
-             * @return array [ '300', '400', '500', etc. ]
-             */
-            $weights = explode(';', substr($weights, strpos($weights, '@') + 1));
-
-            $fonts[] = $family . ':' . implode(',', $weights);
-        }
-
-        $request->set_param('family', implode('|', $fonts));
-    }
-
-    /**
-     * Since Google Fonts' variable fonts API uses the same name for each parameter ('family') we need to parse the url manually.
-     *
-     * @return mixed
-     */
-    private function get_query_from_request()
-    {
-        return parse_url($_SERVER['REQUEST_URI'])['query'];
     }
 
     /**
