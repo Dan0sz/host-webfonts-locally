@@ -101,7 +101,9 @@ class OMGF_StylesheetGenerator
 				$font_src_url = [];
 
 				foreach ($file_types as $file_type) {
-					$font_src_url = $font_src_url + (isset($variant->$file_type) ? [$file_type => urldecode($variant->$file_type)] : []);
+					if (isset($variant->$file_type)) {
+						$font_src_url = array_merge($font_src_url, [$file_type => urldecode($variant->$file_type)]);
+					}
 				}
 
 				$stylesheet .= $this->build_source_string($font_src_url);

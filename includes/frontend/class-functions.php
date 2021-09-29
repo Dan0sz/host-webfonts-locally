@@ -200,11 +200,14 @@ class OMGF_Frontend_Functions
 				}
 
 				$params = http_build_query(
-					$query_array + [
-						'handle' => $updated_handle,
-						'original_handle' => $handle,
-						'_wpnonce' => wp_create_nonce('wp_rest')
-					]
+					array_merge(
+						$query_array,
+						[
+							'handle' => $updated_handle,
+							'original_handle' => $handle,
+							'_wpnonce' => wp_create_nonce('wp_rest')
+						]
+					)
 				);
 
 				/**
