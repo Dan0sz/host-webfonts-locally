@@ -118,8 +118,8 @@ class OMGF
 		/**
 		 * If $maybe_add doesn't exist in the cache layer yet, add it.
 		 */
-		if (!isset($optimized_fonts[key($maybe_add)])) {
-			$optimized_fonts = $optimized_fonts + $maybe_add;
+		if (!empty($maybe_add) && !isset($optimized_fonts[key($maybe_add)])) {
+			$optimized_fonts = array_merge($optimized_fonts, $maybe_add);
 		}
 
 		return $optimized_fonts;
