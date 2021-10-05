@@ -130,7 +130,7 @@ No, not yet. But I will definitely try to make it compatible in the future!
 
 = 4.5.9 | October 5th, 2021 =
 * Fix: content_url() should always be encoded, also if file already exists.
-* Enhancement: If stylesheet is already generated, stop execution to improve API execution.
+* Enhancement: If stylesheet is already generated, stop execution to decrease API request time.
 
 = 4.5.8 =
 * Fix: use array_merge() to prevent unsupported operand types error.
