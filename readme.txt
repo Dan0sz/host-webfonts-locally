@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.8
-Stable tag: 4.5.8
+Stable tag: 4.5.9
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -127,6 +127,10 @@ No, not yet. But I will definitely try to make it compatible in the future!
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.5.9 | October 5th, 2021 =
+* Fix: content_url() should always be encoded, also if file already exists.
+* Enhancement: If stylesheet is already generated, stop execution to improve API execution.
 
 = 4.5.8 =
 * Fix: use array_merge() to prevent unsupported operand types error.
