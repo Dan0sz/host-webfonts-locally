@@ -178,18 +178,33 @@ class OMGF_API_Download extends WP_REST_Controller
             }
         }
 
-        $stylesheet = OMGF::generate_stylesheet($fonts, $original_handle);
         $local_file = $this->path . '/' . $this->handle . '.css';
+
+        /**
+         * If this $stylesheet doesn't exist yet, let's generate it.
+         * 
+         * If any modifications are done, e.g. unloads, the cache key ($handle) changes. Therefore it makes no sense to
+         * continue after this point if $local_file already exists.
+         * 
+         * @since v4.5.9
+         */
+        if (file_exists($local_file)) {
+            return;
+        }
+
+        $stylesheet = OMGF::generate_stylesheet($fonts, $original_handle);
 
         file_put_contents($local_file, $stylesheet);
 
         $current_stylesheet = [$original_handle => $fonts];
+
         /**
          * $current_stylesheet is added to temporary cache layer, if it isn't present in database.
          * 
          * @since v4.5.7
          */
         $optimized_fonts = OMGF::optimized_fonts($current_stylesheet);
+
         /**
          * When unload is used, this takes care of rewriting the font style URLs in the database.
          * 
