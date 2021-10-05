@@ -61,7 +61,7 @@ class OMGF_Download
 		$file_uri = str_replace(WP_CONTENT_DIR, '', $file);
 
 		if (file_exists($file)) {
-			return content_url($file_uri);
+			return urlencode(content_url($file_uri));
 		}
 
 		$tmp = download_url($this->url);
