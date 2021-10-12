@@ -251,10 +251,15 @@ class OMGF_API_Download extends WP_REST_Controller
      */
     private function grab_font_family($font_family, $query)
     {
-        $url = $this->get_working_service_url();
+        $url          = $this->get_working_service_url();
+        list($family) = explode(': ', $font_family);
 
-        list($family) = explode(':', $font_family);
-        $family       = strtolower(str_replace([' ', '+'], '-', $family));
+        /**
+         * Replace multiple spaces or plus signs (or a combination of, with a single dash)
+         * 
+         * @since v4.5.10
+         */
+        $family = strtolower(preg_replace("/[\s\+]+/", '-', $family));
 
         /**
          * Add fonts to the request's $_GET 'family' parameter. Then pass an array to 'omgf_alternate_fonts' 
