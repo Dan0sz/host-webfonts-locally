@@ -87,7 +87,7 @@ class OMGF_API_Download extends WP_REST_Controller
     }
 
     /**
-     * @param $request WP_Rest_Request
+     * @param WP_REST_Request $request
      */
     public function process($request)
     {
