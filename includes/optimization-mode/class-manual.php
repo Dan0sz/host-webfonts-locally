@@ -74,7 +74,8 @@ class OMGF_OptimizationMode_Manual
 
             $download = $this->do_rest_request($url);
 
-            if (isset($download->status) && $download->status != 200) {
+            /** @var WP_REST_Response $download */
+            if ($download->is_error()) {
                 $this->download_failed($download);
 
                 $error = true;
@@ -142,7 +143,9 @@ class OMGF_OptimizationMode_Manual
     }
 
     /**
+     * @param string $url
      * 
+     * @return WP_REST_Response
      */
     private function do_rest_request($url)
     {
@@ -179,7 +182,7 @@ class OMGF_OptimizationMode_Manual
     }
 
     /**
-     * @param $response WP_Error|array
+     * @param $response WP_REST_Response
      */
     private function download_failed($response)
     {
@@ -229,11 +232,17 @@ class OMGF_OptimizationMode_Manual
     }
 
     /**
-     * @param array|WP_Error $response 
+     * @param WP_REST_Response|WP_Error|array $response 
+     * 
      * @return int|string 
      */
     private function get_error_code($response)
     {
+        if ($response instanceof WP_REST_Response && $response->is_error()) {
+            // Convert to WP_Error if WP_REST_Response
+            $response = $response->as_error();
+        }
+
         if (is_wp_error($response)) {
             return $response->get_error_code();
         }
@@ -242,11 +251,17 @@ class OMGF_OptimizationMode_Manual
     }
 
     /**
-     * @param array|WP_Error $response 
+     * @param WP_REST_Response|WP_Error|array $response 
+     * 
      * @return int|string 
      */
     private function get_error_message($response)
     {
+        if ($response instanceof WP_REST_Response && $response->is_error()) {
+            // Convert to WP_Error if WP_REST_Response
+            $response = $response->as_error();
+        }
+
         if (is_wp_error($response)) {
             return $response->get_error_message();
         }
