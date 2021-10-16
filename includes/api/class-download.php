@@ -115,7 +115,7 @@ class OMGF_API_Download extends WP_REST_Controller
         $fonts = array_filter($fonts);
 
         if (empty($fonts)) {
-            exit();
+            return;
         }
 
         foreach ($fonts as $font_key => &$font) {
@@ -252,7 +252,7 @@ class OMGF_API_Download extends WP_REST_Controller
     private function grab_font_family($font_family, $query)
     {
         $url          = $this->get_working_service_url();
-        list($family) = explode(': ', $font_family);
+        list($family) = explode(':', $font_family);
 
         /**
          * Replace multiple spaces or plus signs (or a combination of, with a single dash)
@@ -300,7 +300,7 @@ class OMGF_API_Download extends WP_REST_Controller
             $font_family   = str_replace('-', ' ', $family);
             $error_body    = wp_remote_retrieve_body($response);
             $error_message = wp_remote_retrieve_response_message($response);
-            $message       = sprintf(__('OMGF could not find <strong>%s</strong>. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $error_message);
+            $message       = sprintf(__('OMGF couldn\'t find <strong>%s</strong>. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $error_message);
 
             OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', false, 'error');
 
