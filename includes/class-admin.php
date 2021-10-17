@@ -1,4 +1,6 @@
 <?php
+defined('ABSPATH') || exit;
+
 /* * * * * * * * * * * * * * * * * * * * *
  *
  *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
@@ -13,10 +15,6 @@
  * @copyright: (c) 2021 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
-
-use function PHPSTORM_META\map;
-
-defined('ABSPATH') || exit;
 
 class OMGF_Admin
 {
