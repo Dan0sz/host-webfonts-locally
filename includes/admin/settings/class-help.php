@@ -36,13 +36,13 @@ class OMGF_Admin_Settings_Help extends OMGF_Admin_Settings_Builder
     public function do_content()
     {
         $utmTags = '?utm_source=omgf&utm_medium=plugin&utm_campaign=support_tab';
-        $tweetUrl = "https://twitter.com/intent/tweet?text=I+am+using+OMGF+to+speed+up+Google+Fonts+for+@WordPress!+Try+it+for+yourself:&via=Dan0sz&hashtags=GoogleFonts,WordPress,Pagespeed,Insights&url=https://wordpress.org/plugins/host-webfonts-local/";
+        $tweetUrl = sprintf("https://twitter.com/intent/tweet?text=I+am+using+%s+to+speed+up+Google+Fonts+for+@WordPress!+Try+it+for+yourself:&via=Dan0sz&hashtags=GoogleFonts,WordPress,Pagespeed,Insights&url=%s", str_replace(' ', '+', apply_filters('omgf_settings_page_title', 'OMGF')), apply_filters('omgf_help_tab_plugin_url', 'https://wordpress.org/plugins/host-webfonts-local/'));
 ?>
         <div class="welcome-panel">
             <div class="welcome-panel-content">
-                <h2><?= __('Thank you for using OMGF!'); ?></h2>
+                <h2><?= sprintf(__('Thank you for using %s!', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')); ?></h2>
                 <p class="about-description">
-                    <?= __('Need help configuring OMGF? Please refer to the links below to get you started.', $this->plugin_text_domain); ?>
+                    <?= sprintf(__('Need help configuring %s? Please refer to the links below to get you started.', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')); ?>
                 </p>
                 <div class="welcome-panel-column-container">
                     <div class="welcome-panel-column">
@@ -50,16 +50,17 @@ class OMGF_Admin_Settings_Help extends OMGF_Admin_Settings_Builder
                             <?php _e('Need Help?', $this->plugin_text_domain); ?>
                         </h3>
                         <ul>
-                            <li><a class="welcome-icon dashicons-controls-play" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_quick_start', 'https://ffw.press/docs/omgf-pro/quick-start/'); ?>"><?= __('Quick Start Guide', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-controls-forward" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_quick_start', 'https://ffw.press/docs/omgf-pro/quick-start/'); ?>"><?= __('Quick Start Guide', $this->plugin_text_domain); ?></a></li>
                             <li><a class="welcome-icon dashicons-text-page" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_user_manual', 'https://ffw.press/docs/omgf-pro/user-manual/'); ?>"><?= __('User Manual', $this->plugin_text_domain); ?></a></li>
                             <li><a class="welcome-icon dashicons-editor-help" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_faq_link', 'https://wordpress.org/plugins/host-webfonts-local/#description'); ?>"><?= __('FAQ', $this->plugin_text_domain); ?></a></li>
-                            <li><a class="welcome-icon dashicons-bell" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_get_support_link', 'https://wordpress.org/support/plugin/host-webfonts-local/#new-post'); ?>"><?= __('Get Support', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-sos" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_troubleshooting_link', 'https://ffw.press/docs/omgf-pro/troubleshooting/'); ?>"><?= __('Troubleshooting Guide', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-email" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_get_support_link', 'https://wordpress.org/support/plugin/host-webfonts-local/#new-post'); ?>"><?= __('Get Support', $this->plugin_text_domain); ?></a></li>
                         </ul>
                     </div>
                     <div class="welcome-panel-column">
-                        <h3><?= __('Support OMGF & Spread the Word!', $this->plugin_text_domain); ?></h3>
+                        <h3><?= sprintf(__('Support %s & Spread the Word!', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')); ?></h3>
                         <ul>
-                            <li><a class="welcome-icon dashicons-star-filled" target="_blank" href="https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post"><?= __('Write a 5-star Review or,', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-star-filled" target="_blank" href="<?= apply_filters('omgf_help_tab_review_link', 'https://wordpress.org/support/plugin/host-webfonts-local/reviews/?rate=5#new-post'); ?>"><?= __('Write a 5-star Review or,', $this->plugin_text_domain); ?></a></li>
                             <li><a class="welcome-icon dashicons-twitter" target="_blank" href="<?= $tweetUrl; ?>"><?= __('Tweet about it!', $this->plugin_text_domain); ?></a></li>
                         </ul>
                     </div>
