@@ -332,8 +332,6 @@ class OMGF_API_Download extends WP_REST_Controller
      * Because the regular Google Webfonts Helper API tends to go offline sometimes, this function allows us
      * to use fallback services.
      * 
-     * TODO: Setup own mirror.
-     * 
      * @return string Will return regular API url if fallback API url fails, too. Error handling later on will display a
      *                proper message to the user.
      */

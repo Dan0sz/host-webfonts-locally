@@ -50,11 +50,11 @@ class OMGF_Admin_Settings_Help extends OMGF_Admin_Settings_Builder
                             <?php _e('Need Help?', $this->plugin_text_domain); ?>
                         </h3>
                         <ul>
-                            <li><a class="welcome-icon dashicons-controls-forward" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_quick_start', 'https://ffw.press/docs/omgf-pro/quick-start/'); ?>"><?= __('Quick Start Guide', $this->plugin_text_domain); ?></a></li>
-                            <li><a class="welcome-icon dashicons-text-page" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_user_manual', 'https://ffw.press/docs/omgf-pro/user-manual/'); ?>"><?= __('User Manual', $this->plugin_text_domain); ?></a></li>
-                            <li><a class="welcome-icon dashicons-editor-help" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_faq_link', 'https://wordpress.org/plugins/host-webfonts-local/#description'); ?>"><?= __('FAQ', $this->plugin_text_domain); ?></a></li>
-                            <li><a class="welcome-icon dashicons-sos" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_troubleshooting_link', 'https://ffw.press/docs/omgf-pro/troubleshooting/'); ?>"><?= __('Troubleshooting Guide', $this->plugin_text_domain); ?></a></li>
-                            <li><a class="welcome-icon dashicons-email" target="_blank" href="<?= apply_filters('omgf_settings_sidebar_get_support_link', 'https://wordpress.org/support/plugin/host-webfonts-local/#new-post'); ?>"><?= __('Get Support', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-controls-forward" target="_blank" href="<?= apply_filters('omgf_settings_help_quick_start', 'https://docs.ffw.press/article/7-quick-start'); ?>"><?= __('Quick Start Guide', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-text-page" target="_blank" href="<?= apply_filters('omgf_settings_help_user_manual', 'https://docs.ffw.press/category/4-omgf-pro'); ?>"><?= __('User Manual', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-editor-help" target="_blank" href="<?= apply_filters('omgf_settings_help_faq_link', 'https://docs.ffw.press/article/9-frequently-asked-question-faq'); ?>"><?= __('FAQ', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-sos" target="_blank" href="<?= apply_filters('omgf_settings_help_troubleshooting_link', 'https://docs.ffw.press/category/37-omgf-pro---troubleshooting'); ?>"><?= __('Troubleshooting Guide', $this->plugin_text_domain); ?></a></li>
+                            <li><a class="welcome-icon dashicons-email" target="_blank" href="<?= apply_filters('omgf_settings_help_support_link', 'https://docs.ffw.press/contact'); ?>"><?= __('Get Support', $this->plugin_text_domain); ?></a></li>
                         </ul>
                     </div>
                     <div class="welcome-panel-column">
