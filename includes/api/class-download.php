@@ -269,7 +269,7 @@ class OMGF_API_Download extends WP_REST_Controller
         $alternate_fonts = apply_filters('omgf_alternate_fonts', []);
 
         if (in_array($family, array_keys($alternate_fonts))) {
-            $url = apply_filters('omgf_alternate_api_url', $url);
+            $url = apply_filters('omgf_alternate_api_url', $url, $family);
             unset($query);
         }
 
