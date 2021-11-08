@@ -44,7 +44,7 @@ Everything in the free version, plus:
   - Anything you like!
 - Proper handling for AMP pages (Fallback to or remove Google Fonts).
 
-**[Documentation](https://ffw.press/docs/omgf-pro/) | [Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/)**
+**[Documentation](https://docs.ffw.press/category/4-omgf-pro/) | [Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/)**
 
 
 ## Installation

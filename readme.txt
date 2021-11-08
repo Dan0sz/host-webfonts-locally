@@ -58,7 +58,7 @@ Everything in the free version, plus:
   - Anything you like!
 - Proper handling for AMP pages (Fallback to or remove Google Fonts).
 
-*[Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/) | [Documentation](https://ffw.press/docs/omgf-pro/) | [Tested Plugins & Themes](https://ffw.press/docs/omgf-pro/troubleshooting/compatibility/)*
+*[Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/) | [Documentation](https://docs.ffw.press/category/4-omgf-pro/) | [Tested Plugins & Themes](https://docs.ffw.press/article/40-list-of-compatible-themes-and-plugins-omgf-pro)*
 
 == Installation ==
 
@@ -66,11 +66,11 @@ Everything in the free version, plus:
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Use the Settings -> Optimize Google Fonts screen to configure the plugin
 
-For a more comprehensive guide on configuring OMGF, check out the [user manual](https://ffw.press/docs/omgf-pro/user-manual/)
+For a more comprehensive guide on configuring OMGF, check out the [user manual](https://docs.ffw.press/category/4-omgf-pro/)
 
 == Frequently Asked Questions ==
 
-For the FAQ, [click here](https://ffw.press/docs/omgf-pro/faq/).
+For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 
 == Screenshots ==
 
