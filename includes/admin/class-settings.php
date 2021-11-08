@@ -194,7 +194,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		}
 
 		// Footer Text
-		add_filter('admin_footer_text', [$this, 'footer_text_left']);
+		add_filter('admin_footer_text', [$this, 'footer_text_left'], 99);
 		add_filter('update_footer', [$this, 'footer_text_right'], 11);
 
 		// Tabs
