@@ -227,7 +227,7 @@ jQuery(document).ready(function ($) {
          */
         toggle: function (elem, option) {
             var this_option = $(elem);
-            var other_option = $('.' + option + '-' + this_option.data('handle') + '-' + this_option.data('font-id') + '-' + this_option.val() + ' .' + option);
+            var other_option = $('.' + option + '-' + this_option.data('font-id') + '-' + this_option.val() + ' .' + option);
 
             if (elem.checked) {
                 other_option.attr('disabled', true);
