@@ -275,7 +275,7 @@ class OMGF_API_Download extends WP_REST_Controller
 
         $query_string = '';
 
-        if ($query) {
+        if (isset($query)) {
             $query_string = '?' . http_build_query($query);
         }
 
