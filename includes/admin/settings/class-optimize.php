@@ -39,8 +39,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimization_mode'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_combine_requests'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_include_file_types'], 60);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_subsets'], 70);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_include_file_types'], 70);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_subsets'], 80);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -107,6 +108,20 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_FONT_DISPLAY_OPTIONS,
 			OMGF_DISPLAY_OPTION,
 			__('Select which value to set the font-display attribute to. Defaults to Swap (recommended).', $this->plugin_text_domain)
+		);
+	}
+
+	/**
+	 * Force Font-Display Option Site Wide
+	 */
+	public function do_promo_force_font_display()
+	{
+		$this->do_checkbox(
+			__('Force Font-Display Option Site Wide (Pro)', $this->plugin_text_domain),
+			'omgf_pro_force_font_display',
+			defined('OMGF_PRO_FORCE_FONT_DISPLAY') ? OMGF_PRO_FORCE_FONT_DISPLAY : false,
+			__('Force the above <code>font-display</code> attribute on all <code>@font-face</code> statements to ensure all text is user-visible while webfonts and icon sets are loading.', $this->plugin_text_domain),
+			true
 		);
 	}
 
