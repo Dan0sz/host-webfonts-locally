@@ -225,11 +225,13 @@ class OMGF_Frontend_Functions
 	 */
 	private function detect_registered_stylesheets($registered_styles)
 	{
-		return array_filter(
+		$detected_stylesheets = array_filter(
 			$registered_styles,
 			function ($contents) {
 				return strpos($contents->src, 'fonts.googleapis.com/css') !== false;
 			}
 		);
+
+		return apply_filters('omgf_detected_registered_stylesheets', $detected_stylesheets, $registered_styles);
 	}
 }
