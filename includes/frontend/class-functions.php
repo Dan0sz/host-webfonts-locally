@@ -176,6 +176,9 @@ class OMGF_Frontend_Functions
 
 			$cached_file = OMGF_CACHE_PATH . '/' . $updated_handle . "/$updated_handle.css";
 
+			/**
+			 * Bail early if stylesheet already exists.
+			 */
 			if (file_exists(WP_CONTENT_DIR . $cached_file)) {
 				$wp_styles->registered[$handle]->src = content_url($cached_file);
 
@@ -232,6 +235,9 @@ class OMGF_Frontend_Functions
 			}
 		);
 
+		/**
+		 * @since v4.5.11 Added filter to allow adding additional stylesheets.
+		 */
 		return apply_filters('omgf_detected_registered_stylesheets', $detected_stylesheets, $registered_styles);
 	}
 }
