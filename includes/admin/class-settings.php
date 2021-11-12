@@ -479,7 +479,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		$xml = get_transient(self::OMGF_NEWS_REEL);
 
 		if (!$xml) {
-			$response = wp_remote_get('https://daan.dev/tag/omgf/feed');
+			$response = wp_remote_get('https://ffw.press/blog/tag/omgf/feed');
 
 			if (!is_wp_error($response)) {
 				$xml = wp_remote_retrieve_body($response);
