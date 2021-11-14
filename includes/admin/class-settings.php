@@ -493,6 +493,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			return $text;
 		}
 
+		/**
+		 * Make sure the XML is properly encoded.
+		 */
+		$xml = utf8_encode(html_entity_decode($xml));
 		$xml = simplexml_load_string($xml);
 
 		if (!$xml) {
