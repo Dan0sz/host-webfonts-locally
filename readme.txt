@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.8
-Stable tag: 4.5.10
+Stable tag: 4.5.11
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -80,6 +80,14 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.5.11 | November 17th, 2021 =
+* Doc: Updated links to fancy new documentation hub: docs.ffw.press
+* Dev: Added $font_family to omgf_alternate_api_url filter.
+* Dev: Added filter to detect_registered_stylesheets().
+* Fix: disable preload/unload when opposite checkbox is checked.
+* Fix: Updated RSS feed URL and properly encode retrieved XML to prevent parse error simplexml_load_string().
+* Promo: Added force font-display promo material.
 
 = 4.5.10 | October 18th, 2021 =
 * Enhancement: API now cleans up excessive spacing and + symbols in requests before fetching fonts. This comes in handy when e.g. @import statements in CSS stylesheets are auto-formatted by IDEs.
