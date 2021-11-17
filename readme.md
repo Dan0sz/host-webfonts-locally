@@ -33,8 +33,10 @@ Everything in the free version, plus:
 - Automatically remove/replace all Google Fonts throughout the entire document/page,
   - Also supports WebFont Loader (webfont.js), Early Access Google Fonts and requests in stylesheets using @import and @font-face statements.
   - Automatically generate different stylesheets for pages with different Google Fonts configurations.
+  - Material Icons support.
 - Combine all Google Fonts stylesheets (requested by your theme and/or plugins) into one file,
 - Deduplicate Google Fonts stylesheets,
+- Rewrite stylesheets added by other plugins and/or themes to include the configured font-display (e.g. swap) option, this will remove *the ensure text remains visible during webfont load* optimization suggestion from Google PageSpeed Insights,
 - Define file types to include in stylesheet (WOFF, WOFF2, EOT, TTF, SVG),
 - Reduce loading time and page size, by forcing the used subset(s) for all Google Fonts requests,
 - Remove Resource Hints (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com,
