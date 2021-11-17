@@ -65,6 +65,15 @@ class OMGF_Download
 		}
 
 		$tmp = download_url($this->url);
+
+		if (is_wp_error($tmp)) {
+			/** @var WP_Error $tmp */
+			OMGF_Admin_Notice::set_notice($tmp->get_error_message(), 'omgf-download-failed', false, 'error', $tmp->get_error_code());
+
+			return '';
+		}
+
+		/** @var string $tmp */
 		copy($tmp, $file);
 		@unlink($tmp);
 
