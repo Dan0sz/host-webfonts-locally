@@ -56,6 +56,7 @@ class OMGF_Admin
 		// This used to fix a bug, but now it breaks stuff. Leave it here for the time being.
 		// add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'update_optimized_fonts'], 10, 2);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
+		add_action('pre_update_option_omgf_cache_dir', [$this, 'validate_cache_dir'], 10, 2);
 		add_filter('pre_update_option', [$this, 'settings_changed'], 10, 3);
 	}
 
@@ -179,6 +180,42 @@ class OMGF_Admin
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Perform a few checks before saving the Cache Directory value to the database.
+	 * 
+	 * @param mixed $new_dir 
+	 * @param mixed $old_dir 
+	 * @return mixed 
+	 */
+	public function validate_cache_dir($new_dir, $old_dir)
+	{
+		$allowed_path = WP_CONTENT_DIR . $new_dir;
+		$mkdir        = true;
+
+		if (!file_exists($allowed_path)) {
+			/**
+			 * wp_mkdir_p() already does some simple checks for path traversal, but we check it again using realpath() later on anyway.
+			 */
+			$mkdir = wp_mkdir_p($allowed_path);
+		}
+
+		if (!$mkdir) {
+			OMGF_Admin_Notice::set_notice(sprintf(__('Something went wrong while trying to create OMGF\'s Cache Directory: %s. Setting wasn\'t updated.', $this->plugin_text_domain), $new_dir), 'omgf-create-cache-dir-failed', false, 'error');
+
+			return $old_dir;
+		}
+
+		$real_path = realpath($allowed_path);
+
+		if ($real_path != rtrim($allowed_path, '/')) {
+			OMGF_Admin_Notice::set_notice(__('OMGF\'s Cache Directory wasn\'t changed. Attempted path traversal.', $this->plugin_text_domain), 'omgf-attempted-path-traversal', false, 'error');
+
+			return $old_dir;
+		}
+
+		return $new_dir;
 	}
 
 	/**
