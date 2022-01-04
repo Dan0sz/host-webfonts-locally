@@ -32,6 +32,7 @@ class OMGF_API_Download extends WP_REST_Controller
         'muli'     => 'mulish'
     ];
 
+    /** @var string */
     private $plugin_text_domain = 'host-webfonts-local';
 
     /** @var array */
@@ -83,7 +84,12 @@ class OMGF_API_Download extends WP_REST_Controller
             return false;
         }
 
-        return wp_verify_nonce($_REQUEST['_wpnonce'], 'wp_rest') > 0;
+        /**
+         * This API should only be accessible to users with manage_options capabilities.
+         * 
+         * @since v4.5.13
+         */
+        return current_user_can('manage_options') && wp_verify_nonce($_REQUEST['_wpnonce'], 'wp_rest') > 0;
     }
 
     /**
