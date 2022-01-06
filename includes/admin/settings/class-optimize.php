@@ -21,7 +21,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	const FFW_PRESS_OMGF_AF_URL = 'https://ffw.press/wordpress/omgf-additional-fonts/';
 
 	/** @var array $optimized_fonts */
-	private $optimized_fonts;
+	private $optimized_fonts = [];
 
 	/**
 	 * OMGF_Admin_Settings_Optimize constructor.
@@ -174,10 +174,13 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 */
 	public function do_optimize_fonts_contents()
 	{
+		/**
+		 * Note: moving this to the constructor doesn't get it properly refreshed after a page reload.
+		 */
 		$this->optimized_fonts = OMGF::optimized_fonts();
 		?>
 			<span class="option-title"><?= __('Manage Optimized Fonts', $this->plugin_text_domain); ?></span>
-			<?php if ($this->optimized_fonts) : ?>
+			<?php if (!empty($this->optimized_fonts)) : ?>
 				<?= $this->do_optimized_fonts_manager(); ?>
 			<?php else : ?>
 				<div class="omgf-optimize-fonts-description">
