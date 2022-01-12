@@ -300,7 +300,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<span class="dashicons-before dashicons-yes"></span> <?= __('Pros:', $this->plugin_text_domain); ?>
 					</h3>
 					<ul>
-						<li><?= __('A small initial performance boost, because no calls to OMGF\'s Download API are made in the frontend.', $this->plugin_text_domain); ?></li>
 						<li><?= __('Force one stylesheet to be used throughout the site.', $this->plugin_text_domain); ?></li>
 					</ul>
 				</div>
