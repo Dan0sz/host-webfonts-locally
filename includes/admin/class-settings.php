@@ -148,9 +148,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_AMP_HANDLING = 'omgf_amp_handling';
 	const OMGF_ADV_SETTING_CACHE_PATH   = 'omgf_cache_dir';
-	const OMGF_ADV_SETTING_SOURCE_URL   = 'omgf_fonts_url';
 	const OMGF_ADV_SETTING_UNINSTALL    = 'omgf_uninstall';
 
 	/**
