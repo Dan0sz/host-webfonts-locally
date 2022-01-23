@@ -25,25 +25,30 @@
   white-space: nowrap;
   padding: 1px 10px !important;
 }
+
 .omgf .button-cancel:hover {
   cursor: pointer;
   background: #d54e21;
   color: #fff;
   border-color: #d54e21;
 }
+
 /**
  * Navigation
  */
 .omgf-nav {
   padding: 1em 0 1.5em;
 }
+
 .omgf-nav a {
   cursor: pointer;
 }
+
 .omgf-nav .dashicons-before:before {
   margin-right: 0.25em;
   line-height: 1.15em;
 }
+
 .omgf-optimize-fonts-container {
   text-align: center;
   padding: 25px 50px;
@@ -52,6 +57,7 @@
   overflow: visible;
   position: relative;
 }
+
 .omgf-optimize-fonts-container .option-title {
   position: absolute;
   left: -220px;
@@ -60,22 +66,27 @@
   font-size: 14px;
   color: #1d2327;
 }
+
 .omgf-optimize-fonts-container h3 {
   font-size: 1.3em;
   margin-top: 0;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage {
   text-align: left;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table {
   width: 100%;
   border-collapse: collapse;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip {
   position: relative;
   font-size: 16px;
   line-height: 25px;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip .tooltip-text {
   visibility: hidden;
   position: absolute;
@@ -92,39 +103,50 @@
   margin-left: -125px;
   border-radius: 3px;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip .tooltip-text .illustration {
   margin-top: 10px;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip:hover .tooltip-text {
   visibility: visible;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table thead th {
   width: 13%;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody {
   border: 1px solid #ccd0d4;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody th {
   padding: 5px 0 0 10px;
   width: 40%;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td {
   padding-bottom: 5px;
   width: 13%;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .unload-mass-action {
   font-size: 0.9em;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .family {
   padding: 0 10px 0;
   font-weight: 600;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody tr:last-child td {
   padding-bottom: 10px;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-pros {
   margin-right: 10px;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-pros,
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-cons {
   text-align: left;
@@ -132,36 +154,44 @@
   display: inline-block;
   vertical-align: top;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-pros span:before,
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description .omgf-optimize-fonts-cons span:before {
   vertical-align: -4px;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description label {
   font-size: 18px;
   font-weight: bold;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-description #omgf_manual_optimize_url {
   font-size: 18px;
   padding: 0 15px;
   margin-left: 10px;
 }
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-tooltip {
   padding: 0 15px 5px;
 }
+
 .omgf-optimize-fonts-container p,
 .omgf-optimize-fonts-container ul {
   text-align: justify;
 }
+
 @media only screen and (max-width: 782px) {
   .omgf-optimize-fonts-container {
     margin: 20px 0;
   }
+
   .omgf-optimize-fonts-container .option-title {
     position: relative;
     left: initial;
     top: initial;
   }
 }
+
 /**
  * Loader
  */
@@ -173,6 +203,7 @@
   top: 0;
   text-align: center;
 }
+
 .omgf-loading .spinner {
   top: 50%;
   left: 50%;
@@ -180,19 +211,24 @@
   -ms-transform: translate(0, -70%);
   transform: translate(0, -70%);
 }
+
 /**
  * Welcome Block
  */
 #footer-thankyou a {
   vertical-align: -0.65em;
 }
+
 #footer-thankyou .dashicons.ffwp-heart {
   vertical-align: middle;
 }
+
 #footer-thankyou .dashicons.ffwp-heart:before {
   color: #FF4136;
 }
+
 #footer-thankyou .signature-image {
   width: 96px;
 }
-/*# sourceMappingURL=./omgf-admin.css.map */
+
+/*# sourceMappingURL=/wp-content/plugins/host-webfonts-local/assets/css/omgf-admin.css.map */
