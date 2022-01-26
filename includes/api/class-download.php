@@ -101,7 +101,7 @@ class OMGF_API_Download extends WP_REST_Controller
         $original_handle = sanitize_title_with_dashes($request->get_param('original_handle'));
 
         if (!$this->handle || !$original_handle) {
-            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF API couldn\'t find required handle parameter. Values sent were %s and %s.', $this->plugin_text_domain), $original_handle, $this->handle));
+            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF API couldn\'t find required handle parameter. Values sent were %s and %s.', $this->plugin_text_domain), $original_handle, $this->handle), 'omgf-api-handle-not-found', true, 'error', 406);
         }
 
         $this->path       = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
