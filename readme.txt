@@ -83,6 +83,10 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 
 == Changelog ==
 
+= 4.5.15 | January 26th, 2022 =
+* Tested with WP 5.9
+  - Fix: WP 5.9 welcome banner displayed in Optimized Fonts Manager section.
+
 = 4.5.14 | January 18th, 2022 =
 * Fix: Pro options Google Fonts Source URL and AMP handling couldn't be saved.
 
