@@ -165,7 +165,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	public function do_optimize_fonts_container()
 	{
 	?>
-		<div class="omgf-optimize-fonts-container welcome-panel">
+		<div class="omgf-optimize-fonts-container postbox">
 		<?php
 	}
 
