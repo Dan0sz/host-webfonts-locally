@@ -193,7 +193,10 @@ class OMGF
 		$cache_keys = self::cache_keys();
 
 		foreach ($cache_keys as $index => $key) {
-			if (strpos($key, $handle) !== false) {
+			/**
+			 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
+			 */
+			if (strpos($key, strtolower($handle)) !== false) {
 				return $key;
 			}
 		}

@@ -1,4 +1,6 @@
 <?php
+defined('ABSPATH') || exit;
+
 /* * * * * * * * * * * * * * * * * * * * *
  *
  *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
@@ -13,9 +15,6 @@
  * @copyright: (c) 2021 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
-
-defined('ABSPATH') || exit;
-
 class OMGF_Frontend_Functions
 {
 	const OMGF_STYLE_HANDLE = 'omgf-fonts';
@@ -170,8 +169,12 @@ class OMGF_Frontend_Functions
 
 			$updated_handle = $handle;
 
-			if ($unloaded_fonts) {
-				$updated_handle = OMGF::get_cache_key($handle);
+			if ($unloaded_fonts && $cache_key = OMGF::get_cache_key($handle)) {
+				/**
+				 * @since v4.5.16 Since cache key returns an empty string if none is found, an extra
+				 *                check is required to not accidentally overwrite the $updated_handle.
+				 */
+				$updated_handle = $cache_key;
 			}
 
 			$cached_file = OMGF_CACHE_PATH . '/' . $updated_handle . "/$updated_handle.css";
@@ -206,9 +209,13 @@ class OMGF_Frontend_Functions
 					array_merge(
 						$query_array,
 						[
-							'handle' => $updated_handle,
-							'original_handle' => $handle,
-							'_wpnonce' => wp_create_nonce('wp_rest')
+							/**
+							 * @since v4.5.16 convert handle parameters to lowercase, to make sure the naming is
+							 * 				  consistent across the board.
+							 */
+							'handle'          => strtolower($updated_handle),
+							'original_handle' => strtolower($handle),
+							'_wpnonce'        => wp_create_nonce('wp_rest')
 						]
 					)
 				);
