@@ -190,6 +190,54 @@
   }
 }
 
+#omgf-help-form {
+  .postbox {
+    padding: 0 15px 5px;
+
+    .column-container {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+
+      .column {
+        ul {
+          li {
+            margin-bottom: 10px;
+
+            &:last-child {
+              margin-bottom: none;
+            }
+
+            a {
+              text-decoration: none;
+              line-height: 1.45;
+    
+              i {
+                &.dashicons {
+                  margin-right: 5px;
+                  color: #646970;
+                }
+              }
+            }
+          }
+        }
+
+        &.last {
+          margin-right: 45px;
+
+          .signature {
+            text-align: center; 
+  
+            .dashicons-heart {
+              color: red;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: 782px) {
   .omgf-optimize-fonts-container {
     margin: 20px 0;
