@@ -363,4 +363,19 @@ class OMGF
 			unlink($entry);
 		}
 	}
+
+	/**
+	 * Global debug logging function.
+	 * 
+	 * @param mixed $message 
+	 * @return void 
+	 */
+	public static function debug($message)
+	{
+		if (!OMGF_DEBUG_MODE) {
+			return;
+		}
+
+		error_log(current_time('Y-m-d H:i:s') . ' '  . microtime() . ": $message\n", 3, trailingslashit(WP_CONTENT_DIR) . 'omgf-pro-debug.log');
+	}
 }
