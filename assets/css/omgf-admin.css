@@ -181,7 +181,7 @@
   text-align: center;
 }
 #omgf-help-form .postbox .column-container .column.last .signature .dashicons-heart {
-  color: red;
+  color: #FF4136;
 }
 @media only screen and (max-width: 782px) {
   .omgf-optimize-fonts-container {
