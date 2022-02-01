@@ -211,6 +211,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							<th><?= __('Preload', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?= __('Preload font files (before everything else) so they will be available as soon as they are required for the rendering of the page. Only use preload for font files that are used above the fold.', $this->plugin_text_domain); ?></span><img width="230" class="illustration" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/above-the-fold.png'; ?>" /></span></span></th>
 							<th><?= __('Do not load', $this->plugin_text_domain); ?></th>
 							<th><?= __('Fallback Font Stack (Pro)', $this->plugin_text_domain); ?></th>
+							<th><?= __('Replace (Pro)', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?= __('When the Replace option is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback.', $this->plugin_text_domain); ?></span></span></span></th>
 						</tr>
 					</thead>
 					<?php
@@ -242,6 +243,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 												<option <?= defined('OMGF_PRO_FALLBACK_FONT_STACK') && isset(OMGF_PRO_FALLBACK_FONT_STACK[$handle][$font->id]) && OMGF_PRO_FALLBACK_FONT_STACK[$handle][$font->id] == $value ? 'selected' : ''; ?> value="<?= $value; ?>"><?= $label; ?></option>
 											<?php endforeach; ?>
 										</select>
+									</td>
+									<td class="replace">
+										<?php $replace = defined('OMGF_PRO_REPLACE_FONT') && isset(OMGF_PRO_REPLACE_FONT[$handle][$font->id]) && OMGF_PRO_REPLACE_FONT[$handle][$font->id] == 'on' ? 'checked' : ''; ?>
+										<input autocomplete="off" type="checkbox" class="replace" <?= $replace; ?> <?= apply_filters('omgf_pro_replace_font_setting_disabled', true) ? 'disabled' : ''; ?> name="omgf_pro_replace_font[<?= $handle; ?>][<?= $font->id; ?>]" />
 									</td>
 								</tr>
 								<?php foreach ($font->variants as $variant) : ?>
