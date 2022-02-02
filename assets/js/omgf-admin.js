@@ -283,6 +283,7 @@ jQuery(document).ready(function ($) {
     };
 
     omgf_show_loader = omgf_admin.show_loader;
+    omgf_unload_all = omgf_admin.unload_all;
 
     omgf_admin.init();
 });
