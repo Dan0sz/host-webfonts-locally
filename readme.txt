@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.9
-Stable tag: 4.5.15
+Stable tag: 4.5.16
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -83,81 +83,89 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 
 == Changelog ==
 
+= 4.5.16 | February 2nd, 2022 =
+* Fixed: WP 5.9 welcome banner removed from Help section.
+* Added: Basic debugging throughout the plugin (can be enable by setting the OMGF_DEBUG_MODE constant to true);
+* Fixed: Updated handle was overwritten by empty value if cache key wasn't defined.
+* Added: More user friendly error messages.
+* Fixed: "Handle not provided" error should not kill the entire Download API process (post OMGF v4)
+* Pro Feature: Fallback Font Stacks can now Replace an entire Google Fonts font-family.
+
 = 4.5.15 | January 26th, 2022 =
 * Tested with WP 5.9
-  - Fix: WP 5.9 welcome banner displayed in Optimized Fonts Manager section.
+  - Fixed: WP 5.9 welcome banner displayed in Optimized Fonts Manager section.
 
 = 4.5.14 | January 18th, 2022 =
-* Fix: Pro options Google Fonts Source URL and AMP handling couldn't be saved.
+* Fixed: Pro options Google Fonts Source URL and AMP handling couldn't be saved.
 
 = 4.5.13 | January 4th, 2022 =
-* Sec: Properly check permissions when Download API is accessed.
+* Secured: Properly check permissions when Download API is accessed.
 
 = 4.5.12 | November 27th, 2021 =
-* Sec: Prevent path traversal when cache directory setting is changed. (Thanks, @jsgm!)
+* Secured: Prevent path traversal when cache directory setting is changed. (Thanks, @jsgm!)
 
 = 4.5.11 | November 17th, 2021 =
-* Doc: Updated links to fancy new documentation hub: docs.ffw.press
+* Documented: Updated links to fancy new documentation hub: docs.ffw.press
 * Dev: Added $font_family to omgf_alternate_api_url filter.
 * Dev: Added filter to detect_registered_stylesheets().
-* Fix: disable preload/unload when opposite checkbox is checked.
-* Fix: Updated RSS feed URL and properly encode retrieved XML to prevent parse error simplexml_load_string().
+* Fixed: disable preload/unload when opposite checkbox is checked.
+* Fixed: Updated RSS feed URL and properly encode retrieved XML to prevent parse error simplexml_load_string().
 * Promo: Added force font-display promo material.
 
 = 4.5.10 | October 18th, 2021 =
-* Enhancement: API now cleans up excessive spacing and + symbols in requests before fetching fonts. This comes in handy when e.g. @import statements in CSS stylesheets are auto-formatted by IDEs.
-* Fix: API would crash when Google Fonts request turned up empty.
-* Fix: Added proper error handling for when downloading fonts failed.
-* Doc: Added link to Troubleshooting Guide to Help tab.
+* Enhanced: API now cleans up excessive spacing and + symbols in requests before fetching fonts. This comes in handy when e.g. @import statements in CSS stylesheets are auto-formatted by IDEs.
+* Fixed: API would crash when Google Fonts request turned up empty.
+* Fixed: Added proper error handling for when downloading fonts failed.
+* Documented: Added link to Troubleshooting Guide to Help tab.
 
 = 4.5.9 | October 5th, 2021 =
-* Fix: content_url() should always be encoded, also if file already exists.
-* Enhancement: If stylesheet is already generated, stop execution to decrease API request time.
+* Fixed: content_url() should always be encoded, also if file already exists.
+* Enhanced: If stylesheet is already generated, stop execution to decrease API request time.
 
 = 4.5.8 =
-* Fix: use array_merge() to prevent unsupported operand types error.
+* Fixed: use array_merge() to prevent unsupported operand types error.
 
 = 4.5.7 | September 29th, 2021 = 
-* Enhancement: significantly reduced code running frontend.
-* Fix: internal requests to OMGF's Download API are no longer treated as 'remote'.
-* Fix: stylesheets are no longer skipped in some situations by the temp storage layer, before writing them to the database.
-* Fix: using the mass actions (e.g. unload all, unload italics) no longer affect font families with the same name in a stylesheet with a different handle.
-* Fix: Italic fonts are now properly detected by the API when CSS2 (variable fonts) API is used by themes and/or plugins.
-* Fix: Added my own self-managed fallback API mirror to prevent more Google Fonts API downtime.
-* Enhancement: reduced code in Download API by ~20%.
+* Enhanced: significantly reduced code running frontend.
+* Fixed: internal requests to OMGF's Download API are no longer treated as 'remote'.
+* Fixed: stylesheets are no longer skipped in some situations by the temp storage layer, before writing them to the database.
+* Fixed: using the mass actions (e.g. unload all, unload italics) no longer affect font families with the same name in a stylesheet with a different handle.
+* Fixed: Italic fonts are now properly detected by the API when CSS2 (variable fonts) API is used by themes and/or plugins.
+* Fixed: Added my own self-managed fallback API mirror to prevent more Google Fonts API downtime.
+* Enhanced: reduced code in Download API by ~20%.
 * Dev: add-ons for OMGF can now use the show_loader() method.
 * Several UX and performance tweaks.
 
 = 4.5.6 =
-* Fix: Added Fallback API URL for when Google Fonts Helper is down.
-* Enhancement: Added extra error handling in Manual Optimization Mode.
-* Fix: API requests made in Manual Optimization Mode are no longer forced to SSL. It now uses the protocol configured in Settings > General > WordPress URL.
-* Fix: Stylesheet handles containing spaces would prevent Optimize Google Fonts screen from rendering properly.
+* Fixed: Added Fallback API URL for when Google Fonts Helper is down.
+* Enhanced: Added extra error handling in Manual Optimization Mode.
+* Fixed: API requests made in Manual Optimization Mode are no longer forced to SSL. It now uses the protocol configured in Settings > General > WordPress URL.
+* Fixed: Stylesheet handles containing spaces would prevent Optimize Google Fonts screen from rendering properly.
 * Several refactors and code optimizations.
 
 = 4.5.5 =
-* Fix: Prevent collision with other plugins when authenticating AJAX-calls.
+* Fixed: Prevent collision with other plugins when authenticating AJAX-calls.
 
 = 4.5.4 | August 18th, 2021 =
 * Security: Access to the Download API now requires a valid nonce to prevent CSRF.
 * Security: Added authentication to Empty Cache Directory AJAX-call.
 
 = 4.5.3 | August 17th, 2021 =
-* Fix: "Too few arguments to function OmgfPro_Frontend_AutoReplace::passthru_handle()" would occur if OMGF Pro was updated to v2.5.1 before OMGF was updated to v4.5.2.
+* Fixed: "Too few arguments to function OmgfPro_Frontend_AutoReplace::passthru_handle()" would occur if OMGF Pro was updated to v2.5.1 before OMGF was updated to v4.5.2.
 * Security: Added checks to prevent path traversal and CSRF in Empty Cache Directory AJAX call.
 
 = 4.5.2 | August 16th, 2021 = 
 * Pro Feature: Added promo material for @font-face detection in local stylesheets.
-* Fix: Fixed several warnings and notices.
+* Fixed: Fixed several warnings and notices.
 
 = 4.5.1 | August 2nd, 2021 =
-* Enhancement: Added post update notice to inform user of the plugin's database changes. The current notice you were viewed was simply, because the current DB version wasn't logged yet on your system. So if you're reading this: Ha! Made you look! ;)
+* Enhanced: Added post update notice to inform user of the plugin's database changes. The current notice you were viewed was simply, because the current DB version wasn't logged yet on your system. So if you're reading this: Ha! Made you look! ;)
 * Pro Feature: Added promo material for Fallback Font Stack (Pro) feature.
-* Enhancement: moved Stylesheet Generator to its own backend API.
-* Enhancement: moved Font Downloader to its own backend API.
-* Enhancement: Updated description of Optimization Modes.
-* Fix: Fixed glitch in footer news ticker.
-* Enhancement: Added several filter and action hooks to allow a more seamless integration with OMGF Pro and OMGF Additional Fonts.
+* Enhanced: moved Stylesheet Generator to its own backend API.
+* Enhanced: moved Font Downloader to its own backend API.
+* Enhanced: Updated description of Optimization Modes.
+* Fixed: Fixed glitch in footer news ticker.
+* Enhanced: Added several filter and action hooks to allow a more seamless integration with OMGF Pro and OMGF Additional Fonts.
 * Several code and performance optimizations.
 
 = 4.5.0 | July 28th, 2021 =
