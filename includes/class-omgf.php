@@ -372,7 +372,7 @@ class OMGF
 	 */
 	public static function debug($message)
 	{
-		if (!OMGF_DEBUG_MODE) {
+		if (!defined('OMGF_DEBUG_MODE') || !OMGF_DEBUG_MODE) {
 			return;
 		}
 
