@@ -245,12 +245,11 @@ class OMGF_Frontend_Functions
 			}
 		);
 
+		OMGF::debug(sprintf(__('Found %s stylesheets containing Google Fonts: %s', $this->plugin_text_domain), count($detected_stylesheets), print_r($detected_stylesheets, true)));
+
 		/**
 		 * @since v4.5.11 Added filter to allow adding additional stylesheets.
 		 */
-
-		OMGF::debug(sprintf(__('Found %s stylesheets containing Google Fonts: %s', $this->plugin_text_domain), $detected_stylesheets, print_r($detected_stylesheets, true)));
-
 		return apply_filters('omgf_detected_registered_stylesheets', $detected_stylesheets, $registered_styles);
 	}
 }
