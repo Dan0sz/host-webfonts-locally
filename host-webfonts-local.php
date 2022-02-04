@@ -21,7 +21,6 @@ define('OMGF_PLUGIN_FILE', __FILE__);
 define('OMGF_PLUGIN_BASENAME', plugin_basename(OMGF_PLUGIN_FILE));
 define('OMGF_STATIC_VERSION', '4.5.11');
 define('OMGF_DB_VERSION', '4.5.1');
-define('OMGF_DEBUG_MODE', false); // Do NOT leave this enabled. For debugging purposes only.
 
 /**
  * Takes care of loading classes on demand.
