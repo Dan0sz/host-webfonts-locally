@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.9
-Stable tag: 4.5.17
+Stable tag: 4.5.18
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -82,6 +82,9 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 4.5.18 = 
+* Fixed: use of undefined constant 'OMGF_DEBUG_MODE'.
 
 = 4.5.17 | February 4th, 2022 =
 * Hotfix: array to string conversion on line 252 in class OMGF_Frontend_Functions.
