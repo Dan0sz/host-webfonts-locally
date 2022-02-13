@@ -31,6 +31,7 @@ jQuery(document).ready(function ($) {
             $('input[name="omgf_optimization_mode"]').on('click', this.toggle_optimization_mode_content);
             $('input[name="omgf_optimization_mode"]').on('change', this.toggle_manual_optimization_mode_section);
             $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
+            $('#omgf-stale-cache').on('click', function () { $('#omgf-empty').click(); });
             $('.omgf-optimize-fonts-manage .unload').on('change', this.unload_stylesheets);
             $('.omgf-optimize-fonts-manage .unload, .omgf-optimize-fonts-manage .fallback-font-stack select').on('change', this.generate_cache_key);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.toggle_preload);

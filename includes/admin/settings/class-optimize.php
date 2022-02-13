@@ -136,18 +136,16 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							<?php foreach ($stylesheets as $handle => $contents) : ?>
 								<?php
 								$cache_key = OMGF::get_cache_key($handle);
-								$modified  = false;
 
 								if (!$cache_key) {
 									$cache_key = $handle;
-								} else {
-									$modified = true;
 								}
 
 								$downloaded = file_exists(OMGF_FONTS_DIR . "/$cache_key/$cache_key.css");
+								$stale      = function_exists('omgf_pro_init') && strpos($cache_key, 'pro-merged') === false;
 								?>
-								<li class="<?= $downloaded ? 'found' : 'not-found'; ?>">
-									<strong><?= $handle; ?></strong> <?php if ($modified) : ?><em>(<?= sprintf(__('stored in cache as %s', $this->plugin_text_domain), $cache_key); ?>)</em><?php endif; ?>
+								<li class="<?= $stale ? 'stale' : ($downloaded ? 'found' : 'not-found'); ?>">
+									<strong><?= $handle; ?></strong> <?php if (!$stale) : ?><em>(<?= sprintf(__('stored in %s', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_FONTS_DIR . "/$cache_key")); ?>)</em><?php elseif ($stale) : ?><em>(<?= __('Stale cache item. <a id="omgf-stale-cache" href="#">Empty cache</a> and run optimization again.', $this->plugin_text_domain); ?>)</em><?php endif; ?>
 								</li>
 							<?php endforeach; ?>
 						</ul>

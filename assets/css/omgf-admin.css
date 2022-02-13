@@ -114,6 +114,10 @@
   vertical-align: middle;
   margin-right: 0.5em;
 }
+.omgf form .omgf-manual-optimization-mode .status ul li.stale:before {
+  content: "\f534";
+  color: #FF851B;
+}
 .omgf form .omgf-manual-optimization-mode .status ul li.found:before {
   content: "\f147";
   color: #2ECC40;
