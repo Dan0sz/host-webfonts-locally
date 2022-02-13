@@ -101,7 +101,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	{
 	?>
 		<div class="omgf-manual-optimization-mode postbox" style="padding: 0 15px 5px; <?= OMGF_OPTIMIZATION_MODE == 'manual' ? '' : 'display: none;'; ?>">
-			<h3><?= __('Optimization Mode: Force -- Task Manager', $this->plugin_text_domain); ?></h3>
+			<h3><?= __('Optimization Mode: Force — Task Manager', $this->plugin_text_domain); ?></h3>
 			<p class="description">
 				<?= __('Are you using a regular theme (and a page builder) and are the same Google Fonts loading throughout all your posts/pages? Then <strong>Manual Optimization Mode</strong> is right for you.', $this->plugin_text_domain); ?>
 			</p>
