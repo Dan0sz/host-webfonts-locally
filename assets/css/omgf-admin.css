@@ -47,6 +47,29 @@
 .omgf form {
   max-width: 1350px;
 }
+.omgf form .dashicons {
+  line-height: 15px;
+}
+.omgf form .dashicons.dashicons-yes {
+  color: #2ECC40;
+}
+.omgf form .dashicons.dashicons-no {
+  color: #FF4136;
+}
+.omgf form .omgf-manual-optimization-mode .pro-con-container {
+  display: flex;
+  justify-content: center;
+}
+.omgf form .omgf-manual-optimization-mode .pro-con-container .pros,
+.omgf form .omgf-manual-optimization-mode .pro-con-container .cons {
+  width: 50%;
+}
+.omgf form .omgf-manual-optimization-mode .status {
+  padding-left: 0;
+}
+.omgf form .omgf-manual-optimization-mode .status ul {
+  margin-top: 5px;
+}
 .omgf-optimize-fonts-container {
   text-align: center;
   padding: 25px 50px;
