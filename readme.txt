@@ -21,7 +21,7 @@ OMGF is written with performance and user-friendliness in mind. It uses the Goog
 
 = How Does It Work? =
 
-After installing the plugin, choose your Optimization Mode: Force (default) or Scan Each Page (only available in Pro).
+After installing the plugin, choose your Optimization Mode: Force (default) or Scan Posts/Pages (only available in Pro).
 
 When *Force* is selected, you can simply configure OMGF to work in the way you want, and run its detection mechanism on an address of your choosing. Tweak the stylesheet(s) as you wish and these will be used throughout your site.
 
@@ -88,9 +88,10 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 * Added: Force Optimization Mode Task Manager.
          - Offers an easy overview of downloaded stylesheets and where they're stored,
          - Indicates stale cache files.
-* Added: Clearer explanation of when to use Scan Each Page VS Force Optimization Mode.
+* Added: Clearer explanation of when to use Scan Posts/Pages VS Force Optimization Mode.
 * Fixed: Cache handles weren't removed when cache directory was emptied.
 * Fixed: Tooltip in Manage Optimized Fonts section wasn't aligned properly.
+* Renamed: Manual Optimization Mode to Force and Automatic to Scan Posts/Pages.
 
 = 4.5.19 | February 5th, 2022 =
 * Fixed: Use of undefined constant in OMGF_Admin_Settings_Help class.
@@ -277,7 +278,7 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 * Added CSS2 (Variable Fonts) compatiblity,
 * No more spaces in filenames of downloaded fonts,
 * Added Optimize Fonts tab, which resembles the 'Generate Stylesheet' tab from v3, and features,
-  * Optimization Mode: Force or Scan Each Page,
+  * Optimization Mode: Force or Scan Posts/Pages,
     * If Force is selected, the URL can be specified which should be scanned for Google Fonts,
   * A complete overview of all detected fonts, grouped by stylesheet,
   * Options to preload or unload for each font.

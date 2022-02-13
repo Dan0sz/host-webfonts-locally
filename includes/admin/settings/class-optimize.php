@@ -88,7 +88,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_OPTIMIZATION_MODE,
 			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE,
 			OMGF_OPTIMIZATION_MODE,
-			__('<strong>Force</strong> will apply a single stylesheet to all of your posts/pages. <strong>Scan Each Page</strong> will go through each page one by one and compile separate stylesheets for each different Google Fonts configuration.', $this->plugin_text_domain)
+			__('<strong>Force</strong> will apply a single stylesheet to all of your posts/pages. <strong>Scan Posts/Pages</strong> will go through each page one by one and compile separate stylesheets for each different Google Fonts configuration.', $this->plugin_text_domain)
 		);
 	}
 
