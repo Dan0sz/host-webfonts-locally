@@ -388,32 +388,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		{
 		?>
 			<div class="omgf-optimize-fonts-manual" <?= OMGF_OPTIMIZATION_MODE == 'manual' ? '' : 'style="display: none;"'; ?>>
-				<p>
-					<?= sprintf(__("You've chosen to <strong>optimize your Google Fonts manually</strong>. OMGF will <u>not</u> run automatically and will <strong>%s</strong> the requested Google Fonts throughout your website that were captured on the post/page you defined. A Cross-Browser compatible stylesheet will be generated for all requested Google Fonts.", $this->plugin_text_domain), OMGF_FONT_PROCESSING); ?>
-				</p>
-				<div class="omgf-optimize-fonts-pros">
-					<h3>
-						<span class="dashicons-before dashicons-yes"></span> <?= __('Pros:', $this->plugin_text_domain); ?>
-					</h3>
-					<ul>
-						<li><?= __('Force one stylesheet to be used throughout the site.', $this->plugin_text_domain); ?></li>
-					</ul>
-				</div>
-				<div class="omgf-optimize-fonts-cons">
-					<h3>
-						<span class="dashicons-before dashicons-no"></span> <?= __('Cons', $this->plugin_text_domain); ?>
-					</h3>
-					<ul>
-						<li><?= __('A font that is only used on a few pages might be lost if one of those URLs isn\'t scanned for fonts.', $this->plugin_text_domain); ?></li>
-					</ul>
-				</div>
-				<p>
-					<?= __('Enter the URL of the post/page you\'d like to scan for Google Fonts. The detected and optimized stylesheets will be applied on all pages where they\'re used.', $this->plugin_text_domain); ?>
-				</p>
-				<label for="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>">
-					<?= __('URL to Scan', $this->plugin_text_domain); ?>
-					<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>" />
-				</label>
 				<div class="omgf-optimize-fonts-tooltip">
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
@@ -431,29 +405,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		{
 		?>
 			<div class="omgf-optimize-fonts-automatic" <?= OMGF_OPTIMIZATION_MODE == 'auto' ? '' : 'style="display: none;"'; ?>>
-				<p>
-					<?= sprintf(__("You've chosen to <strong>optimize your Google Fonts automatically</strong>. OMGF will run silently in the background and <strong>%s</strong> all requested Google Fonts. If the captured stylesheet doesn't exist yet, a call is sent to OMGF's Download API to download the font files and generate a Cross-Browser compatible stylesheet.", $this->plugin_text_domain), OMGF_FONT_PROCESSING); ?>
-				</p>
-				<div class="omgf-optimize-fonts-pros">
-					<h3>
-						<span class="dashicons-before dashicons-yes"></span> <?= __('Pros:', $this->plugin_text_domain); ?>
-					</h3>
-					<ul>
-						<li><?= __('No maintenance.', $this->plugin_text_domain); ?></li>
-					</ul>
-				</div>
-				<div class="omgf-optimize-fonts-cons">
-					<h3>
-						<span class="dashicons-before dashicons-no"></span> <?= __('Cons', $this->plugin_text_domain); ?>
-					</h3>
-					<ul>
-						<li><?= __("The first time an unoptimized Google Fonts stylesheet is found, the API will be triggered in the frontend, which might cause the page to load slower than usual. All subsequent pageviews for that page (and all pages using that same stylesheet will load just as fast as when Manual mode is used.", $this->plugin_text_domain); ?></li>
-					</ul>
-				</div>
 				<div class="omgf-optimize-fonts-tooltip">
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
-						<em><?= __("After saving your changes, this section will be populated with all captured fonts, font styles and available options as your site's frontend is visited by you or others. You will be able to manage your fonts at a later point.", $this->plugin_text_domain); ?></em>
+						<em><?= __("After saving your changes, this section will be populated with all captured fonts, font styles and available options as the cron task progresses.", $this->plugin_text_domain); ?></em>
 					</p>
 				</div>
 			</div>
