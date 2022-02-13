@@ -39,7 +39,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	const OMGF_OPTIMIZATION_MODE       = [
 		'manual' => 'Force (default)',
-		'auto'   => 'Scan Each Page (Pro)'
+		'auto'   => 'Scan Posts/Pages (Pro)'
 	];
 	const OMGF_FONT_PROCESSING_OPTIONS = [
 		'replace' => 'Replace (default)',
