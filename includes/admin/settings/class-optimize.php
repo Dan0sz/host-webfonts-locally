@@ -33,10 +33,19 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		$this->title = __('Optimize Google Fonts', $this->plugin_text_domain);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_title'], 10);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_description'], 15);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_description'], 11);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 20);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_optimization_mode'], 30);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_optimization_mode'], 21);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 22);
+
+		add_filter('omgf_optimize_settings_content', [$this, 'open_manual_optimization_mode'], 23);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 24);
+		add_filter('omgf_optimize_settings_content', [$this, 'manual_optimization_status'], 25);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 26);
+		add_filter('omgf_optimize_settings_content', [$this, 'close_manual_optimization_mode'], 27);
+
+		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_combine_requests'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 60);
@@ -81,6 +90,76 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_OPTIMIZATION_MODE,
 			__('<strong>Manual</strong> processing mode is best suited for configurations, which use a fixed number of fonts across the entire site. When in manual mode, the generated stylesheet is forced throughout the entire site. <strong>Automatic</strong> processing mode is best suited for configurations using e.g. page builders, which load different fonts on certain pages.', $this->plugin_text_domain)
 		);
+	}
+
+	/**
+	 * Opens the Manual Optimization Mode info screen container.
+	 * 
+	 * @return void 
+	 */
+	public function open_manual_optimization_mode()
+	{
+	?>
+		<div class="omgf-manual-optimization-mode postbox" style="padding: 0 15px 5px; <?= OMGF_OPTIMIZATION_MODE == 'manual' ? '' : 'display: none;'; ?>">
+			<h3><?= __('Manual Optimization Mode Task Manager', $this->plugin_text_domain); ?></h3>
+			<p class="description">
+				<?= __('Are you using a regular theme (and a page builder) and are the same Google Fonts loading throughout all your posts/pages? Then <strong>Manual Optimization Mode</strong> is right for you.', $this->plugin_text_domain); ?>
+			</p>
+			<div class="pro-con-container">
+				<div class="pros">
+					<h4><?= __('Pros', $this->plugin_text_domain); ?></h4>
+					<ul class="pros-list">
+						<li><?= __('Fast. Immediate results.', $this->plugin_text_domain); ?></li>
+						<li><?= __('One (or a few) stylesheets to manage.', $this->plugin_text_domain); ?></li>
+						<li><?= __('Compatible with multilanguage plugins, e.g. WPML or Polylang.', $this->plugin_text_domain); ?></li>
+					</ul>
+				</div>
+				<div class="cons">
+					<h4><?= __('Cons', $this->plugin_text_domain); ?></h4>
+					<ul class="cons-list">
+						<li><?= __('Might miss a font, when using a page builder and a unique font is used on a few separate pages.', $this->plugin_text_domain); ?></li>
+					</ul>
+				</div>
+			</div>
+		<?php
+	}
+
+	public function manual_optimization_status()
+	{
+		$stylesheets = OMGF::optimized_fonts();
+		?>
+			<tr valign="top">
+				<th scope="row"><?= __('Stylesheet Status', $this->plugin_text_domain); ?></th>
+				<td class="status">
+					<?php if (!empty($stylesheets)) : ?>
+						<ul>
+							<?php foreach ($stylesheets as $handle => $contents) : ?>
+								<?php $downloaded = file_exists(OMGF_FONTS_DIR . "/$handle/$handle.css"); ?>
+								<li>
+									<i class="<?= $downloaded ? 'dashicons dashicons-yes' : 'dashicons dashicons-no'; ?>"></i> <?= $handle; ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php else : ?>
+						<p>
+							<?= __('No stylesheets found. <a href="#" id="omgf-save-optimize">Run optimization</a>?', $this->plugin_text_domain); ?>
+						</p>
+					<?php endif; ?>
+				</td>
+			</tr>
+		<?php
+	}
+
+	/**
+	 * Close the container.
+	 * 
+	 * @return void 
+	 */
+	public function close_manual_optimization_mode()
+	{
+		?>
+		</div>
+	<?php
 	}
 
 	/**

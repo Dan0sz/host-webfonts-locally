@@ -29,6 +29,8 @@ jQuery(document).ready(function ($) {
         init: function () {
             // Settings
             $('input[name="omgf_optimization_mode"]').on('click', this.toggle_optimization_mode_content);
+            $('input[name="omgf_optimization_mode"]').on('change', this.toggle_manual_optimization_mode_section);
+            $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
             $('.omgf-optimize-fonts-manage .unload').on('change', this.unload_stylesheets);
             $('.omgf-optimize-fonts-manage .unload, .omgf-optimize-fonts-manage .fallback-font-stack select').on('change', this.generate_cache_key);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.toggle_preload);
@@ -74,6 +76,16 @@ jQuery(document).ready(function ($) {
             } else {
                 $('.omgf-optimize-fonts-automatic').show();
                 $('.omgf-optimize-fonts-manual').hide();
+            }
+        },
+
+        toggle_manual_optimization_mode_section: function () {
+            var section = $('.omgf-manual-optimization-mode');
+
+            if (this.value == 'manual') {
+                section.show();
+            } else {
+                section.hide();
             }
         },
 

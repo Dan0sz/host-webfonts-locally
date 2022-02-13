@@ -58,13 +58,6 @@
   .dashicons {
     line-height: 15px;
 
-    &.dashicons-yes {
-      color: #2ECC40;
-    }
-  
-    &.dashicons-no {
-      color: #FF4136;
-    }
   }
 
   .omgf-manual-optimization-mode {
@@ -74,6 +67,40 @@
 
       .pros, .cons {
         width: 50%;
+
+        .pros-list,
+        .cons-list {
+          list-style: none;
+          margin-left: 0;
+          padding-left: 0;
+
+          li {
+            padding-left: 1.5em;
+            text-indent: -2em;
+            line-height: 18px;
+          }
+
+          li:before {
+            font-family: 'dashicons';
+            font-size: 18px;
+            vertical-align: middle;
+            margin-right: .5em;
+          }
+        }
+
+        .pros-list {
+          li:before {
+            content: "\f147";
+            color: #2ECC40;
+          }
+        }
+
+        .cons-list {
+          li:before {
+            content: "\f158";
+            color: #FF4136;
+          }
+        }
       }
     }
 
