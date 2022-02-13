@@ -3,7 +3,7 @@
 /**
  * Plugin Name: OMGF
  * Plugin URI: https://ffw.press/wordpress/omgf/
- * Description: Minimize DNS requests, leverage browser cache and speed up WordPress by saving Google Fonts to your server and removing external Google Fonts requests.
+ * Description: Increase GDPR compliance, reduce DNS requests and leverage browser cache by automatically downloading Google Fonts to your server.
  * Version: 4.6.0
  * Author: Daan from FFW.Press
  * Author URI: https://ffw.press
