@@ -44,6 +44,9 @@
   margin-right: 0.25em;
   line-height: 1.15em;
 }
+.omgf form {
+  max-width: 1350px;
+}
 .omgf-optimize-fonts-container {
   text-align: center;
   padding: 25px 50px;
