@@ -134,9 +134,20 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 					<?php if (!empty($stylesheets)) : ?>
 						<ul>
 							<?php foreach ($stylesheets as $handle => $contents) : ?>
-								<?php $downloaded = file_exists(OMGF_FONTS_DIR . "/$handle/$handle.css"); ?>
-								<li>
-									<i class="<?= $downloaded ? 'dashicons dashicons-yes' : 'dashicons dashicons-no'; ?>"></i> <?= $handle; ?>
+								<?php
+								$cache_key = OMGF::get_cache_key($handle);
+								$modified  = false;
+
+								if (!$cache_key) {
+									$cache_key = $handle;
+								} else {
+									$modified = true;
+								}
+
+								$downloaded = file_exists(OMGF_FONTS_DIR . "/$cache_key/$cache_key.css");
+								?>
+								<li class="<?= $downloaded ? 'found' : 'not-found'; ?>">
+									<strong><?= $handle; ?></strong> <?php if ($modified) : ?><em>(<?= sprintf(__('stored in cache as %s', $this->plugin_text_domain), $cache_key); ?>)</em><?php endif; ?>
 								</li>
 							<?php endforeach; ?>
 						</ul>

@@ -95,9 +95,32 @@
 }
 .omgf form .omgf-manual-optimization-mode .status {
   padding-left: 0;
+  line-height: 1;
 }
 .omgf form .omgf-manual-optimization-mode .status ul {
   margin-top: 5px;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+.omgf form .omgf-manual-optimization-mode .status ul li {
+  padding-left: 1.5em;
+  text-indent: -2em;
+  line-height: 18px;
+}
+.omgf form .omgf-manual-optimization-mode .status ul li:before {
+  font-family: 'dashicons';
+  font-size: 18px;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+.omgf form .omgf-manual-optimization-mode .status ul li.found:before {
+  content: "\f147";
+  color: #2ECC40;
+}
+.omgf form .omgf-manual-optimization-mode .status ul li.not-found:before {
+  content: "\f158";
+  color: #FF4136;
 }
 .omgf-optimize-fonts-container {
   text-align: center;
