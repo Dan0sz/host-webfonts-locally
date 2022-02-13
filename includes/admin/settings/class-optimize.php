@@ -88,7 +88,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_OPTIMIZATION_MODE,
 			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE,
 			OMGF_OPTIMIZATION_MODE,
-			__('<strong>Manual</strong> processing mode is best suited for configurations, which use a fixed number of fonts across the entire site. When in manual mode, the generated stylesheet is forced throughout the entire site. <strong>Automatic</strong> processing mode is best suited for configurations using e.g. page builders, which load different fonts on certain pages.', $this->plugin_text_domain)
+			__('<strong>Force</strong> will apply a single stylesheet to all of your posts/pages. <strong>Scan Each Page</strong> will go through each page one by one and compile separate stylesheets for each different Google Fonts configuration.', $this->plugin_text_domain)
 		);
 	}
 
@@ -101,7 +101,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	{
 	?>
 		<div class="omgf-manual-optimization-mode postbox" style="padding: 0 15px 5px; <?= OMGF_OPTIMIZATION_MODE == 'manual' ? '' : 'display: none;'; ?>">
-			<h3><?= __('Manual Optimization Mode Task Manager', $this->plugin_text_domain); ?></h3>
+			<h3><?= __('Optimization Mode: Force -- Task Manager', $this->plugin_text_domain); ?></h3>
 			<p class="description">
 				<?= __('Are you using a regular theme (and a page builder) and are the same Google Fonts loading throughout all your posts/pages? Then <strong>Manual Optimization Mode</strong> is right for you.', $this->plugin_text_domain); ?>
 			</p>

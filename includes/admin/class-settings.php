@@ -38,8 +38,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Option Values
 	 */
 	const OMGF_OPTIMIZATION_MODE       = [
-		'manual' => 'Manual (default)',
-		'auto'   => 'Automatic (Pro)'
+		'manual' => 'Force (default)',
+		'auto'   => 'Scan Each Page (Pro)'
 	];
 	const OMGF_FONT_PROCESSING_OPTIONS = [
 		'replace' => 'Replace (default)',

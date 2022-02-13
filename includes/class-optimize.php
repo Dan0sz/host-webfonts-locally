@@ -84,7 +84,7 @@ class OMGF_Optimize
     }
 
     /**
-     * Run Manual mode.
+     * Run Force mode.
      * 
      * @return void 
      */

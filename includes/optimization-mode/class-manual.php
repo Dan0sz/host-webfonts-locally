@@ -32,7 +32,7 @@ class OMGF_OptimizationMode_Manual
     }
 
     /**
-     * Run Manual mode.
+     * Run Force mode.
      * 
      * @return void 
      */

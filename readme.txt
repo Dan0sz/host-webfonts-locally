@@ -21,9 +21,9 @@ OMGF is written with performance and user-friendliness in mind. It uses the Goog
 
 = How Does It Work? =
 
-After installing the plugin, choose your Optimization Mode: Manual (default) or Automatic (only available in Pro).
+After installing the plugin, choose your Optimization Mode: Force (default) or Scan Each Page (only available in Pro).
 
-When *Manual* is selected, you can simply configure OMGF to work in the way you want, and run its detection mechanism on an address of your choosing. Tweak the stylesheet(s) as you wish and these will be used throughout your site.
+When *Force* is selected, you can simply configure OMGF to work in the way you want, and run its detection mechanism on an address of your choosing. Tweak the stylesheet(s) as you wish and these will be used throughout your site.
 
 In *Automatic* (Pro) Mode, OMGF runs silently in the background and captures any requests made to fonts.googleapis.com or fonts.gstatic.com. When a webpage is first loaded, it reroutes these requests to its own Download API and copies the fonts over to your server. Then it generates a stylesheet for your fonts including SVG, EOT, TTF, WOFF and WOFF2 formats to guarantee maximum cross browser compatibility!
 
@@ -85,10 +85,10 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 
 = 4.6.0 | February 16th, 2022 =
 * Fixed: Loading spinner wasn't center aligned.
-* Added: Manual Optimization Mode Task Manager.
+* Added: Force Optimization Mode Task Manager.
          - Offers an easy overview of downloaded stylesheets and where they're stored,
          - Indicates stale cache files.
-* Added: Clearer explanation of when to use Automatic VS Manual Optimization Mode.
+* Added: Clearer explanation of when to use Scan Each Page VS Force Optimization Mode.
 * Fixed: Cache handles weren't removed when cache directory was emptied.
 * Fixed: Tooltip in Manage Optimized Fonts section wasn't aligned properly.
 
@@ -156,8 +156,8 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 
 = 4.5.6 =
 * Fixed: Added Fallback API URL for when Google Fonts Helper is down.
-* Enhanced: Added extra error handling in Manual Optimization Mode.
-* Fixed: API requests made in Manual Optimization Mode are no longer forced to SSL. It now uses the protocol configured in Settings > General > WordPress URL.
+* Enhanced: Added extra error handling in Force Optimization Mode.
+* Fixed: API requests made in Force Optimization Mode are no longer forced to SSL. It now uses the protocol configured in Settings > General > WordPress URL.
 * Fixed: Stylesheet handles containing spaces would prevent Optimize Google Fonts screen from rendering properly.
 * Several refactors and code optimizations.
 
@@ -277,8 +277,8 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 * Added CSS2 (Variable Fonts) compatiblity,
 * No more spaces in filenames of downloaded fonts,
 * Added Optimize Fonts tab, which resembles the 'Generate Stylesheet' tab from v3, and features,
-  * Optimization Mode: Manual or Automatic,
-    * If Manual is selected, the URL can be specified which should be scanned for Google Fonts,
+  * Optimization Mode: Force or Scan Each Page,
+    * If Force is selected, the URL can be specified which should be scanned for Google Fonts,
   * A complete overview of all detected fonts, grouped by stylesheet,
   * Options to preload or unload for each font.
 * Move settings to more sensible places and re-grouped them in 3 groups:
