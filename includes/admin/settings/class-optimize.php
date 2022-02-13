@@ -388,6 +388,13 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		{
 		?>
 			<div class="omgf-optimize-fonts-manual" <?= OMGF_OPTIMIZATION_MODE == 'manual' ? '' : 'style="display: none;"'; ?>>
+				<p>
+					<?= __('Enter the URL of the post/page you\'d like to scan for Google Fonts. The detected and optimized stylesheets will be applied on all pages where they\'re used.', $this->plugin_text_domain); ?>
+				</p>
+				<label for="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>">
+					<?= __('URL to Scan', $this->plugin_text_domain); ?>
+					<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>" />
+				</label>
 				<div class="omgf-optimize-fonts-tooltip">
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
