@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
  *
  * @package  : OMGF
  * @author   : Daan van den Bergh
- * @copyright: (c) 2021 Daan van den Bergh
+ * @copyright: © 2022 Daan van den Bergh
  * @url      : https://ffw.press
  * * * * * * * * * * * * * * * * * * * */
 class OMGF_Frontend_Process

@@ -2,7 +2,7 @@
 /* * * * * * * * * * * * * * * * * * * * * *
  * @author   : Daan van den Bergh
  * @url      : https://ffw.press/wordpress-plugins/
- * @copyright: (c) 2021 Daan van den Bergh
+ * @copyright: © 2022 Daan van den Bergh
  * @license  : GPL2v2 or later
  * * * * * * * * * * * * * * * * * * * * * */
 
