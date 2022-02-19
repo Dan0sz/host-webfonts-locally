@@ -54,35 +54,35 @@
   padding-left: 0;
   line-height: 1;
 }
-.omgf form .omgf-task-manager .status ul {
+.omgf form .omgf-task-manager ul {
   margin-top: 5px;
   list-style: none;
   margin-left: 0;
   padding-left: 0;
 }
-.omgf form .omgf-task-manager .status ul li {
+.omgf form .omgf-task-manager ul li {
   padding-left: 1.5em;
   text-indent: -2em;
   line-height: 18px;
 }
-.omgf form .omgf-task-manager .status ul li:before {
+.omgf form .omgf-task-manager ul li:before {
   font-family: 'dashicons';
   font-size: 18px;
   vertical-align: middle;
 }
-.omgf form .omgf-task-manager .status ul li.stale:before {
+.omgf form .omgf-task-manager ul li.stale:before {
   content: "\f534";
   color: #FF851B;
 }
-.omgf form .omgf-task-manager .status ul li.found:before {
+.omgf form .omgf-task-manager ul li.found:before {
   content: "\f147";
   color: #2ECC40;
 }
-.omgf form .omgf-task-manager .status ul li.not-found:before {
+.omgf form .omgf-task-manager ul li.not-found:before {
   content: "\f158";
   color: #FF4136;
 }
-.omgf form .omgf-task-manager .status ul li.stale-cache-notice:before {
+.omgf form .omgf-task-manager ul li.stale-cache-notice:before {
   content: "\f348";
   color: #0074D9;
 }

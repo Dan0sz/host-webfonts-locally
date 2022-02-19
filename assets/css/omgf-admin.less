@@ -64,45 +64,44 @@
     .status {
       padding-left: 0;
       line-height: 1;
+    }
 
-      ul {
-        margin-top: 5px;
-        list-style: none;
-        margin-left: 0;
-        padding-left: 0;
+    ul {
+      margin-top: 5px;
+      list-style: none;
+      margin-left: 0;
+      padding-left: 0;
 
-        li {
-          padding-left: 1.5em;
-          text-indent: -2em;
-          line-height: 18px;
+      li {
+        padding-left: 1.5em;
+        text-indent: -2em;
+        line-height: 18px;
 
-          &:before {
-            font-family: 'dashicons';
-            font-size: 18px;
-            vertical-align: middle;
-          }
-
-          &.stale:before {
-            content: "\f534";
-            color: #FF851B;
-          }
-
-          &.found:before {
-            content: "\f147";
-            color: #2ECC40;
-          }
-
-          &.not-found:before {
-            content: "\f158";
-            color: #FF4136;
-          }
-
-          &.stale-cache-notice:before {
-            content: "\f348";
-            color: #0074D9;
-          }
+        &:before {
+          font-family: 'dashicons';
+          font-size: 18px;
+          vertical-align: middle;
         }
 
+        &.stale:before {
+          content: "\f534";
+          color: #FF851B;
+        }
+
+        &.found:before {
+          content: "\f147";
+          color: #2ECC40;
+        }
+
+        &.not-found:before {
+          content: "\f158";
+          color: #FF4136;
+        }
+
+        &.stale-cache-notice:before {
+          content: "\f348";
+          color: #0074D9;
+        }
       }
     }
   }

@@ -83,7 +83,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		<div class="omgf-task-manager postbox" style="padding: 0 15px 5px;">
 			<h3><?= __('Task Manager', $this->plugin_text_domain); ?></h3>
 			<p class="description">
-				<?= __('A quick overview of the stylesheets currently in your cache folder.', $this->plugin_text_domain); ?>
+				<?= __('A quick overview of the stylesheets (and their status) currently in your cache folder.', $this->plugin_text_domain); ?>
 			</p>
 		<?php
 	}
@@ -125,6 +125,16 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							<?= __('No stylesheets found. <a href="#" id="omgf-save-optimize">Run optimization</a>?', $this->plugin_text_domain); ?>
 						</p>
 					<?php endif; ?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php _e('Legend', $this->plugin_text_domain); ?></th>
+				<td class="status">
+					<ul>
+						<li class="found"> <?php _e('<strong>Found</strong>. Stylesheet exists on your file system.', $this->plugin_text_domain); ?></li>
+						<li class="not-found"> <?php _e('<strong>Not Found</strong>. Stylesheet was detected, but was somehow removed.', $this->plugin_text_domain); ?></li>
+						<li class="stale"> <?php _e('<strong>Stale</strong>. Settings were changed and the stylesheet does not reflect those changes.', $this->plugin_text_domain); ?></li>
+					</ul>
 				</td>
 			</tr>
 		<?php
