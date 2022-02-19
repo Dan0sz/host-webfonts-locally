@@ -86,6 +86,6 @@ class OMGF_Optimize
      */
     private function run_manual()
     {
-        new OMGF_OptimizationMode_Manual();
+        new OMGF_Optimize_Run();
     }
 }

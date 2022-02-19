@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
  * @url      : https://ffw.press
  * * * * * * * * * * * * * * * * * * * */
 
-class OMGF_OptimizationMode_Manual
+class OMGF_Optimize_Run
 {
     /** @var string */
     private $plugin_text_domain = 'host-webfonts-local';
