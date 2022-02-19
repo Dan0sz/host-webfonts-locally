@@ -11,7 +11,7 @@
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: (c) 2021 Daan van den Bergh
- * @url      : https://daan.dev
+ * @url      : https://ffw.press
  * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
@@ -502,7 +502,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			return $text;
 		}
 
-		$text = sprintf(__('Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', $this->plugin_text_domain), 'https://daan.dev/tag/omgf') . ' ';
+		$text = sprintf(__('Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', $this->plugin_text_domain), 'https://ffw.press/blog/tag/omgf') . ' ';
 		$text .= '<span id="omgf-ticker-wrap">';
 		$i    = 0;
 
