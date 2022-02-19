@@ -31,7 +31,7 @@ jQuery(document).ready(function ($) {
             $('input[name="omgf_optimization_mode"]').on('click', this.toggle_optimization_mode_content);
             $('input[name="omgf_optimization_mode"]').on('change', this.toggle_manual_optimization_mode_section);
             $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
-            $('#omgf-stale-cache').on('click', function () { $('#omgf-empty').click(); });
+            $('#omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.unload_stylesheets);
             $('.omgf-optimize-fonts-manage .unload, .omgf-optimize-fonts-manage .fallback-font-stack select').on('change', this.generate_cache_key);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.toggle_preload);
@@ -91,6 +91,30 @@ jQuery(document).ready(function ($) {
         },
 
         /**
+         * Changes the cache keys to force a refresh with the current settings.
+         */
+        refresh_cache: function () {
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_refresh_cache',
+                    nonce: omgf_admin.nonce,
+                },
+                beforeSend: function () {
+                    omgf_admin.show_loader();
+
+                    $('.omgf-optimize-fonts-manage table tbody').each(function (key, elem) {
+                        omgf_admin.generate_cache_key(elem);
+                    });
+                },
+                complete: function () {
+                    $('#submit').click();
+                }
+            });
+        },
+
+        /**
          * Populates the omgf_unload_stylesheets hidden field.
          */
         unload_stylesheets: function () {
@@ -121,9 +145,14 @@ jQuery(document).ready(function ($) {
         /**
          * Generate a new cache key upon each unload change.
          */
-        generate_cache_key: function () {
-            var current_handle = $(this).data('handle'),
-                cache_keys_input = $('#omgf_cache_keys'),
+        generate_cache_key: function (element = null) {
+            if (element !== null) {
+                var current_handle = $(element).attr('id');
+            } else {
+                var current_handle = $(this).data('handle');
+            }
+
+            var cache_keys_input = $('#omgf_cache_keys'),
                 cache_keys = cache_keys_input.val().split(','),
                 checked = $('#' + current_handle + ' input.unload:checked').length,
                 total = $('#' + current_handle + ' input.unload').length,
@@ -270,7 +299,7 @@ jQuery(document).ready(function ($) {
                 type: 'POST',
                 url: ajaxurl,
                 data: {
-                    action: 'omgf_ajax_empty_dir',
+                    action: 'omgf_empty_dir',
                     nonce: omgf_admin.nonce,
                     section: omgf_admin.cache_section
                 },

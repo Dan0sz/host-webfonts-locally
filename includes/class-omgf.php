@@ -34,7 +34,6 @@ class OMGF
 		}
 
 		add_action('admin_init', [$this, 'do_optimize']);
-		add_action('rest_api_init', [$this, 'register_routes']);
 		add_filter('content_url', [$this, 'force_ssl'], 1000, 2);
 
 		/**
@@ -48,18 +47,17 @@ class OMGF
 	 */
 	public function define_constants()
 	{
-		define('OMGF_SITE_URL', 'https://daan.dev');
+		define('OMGF_SITE_URL', 'https://ffw.press');
+		define('OMGF_CACHE_IS_STALE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE)));
 		define('OMGF_CURRENT_DB_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION)));
-		define('OMGF_OPTIMIZATION_MODE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE, 'manual')));
-		define('OMGF_MANUAL_OPTIMIZE_URL', esc_url(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL, get_site_url()) ?: get_site_url()));
-		define('OMGF_FONT_PROCESSING', esc_attr(get_option(OMGF_Admin_Settings::OMGF_DETECTION_SETTING_FONT_PROCESSING, 'replace')));
 		define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
-		define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
-		define('OMGF_CACHE_PATH', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH)) ?: '/uploads/omgf');
-		define('OMGF_FONTS_DIR', WP_CONTENT_DIR . OMGF_CACHE_PATH);
-		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
 		define('OMGF_CACHE_KEYS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '')));
+		define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
+		define('OMGF_FONT_PROCESSING', esc_attr(get_option(OMGF_Admin_Settings::OMGF_DETECTION_SETTING_FONT_PROCESSING, 'replace')));
+		define('OMGF_CACHE_DIR', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_DIR)) ?: '/uploads/omgf');
+		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
+		define('OMGF_CACHE_PATH', WP_CONTENT_DIR . OMGF_CACHE_DIR);
 	}
 
 	/**
@@ -250,20 +248,11 @@ class OMGF
 	}
 
 	/**
-	 * @return OMGF_Frontend_Functions
+	 * @return OMGF_Frontend_Process
 	 */
 	public function do_frontend()
 	{
-		return new OMGF_Frontend_Functions();
-	}
-
-	/**
-	 *
-	 */
-	public function register_routes()
-	{
-		$proxy = new OMGF_API_Download();
-		$proxy->register_routes();
+		return new OMGF_Frontend_Process();
 	}
 
 	/**
@@ -287,7 +276,7 @@ class OMGF
 		$new_version     = $plugin['new_version'];
 
 		if (version_compare($current_version, $new_version, '<')) {
-			$response = wp_remote_get('https://daan.dev/omgf-update-notices.json');
+			$response = wp_remote_get('https://ffw.press/omgf-update-notices.json');
 
 			if (is_wp_error($response)) {
 				return;
@@ -321,7 +310,7 @@ class OMGF
 		/**
 		 * Only rewrite URLs requested by this plugin. We don't want to interfere with other plugins.
 		 */
-		if (strpos($url, OMGF_CACHE_PATH) === false) {
+		if (strpos($url, OMGF_CACHE_DIR) === false) {
 			return $url;
 		}
 

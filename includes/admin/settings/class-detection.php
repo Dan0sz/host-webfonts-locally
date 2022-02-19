@@ -30,11 +30,8 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_detection_settings_content', [$this, 'do_before'], 20);
 
 		// Settings
-		add_filter('omgf_detection_settings_content', [$this, 'do_process_google_fonts'], 30);
-		add_filter('omgf_detection_settings_content', [$this, 'do_promo_advanced_processing'], 40);
-		add_filter('omgf_detection_settings_content', [$this, 'do_promo_safe_mode'], 50);
-		add_filter('omgf_detection_settings_content', [$this, 'do_promo_fonts_processing'], 60);
-		add_filter('omgf_detection_settings_content', [$this, 'do_promo_process_resource_hints'], 70);
+		add_filter('omgf_detection_settings_content', [$this, 'advanced_processing'], 30);
+		add_filter('omgf_detection_settings_content', [$this, 'advanced_processing_promo'], 60);
 
 		// Close
 		add_filter('omgf_detection_settings_content', [$this, 'do_after'], 100);
@@ -47,7 +44,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 	{
 ?>
 		<p>
-			<?= __('These settings affect OMGF\'s automatic detection mechanism and how it treats the Google Fonts your theme and plugins use. If you want to use OMGF to remove the Google Fonts your WordPress configuration currently uses, set <strong>Google Fonts Processing</strong> to Remove.', $this->plugin_text_domain); ?>
+			<?= __('These settings affect OMGF\'s automatic detection mechanism and how it treats the Google Fonts your theme and plugins use. If you want to use OMGF to remove (instead of replace) the Google Fonts your WordPress configuration currently uses, set <strong>Google Fonts Processing</strong> to Remove.', $this->plugin_text_domain); ?>
 		</p>
 	<?php
 	}
@@ -55,14 +52,14 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function do_promo_fonts_processing()
+	public function advanced_processing_promo()
 	{
 	?>
 		<tr>
-			<th scope="row"><?= __('Google Fonts Processing (Pro)', $this->plugin_text_domain); ?></th>
+			<th scope="row"><?= __('Advanced Processing (Pro)', $this->plugin_text_domain); ?></th>
 			<td>
 				<fieldset id="" class="scheme-list">
-					<?php foreach ($this->fonts_processing_pro_options() as $name => $data) : ?>
+					<?php foreach ($this->advanced_processing_pro_options() as $name => $data) : ?>
 						<?php
 						$checked  = defined(strtoupper($name)) ? constant(strtoupper($name)) : false;
 						$disabled = apply_filters($name . '_setting_disabled', true) ? 'disabled' : '';
@@ -74,10 +71,10 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 					<?php endforeach; ?>
 				</fieldset>
 				<p class="description">
-					<?= $this->promo; ?>
+					<?= __('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to dig deeper (e.g. inside a theme\'s/plugin\'s stylesheets or (Web Font Loader) JS files) enable these options. These options can impact performance and are best used in combination with a page caching plugin.', $this->plugin_text_domain) . ' ' . $this->promo; ?>
 				</p>
 				<ul>
-					<?php foreach ($this->fonts_processing_pro_options() as $name => $data) : ?>
+					<?php foreach ($this->advanced_processing_pro_options() as $name => $data) : ?>
 						<li><strong><?= $data['label']; ?></strong>: <?= $data['description']; ?></li>
 					<?php endforeach; ?>
 				</ul>
@@ -89,13 +86,9 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 	/**
 	 * @return array
 	 */
-	private function fonts_processing_pro_options()
+	private function advanced_processing_pro_options()
 	{
 		return [
-			'omgf_pro_process_stylesheets'    => [
-				'label'       => __('Process External Stylesheets', $this->plugin_text_domain),
-				'description' => __('Process stylesheets loaded from <code>fonts.googleapis.com</code> or <code>fonts.gstatic.com</code>.', $this->plugin_text_domain)
-			],
 			'omgf_pro_process_stylesheet_imports' => [
 				'label'		  => __('Process Stylesheet Imports', $this->plugin_text_domain),
 				'description' => __('Scan stylesheets loaded by your theme and plugins for <code>@import</code> statements loading Google Fonts and process them.', $this->plugin_text_domain)
@@ -122,58 +115,14 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function do_promo_advanced_processing()
-	{
-		$this->do_checkbox(
-			__('Advanced Processing (Pro)', $this->plugin_text_domain),
-			'omgf_pro_advanced_processing',
-			defined('OMGF_PRO_ADVANCED_PROCESSING') ? OMGF_PRO_ADVANCED_PROCESSING : false,
-			__('By default, OMGF scans for Google Fonts which are registered/enqueued using the <code>wp_enqueue_scripts()</code> action in WordPress\' header (<code>wp_head()</code>). Enabling this option will process all Google Fonts throughout the entire document. This setting can be fine-tuned using the settings below.', $this->plugin_text_domain) . ' ' . $this->promo,
-			true
-		);
-	}
-
-	/**
-	 * Add option for Safe Mode (Pro)
-	 * 
-	 * @return void 
-	 */
-	public function do_promo_safe_mode()
-	{
-		$this->do_checkbox(
-			__('Safe Mode (Pro)', $this->plugin_text_domain),
-			'omgf_pro_safe_mode',
-			defined('OMGF_PRO_SAFE_MODE') ? OMGF_PRO_SAFE_MODE : false,
-			__('Enable Safe Mode if Advanced Processing (Pro) breaks styling of certain pages.', $this->plugin_text_domain) . ' ' . $this->promo,
-			true
-		);
-	}
-
-	/**
-	 * Add promo options for Process Resource Hints
-	 */
-	public function do_promo_process_resource_hints()
-	{
-		$this->do_checkbox(
-			__('Remove Resource Hints (Pro)', $this->plugin_text_domain),
-			'omgf_pro_process_resource_hints',
-			defined('OMGF_PRO_PROCESS_RESOURCE_HINTS') ? OMGF_PRO_PROCESS_RESOURCE_HINTS : false,
-			__('Remove all <code>link</code> elements with a <code>rel</code> attribute value of <code>dns-prefetch</code>, <code>preload</code> or <code>preconnect</code> pointing to <code>fonts.googleapis.com</code> or <code>fonts.gstatic.com</code>.', $this->plugin_text_domain) . ' ' . $this->promo,
-			true
-		);
-	}
-
-	/**
-	 *
-	 */
-	public function do_process_google_fonts()
+	public function advanced_processing()
 	{
 		$this->do_select(
 			__('Google Fonts Processing', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_DETECTION_SETTING_FONT_PROCESSING,
 			OMGF_Admin_Settings::OMGF_FONT_PROCESSING_OPTIONS,
 			OMGF_FONT_PROCESSING,
-			sprintf(__("Choose whether OMGF should (find, download and) <strong>replace</strong> all Google Fonts, or just <strong>remove</strong> them. Choosing Remove will force WordPress to fallback to system fonts.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO)
+			sprintf(__("Choose whether OMGF should copy all Google Fonts to the server, or just <strong>remove</strong> them. Choosing Remove will force WordPress to fallback to system fonts.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO)
 		);
 	}
 }

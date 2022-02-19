@@ -16,7 +16,7 @@
 
 defined('ABSPATH') || exit;
 
-class OMGF_API_Download extends WP_REST_Controller
+class OMGF_API_Download
 {
     const OMGF_GOOGLE_FONTS_API_URL       = 'https://google-webfonts-helper.herokuapp.com/api/fonts/';
     const OMGF_GOOGLE_FONTS_API_FALLBACK  = 'https://omgf-google-fonts-api.herokuapp.com/api/fonts/';
@@ -27,88 +27,75 @@ class OMGF_API_Download extends WP_REST_Controller
      * 
      * The key of an element should be dashed (no spaces) if necessary, e.g. open-sans.
      */
-    const OMGF_RENAMED_GOOGLE_FONTS   = [
+    const OMGF_RENAMED_GOOGLE_FONTS = [
         'ek-mukta' => 'mukta',
         'muli'     => 'mulish'
     ];
 
-    /** @var string */
-    private $plugin_text_domain = 'host-webfonts-local';
-
-    /** @var array */
-    private $endpoints = ['css', 'css2'];
-
-    /** @var string */
-    protected $namespace = 'omgf/v1';
-
-    /** @var string */
-    protected $rest_base = '/download/';
+    /** @var string $family */
+    private $family = '';
 
     /** @var string */
     private $handle = '';
 
+    /** @var string $original_handle */
+    private $original_handle = '';
+
+    /** @var string $subset */
+    private $subset = '';
+
     /** @var string */
     private $path = '';
 
+    /** @var string */
+    private $plugin_text_domain = 'host-webfonts-local';
+
     /**
-     * @return void 
+     * @param string $family          "family" parameters in Google Fonts API URL, e.g. "?family="Lato:100,200,300,etc."
+     * @param string $handle          The cache handle, generated using $handle + 5 random chars. Used for storing the fonts and stylesheet.
+     * @param string $original_handle The stylesheet handle, present in the ID attribute.
+     * @param string $subset          "subset" parameter, defaults to 'latin,latin-ext'.
+     * 
+     * @return string Local URL of generated stylesheet.
+     * 
+     * @throws SodiumException 
+     * @throws SodiumException 
+     * @throws TypeError 
+     * @throws TypeError 
+     * @throws TypeError 
      */
-    public function register_routes()
-    {
-        foreach ($this->endpoints as $endpoint) {
-            register_rest_route(
-                $this->namespace,
-                '/' . $this->rest_base . $endpoint,
-                [
-                    [
-                        'methods'             => 'GET',
-                        'callback'            => [$this, 'process'],
-                        'permission_callback' => [$this, 'permissions_check']
-                    ],
-                    'schema' => null,
-                ]
-            );
-        }
+    public function __construct(
+        string $family,
+        string $handle,
+        string $original_handle,
+        string $subset = ''
+    ) {
+        $this->family          = $family;
+        $this->handle          = sanitize_title_with_dashes($handle);
+        $this->original_handle = sanitize_title_with_dashes($original_handle);
+        $this->subset          = $subset ?? 'latin,latin-ext';
+        $this->path            = OMGF_CACHE_PATH . '/' . $this->handle;
     }
 
     /**
-     * Prevent CSRF.
+     * @return string 
      * 
-     * @since v4.5.4
-     * 
-     * @return bool
+     * @throws SodiumException 
+     * @throws SodiumException 
+     * @throws TypeError 
+     * @throws TypeError 
+     * @throws TypeError 
      */
-    public function permissions_check()
+    public function process()
     {
-        if (!isset($_REQUEST['_wpnonce'])) {
-            return false;
+        if (!$this->handle || !$this->original_handle) {
+            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF couldn\'t find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%s</code> and <code>%s</code>.', $this->plugin_text_domain), $this->original_handle, $this->handle), 'omgf-api-handle-not-found', false, 'error', 406);
+
+            return '';
         }
 
-        /**
-         * This API should only be accessible to users with manage_options capabilities.
-         * 
-         * @since v4.5.13
-         */
-        return current_user_can('manage_options') && wp_verify_nonce($_REQUEST['_wpnonce'], 'wp_rest') > 0;
-    }
-
-    /**
-     * @param WP_REST_Request $request
-     */
-    public function process($request)
-    {
-        $this->handle    = sanitize_title_with_dashes($request->get_param('handle'));
-        $original_handle = sanitize_title_with_dashes($request->get_param('original_handle'));
-
-        if (!$this->handle || !$original_handle) {
-            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF couldn\'t find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%s</code> and <code>%s</code>.', $this->plugin_text_domain), $original_handle, $this->handle), 'omgf-api-handle-not-found', false, 'error', 406);
-
-            return;
-        }
-
-        $this->path       = WP_CONTENT_DIR . OMGF_CACHE_PATH . '/' . $this->handle;
-        $font_families    = explode('|', $request->get_param('family'));
-        $query['subsets'] = $request->get_param('subset') ?? 'latin,latin-ext';
+        $font_families    = explode('|', $this->family);
+        $query['subsets'] = $this->subset;
         $fonts            = [];
 
         foreach ($font_families as $font_family) {
@@ -123,10 +110,10 @@ class OMGF_API_Download extends WP_REST_Controller
         $fonts = array_filter($fonts);
 
         if (empty($fonts)) {
-            return;
+            return '';
         }
 
-        foreach ($fonts as $font_key => &$font) {
+        foreach ($fonts as &$font) {
             $fonts_request = $this->build_fonts_request($font_families, $font);
 
             if (strpos($fonts_request, ':') != false) {
@@ -142,13 +129,13 @@ class OMGF_API_Download extends WP_REST_Controller
                 $font_id = $font->id;
 
                 // Now we're sure we got 'em all. We can safely dequeue those we don't want.
-                if (isset($unloaded_fonts[$original_handle][$font_id])) {
-                    $requested_variants = $this->dequeue_unloaded_variants($requested_variants, $unloaded_fonts[$original_handle], $font->id);
+                if (isset($unloaded_fonts[$this->original_handle][$font_id])) {
+                    $requested_variants = $this->dequeue_unloaded_variants($requested_variants, $unloaded_fonts[$this->original_handle], $font->id);
                     $fonts_request      = $family . ':' . implode(',', $requested_variants);
                 }
             }
 
-            $font->variants = $this->process_unload_queue($font->id, $font->variants, $fonts_request, $original_handle);
+            $font->variants = $this->process_unload_queue($font->id, $font->variants, $fonts_request, $this->original_handle);
         }
 
         /**
@@ -191,20 +178,20 @@ class OMGF_API_Download extends WP_REST_Controller
         /**
          * If this $stylesheet doesn't exist yet, let's generate it.
          * 
-         * If any modifications are done, e.g. unloads, the cache key ($handle) changes. Therefore it makes no sense to
+         * If any modifications are done, e.g. unloads, the cache key ($this->handle) changes. Therefore it makes no sense to
          * continue after this point if $local_file already exists.
          * 
          * @since v4.5.9
          */
         if (file_exists($local_file)) {
-            return;
+            return str_replace(WP_CONTENT_DIR, content_url(), $local_file);
         }
 
-        $stylesheet = OMGF::generate_stylesheet($fonts, $original_handle);
+        $stylesheet = OMGF::generate_stylesheet($fonts, $this->original_handle);
 
         file_put_contents($local_file, $stylesheet);
 
-        $current_stylesheet = [$original_handle => $fonts];
+        $current_stylesheet = [$this->original_handle => $fonts];
 
         /**
          * $current_stylesheet is added to temporary cache layer, if it isn't present in database.
@@ -221,6 +208,8 @@ class OMGF_API_Download extends WP_REST_Controller
         $optimized_fonts = $this->rewrite_variants($optimized_fonts, $current_stylesheet);
 
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
+
+        return str_replace(WP_CONTENT_DIR, content_url(), $local_file);
     }
 
     /**

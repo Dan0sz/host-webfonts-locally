@@ -92,9 +92,9 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	{
 		$this->do_text(
 			__('Fonts Cache Directory', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH,
+			OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_DIR,
 			__('e.g. /uploads/omgf', $this->plugin_text_domain),
-			OMGF_CACHE_PATH,
+			OMGF_CACHE_DIR,
 			__("The directory (inside <code>wp-content</code>) where font files should be stored. Give each site a unique value if you're using Multisite. Defaults to <code>/uploads/omgf</code>. After changing this setting, the directory will be created if it doesn't exist and existing files will be moved automatically.", $this->plugin_text_domain)
 		);
 	}
@@ -111,8 +111,8 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			defined('OMGF_PRO_SOURCE_URL') ? OMGF_PRO_SOURCE_URL : '',
 			sprintf(
 				__("Modify the <code>src</code> URL for each font file in the stylesheet. This can be anything, like an absolute URL (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>). Make sure you include the full path to where OMGF's files are stored and/or served from. Defaults to <code>%s</code>.", $this->plugin_text_domain),
-				str_replace(home_url(), 'https://your-cdn.com', WP_CONTENT_URL . OMGF_CACHE_PATH),
-				WP_CONTENT_URL . OMGF_CACHE_PATH
+				str_replace(home_url(), 'https://your-cdn.com', WP_CONTENT_URL . OMGF_CACHE_DIR),
+				WP_CONTENT_URL . OMGF_CACHE_DIR
 			) . ' ' . $this->promo,
 			true
 		);

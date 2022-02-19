@@ -24,6 +24,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Transients
 	 */
 	const OMGF_NEWS_REEL          = 'omgf_news_reel';
+	const OMGF_CACHE_IS_STALE     = 'omgf_cache_is_stale';
 	const OMGF_CURRENT_DB_VERSION = 'omgf_current_db_version';
 
 	/**
@@ -37,12 +38,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Option Values
 	 */
-	const OMGF_OPTIMIZATION_MODE       = [
-		'manual' => 'Force (default)',
-		'auto'   => 'Scan Posts/Pages (Pro)'
-	];
 	const OMGF_FONT_PROCESSING_OPTIONS = [
-		'replace' => 'Replace (default)',
+		'replace' => 'Download (default)',
 		'remove'  => 'Remove only'
 	];
 	const OMGF_FONT_DISPLAY_OPTIONS    = [
@@ -131,8 +128,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Optimize Fonts
 	 */
 	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
-	const OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL = 'omgf_manual_optimize_url';
-	const OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE   = 'omgf_optimization_mode';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS     = 'omgf_optimized_fonts';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
 	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS       = 'omgf_preload_fonts';
@@ -148,8 +143,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_CACHE_PATH   = 'omgf_cache_dir';
-	const OMGF_ADV_SETTING_UNINSTALL    = 'omgf_uninstall';
+	const OMGF_ADV_SETTING_CACHE_DIR = 'omgf_cache_dir';
+	const OMGF_ADV_SETTING_UNINSTALL = 'omgf_uninstall';
 
 	/**
 	 * Miscellaneous

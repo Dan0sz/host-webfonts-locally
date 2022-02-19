@@ -21,8 +21,8 @@ class OMGF_Admin
 	const OMGF_ADMIN_JS_HANDLE  = 'omgf-admin-js';
 	const OMGF_ADMIN_CSS_HANDLE = 'omgf-admin-css';
 
-	/** @var array $show_notice */
-	private $show_notice = [];
+	/** @var array $stale_cache_options */
+	private $stale_cache_options = [];
 
 	/** @var string $plugin_text_domain */
 	private $plugin_text_domain = 'host-webfonts-local';
@@ -33,14 +33,13 @@ class OMGF_Admin
 	public function __construct()
 	{
 		/**
-		 * Filterable list of options that require the cache to be emptied.
+		 * Filterable list of options that marks the cache as stale.
 		 */
-		$this->show_notice = apply_filters(
-			'omgf_admin_options_show_notice',
+		$this->stale_cache_options = apply_filters(
+			'omgf_admin_stale_cache_options',
 			[
-				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE,
 				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION,
-				OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_PATH,
+				OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_DIR,
 			]
 		);
 
@@ -53,8 +52,10 @@ class OMGF_Admin
 		$this->do_help();
 		$this->maybe_do_after_update_notice();
 
-		// This used to fix a bug, but now it breaks stuff. Leave it here for the time being.
-		// add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'update_optimized_fonts'], 10, 2);
+		/**
+		 * @since v4.7.0 Fixes a bug where the Optimized Fonts wouldn't be shown after page reload.
+		 */
+		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'update_optimized_fonts'], 10, 2);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
 		add_action('pre_update_option_omgf_cache_dir', [$this, 'validate_cache_dir'], 10, 2);
 		add_filter('pre_update_option', [$this, 'settings_changed'], 10, 3);
@@ -172,7 +173,7 @@ class OMGF_Admin
 		$cache_keys = explode(',', $old_value);
 
 		foreach ($cache_keys as $key) {
-			$entries = array_filter((array) glob(OMGF_FONTS_DIR . "/*$key"));
+			$entries = array_filter((array) glob(OMGF_CACHE_PATH . "/*$key"));
 
 			foreach ($entries as $entry) {
 				OMGF::delete($entry);
@@ -230,7 +231,7 @@ class OMGF_Admin
 	 */
 	public function settings_changed($value, $option_name, $old_value)
 	{
-		if (!in_array($option_name, $this->show_notice)) {
+		if (!in_array($option_name, $this->stale_cache_options)) {
 			return $value;
 		}
 
@@ -241,12 +242,14 @@ class OMGF_Admin
 				$wp_settings_errors = [];
 			}
 
+			update_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE, true);
+
 			add_settings_error(
 				'general',
-				'omgf_settings_changed',
+				'omgf_cache_style',
 				sprintf(
-					__('Settings changed. <a href="#" data-cache-section="/*" data-nonce="%s" class="omgf-empty">Click here</a> to empty OMGF\'s cache.', $this->plugin_text_domain),
-					wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE)
+					__('OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.', $this->plugin_text_domain),
+					admin_url(OMGF_Admin_Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS)
 				),
 				'success'
 			);

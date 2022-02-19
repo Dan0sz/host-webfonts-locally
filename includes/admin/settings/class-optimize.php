@@ -35,18 +35,13 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_title'], 10);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_description'], 11);
 
-		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 20);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_optimization_mode'], 21);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 22);
-
-		add_filter('omgf_optimize_settings_content', [$this, 'open_manual_optimization_mode'], 23);
+		add_filter('omgf_optimize_settings_content', [$this, 'open_task_manager'], 23);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 24);
-		add_filter('omgf_optimize_settings_content', [$this, 'manual_optimization_status'], 25);
+		add_filter('omgf_optimize_settings_content', [$this, 'task_manager_status'], 25);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 26);
-		add_filter('omgf_optimize_settings_content', [$this, 'close_manual_optimization_mode'], 27);
+		add_filter('omgf_optimize_settings_content', [$this, 'close_task_manager'], 27);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 30);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_combine_requests'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 60);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_include_file_types'], 70);
@@ -78,53 +73,27 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	}
 
 	/**
-	 * 
-	 * @return void 
-	 */
-	public function do_optimization_mode()
-	{
-		$this->do_radio(
-			__('Optimization Mode', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_OPTIMIZATION_MODE,
-			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZATION_MODE,
-			OMGF_OPTIMIZATION_MODE,
-			__('<strong>Force</strong> will apply a single stylesheet to all of your posts/pages. <strong>Scan Posts/Pages</strong> will go through each page one by one and compile separate stylesheets for each different Google Fonts configuration.', $this->plugin_text_domain)
-		);
-	}
-
-	/**
 	 * Opens the Force info screen container.
 	 * 
 	 * @return void 
 	 */
-	public function open_manual_optimization_mode()
+	public function open_task_manager()
 	{
 	?>
-		<div class="omgf-manual-optimization-mode postbox" style="padding: 0 15px 5px; <?= OMGF_OPTIMIZATION_MODE == 'manual' ? '' : 'display: none;'; ?>">
-			<h3><?= __('Optimization Mode: Force — Task Manager', $this->plugin_text_domain); ?></h3>
+		<div class="omgf-task-manager postbox" style="padding: 0 15px 5px;">
+			<h3><?= __('Task Manager', $this->plugin_text_domain); ?></h3>
 			<p class="description">
-				<?= __('Are you using a regular theme (and a page builder) and are the same Google Fonts loading throughout all your posts/pages? Then <strong>Force</strong> is right for you.', $this->plugin_text_domain); ?>
+				<?= __('A quick overview of the stylesheets currently in your cache folder.', $this->plugin_text_domain); ?>
 			</p>
-			<div class="pro-con-container">
-				<div class="pros">
-					<h4><?= __('Pros', $this->plugin_text_domain); ?></h4>
-					<ul class="pros-list">
-						<li><?= __('Fast. Immediate results.', $this->plugin_text_domain); ?></li>
-						<li><?= __('One (or a few) stylesheets to manage.', $this->plugin_text_domain); ?></li>
-						<li><?= __('Compatible with multilanguage plugins, e.g. WPML or Polylang.', $this->plugin_text_domain); ?></li>
-					</ul>
-				</div>
-				<div class="cons">
-					<h4><?= __('Cons', $this->plugin_text_domain); ?></h4>
-					<ul class="cons-list">
-						<li><?= __('Might miss a font, when using a page builder and a unique font is used on a few separate pages.', $this->plugin_text_domain); ?></li>
-					</ul>
-				</div>
-			</div>
 		<?php
 	}
 
-	public function manual_optimization_status()
+	/**
+	 * 
+	 * 
+	 * @return void 
+	 */
+	public function task_manager_status()
 	{
 		$stylesheets = OMGF::optimized_fonts();
 		?>
@@ -141,13 +110,15 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 									$cache_key = $handle;
 								}
 
-								$downloaded = file_exists(OMGF_FONTS_DIR . "/$cache_key/$cache_key.css");
-								$stale      = function_exists('omgf_pro_init') && strpos($cache_key, 'pro-merged') === false;
+								$downloaded = file_exists(OMGF_CACHE_PATH . "/$cache_key/$cache_key.css");
 								?>
-								<li class="<?= $stale ? 'stale' : ($downloaded ? 'found' : 'not-found'); ?>">
-									<strong><?= $handle; ?></strong> <?php if (!$stale) : ?><em>(<?= sprintf(__('stored in %s', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_FONTS_DIR . "/$cache_key")); ?>)</em><?php elseif ($stale) : ?><em>(<?= __('Stale cache item. <a id="omgf-stale-cache" href="#">Empty cache</a> and run optimization again.', $this->plugin_text_domain); ?>)</em><?php endif; ?>
+								<li class="<?= OMGF_CACHE_IS_STALE ? 'stale' : ($downloaded ? 'found' : 'not-found'); ?>">
+									<strong><?= $handle; ?></strong> <em>(<?= sprintf(__('stored in %s', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_CACHE_PATH . "/$cache_key")); ?>)</em> <a href="<?php echo "#$cache_key"; ?>" title="<?php echo sprintf(__('Manage %s', $this->plugin_text_domain), $cache_key); ?>"><?php echo __('Configure', $this->plugin_text_domain); ?></a><br />
 								</li>
 							<?php endforeach; ?>
+							<?php if (OMGF_CACHE_IS_STALE) : ?>
+								<li class="stale-cache-notice"><em><?= __('The stylesheets in the cache do not reflect the current settings. <a href="#" id="omgf-cache-refresh">Click here to refresh them</a>.', $this->plugin_text_domain); ?></em></li>
+							<?php endif; ?>
 						</ul>
 					<?php else : ?>
 						<p>
@@ -164,25 +135,11 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 * 
 	 * @return void 
 	 */
-	public function close_manual_optimization_mode()
+	public function close_task_manager()
 	{
 		?>
 		</div>
 	<?php
-	}
-
-	/**
-	 *
-	 */
-	public function do_promo_combine_requests()
-	{
-		$this->do_checkbox(
-			__('Combine & Dedupe (Pro)', $this->plugin_text_domain),
-			'omgf_pro_combine_requests',
-			defined('OMGF_PRO_COMBINE_REQUESTS') ? true : false,
-			__('Combine and deduplicate multiple Google Fonts stylesheets into one stylesheet. This feature is always on in OMGF Pro.', $this->plugin_text_domain) . ' ' . $this->promo,
-			true
-		);
 	}
 
 	/**
@@ -273,8 +230,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			<?php else : ?>
 				<div class="omgf-optimize-fonts-description">
 					<?php
-					$this->do_manual_template();
-					$this->do_automatic_template();
+					$this->do_optimize_fonts_section();
 					?>
 				</div>
 			<?php endif;
@@ -365,16 +321,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				<div class="omgf-optimize-fonts-tooltip">
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
-						<?php if (OMGF_OPTIMIZATION_MODE == 'manual') : ?>
-							<em><?= sprintf(__("This list is populated with all Google Fonts captured and downloaded from <strong>%s</strong>. Optimizations will be applied on every page using these fonts. If you want to optimize additional Google Fonts from other pages, switch to <strong>Automatic (Pro)</strong> and visit the pages containing the stylesheets you'd like to optimize. This list will automatically be populated with the captured fonts.", $this->plugin_text_domain), OMGF_MANUAL_OPTIMIZE_URL); ?></em>
-						<?php else : ?>
-							<?php $no_cache_param = '?omgf_optimize=' . substr(md5(microtime()), rand(0, 26), 5); ?>
-							<em><?= sprintf(__("This list is automatically populated with Google Fonts captured throughout your entire site. Optimizations will be applied on every page using these fonts. <strong>Automatic</strong> mode might not work when a Full Page Cache plugin is activated. If this list is not being populated with Google Fonts, you could try to visit your frontend and append the following parameter to the URL: <strong>%s</strong>", $this->plugin_text_domain), $no_cache_param); ?></em>
-						<?php endif; ?>
+						<em><?= sprintf(__("This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. Upon clicking <strong>Save & Optimize</strong> your homepage (<code>%s</code>) will be scanned for available fonts. Stylesheets discovered on other pages will be downloaded (and added to this overview) upon pageload.", $this->plugin_text_domain), get_site_url()); ?></em>
 					</p>
 				</div>
 				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value='<?= serialize($this->optimized_fonts); ?>' />
-				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= OMGF_UNLOAD_STYLESHEETS; ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" value="<?= implode(',', $cache_handles); ?>" />
 			</div>
@@ -384,38 +334,14 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		/**
 		 *
 		 */
-		public function do_manual_template()
+		public function do_optimize_fonts_section()
 		{
 		?>
-			<div class="omgf-optimize-fonts-manual" <?= OMGF_OPTIMIZATION_MODE == 'manual' ? '' : 'style="display: none;"'; ?>>
-				<p>
-					<?= __('Enter the URL of the post/page you\'d like to scan for Google Fonts. The detected and optimized stylesheets will be applied on all pages where they\'re used.', $this->plugin_text_domain); ?>
-				</p>
-				<label for="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>">
-					<?= __('URL to Scan', $this->plugin_text_domain); ?>
-					<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" type="text" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_MANUAL_OPTIMIZE_URL; ?>" value="<?= OMGF_MANUAL_OPTIMIZE_URL; ?>" />
-				</label>
+			<div class="omgf-optimize-fonts">
 				<div class="omgf-optimize-fonts-tooltip">
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
-						<em><?= __('This section will be populated with all captured fonts, font styles and available options after saving changes.', $this->plugin_text_domain); ?></em>
-					</p>
-				</div>
-			</div>
-		<?php
-		}
-
-		/**
-		 *
-		 */
-		public function do_automatic_template()
-		{
-		?>
-			<div class="omgf-optimize-fonts-automatic" <?= OMGF_OPTIMIZATION_MODE == 'auto' ? '' : 'style="display: none;"'; ?>>
-				<div class="omgf-optimize-fonts-tooltip">
-					<p>
-						<span class="dashicons-before dashicons-info-outline"></span>
-						<em><?= __("After saving your changes, this section will be populated with all captured fonts, font styles and available options as the cron task progresses.", $this->plugin_text_domain); ?></em>
+						<em><?= __('This section will be populated with all captured fonts, font styles and available options after saving changes. The list will grow organically as other Google Fonts stylesheets might be discovered on other pages.', $this->plugin_text_domain); ?></em>
 					</p>
 				</div>
 			</div>

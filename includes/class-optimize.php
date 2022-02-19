@@ -60,11 +60,7 @@ class OMGF_Optimize
 
         add_filter('http_request_args', [$this, 'verify_ssl']);
 
-        $optimization_mode = apply_filters('omgf_optimization_mode', OMGF_OPTIMIZATION_MODE);
-
-        if ('manual' == $optimization_mode) {
-            $this->run_manual();
-        }
+        $this->run_manual();
     }
 
     /**

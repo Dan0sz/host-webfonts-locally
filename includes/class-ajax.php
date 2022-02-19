@@ -26,7 +26,22 @@ class OMGF_AJAX
 	 */
 	public function __construct()
 	{
-		add_action('wp_ajax_omgf_ajax_empty_dir', [$this, 'empty_directory']);
+		add_action('wp_ajax_omgf_refresh_cache', [$this, 'refresh_cache']);
+		add_action('wp_ajax_omgf_empty_dir', [$this, 'empty_directory']);
+	}
+
+	/**
+	 * Removes the stale cache mark.
+	 */
+	public function refresh_cache()
+	{
+		check_ajax_referer(OMGF_Admin_Settings::OMGF_ADMIN_PAGE, 'nonce');
+
+		if (!current_user_can('manage_options')) {
+			wp_die(__("Hmmm, you're not supposed to be here.", $this->plugin_text_domain));
+		}
+
+		delete_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE);
 	}
 
 	/**
@@ -40,12 +55,12 @@ class OMGF_AJAX
 		check_ajax_referer(OMGF_Admin_Settings::OMGF_ADMIN_PAGE, 'nonce');
 
 		if (!current_user_can('manage_options')) {
-			wp_die(__("You're not cool enough to access this page.", $this->plugin_text_domain));
+			wp_die(__("Hmmm, you're not supposed to be here.", $this->plugin_text_domain));
 		}
 
 		$section       = str_replace('*', '', $_POST['section']);
-		$set_path      = rtrim(OMGF_FONTS_DIR . $section, '/');
-		$resolved_path = realpath(OMGF_FONTS_DIR . $section);
+		$set_path      = rtrim(OMGF_CACHE_PATH . $section, '/');
+		$resolved_path = realpath(OMGF_CACHE_PATH . $section);
 
 		if ($resolved_path != $set_path) {
 			wp_die(__('Attempted path traversal detected. Sorry, no script kiddies allowed!', $this->plugin_text_domain));
@@ -53,7 +68,7 @@ class OMGF_AJAX
 
 		try {
 			$section = $_POST['section'];
-			$entries = array_filter((array) glob(OMGF_FONTS_DIR . $section));
+			$entries = array_filter((array) glob(OMGF_CACHE_PATH . $section));
 
 			$instructions = apply_filters(
 				'omgf_clean_up_instructions',

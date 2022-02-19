@@ -42,7 +42,7 @@ class OMGF_Uninstall
 
         $this->wpdb     = $wpdb;
         $this->options  = $settings->get_settings();
-        $this->cacheDir = OMGF_FONTS_DIR;
+        $this->cacheDir = OMGF_CACHE_PATH;
 
         $this->remove_db_entries();
         $this->delete_files();
