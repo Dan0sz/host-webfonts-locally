@@ -60,7 +60,7 @@ class OMGF_Optimize
 
         add_filter('http_request_args', [$this, 'verify_ssl']);
 
-        $this->run_manual();
+        $this->run();
     }
 
     /**
@@ -84,7 +84,7 @@ class OMGF_Optimize
      * 
      * @return void 
      */
-    private function run_manual()
+    private function run()
     {
         new OMGF_Optimize_Run();
     }
