@@ -256,11 +256,11 @@ class OMGF
 	}
 
 	/**
-	 * @return OMGF_Optimize
+	 * @return OMGF_Admin_Optimize
 	 */
 	public function do_optimize()
 	{
-		return new OMGF_Optimize();
+		return new OMGF_Admin_Optimize();
 	}
 
 	/**

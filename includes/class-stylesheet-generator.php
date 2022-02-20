@@ -61,8 +61,8 @@ class OMGF_StylesheetGenerator
 			 * If Font Family's name was recently renamed, the old name should be used so no manual changes have to be made 
 			 * to the stylesheet after processing.
 			 */
-			$renamed_font_family = in_array($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS)
-				? array_search($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS)
+			$renamed_font_family = in_array($font->id, OMGF_Optimize::OMGF_RENAMED_GOOGLE_FONTS)
+				? array_search($font->id, OMGF_Optimize::OMGF_RENAMED_GOOGLE_FONTS)
 				: '';
 
 			foreach ($font->variants as $variant) {

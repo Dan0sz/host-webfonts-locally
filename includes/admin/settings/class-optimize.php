@@ -284,7 +284,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							<?php foreach ($fonts as $font) : ?>
 								<?php if (!is_object($font) || count((array) $font->variants) <= 0) continue; ?>
 								<?php
-								$aka = in_array($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS) ? array_search($font->id, OMGF_API_Download::OMGF_RENAMED_GOOGLE_FONTS) : '';
+								$aka = in_array($font->id, OMGF_Optimize::OMGF_RENAMED_GOOGLE_FONTS) ? array_search($font->id, OMGF_Optimize::OMGF_RENAMED_GOOGLE_FONTS) : '';
 								?>
 								<tr class="font-family" data-id="<?= $handle . '-' . $font->id; ?>">
 									<td colspan="5">

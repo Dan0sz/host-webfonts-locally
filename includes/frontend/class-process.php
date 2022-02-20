@@ -279,8 +279,8 @@ class OMGF_Frontend_Process
 				continue;
 			}
 
-			$download   = new OMGF_API_Download($post_query['family'], $post_query['handle'], $post_query['original_handle'], $post_query['subset'] ?? '');
-			$cached_url = $download->process();
+			$optimize   = new OMGF_Optimize($post_query['family'], $post_query['handle'], $post_query['original_handle'], $post_query['subset'] ?? '');
+			$cached_url = $optimize->process();
 
 			if (!$cached_url) {
 				continue;
@@ -294,7 +294,9 @@ class OMGF_Frontend_Process
 			return $html;
 		}
 
-		return str_replace($search, $replace, $html);
+		$html = str_replace($search, $replace, $html);
+
+		return apply_filters('omgf_processed_html', $html);
 	}
 
 	/**
