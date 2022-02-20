@@ -161,7 +161,7 @@ class OMGF_Frontend_Process
 	/**
 	 * Returns the buffer for filtering, so page cache doesn't break.
 	 * 
-	 * @since v4.3.1 Tested with:
+	 * @since v5.0.0 Tested with:
 	 *               - Cache Enabler v1.8.7
 	 *                 - Default Settings
 	 *               - LiteSpeed Cache
