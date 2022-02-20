@@ -28,8 +28,6 @@ jQuery(document).ready(function ($) {
          */
         init: function () {
             // Settings
-            $('input[name="omgf_optimization_mode"]').on('click', this.toggle_optimization_mode_content);
-            $('input[name="omgf_optimization_mode"]').on('change', this.toggle_manual_optimization_mode_section);
             $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
             $('#omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.unload_stylesheets);
@@ -64,29 +62,6 @@ jQuery(document).ready(function ($) {
 
             if (omgf_admin.ticker_index == omgf_admin.ticker_items.length) {
                 omgf_admin.ticker_index = 0;
-            }
-        },
-
-        /**
-         *
-         */
-        toggle_optimization_mode_content: function () {
-            if (this.value == 'manual') {
-                $('.omgf-optimize-fonts-manual').show();
-                $('.omgf-optimize-fonts-automatic').hide();
-            } else {
-                $('.omgf-optimize-fonts-automatic').show();
-                $('.omgf-optimize-fonts-manual').hide();
-            }
-        },
-
-        toggle_manual_optimization_mode_section: function () {
-            var section = $('.omgf-manual-optimization-mode');
-
-            if (this.value == 'manual') {
-                section.show();
-            } else {
-                section.hide();
             }
         },
 
@@ -146,7 +121,7 @@ jQuery(document).ready(function ($) {
          * Generate a new cache key upon each unload change.
          */
         generate_cache_key: function (element = null) {
-            if (element !== null) {
+            if (element.target === undefined) {
                 var current_handle = $(element).attr('id');
             } else {
                 var current_handle = $(this).data('handle');
