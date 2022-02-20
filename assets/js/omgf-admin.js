@@ -28,8 +28,6 @@ jQuery(document).ready(function ($) {
          */
         init: function () {
             // Settings
-            $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
-            $('#omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.unload_stylesheets);
             $('.omgf-optimize-fonts-manage .unload, .omgf-optimize-fonts-manage .fallback-font-stack select').on('change', this.generate_cache_key);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.toggle_preload);
@@ -38,9 +36,11 @@ jQuery(document).ready(function ($) {
             $('.omgf-optimize-fonts-manage .unload-all').on('click', this.unload_all);
             $('.omgf-optimize-fonts-manage .load-all').on('click', this.load_all);
 
-            // Buttons
-            $('.omgf-empty').on('click', this.empty_cache_directory);
+            // Buttons (AJAX, etc.)
+            $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
             $('#omgf-optimize-settings-form').submit(this.show_loader_before_submit);
+            $('#omgf-cache-refresh').on('click', this.refresh_cache);
+            $('.omgf-empty').on('click', this.empty_cache_directory);
 
             // Ticker
             setInterval(this.loop_ticker_items, 4000);
