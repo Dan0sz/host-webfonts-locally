@@ -44,6 +44,9 @@ class OMGF_Optimize
     /** @var string $subset */
     private $subset = '';
 
+    /** @var string $return */
+    private $return = 'url';
+
     /** @var string */
     private $path = '';
 
@@ -51,10 +54,11 @@ class OMGF_Optimize
     private $plugin_text_domain = 'host-webfonts-local';
 
     /**
-     * @param string $family          "family" parameters in Google Fonts API URL, e.g. "?family="Lato:100,200,300,etc."
+     * @param string $family          Contents of "family" parameters in Google Fonts API URL, e.g. "?family="Lato:100,200,300,etc."
      * @param string $handle          The cache handle, generated using $handle + 5 random chars. Used for storing the fonts and stylesheet.
      * @param string $original_handle The stylesheet handle, present in the ID attribute.
-     * @param string $subset          "subset" parameter, defaults to 'latin,latin-ext'.
+     * @param string $subset          Contents of "subset" parameter, defaults to 'latin,latin-ext'.
+     * @param string $return          Valid values: 'url' | 'path' | 'object'.
      * 
      * @return string Local URL of generated stylesheet.
      * 
@@ -68,17 +72,19 @@ class OMGF_Optimize
         string $family,
         string $handle,
         string $original_handle,
-        string $subset = ''
+        string $subset = '',
+        string $return = 'url'
     ) {
         $this->family          = $family;
         $this->handle          = sanitize_title_with_dashes($handle);
         $this->original_handle = sanitize_title_with_dashes($original_handle);
         $this->subset          = $subset ?? 'latin,latin-ext';
         $this->path            = OMGF_CACHE_PATH . '/' . $this->handle;
+        $this->return          = $return;
     }
 
     /**
-     * @return string 
+     * @return string|array
      * 
      * @throws SodiumException 
      * @throws SodiumException 
@@ -174,19 +180,6 @@ class OMGF_Optimize
         }
 
         $local_file = $this->path . '/' . $this->handle . '.css';
-
-        /**
-         * If this $stylesheet doesn't exist yet, let's generate it.
-         * 
-         * If any modifications are done, e.g. unloads, the cache key ($this->handle) changes. Therefore it makes no sense to
-         * continue after this point if $local_file already exists.
-         * 
-         * @since v4.5.9
-         */
-        if (file_exists($local_file)) {
-            return str_replace(WP_CONTENT_DIR, content_url(), $local_file);
-        }
-
         $stylesheet = OMGF::generate_stylesheet($fonts, $this->original_handle);
 
         file_put_contents($local_file, $stylesheet);
@@ -209,7 +202,16 @@ class OMGF_Optimize
 
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
 
-        return str_replace(WP_CONTENT_DIR, content_url(), $local_file);
+        switch ($this->return) {
+            case 'path':
+                return $local_file;
+                break;
+            case 'object':
+                return $current_stylesheet;
+                break;
+            default: // 'url'
+                return str_replace(WP_CONTENT_DIR, content_url(), $local_file);
+        }
     }
 
     /**
