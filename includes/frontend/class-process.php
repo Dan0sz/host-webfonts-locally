@@ -41,7 +41,7 @@ class OMGF_Frontend_Process
 	{
 		add_action('wp_head', [$this, 'add_preloads'], 3);
 		add_filter('wp_resource_hints', [$this, 'remove_preconnects']);
-		add_filter('omgf_buffer_output', [$this, 'parse_source']);
+		add_filter('omgf_buffer_output', [$this, 'parse']);
 		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
 	}
 
@@ -196,12 +196,25 @@ class OMGF_Frontend_Process
 	}
 
 	/**
+	 * This method uses Regular Expressions to parse the HTML. It's tested to be at least 
+	 * twice as fast compared to using Xpath.
+	 * 
+	 * Test results (in seconds, with XDebug enabled)
+	 * 
+	 * Uncached: 	17.81094789505
+	 * 			 	18.687641859055
+	 * 			 	18.301512002945
+	 * Cached:		0.00046515464782715
+	 * 				0.00037288665771484
+	 * 				0.00053095817565918
+	 * 
+	 * Using Xpath proved to be untestable, because it varied anywhere between 38 seconds and, well, timeouts.
 	 * 
 	 * @param string $html 
 	 * 
 	 * @return string 
 	 */
-	public function parse_source($html)
+	public function parse($html)
 	{
 		preg_match_all('/<link.*fonts\.googleapis\.com.*?[\/]?>/', $html, $links);
 
