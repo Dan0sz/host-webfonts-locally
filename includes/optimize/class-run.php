@@ -63,7 +63,7 @@ class OMGF_Optimize_Run
         return wp_remote_get(
             $this->no_cache_optimize_url($url),
             [
-                'timeout' => 30
+                'timeout' => 60
             ]
         );
     }
