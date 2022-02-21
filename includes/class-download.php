@@ -71,6 +71,10 @@ class OMGF_Download
 			return urlencode(content_url($file_uri));
 		}
 
+		if (strpos($this->url, '//') === 0) {
+			$this->url = 'https:' . $this->url;
+		}
+
 		$tmp = download_url($this->url);
 
 		if (is_wp_error($tmp)) {
