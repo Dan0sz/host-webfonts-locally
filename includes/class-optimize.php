@@ -78,7 +78,7 @@ class OMGF_Optimize
         $this->family          = $family;
         $this->handle          = sanitize_title_with_dashes($handle);
         $this->original_handle = sanitize_title_with_dashes($original_handle);
-        $this->subset          = $subset ?? 'latin,latin-ext';
+        $this->subset          = $subset ?: 'latin,latin-ext';
         $this->path            = OMGF_CACHE_PATH . '/' . $this->handle;
         $this->return          = $return;
     }
@@ -125,7 +125,7 @@ class OMGF_Optimize
             if (strpos($fonts_request, ':') != false) {
                 list($family, $requested_variants) = explode(':', $fonts_request);
             } else {
-                $family   = $fonts_request;
+                $family             = $fonts_request;
                 $requested_variants = '';
             }
 
