@@ -75,7 +75,7 @@
   color: #FF851B;
 }
 .omgf form .omgf-task-manager ul li.found:before {
-  content: "\f147";
+  content: "\f15e";
   color: #2ECC40;
 }
 .omgf form .omgf-task-manager ul li.not-found:before {
@@ -84,6 +84,10 @@
 }
 .omgf form .omgf-task-manager ul li.stale-cache-notice:before {
   content: "\f348";
+  color: #0074D9;
+}
+.omgf form .omgf-task-manager ul li.unloaded:before {
+  content: "\f460";
   color: #0074D9;
 }
 .omgf-optimize-fonts-container {

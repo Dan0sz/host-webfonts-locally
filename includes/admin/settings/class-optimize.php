@@ -95,7 +95,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 */
 	public function task_manager_status()
 	{
-		$stylesheets = OMGF::optimized_fonts();
+		$stylesheets          = OMGF::optimized_fonts();
+		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
 			<tr valign="top">
 				<th scope="row"><?= __('Stylesheet Status', $this->plugin_text_domain); ?></th>
@@ -111,8 +112,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 								}
 
 								$downloaded = file_exists(OMGF_CACHE_PATH . "/$cache_key/$cache_key.css");
+								$unloaded   = in_array($handle, $unloaded_stylesheets);
 								?>
-								<li class="<?= OMGF_CACHE_IS_STALE ? 'stale' : ($downloaded ? 'found' : 'not-found'); ?>">
+								<li class="<?= OMGF_CACHE_IS_STALE ? 'stale' : ($unloaded ? 'unloaded' : ($downloaded ? 'found' : 'not-found')); ?>">
 									<strong><?= $handle; ?></strong> <em>(<?= sprintf(__('stored in %s', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_CACHE_PATH . "/$cache_key")); ?>)</em> <a href="<?php echo "#$cache_key"; ?>" title="<?php echo sprintf(__('Manage %s', $this->plugin_text_domain), $cache_key); ?>"><?php echo __('Configure', $this->plugin_text_domain); ?></a><br />
 								</li>
 							<?php endforeach; ?>
@@ -132,8 +134,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				<td class="status">
 					<ul>
 						<li class="found"> <?php _e('<strong>Found</strong>. Stylesheet exists on your file system.', $this->plugin_text_domain); ?></li>
-						<li class="not-found"> <?php _e('<strong>Not Found</strong>. Stylesheet was detected, but was somehow removed.', $this->plugin_text_domain); ?></li>
+						<li class="unloaded"> <?php _e('<strong>Unloaded</strong>. Stylesheet exists, but is not loaded in the frontend.', $this->plugin_text_domain); ?></li>
 						<li class="stale"> <?php _e('<strong>Stale</strong>. Settings were changed and the stylesheet does not reflect those changes.', $this->plugin_text_domain); ?></li>
+						<li class="not-found"> <?php _e('<strong>Not Found</strong>. Stylesheet was detected, but was somehow removed.', $this->plugin_text_domain); ?></li>
 					</ul>
 				</td>
 			</tr>
@@ -337,6 +340,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value='<?= serialize($this->optimized_fonts); ?>' />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= OMGF_UNLOAD_STYLESHEETS; ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" value="<?= implode(',', $cache_handles); ?>" />
+				<?php echo apply_filters('omgf_optimize_fonts_hidden_fields', ''); ?>
 			</div>
 		<?php
 		}
