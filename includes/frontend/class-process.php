@@ -105,7 +105,7 @@ class OMGF_Frontend_Process
 	 */
 	public function remove_preconnects($urls)
 	{
-		return array_diff($urls, ['fonts.googleapis.com']);
+		return array_diff($urls, ['fonts.googleapis.com', 'fonts.gstatic.com']);
 	}
 
 	/**
