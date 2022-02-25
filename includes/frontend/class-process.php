@@ -146,7 +146,7 @@ class OMGF_Frontend_Process
 		/**
 		 * Customizer previews shouldn't get optimized content.
 		 */
-		if (function_exists('is_customize_preview')) {
+		if (function_exists('is_customize_preview') && is_customize_preview()) {
 			$start = !is_customize_preview();
 		}
 
