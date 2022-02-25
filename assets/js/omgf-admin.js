@@ -293,7 +293,7 @@ jQuery(document).ready(function ($) {
          *
          */
         show_loader: function () {
-            $('#wpcontent').append('<div class="omgf-loading"><span class="spinner is-active"></span></div>');
+            $('#wpwrap').append('<div class="omgf-loading"><span class="spinner is-active"></span></div>');
         }
     };
 
