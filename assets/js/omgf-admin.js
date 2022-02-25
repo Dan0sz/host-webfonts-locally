@@ -77,8 +77,6 @@ jQuery(document).ready(function ($) {
                     nonce: omgf_admin.nonce,
                 },
                 beforeSend: function () {
-                    omgf_admin.show_loader();
-
                     $('.omgf-optimize-fonts-manage table tbody').each(function (key, elem) {
                         omgf_admin.generate_cache_key(elem);
                     });
