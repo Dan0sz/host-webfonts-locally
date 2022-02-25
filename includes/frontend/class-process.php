@@ -17,7 +17,7 @@ defined('ABSPATH') || exit;
  * * * * * * * * * * * * * * * * * * * */
 class OMGF_Frontend_Process
 {
-	const OMGF_STYLE_HANDLE = 'omgf-fonts';
+	const RESOURCE_HINTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 	/**
 	 * @var array $page_builders Array of keys set by page builders when they're displaying their previews.
@@ -100,15 +100,35 @@ class OMGF_Frontend_Process
 	/**
 	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
 	 * 
-	 * @todo Resource Hints not added using wp_resource_hints() aren't detected. However, using
-	 * 		 a regex is risky, because we can't guarantee we're not removing stylesheets.
-	 * 
 	 * @param array $urls 
 	 * @return array 
 	 */
 	public function remove_resource_hints($urls)
 	{
-		return array_diff($urls, ['fonts.googleapis.com', 'fonts.gstatic.com']);
+		foreach ($urls as $key => &$url) {
+			if (is_array($url)) {
+				$url = $this->remove_resource_hints($url);
+
+				continue;
+			}
+
+			foreach (self::RESOURCE_HINTS as $hint) {
+				if (strpos($url, $hint) !== false) {
+					unset($urls[$key]);
+				}
+			}
+		}
+
+		return $urls;
+	}
+
+	private function search_and_remove($element)
+	{
+		if (($key = array_search(['fonts.gstatic.com', 'fonts.googleapis.com'], $element)) !== false) {
+			unset($element[$key]);
+		}
+
+		return $element;
 	}
 
 	/**
