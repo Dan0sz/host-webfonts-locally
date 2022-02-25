@@ -99,8 +99,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
 			<tr valign="top">
-				<th scope="row"><?= __('Stylesheet Status', $this->plugin_text_domain); ?></th>
-				<td class="status">
+				<th scope="row"><?= __('Cache Status', $this->plugin_text_domain); ?></th>
+				<td class="task-manager-row">
 					<?php if (!empty($stylesheets)) : ?>
 						<ul>
 							<?php foreach ($stylesheets as $handle => $contents) : ?>
@@ -131,13 +131,19 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			</tr>
 			<tr>
 				<th scope="row"><?php _e('Legend', $this->plugin_text_domain); ?></th>
-				<td class="status">
+				<td class="task-manager-row">
 					<ul>
 						<li class="found"> <?php _e('<strong>Found</strong>. Stylesheet exists on your file system.', $this->plugin_text_domain); ?></li>
 						<li class="unloaded"> <?php _e('<strong>Unloaded</strong>. Stylesheet exists, but is not loaded in the frontend.', $this->plugin_text_domain); ?></li>
 						<li class="stale"> <?php _e('<strong>Stale</strong>. Settings were changed and the stylesheet does not reflect those changes.', $this->plugin_text_domain); ?></li>
 						<li class="not-found"> <?php _e('<strong>Not Found</strong>. Stylesheet was detected, but was somehow removed.', $this->plugin_text_domain); ?></li>
 					</ul>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php _e('Flush Cache', $this->plugin_text_domain); ?></th>
+				<td class="task-manager-row">
+					<a id="omgf-empty" data-cache-section="/*" data-nonce="<?= wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" class="omgf-empty button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
 				</td>
 			</tr>
 		<?php

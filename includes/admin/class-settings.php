@@ -415,7 +415,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			?>
 			<?php if ($this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP) : ?>
 				<?php submit_button($this->submit_button_text, 'primary', 'submit', false); ?>
-				<a id="omgf-empty" data-cache-section="/*" data-nonce="<?= wp_create_nonce(self::OMGF_ADMIN_PAGE); ?>" class="omgf-empty button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
 			<?php endif; ?>
 		</form>
 <?php
