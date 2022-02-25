@@ -28,8 +28,9 @@ class OMGF_Optimize
      * The key of an element should be dashed (no spaces) if necessary, e.g. open-sans.
      */
     const OMGF_RENAMED_GOOGLE_FONTS = [
-        'ek-mukta' => 'mukta',
-        'muli'     => 'mulish'
+        'crimson-text' => 'crimson-pro',
+        'ek-mukta'     => 'mukta',
+        'muli'         => 'mulish'
     ];
 
     /** @var string $family */
