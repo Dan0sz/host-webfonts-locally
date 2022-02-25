@@ -117,20 +117,18 @@ class OMGF_Frontend_Process
 	 */
 	public function maybe_buffer_output()
 	{
-		$start = true;
-
 		/**
 		 * Allows us to quickly bypass fonts optimization.
 		 */
 		if (isset($_GET['nomgf'])) {
-			$start = false;
+			return false;
 		}
 
 		/**
 		 * Should we optimize for logged in Administrators/Editors?
 		 */
 		if (!OMGF_OPTIMIZE_EDIT_ROLES && current_user_can('edit_pages')) {
-			$start = false;
+			return false;
 		}
 
 		/**
@@ -138,8 +136,7 @@ class OMGF_Frontend_Process
 		 */
 		foreach ($this->page_builders as $page_builder) {
 			if (array_key_exists($page_builder, $_GET)) {
-				$start = false;
-				break;
+				return false;
 			}
 		}
 
@@ -147,15 +144,13 @@ class OMGF_Frontend_Process
 		 * Customizer previews shouldn't get optimized content.
 		 */
 		if (function_exists('is_customize_preview') && is_customize_preview()) {
-			$start = !is_customize_preview();
+			return false;
 		}
 
 		/**
 		 * Let's GO!
 		 */
-		if ($start) {
-			ob_start([$this, 'return_buffer']);
-		}
+		ob_start([$this, 'return_buffer']);
 	}
 
 	/**
