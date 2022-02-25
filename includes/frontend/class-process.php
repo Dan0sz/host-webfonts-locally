@@ -292,25 +292,36 @@ class OMGF_Frontend_Process
 		$replace = [];
 
 		foreach ($google_fonts as $key => $stack) {
-			$updated_handle = $stack['id'];
+			$handle = $stack['id'];
 
 			/**
-			 * $updated_handle is used for caching. $stack['id'] contains the original handle.
+			 * If stylesheet with $handle is completely marked for unload, just clean the 'href'
+			 * attribute to prevent it from loading.
 			 */
-			if ((OMGF::unloaded_fonts() && $cache_key = OMGF::get_cache_key($stack['id']))
-				|| apply_filters('omgf_frontend_update_cache_key', false)
-			) {
-				$updated_handle = $cache_key;
-			}
-
-			if (file_exists(OMGF_CACHE_PATH . "/$updated_handle/$updated_handle.css")) {
-				$search[$key]  = $stack['href'];
-				$replace[$key] = content_url(OMGF_CACHE_DIR . "/$updated_handle/$updated_handle.css");
+			if (OMGF::unloaded_stylesheets() && in_array($handle, OMGF::unloaded_stylesheets())) {
+				$search[$key] = $stack['href'];
+				$replace[$key] = '';
 
 				continue;
 			}
 
-			$api_url    = $this->build_request_url(urldecode($stack['href']), $updated_handle, $stack['id']);
+			/**
+			 * $cache_key is used for caching. $handle contains the original handle.
+			 */
+			if ((OMGF::unloaded_fonts() && $cache_key = OMGF::get_cache_key($stack['id']))
+				|| apply_filters('omgf_frontend_update_cache_key', false)
+			) {
+				$handle = $cache_key;
+			}
+
+			if (file_exists(OMGF_CACHE_PATH . "/$handle/$handle.css")) {
+				$search[$key]  = $stack['href'];
+				$replace[$key] = content_url(OMGF_CACHE_DIR . "/$handle/$handle.css");
+
+				continue;
+			}
+
+			$api_url    = $this->build_request_url(urldecode($stack['href']), $handle, $stack['id']);
 			$api_params = parse_url($api_url);
 
 			parse_str($api_params['query'], $post_query);
