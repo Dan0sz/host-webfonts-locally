@@ -26,11 +26,13 @@ class OMGF
 		$this->define_constants();
 
 		if (is_admin()) {
-			add_action('plugins_loaded', [$this, 'init_admin'], 50);
+			add_action('_admin_menu', [$this, 'init_admin']);
+
+			$this->add_ajax_hooks();
 		}
 
 		if (!is_admin()) {
-			add_action('plugins_loaded', [$this, 'init_frontend'], 50);
+			add_action('init', [$this, 'init_frontend'], 50);
 		}
 
 		add_action('admin_init', [$this, 'do_optimize']);
@@ -61,24 +63,100 @@ class OMGF
 	}
 
 	/**
-	 * Required in Admin.
+	 * Needs to run before admin_menu and admin_init.
 	 * 
-	 * @return void 
+	 * @action _admin_menu
+	 * 
+	 * @return OMGF_Admin_Settings
 	 */
 	public function init_admin()
 	{
-		$this->do_settings();
-		$this->add_ajax_hooks();
+		return new OMGF_Admin_Settings();
 	}
 
 	/**
-	 * Required in Frontend.
-	 * 
-	 * @return void 
+	 * @return OMGF_AJAX
+	 */
+	private function add_ajax_hooks()
+	{
+		return new OMGF_AJAX();
+	}
+
+	/**
+	 * @return OMGF_Frontend_Process
 	 */
 	public function init_frontend()
 	{
-		$this->do_frontend();
+		return new OMGF_Frontend_Process();
+	}
+
+	/**
+	 * @return OMGF_Admin_Optimize
+	 */
+	public function do_optimize()
+	{
+		return new OMGF_Admin_Optimize();
+	}
+
+	/**
+	 * content_url() uses is_ssl() to detect whether SSL is used. This fails for servers behind
+	 * load balancers and/or reverse proxies. So, we double check with this filter.
+	 * 
+	 * @since v4.4.4
+	 * 
+	 * @param mixed $url 
+	 * @param mixed $path 
+	 * @return mixed 
+	 */
+	public function force_ssl($url, $path)
+	{
+		/**
+		 * Only rewrite URLs requested by this plugin. We don't want to interfere with other plugins.
+		 */
+		if (strpos($url, OMGF_CACHE_DIR) === false) {
+			return $url;
+		}
+
+		/**
+		 * If the user entered https:// in the Home URL option, it's safe to assume that SSL is used.
+		 */
+		if (!is_ssl() && strpos(get_site_url(), 'https://') !== false) {
+			$url = str_replace('http://', 'https://', $url);
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Render update notices if available.
+	 * 
+	 * @param mixed $plugin 
+	 * @param mixed $response 
+	 * @return void 
+	 */
+	public function render_update_notice($plugin, $response)
+	{
+		$current_version = $plugin['Version'];
+		$new_version     = $plugin['new_version'];
+
+		if (version_compare($current_version, $new_version, '<')) {
+			$response = wp_remote_get('https://ffw.press/omgf-update-notices.json');
+
+			if (is_wp_error($response)) {
+				return;
+			}
+
+			$update_notices = (array) json_decode(wp_remote_retrieve_body($response));
+
+			if (!isset($update_notices[$new_version])) {
+				return;
+			}
+
+			printf(
+				' <strong>' . __('This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.') . '</strong>',
+				$update_notices[$new_version]->url
+			);
+		}
 	}
 
 	/**
@@ -231,101 +309,10 @@ class OMGF
 		return $generator->generate();
 	}
 
-	/**
-	 * @return OMGF_Admin_Settings
-	 */
-	private function do_settings()
-	{
-		return new OMGF_Admin_Settings();
-	}
-
-	/**
-	 * @return OMGF_AJAX
-	 */
-	private function add_ajax_hooks()
-	{
-		return new OMGF_AJAX();
-	}
-
-	/**
-	 * @return OMGF_Frontend_Process
-	 */
-	public function do_frontend()
-	{
-		return new OMGF_Frontend_Process();
-	}
-
-	/**
-	 * @return OMGF_Admin_Optimize
-	 */
-	public function do_optimize()
-	{
-		return new OMGF_Admin_Optimize();
-	}
-
-	/**
-	 * Render update notices if available.
-	 * 
-	 * @param mixed $plugin 
-	 * @param mixed $response 
-	 * @return void 
-	 */
-	public function render_update_notice($plugin, $response)
-	{
-		$current_version = $plugin['Version'];
-		$new_version     = $plugin['new_version'];
-
-		if (version_compare($current_version, $new_version, '<')) {
-			$response = wp_remote_get('https://ffw.press/omgf-update-notices.json');
-
-			if (is_wp_error($response)) {
-				return;
-			}
-
-			$update_notices = (array) json_decode(wp_remote_retrieve_body($response));
-
-			if (!isset($update_notices[$new_version])) {
-				return;
-			}
-
-			printf(
-				' <strong>' . __('This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.') . '</strong>',
-				$update_notices[$new_version]->url
-			);
-		}
-	}
-
-	/**
-	 * content_url() uses is_ssl() to detect whether SSL is used. This fails for servers behind
-	 * load balancers and/or reverse proxies. So, we double check with this filter.
-	 * 
-	 * @since v4.4.4
-	 * 
-	 * @param mixed $url 
-	 * @param mixed $path 
-	 * @return mixed 
-	 */
-	public function force_ssl($url, $path)
-	{
-		/**
-		 * Only rewrite URLs requested by this plugin. We don't want to interfere with other plugins.
-		 */
-		if (strpos($url, OMGF_CACHE_DIR) === false) {
-			return $url;
-		}
-
-		/**
-		 * If the user entered https:// in the Home URL option, it's safe to assume that SSL is used.
-		 */
-		if (!is_ssl() && strpos(home_url(), 'https://') !== false) {
-			$url = str_replace('http://', 'https://', $url);
-		}
-
-		return $url;
-	}
 
 	/**
 	 * @return OMGF_Uninstall
+	 * 
 	 * @throws ReflectionException
 	 */
 	public static function do_uninstall()
