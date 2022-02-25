@@ -38,7 +38,6 @@ class OMGF_Admin
 		$this->stale_cache_options = apply_filters(
 			'omgf_admin_stale_cache_options',
 			[
-				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION,
 				OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_DIR,
 			]
 		);
