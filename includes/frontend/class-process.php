@@ -39,10 +39,10 @@ class OMGF_Frontend_Process
 	 */
 	public function __construct()
 	{
+		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
+		add_filter('omgf_buffer_output', [$this, 'parse']);
 		add_action('wp_head', [$this, 'add_preloads'], 3);
 		add_filter('wp_resource_hints', [$this, 'remove_resource_hints']);
-		add_filter('omgf_buffer_output', [$this, 'parse']);
-		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
 	}
 
 	/**
@@ -120,15 +120,6 @@ class OMGF_Frontend_Process
 		}
 
 		return $urls;
-	}
-
-	private function search_and_remove($element)
-	{
-		if (($key = array_search(['fonts.gstatic.com', 'fonts.googleapis.com'], $element)) !== false) {
-			unset($element[$key]);
-		}
-
-		return $element;
 	}
 
 	/**
