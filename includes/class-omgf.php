@@ -49,6 +49,8 @@ class OMGF
 	 */
 	public function define_constants()
 	{
+		/** Prevents undefined constant in OMGF Pro, if its not at version v3.3.0 (yet) */
+		define('OMGF_OPTIMIZATION_MODE', false);
 		define('OMGF_SITE_URL', 'https://ffw.press');
 		define('OMGF_CACHE_IS_STALE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE)));
 		define('OMGF_CURRENT_DB_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION)));
