@@ -31,7 +31,7 @@ class OMGF_AJAX
 	}
 
 	/**
-	 * Removes the stale cache mark.
+	 * Removes the stale cache mark. Should be triggered along with a form submit.
 	 */
 	public function refresh_cache()
 	{
