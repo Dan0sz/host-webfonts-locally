@@ -234,7 +234,10 @@ class OMGF_Admin
 			return $value;
 		}
 
-		if ($value != $old_value) {
+		/**
+		 * If $old_value equals false, that means it's never been set before.
+		 */
+		if ($value != $old_value && $old_value !== false) {
 			global $wp_settings_errors;
 
 			if (!empty($wp_settings_errors)) {
