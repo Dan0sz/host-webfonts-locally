@@ -76,6 +76,7 @@ class OMGF_AJAX
 					'section' => $section,
 					'exclude' => [],
 					'queue'   => [
+						OMGF_Admin_Settings::OMGF_CACHE_IS_STALE,
 						OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
 						OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
 						OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
