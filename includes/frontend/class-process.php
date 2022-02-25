@@ -40,7 +40,7 @@ class OMGF_Frontend_Process
 	public function __construct()
 	{
 		add_action('wp_head', [$this, 'add_preloads'], 3);
-		add_filter('wp_resource_hints', [$this, 'remove_preconnects']);
+		add_filter('wp_resource_hints', [$this, 'remove_resource_hints']);
 		add_filter('omgf_buffer_output', [$this, 'parse']);
 		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
 	}
@@ -100,10 +100,13 @@ class OMGF_Frontend_Process
 	/**
 	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
 	 * 
+	 * @todo Resource Hints not added using wp_resource_hints() aren't detected. However, using
+	 * 		 a regex is risky, because we can't guarantee we're not removing stylesheets.
+	 * 
 	 * @param array $urls 
 	 * @return array 
 	 */
-	public function remove_preconnects($urls)
+	public function remove_resource_hints($urls)
 	{
 		return array_diff($urls, ['fonts.googleapis.com', 'fonts.gstatic.com']);
 	}
@@ -331,7 +334,7 @@ class OMGF_Frontend_Process
 	/**
 	 * The generated request URL includes all required parameters for OMGF's Download API. 
 	 *
-	 * @param string $url            e.g. https://fonts.googleapis.com/css?family=Open+Sans
+	 * @param string $url            e.g. https://fonts.googleapis.com/css?family=Open+Sans:100,200,300|Roboto:100,200,300 etc.
 	 * @param string $updated_handle e.g. example-handle-xvfdo
 	 * @param string $handle         e.g. example-handle
 	 *
@@ -342,7 +345,11 @@ class OMGF_Frontend_Process
 		$parsed_url = parse_url($url);
 		$query      = $parsed_url['query'] ?? '';
 
-		parse_str($query, $original_query);
+		if ($parsed_url['path'] == '/css2') {
+			$original_query = $this->parse_css2($query);
+		} else {
+			parse_str($query, $original_query);
+		}
 
 		$params = http_build_query(
 			array_merge(
@@ -354,8 +361,66 @@ class OMGF_Frontend_Process
 			)
 		);
 
-		$request = $url . '?' . $params;
+		$request = 'https://fonts.googleapis.com/css?' . $params;
 
 		return apply_filters('omgf_request_url', $request);
+	}
+
+	/**
+	 * Convert CSS2 query to regular CSS API query.
+	 * 
+	 * @param string $query 
+	 * 
+	 * @return array 
+	 */
+	private function parse_css2($query)
+	{
+		// array_filter() removes empty elements.
+		$families = array_filter(explode('&', $query));
+
+		foreach ($families as $param) {
+			if (strpos($param, 'family') === false) {
+				continue;
+			}
+
+			parse_str($param, $parts);
+
+			$font_families[] = $parts['family'];
+		}
+
+		if (empty($font_families)) {
+			return $query;
+		}
+
+		$weights = '';
+
+		foreach ($font_families as $font_family) {
+			if (strpos($font_family, ':') !== false) {
+				list($family, $weights) = explode(':', $font_family);
+			} else {
+				$family  = $font_family;
+				$weights = '';
+			}
+
+			/**
+			 * @var array|string $weights [ '300', '400', '500', etc. ] | ''
+			 */
+			$weights = strpos($weights, ';') !== false ? explode(';', substr($weights, strpos($weights, '@') + 1)) : '';
+
+			if (!$weights) {
+				$fonts[] = $family;
+
+				continue;
+			}
+
+			foreach ($weights as &$weight) {
+				$properties = explode(',', $weight);
+				$weight     = $properties[0] == '1' && isset($properties[1]) ? $properties[1] . 'italic' : ($properties[0] != '0' ? $properties[0] : $properties[1]);
+			}
+
+			$fonts[] = $family . ':' . implode(',', $weights);
+		}
+
+		return ['family' => implode('|', $fonts)];
 	}
 }
