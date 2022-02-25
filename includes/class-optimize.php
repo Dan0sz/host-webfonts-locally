@@ -182,8 +182,13 @@ class OMGF_Optimize
 
         $local_file = $this->path . '/' . $this->handle . '.css';
         $stylesheet = OMGF::generate_stylesheet($fonts, $this->original_handle);
+        $filesystem = OMGF::filesystem();
 
-        file_put_contents($local_file, $stylesheet);
+        if (!file_exists($this->path)) {
+            wp_mkdir_p($this->path);
+        }
+
+        $filesystem->put_contents($local_file, $stylesheet);
 
         $current_stylesheet = [$this->original_handle => $fonts];
 
