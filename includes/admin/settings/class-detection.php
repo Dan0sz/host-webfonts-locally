@@ -118,7 +118,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_DETECTION_SETTING_FONT_PROCESSING,
 			OMGF_Admin_Settings::OMGF_FONT_PROCESSING_OPTIONS,
 			OMGF_FONT_PROCESSING,
-			sprintf(__("Choose whether OMGF should copy all Google Fonts to the server, or just <strong>remove</strong> them. Choosing Remove will force WordPress to fallback to system fonts.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO)
+			sprintf(__("Choose whether OMGF should copy all Google Fonts to the server, or just <strong>remove</strong> them. Choosing Remove will force browsers to fallback to system fonts.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO)
 		);
 	}
 }
