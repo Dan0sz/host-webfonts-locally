@@ -71,7 +71,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 					<?php endforeach; ?>
 				</fieldset>
 				<p class="description">
-					<?= __('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to dig deeper (e.g. inside a theme\'s/plugin\'s stylesheets or (Web Font Loader) JS files) enable these options. These options can impact performance and are best used in combination with a page caching plugin.', $this->plugin_text_domain) . ' ' . $this->promo; ?>
+					<?= __('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to dig deeper (e.g. inside a theme\'s/plugin\'s stylesheets or Web Font Loader files) enable these options. These options can impact performance and are best used in combination with a page caching plugin.', $this->plugin_text_domain) . ' ' . $this->promo; ?>
 				</p>
 				<ul>
 					<?php foreach ($this->advanced_processing_pro_options() as $name => $data) : ?>
@@ -103,7 +103,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			],
 			'omgf_pro_process_early_access'   => [
 				'label'       => __('Process Early Access', $this->plugin_text_domain),
-				'description' => __('Process stylesheets loaded from <code>fonts.googleapis.com/earlyaccess</code> or <code>fonts.gstatic.com/ea</code>.', $this->plugin_text_domain)
+				'description' => __('Process Google Fonts loaded from <code>fonts.googleapis.com/earlyaccess</code> or <code>fonts.gstatic.com/ea</code>.', $this->plugin_text_domain)
 			]
 		];
 	}
@@ -118,7 +118,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_DETECTION_SETTING_FONT_PROCESSING,
 			OMGF_Admin_Settings::OMGF_FONT_PROCESSING_OPTIONS,
 			OMGF_FONT_PROCESSING,
-			sprintf(__("Choose whether OMGF should copy all Google Fonts to the server, or just <strong>remove</strong> them. Choosing Remove will force browsers to fallback to system fonts.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO)
+			sprintf(__("Choose whether OMGF should <strong>download</strong> all Google Fonts to the server, or just <strong>remove</strong> them. Choosing Remove will force browsers to fallback to system fonts.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO)
 		);
 	}
 }
