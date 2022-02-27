@@ -124,7 +124,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						</ul>
 					<?php else : ?>
 						<p>
-							<?= __('No stylesheets found. <a href="#" id="omgf-save-optimize">Run optimization</a>?', $this->plugin_text_domain); ?>
+							<?= __('No stylesheets found. <a href="#" id="omgf-save-optimize">Start optimization</a>?', $this->plugin_text_domain); ?>
 						</p>
 					<?php endif; ?>
 				</td>
