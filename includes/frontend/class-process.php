@@ -43,6 +43,9 @@ class OMGF_Frontend_Process
 		add_filter('omgf_buffer_output', [$this, 'parse']);
 		add_action('wp_head', [$this, 'add_preloads'], 3);
 		add_filter('wp_resource_hints', [$this, 'remove_resource_hints']);
+
+		/** Smart Slider 3 compatibility */
+		add_filter('wordpress_prepare_output', [$this, 'parse'], 11);
 	}
 
 	/**
@@ -370,7 +373,10 @@ class OMGF_Frontend_Process
 		if ($parsed_url['path'] == '/css2') {
 			$original_query = $this->parse_css2($query);
 		} else {
-			parse_str($query, $original_query);
+			/**
+			 * Decode, just to be sure.
+			 */
+			parse_str(html_entity_decode($query), $original_query);
 		}
 
 		$params = http_build_query(
