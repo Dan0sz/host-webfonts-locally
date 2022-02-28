@@ -44,7 +44,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 	{
 ?>
 		<p>
-			<?= __('These settings affect OMGF\'s automatic detection mechanism and how it treats the Google Fonts your theme and plugins use. If you want to use OMGF to remove (instead of replace) the Google Fonts your WordPress configuration currently uses, set <strong>Google Fonts Processing</strong> to Remove.', $this->plugin_text_domain); ?>
+			<?= __('These settings affect the detection mechanism and in which areas it searches (i.e. how deep it digs) to find Google Fonts. If you want to remove (instead of replace) the Google Fonts your WordPress configuration currently uses, set <strong>Google Fonts Processing</strong> to Remove.', $this->plugin_text_domain); ?>
 		</p>
 	<?php
 	}
@@ -71,7 +71,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 					<?php endforeach; ?>
 				</fieldset>
 				<p class="description">
-					<?= __('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to dig deeper (e.g. inside a theme\'s/plugin\'s stylesheets or Web Font Loader files) enable these options. These options can impact performance and are best used in combination with a page caching plugin.', $this->plugin_text_domain) . ' ' . $this->promo; ?>
+					<?= __('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to "dig deeper" (e.g. inside a theme\'s/plugin\'s stylesheets or Web Font Loader files) enable these options. These options can impact performance and are best used in combination with a page caching plugin.', $this->plugin_text_domain) . ' ' . $this->promo; ?>
 				</p>
 				<ul>
 					<?php foreach ($this->advanced_processing_pro_options() as $name => $data) : ?>
