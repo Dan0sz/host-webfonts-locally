@@ -83,6 +83,12 @@ class OMGF_Optimize_Run
      */
     private function optimization_succeeded()
     {
+        if (count(get_settings_errors())) {
+            global $wp_settings_errors;
+
+            $wp_settings_errors = [];
+        }
+
         add_settings_error('general', 'omgf_optimization_success', __('Optimization completed successfully.'), 'success');
 
         OMGF_Admin_Notice::set_notice(
