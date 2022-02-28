@@ -317,6 +317,9 @@ class OMGF_Frontend_Process
 				$handle = $cache_key;
 			}
 
+			/**
+			 * Regular requests (in the frontend) will end here if the file exists.
+			 */
 			if (!isset($_GET['omgf_optimize']) && file_exists(OMGF_CACHE_PATH . "/$handle/$handle.css")) {
 				$search[$key]  = $stack['href'];
 				$replace[$key] = content_url(OMGF_CACHE_DIR . "/$handle/$handle.css");
