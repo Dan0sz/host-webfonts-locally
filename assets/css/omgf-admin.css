@@ -121,6 +121,7 @@
   position: relative;
   font-size: 16px;
   line-height: 16px;
+  height: 12px;
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table .tooltip .tooltip-text {
   visibility: hidden;
