@@ -120,7 +120,7 @@ class OMGF_Admin
 	 */
 	private function maybe_do_after_update_notice()
 	{
-		if (OMGF_CURRENT_DB_VERSION !== false && version_compare(OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<')) {
+		if (OMGF_CURRENT_DB_VERSION != false && version_compare(OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<')) {
 			OMGF_Admin_Notice::set_notice(
 				sprintf(
 					__('Thank you for updating OMGF to v%s! This version contains database changes. <a href="%s">Verify your settings</a> and make sure everything is as you left it or, <a href="%s">view the changelog</a> for details. ', $this->plugin_text_domain),
