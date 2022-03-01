@@ -119,7 +119,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 								</li>
 							<?php endforeach; ?>
 							<?php if (OMGF_CACHE_IS_STALE) : ?>
-								<li class="stale-cache-notice"><em><?= __('The stylesheets in the cache do not reflect the current settings. <a href="#" id="omgf-cache-refresh">Click here to refresh them</a>.', $this->plugin_text_domain); ?></em></li>
+								<li class="stale-cache-notice"><em><?= __('The stylesheets in the cache do not reflect the current settings. Either <a href="#" id="omgf-cache-refresh">refresh</a> (and maintain settings) or <a href="#" id="omgf-cache-flush">flush</a> (and start over) the cache directory.', $this->plugin_text_domain); ?></em></li>
 							<?php endif; ?>
 						</ul>
 					<?php else : ?>
@@ -340,7 +340,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				<div class="omgf-optimize-fonts-tooltip">
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
-						<em><?= sprintf(__("This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. Upon clicking <strong>Save & Optimize</strong> your homepage (<code>%s</code>) will be scanned for available fonts. Stylesheets discovered on other pages will be downloaded (and added to this overview) upon pageload.", $this->plugin_text_domain), get_site_url()); ?></em>
+						<em><?= sprintf(__("This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically if other Google Fonts stylesheets are discovered throughout your site.", $this->plugin_text_domain), get_site_url()); ?></em>
 					</p>
 				</div>
 				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value='<?= serialize($this->optimized_fonts); ?>' />
@@ -361,7 +361,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				<div class="omgf-optimize-fonts-tooltip">
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
-						<em><?= __('This section will be populated with all captured fonts, font styles and available options after saving changes. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site.', $this->plugin_text_domain); ?></em>
+						<em><?= sprintf(__('After clicking <strong>Save & Optimize</strong>, this section will be populated with any Google Fonts (along with requested styles and available options) requested on <code>%s</code>. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site.', $this->plugin_text_domain), get_site_url()); ?></em>
 					</p>
 				</div>
 			</div>

@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
             $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
             $('#omgf-optimize-settings-form').submit(this.show_loader_before_submit);
             $('#omgf-cache-refresh').on('click', this.refresh_cache);
-            $('.omgf-empty').on('click', this.empty_cache_directory);
+            $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
 
             // Ticker
             setInterval(this.loop_ticker_items, 4000);
