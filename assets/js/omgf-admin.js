@@ -38,9 +38,10 @@ jQuery(document).ready(function ($) {
 
             // Buttons (AJAX, etc.)
             $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
-            $('#omgf-optimize-settings-form').submit(this.show_loader_before_submit);
+            $('#omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
             $('#omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
+            $('#omgf-optimize-settings-form').submit(this.show_loader_before_submit);
 
             // Ticker
             setInterval(this.loop_ticker_items, 4000);
@@ -63,6 +64,26 @@ jQuery(document).ready(function ($) {
             if (omgf_admin.ticker_index == omgf_admin.ticker_items.length) {
                 omgf_admin.ticker_index = 0;
             }
+        },
+
+        remove_stylesheet_from_db: function () {
+            var handle = $(this).data('handle');
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_remove_stylesheet_from_db',
+                    handle: handle,
+                    nonce: omgf_admin.nonce,
+                },
+                beforeSend: function () {
+                    omgf_admin.show_loader();
+                },
+                complete: function () {
+                    location.reload();
+                }
+            });
         },
 
         /**

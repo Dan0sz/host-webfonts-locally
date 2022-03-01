@@ -115,11 +115,11 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 								$unloaded   = in_array($handle, $unloaded_stylesheets);
 								?>
 								<li class="<?= OMGF_CACHE_IS_STALE ? 'stale' : ($unloaded ? 'unloaded' : ($downloaded ? 'found' : 'not-found')); ?>">
-									<strong><?= $handle; ?></strong> <em>(<?= sprintf(__('stored in %s', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_CACHE_PATH . "/$cache_key")); ?>)</em> <a href="<?php echo "#$cache_key"; ?>" title="<?php echo sprintf(__('Manage %s', $this->plugin_text_domain), $cache_key); ?>"><?php echo __('Configure', $this->plugin_text_domain); ?></a><br />
+									<strong><?= $handle; ?></strong> <em>(<?= sprintf(__('stored in %s', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_CACHE_PATH . "/$cache_key")); ?>)</em> <a href="<?php echo $downloaded ? "#$cache_key" : '#'; ?>" data-handle="<?php echo esc_attr($handle); ?>" id="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>" title="<?php echo sprintf(__('Manage %s', $this->plugin_text_domain), $cache_key); ?>"><?php $downloaded ? _e('Configure', $this->plugin_text_domain) : _e('Remove', $this->plugin_text_domain); ?></a><br />
 								</li>
 							<?php endforeach; ?>
 							<?php if (OMGF_CACHE_IS_STALE) : ?>
-								<li class="stale-cache-notice"><em><?= __('The stylesheets in the cache do not reflect the current settings. Either <a href="#" id="omgf-cache-refresh">refresh</a> (and maintain settings) or <a href="#" id="omgf-cache-flush">flush</a> (and start over) the cache directory.', $this->plugin_text_domain); ?></em></li>
+								<li class="stale-cache-notice"><em><?= __('The stylesheets in the cache do not reflect the current settings. Either <a href="#" id="omgf-cache-refresh">refresh</a> the cache (and maintain settings) or <a href="#" id="omgf-cache-flush">flush</a> it and start over.', $this->plugin_text_domain); ?></em></li>
 							<?php endif; ?>
 						</ul>
 					<?php else : ?>
@@ -136,7 +136,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<li class="found"> <?php _e('<strong>Found</strong>. Stylesheet exists on your file system.', $this->plugin_text_domain); ?></li>
 						<li class="unloaded"> <?php _e('<strong>Unloaded</strong>. Stylesheet exists, but is not loaded in the frontend.', $this->plugin_text_domain); ?></li>
 						<li class="stale"> <?php _e('<strong>Stale</strong>. Settings were changed and the stylesheet does not reflect those changes.', $this->plugin_text_domain); ?></li>
-						<li class="not-found"> <?php _e('<strong>Not Found</strong>. Stylesheet was detected, but was somehow removed.', $this->plugin_text_domain); ?></li>
+						<li class="not-found"> <?php _e('<strong>Not Found</strong>. Stylesheet was detected once, but is missing now. You can safely remove it.', $this->plugin_text_domain); ?></li>
 					</ul>
 				</td>
 			</tr>
