@@ -305,7 +305,7 @@ class OMGF_Optimize
             $font_family   = str_replace('-', ' ', $family);
             $error_body    = wp_remote_retrieve_body($response);
             $error_message = wp_remote_retrieve_response_message($response);
-            $message       = sprintf(__('OMGF couldn\'t find <strong>%s</strong>. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $error_message);
+            $message       = sprintf(__('OMGF couldn\'t find <strong>%s</strong> on %s. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $_SERVER['REQUEST_URI'] == '/' ? 'your homepage' : $_SERVER['REQUEST_URI'], $error_message);
 
             OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', 'error');
 
