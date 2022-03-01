@@ -71,7 +71,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 					<?php endforeach; ?>
 				</fieldset>
 				<p class="description">
-					<?= __('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to "dig deeper" (e.g. inside a theme\'s/plugin\'s stylesheets or Web Font Loader files) enable these options. These options can impact performance and are best used in combination with a page caching plugin.', $this->plugin_text_domain) . ' ' . $this->promo; ?>
+					<?= __('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to "dig deeper", e.g. inside a theme or plugin\'s CSS stylesheets or (Web Font Loader) JS files, enable these options. These options can impact performance and are best used in combination with a page caching plugin.', $this->plugin_text_domain) . ' ' . $this->promo; ?>
 				</p>
 				<ul>
 					<?php foreach ($this->advanced_processing_pro_options() as $name => $data) : ?>
