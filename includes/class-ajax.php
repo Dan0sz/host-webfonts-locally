@@ -104,7 +104,6 @@ class OMGF_AJAX
 			OMGF_Admin_Notice::set_notice(
 				__('OMGF encountered an error while emptying the cache directory: ', $this->plugin_text_domain) . $e->getMessage(),
 				'omgf-cache-error',
-				true,
 				'error',
 				$e->getCode()
 			);

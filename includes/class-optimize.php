@@ -96,7 +96,7 @@ class OMGF_Optimize
     public function process()
     {
         if (!$this->handle || !$this->original_handle) {
-            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF couldn\'t find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%s</code> and <code>%s</code>.', $this->plugin_text_domain), $this->original_handle, $this->handle), 'omgf-api-handle-not-found', false, 'error', 406);
+            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF couldn\'t find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%s</code> and <code>%s</code>.', $this->plugin_text_domain), $this->original_handle, $this->handle), 'omgf-api-handle-not-found', 'error', 406);
 
             return '';
         }
@@ -296,7 +296,7 @@ class OMGF_Optimize
         );
 
         if (is_wp_error($response)) {
-            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF encountered an error while trying to fetch fonts: %s', $this->plugin_text_domain), $response->get_error_message()), $response->get_error_code(), true, 'error', 500);
+            OMGF_Admin_Notice::set_notice(sprintf(__('OMGF encountered an error while trying to fetch fonts: %s', $this->plugin_text_domain), $response->get_error_message()), $response->get_error_code(), 'error', 408);
         }
 
         $response_code = wp_remote_retrieve_response_code($response);
@@ -307,24 +307,24 @@ class OMGF_Optimize
             $error_message = wp_remote_retrieve_response_message($response);
             $message       = sprintf(__('OMGF couldn\'t find <strong>%s</strong>. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $error_message);
 
-            OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', false, 'error');
+            OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', 'error');
 
             if ($error_message == 'Service Unavailable') {
                 $message = __('OMGF\'s Google Fonts API is currently unavailable. Try again later.', $this->plugin_text_domain);
 
-                OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', true, 'error', $response_code);
+                OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', 'error', $response_code);
             }
 
             if ($error_body == 'Not found') {
                 $message = sprintf(__('Please verify that %s is available for free at Google Fonts by doing <a href="%s" target="_blank">a manual search</a>. Maybe it\'s a Premium font?', $this->plugin_text_domain), ucwords($font_family), 'https://fonts.google.com/?query=' . str_replace('-', '+', $family));
 
-                OMGF_Admin_Notice::set_notice($message, 'omgf_api_info_not_found', false, 'info');
+                OMGF_Admin_Notice::set_notice($message, 'omgf_api_info_not_found', 'info');
             }
 
             if ($error_body == 'Internal Server Error') {
                 $message = sprintf(__('Try using the Force Subsets option (available in OMGF Pro) to force loading %s in a subset in which it\'s actually available. Use the Language filter <a href="%s" target="_blank">here</a> to verify which subsets are available for %s.', $this->plugin_text_domain), ucwords($font_family), 'https://fonts.google.com/?query=' . str_replace('-', '+', $family), ucwords($font_family));
 
-                OMGF_Admin_Notice::set_notice($message, 'omgf_api_info_internal_server_error', false, 'info');
+                OMGF_Admin_Notice::set_notice($message, 'omgf_api_info_internal_server_error', 'info');
             }
 
             return [];

@@ -94,7 +94,6 @@ class OMGF_Optimize_Run
         OMGF_Admin_Notice::set_notice(
             __('If you\'re using any 3rd party optimization plugins (e.g. WP Rocket, Autoptimize, W3 Total Cache, etc.) make sure to flush their caches for OMGF\'s optimizations to take effect.', $this->plugin_text_domain),
             'omgf-cache-notice',
-            false,
             'warning'
         );
     }

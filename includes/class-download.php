@@ -79,7 +79,7 @@ class OMGF_Download
 
 		if (is_wp_error($tmp)) {
 			/** @var WP_Error $tmp */
-			OMGF_Admin_Notice::set_notice(__('OMGF encountered an error while downloading fonts', $this->plugin_text_domain) . ': ' . $tmp->get_error_message(), 'omgf-download-failed', false, 'error', $tmp->get_error_code());
+			OMGF_Admin_Notice::set_notice(__('OMGF encountered an error while downloading fonts', $this->plugin_text_domain) . ': ' . $tmp->get_error_message(), 'omgf-download-failed', 'error', $tmp->get_error_code());
 
 			return '';
 		}

@@ -128,8 +128,7 @@ class OMGF_Admin
 					admin_url(OMGF_Admin_Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS),
 					admin_url(OMGF_Admin_Settings::OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION)
 				),
-				'omgf-post-update',
-				false
+				'omgf-post-update'
 			);
 
 			update_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION);
@@ -202,7 +201,7 @@ class OMGF_Admin
 		}
 
 		if (!$mkdir) {
-			OMGF_Admin_Notice::set_notice(sprintf(__('Something went wrong while trying to create OMGF\'s Cache Directory: %s. Setting wasn\'t updated.', $this->plugin_text_domain), $new_dir), 'omgf-create-cache-dir-failed', false, 'error');
+			OMGF_Admin_Notice::set_notice(sprintf(__('Something went wrong while trying to create OMGF\'s Cache Directory: %s. Setting wasn\'t updated.', $this->plugin_text_domain), $new_dir), 'omgf-create-cache-dir-failed', 'error');
 
 			return $old_dir;
 		}
@@ -210,7 +209,7 @@ class OMGF_Admin
 		$real_path = realpath($allowed_path);
 
 		if ($real_path != rtrim($allowed_path, '/')) {
-			OMGF_Admin_Notice::set_notice(__('OMGF\'s Cache Directory wasn\'t changed. Attempted path traversal.', $this->plugin_text_domain), 'omgf-attempted-path-traversal', false, 'error');
+			OMGF_Admin_Notice::set_notice(__('OMGF\'s Cache Directory wasn\'t changed. Attempted path traversal.', $this->plugin_text_domain), 'omgf-attempted-path-traversal', 'error');
 
 			return $old_dir;
 		}
