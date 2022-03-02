@@ -377,7 +377,7 @@ class OMGF_Frontend_Process
 			// Request to fonts.googleapis.com/css2?etc.
 			$original_query = $this->parse_css2($query);
 		} elseif (strpos($parsed_url['path'], 'earlyaccess') !== false) {
-			// Request to https://fonts.googleapis.com/earlyaccess/etc. should be left to OMGF Pro to deal with it.
+			// Request to https://fonts.googleapis.com/earlyaccess/etc. should be left for OMGF Pro to deal with.
 			$original_query = ['family' => ''];
 		} else {
 			/**
