@@ -43,7 +43,7 @@ class OMGF_Optimize
     private $original_handle = '';
 
     /** @var string $subset */
-    private $subset = '';
+    private $subset = 'latin';
 
     /** @var string $return */
     private $return = 'url';
@@ -58,7 +58,7 @@ class OMGF_Optimize
      * @param string $family          Contents of "family" parameters in Google Fonts API URL, e.g. "?family="Lato:100,200,300,etc."
      * @param string $handle          The cache handle, generated using $handle + 5 random chars. Used for storing the fonts and stylesheet.
      * @param string $original_handle The stylesheet handle, present in the ID attribute.
-     * @param string $subset          Contents of "subset" parameter, defaults to 'latin,latin-ext'.
+     * @param string $subset          Contents of "subset" parameter, defaults to 'latin', because most fonts are available in this subset.
      * @param string $return          Valid values: 'url' | 'path' | 'object'.
      * 
      * @return string Local URL of generated stylesheet.
@@ -79,7 +79,7 @@ class OMGF_Optimize
         $this->family          = $family;
         $this->handle          = sanitize_title_with_dashes($handle);
         $this->original_handle = sanitize_title_with_dashes($original_handle);
-        $this->subset          = $subset ?: 'latin,latin-ext';
+        $this->subset          = $subset ?: 'latin';
         $this->path            = OMGF_CACHE_PATH . '/' . $this->handle;
         $this->return          = $return;
     }
@@ -292,7 +292,8 @@ class OMGF_Optimize
         }
 
         $response = wp_remote_get(
-            sprintf($url . '%s', $family) . $query_string
+            sprintf($url . '%s', $family) . $query_string,
+            ['timeout' => 30]
         );
 
         if (is_wp_error($response)) {
@@ -305,7 +306,7 @@ class OMGF_Optimize
             $font_family   = str_replace('-', ' ', $family);
             $error_body    = wp_remote_retrieve_body($response);
             $error_message = wp_remote_retrieve_response_message($response);
-            $message       = sprintf(__('OMGF couldn\'t find <strong>%s</strong> on %s. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), $_SERVER['REQUEST_URI'] == '/' ? 'your homepage' : $_SERVER['REQUEST_URI'], $error_message);
+            $message       = sprintf(__('OMGF couldn\'t find <strong>%s</strong> while parsing %s. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), isset($_GET['omgf_optimize']) ? 'your homepage' : $_SERVER['REQUEST_URI'], is_wp_error($response) ? $response->get_error_message() : $error_message);
 
             OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', 'error');
 
