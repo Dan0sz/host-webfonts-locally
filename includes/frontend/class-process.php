@@ -230,7 +230,7 @@ class OMGF_Frontend_Process
 	{
 		preg_match_all('/<link.*fonts\.googleapis\.com\/css.*?[\/]?>/', $html, $links);
 
-		if (!isset($links[0])) {
+		if (!isset($links[0]) || empty($links[0])) {
 			return $html;
 		}
 
@@ -374,11 +374,15 @@ class OMGF_Frontend_Process
 		$query      = $parsed_url['query'] ?? '';
 
 		if ($parsed_url['path'] == '/css2') {
+			// Request to fonts.googleapis.com/css2?etc.
 			$original_query = $this->parse_css2($query);
 		} elseif (strpos($parsed_url['path'], 'earlyaccess') !== false) {
-			$original_query = ['family' => basename($parsed_url['path'], '.css')];
+			// Request to https://fonts.googleapis.com/earlyaccess/etc. should be left to OMGF Pro to deal with it.
+			$original_query = ['family' => ''];
 		} else {
 			/**
+			 * Request to fonts.googleapis.com/css?etc. (default)
+			 * 
 			 * Decode, just to be sure.
 			 */
 			parse_str(html_entity_decode($query), $original_query);
