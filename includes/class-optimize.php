@@ -256,7 +256,6 @@ class OMGF_Optimize
      */
     private function grab_font_family($font_family, $query)
     {
-        $url          = $this->get_working_service_url();
         list($family) = explode(':', $font_family);
 
         /**
@@ -292,9 +291,15 @@ class OMGF_Optimize
         }
 
         $response = wp_remote_get(
-            sprintf($url . '%s', $family) . $query_string,
-            ['timeout' => 30]
+            sprintf(self::OMGF_GOOGLE_FONTS_API_URL . '%s', $family) . $query_string
         );
+
+        // Try with mirror, if first request failed.
+        if (is_wp_error($response) && $response->get_error_code() == 'http_request_failed') {
+            $response = wp_remote_get(
+                sprintf(self::OMGF_GOOGLE_FONTS_API_FALLBACK . '%s', $family) . $query_string
+            );
+        }
 
         if (is_wp_error($response)) {
             OMGF_Admin_Notice::set_notice(sprintf(__('OMGF encountered an error while trying to fetch fonts: %s', $this->plugin_text_domain), $response->get_error_message()), $response->get_error_code(), 'error', 408);
@@ -332,38 +337,6 @@ class OMGF_Optimize
         }
 
         return json_decode(wp_remote_retrieve_body($response));
-    }
-
-    /**
-     * Because the regular Google Webfonts Helper API tends to go offline sometimes, this function allows us
-     * to use fallback services.
-     * 
-     * @return string Will return regular API url if fallback API url fails, too. Error handling later on will display a
-     *                proper message to the user.
-     */
-    private function get_working_service_url()
-    {
-        /**
-         * If this transient returns true, then that means that the regular API has failed in the last hour.
-         */
-        if (get_transient(self::OMGF_USE_FALLBACK_API_TRANSIENT)) {
-            return self::OMGF_GOOGLE_FONTS_API_FALLBACK;
-        }
-
-        $url      = self::OMGF_GOOGLE_FONTS_API_URL;
-        $response = wp_remote_get($url);
-
-        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) != 200) {
-            set_transient(self::OMGF_USE_FALLBACK_API_TRANSIENT, true, HOUR_IN_SECONDS);
-
-            $response = wp_remote_get(self::OMGF_GOOGLE_FONTS_API_FALLBACK);
-
-            if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) == 200) {
-                $url = self::OMGF_GOOGLE_FONTS_API_FALLBACK;
-            }
-        }
-
-        return $url;
     }
 
     /**
