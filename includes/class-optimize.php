@@ -354,7 +354,7 @@ class OMGF_Optimize
         $response = wp_remote_get($url);
 
         if (is_wp_error($response) || wp_remote_retrieve_response_code($response) != 200) {
-            set_transient(self::OMGF_USE_FALLBACK_API_TRANSIENT, true, DAY_IN_SECONDS);
+            set_transient(self::OMGF_USE_FALLBACK_API_TRANSIENT, true, HOUR_IN_SECONDS);
 
             $response = wp_remote_get(self::OMGF_GOOGLE_FONTS_API_FALLBACK);
 
