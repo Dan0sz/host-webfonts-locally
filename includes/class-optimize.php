@@ -344,7 +344,7 @@ class OMGF_Optimize
     private function get_working_service_url()
     {
         /**
-         * If this transient returns true, then that means that the regular API has failed in the last 24 hours.
+         * If this transient returns true, then that means that the regular API has failed in the last hour.
          */
         if (get_transient(self::OMGF_USE_FALLBACK_API_TRANSIENT)) {
             return self::OMGF_GOOGLE_FONTS_API_FALLBACK;
