@@ -375,6 +375,8 @@ class OMGF_Frontend_Process
 
 		if ($parsed_url['path'] == '/css2') {
 			$original_query = $this->parse_css2($query);
+		} elseif (strpos($parsed_url['path'], 'earlyaccess') !== false) {
+			$original_query = ['family' => basename($parsed_url['path'], '.css')];
 		} else {
 			/**
 			 * Decode, just to be sure.
