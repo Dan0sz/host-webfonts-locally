@@ -271,9 +271,13 @@ class OMGF_Optimize
          * an alternate API.
          */
         $alternate_fonts = apply_filters('omgf_alternate_fonts', []);
+        $alternate_url   = false;
+        $url             = '';
 
         if (in_array($family, array_keys($alternate_fonts))) {
-            $url = apply_filters('omgf_alternate_api_url', $url, $family);
+            $alternate_url = true;
+
+            $url = apply_filters('omgf_alternate_api_url', '', $family);
             unset($query);
         }
 
@@ -290,14 +294,20 @@ class OMGF_Optimize
             $family = self::OMGF_RENAMED_GOOGLE_FONTS[$family];
         }
 
-        $response = wp_remote_get(
-            sprintf(self::OMGF_GOOGLE_FONTS_API_URL . '%s', $family) . $query_string
-        );
-
-        // Try with mirror, if first request failed.
-        if (is_wp_error($response) && $response->get_error_code() == 'http_request_failed') {
+        if (!$alternate_url) {
             $response = wp_remote_get(
-                sprintf(self::OMGF_GOOGLE_FONTS_API_FALLBACK . '%s', $family) . $query_string
+                sprintf(self::OMGF_GOOGLE_FONTS_API_URL . '%s', $family) . $query_string
+            );
+
+            // Try with mirror, if first request failed.
+            if (is_wp_error($response) && $response->get_error_code() == 'http_request_failed') {
+                $response = wp_remote_get(
+                    sprintf(self::OMGF_GOOGLE_FONTS_API_FALLBACK . '%s', $family) . $query_string
+                );
+            }
+        } else {
+            $response = wp_remote_get(
+                sprintf($url . '%s', $family) . $query_string
             );
         }
 
