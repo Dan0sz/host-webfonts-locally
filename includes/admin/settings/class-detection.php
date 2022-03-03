@@ -30,7 +30,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_detection_settings_content', [$this, 'do_before'], 20);
 
 		// Settings
-		add_filter('omgf_detection_settings_content', [$this, 'advanced_processing'], 30);
+		add_filter('omgf_detection_settings_content', [$this, 'google_fonts_processing'], 30);
 		add_filter('omgf_detection_settings_content', [$this, 'advanced_processing_promo'], 60);
 
 		// Close
@@ -46,6 +46,23 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 		<p>
 			<?= __('These settings affect the detection mechanism and in which areas it searches (i.e. how deep it digs) to find Google Fonts. If you want to remove (instead of replace) the Google Fonts your WordPress configuration currently uses, set <strong>Google Fonts Processing</strong> to Remove.', $this->plugin_text_domain); ?>
 		</p>
+	<?php
+	}
+
+	/**
+	 *
+	 */
+	public function google_fonts_processing()
+	{
+	?>
+		<tr>
+			<th scope="row"><?= __('Google Fonts Processing', $this->plugin_text_domain); ?></th>
+			<td>
+				<p class="description">
+					<?= sprintf(__('By default, OMGF replaces Google Fonts stylesheets (e.g. <code>https://fonts.googleapis.com/css?family=Open+Sans</code>) with locally hosted copies. This behavior can be tweaked further using the <strong>Advanced Processing (Pro)</strong> option. To remove/unload Google Fonts, go to <em>Optimize Fonts</em> > <a href="%s"><em>Manage Optimized Fonts</em></a> and click <strong>Unload all</strong> next to the stylesheet handle you\'d like to remove.', $this->plugin_text_domain), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-optimize-settings#omgf-manage-optimized-fonts')); ?>
+				</p>
+			</td>
+		</tr>
 	<?php
 	}
 
@@ -106,19 +123,5 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 				'description' => __('Process Google Fonts loaded from <code>fonts.googleapis.com/earlyaccess</code> or <code>fonts.gstatic.com/ea</code>.', $this->plugin_text_domain)
 			]
 		];
-	}
-
-	/**
-	 *
-	 */
-	public function advanced_processing()
-	{
-		$this->do_select(
-			__('Google Fonts Processing', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_DETECTION_SETTING_FONT_PROCESSING,
-			OMGF_Admin_Settings::OMGF_FONT_PROCESSING_OPTIONS,
-			OMGF_FONT_PROCESSING,
-			sprintf(__("Choose whether OMGF should <strong>download</strong> all Google Fonts to the server, or just <strong>remove</strong> them. Choosing Remove will force browsers to fallback to system fonts.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO)
-		);
 	}
 }

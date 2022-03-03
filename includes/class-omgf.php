@@ -58,7 +58,6 @@ class OMGF
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
 		define('OMGF_CACHE_KEYS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '')));
 		define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
-		define('OMGF_FONT_PROCESSING', esc_attr(get_option(OMGF_Admin_Settings::OMGF_DETECTION_SETTING_FONT_PROCESSING, 'replace')));
 		define('OMGF_CACHE_DIR', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_DIR)) ?: '/uploads/omgf');
 		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
 		define('OMGF_CACHE_PATH', WP_CONTENT_DIR . OMGF_CACHE_DIR);

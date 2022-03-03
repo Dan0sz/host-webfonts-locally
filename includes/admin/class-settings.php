@@ -36,12 +36,8 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_SETTINGS_FIELD_HELP      = 'omgf-help';
 
 	/**
-	 * Option Values
+	 * Option values for (multi)selects.
 	 */
-	const OMGF_FONT_PROCESSING_OPTIONS = [
-		'replace' => 'Download (default)',
-		'remove'  => 'Remove only'
-	];
 	const OMGF_FONT_DISPLAY_OPTIONS    = [
 		'swap'     => 'Swap (recommended)',
 		'auto'     => 'Auto',
@@ -134,11 +130,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS        = 'omgf_unload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS  = 'omgf_unload_stylesheets';
 	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS          = 'omgf_cache_keys';
-
-	/**
-	 * Detection Settings
-	 */
-	const OMGF_DETECTION_SETTING_FONT_PROCESSING = 'omgf_font_processing';
 
 	/**
 	 * Advanced Settings
