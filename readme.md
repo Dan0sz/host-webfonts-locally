@@ -22,14 +22,14 @@ Every found stylesheet is listed in the **Manage Optimized Fonts** section of OM
 - Set a *Fallback Font Stack* (OMGF Pro required), to further **reduce Cumulative Layout Shift**, or
 - *Replace* (OMGF Pro required) font-families with system fonts to **speed up page loading times**!
 
-## Other Features include
+### Other Features include
 
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to your Google Fonts,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to all your other fonts! (OMGF Pro required),
 - Reduce the filesize of your fonts and stylesheets, by using the *Force subset* and *Include File Types* feature (OMGF Pro required),
 
-## Additional Features in OMGF Pro
+### Additional Features in OMGF Pro
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
   - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
   - `@font-face` and `@import` statements inside **local stylesheets**,
