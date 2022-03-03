@@ -25,17 +25,17 @@ After installing the plugin, OMGF will automatically start looking for Google Fo
 
 Every found stylesheet is listed in the **Manage Optimized Fonts** section of OMGF's settings screen. There, you can choose to:
 
-- Preload fonts to reduce Cumulative Layout Shift above the fold,
-- Unload fonts that're not used by you, your theme and/or plugins,
-- Set a Fallback Font Stack (OMGF Pro required), to further reduce Cumulative Layout Shift, or
-- Replace (OMGF Pro required) font-families with system fonts!
+- *Preload* fonts to **reduce Cumulative Layout Shift** above the fold,
+- *Unload* fonts that're not used by you, your theme and/or plugins,
+- Set a *Fallback Font Stack* (OMGF Pro required), to further **reduce Cumulative Layout Shift**, or
+- *Replace* (OMGF Pro required) font-families with system fonts!
 
 = Other Features include =
 
-- **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to fonts.googleapis.com or fonts.gstatic.com,
+- **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to your Google Fonts,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to all your other fonts! (OMGF Pro required),
-- Reduce the filesize of your fonts and stylesheets, by using the **Force subset** and ** Include File Types** feature (OMGF Pro required),
+- Reduce the filesize of your fonts and stylesheets, by using the *Force subset* and *Include File Types* feature (OMGF Pro required),
 
 = Additional Features in OMGF Pro =
 - "Dig deeper" to find Google Fonts and optimized further. OMGF Pro supports:
