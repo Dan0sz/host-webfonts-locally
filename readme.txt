@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.9
-Stable tag: 4.6.0
+Stable tag: 5.0.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,19 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.0.0 - **The Better, Bigger, Faster, Stronger, Cooler, Awesomer Edition** | March 4th, 2022 =
+* Added: Parse entire HTML document for Google Fonts stylesheets (instead of just wp_head())
+* Added: Merged both Optimization Modes option into one automatically running option:
+         - A first scan is done upon Save & Optimize,
+         - A quick check is done on pageload, to see if other Google Fonts are found than the ones already found, and if so, they're downloaded and replaced on-the-fly.
+* Enhanced: The Download API is replaced for an easier, leaner and faster alternative and no longer uses the WordPress API.
+         - If the first request fails, a mirror is used to retry the request, before throwing an error.
+* Enhanced: The Task Manager now offers a quick overview of downloaded stylesheets and their status, along with simple management tasks, e.g. cache flush, configure stylesheet and/or remove.
+         - When cache is marked as stale, it's now possible to refresh the cache and maintain your stylesheet configuration.
+* Added: Resource hints enqueued in wp_resource_hints() are now properly removed.
+* Fixed: Smart Slider 3 compatibility.
+* Several bugfixes, UX improvements and code optimizations.
 
 = 4.6.0 | February 16th, 2022 =
 * Fixed: Loading spinner wasn't center aligned.
