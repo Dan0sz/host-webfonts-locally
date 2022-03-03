@@ -27,12 +27,12 @@ Every found stylesheet is listed in the **Manage Optimized Fonts** section of OM
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to your Google Fonts,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to all your other fonts! (OMGF Pro required),
-- Reduce the filesize of your fonts and stylesheets, by using the *Force subset* and *Include File Types* feature (OMGF Pro required),
+- **Reduce the filesize** of your fonts and stylesheets, by using the *Force subset* and *Include File Types* feature (OMGF Pro required),
 
 ### Additional Features in OMGF Pro
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
   - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
-  - `@font-face` and `@import` statements inside **local stylesheets**,
+  - `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,
   - Web Font Loader (`webfont.js`),
   - Early Access Google Fonts.
   - Material Icons support.
