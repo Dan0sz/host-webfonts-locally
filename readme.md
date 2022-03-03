@@ -15,7 +15,7 @@ OMGF is written with performance and user-friendliness in mind. It uses the Goog
 
 After installing the plugin, OMGF will automatically start looking for Google Fonts whenever a page is requested on your website.
 
-Every found stylesheet is listed in the **Manage Optimized Fonts** section of OMGF's settings screen. There, you can choose to:
+All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's settings screen. There, you can choose to:
 
 - *Preload* fonts to **reduce Cumulative Layout Shift** above the fold,
 - *Unload* fonts that're not used by you, your theme and/or plugins,
