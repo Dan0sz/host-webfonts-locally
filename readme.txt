@@ -28,7 +28,7 @@ Every found stylesheet is listed in the **Manage Optimized Fonts** section of OM
 - *Preload* fonts to **reduce Cumulative Layout Shift** above the fold,
 - *Unload* fonts that're not used by you, your theme and/or plugins,
 - Set a *Fallback Font Stack* (OMGF Pro required), to further **reduce Cumulative Layout Shift**, or
-- *Replace* (OMGF Pro required) font-families with system fonts!
+- *Replace* (OMGF Pro required) font-families with system fonts to **speed up loading times**!
 
 = Other Features include =
 
