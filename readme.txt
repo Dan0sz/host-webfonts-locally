@@ -71,7 +71,7 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 2. The task manager offers a quick overview of the currently detected stylesheets and their status (e.g. loaded, stale or missing) along with quick links to simple management tasks, e.g. Empty Cache and Configure/Remove.
 3. After you've completed configuring OMGF, the Manage Optimized Fonts section will allow you to tweak all of your Google Fonts stylesheets, by e.g. unloading unused fonts and/or preloading fonts above the fold.
 4. OMGF Pro users can further tweak its level of detection under Detection Settings.
-4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
+5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
 
