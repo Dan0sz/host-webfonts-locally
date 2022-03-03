@@ -135,7 +135,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 					<ul>
 						<li class="found"> <?php _e('<strong>Found</strong>. Stylesheet exists on your file system.', $this->plugin_text_domain); ?></li>
 						<li class="unloaded"> <?php _e('<strong>Unloaded</strong>. Stylesheet exists, but is not loaded in the frontend.', $this->plugin_text_domain); ?></li>
-						<li class="stale"> <?php _e('<strong>Stale</strong>. Settings were changed and the stylesheet does not reflect those changes.', $this->plugin_text_domain); ?></li>
+						<li class="stale"> <?php _e('<strong>Stale</strong>. Settings were changed and the stylesheet\'s content do not reflect those changes.', $this->plugin_text_domain); ?></li>
 						<li class="not-found"> <?php _e('<strong>Not Found</strong>. Stylesheet was detected once, but is missing now. You can safely remove it.', $this->plugin_text_domain); ?></li>
 					</ul>
 				</td>
