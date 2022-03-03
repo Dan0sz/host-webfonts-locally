@@ -61,7 +61,7 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
 
 ## Frequently Asked Questions
 
-Visit the [FAQ at Wordpress.org](https://wordpress.org/plugins/host-webfonts-local/#faq)
+For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 
 ## Support
 
