@@ -38,7 +38,7 @@ Every found stylesheet is listed in the **Manage Optimized Fonts** section of OM
 - Reduce the filesize of your fonts and stylesheets, by using the *Force subset* and *Include File Types* feature (OMGF Pro required),
 
 = Additional Features in OMGF Pro =
-- "Dig deeper" to find Google Fonts and optimized further. OMGF Pro supports:
+- "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
   - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
   - `@font-face` and `@import` statements inside **local stylesheets**,
   - Web Font Loader (`webfont.js`),
