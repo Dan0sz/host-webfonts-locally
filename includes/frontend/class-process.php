@@ -157,6 +157,16 @@ class OMGF_Frontend_Process
 			}
 		}
 
+		/** 
+		 * Honor PageSpeed=off parameter as used by mod_pagespeed, in use by some pagebuilders,
+		 * 
+		 * @see https://www.modpagespeed.com/doc/experiment#ModPagespeed
+		 */
+		if (array_key_exists('PageSpeed', $_GET) && 'off' === $_GET['PageSpeed']) {
+			return false;
+		}
+
+
 		/**
 		 * Customizer previews shouldn't get optimized content.
 		 */
