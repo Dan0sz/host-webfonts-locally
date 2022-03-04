@@ -82,6 +82,7 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
          - A quick check is done on pageload, to see if other Google Fonts are found than the ones already found, and if so, they're downloaded and replaced on-the-fly.
 * Enhanced: The Download API is replaced for an easier, leaner and faster alternative and no longer uses the WordPress API.
          - If the first request fails, a mirror is used to retry the request, before throwing an error.
+         - Fixes rest_no_route errors in some configurations.
 * Enhanced: The Task Manager now offers a quick overview of downloaded stylesheets and their status, along with simple management tasks, e.g. cache flush, configure stylesheet and/or remove.
          - When cache is marked as stale, it's now possible to refresh the cache and maintain your stylesheet configuration.
 * Added: Resource hints enqueued in wp_resource_hints() are now properly removed.
