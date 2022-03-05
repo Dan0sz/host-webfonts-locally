@@ -135,6 +135,13 @@ class OMGF_Frontend_Process
 	public function maybe_buffer_output()
 	{
 		/**
+		 * Always run, if the omgf_optimize (added by Save & Optimize) is set.
+		 */
+		if (isset($_GET['omgf_optimize'])) {
+			return true;
+		}
+
+		/**
 		 * Allows us to quickly bypass fonts optimization.
 		 */
 		if (isset($_GET['nomgf'])) {
