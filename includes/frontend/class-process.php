@@ -280,7 +280,7 @@ class OMGF_Frontend_Process
 		foreach ($links as $key => $link) {
 			preg_match('/id=[\'"](?P<id>.*?)[\'"]/', $link, $id);
 
-			$id = $id['id'] ?? "$handle-$key";
+			$id = $this->strip_css_tag($id['id'] ?? "$handle-$key");
 
 			preg_match('/href=[\'"](?P<href>.*?)[\'"]/', $link, $href);
 
@@ -295,6 +295,25 @@ class OMGF_Frontend_Process
 		OMGF::debug(sprintf(__('Built set: %s', 'host-webfonts-local'), print_r($google_fonts, true)));
 
 		return $google_fonts;
+	}
+
+	/**
+	 * Strip "-css" from the end of the stylesheet id, which WordPress adds to properly enqueued stylesheets.
+	 * 
+	 * @since v5.0.1 This eases the migration from v4.6.0.
+	 * 
+	 * @param  mixed $handle 
+	 * @return mixed 
+	 */
+	private function strip_css_tag($handle)
+	{
+		$pos = strrpos($handle, '-css');
+
+		if ($pos !== false) {
+			$handle = substr_replace($handle, '', $pos, strlen($handle));
+		}
+
+		return $handle;
 	}
 
 	/**
