@@ -38,7 +38,7 @@ class OMGF_Optimize_Run
      */
     private function run()
     {
-        $front_html = $this->get_front_html(get_site_url());
+        $front_html = $this->get_front_html(home_url());
         $error      = false;
 
         if (is_wp_error($front_html) || wp_remote_retrieve_response_code($front_html) != 200) {
