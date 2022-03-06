@@ -78,21 +78,9 @@ class OMGF_Frontend_Process
 		}
 
 		$optimized_fonts = apply_filters('omgf_frontend_optimized_fonts', OMGF::optimized_fonts());
-
-		/**
-		 * When OMGF Pro is enabled and set to Automatic mode, the merged handle is used to only load selected
-		 * preloads for the currently used stylesheet.
-		 * 
-		 * @since v4.5.3 Added 2nd dummy parameter, to prevent Fatal Errors after updating.
-		 */
-		$pro_handle = apply_filters('omgf_pro_merged_handle', '', '');
-		$i          = 0;
+		$i               = 0;
 
 		foreach ($optimized_fonts as $stylesheet_handle => $font_faces) {
-			if ($pro_handle && $stylesheet_handle != $pro_handle) {
-				continue;
-			}
-
 			foreach ($font_faces as $font_face) {
 				$preloads_stylesheet = $preloaded_fonts[$stylesheet_handle] ?? [];
 
@@ -110,6 +98,14 @@ class OMGF_Frontend_Process
 
 				foreach ($preload_variants as $variant) {
 					$url = rawurldecode($variant->woff2);
+
+					/**
+					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
+					 */
+					if (!file_exists(str_replace(content_url(), WP_CONTENT_DIR, $url))) {
+						continue;
+					}
+
 					echo "<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n";
 					$i++;
 				}
