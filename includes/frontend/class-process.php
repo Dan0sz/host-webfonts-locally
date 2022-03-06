@@ -39,6 +39,15 @@ class OMGF_Frontend_Process
 	 */
 	public function __construct()
 	{
+		$this->init();
+	}
+
+	private function init()
+	{
+		if (isset($_GET['nomgf'])) {
+			return;
+		}
+
 		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
 		add_filter('omgf_buffer_output', [$this, 'parse']);
 		add_action('wp_head', [$this, 'add_preloads'], 3);
@@ -139,13 +148,6 @@ class OMGF_Frontend_Process
 		 */
 		if (isset($_GET['omgf_optimize'])) {
 			return true;
-		}
-
-		/**
-		 * Allows us to quickly bypass fonts optimization.
-		 */
-		if (isset($_GET['nomgf'])) {
-			return false;
 		}
 
 		/**
