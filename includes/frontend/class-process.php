@@ -199,6 +199,8 @@ class OMGF_Frontend_Process
 	 * @since v5.0.0 Tested with:
 	 *               - Cache Enabler v1.8.7
 	 *                 - Default Settings
+	 *               - Kinsta Cache (Same as Cache Enabler?)
+	 * 				   - Works on ffw.press
 	 *               - LiteSpeed Cache
 	 *                 - Don't know (Gal Baras tested it: @see https://wordpress.org/support/topic/completely-broke-wp-rocket-plugin/#post-15377538)
 	 *               - W3 Total Cache v2.2.1:
@@ -216,7 +218,6 @@ class OMGF_Frontend_Process
 	 * 
 	 * @todo         Not tested (yet):
 	 *               - Asset Cleanup Pro
-	 *               - Kinsta Cache (Same as Cache Enabler?)
 	 *               - Swift Performance
 	 *  
 	 * @return void 
