@@ -4,7 +4,7 @@
  * Plugin Name: OMGF
  * Plugin URI: https://ffw.press/wordpress/omgf/
  * Description: Increase GDPR compliance, reduce DNS requests and leverage browser cache by automatically downloading Google Fonts to your server.
- * Version: 5.0.0
+ * Version: 5.0.1
  * Author: Daan from FFW.Press
  * Author URI: https://ffw.press
  * License: GPL2v2 or later

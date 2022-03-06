@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.9
-Stable tag: 5.0.0
+Stable tag: 5.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,12 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.0.1 =
+* Fixed: Previous versions of OMGF would save stylesheet handles without the appended '-css' string. This is now brought back to guarantee a smooth transition to v5.
+* Fixed: If `?nomgf=1` parameter was set, preloads would still be loaded.
+* Fixed: Added an extra check if file exists, before adding font files for preloading.
+* Enhanced: A small speed boost for Save & Optimize.
 
 = 5.0.0 - **The Better, Bigger, Faster, Stronger, Cooler, Awesomer Edition** | March 4th, 2022 =
 * Added: Parse entire HTML document for Google Fonts stylesheets (instead of just wp_head())
