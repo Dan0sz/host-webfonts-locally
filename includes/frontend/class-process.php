@@ -42,8 +42,16 @@ class OMGF_Frontend_Process
 		$this->init();
 	}
 
+	/**
+	 * Actions and hooks.
+	 * 
+	 * @return void 
+	 */
 	private function init()
 	{
+		/**
+		 * Halt if this parameter is set.
+		 */
 		if (isset($_GET['nomgf'])) {
 			return;
 		}
