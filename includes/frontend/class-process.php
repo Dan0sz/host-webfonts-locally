@@ -63,6 +63,9 @@ class OMGF_Frontend_Process
 
 		/** Smart Slider 3 compatibility */
 		add_filter('wordpress_prepare_output', [$this, 'parse'], 11);
+
+		/** Mesmerize Pro theme compatibility */
+		add_filter('style_loader_tag', [$this, 'remove_mesmerize_filter'], 12, 1);
 	}
 
 	/**
@@ -148,7 +151,7 @@ class OMGF_Frontend_Process
 	public function maybe_buffer_output()
 	{
 		/**
-		 * Always run, if the omgf_optimize (added by Save & Optimize) is set.
+		 * Always run, if the omgf_optimize parameter (added by Save & Optimize) is set.
 		 */
 		if (isset($_GET['omgf_optimize'])) {
 			return ob_start([$this, 'return_buffer']);
@@ -522,5 +525,21 @@ class OMGF_Frontend_Process
 		}
 
 		return ['family' => implode('|', $fonts)];
+	}
+
+	/**
+	 * Because all great themes come packed with extra Cumulative Layout Shifting.
+	 * 
+	 * @param string $tag
+	 *  
+	 * @return string 
+	 */
+	public function remove_mesmerize_filter($tag)
+	{
+		if (wp_get_theme()->template == 'mesmerize-pro' && strpos($tag, 'fonts.googleapis.com') !== false) {
+			return str_replace('href="" data-href', 'href', $tag);
+		}
+
+		return $tag;
 	}
 }
