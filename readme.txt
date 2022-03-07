@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.9
-Stable tag: 5.0.1
+Stable tag: 5.0.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,11 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.0.2 =
+* Fixed: Use Site Address (URL) to run first optimization scan, instead of WordPress Address (URL), because the WordPress install URL can differ from the frontend URL.
+* Fixed: Make sure stylesheet URL is properly decoded and HTML entities, etc. are removed, before attempting to process it. (This would cause parameters, like `subset` or `display`, to get lost).
+* Added: omgf_optimize_query_subset filter to OMGF_Optimize class.
 
 = 5.0.1 =
 * Fixed: Previous versions of OMGF would save stylesheet handles without the appended '-css' string. This is now brought back to guarantee a smooth transition to v5.
