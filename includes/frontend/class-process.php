@@ -151,7 +151,7 @@ class OMGF_Frontend_Process
 		 * Always run, if the omgf_optimize (added by Save & Optimize) is set.
 		 */
 		if (isset($_GET['omgf_optimize'])) {
-			ob_start([$this, 'return_buffer']);
+			return ob_start([$this, 'return_buffer']);
 		}
 
 		/**
