@@ -410,7 +410,7 @@ class OMGF_Frontend_Process
 				continue;
 			}
 
-			$optimize   = new OMGF_Optimize($query['family'], $query['handle'], $query['original_handle'], $query['subset'] ?? '');
+			$optimize   = new OMGF_Optimize($query['family'], $query['handle'], $query['original_handle'], apply_filters('omgf_optimize_query_subset', $query['subset'] ?? ''));
 			$cached_url = $optimize->process();
 
 			if (!$cached_url) {
