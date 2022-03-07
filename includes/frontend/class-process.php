@@ -314,6 +314,10 @@ class OMGF_Frontend_Process
 	 */
 	private function strip_css_tag($handle)
 	{
+		if (!$this->ends_with($handle, '-css')) {
+			return $handle;
+		}
+
 		$pos = strrpos($handle, '-css');
 
 		if ($pos !== false) {
@@ -321,6 +325,27 @@ class OMGF_Frontend_Process
 		}
 
 		return $handle;
+	}
+
+	/**
+	 * Checks if a $string ends with $end.
+	 * 
+	 * @since v5.0.2
+	 * 
+	 * @param string $string 
+	 * @param string $end
+	 *  
+	 * @return bool 
+	 */
+	private function ends_with($string, $end)
+	{
+		$len = strlen($end);
+
+		if ($len == 0) {
+			return true;
+		}
+
+		return (substr($string, -$len) === $end);
 	}
 
 	/**
@@ -376,25 +401,16 @@ class OMGF_Frontend_Process
 				continue;
 			}
 
-			$api_url    = $this->build_request_url(urldecode($stack['href']), $handle, $stack['id']);
-			$api_params = parse_url($api_url);
-
-			parse_str($api_params['query'], $post_query);
-
-			if (isset($api_params['fragment'])) {
-				parse_str($api_params['fragment'], $additional_query);
-
-				$post_query = array_merge($post_query, $additional_query);
-			}
+			$query = $this->build_query($stack['href'], $handle, $stack['id']);
 
 			/**
 			 * Required parameters.
 			 */
-			if (!isset($post_query['family']) || !isset($post_query['handle']) || !isset($post_query['original_handle'])) {
+			if (!isset($query['family']) || !isset($query['handle']) || !isset($query['original_handle'])) {
 				continue;
 			}
 
-			$optimize   = new OMGF_Optimize($post_query['family'], $post_query['handle'], $post_query['original_handle'], $post_query['subset'] ?? '');
+			$optimize   = new OMGF_Optimize($query['family'], $query['handle'], $query['original_handle'], $query['subset'] ?? '');
 			$cached_url = $optimize->process();
 
 			if (!$cached_url) {
@@ -417,8 +433,10 @@ class OMGF_Frontend_Process
 	 *
 	 * @return string
 	 */
-	public function build_request_url($url, $updated_handle, $handle)
+	public function build_query($url, $updated_handle, $handle)
 	{
+		// Filter out HTML (&#038;, etc) and URL encoded characters, so we can properly parse it.
+		$url        = htmlspecialchars_decode(urldecode($url));
 		$parsed_url = parse_url($url);
 		$query      = $parsed_url['query'] ?? '';
 
@@ -434,22 +452,18 @@ class OMGF_Frontend_Process
 			 * 
 			 * Decode, just to be sure.
 			 */
-			parse_str(html_entity_decode($query), $original_query);
+			parse_str($query, $original_query);
 		}
 
-		$params = http_build_query(
-			array_merge(
-				$original_query,
-				[
-					'handle'          => $updated_handle,
-					'original_handle' => $handle,
-				]
-			)
+		$params = array_merge(
+			$original_query,
+			[
+				'handle'          => $updated_handle,
+				'original_handle' => $handle,
+			]
 		);
 
-		$request = 'https://fonts.googleapis.com/css?' . $params;
-
-		return apply_filters('omgf_request_url', $request);
+		return apply_filters('omgf_request_url', $params);
 	}
 
 	/**
