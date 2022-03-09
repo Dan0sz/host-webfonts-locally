@@ -51,10 +51,7 @@ class OMGF_Admin
 		$this->do_help();
 		$this->maybe_do_after_update_notice();
 
-		/**
-		 * @since v4.7.0 Fixes a bug where the Optimized Fonts wouldn't be shown after page reload.
-		 */
-		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'update_optimized_fonts'], 10, 2);
+		add_filter('alloptions', [$this, 'force_optimized_fonts_from_db']);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
 		add_action('pre_update_option_omgf_cache_dir', [$this, 'validate_cache_dir'], 10, 2);
 		add_filter('pre_update_option', [$this, 'settings_changed'], 10, 3);
@@ -136,17 +133,25 @@ class OMGF_Admin
 	}
 
 	/**
-	 * This fixes a bug where the admin screen wouldn't properly be updated after omgf_optimized_fonts 
-	 * was updated by the API.
+	 * @since  v5.0.5 Forces get_option() to fetch a fresh copy of omgf_optimized_fonts from the database,
+	 * 				 we're doing plenty to limit reads from the DB already. So, this is warranted.
 	 * 
-	 * @param $old_value
-	 * @param $value
-	 *
-	 * @return bool|array
+	 * @see    OMGF::optimized_fonts()
+	 * 
+	 * @param  array $alloptions 
+	 * 
+	 * @return array 
 	 */
-	public function update_optimized_fonts($value, $old_value)
+	public function force_optimized_fonts_from_db($alloptions)
 	{
-		return $old_value;
+		if (
+			isset($alloptions[OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS])
+			&& $alloptions[OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS] == false
+		) {
+			unset($alloptions[OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS]);
+		}
+
+		return $alloptions;
 	}
 
 	/**

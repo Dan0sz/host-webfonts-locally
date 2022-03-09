@@ -343,7 +343,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<em><?= sprintf(__("This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically if other Google Fonts stylesheets are discovered throughout your site.", $this->plugin_text_domain), get_site_url()); ?></em>
 					</p>
 				</div>
-				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?= esc_attr(serialize($this->optimized_fonts)); ?>" />
+				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?= base64_encode(serialize($this->optimized_fonts)); ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= esc_attr(OMGF_UNLOAD_STYLESHEETS); ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" value="<?= esc_attr(implode(',', $cache_handles)); ?>" />
 				<?php echo apply_filters('omgf_optimize_fonts_hidden_fields', ''); ?>

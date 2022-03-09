@@ -36,6 +36,7 @@ class OMGF
 		}
 
 		add_action('admin_init', [$this, 'do_optimize']);
+		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'base64_decode_optimized_fonts']);
 		add_filter('content_url', [$this, 'force_ssl'], 1000, 2);
 
 		/**
@@ -97,6 +98,24 @@ class OMGF
 	public function do_optimize()
 	{
 		return new OMGF_Admin_Optimize();
+	}
+
+	/**
+	 * @since v5.0.5 omgf_optimized_fonts is base64_encoded in the frontend, to bypass firewall restrictions on
+	 * some servers.
+	 * 
+	 * @param $old_value
+	 * @param $value
+	 *
+	 * @return bool|array
+	 */
+	public function base64_decode_optimized_fonts($value)
+	{
+		if (is_string($value) && base64_decode($value, true)) {
+			return base64_decode($value);
+		}
+
+		return $value;
 	}
 
 	/**
