@@ -351,7 +351,12 @@ class OMGF_Optimize
     }
 
     /**
-     * Wrapper for wp_remote_get() which tries a mirror API if the first request fails. (It tends to do that)
+     * Wrapper for wp_remote_get() which tries a mirror API if the first request fails. (It tends to timeout sometimes)
+     * 
+     * @param string $family 
+     * @param string $query 
+     * 
+     * @return array|WP_Error 
      */
     private function remote_get($family, $query)
     {
