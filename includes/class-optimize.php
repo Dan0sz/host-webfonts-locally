@@ -43,7 +43,7 @@ class OMGF_Optimize
     private $original_handle = '';
 
     /** @var string $subset */
-    private $subset = 'latin';
+    private $subset = '';
 
     /** @var string $return */
     private $return = 'url';
@@ -58,7 +58,7 @@ class OMGF_Optimize
      * @param string $family          Contents of "family" parameters in Google Fonts API URL, e.g. "?family="Lato:100,200,300,etc."
      * @param string $handle          The cache handle, generated using $handle + 5 random chars. Used for storing the fonts and stylesheet.
      * @param string $original_handle The stylesheet handle, present in the ID attribute.
-     * @param string $subset          Contents of "subset" parameter, defaults to 'latin', because most fonts are available in this subset.
+     * @param string $subset          Contents of "subset" parameter. If left empty, the downloaded files will support all subsets.
      * @param string $return          Valid values: 'url' | 'path' | 'object'.
      * 
      * @return string Local URL of generated stylesheet.
@@ -79,7 +79,7 @@ class OMGF_Optimize
         $this->family          = $family;
         $this->handle          = sanitize_title_with_dashes($handle);
         $this->original_handle = sanitize_title_with_dashes($original_handle);
-        $this->subset          = $subset ?: 'latin';
+        $this->subset          = $subset;
         $this->path            = OMGF_CACHE_PATH . '/' . $this->handle;
         $this->return          = $return;
     }
@@ -101,9 +101,13 @@ class OMGF_Optimize
             return '';
         }
 
-        $font_families    = explode('|', $this->family);
-        $query['subsets'] = $this->subset;
-        $fonts            = [];
+        $font_families = explode('|', $this->family);
+        $query         = [];
+        $fonts         = [];
+
+        if ($this->subset) {
+            $query['subsets'] = $this->subset;
+        }
 
         foreach ($font_families as $font_family) {
             if (empty($font_family)) {
@@ -271,19 +275,15 @@ class OMGF_Optimize
          * an alternate API.
          */
         $alternate_fonts = apply_filters('omgf_alternate_fonts', []);
-        $alternate_url   = false;
-        $url             = '';
+        $alternate_url   = '';
+        $query_string    = '';
 
         if (in_array($family, array_keys($alternate_fonts))) {
-            $alternate_url = true;
-
-            $url = apply_filters('omgf_alternate_api_url', '', $family);
+            $alternate_url = apply_filters('omgf_alternate_api_url', '', $family);
             unset($query);
         }
 
-        $query_string = '';
-
-        if (isset($query)) {
+        if (!empty($query)) {
             $query_string = '?' . http_build_query($query);
         }
 
@@ -307,12 +307,31 @@ class OMGF_Optimize
             }
         } else {
             $response = wp_remote_get(
-                sprintf($url . '%s', $family) . $query_string
+                sprintf($alternate_url . '%s', $family) . $query_string
             );
         }
 
         if (is_wp_error($response)) {
             OMGF_Admin_Notice::set_notice(sprintf(__('OMGF encountered an error while trying to fetch fonts: %s', $this->plugin_text_domain), $response->get_error_message()), $response->get_error_code(), 'error', 408);
+        }
+
+        /**
+         * If no subset was set, do a quick refresh to make sure all available subsets are included.
+         */
+        if (!$query_string && !$alternate_url) {
+            $response_body = wp_remote_retrieve_body($response);
+            $body          = json_decode($response_body);
+            $query_string  = '?subsets=' . (isset($body->subsets) ? implode(',', $body->subsets) : 'latin,latin-ext');
+
+            $response = wp_remote_get(
+                sprintf(self::OMGF_GOOGLE_FONTS_API_URL . '%s', $family) . $query_string
+            );
+
+            if (is_wp_error($response) && $response->get_error_code() == 'http_request_failed') {
+                $response = wp_remote_get(
+                    sprintf(self::OMGF_GOOGLE_FONTS_API_FALLBACK . '%s', $family) . $query_string
+                );
+            }
         }
 
         $response_code = wp_remote_retrieve_response_code($response);
