@@ -295,16 +295,7 @@ class OMGF_Optimize
         }
 
         if (!$alternate_url) {
-            $response = wp_remote_get(
-                sprintf(self::OMGF_GOOGLE_FONTS_API_URL . '%s', $family) . $query_string
-            );
-
-            // Try with mirror, if first request failed.
-            if (is_wp_error($response) && $response->get_error_code() == 'http_request_failed') {
-                $response = wp_remote_get(
-                    sprintf(self::OMGF_GOOGLE_FONTS_API_FALLBACK . '%s', $family) . $query_string
-                );
-            }
+            $response = $this->remote_get($family, $query_string);
         } else {
             $response = wp_remote_get(
                 sprintf($alternate_url . '%s', $family) . $query_string
@@ -322,16 +313,7 @@ class OMGF_Optimize
             $response_body = wp_remote_retrieve_body($response);
             $body          = json_decode($response_body);
             $query_string  = '?subsets=' . (isset($body->subsets) ? implode(',', $body->subsets) : 'latin,latin-ext');
-
-            $response = wp_remote_get(
-                sprintf(self::OMGF_GOOGLE_FONTS_API_URL . '%s', $family) . $query_string
-            );
-
-            if (is_wp_error($response) && $response->get_error_code() == 'http_request_failed') {
-                $response = wp_remote_get(
-                    sprintf(self::OMGF_GOOGLE_FONTS_API_FALLBACK . '%s', $family) . $query_string
-                );
-            }
+            $response      = $this->remote_get($family, $query_string);
         }
 
         $response_code = wp_remote_retrieve_response_code($response);
@@ -366,6 +348,25 @@ class OMGF_Optimize
         }
 
         return json_decode(wp_remote_retrieve_body($response));
+    }
+
+    /**
+     * Wrapper for wp_remote_get() which tries a mirror API if the first request fails. (It tends to do that)
+     */
+    private function remote_get($family, $query)
+    {
+        $response = wp_remote_get(
+            sprintf(self::OMGF_GOOGLE_FONTS_API_URL . '%s', $family) . $query
+        );
+
+        // Try with mirror, if first request failed.
+        if (is_wp_error($response) && $response->get_error_code() == 'http_request_failed') {
+            $response = wp_remote_get(
+                sprintf(self::OMGF_GOOGLE_FONTS_API_FALLBACK . '%s', $family) . $query
+            );
+        }
+
+        return $response;
     }
 
     /**
