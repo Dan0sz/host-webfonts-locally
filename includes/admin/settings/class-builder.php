@@ -96,7 +96,7 @@ class OMGF_Admin_Settings_Builder
 			<td>
 				<?php foreach ($inputs as $option => $option_label) : ?>
 					<label>
-						<input type="radio" <?= strpos($option_label, '(Pro)') !== false ? apply_filters($name . '_' . $option . '_setting_disabled', 'disabled') : ''; ?> class="<?= str_replace('_', '-', $name . '_' . $option); ?>" name="<?= $name; ?>" value="<?= $option; ?>" <?= $option == $checked ? 'checked="checked"' : ''; ?> />
+						<input type="radio" <?= strpos($option_label, '(Pro)') !== false ? apply_filters($name . '_' . $option . '_setting_disabled', 'disabled') : ''; ?> class="<?= str_replace('_', '-', $name . '_' . $option); ?>" name="<?= $name; ?>" value="<?= esc_attr($option); ?>" <?= $option == $checked ? 'checked="checked"' : ''; ?> />
 						<?= $option_label; ?>
 					</label>
 					<br />
@@ -139,7 +139,7 @@ class OMGF_Admin_Settings_Builder
 							$is_selected = $selected == $option;
 						}
 						?>
-						<option value="<?= $option; ?>" <?= $is_selected ? 'selected="selected"' : ''; ?>><?= $option_label; ?></option>
+						<option value="<?= esc_attr($option); ?>" <?= $is_selected ? 'selected="selected"' : ''; ?>><?= $option_label; ?></option>
 					<?php endforeach; ?>
 				</select>
 				<p class="description">
@@ -164,7 +164,7 @@ class OMGF_Admin_Settings_Builder
 		<tr valign="top" <?= $visible ? '' : 'style="display: none;"'; ?>>
 			<th scope="row"><?= apply_filters($name . '_setting_label', $label); ?></th>
 			<td>
-				<input class="<?= str_replace('_', '-', $name); ?>" type="number" name="<?= $name; ?>" min="<?= $min; ?>" value="<?= $value; ?>" />
+				<input class="<?= str_replace('_', '-', $name); ?>" type="number" name="<?= $name; ?>" min="<?= $min; ?>" value="<?= esc_attr($value); ?>" />
 				<p class="description">
 					<?= apply_filters($name . '_setting_description', $description); ?>
 				</p>
@@ -189,7 +189,7 @@ class OMGF_Admin_Settings_Builder
 		<tr class="<?= str_replace('_', '-', $name); ?>-row">
 			<th scope="row"><?= apply_filters($name . '_setting_label', $label); ?></th>
 			<td>
-				<input <?= apply_filters($name . '_setting_disabled', $disabled) ? 'disabled' : ''; ?> class="<?= str_replace('_', '-', $name); ?>" type="text" name="<?= $name; ?>" placeholder="<?= $placeholder; ?>" value="<?= $value; ?>" />
+				<input <?= apply_filters($name . '_setting_disabled', $disabled) ? 'disabled' : ''; ?> class="<?= str_replace('_', '-', $name); ?>" type="text" name="<?= $name; ?>" placeholder="<?= $placeholder; ?>" value="<?= esc_attr($value); ?>" />
 				<p class="description">
 					<?= apply_filters($name . 'setting_description', $description); ?>
 				</p>
