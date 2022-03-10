@@ -217,7 +217,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			'omgf_pro_force_subsets',
 			OMGF_Admin_Settings::OMGF_FORCE_SUBSETS_OPTIONS,
 			defined('OMGF_PRO_FORCE_SUBSETS') ? OMGF_PRO_FORCE_SUBSETS : [],
-			__('If a theme or plugin loads subsets you don\'t need, use this option to force all Google Fonts to be loaded in the selected subsets. You can also use this option to force the loading of additional subsets, if a theme/plugin doesn\'t allow you to configure the loaded subsets. <em>Use CTRL + click to select multiple values</em>.', $this->plugin_text_domain) . ' ' . $this->promo,
+			__('By default, Google Fonts are loaded in all subsets, which results in unnecessarily large stylesheets. Use this option to force all Google Fonts to be loaded in the selected subset(s). <em>Use CTRL + click to select multiple values</em>.', $this->plugin_text_domain) . ' ' . $this->promo,
 			true,
 			true
 		);
