@@ -56,10 +56,10 @@ class OMGF_Frontend_Process
 			return;
 		}
 
-		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
-		add_filter('omgf_buffer_output', [$this, 'parse']);
 		add_action('wp_head', [$this, 'add_preloads'], 3);
-		add_filter('wp_resource_hints', [$this, 'remove_resource_hints']);
+		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
+		add_filter('omgf_buffer_output', [$this, 'remove_resource_hints'], 9);
+		add_filter('omgf_buffer_output', [$this, 'parse']);
 
 		/** Smart Slider 3 compatibility */
 		add_filter('wordpress_prepare_output', [$this, 'parse'], 11);
@@ -114,31 +114,6 @@ class OMGF_Frontend_Process
 				}
 			}
 		}
-	}
-
-	/**
-	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
-	 * 
-	 * @param array $urls 
-	 * @return array 
-	 */
-	public function remove_resource_hints($urls)
-	{
-		foreach ($urls as $key => &$url) {
-			if (is_array($url)) {
-				$url = $this->remove_resource_hints($url);
-
-				continue;
-			}
-
-			foreach (self::RESOURCE_HINTS as $hint) {
-				if (strpos($url, $hint) !== false) {
-					unset($urls[$key]);
-				}
-			}
-		}
-
-		return $urls;
 	}
 
 	/**
@@ -232,6 +207,39 @@ class OMGF_Frontend_Process
 		}
 
 		return apply_filters('omgf_buffer_output', $html);
+	}
+
+	/**
+	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
+	 * 
+	 * @since v5.0.5 Use a regular expression to match all resource hints.
+	 * 
+	 * @param  string $html Valid HTML.
+	 *  
+	 * @return string Valid HTML.
+	 */
+	public function remove_resource_hints($html)
+	{
+		preg_match_all('/<link.*?(dns-prefetch|preconnect).*?>/', $html, $resource_hints);
+
+		if (!isset($resource_hints[0]) || empty($resource_hints[0])) {
+			return $html;
+		}
+
+		$search = [];
+
+		foreach ($resource_hints[0] as $key => $match) {
+			if (
+				strpos($match, 'fonts.googleapis.com') === false
+				&& strpos($match, 'fonts.gstatic.com') === false
+			) {
+				continue;
+			}
+
+			$search[] = $match;
+		}
+
+		return str_replace($search, '', $html);
 	}
 
 	/**
