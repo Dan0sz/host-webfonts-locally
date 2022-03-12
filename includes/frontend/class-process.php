@@ -266,14 +266,14 @@ class OMGF_Frontend_Process
 		preg_match_all('/<link.*fonts\.googleapis\.com\/css.*?[\/]?>/', $html, $links);
 
 		if (!isset($links[0]) || empty($links[0])) {
-			return $html;
+			return apply_filters('omgf_processed_html', $html, $this);
 		}
 
 		$google_fonts   = $this->build_fonts_set($links[0]);
 		$search_replace = $this->build_search_replace($google_fonts);
 
 		if (empty($search_replace['search']) || empty($search_replace['replace'])) {
-			return $html;
+			return apply_filters('omgf_processed_html', $html, $this);
 		}
 
 		$html = str_replace($search_replace['search'], $search_replace['replace'], $html);
