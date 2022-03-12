@@ -75,6 +75,15 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 
 == Changelog ==
 
+= 5.0.5 =
+* Added: Compatibility with Mesmerize Pro theme; this theme loads Google Fonts asynchronously, which causes CLS.
+* Fixed: Running Save & Optimize a 2nd time could trigger some firewall rules, due to the serialized array being passed along with the settings form's POST action. This serialized array is now stored in the form using base64_encode() and decoded before being saved to the database.
+* Fixed: Since the Google Fonts API has removed the `subsets` paramater and returns all subsets by default, OMGF now does the same. Unlike the Google Fonts API, OMGF does still respect and apply the parameter if it set, because it is still used by many themes and plugins. 
+  * Re-worded Force Subsets (Pro) featured to clarify this behavior.
+* Fixed: Some resource hints that were added using unconventional methods (i.e. *not* using `wp_resource_hints()`) weren't removed.
+* Fixed: If no regular Google Fonts stylesheets were present, the `omgf_processed_html` filter would never be triggered.
+* Fixed: Stylesheets on AMP pages would be rewritten to local stylesheets, while this is not supported by AMP.
+
 = 5.0.4 =
 * Fixed: don't allow starting buffer twice.
 
