@@ -115,10 +115,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		'trebuchet-ms'	  => 'Trebuchet MS',
 		'verdana'		  => 'Verdana'
 	];
-	const OMGF_AMP_HANDLING_OPTIONS = [
-		'fallback' => 'Fallback (default)',
-		'disable'  => 'Disable'
-	];
 
 	/**
 	 * Optimize Fonts

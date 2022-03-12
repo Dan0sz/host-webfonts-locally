@@ -33,7 +33,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_advanced_settings_content', [$this, 'do_before'], 20);
 
 		// Settings
-		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_amp_handling'], 40);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 70);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_fonts_source_url'], 80);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 110);
@@ -52,19 +51,6 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			<?= __('If you require the downloaded/generated files to be saved in a different location or served from a different resource (e.g. a CDN) or path, use these settings to make OMGF work with your configuration.', $this->plugin_text_domain); ?>
 		</p>
 <?php
-	}
-
-	public function do_promo_amp_handling()
-	{
-		$this->do_select(
-			__('AMP handling (Pro)', $this->plugin_text_domain),
-			'omgf_pro_amp_handling',
-			OMGF_Admin_Settings::OMGF_AMP_HANDLING_OPTIONS,
-			defined('OMGF_PRO_AMP_HANDLING') ? OMGF_PRO_AMP_HANDLING : '',
-			sprintf(__("Decide how OMGF Pro should behave on AMP pages. Only select <strong>enable</strong> if the custom CSS limit of 75kb is not already reached by your theme and/or other plugins and no other <code>amp-custom</code> tag is present on your pages.", $this->plugin_text_domain), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO) . ' ' . $this->promo,
-			false,
-			true
-		);
 	}
 
 	/**
