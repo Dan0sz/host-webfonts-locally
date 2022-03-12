@@ -263,7 +263,7 @@ class OMGF_Frontend_Process
 	 */
 	public function parse($html)
 	{
-		if ($this->is_amp_request()) {
+		if ($this->is_amp()) {
 			return apply_filters('omgf_processed_html', $html, $this);
 		}
 
@@ -286,11 +286,11 @@ class OMGF_Frontend_Process
 	}
 
 	/**
-	 * @since v5.0.5 Check if current page is an AMP page.
+	 * @since v5.0.5 Check if current page is AMP page.
 	 * 
 	 * @return bool 
 	 */
-	private function is_amp_request()
+	private function is_amp()
 	{
 		return (function_exists('is_amp_endpoint') && is_amp_endpoint())
 			|| (function_exists('ampforwp_is_amp_endpoint') && ampforwp_is_amp_endpoint());
