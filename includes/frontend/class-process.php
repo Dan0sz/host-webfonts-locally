@@ -263,6 +263,10 @@ class OMGF_Frontend_Process
 	 */
 	public function parse($html)
 	{
+		if ($this->is_amp_request()) {
+			return apply_filters('omgf_processed_html', $html, $this);
+		}
+
 		preg_match_all('/<link.*fonts\.googleapis\.com\/css.*?[\/]?>/', $html, $links);
 
 		if (!isset($links[0]) || empty($links[0])) {
@@ -279,6 +283,17 @@ class OMGF_Frontend_Process
 		$html = str_replace($search_replace['search'], $search_replace['replace'], $html);
 
 		return apply_filters('omgf_processed_html', $html, $this);
+	}
+
+	/**
+	 * @since v5.0.5 Check if current page is an AMP page.
+	 * 
+	 * @return bool 
+	 */
+	private function is_amp_request()
+	{
+		return (function_exists('is_amp_endpoint') && is_amp_endpoint())
+			|| (function_exists('ampforwp_is_amp_endpoint') && ampforwp_is_amp_endpoint());
 	}
 
 	/**
