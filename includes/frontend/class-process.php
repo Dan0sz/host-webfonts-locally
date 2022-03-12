@@ -257,9 +257,9 @@ class OMGF_Frontend_Process
 	 * 
 	 * Using Xpath proved to be untestable, because it varied anywhere between 38 seconds and, well, timeouts.
 	 * 
-	 * @param string $html 
+	 * @param string $html Valid HTML.
 	 * 
-	 * @return string 
+	 * @return string Valid HTML, filtered by @filter omgf_processed_html.
 	 */
 	public function parse($html)
 	{
