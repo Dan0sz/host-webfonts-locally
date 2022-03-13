@@ -83,6 +83,7 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 * Fixed: Some resource hints that were added using unconventional methods (i.e. *not* using `wp_resource_hints()`) weren't removed.
 * Fixed: If no regular Google Fonts stylesheets were present, the `omgf_processed_html` filter would never be triggered.
 * Fixed: Stylesheets on AMP pages would be rewritten to local stylesheets, while this is not supported by AMP.
+* Removed: AMP handling (Pro) option from Advanced Settings, because it's no longer supported by AMP.
 
 = 5.0.4 =
 * Fixed: don't allow starting buffer twice.
