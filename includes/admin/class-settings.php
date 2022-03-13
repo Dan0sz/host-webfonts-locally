@@ -23,9 +23,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Transients
 	 */
-	const OMGF_NEWS_REEL          = 'omgf_news_reel';
-	const OMGF_CACHE_IS_STALE     = 'omgf_cache_is_stale';
-	const OMGF_CURRENT_DB_VERSION = 'omgf_current_db_version';
+	const OMGF_NEWS_REEL           = 'omgf_news_reel';
+	const OMGF_CACHE_IS_STALE      = 'omgf_cache_is_stale';
+	const OMGF_CURRENT_DB_VERSION  = 'omgf_current_db_version';
+	const OMGF_CACHE_TIMESTAMP     = 'omgf_cache_timestamp';
 
 	/**
 	 * Settings Fields

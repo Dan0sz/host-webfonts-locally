@@ -34,11 +34,22 @@ class OMGF_Frontend_Process
 		'vc_action'
 	];
 
+	/** @var string $timestamp */
+	private $timestamp = '';
+
 	/**
 	 * OMGF_Frontend_Functions constructor.
 	 */
 	public function __construct()
 	{
+		$this->timestamp = get_option(OMGF_Admin_Settings::OMGF_CACHE_TIMESTAMP, '');
+
+		if (!$this->timestamp) {
+			$this->timestamp = time();
+
+			update_option(OMGF_Admin_settings::OMGF_CACHE_TIMESTAMP, $this->timestamp);
+		}
+
 		$this->init();
 	}
 
@@ -422,7 +433,7 @@ class OMGF_Frontend_Process
 			 */
 			if (!isset($_GET['omgf_optimize']) && file_exists(OMGF_CACHE_PATH . "/$handle/$handle.css")) {
 				$search[$key]  = $stack['href'];
-				$replace[$key] = content_url(OMGF_CACHE_DIR . "/$handle/$handle.css");
+				$replace[$key] = content_url(OMGF_CACHE_DIR . "/$handle/$handle.css") . '?ver=' . $this->timestamp;
 
 				continue;
 			}
@@ -444,7 +455,7 @@ class OMGF_Frontend_Process
 			}
 
 			$search[$key]  = $stack['href'];
-			$replace[$key] = $cached_url;
+			$replace[$key] = $cached_url . '?ver=' . $this->timestamp;
 		}
 
 		return ['search' => $search, 'replace' => $replace];
