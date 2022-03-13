@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.9
-Stable tag: 5.0.4
+Stable tag: 5.0.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -77,6 +77,7 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 
 = 5.0.5 =
 * Added: Compatibility with Mesmerize Pro theme; this theme loads Google Fonts asynchronously, which causes CLS.
+* Added: UNIX timestamp cached stylesheets to make sure browser cache of visitors is busted, upon cache refresh.
 * Fixed: Running Save & Optimize a 2nd time could trigger some firewall rules, due to the serialized array being passed along with the settings form's POST action. This serialized array is now stored in the form using base64_encode() and decoded before being saved to the database.
 * Fixed: Since the Google Fonts API has removed the `subsets` paramater and returns all subsets by default, OMGF now does the same. Unlike the Google Fonts API, OMGF does still respect and apply the parameter if it set, because it is still used by many themes and plugins. 
   * Re-worded Force Subsets (Pro) featured to clarify this behavior.
