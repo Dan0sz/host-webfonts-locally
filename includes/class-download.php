@@ -42,10 +42,10 @@ class OMGF_Download
 		string $extension,
 		string $path
 	) {
-		$this->url = $url;
-		$this->filename = $filename;
+		$this->url       = $url;
+		$this->filename  = $filename;
 		$this->extension = $extension;
-		$this->path = $path;
+		$this->path      = $path;
 	}
 
 	/**
