@@ -63,7 +63,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			<th scope="row"><?= __('Fonts Cache Directory', $this->plugin_text_domain); ?></th>
 			<td>
 				<p class="description">
-					<?= sprintf(__('Downloaded stylesheets and font files are stored in: <code>%s</code>.', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_UPLOAD_DIR)); ?>
+					<?= sprintf(__('Downloaded stylesheets and font files %s are stored in: <code>%s</code>.', $this->plugin_text_domain), is_multisite() ? __('(for this site)', $this->plugin_text_domain) : '', str_replace(ABSPATH, '', OMGF_UPLOAD_DIR)); ?>
 				</p>
 			</td>
 		</tr>
