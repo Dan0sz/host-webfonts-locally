@@ -387,7 +387,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				__('Optimize Fonts For Editors/Administrators?', $this->plugin_text_domain),
 				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES,
 				OMGF_OPTIMIZE_EDIT_ROLES,
-				__('Should only be disabled while debugging/testing, e.g. using a page builder or switching themes.', $this->plugin_text_domain)
+				__('OMGF automatically disables on customizer and page builder previews, etc. Disable this if you want to permanently disable OMGF when you\'re logged in. E.g. when testing/debugging.', $this->plugin_text_domain)
 			);
 		}
 	}
