@@ -111,11 +111,11 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 									$cache_key = $handle;
 								}
 
-								$downloaded = file_exists(OMGF_CACHE_PATH . "/$cache_key/$cache_key.css");
+								$downloaded = file_exists(OMGF_UPLOAD_DIR . "/$cache_key/$cache_key.css");
 								$unloaded   = in_array($handle, $unloaded_stylesheets);
 								?>
 								<li class="<?= OMGF_CACHE_IS_STALE ? 'stale' : ($unloaded ? 'unloaded' : ($downloaded ? 'found' : 'not-found')); ?>">
-									<strong><?= $handle; ?></strong> <em>(<?= sprintf(__('stored in %s', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_CACHE_PATH . "/$cache_key")); ?>)</em> <?php if (!$unloaded) : ?><a href="<?php echo $downloaded ? "#$handle" : '#'; ?>" data-handle="<?php echo esc_attr($handle); ?>" id="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>" title="<?php echo sprintf(__('Manage %s', $this->plugin_text_domain), $cache_key); ?>"><?php $downloaded ? _e('Configure', $this->plugin_text_domain) : _e('Remove', $this->plugin_text_domain); ?></a><?php endif; ?>
+									<strong><?= $handle; ?></strong> <em>(<?= sprintf(__('stored in %s', $this->plugin_text_domain), str_replace(ABSPATH, '', OMGF_UPLOAD_DIR . "/$cache_key")); ?>)</em> <?php if (!$unloaded) : ?><a href="<?php echo $downloaded ? "#$handle" : '#'; ?>" data-handle="<?php echo esc_attr($handle); ?>" id="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>" title="<?php echo sprintf(__('Manage %s', $this->plugin_text_domain), $cache_key); ?>"><?php $downloaded ? _e('Configure', $this->plugin_text_domain) : _e('Remove', $this->plugin_text_domain); ?></a><?php endif; ?>
 								</li>
 							<?php endforeach; ?>
 							<?php if (OMGF_CACHE_IS_STALE) : ?>

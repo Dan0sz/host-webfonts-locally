@@ -131,7 +131,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_CACHE_DIR = 'omgf_cache_dir';
 	const OMGF_ADV_SETTING_UNINSTALL = 'omgf_uninstall';
 
 	/**
@@ -389,7 +388,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			return;
 		}
 	?>
-		<form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="<?= admin_url('options.php?tab=' . $this->active_tab); ?>" autocomplete="off">
+		<form id="<?= $field; ?>-form" name="omgf-settings-form" method="post" action="<?= apply_filters('omgf_form_action', admin_url('options.php?tab=' . $this->active_tab), $this->page, $this->active_tab); ?>" autocomplete="off">
 			<?php
 			settings_fields($field);
 			do_settings_sections($field);

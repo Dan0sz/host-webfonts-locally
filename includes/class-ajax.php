@@ -128,8 +128,8 @@ class OMGF_AJAX
 		}
 
 		$section       = str_replace('*', '', $_POST['section']);
-		$set_path      = rtrim(OMGF_CACHE_PATH . $section, '/');
-		$resolved_path = realpath(OMGF_CACHE_PATH . $section);
+		$set_path      = rtrim(OMGF_UPLOAD_DIR . $section, '/');
+		$resolved_path = realpath(OMGF_UPLOAD_DIR . $section);
 
 		if ($resolved_path != $set_path) {
 			wp_die(__('Attempted path traversal detected. Sorry, no script kiddies allowed!', $this->plugin_text_domain));
@@ -137,7 +137,7 @@ class OMGF_AJAX
 
 		try {
 			$section = $_POST['section'];
-			$entries = array_filter((array) glob(OMGF_CACHE_PATH . $section));
+			$entries = array_filter((array) glob(OMGF_UPLOAD_DIR . $section));
 
 			$this->empty_cache($section, $entries);
 
@@ -154,7 +154,7 @@ class OMGF_AJAX
 
 	private function empty_cache($section)
 	{
-		$entries      = array_filter((array) glob(OMGF_CACHE_PATH . $section));
+		$entries      = array_filter((array) glob(OMGF_UPLOAD_DIR . $section));
 		$instructions = apply_filters(
 			'omgf_clean_up_instructions',
 			[

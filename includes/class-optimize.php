@@ -80,7 +80,7 @@ class OMGF_Optimize
         $this->handle          = sanitize_title_with_dashes($handle);
         $this->original_handle = sanitize_title_with_dashes($original_handle);
         $this->subset          = $subset;
-        $this->path            = OMGF_CACHE_PATH . '/' . $this->handle;
+        $this->path            = OMGF_UPLOAD_DIR . '/' . $this->handle;
         $this->return          = $return;
     }
 

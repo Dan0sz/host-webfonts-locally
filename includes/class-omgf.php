@@ -36,8 +36,8 @@ class OMGF
 		}
 
 		add_action('admin_init', [$this, 'do_optimize']);
-		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'base64_decode_optimized_fonts']);
 		add_filter('content_url', [$this, 'force_ssl'], 1000, 2);
+		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'base64_decode_optimized_fonts']);
 
 		/**
 		 * Render plugin update messages.
@@ -59,9 +59,9 @@ class OMGF
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
 		define('OMGF_CACHE_KEYS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '')));
 		define('OMGF_OPTIMIZE_EDIT_ROLES', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES, 'on')));
-		define('OMGF_CACHE_DIR', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_DIR)) ?: '/uploads/omgf');
 		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
-		define('OMGF_CACHE_PATH', WP_CONTENT_DIR . OMGF_CACHE_DIR);
+		define('OMGF_UPLOAD_DIR', wp_upload_dir()['basedir'] . '/omgf');
+		define('OMGF_UPLOAD_URL', wp_upload_dir()['baseurl'] . '/omgf');
 	}
 
 	/**
@@ -133,7 +133,7 @@ class OMGF
 		/**
 		 * Only rewrite URLs requested by this plugin. We don't want to interfere with other plugins.
 		 */
-		if (strpos($url, OMGF_CACHE_DIR) === false) {
+		if (strpos($url, OMGF_UPLOAD_URL) === false) {
 			return $url;
 		}
 

@@ -35,12 +35,7 @@ class OMGF_Admin
 		/**
 		 * Filterable list of options that marks the cache as stale.
 		 */
-		$this->stale_cache_options = apply_filters(
-			'omgf_admin_stale_cache_options',
-			[
-				OMGF_Admin_Settings::OMGF_ADV_SETTING_CACHE_DIR,
-			]
-		);
+		$this->stale_cache_options = apply_filters('omgf_admin_stale_cache_options', []);
 
 		add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
 		add_action('admin_notices', [$this, 'print_notices']);
@@ -53,7 +48,6 @@ class OMGF_Admin
 
 		add_filter('alloptions', [$this, 'force_optimized_fonts_from_db']);
 		add_filter('pre_update_option_omgf_cache_keys', [$this, 'clean_up_cache'], 10, 3);
-		add_action('pre_update_option_omgf_cache_dir', [$this, 'validate_cache_dir'], 10, 2);
 		add_filter('pre_update_option', [$this, 'settings_changed'], 10, 3);
 	}
 
@@ -176,7 +170,7 @@ class OMGF_Admin
 		$cache_keys = explode(',', $old_value);
 
 		foreach ($cache_keys as $key) {
-			$entries = array_filter((array) glob(OMGF_CACHE_PATH . "/*$key"));
+			$entries = array_filter((array) glob(OMGF_UPLOAD_DIR . "/*$key"));
 
 			foreach ($entries as $entry) {
 				OMGF::delete($entry);
@@ -184,42 +178,6 @@ class OMGF_Admin
 		}
 
 		return $value;
-	}
-
-	/**
-	 * Perform a few checks before saving the Cache Directory value to the database.
-	 * 
-	 * @param mixed $new_dir 
-	 * @param mixed $old_dir 
-	 * @return mixed 
-	 */
-	public function validate_cache_dir($new_dir, $old_dir)
-	{
-		$allowed_path = WP_CONTENT_DIR . $new_dir;
-		$mkdir        = true;
-
-		if (!file_exists($allowed_path)) {
-			/**
-			 * wp_mkdir_p() already does some simple checks for path traversal, but we check it again using realpath() later on anyway.
-			 */
-			$mkdir = wp_mkdir_p($allowed_path);
-		}
-
-		if (!$mkdir) {
-			OMGF_Admin_Notice::set_notice(sprintf(__('Something went wrong while trying to create OMGF\'s Cache Directory: %s. Setting wasn\'t updated.', $this->plugin_text_domain), $new_dir), 'omgf-create-cache-dir-failed', 'error');
-
-			return $old_dir;
-		}
-
-		$real_path = realpath($allowed_path);
-
-		if ($real_path != rtrim($allowed_path, '/')) {
-			OMGF_Admin_Notice::set_notice(__('OMGF\'s Cache Directory wasn\'t changed. Attempted path traversal.', $this->plugin_text_domain), 'omgf-attempted-path-traversal', 'error');
-
-			return $old_dir;
-		}
-
-		return $new_dir;
 	}
 
 	/**
