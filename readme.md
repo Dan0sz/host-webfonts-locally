@@ -30,6 +30,7 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
 - **Reduce the filesize** of your fonts and stylesheets, by using the *Force subset* and *Include File Types* feature (OMGF Pro required),
 
 ### Additional Features in OMGF Pro
+- **Multisite** support,
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
   - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
   - `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,

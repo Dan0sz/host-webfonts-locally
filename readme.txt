@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.9
-Stable tag: 5.0.5
+Stable tag: 5.0.6
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -38,6 +38,7 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
 - **Reduce the file size** of your fonts and stylesheets, by using the *Force subset* and *Include File Types* feature (OMGF Pro required),
 
 = Additional Features in OMGF Pro =
+- **Multisite** support,
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
   - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
   - `@font-face` and `@import` statements inside **local stylesheets** loaded by your theme and/or plugins,
@@ -74,6 +75,11 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.0.6 =
+* Added: Cache Directory is now automatically set to the value used by WordPress (wp_upload_dir()). Cache Directory option has been removed to improve UX.
+  - Added: omgf_upload_dir and omgf_upload_url filters for DEVs who want to modify the default Cache Directory value.
+* Reworded description of Optimize for logged-in Administrators/Editors option.
 
 = 5.0.5 =
 * Added: Compatibility with Mesmerize Pro theme; this theme loads Google Fonts asynchronously, which causes CLS.
