@@ -131,6 +131,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Advanced Settings
 	 */
+	const OMGF_ADV_SETTING_TEST_MODE = 'omgf_test_mode';
 	const OMGF_ADV_SETTING_UNINSTALL = 'omgf_uninstall';
 
 	/**

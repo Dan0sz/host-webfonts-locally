@@ -33,9 +33,10 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_advanced_settings_content', [$this, 'do_before'], 20);
 
 		// Settings
-		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 70);
-		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_fonts_source_url'], 80);
-		add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 110);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 50);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_fonts_source_url'], 60);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_test_mode'], 70);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 100);
 
 		// Close
 		add_filter('omgf_advanced_settings_content', [$this, 'do_after'], 200);
@@ -90,7 +91,20 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	}
 
 	/**
-	 *
+	 * Test Mode
+	 */
+	public function do_test_mode()
+	{
+		$this->do_checkbox(
+			__('Test Mode', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_ADV_SETTING_TEST_MODE,
+			OMGF_TEST_MODE,
+			__('With this setting enabled, OMGF\'s optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend.', $this->plugin_text_domain)
+		);
+	}
+
+	/**
+	 * Remove Settings/Files at Uninstall.
 	 */
 	public function do_uninstall()
 	{

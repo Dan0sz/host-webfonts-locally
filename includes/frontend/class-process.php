@@ -61,9 +61,16 @@ class OMGF_Frontend_Process
 	private function init()
 	{
 		/**
-		 * Halt if this parameter is set.
+		 * Halt execution if:
+		 * * `nomgf` GET-parameter is set.
+		 * * Test Mode is enabled and current user is not an admin.
+		 * * Test Mode is enabled and `omgf` GET-parameter is not set.
 		 */
-		if (isset($_GET['nomgf'])) {
+		if (
+			isset($_GET['nomgf'])
+			|| ((OMGF_TEST_MODE == 'on' && !current_user_can('manage_options'))
+				&& (OMGF_TEST_MODE == 'on' && !current_user_can('manage_options') && !isset($_GET['omgf'])))
+		) {
 			return;
 		}
 
