@@ -50,7 +50,6 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
   - To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide, etc.), or
   - Set a relative path to easily migrate from development/staging areas to production/live, or
   - Anything you like!
-- Proper handling for AMP pages (Fallback to or remove Google Fonts).
 
 *[Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/) | [Documentation](https://docs.ffw.press/category/4-omgf-pro/) | [Tested Plugins & Themes](https://docs.ffw.press/article/40-list-of-compatible-themes-and-plugins-omgf-pro)*
 
