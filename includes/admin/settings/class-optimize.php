@@ -53,7 +53,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'close_optimize_fonts_container'], 300);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 350);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_edit_roles'], 375);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_test_mode'], 375);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 400);
 	}
 
@@ -379,15 +379,15 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		}
 
 		/**
-		 *
+		 * Test Mode
 		 */
-		public function do_optimize_edit_roles()
+		public function do_test_mode()
 		{
 			$this->do_checkbox(
-				__('Optimize Fonts For Editors/Administrators?', $this->plugin_text_domain),
-				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES,
-				OMGF_OPTIMIZE_EDIT_ROLES,
-				__('OMGF automatically disables on customizer and page builder previews, etc. Disable this if you want to permanently disable OMGF when you\'re logged in. E.g. when testing/debugging.', $this->plugin_text_domain)
+				__('Test Mode', $this->plugin_text_domain),
+				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE,
+				OMGF_TEST_MODE,
+				__('With this setting enabled, OMGF\'s optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend.', $this->plugin_text_domain)
 			);
 		}
 	}

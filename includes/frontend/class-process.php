@@ -151,13 +151,6 @@ class OMGF_Frontend_Process
 		}
 
 		/**
-		 * Should we optimize for logged in Administrators/Editors?
-		 */
-		if (!OMGF_OPTIMIZE_EDIT_ROLES && current_user_can('edit_pages')) {
-			return false;
-		}
-
-		/**
 		 * Make sure Page Builder previews don't get optimized content.
 		 */
 		foreach ($this->page_builders as $page_builder) {

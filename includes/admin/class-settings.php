@@ -120,18 +120,17 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Optimize Fonts
 	 */
-	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION      = 'omgf_display_option';
-	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS     = 'omgf_optimized_fonts';
-	const OMGF_OPTIMIZE_SETTING_OPTIMIZE_EDIT_ROLES = 'omgf_optimize_edit_roles';
-	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS       = 'omgf_preload_fonts';
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS        = 'omgf_unload_fonts';
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS  = 'omgf_unload_stylesheets';
-	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS          = 'omgf_cache_keys';
+	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'omgf_display_option';
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'omgf_optimized_fonts';
+	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      = 'omgf_preload_fonts';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS       = 'omgf_unload_fonts';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'omgf_unload_stylesheets';
+	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS         = 'omgf_cache_keys';
+	const OMGF_OPTIMIZE_SETTING_TEST_MODE          = 'omgf_test_mode';
 
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_TEST_MODE = 'omgf_test_mode';
 	const OMGF_ADV_SETTING_UNINSTALL = 'omgf_uninstall';
 
 	/**
