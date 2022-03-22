@@ -68,8 +68,8 @@ class OMGF_Frontend_Process
 		 */
 		if (
 			isset($_GET['nomgf'])
-			|| ((OMGF_TEST_MODE == 'on' && !current_user_can('manage_options'))
-				&& (OMGF_TEST_MODE == 'on' && !current_user_can('manage_options') && !isset($_GET['omgf'])))
+			|| ((OMGF_TEST_MODE == 'on' && !current_user_can('manage_options') && !isset($_GET['omgf_optimize']))
+				&& (OMGF_TEST_MODE == 'on' && !current_user_can('manage_options') && !isset($_GET['omgf_optimize']) && !isset($_GET['omgf'])))
 		) {
 			return;
 		}
