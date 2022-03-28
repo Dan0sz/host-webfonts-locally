@@ -413,7 +413,7 @@ class OMGF_Frontend_Process
 			 * attribute to prevent it from loading.
 			 */
 			if (OMGF::unloaded_stylesheets() && in_array($handle, OMGF::unloaded_stylesheets())) {
-				$search[$key] = $stack['href'];
+				$search[$key]  = $stack['href'];
 				$replace[$key] = '';
 
 				continue;
