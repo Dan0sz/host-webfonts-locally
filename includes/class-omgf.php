@@ -61,7 +61,7 @@ class OMGF
 		define('OMGF_TEST_MODE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE)));
 		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
 		define('OMGF_UPLOAD_DIR', apply_filters('omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf'));
-		define('OMGF_UPLOAD_URL', apply_filters('omgf_upload_url', WP_CONTENT_URL . '/uploads/omgf'));
+		define('OMGF_UPLOAD_URL', apply_filters('omgf_upload_url', content_url('/uploads/omgf')));
 	}
 
 	/**
