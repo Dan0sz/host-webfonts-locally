@@ -319,8 +319,6 @@ class OMGF_Frontend_Process
 	{
 		$google_fonts = [];
 
-		OMGF::debug(sprintf(__('Building fonts set for handle %s, using $s', 'host-webfonts-local'), $handle, print_r($links, true)));
-
 		foreach ($links as $key => $link) {
 			preg_match('/id=[\'"](?P<id>.*?)[\'"]/', $link, $id);
 
@@ -335,8 +333,6 @@ class OMGF_Frontend_Process
 			$google_fonts[$key]['id']   = $id;
 			$google_fonts[$key]['href'] = $href['href'];
 		}
-
-		OMGF::debug(sprintf(__('Built set: %s', 'host-webfonts-local'), print_r($google_fonts, true)));
 
 		return $google_fonts;
 	}
