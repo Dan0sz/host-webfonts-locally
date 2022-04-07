@@ -306,7 +306,7 @@ jQuery(document).ready(function ($) {
             });
         },
 
-        show_loader_before_submit: function (e) {
+        show_loader_before_submit: function () {
             omgf_admin.show_loader();
         },
 
