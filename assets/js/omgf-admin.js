@@ -20,7 +20,7 @@ jQuery(document).ready(function ($) {
         empty_cache_directory_xhr: false,
         optimize_xhr: false,
         cache_prefix: '-mod-',
-        cache_section: $('.omgf-empty').data('cache-section'),
+        flush_action_init: $('.omgf-empty').data('init'),
         nonce: $('.omgf-empty').data('nonce'),
 
         /**
@@ -295,7 +295,7 @@ jQuery(document).ready(function ($) {
                 data: {
                     action: 'omgf_empty_dir',
                     nonce: omgf_admin.nonce,
-                    section: omgf_admin.cache_section
+                    init: omgf_admin.flush_action_init
                 },
                 beforeSend: function () {
                     omgf_admin.show_loader();

@@ -100,7 +100,7 @@ class OMGF_AJAX
 
 		add_filter('omgf_clean_up_instructions', function () {
 			return [
-				'section' => '/',
+				'init'    => OMGF_Admin_Settings::OMGF_ADMIN_PAGE,
 				'exclude' => [],
 				'queue'   => [
 					OMGF_Admin_Settings::OMGF_CACHE_IS_STALE
@@ -108,7 +108,7 @@ class OMGF_AJAX
 			];
 		});
 
-		$this->empty_cache('/');
+		$this->empty_cache();
 
 		delete_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE);
 	}
@@ -127,19 +127,10 @@ class OMGF_AJAX
 			wp_die(__("Hmmm, you're not supposed to be here.", $this->plugin_text_domain));
 		}
 
-		$section       = str_replace('*', '', $_POST['section']);
-		$set_path      = rtrim(OMGF_UPLOAD_DIR . $section, '/');
-		$resolved_path = realpath(OMGF_UPLOAD_DIR . $section);
-
-		if ($resolved_path != $set_path) {
-			wp_die(__('Attempted path traversal detected. Sorry, no script kiddies allowed!', $this->plugin_text_domain));
-		}
-
 		try {
-			$section = $_POST['section'];
-			$entries = array_filter((array) glob(OMGF_UPLOAD_DIR . $section));
+			$init = $_POST['init'] ?? '';
 
-			$this->empty_cache($section, $entries);
+			$this->empty_cache($init);
 
 			OMGF_Admin_Notice::set_notice(__('Cache directory successfully emptied.', $this->plugin_text_domain));
 		} catch (\Exception $e) {
@@ -152,13 +143,13 @@ class OMGF_AJAX
 		}
 	}
 
-	private function empty_cache($section)
+	private function empty_cache($initiator = 'optimize-webfonts')
 	{
-		$entries      = array_filter((array) glob(OMGF_UPLOAD_DIR . $section));
+		$entries      = array_filter((array) glob(OMGF_UPLOAD_DIR . '/*'));
 		$instructions = apply_filters(
 			'omgf_clean_up_instructions',
 			[
-				'section' => $section,
+				'init'    => $initiator,
 				'exclude' => [],
 				'queue'   => [
 					OMGF_Admin_Settings::OMGF_CACHE_IS_STALE,
