@@ -399,8 +399,6 @@ class OMGF_Frontend_Process
 		$search  = [];
 		$replace = [];
 
-		OMGF::debug(__('Building Search/Replace set...', 'host-webfonts-local'));
-
 		foreach ($google_fonts as $key => $stack) {
 			$handle = $stack['id'];
 
