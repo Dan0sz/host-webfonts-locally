@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 5.9
-Stable tag: 5.1.1
+Stable tag: 5.1.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,10 @@ For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.1.2 =
+* Fixed: Minor performance improvement - content_url() is no longer used to generate download file URLs.
+* Rewrote Modify Source URL option's description.
 
 = 5.1.1 =
 * Fixed: using `print_r()` in an output buffer caused 500 errors.
