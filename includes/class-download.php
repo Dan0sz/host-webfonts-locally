@@ -49,7 +49,7 @@ class OMGF_Download
 	}
 
 	/**
-	 * Download $url to $path and return content_url() to $filename.
+	 * Download $url to $path and return OMGF_UPLOAD_URL to $filename.
 	 * 
 	 * @return string 
 	 * 
@@ -65,10 +65,10 @@ class OMGF_Download
 		wp_mkdir_p($this->path);
 
 		$file     = $this->path . '/' . $this->filename . '.' . $this->extension;
-		$file_uri = str_replace(WP_CONTENT_DIR, '', $file);
+		$file_url = OMGF_UPLOAD_URL . str_replace(OMGF_UPLOAD_DIR, '', $this->path) . '/' . $this->filename . '.' . $this->extension;
 
 		if (file_exists($file)) {
-			return urlencode(content_url($file_uri));
+			return $file_url;
 		}
 
 		if (strpos($this->url, '//') === 0) {
@@ -88,6 +88,6 @@ class OMGF_Download
 		copy($tmp, $file);
 		@unlink($tmp);
 
-		return urlencode(content_url($file_uri));
+		return $file_url;
 	}
 }

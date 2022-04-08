@@ -220,7 +220,7 @@ class OMGF_Optimize
                 return $current_stylesheet;
                 break;
             default: // 'url'
-                return str_replace(OMGF_UPLOAD_DIR, content_url('uploads/omgf'), $local_file);
+                return str_replace(OMGF_UPLOAD_DIR, OMGF_UPLOAD_URL, $local_file);
         }
     }
 

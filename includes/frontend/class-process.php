@@ -123,7 +123,7 @@ class OMGF_Frontend_Process
 					/**
 					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
 					 */
-					if (!file_exists(str_replace(content_url(), WP_CONTENT_DIR, $url))) {
+					if (!file_exists(str_replace(OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, $url))) {
 						continue;
 					}
 
