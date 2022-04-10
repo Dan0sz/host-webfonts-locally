@@ -186,6 +186,8 @@ class OMGF_Frontend_Process
 	 * Returns the buffer for filtering, so page cache doesn't break.
 	 * 
 	 * @since v5.0.0 Tested with:
+	 *               - Asset Cleanup Pro
+	 * 				   - Works
 	 *               - Cache Enabler v1.8.7
 	 *                 - Default Settings
 	 *               - Kinsta Cache (Same as Cache Enabler?)
@@ -206,7 +208,6 @@ class OMGF_Frontend_Process
 	 *                 - Page Cache: Enabled
 	 * 
 	 * @todo         Not tested (yet):
-	 *               - Asset Cleanup Pro
 	 *               - Swift Performance
 	 *  
 	 * @return void 
@@ -330,7 +331,19 @@ class OMGF_Frontend_Process
 				continue;
 			}
 
-			$google_fonts[$key]['id']   = $id;
+			/**
+			 * Compatibility fix for Divi Builder
+			 * 
+			 * @since v5.1.3 Because Divi Builder uses the same handle for Google Fonts on each page,
+			 * 			   	 even when these contain Google Fonts, let's append a (kind of) unique
+			 * 				 identifier to the string, to make sure we can make a difference between 
+			 * 				 different Google Fonts configurations.
+			 */
+			if (strpos($id, 'et-builder-googlefonts') !== false) {
+				$google_fonts[$key]['id'] = $id . '-' . strlen($href['href']);
+			} else {
+				$google_fonts[$key]['id'] = $id;
+			}
 			$google_fonts[$key]['href'] = $href['href'];
 		}
 
@@ -462,7 +475,7 @@ class OMGF_Frontend_Process
 	 * @param string $updated_handle e.g. example-handle-xvfdo
 	 * @param string $handle         e.g. example-handle
 	 *
-	 * @return string
+	 * @return array [ 'family' => string, 'display' => string, 'handle' => string, 'original_handle' => string ]
 	 */
 	public function build_query($url, $updated_handle, $handle)
 	{
