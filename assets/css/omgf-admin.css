@@ -188,6 +188,9 @@
   margin-left: -125px;
   border-radius: 3px;
 }
+.tooltip .tooltip-text a {
+  color: white;
+}
 .tooltip .tooltip-text .illustration {
   margin-top: 10px;
 }
