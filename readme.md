@@ -43,7 +43,7 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
   - Set a relative path to easily migrate from development/staging areas to production/live, or
   - Anything you like!
 
-*[Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/) | [Documentation](https://docs.ffw.press/category/4-omgf-pro/) | [Tested Plugins & Themes](https://docs.ffw.press/article/40-list-of-compatible-themes-and-plugins-omgf-pro)*
+*[Purchase OMGF Pro](https://ffw.press/wordpress/omgf-pro/) | [Documentation](https://ffw.press/docs/omgf-pro/) | [Tested Plugins & Themes](https://ffw.press/docs/omgf-pro/tested-themes-plugins/)*
 
 ## Installation
 
@@ -61,7 +61,7 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
 
 ## Frequently Asked Questions
 
-For the FAQ, [click here](https://docs.ffw.press/category/76-omgf-pro---faq).
+For the FAQ, [click here](https://ffw.press/docs/omgf-pro-faq).
 
 ## Support
 
