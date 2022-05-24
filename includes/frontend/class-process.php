@@ -547,9 +547,9 @@ class OMGF_Frontend_Process
 			}
 
 			/**
-			 * @var array|string $weights [ '300', '400', '500', etc. ] | ''
+			 * @var string $weights [ '300', '400', '500', etc. ] || ''
 			 */
-			$weights = strpos($weights, ';') !== false ? explode(';', substr($weights, strpos($weights, '@') + 1)) : '';
+			$weights = strpos($weights, ';') !== false ? explode(';', substr($weights, strpos($weights, '@') + 1)) : [substr($weights, strpos($weights, '@') + 1)];
 
 			if (!$weights) {
 				$fonts[] = $family;
@@ -557,6 +557,9 @@ class OMGF_Frontend_Process
 				continue;
 			}
 
+			/**
+			 * @var array $weights Multiple weights, e.g. [ '300', '400', '500', '0,600', '1,700' ] || Single weight, e.g. [ '500' ] or [ '1,600' ]
+			 */
 			foreach ($weights as &$weight) {
 				$properties = explode(',', $weight);
 				$weight     = $properties[0] == '1' && isset($properties[1]) ? $properties[1] . 'italic' : ($properties[0] != '0' ? $properties[0] : $properties[1]);
