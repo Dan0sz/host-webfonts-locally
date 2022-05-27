@@ -41,7 +41,7 @@ jQuery(document).ready(function ($) {
             $('#omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
             $('#omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
-            $('#omgf-optimize-settings-form').submit(this.show_loader_before_submit);
+            $('#omgf-optimize-settings-form').on('submit', this.show_loader_before_submit);
 
             // Ticker
             setInterval(this.loop_ticker_items, 4000);
