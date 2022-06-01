@@ -38,7 +38,7 @@ class OMGF_Optimize_Run
      */
     private function run()
     {
-        $front_html = $this->get_front_html(home_url());
+        $front_html = $this->get_front_html(get_home_url());
         $error      = false;
 
         if (is_wp_error($front_html) || wp_remote_retrieve_response_code($front_html) != 200) {
@@ -103,6 +103,11 @@ class OMGF_Optimize_Run
      */
     private function frontend_fetch_failed($response)
     {
+        if ($response instanceof WP_REST_Response && $response->is_error()) {
+            // Convert to WP_Error if WP_REST_Response
+            $response = $response->as_error();
+        }
+
         add_settings_error('general', 'omgf_frontend_fetch_failed', __('OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain) . ': ' . $this->get_error_code($response) . ' - ' . $this->get_error_message($response), 'error');
     }
 
@@ -113,11 +118,6 @@ class OMGF_Optimize_Run
      */
     private function get_error_code($response)
     {
-        if ($response instanceof WP_REST_Response && $response->is_error()) {
-            // Convert to WP_Error if WP_REST_Response
-            $response = $response->as_error();
-        }
-
         if (is_wp_error($response)) {
             return $response->get_error_code();
         }
@@ -132,11 +132,6 @@ class OMGF_Optimize_Run
      */
     private function get_error_message($response)
     {
-        if ($response instanceof WP_REST_Response && $response->is_error()) {
-            // Convert to WP_Error if WP_REST_Response
-            $response = $response->as_error();
-        }
-
         if (is_wp_error($response)) {
             return $response->get_error_message();
         }
