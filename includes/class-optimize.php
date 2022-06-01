@@ -148,7 +148,7 @@ class OMGF_Optimize
              * 
              * @since v5.1.4
              */
-            list($family, $requested_variants) = array_pad(explode(':', $fonts_request), 2, '');
+            list(, $requested_variants) = array_pad(explode(':', $fonts_request), 2, '');
 
             $requested_variants = $this->parse_requested_variants($requested_variants, $font);
 
@@ -158,11 +158,10 @@ class OMGF_Optimize
                 // Now we're sure we got 'em all. We can safely dequeue those we don't want.
                 if (isset($unloaded_fonts[$this->original_handle][$font_id])) {
                     $requested_variants = $this->dequeue_unloaded_variants($requested_variants, $unloaded_fonts[$this->original_handle], $font->id);
-                    $fonts_request      = $family . ':' . implode(',', $requested_variants);
                 }
             }
 
-            $font->variants = $this->process_unload_queue($font->id, $font->variants, $fonts_request, $this->original_handle);
+            $font->variants = $this->process_unload_queue($font->id, $font->variants, $requested_variants, $this->original_handle);
         }
 
         /**
@@ -250,18 +249,18 @@ class OMGF_Optimize
     {
         return array_filter(
             $variants,
-            function ($value) use ($unloaded_fonts, $font_id) {
-                if ($value == '400') {
+            function ($variant) use ($unloaded_fonts, $font_id) {
+                if ($variant == '400') {
                     // Sometimes the font is defined as 'regular', so we need to check both.
-                    return !in_array('regular', $unloaded_fonts[$font_id]) && !in_array($value, $unloaded_fonts[$font_id]);
+                    return !in_array('regular', $unloaded_fonts[$font_id]) && !in_array($variant, $unloaded_fonts[$font_id]);
                 }
 
-                if ($value == '400italic') {
+                if ($variant == '400italic') {
                     // Sometimes the font is defined as 'italic', so we need to check both.
-                    return !in_array('italic', $unloaded_fonts[$font_id]) && !in_array($value, $unloaded_fonts[$font_id]);
+                    return !in_array('italic', $unloaded_fonts[$font_id]) && !in_array($variant, $unloaded_fonts[$font_id]);
                 }
 
-                return !in_array($value, $unloaded_fonts[$font_id]);
+                return !in_array($variant, $unloaded_fonts[$font_id]);
             }
         );
     }
@@ -387,6 +386,9 @@ class OMGF_Optimize
      */
     private function parse_requested_variants($request, $font)
     {
+        /**
+         * Build an array and filter out empty elements.
+         */
         $requested_variants = array_filter(explode(',', $request));
 
         /**
@@ -403,48 +405,36 @@ class OMGF_Optimize
 
     /**
      * 
-     * @param mixed $font_id 
-     * @param mixed $available 
-     * @param mixed $wanted 
-     * @param mixed $stylesheet_handle 
+     * @param string $font_id 
+     * @param array  $all_variants      An array of all available font family variants.
+     * @param array  $wanted_variants   An array of requested variants in this font family request.
+     * @param string $stylesheet_handle 
      * @return mixed 
      */
-    private function process_unload_queue($font_id, $available, $wanted, $stylesheet_handle)
+    private function process_unload_queue($font_id, $all_variants, $wanted_variants, $stylesheet_handle)
     {
-        if (strpos($wanted, ':') !== false) {
-            // We don't need the first variable.
-            list(, $variants) = explode(':', $wanted);
-        } else {
-            $variants = '';
-        }
-
-        /**
-         * Build array and filter out empty elements.
-         */
-        $variants = array_filter(explode(',', $variants));
-
         /**
          * If $variants is empty and this is the first run, i.e. there are no unloaded fonts (yet)
          * return all available variants.
          */
-        if (empty($variants) && !isset(OMGF::unloaded_fonts()[$stylesheet_handle][$font_id])) {
-            return $available;
+        if (empty($wanted_variants) && !isset(OMGF::unloaded_fonts()[$stylesheet_handle][$font_id])) {
+            return $all_variants;
         }
 
         return array_filter(
-            $available,
-            function ($font) use ($variants) {
+            $all_variants,
+            function ($font) use ($wanted_variants) {
                 $id = $font->id;
 
                 if ($id == 'regular' || $id == '400') {
-                    return in_array('400', $variants) || in_array('regular', $variants);
+                    return in_array('400', $wanted_variants) || in_array('regular', $wanted_variants);
                 }
 
                 if ($id == 'italic') {
-                    return in_array('400italic', $variants) || in_array('italic', $variants);
+                    return in_array('400italic', $wanted_variants) || in_array('italic', $wanted_variants);
                 }
 
-                return in_array($id, $variants);
+                return in_array($id, $wanted_variants);
             }
         );
     }
