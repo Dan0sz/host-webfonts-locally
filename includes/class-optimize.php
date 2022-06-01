@@ -109,12 +109,28 @@ class OMGF_Optimize
             $query['subsets'] = $this->subset;
         }
 
-        foreach ($font_families as $font_family) {
+        foreach ($font_families as $key => $font_family) {
+            /**
+             * Prevent duplicate entries by generating a unique identifier, all lowercase,
+             * with (multiple) spaces replaced by dashes.
+             * 
+             * @since v5.1.4
+             */
+            $font_name = explode(':', $font_family)[0];
+            $font_id   = strtolower(preg_replace("/[\s\+]+/", '-', $font_name));
+
+            $font_families[$font_id] = $font_family;
+            unset($font_families[$key]);
+        }
+
+        foreach ($font_families as $font_id => $font_family) {
             if (empty($font_family)) {
                 continue;
             }
 
-            $fonts[] = $this->grab_font_family($font_family, $query);
+            if (!isset($fonts[$font_id])) {
+                $fonts[$font_id] = $this->grab_font_object($font_id, $query, $font_name);
+            }
         }
 
         // Filter out empty elements, i.e. failed requests.
@@ -124,15 +140,15 @@ class OMGF_Optimize
             return '';
         }
 
-        foreach ($fonts as &$font) {
-            $fonts_request = $this->build_fonts_request($font_families, $font);
+        foreach ($fonts as $id => &$font) {
+            $fonts_request = $font_families[$id];
 
-            if (strpos($fonts_request, ':') != false) {
-                list($family, $requested_variants) = explode(':', $fonts_request);
-            } else {
-                $family             = $fonts_request;
-                $requested_variants = '';
-            }
+            /**
+             * If no colon is found, @var string $requested_variants will be an empty string.
+             * 
+             * @since v5.1.4
+             */
+            list($family, $requested_variants) = array_pad(explode(':', $fonts_request), 2, '');
 
             $requested_variants = $this->parse_requested_variants($requested_variants, $font);
 
@@ -251,23 +267,14 @@ class OMGF_Optimize
     }
 
     /**
-     * @param $font_family
-     * @param $url
+     * @param $id    Unique identifier for this Font Family, lowercase, dashes instead of spaces.
      * @param $query
+     * @param $name  The full name of the requested Font Family, e.g. Roboto Condensed, Open Sans or Roboto.
      *
      * @return mixed|void
      */
-    private function grab_font_family($font_family, $query)
+    private function grab_font_object($id, $query, $name)
     {
-        list($family) = explode(':', $font_family);
-
-        /**
-         * Replace multiple spaces or plus signs (or a combination of, with a single dash)
-         * 
-         * @since v4.5.10
-         */
-        $family = strtolower(preg_replace("/[\s\+]+/", '-', $family));
-
         /**
          * Add fonts to the request's $_GET 'family' parameter. Then pass an array to 'omgf_alternate_fonts' 
          * filter. Then pass an alternate API url to the 'omgf_alternate_api_url' filter to fetch fonts from 
@@ -277,8 +284,8 @@ class OMGF_Optimize
         $alternate_url   = '';
         $query_string    = '';
 
-        if (in_array($family, array_keys($alternate_fonts))) {
-            $alternate_url = apply_filters('omgf_alternate_api_url', '', $family);
+        if (in_array($id, array_keys($alternate_fonts))) {
+            $alternate_url = apply_filters('omgf_alternate_api_url', '', $id);
             unset($query);
         }
 
@@ -289,15 +296,15 @@ class OMGF_Optimize
         /**
          * If a font changed names recently, map their old name to the new name, before triggering the API request.
          */
-        if (in_array($family, array_keys(self::OMGF_RENAMED_GOOGLE_FONTS))) {
-            $family = self::OMGF_RENAMED_GOOGLE_FONTS[$family];
+        if (in_array($id, array_keys(self::OMGF_RENAMED_GOOGLE_FONTS))) {
+            $id = self::OMGF_RENAMED_GOOGLE_FONTS[$id];
         }
 
         if (!$alternate_url) {
-            $response = $this->remote_get($family, $query_string);
+            $response = $this->remote_get($id, $query_string);
         } else {
             $response = wp_remote_get(
-                sprintf($alternate_url . '%s', $family) . $query_string
+                sprintf($alternate_url . '%s', $id) . $query_string
             );
         }
 
@@ -312,16 +319,15 @@ class OMGF_Optimize
             $response_body = wp_remote_retrieve_body($response);
             $body          = json_decode($response_body);
             $query_string  = '?subsets=' . (isset($body->subsets) ? implode(',', $body->subsets) : 'latin,latin-ext');
-            $response      = $this->remote_get($family, $query_string);
+            $response      = $this->remote_get($id, $query_string);
         }
 
         $response_code = wp_remote_retrieve_response_code($response);
 
         if ($response_code != 200) {
-            $font_family   = str_replace('-', ' ', $family);
             $error_body    = wp_remote_retrieve_body($response);
             $error_message = wp_remote_retrieve_response_message($response);
-            $message       = sprintf(__('OMGF couldn\'t find <strong>%s</strong> while parsing %s. The API returned the following error: %s.', $this->plugin_text_domain), ucwords($font_family), isset($_GET['omgf_optimize']) ? 'your homepage' : $_SERVER['REQUEST_URI'], is_wp_error($response) ? $response->get_error_message() : $error_message);
+            $message       = sprintf(__('OMGF couldn\'t find <strong>%s</strong> while parsing %s. The API returned the following error: %s.', $this->plugin_text_domain), $name, isset($_GET['omgf_optimize']) ? 'your homepage' : $_SERVER['REQUEST_URI'], is_wp_error($response) ? $response->get_error_message() : $error_message);
 
             OMGF_Admin_Notice::set_notice($message, 'omgf_api_error', 'error');
 
@@ -332,13 +338,13 @@ class OMGF_Optimize
             }
 
             if ($error_body == 'Not found') {
-                $message = sprintf(__('Please verify that %s is available for free at Google Fonts by doing <a href="%s" target="_blank">a manual search</a>. Maybe it\'s a Premium font?', $this->plugin_text_domain), ucwords($font_family), 'https://fonts.google.com/?query=' . str_replace('-', '+', $family));
+                $message = sprintf(__('Please verify that %s is available for free at Google Fonts by doing <a href="%s" target="_blank">a manual search</a>. Maybe it\'s a Premium font?', $this->plugin_text_domain), $name, 'https://fonts.google.com/?query=' . str_replace('-', '+', $id));
 
                 OMGF_Admin_Notice::set_notice($message, 'omgf_api_info_not_found', 'info');
             }
 
             if ($error_body == 'Internal Server Error') {
-                $message = sprintf(__('Try using the Force Subsets option (available in OMGF Pro) to force loading %s in a subset in which it\'s actually available. Use the Language filter <a href="%s" target="_blank">here</a> to verify which subsets are available for %s.', $this->plugin_text_domain), ucwords($font_family), 'https://fonts.google.com/?query=' . str_replace('-', '+', $family), ucwords($font_family));
+                $message = sprintf(__('Try using the Force Subsets option (available in OMGF Pro) to force loading %s in a subset in which it\'s actually available. Use the Language filter <a href="%s" target="_blank">here</a> to verify which subsets are available for %s.', $this->plugin_text_domain), $name, 'https://fonts.google.com/?query=' . str_replace('-', '+', $id), $name);
 
                 OMGF_Admin_Notice::set_notice($message, 'omgf_api_info_internal_server_error', 'info');
             }
@@ -371,28 +377,6 @@ class OMGF_Optimize
         }
 
         return $response;
-    }
-
-    /**
-     * @param $font_families
-     * @param $font
-     *
-     * @return mixed
-     */
-    private function build_fonts_request($font_families, $font)
-    {
-        $font_request = array_filter(
-            $font_families,
-            function ($value) use ($font) {
-                if (isset($font->early_access)) {
-                    return strpos($value, strtolower(str_replace(' ', '', $font->family))) !== false;
-                }
-
-                return strpos($value, $font->family) !== false;
-            }
-        );
-
-        return reset($font_request);
     }
 
     /**
