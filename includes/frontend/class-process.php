@@ -323,12 +323,29 @@ class OMGF_Frontend_Process
 		foreach ($links as $key => $link) {
 			preg_match('/id=[\'"](?P<id>.*?)[\'"]/', $link, $id);
 
-			$id = $this->strip_css_tag($id['id'] ?? "$handle-$key");
+			/**
+			 * @var string $id Fallback to empty string if no id attribute exists.
+			 */
+			$id = $this->strip_css_tag($id['id'] ?? '');
 
 			preg_match('/href=[\'"](?P<href>.*?)[\'"]/', $link, $href);
 
+			/**
+			 * No valid href attribute provide in link element.
+			 */
 			if (!isset($href['href'])) {
 				continue;
+			}
+
+			/**
+			 * If no valid id attribute was found then this means that this stylesheet wasn't enqueued
+			 * using proper WordPress conventions. We generate our own using the length of the href attribute
+			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
+			 * 
+			 * @since v5.1.4
+			 */
+			if (!$id) {
+				$id = "$handle-" . strlen($href['href']);
 			}
 
 			/**
@@ -341,9 +358,20 @@ class OMGF_Frontend_Process
 			 */
 			if (strpos($id, 'et-builder-googlefonts') !== false) {
 				$google_fonts[$key]['id'] = $id . '-' . strlen($href['href']);
+			} elseif ($id === 'google-fonts-1') {
+				/**
+				 * Compatibility fix for Elementor
+				 * 
+				 * @since v5.1.4 Because Elementor uses the same (annoyingly generic) handle for Google Fonts 
+				 * 				 stylesheets on each page, even when these contain different Google Fonts than 
+				 * 				 other pages, let's append a (kind of) unique identifier to the string, to make 
+				 * 			 	 sure we can make a difference between different Google Fonts configurations.
+				 */
+				$google_fonts[$key]['id'] = str_replace('-1', strlen($href['href']), $id);
 			} else {
 				$google_fonts[$key]['id'] = $id;
 			}
+
 			$google_fonts[$key]['href'] = $href['href'];
 		}
 
