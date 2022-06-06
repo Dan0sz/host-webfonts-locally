@@ -2,8 +2,8 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
-Tested up to: 5.9
-Stable tag: 5.1.3
+Tested up to: 6.0
+Stable tag: 5.1.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,16 @@ For the FAQ, [click here](https://ffw.press/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.1.4 | June 6th, 2022 =
+* Tested with WP 6.0
+* Fixed: Font-weights weren't properly detected when stylesheets were loaded using Variable Fonts (CSS2) API.
+* Fixed: jQuery.fn.submit() shorthand is deprecated.
+* Fixed: Improved compatibility with servers using Nginx reverse proxy.
+* Fixed: Filter duplicate font-family requests in same Google Fonts request, e.g. fonts.googleapis.com/css?family=Roboto|Roboto.
+* Added: Workaround for Elementor to identify unique Google Fonts stylesheets, because Elementor always uses the (annoyingly generic) 'google-fonts-1' handle as an identifier. :-/
+* Fixed: Generate a 'unique' identifier for each stylesheet without an identifier ('id' attribute)
+* Several minor performance improvements.
 
 = 5.1.3 =
 * Added: workaround for Divi builder to identify unique Google Fonts stylesheets.
