@@ -367,7 +367,7 @@ class OMGF_Frontend_Process
 				 * 				 other pages, let's append a (kind of) unique identifier to the string, to make 
 				 * 			 	 sure we can make a difference between different Google Fonts configurations.
 				 */
-				$google_fonts[$key]['id'] = str_replace('-1', strlen($href['href']), $id);
+				$google_fonts[$key]['id'] = str_replace('-1', '-' . strlen($href['href']), $id);
 			} else {
 				$google_fonts[$key]['id'] = $id;
 			}
