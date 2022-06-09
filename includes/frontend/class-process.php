@@ -232,7 +232,11 @@ class OMGF_Frontend_Process
 	 */
 	public function remove_resource_hints($html)
 	{
-		preg_match_all('/<link.*?(dns-prefetch|preconnect).*?>/', $html, $resource_hints);
+		/**
+		 * @since v5.1.5 Use a lookaround that also matches stylesheet elements, because otherwise
+		 * 				 matches grow past their supposed boundaries.
+		 */
+		preg_match_all('/(?=\<link).*?(stylesheet|preload|dns-prefetch).*?(?<=\>)/', $html, $resource_hints);
 
 		if (!isset($resource_hints[0]) || empty($resource_hints[0])) {
 			return $html;
@@ -241,6 +245,13 @@ class OMGF_Frontend_Process
 		$search = [];
 
 		foreach ($resource_hints[0] as $key => $match) {
+			/**
+			 * @since v5.1.5 Filter out any stylesheet elements.
+			 */
+			if (strpos($match, 'stylesheet') !== false) {
+				continue;
+			}
+
 			if (
 				strpos($match, 'fonts.googleapis.com') === false
 				&& strpos($match, 'fonts.gstatic.com') === false
