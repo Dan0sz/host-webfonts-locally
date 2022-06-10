@@ -17,7 +17,9 @@ defined('ABSPATH') || exit;
  * * * * * * * * * * * * * * * * * * * */
 class OMGF_Frontend_Process
 {
-	const RESOURCE_HINTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+	const RESOURCE_HINTS_URLS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+
+	const RESOURCE_HINTS_ATTR = ['dns-prefetch', 'preconnect', 'preload'];
 
 	/**
 	 * @var array $page_builders Array of keys set by page builders when they're displaying their previews.
@@ -233,10 +235,10 @@ class OMGF_Frontend_Process
 	public function remove_resource_hints($html)
 	{
 		/**
-		 * @since v5.1.5 Use a lookaround that also matches stylesheet elements, because otherwise
+		 * @since v5.1.5 Use a lookaround that matches all link elements, because otherwise
 		 * 				 matches grow past their supposed boundaries.
 		 */
-		preg_match_all('/(?=\<link).*?(stylesheet|preload|dns-prefetch).*?(?<=\>)/', $html, $resource_hints);
+		preg_match_all('/(?=\<link).+?(?<=>)/', $html, $resource_hints);
 
 		if (!isset($resource_hints[0]) || empty($resource_hints[0])) {
 			return $html;
@@ -246,17 +248,20 @@ class OMGF_Frontend_Process
 
 		foreach ($resource_hints[0] as $key => $match) {
 			/**
-			 * @since v5.1.5 Filter out any stylesheet elements.
+			 * @since v5.1.5 Filter out any elements with a href pointing to Google Fonts' APIs.
 			 */
-			if (strpos($match, 'stylesheet') !== false) {
-				continue;
+			foreach (self::RESOURCE_HINTS_URLS as $url) {
+				if (strpos($match, $url) === false) {
+					continue;
+				}
 			}
-
-			if (
-				strpos($match, 'fonts.googleapis.com') === false
-				&& strpos($match, 'fonts.gstatic.com') === false
-			) {
-				continue;
+			/**
+			 * @since v5.1.5 Filter out any preconnect|preload|dns-prefetch elements.
+			 */
+			foreach (self::RESOURCE_HINTS_ATTR as $attr) {
+				if (strpos($match, $attr) === false) {
+					continue;
+				}
 			}
 
 			$search[] = $match;
