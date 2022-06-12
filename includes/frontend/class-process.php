@@ -248,23 +248,19 @@ class OMGF_Frontend_Process
 
 		foreach ($resource_hints[0] as $key => $match) {
 			/**
-			 * @since v5.1.5 Filter out any elements with a href pointing to Google Fonts' APIs.
+			 * @since v5.1.5 Filter out any resource hints with a href pointing to Google Fonts' APIs.
+			 * 
+			 * @todo: I think I should be able to use an array_filter here or something?
 			 */
 			foreach (self::RESOURCE_HINTS_URLS as $url) {
-				if (strpos($match, $url) === false) {
-					continue;
+				if (strpos($match, $url) !== false) {
+					foreach (self::RESOURCE_HINTS_ATTR as $attr) {
+						if (strpos($match, $attr) !== false) {
+							$search[] = $match;
+						}
+					}
 				}
 			}
-			/**
-			 * @since v5.1.5 Filter out any preconnect|preload|dns-prefetch elements.
-			 */
-			foreach (self::RESOURCE_HINTS_ATTR as $attr) {
-				if (strpos($match, $attr) === false) {
-					continue;
-				}
-			}
-
-			$search[] = $match;
 		}
 
 		return str_replace($search, '', $html);
