@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.1.4
+Stable tag: 5.2.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,10 @@ For the FAQ, [click here](https://ffw.press/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.2.0 | June 14th, 2022 =
+* Added: toggle to disable Elementor/Divi compatibility fixes.
+* Fixed: when resource hints (e.g. preloads) were located in unusual places (e.g. Themify Builder places its preloads above the `<title>` element) this would cause other elements (e.g. stylesheets) to be removed as well.
 
 = 5.1.4 | June 6th, 2022 =
 * Tested with WP 6.0
