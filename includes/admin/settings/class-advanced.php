@@ -49,7 +49,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	{
 ?>
 		<p>
-			<?= __('If you require the downloaded/generated files to be saved in a different location or served from a different resource (e.g. a CDN) or path, use these settings to make OMGF work with your configuration.', $this->plugin_text_domain); ?>
+			<?= __('Use these settings to make OMGF work with your specific configuration.', $this->plugin_text_domain); ?>
 		</p>
 	<?php
 	}
@@ -92,13 +92,13 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 	/**
 	 * 
 	 */
-	public function do_compatibility_mode()
+	public function do_compatibility()
 	{
 		$this->do_checkbox(
 			__('Divi/Elementor Compatibility', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_COMPATIBILITY,
 			OMGF_COMPATIBILITY,
-			__('Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed accordingly. However, if you have too many different stylesheets and you want to force the usage of 1 stylesheet throughout all your pages, disabling Divi/Elementor Compatibility might help.', $this->plugin_text_domain)
+			__('Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. However, if you have too many different stylesheets and you want to force the usage of 1 stylesheet throughout all your pages, disabling Divi/Elementor Compatibility might help. Default: on', $this->plugin_text_domain)
 		);
 	}
 
