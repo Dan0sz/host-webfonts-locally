@@ -35,6 +35,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		// Settings
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 50);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_fonts_source_url'], 60);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_compatibility'], 70);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 100);
 
 		// Close
@@ -85,6 +86,19 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 				'https://your-cdn.com/wp-content/uploads/omgf'
 			) . ' ' . $this->promo,
 			true
+		);
+	}
+
+	/**
+	 * 
+	 */
+	public function do_compatibility_mode()
+	{
+		$this->do_checkbox(
+			__('Divi/Elementor Compatibility', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_ADV_SETTING_COMPATIBILITY,
+			OMGF_COMPATIBILITY,
+			__('Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed accordingly. However, if you have too many different stylesheets and you want to force the usage of 1 stylesheet throughout all your pages, disabling Divi/Elementor Compatibility might help.', $this->plugin_text_domain)
 		);
 	}
 

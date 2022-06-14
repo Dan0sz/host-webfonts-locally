@@ -367,10 +367,14 @@ class OMGF_Frontend_Process
 			 * 			   	 even when these contain Google Fonts, let's append a (kind of) unique
 			 * 				 identifier to the string, to make sure we can make a difference between 
 			 * 				 different Google Fonts configurations.
+			 * 
+			 * @since v5.2.0 Allow Divi/Elementor) compatibility fixes to be disabled, for those who have too 
+			 * 				 many different Google Fonts stylesheets configured throughout their pages and 
+			 * 				 blame OMGF for the fact that it detects all those different stylesheets. :-/
 			 */
-			if (strpos($id, 'et-builder-googlefonts') !== false) {
+			if (OMGF_COMPATIBILITY && strpos($id, 'et-builder-googlefonts') !== false) {
 				$google_fonts[$key]['id'] = $id . '-' . strlen($href['href']);
-			} elseif ($id === 'google-fonts-1') {
+			} elseif (OMGF_COMPATIBILITY && $id === 'google-fonts-1') {
 				/**
 				 * Compatibility fix for Elementor
 				 * 
