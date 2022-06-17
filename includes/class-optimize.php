@@ -33,6 +33,17 @@ class OMGF_Optimize
         'muli'         => 'mulish'
     ];
 
+    /**
+     * @since 5.2.1 Use this map to convert shorthands (r(egular), i(talic), b(old) and b(old)i(talic)) to
+     *              to human readable font style values.
+     */
+    const OMGF_FONT_STYLES_MAP = [
+        'r'  => '400',
+        'i'  => '400italic',
+        'b'  => '700',
+        'bi' => '700italic'
+    ];
+
     /** @var string $family */
     private $family = '';
 
@@ -390,6 +401,15 @@ class OMGF_Optimize
          * Build an array and filter out empty elements.
          */
         $requested_variants = array_filter(explode(',', $request));
+
+        /**
+         * @since v5.2.1 Run a quick to see if shorthands (e.g. r,i,b,bi) are used in this request. And if so,
+         *               convert them to human readable values (e.g. 400, 400italic)
+         */
+        $replacements       = self::OMGF_FONT_STYLES_MAP;
+        $requested_variants = array_map(function ($value) use ($replacements) {
+            return isset($replacements[$value]) ? $replacements[$value] : $value;
+        }, $requested_variants);
 
         /**
          * This means by default all fonts are requested, so we need to fill up the queue, before unloading the unwanted variants.
