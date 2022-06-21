@@ -193,7 +193,7 @@ class OMGF_Optimize
             $font->family = rawurlencode($font->family);
 
             foreach ($font->variants as &$variant) {
-                $filename = strtolower($font_id . '-' . $variant->fontStyle . '-' . $variant->fontWeight);
+                $filename = strtolower($font_id . '-' . $variant->fontStyle . '-' . (isset($variant->subset) ? $variant->subset . '-' : '') . $variant->fontWeight);
 
                 /**
                  * Encode font family, because it may contain spaces.
@@ -334,6 +334,13 @@ class OMGF_Optimize
 
         $response_code = wp_remote_retrieve_response_code($response);
 
+        /**
+         * Let's try and parse the stylesheet if it wasn't found on the API.
+         */
+        if ($response_code == 404) {
+            return $this->parse_stylesheet($this->family, $id, $name);
+        }
+
         if ($response_code != 200) {
             $error_body    = wp_remote_retrieve_body($response);
             $error_message = wp_remote_retrieve_response_message($response);
@@ -387,6 +394,99 @@ class OMGF_Optimize
         }
 
         return $response;
+    }
+
+    /**
+     * A workaround for font families which are not available on the Helper API, but are still
+     * served from the Google Fonts API (e.g. Open Sans Condensed)
+     * 
+     * @param string $request     The full request
+     * @param string $id          Unique identifier for this font family
+     * @param string $font_family The full name of font family not available on the Helper API.
+     * @return array An empty array (if request to Google Fonts API returns a 404) or a 
+     *               valid Font Object: { } 
+     */
+    public function parse_stylesheet($request, $id, $font_family)
+    {
+        $requested_families = explode('|', $request);
+
+        foreach ($requested_families as $requested_family) {
+            if (strpos($requested_family, $font_family)) {
+                break;
+            }
+        }
+
+        $url      = 'https://fonts.googleapis.com/css?family=' . urlencode($requested_family);
+        $response = wp_remote_get($url, [
+            // Retrieve WOFF2 files only.
+            'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0'
+        ]);
+
+        $code = wp_remote_retrieve_response_code($response);
+
+        if ($code !== 200) {
+            return [];
+        }
+
+        $stylesheet = wp_remote_retrieve_body($response);
+
+        return (object) [
+            'id'       => $id,
+            'family'   => $font_family,
+            'variants' => $this->parse_variants($stylesheet, $font_family),
+            'subsets'  => $this->parse_subsets($stylesheet, $font_family)
+        ];
+    }
+
+    /**
+     * Parse a stylesheet from Google Fonts' API into 
+     * 
+     * @param string $stylesheet 
+     * @param string $font_family 
+     * 
+     * @return array
+     */
+    private function parse_variants($stylesheet, $font_family)
+    {
+        preg_match_all('/\/\*\s.*?}/s', $stylesheet, $font_faces);
+
+        if (!isset($font_faces[0]) || empty($font_faces[0])) {
+            return [];
+        }
+
+        foreach ($font_faces[0] as $key => $font_face) {
+            preg_match('/font-style:\s(normal|italic);/', $font_face, $font_style);
+            preg_match('/font-weight:\s([0-9]+);/', $font_face, $font_weight);
+            preg_match('/src:\surl\((.*?woff2)\)/', $font_face, $font_src);
+            preg_match('/\/\*\s([a-z\-]+?)\s\*\//', $font_face, $subset);
+            preg_match('/unicode-range:\s(.*?);/', $font_face, $range);
+
+            $font_object[$key]             = new stdClass();
+            $font_object[$key]->id         = $font_weight[1] . ($font_style[1] == 'normal' ? '' : $font_style[1]);
+            $font_object[$key]->fontFamily = $font_family;
+            $font_object[$key]->fontStyle  = $font_style[1];
+            $font_object[$key]->fontWeight = $font_weight[1];
+            $font_object[$key]->woff2      = $font_src[1];
+            $font_object[$key]->subset     = $subset[1];
+            $font_object[$key]->range      = $range[1];
+        }
+
+        return $font_object;
+    }
+
+    /**
+     * Parse stylesheets for subsets, which in Google Fonts stylesheets are always
+     * included, commented above each @font-face statements, e.g. /* latin-ext */ /*
+     */
+    private function parse_subsets($stylesheet)
+    {
+        preg_match_all('/\/\*\s([a-z\-]+?)\s\*\//', $stylesheet, $subsets);
+
+        if (!isset($subsets[1]) || empty($subsets[1])) {
+            return [];
+        }
+
+        return array_unique($subsets[1]);
     }
 
     /**

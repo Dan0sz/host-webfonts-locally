@@ -107,6 +107,11 @@ class OMGF_StylesheetGenerator
 				}
 
 				$stylesheet .= $this->build_source_string($font_src_url);
+
+				if (isset($variant->range)) {
+					$stylesheet .= "    unicode-range: $variant->range;\n";
+				}
+
 				$stylesheet .= "}\n";
 			}
 		}

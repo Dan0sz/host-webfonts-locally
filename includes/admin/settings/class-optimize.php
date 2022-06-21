@@ -315,7 +315,20 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 										<input autocomplete="off" type="checkbox" class="replace" <?= $replace; ?> <?= $fallback ? '' : 'disabled'; ?> <?= apply_filters('omgf_pro_replace_font_setting_disabled', true) ? 'disabled' : ''; ?> name="omgf_pro_replace_font[<?= $handle; ?>][<?= $font->id; ?>]" />
 									</td>
 								</tr>
+								<?php $id = ''; ?>
 								<?php foreach ($font->variants as $variant) : ?>
+									<?php
+									/**
+									 * @since v5.3.0: Variable Fonts are pulled directly from the Google Fonts API,
+									 * 				  which creates @font-face statements for each separate subset.
+									 * 					
+									 * 				  This deals with the duplicate display of font styles. Which also
+									 * 				  means unloading and/or preloading will unload/preload all available
+									 * 				  subsets. It's a bit bloaty, but there's no alternative.
+									 */
+									if ($id == $variant->fontWeight . $variant->fontStyle) continue;
+									?>
+									<?php $id = $variant->fontWeight . $variant->fontStyle; ?>
 									<tr>
 										<td></td>
 										<?php
