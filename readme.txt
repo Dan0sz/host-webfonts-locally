@@ -1,4 +1,4 @@
-=== OMGF | Host Google Fonts Locally ===
+=== OMGF | GDPR Compliant, Faster Google Fonts. Easy. ===
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6

@@ -1,4 +1,4 @@
-# OMGF | Host Google Fonts Locally
+# OMGF | GDPR Compliant, Faster Google Fonts. Easy.
 
 OMGF automagically caches the Google Fonts used by your theme/plugins locally. No configuration (or brains) required!
 
