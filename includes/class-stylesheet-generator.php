@@ -75,38 +75,11 @@ class OMGF_StylesheetGenerator
 				$font_style  = $variant->fontStyle;
 				$font_weight = $variant->fontWeight;
 				$stylesheet .= "@font-face {\n";
-				$stylesheet .= "    font-family: $font_family;\n";
+				$stylesheet .= "    font-family: '$font_family';\n";
 				$stylesheet .= "    font-style: $font_style;\n";
 				$stylesheet .= "    font-weight: $font_weight;\n";
 				$stylesheet .= "    font-display: $font_display;\n";
-
-				/**
-				 * For IE compatibility, EOT is added before the local family name is defined.
-				 */
-				if (in_array('eot', $file_types)) {
-					$stylesheet .= "    src: url('" . urldecode($variant->eot) . "');\n";
-					$eot_key     = array_search('eot', $file_types);
-					unset($file_types[$eot_key]);
-				}
-
-				$local_src = '';
-
-				if (isset($variant->local) && is_array($variant->local)) {
-					foreach ($variant->local as $local) {
-						$local_src .= "local('$local'), ";
-					}
-				}
-
-				$stylesheet  .= "    src: $local_src\n";
-				$font_src_url = [];
-
-				foreach ($file_types as $file_type) {
-					if (isset($variant->$file_type)) {
-						$font_src_url = array_merge($font_src_url, [$file_type => urldecode($variant->$file_type)]);
-					}
-				}
-
-				$stylesheet .= $this->build_source_string($font_src_url);
+				$stylesheet  .= "   src: " . $this->build_source_string(['woff2' => $variant->woff2]) . "\n";
 
 				if (isset($variant->range)) {
 					$stylesheet .= "    unicode-range: $variant->range;\n";
