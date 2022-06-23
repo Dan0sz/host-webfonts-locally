@@ -249,13 +249,16 @@ class OMGF_Frontend_Process
 		foreach ($resource_hints[0] as $key => $match) {
 			/**
 			 * @since v5.1.5 Filter out any resource hints with a href pointing to Google Fonts' APIs.
+			 * @since v5.2.1 Use preg_match() to exactly match an element's attribute, since 3rd party
+			 * 				 plugins (e.g. Asset Cleanup) also tend to include their own custom attributes, 
+			 * 				 e.g. data-wpacu-to-be-preloaded
 			 * 
 			 * @todo: I think I should be able to use an array_filter here or something?
 			 */
 			foreach (self::RESOURCE_HINTS_URLS as $url) {
 				if (strpos($match, $url) !== false) {
 					foreach (self::RESOURCE_HINTS_ATTR as $attr) {
-						if (strpos($match, $attr) !== false) {
+						if (preg_match("/['\"]{$attr}['\"]/", $match) === 1) {
 							$search[] = $match;
 						}
 					}
