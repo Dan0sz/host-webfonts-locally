@@ -196,7 +196,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	{
 		$this->do_checkbox(
 			__('Convert to Variable Fonts (Pro)', $this->plugin_text_domain),
-			'omgf_pro_convert_variable_fonts_api',
+			'omgf_pro_convert_to_var',
 			defined('OMGF_PRO_CONVERT_TO_VAR') ? OMGF_PRO_CONVERT_TO_VAR : false,
 			sprintf(__('When this option is checked, OMGF Pro will attempt to convert all found Google Fonts to <a href="%s">Variable Fonts</a>. By combining multiple font weights/styles into a single file, it significantly reduces <em>HTTP requests</em>, <em>page size</em> and <em>cumulative layout shifting</em>. If it fails, it will still serve regular webfonts. This only works if the Google Fonts loaded by your website are actually <a href="%s">available as Variable Fonts</a>.'), 'https://fonts.google.com/knowledge/glossary/variable_fonts', 'https://fonts.google.com/?vfonly=true')
 		);
