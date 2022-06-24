@@ -44,7 +44,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 60);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_subsets'], 80);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -184,22 +183,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			'omgf_pro_force_font_display',
 			defined('OMGF_PRO_FORCE_FONT_DISPLAY') ? OMGF_PRO_FORCE_FONT_DISPLAY : false,
 			__('Force the above <code>font-display</code> attribute on all <code>@font-face</code> statements to ensure all text is user-visible while webfonts and icon sets are loading.', $this->plugin_text_domain),
-			true
-		);
-	}
-
-	/**
-	 *
-	 */
-	public function do_promo_force_subsets()
-	{
-		$this->do_select(
-			__('Force Subsets (Pro)', $this->plugin_text_domain),
-			'omgf_pro_force_subsets',
-			OMGF_Admin_Settings::OMGF_FORCE_SUBSETS_OPTIONS,
-			defined('OMGF_PRO_FORCE_SUBSETS') ? OMGF_PRO_FORCE_SUBSETS : [],
-			__('By default, Google Fonts are loaded in all subsets, which results in unnecessarily large stylesheets. Use this option to force all Google Fonts to be loaded in the selected subset(s). <em>Use CTRL + click to select multiple values</em>.', $this->plugin_text_domain) . ' ' . $this->promo,
-			true,
 			true
 		);
 	}
