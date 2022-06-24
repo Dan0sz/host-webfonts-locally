@@ -111,7 +111,10 @@ class OMGF_Optimize
             $this->url = 'https:' . $this->url;
         }
 
-        $fonts = $this->grab_fonts_object($this->url);
+        $fonts_bak = $this->grab_fonts_object($this->url);
+        $url       = $this->unload_variants($this->url);
+        $fonts     = $this->grab_fonts_object($url);
+
 
         if (empty($fonts)) {
             return '';
@@ -159,7 +162,7 @@ class OMGF_Optimize
 
         file_put_contents($local_file, $stylesheet);
 
-        $current_stylesheet = [$this->original_handle => $fonts];
+        $current_stylesheet = [$this->original_handle => $fonts_bak];
 
         /**
          * $current_stylesheet is added to temporary cache layer, if it isn't present in database.
@@ -200,7 +203,6 @@ class OMGF_Optimize
      */
     private function grab_fonts_object($url)
     {
-        $url      = $this->unload_variants($url);
         $response = wp_remote_get($url, [
             'user-agent' => self::USER_AGENT['woff2']
         ]);
@@ -232,6 +234,68 @@ class OMGF_Optimize
         }
 
         return $object;
+    }
+
+    /**
+     * Parse a stylesheet from Google Fonts' API into a valid Font Object.
+     * 
+     * @param string $stylesheet 
+     * @param string $font_family 
+     * 
+     * @return array
+     */
+    private function parse_variants($stylesheet, $font_family)
+    {
+        preg_match_all('/\/\*\s.*?}/s', $stylesheet, $font_faces);
+
+        if (!isset($font_faces[0]) || empty($font_faces[0])) {
+            return [];
+        }
+
+        foreach ($font_faces[0] as $key => $font_face) {
+            if (strpos($font_face, $font_family) === false) {
+                continue;
+            }
+
+            preg_match('/font-style:\s(normal|italic);/', $font_face, $font_style);
+            preg_match('/font-weight:\s([0-9]+);/', $font_face, $font_weight);
+            preg_match('/src:\surl\((.*?woff2)\)/', $font_face, $font_src);
+            preg_match('/\/\*\s([a-z\-]+?)\s\*\//', $font_face, $subset);
+            preg_match('/unicode-range:\s(.*?);/', $font_face, $range);
+
+            $font_object[$key]             = new stdClass();
+            $font_object[$key]->id         = $font_weight[1] . ($font_style[1] == 'normal' ? '' : $font_style[1]);
+            $font_object[$key]->fontFamily = $font_family;
+            $font_object[$key]->fontStyle  = $font_style[1];
+            $font_object[$key]->fontWeight = $font_weight[1];
+            $font_object[$key]->woff2      = $font_src[1];
+            $font_object[$key]->subset     = $subset[1];
+            $font_object[$key]->range      = $range[1];
+
+            /**
+             * @since v5.3.0 Is this a variable font i.e. one font file for multiple font weights/styles?
+             */
+            if (substr_count($stylesheet, $font_src[1]) > 1) {
+                $this->variable_fonts[strtolower(str_replace(' ', '-', $font_family))] = true;
+            }
+        }
+
+        return $font_object;
+    }
+
+    /**
+     * Parse stylesheets for subsets, which in Google Fonts stylesheets are always
+     * included, commented above each @font-face statements, e.g. /* latin-ext */ /*
+     */
+    private function parse_subsets($stylesheet)
+    {
+        preg_match_all('/\/\*\s([a-z\-]+?)\s\*\//', $stylesheet, $subsets);
+
+        if (!isset($subsets[1]) || empty($subsets[1])) {
+            return [];
+        }
+
+        return array_unique($subsets[1]);
     }
 
     /**
@@ -374,68 +438,6 @@ class OMGF_Optimize
         }
 
         return 'https://fonts.googleapis.com/css?family=' . implode('|', $font_families);
-    }
-
-    /**
-     * Parse a stylesheet from Google Fonts' API into a valid Font Object.
-     * 
-     * @param string $stylesheet 
-     * @param string $font_family 
-     * 
-     * @return array
-     */
-    private function parse_variants($stylesheet, $font_family)
-    {
-        preg_match_all('/\/\*\s.*?}/s', $stylesheet, $font_faces);
-
-        if (!isset($font_faces[0]) || empty($font_faces[0])) {
-            return [];
-        }
-
-        foreach ($font_faces[0] as $key => $font_face) {
-            if (strpos($font_face, $font_family) === false) {
-                continue;
-            }
-
-            preg_match('/font-style:\s(normal|italic);/', $font_face, $font_style);
-            preg_match('/font-weight:\s([0-9]+);/', $font_face, $font_weight);
-            preg_match('/src:\surl\((.*?woff2)\)/', $font_face, $font_src);
-            preg_match('/\/\*\s([a-z\-]+?)\s\*\//', $font_face, $subset);
-            preg_match('/unicode-range:\s(.*?);/', $font_face, $range);
-
-            $font_object[$key]             = new stdClass();
-            $font_object[$key]->id         = $font_weight[1] . ($font_style[1] == 'normal' ? '' : $font_style[1]);
-            $font_object[$key]->fontFamily = $font_family;
-            $font_object[$key]->fontStyle  = $font_style[1];
-            $font_object[$key]->fontWeight = $font_weight[1];
-            $font_object[$key]->woff2      = $font_src[1];
-            $font_object[$key]->subset     = $subset[1];
-            $font_object[$key]->range      = $range[1];
-
-            /**
-             * @since v5.3.0 Is this a variable font i.e. one font file for multiple font weights/styles?
-             */
-            if (substr_count($stylesheet, $font_src[1]) > 1) {
-                $this->variable_fonts[strtolower(str_replace(' ', '-', $font_family))] = true;
-            }
-        }
-
-        return $font_object;
-    }
-
-    /**
-     * Parse stylesheets for subsets, which in Google Fonts stylesheets are always
-     * included, commented above each @font-face statements, e.g. /* latin-ext */ /*
-     */
-    private function parse_subsets($stylesheet)
-    {
-        preg_match_all('/\/\*\s([a-z\-]+?)\s\*\//', $stylesheet, $subsets);
-
-        if (!isset($subsets[1]) || empty($subsets[1])) {
-            return [];
-        }
-
-        return array_unique($subsets[1]);
     }
 
     /**
