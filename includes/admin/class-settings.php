@@ -46,13 +46,6 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		'fallback' => 'Fallback',
 		'optional' => 'Optional'
 	];
-	const OMGF_FILE_TYPES_OPTIONS = [
-		'woff2' => 'Web Open Font Format 2.0 (WOFF2)',
-		'woff'  => 'Web Open Font Format (WOFF)',
-		'eot'   => 'Embedded OpenType (EOT)',
-		'ttf'   => 'TrueType Font (TTF)',
-		'svg'   => 'Scalable Vector Graphics (SVG)'
-	];
 	const OMGF_FORCE_SUBSETS_OPTIONS   = [
 		'arabic'              => 'Arabic',
 		'bengali'             => 'Bengali',
