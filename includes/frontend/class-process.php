@@ -492,15 +492,6 @@ class OMGF_Frontend_Process
 				continue;
 			}
 
-			$query = $this->build_query($stack['href'], $handle, $stack['id']);
-
-			/**
-			 * Required parameters.
-			 */
-			if (!isset($query['family']) || !isset($query['handle']) || !isset($query['original_handle'])) {
-				continue;
-			}
-
 			$optimize   = new OMGF_Optimize($stack['href'], $handle, $stack['id']);
 			$cached_url = $optimize->process();
 
@@ -513,109 +504,6 @@ class OMGF_Frontend_Process
 		}
 
 		return ['search' => $search, 'replace' => $replace];
-	}
-
-	/**
-	 * The generated request URL includes all required parameters for OMGF's Download API. 
-	 *
-	 * @param string $url            e.g. https://fonts.googleapis.com/css?family=Open+Sans:100,200,300|Roboto:100,200,300 etc.
-	 * @param string $updated_handle e.g. example-handle-xvfdo
-	 * @param string $handle         e.g. example-handle
-	 *
-	 * @return array [ 'family' => string, 'display' => string, 'handle' => string, 'original_handle' => string ]
-	 */
-	public function build_query($url, $updated_handle, $handle)
-	{
-		// Filter out HTML (&#038;, etc) and URL encoded characters, so we can properly parse it.
-		$url        = htmlspecialchars_decode(urldecode($url));
-		$parsed_url = parse_url($url);
-		$query      = $parsed_url['query'] ?? '';
-
-		if ($parsed_url['path'] == '/css2') {
-			// Request to fonts.googleapis.com/css2?etc.
-			$original_query = $this->parse_css2($query);
-		} elseif (strpos($parsed_url['path'], 'earlyaccess') !== false) {
-			// Request to https://fonts.googleapis.com/earlyaccess/etc. should be left for OMGF Pro to deal with.
-			$original_query = ['family' => ''];
-		} else {
-			/**
-			 * Request to fonts.googleapis.com/css?etc. (default)
-			 * 
-			 * Decode, just to be sure.
-			 */
-			parse_str($query, $original_query);
-		}
-
-		$params = array_merge(
-			$original_query,
-			[
-				'handle'          => $updated_handle,
-				'original_handle' => $handle,
-			]
-		);
-
-		return apply_filters('omgf_request_url', $params);
-	}
-
-	/**
-	 * Convert CSS2 query to regular CSS API query.
-	 * 
-	 * @param string $query 
-	 * 
-	 * @return array 
-	 */
-	private function parse_css2($query)
-	{
-		// array_filter() removes empty elements.
-		$families = array_filter(explode('&', $query));
-
-		foreach ($families as $param) {
-			if (strpos($param, 'family') === false) {
-				continue;
-			}
-
-			parse_str($param, $parts);
-
-			$font_families[] = $parts['family'];
-		}
-
-		if (empty($font_families)) {
-			return $query;
-		}
-
-		$weights = '';
-
-		foreach ($font_families as $font_family) {
-			if (strpos($font_family, ':') !== false) {
-				list($family, $weights) = explode(':', $font_family);
-			} else {
-				$family  = $font_family;
-				$weights = '';
-			}
-
-			/**
-			 * @var string $weights [ '300', '400', '500', etc. ] || ''
-			 */
-			$weights = strpos($weights, ';') !== false ? explode(';', substr($weights, strpos($weights, '@') + 1)) : [substr($weights, strpos($weights, '@') + 1)];
-
-			if (!$weights) {
-				$fonts[] = $family;
-
-				continue;
-			}
-
-			/**
-			 * @var array $weights Multiple weights, e.g. [ '300', '400', '500', '0,600', '1,700' ] || Single weight, e.g. [ '500' ] or [ '1,600' ]
-			 */
-			foreach ($weights as &$weight) {
-				$properties = explode(',', $weight);
-				$weight     = $properties[0] == '1' && isset($properties[1]) ? $properties[1] . 'italic' : ($properties[0] != '0' ? $properties[0] : $properties[1]);
-			}
-
-			$fonts[] = $family . ':' . implode(',', $weights);
-		}
-
-		return ['family' => implode('|', $fonts)];
 	}
 
 	/**
