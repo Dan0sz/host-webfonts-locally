@@ -44,6 +44,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_convert_to_variable_fonts'], 70);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -184,6 +185,20 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			defined('OMGF_PRO_FORCE_FONT_DISPLAY') ? OMGF_PRO_FORCE_FONT_DISPLAY : false,
 			__('Force the above <code>font-display</code> attribute on all <code>@font-face</code> statements to ensure all text is user-visible while webfonts and icon sets are loading.', $this->plugin_text_domain),
 			true
+		);
+	}
+
+	/**
+	 * 
+	 * @return void 
+	 */
+	public function do_promo_convert_to_variable_fonts()
+	{
+		$this->do_checkbox(
+			__('Convert to Variable Fonts (Pro)', $this->plugin_text_domain),
+			'omgf_pro_convert_variable_fonts_api',
+			defined('OMGF_PRO_CONVERT_TO_VAR') ? OMGF_PRO_CONVERT_TO_VAR : false,
+			sprintf(__('When this option is checked, OMGF Pro will attempt to convert all found Google Fonts to <a href="%s">Variable Fonts</a>. By combining multiple font weights/styles into a single file, it significantly reduces <em>HTTP requests</em>, <em>page size</em> and <em>cumulative layout shifting</em>. If it fails, it will still serve regular webfonts. This only works if the Google Fonts loaded by your website are actually <a href="%s">available as Variable Fonts</a>.'), 'https://fonts.google.com/knowledge/glossary/variable_fonts', 'https://fonts.google.com/?vfonly=true')
 		);
 	}
 
