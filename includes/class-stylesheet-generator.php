@@ -68,7 +68,7 @@ class OMGF_StylesheetGenerator
 				$stylesheet .= "    font-style: $font_style;\n";
 				$stylesheet .= "    font-weight: $font_weight;\n";
 				$stylesheet .= "    font-display: $font_display;\n";
-				$stylesheet  .= "   src: " . $this->build_source_string(['woff2' => $variant->woff2]) . "\n";
+				$stylesheet .= "    src: " . $this->build_source_string(['woff2' => $variant->woff2]);
 
 				if (isset($variant->range)) {
 					$stylesheet .= "    unicode-range: $variant->range;\n";
