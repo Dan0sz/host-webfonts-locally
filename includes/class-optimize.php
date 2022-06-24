@@ -79,7 +79,7 @@ class OMGF_Optimize
         string $original_handle,
         string $return = 'url'
     ) {
-        $this->url             = $url;
+        $this->url             = apply_filters('omgf_optimize_url', $url);
         $this->handle          = sanitize_title_with_dashes($handle);
         $this->original_handle = sanitize_title_with_dashes($original_handle);
         $this->path            = OMGF_UPLOAD_DIR . '/' . $this->handle;
