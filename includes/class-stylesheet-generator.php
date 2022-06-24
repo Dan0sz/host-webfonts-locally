@@ -21,9 +21,6 @@ class OMGF_StylesheetGenerator
 	/** @var $fonts */
 	private $fonts;
 
-	/** @var string $handle */
-	private $handle;
-
 	/** @var string $plugin */
 	private $plugin;
 
@@ -32,11 +29,9 @@ class OMGF_StylesheetGenerator
 	 */
 	public function __construct(
 		$fonts,
-		string $handle,
 		string $plugin
 	) {
 		$this->fonts  = $fonts;
-		$this->handle = $handle;
 		$this->plugin = $plugin;
 	}
 

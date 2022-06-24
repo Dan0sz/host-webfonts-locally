@@ -156,7 +156,7 @@ class OMGF_Optimize
         }
 
         $local_file = $this->path . '/' . $this->handle . '.css';
-        $stylesheet = OMGF::generate_stylesheet($fonts, $this->original_handle);
+        $stylesheet = OMGF::generate_stylesheet($fonts);
 
         if (!file_exists($this->path)) {
             wp_mkdir_p($this->path);

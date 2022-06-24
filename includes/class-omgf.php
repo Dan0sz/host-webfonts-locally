@@ -323,9 +323,9 @@ class OMGF
 	 * 
 	 * @return string 
 	 */
-	public static function generate_stylesheet($fonts, $handle = '', $plugin = 'OMGF')
+	public static function generate_stylesheet($fonts, $plugin = 'OMGF')
 	{
-		$generator = new OMGF_StylesheetGenerator($fonts, $handle, $plugin);
+		$generator = new OMGF_StylesheetGenerator($fonts, $plugin);
 
 		return $generator->generate();
 	}
