@@ -197,7 +197,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	public function do_promo_include_file_types()
 	{
 		$this->do_select(
-			__('Include File Types (Pro)', $this->plugin_text_domain),
+			__('Include File Types (Pro) (Deprecated)', $this->plugin_text_domain),
 			'omgf_pro_file_types',
 			OMGF_Admin_Settings::OMGF_FILE_TYPES_OPTIONS,
 			defined('OMGF_PRO_FILE_TYPES') ? OMGF_PRO_FILE_TYPES : [],
@@ -213,7 +213,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	public function do_promo_force_subsets()
 	{
 		$this->do_select(
-			__('Force Subsets (Pro)', $this->plugin_text_domain),
+			__('Force Subsets (Pro) (Deprecated)', $this->plugin_text_domain),
 			'omgf_pro_force_subsets',
 			OMGF_Admin_Settings::OMGF_FORCE_SUBSETS_OPTIONS,
 			defined('OMGF_PRO_FORCE_SUBSETS') ? OMGF_PRO_FORCE_SUBSETS : [],
