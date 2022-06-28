@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.2.1
+Stable tag: 5.2.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.2.2 | June 28th, 2022 =
+* Fixed: updated links from ffw.press to daan.dev after the migration.
 
 = 5.2.1 | June 25th, 2022 =
 * Fixed: shorthand syntax (r,i,b,bi) is now parsed correctly.
