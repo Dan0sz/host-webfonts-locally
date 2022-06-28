@@ -132,7 +132,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	const OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS = 'options-general.php?page=optimize-webfonts';
 	const OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION      = 'plugin-install.php?tab=plugin-information&plugin=host-webfonts-local&TB_iframe=true&width=772&height=1015&section=changelog';
-	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://ffw.press/wordpress/omgf-pro/';
+	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://daan.dev/wordpress/omgf-pro/';
 
 	/** @var string $active_tab */
 	private $active_tab;
@@ -452,7 +452,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		$xml = get_transient(self::OMGF_NEWS_REEL);
 
 		if (!$xml) {
-			$response = wp_remote_get('https://ffw.press/blog/tag/omgf/feed');
+			$response = wp_remote_get('https://daan.dev/blog/tag/omgf/feed');
 
 			if (!is_wp_error($response)) {
 				$xml = wp_remote_retrieve_body($response);
@@ -483,7 +483,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			return $text;
 		}
 
-		$text = sprintf(__('Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', $this->plugin_text_domain), 'https://ffw.press/blog/tag/omgf') . ' ';
+		$text = sprintf(__('Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', $this->plugin_text_domain), 'https://daan.dev/blog/tag/omgf') . ' ';
 		$text .= '<span id="omgf-ticker-wrap">';
 		$i    = 0;
 
