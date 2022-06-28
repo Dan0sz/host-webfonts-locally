@@ -5,7 +5,7 @@
  * Plugin URI: https://daan.dev/wordpress/omgf/
  * Description: Increase GDPR compliance, reduce DNS requests and leverage browser cache by automatically downloading Google Fonts to your server.
  * Version: 5.2.2
- * Author: Daan from FFW.Press
+ * Author: Daan from Daan.dev
  * Author URI: https://daan.dev
  * License: GPL2v2 or later
  * Text Domain: host-webfonts-local

@@ -193,7 +193,7 @@ class OMGF_Frontend_Process
 	 *               - Cache Enabler v1.8.7
 	 *                 - Default Settings
 	 *               - Kinsta Cache (Same as Cache Enabler?)
-	 * 				   - Works on ffw.press
+	 * 				   - Works on Daan.dev
 	 *               - LiteSpeed Cache
 	 *                 - Don't know (Gal Baras tested it: @see https://wordpress.org/support/topic/completely-broke-wp-rocket-plugin/#post-15377538)
 	 *               - W3 Total Cache v2.2.1:

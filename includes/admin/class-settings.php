@@ -429,7 +429,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function footer_text_left()
 	{
-		$text = sprintf(__('Coded with %s in The Netherlands @ <strong>FFW.Press</strong>.', $this->plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>');
+		$text = sprintf(__('Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', $this->plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>');
 
 		return '<span id="footer-thankyou">' . $text . '</span>';
 	}
