@@ -11,7 +11,7 @@
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: © 2022 Daan van den Bergh
- * @url      : https://ffw.press
+ * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
@@ -52,7 +52,7 @@ class OMGF
 	{
 		/** Prevents undefined constant in OMGF Pro, if its not at version v3.3.0 (yet) */
 		define('OMGF_OPTIMIZATION_MODE', false);
-		define('OMGF_SITE_URL', 'https://ffw.press');
+		define('OMGF_SITE_URL', 'https://daan.dev');
 		define('OMGF_CACHE_IS_STALE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE)));
 		define('OMGF_CURRENT_DB_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION)));
 		define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
@@ -161,7 +161,7 @@ class OMGF
 		$new_version     = $plugin['new_version'];
 
 		if (version_compare($current_version, $new_version, '<')) {
-			$response = wp_remote_get('https://ffw.press/omgf-update-notices.json');
+			$response = wp_remote_get('https://daan.dev/omgf-update-notices.json');
 
 			if (is_wp_error($response)) {
 				return;
