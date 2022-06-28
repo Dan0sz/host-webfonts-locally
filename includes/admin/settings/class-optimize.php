@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
 
 class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 {
-	const FFW_PRESS_OMGF_AF_URL = 'https://ffw.press/wordpress/omgf-additional-fonts/';
+	const FFW_PRESS_OMGF_AF_URL = 'https://daan.dev/wordpress/omgf-additional-fonts/';
 
 	/** @var array $optimized_fonts */
 	private $optimized_fonts = [];
@@ -207,7 +207,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		 */
 		$this->optimized_fonts = OMGF::optimized_fonts();
 		?>
-			<span class="option-title"><?= __('Manage Optimized Fonts', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('Don\'t know where or how to start optimizing your Google Fonts? That\'s okay. <a href="%s">This guide</a> will get you sorted.', $this->plugin_text_domain), 'https://ffw.press/blog/how-to/wordpress-google-fonts/'); ?></span></span></span></span>
+			<span class="option-title"><?= __('Manage Optimized Fonts', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('Don\'t know where or how to start optimizing your Google Fonts? That\'s okay. <a href="%s">This guide</a> will get you sorted.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/'); ?></span></span></span></span>
 			<?php if (!empty($this->optimized_fonts)) : ?>
 				<?= $this->do_optimized_fonts_manager(); ?>
 			<?php else : ?>
@@ -235,10 +235,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							<td>&nbsp;</td>
 							<th><?= __('Style', $this->plugin_text_domain); ?></th>
 							<th><?= __('Weight', $this->plugin_text_domain); ?></th>
-							<th><?= __('Preload', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('<a href="%s">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold.', $this->plugin_text_domain), 'https://ffw.press/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold'); ?></span><img width="230" class="illustration" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/above-the-fold.png'; ?>" /></span></span></th>
+							<th><?= __('Preload', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('<a href="%s">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold'); ?></span><img width="230" class="illustration" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/above-the-fold.png'; ?>" /></span></span></th>
 							<th><?= __('Do not load', $this->plugin_text_domain); ?></th>
 							<th><?= __('Fallback Font Stack (Pro)', $this->plugin_text_domain); ?></th>
-							<th><?= __('Replace (Pro)', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('When the <a href="%s">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback.', $this->plugin_text_domain), 'https://ffw.press/blog/how-to/wordpress-google-fonts/#7-4-specify-a-fallback-font-stack'); ?></span></span></span></th>
+							<th><?= __('Replace (Pro)', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('When the <a href="%s">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/#7-4-specify-a-fallback-font-stack'); ?></span></span></span></th>
 						</tr>
 					</thead>
 					<?php
