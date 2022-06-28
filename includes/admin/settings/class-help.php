@@ -65,9 +65,9 @@ class OMGF_Admin_Settings_Help extends OMGF_Admin_Settings_Builder
                         </ul>
                     </div>
                     <div class="column last">
-                        <h3 class="signature"><?= sprintf(__('Coded with %s by', $this->plugin_text_domain), '<i class="dashicons dashicons-heart"></i>'); ?> </h3>
+                        <h3 class="signature"><?= sprintf(__('Coded with %s by', $this->plugin_text_domain), '❤️'); ?> </h3>
                         <p class="signature">
-                            <a target="_blank" title="<?= __('Visit FFW Press', $this->plugin_text_domain); ?>" href="https://daan.dev/wordpress-plugins/"><img class="signature-image" alt="<?= __('Visit FFW Press', $this->plugin_text_domain); ?>" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/logo-color.png'; ?>" /></a>
+                            <a target="_blank" title="<?= __('Visit Daan.dev', $this->plugin_text_domain); ?>" href="https://daan.dev/wordpress-plugins/"><img class="signature-image" alt="<?= __('Visit Daan.dev', $this->plugin_text_domain); ?>" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/logo.png'; ?>" /></a>
                         </p>
                     </div>
                 </div>
