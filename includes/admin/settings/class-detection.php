@@ -11,7 +11,7 @@
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: © 2022 Daan van den Bergh
- * @url      : https://ffw.press
+ * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
@@ -88,7 +88,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 					<?php endforeach; ?>
 				</fieldset>
 				<p class="description">
-					<?= sprintf(__('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to "dig deeper", e.g. inside a theme\'s/plugin\'s CSS stylesheets or (Web Font Loader) JS files, <a href="%s" target="_blank">enable these options</a> to increase its level of detection. Best used in combination with a page caching plugin.', $this->plugin_text_domain), 'https://docs.ffw.press/article/21-omgf-pro-google-fonts-processing') . ' ' . $this->promo; ?>
+					<?= sprintf(__('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to "dig deeper", e.g. inside a theme\'s/plugin\'s CSS stylesheets or (Web Font Loader) JS files, <a href="%s" target="_blank">enable these options</a> to increase its level of detection. Best used in combination with a page caching plugin.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/detection-settings-advanced-processing/') . ' ' . $this->promo; ?>
 				</p>
 				<ul>
 					<?php foreach ($this->advanced_processing_pro_options() as $name => $data) : ?>

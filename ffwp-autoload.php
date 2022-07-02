@@ -1,7 +1,7 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * *
  * @author   : Daan van den Bergh
- * @url      : https://ffw.press/wordpress-plugins/
+ * @url      : https://daan.dev/wordpress-plugins/
  * @copyright: © 2022 Daan van den Bergh
  * @license  : GPL2v2 or later
  * * * * * * * * * * * * * * * * * * * * * */

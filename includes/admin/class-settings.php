@@ -11,7 +11,7 @@
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: © 2022 Daan van den Bergh
- * @url      : https://ffw.press
+ * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
@@ -422,7 +422,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 */
 	public function footer_text_left()
 	{
-		$text = sprintf(__('Coded with %s in The Netherlands @ <strong>FFW.Press</strong>.', $this->plugin_text_domain), '<span class="dashicons dashicons-heart ffwp-heart"></span>');
+		$text = sprintf(__('Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', $this->plugin_text_domain), '❤️');
 
 		return '<span id="footer-thankyou">' . $text . '</span>';
 	}

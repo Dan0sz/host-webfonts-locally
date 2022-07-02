@@ -11,7 +11,7 @@
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: © 2022 Daan van den Bergh
- * @url      : https://ffw.press
+ * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;

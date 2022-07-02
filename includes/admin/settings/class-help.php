@@ -11,7 +11,7 @@
  * @package  : OMGF
  * @author   : Daan van den Bergh
  * @copyright: © 2022 Daan van den Bergh
- * @url      : https://ffw.press
+ * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
 defined('ABSPATH') || exit;
@@ -50,11 +50,11 @@ class OMGF_Admin_Settings_Help extends OMGF_Admin_Settings_Builder
                             <?php _e('Need Help?', $this->plugin_text_domain); ?>
                         </h3>
                         <ul>
-                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_quick_start', 'https://docs.ffw.press/article/7-quick-start'); ?>"><i class="dashicons dashicons-controls-forward"></i><?= __('Quick Start Guide', $this->plugin_text_domain); ?></a></li>
-                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_user_manual', 'https://docs.ffw.press/category/4-omgf-pro'); ?>"><i class="dashicons dashicons-text-page"></i><?= __('User Manual', $this->plugin_text_domain); ?></a></li>
-                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_faq_link', 'https://docs.ffw.press/article/9-frequently-asked-question-faq'); ?>"><i class="dashicons dashicons-editor-help"></i><?= __('FAQ', $this->plugin_text_domain); ?></a></li>
-                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_troubleshooting_link', 'https://docs.ffw.press/category/37-omgf-pro---troubleshooting'); ?>"><i class="dashicons dashicons-sos"></i><?= __('Troubleshooting Guide', $this->plugin_text_domain); ?></a></li>
-                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_support_link', 'https://docs.ffw.press/contact'); ?>"><i class="dashicons dashicons-email"></i><?= __('Get Support', $this->plugin_text_domain); ?></a></li>
+                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_quick_start', 'https://daan.dev/docs/omgf-pro/quick-start'); ?>"><i class="dashicons dashicons-controls-forward"></i><?= __('Quick Start Guide', $this->plugin_text_domain); ?></a></li>
+                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_user_manual', 'https://daan.dev/docs/omgf-pro/'); ?>"><i class="dashicons dashicons-text-page"></i><?= __('User Manual', $this->plugin_text_domain); ?></a></li>
+                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_faq_link', 'https://daan.dev/docs/omgf-pro-faq/'); ?>"><i class="dashicons dashicons-editor-help"></i><?= __('FAQ', $this->plugin_text_domain); ?></a></li>
+                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_troubleshooting_link', 'https://daan.dev/docs/omgf-pro-troubleshooting/'); ?>"><i class="dashicons dashicons-sos"></i><?= __('Troubleshooting Guide', $this->plugin_text_domain); ?></a></li>
+                            <li><a target="_blank" href="<?= apply_filters('omgf_settings_help_support_link', 'https://daan.dev/contact/'); ?>"><i class="dashicons dashicons-email"></i><?= __('Get Support', $this->plugin_text_domain); ?></a></li>
                         </ul>
                     </div>
                     <div class="column">
@@ -65,9 +65,9 @@ class OMGF_Admin_Settings_Help extends OMGF_Admin_Settings_Builder
                         </ul>
                     </div>
                     <div class="column last">
-                        <h3 class="signature"><?= sprintf(__('Coded with %s by', $this->plugin_text_domain), '<i class="dashicons dashicons-heart"></i>'); ?> </h3>
+                        <h3 class="signature"><?= sprintf(__('Coded with %s by', $this->plugin_text_domain), '❤️'); ?> </h3>
                         <p class="signature">
-                            <a target="_blank" title="<?= __('Visit FFW Press', $this->plugin_text_domain); ?>" href="https://ffw.press/wordpress-plugins/"><img class="signature-image" alt="<?= __('Visit FFW Press', $this->plugin_text_domain); ?>" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/logo-color.png'; ?>" /></a>
+                            <a target="_blank" title="<?= __('Visit Daan.dev', $this->plugin_text_domain); ?>" href="https://daan.dev/wordpress-plugins/"><img class="signature-image" alt="<?= __('Visit Daan.dev', $this->plugin_text_domain); ?>" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/logo.png'; ?>" /></a>
                         </p>
                     </div>
                 </div>
