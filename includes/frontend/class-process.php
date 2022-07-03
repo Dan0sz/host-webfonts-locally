@@ -460,7 +460,10 @@ class OMGF_Frontend_Process
 		$replace = [];
 
 		foreach ($google_fonts as $key => $stack) {
-			$handle = $stack['id'];
+			/**
+			 * Handles should be all lowercase to prevent duplication issues on some filesystems.
+			 */
+			$handle = strtolower($stack['id']);
 
 			/**
 			 * If stylesheet with $handle is completely marked for unload, just clean the 'href'
