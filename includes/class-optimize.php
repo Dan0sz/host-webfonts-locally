@@ -18,19 +18,8 @@ defined('ABSPATH') || exit;
 
 class OMGF_Optimize
 {
-    const USER_AGENT                      = [
+    const USER_AGENT = [
         'woff2' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0',
-    ];
-
-    /**
-     * If a font changed names recently, this array will map the old name (key) to the new name (value).
-     * 
-     * The key of an element should be dashed (no spaces) if necessary, e.g. open-sans.
-     */
-    const OMGF_RENAMED_GOOGLE_FONTS = [
-        'crimson-text' => 'crimson-pro',
-        'ek-mukta'     => 'mukta',
-        'muli'         => 'mulish'
     ];
 
     /** @var string $url */
@@ -162,6 +151,7 @@ class OMGF_Optimize
 
         file_put_contents($local_file, $stylesheet);
 
+        $fonts_bak          = array_replace_recursive($fonts_bak, $fonts);
         $current_stylesheet = [$this->original_handle => $fonts_bak];
 
         /**
