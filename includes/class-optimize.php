@@ -218,8 +218,8 @@ class OMGF_Optimize
             $object[$id] = (object) [
                 'id'       => $id,
                 'family'   => $font_family,
-                'variants' => $this->parse_variants($stylesheet, $font_family),
-                'subsets'  => $this->parse_subsets($stylesheet, $font_family)
+                'variants' => apply_filters('omgf_optimize_fonts_object_variants', $this->parse_variants($stylesheet, $font_family), $stylesheet, $font_family, $this->url),
+                'subsets'  => apply_filters('omgf_optimize_fonts_object_subsets', $this->parse_subsets($stylesheet, $font_family), $stylesheet, $font_family, $this->url)
             ];
         }
 
@@ -236,7 +236,10 @@ class OMGF_Optimize
      */
     private function parse_variants($stylesheet, $font_family)
     {
-        preg_match_all('/\/\*\s.*?}/s', $stylesheet, $font_faces);
+        /**
+         * This also captures the commented Subset name.
+         */
+        preg_match_all(apply_filters('omgf_optimize_parse_variants_regex', '/\/\*\s.*?}/s', $this->url), $stylesheet, $font_faces);
 
         if (!isset($font_faces[0]) || empty($font_faces[0])) {
             return [];
@@ -259,8 +262,14 @@ class OMGF_Optimize
             $font_object[$key]->fontStyle  = $font_style[1];
             $font_object[$key]->fontWeight = $font_weight[1];
             $font_object[$key]->woff2      = $font_src[1];
-            $font_object[$key]->subset     = $subset[1];
-            $font_object[$key]->range      = $range[1];
+
+            if (!empty($subset) && isset($subset[1])) {
+                $font_object[$key]->subset = $subset[1];
+            }
+
+            if (!empty($range) && isset($range[1])) {
+                $font_object[$key]->range = $range[1];
+            }
 
             /**
              * @since v5.3.0 Is this a variable font i.e. one font file for multiple font weights/styles?
