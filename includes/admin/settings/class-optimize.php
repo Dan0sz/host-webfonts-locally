@@ -256,12 +256,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							</tr>
 							<?php foreach ($fonts as $font) : ?>
 								<?php if (!is_object($font) || count((array) $font->variants) <= 0) continue; ?>
-								<?php
-								$aka = in_array($font->id, OMGF_Optimize::OMGF_RENAMED_GOOGLE_FONTS) ? array_search($font->id, OMGF_Optimize::OMGF_RENAMED_GOOGLE_FONTS) : '';
-								?>
 								<tr class="font-family" data-id="<?= $handle . '-' . $font->id; ?>">
 									<td colspan="5">
-										<span class="family"><em><?= rawurldecode($font->family); ?><?= $aka ? ' (' . sprintf(__('formerly known as <strong>%s</strong>', $this->plugin_text_domain) . ')', ucfirst($aka)) : ''; ?></em></span> <span class="unload-mass-action">(<a href="#" class="unload-italics"><?= __('Unload italics', $this->plugin_text_domain); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?= __('In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.', $this->plugin_text_domain); ?></span></span> | <a href="#" class="unload-all"><?= __('Unload all', $this->plugin_text_domain); ?></a> | <a href="#" class="load-all"><?= __('Load all', $this->plugin_text_domain); ?></a>)</span>
+										<span class="family"><em><?= rawurldecode($font->family); ?></em></span> <span class="unload-mass-action">(<a href="#" class="unload-italics"><?= __('Unload italics', $this->plugin_text_domain); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?= __('In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.', $this->plugin_text_domain); ?></span></span> | <a href="#" class="unload-all"><?= __('Unload all', $this->plugin_text_domain); ?></a> | <a href="#" class="load-all"><?= __('Load all', $this->plugin_text_domain); ?></a>)</span>
 									</td>
 									<td class="fallback-font-stack">
 										<select data-handle="<?= $handle; ?>" <?= apply_filters('omgf_pro_fallback_font_stack_setting_disabled', true) ? 'disabled' : ''; ?> name="omgf_pro_fallback_font_stack[<?= $handle; ?>][<?= $font->id; ?>]">
