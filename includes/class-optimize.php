@@ -34,6 +34,9 @@ class OMGF_Optimize
     /** @var string $return */
     private $return = 'url';
 
+    /** @var bool $return_early */
+    private $return_early = false;
+
     /** @var string */
     private $path = '';
 
@@ -53,6 +56,7 @@ class OMGF_Optimize
      * @param string $original_handle The stylesheet handle, present in the ID attribute.
      * @param string $subset          Contents of "subset" parameter. If left empty, the downloaded files will support all subsets.
      * @param string $return          Valid values: 'url' | 'path' | 'object'.
+     * @param bool   $return_early    If this is set to true, the optimization will skip out early if the object already exists in the database.
      * 
      * @return string Local URL of generated stylesheet.
      * 
@@ -66,7 +70,8 @@ class OMGF_Optimize
         string $url,
         string $handle,
         string $original_handle,
-        string $return = 'url'
+        string $return = 'url',
+        bool   $return_early = false
     ) {
         $this->url             = apply_filters('omgf_optimize_url', $url);
         $this->handle          = sanitize_title_with_dashes($handle);
@@ -74,6 +79,7 @@ class OMGF_Optimize
         $this->path            = OMGF_UPLOAD_DIR . '/' . $this->handle;
         $this->subsets         = apply_filters('omgf_optimize_query_subset', '');
         $this->return          = $return;
+        $this->return_early    = $return_early;
     }
 
     /**
@@ -100,10 +106,25 @@ class OMGF_Optimize
             $this->url = 'https:' . $this->url;
         }
 
-        $fonts_bak = $this->grab_fonts_object($this->url);
-        $url       = $this->unload_variants($this->url);
-        $fonts     = $this->grab_fonts_object($url);
+        $fonts_bak  = $this->grab_fonts_object($this->url);
+        $url        = $this->unload_variants($this->url);
+        $local_file = $this->path . '/' . $this->handle . '.css';
 
+        /**
+         * @since v3.6.0 Allows us to bail early, if a fresh copy of files/stylesheets isn't necessary.
+         */
+        if (file_exists($local_file) && $this->return_early) {
+            switch ($this->return) {
+                case 'path':
+                    return $local_file;
+                case 'object':
+                    return [$this->original_handle => $fonts_bak];
+                default:
+                    return str_replace(OMGF_UPLOAD_DIR, OMGF_UPLOAD_URL, $local_file);
+            }
+        }
+
+        $fonts = $this->grab_fonts_object($url);
 
         if (empty($fonts)) {
             return '';
@@ -142,7 +163,6 @@ class OMGF_Optimize
             }
         }
 
-        $local_file = $this->path . '/' . $this->handle . '.css';
         $stylesheet = OMGF::generate_stylesheet($fonts);
 
         if (!file_exists($this->path)) {
