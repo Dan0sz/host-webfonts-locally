@@ -209,8 +209,8 @@ class OMGF_Frontend_Process
 	 *               - WP Super Cache v1.7.4
 	 *                 - Page Cache: Enabled
 	 * 
-	 * @todo         Not tested (yet):
-	 *               - Swift Performance
+	 * Not tested (yet):
+	 * TODO: [OMGF-41] - Swift Performance
 	 *  
 	 * @return void 
 	 */
@@ -253,7 +253,7 @@ class OMGF_Frontend_Process
 			 * 				 plugins (e.g. Asset Cleanup) also tend to include their own custom attributes, 
 			 * 				 e.g. data-wpacu-to-be-preloaded
 			 * 
-			 * @todo: I think I should be able to use an array_filter here or something?
+			 * TODO: [OMGF-42] I think I should be able to use an array_filter here or something?
 			 */
 			foreach (self::RESOURCE_HINTS_URLS as $url) {
 				if (strpos($match, $url) !== false) {
@@ -495,9 +495,15 @@ class OMGF_Frontend_Process
 			$query = $this->build_query($stack['href'], $handle, $stack['id']);
 
 			/**
-			 * Required parameters.
+			 * If required parameters aren't set, this request is most likely invalid. Let's just remove it.
+			 * 
+			 * TODO: [OMGF-40] Remove entire HTML element 
 			 */
+
 			if (!isset($query['family']) || !isset($query['handle']) || !isset($query['original_handle'])) {
+				$search[$key]  = $stack['href'];
+				$replace[$key] = '';
+
 				continue;
 			}
 
