@@ -463,7 +463,8 @@ class OMGF_Frontend_Process
 			/**
 			 * Handles should be all lowercase to prevent duplication issues on some filesystems.
 			 */
-			$handle = strtolower($stack['id']);
+			$handle          = strtolower($stack['id']);
+			$original_handle = $handle;
 
 			/**
 			 * If stylesheet with $handle is completely marked for unload, just clean the 'href'
@@ -495,22 +496,22 @@ class OMGF_Frontend_Process
 				continue;
 			}
 
-			$query = $this->build_query($stack['href'], $handle, $stack['id']);
+			$query = parse_url($stack['href'], PHP_URL_QUERY);
+			parse_str($query, $query);
 
 			/**
 			 * If required parameters aren't set, this request is most likely invalid. Let's just remove it.
 			 * 
 			 * TODO: [OMGF-40] Remove entire HTML element 
 			 */
-
-			if (!isset($query['family']) || !isset($query['handle']) || !isset($query['original_handle'])) {
+			if (!isset($query['family'])) {
 				$search[$key]  = $stack['href'];
 				$replace[$key] = '';
 
 				continue;
 			}
 
-			$optimize   = new OMGF_Optimize($query['family'], $query['handle'], $query['original_handle'], apply_filters('omgf_optimize_query_subset', $query['subset'] ?? ''));
+			$optimize   = new OMGF_Optimize($stack['href'], $handle, $original_handle);
 			$cached_url = $optimize->process();
 
 			if (!$cached_url) {
