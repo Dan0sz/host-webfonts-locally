@@ -294,7 +294,10 @@ class OMGF_Frontend_Process
 			return apply_filters('omgf_processed_html', $html, $this);
 		}
 
-		preg_match_all('/<link.*fonts\.googleapis\.com\/css.*?[\/]?>/', $html, $links);
+		/**
+		 * Use positive lookaround for stricter matching.
+		 */
+		preg_match_all('/(?=\<link).+?href=[\'"](https:)?\/\/fonts\.googleapis\.com\/css.+?[\'"].+?(?<=>)/', $html, $links);
 
 		if (!isset($links[0]) || empty($links[0])) {
 			return apply_filters('omgf_processed_html', $html, $this);
