@@ -290,7 +290,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 										$replace  = defined('OMGF_PRO_REPLACE_FONT') && isset(OMGF_PRO_REPLACE_FONT[$handle][$font->id]) && OMGF_PRO_REPLACE_FONT[$handle][$font->id] == 'on' ? 'checked' : '';
 										$fallback = defined('OMGF_PRO_FALLBACK_FONT_STACK') && isset(OMGF_PRO_FALLBACK_FONT_STACK[$handle][$font->id]) && OMGF_PRO_FALLBACK_FONT_STACK[$handle][$font->id] !== '';
 										?>
-										<input autocomplete="off" type="checkbox" class="replace" <?= $replace; ?> <?= $fallback ? '' : 'disabled'; ?> <?= apply_filters('omgf_pro_replace_font_setting_disabled', true) ? 'disabled' : ''; ?> name="omgf_pro_replace_font[<?= $handle; ?>][<?= $font->id; ?>]" />
+										<input autocomplete="off" type="checkbox" class="replace" <?= $replace; ?> <?= $fallback ? '' : 'disabled'; ?> <?= !defined('OMGF_PRO_REPLACE_FONT') ? 'disabled' : ''; ?> name="omgf_pro_replace_font[<?= $handle; ?>][<?= $font->id; ?>]" />
 									</td>
 								</tr>
 								<?php $id = ''; ?>

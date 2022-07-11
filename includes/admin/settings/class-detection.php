@@ -31,7 +31,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 
 		// Settings
 		add_filter('omgf_detection_settings_content', [$this, 'google_fonts_processing'], 30);
-		add_filter('omgf_detection_settings_content', [$this, 'advanced_processing_promo'], 60);
+		add_filter('omgf_detection_settings_content', [$this, 'promo_advanced_processing'], 60);
 
 		// Close
 		add_filter('omgf_detection_settings_content', [$this, 'do_after'], 100);
@@ -69,7 +69,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 	/**
 	 *
 	 */
-	public function advanced_processing_promo()
+	public function promo_advanced_processing()
 	{
 	?>
 		<tr>
@@ -79,7 +79,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 					<?php foreach ($this->advanced_processing_pro_options() as $name => $data) : ?>
 						<?php
 						$checked  = defined(strtoupper($name)) ? constant(strtoupper($name)) : false;
-						$disabled = apply_filters($name . '_setting_disabled', true) ? 'disabled' : '';
+						$disabled = !defined(strtoupper($name)) ? 'disabled' : '';
 						?>
 						<label for="<?= $name; ?>">
 							<input type="checkbox" name="<?= $name; ?>" id="<?= $name; ?>" <?= $checked ? 'checked="checked"' : ''; ?> <?= $disabled; ?> /><?= $data['label']; ?>
