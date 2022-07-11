@@ -42,9 +42,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'close_task_manager'], 27);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 30);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_block_async_google_fonts'], 60);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 40);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 50);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_block_async_google_fonts'], 60);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -179,14 +179,14 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 * 
 	 * @return void 
 	 */
-	public function do_block_async_google_fonts()
+	public function do_promo_block_async_google_fonts()
 	{
 		$this->do_checkbox(
 			__('Block Async Google Fonts (Pro)', $this->plugin_text_domain),
 			'omgf_pro_block_async_fonts',
 			defined('OMGF_PRO_BLOCK_ASYNC_FONTS') ? OMGF_PRO_BLOCK_ASYNC_FONTS : false,
-			__('Block all Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries, e.g. Google Maps and some themes, etc. Please make sure blocking Google Fonts isn\'t against the 3rd party\'s Terms Of Service, before enabling this option. <strong>Warning!</strong> Make sure you load the Google Fonts, either manually or by using a plugin (like Additional Fonts) to prevent the font styling breaks.', $this->plugin_text_domain),
-			true
+			sprintf(__('Block all Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries, e.g. Google Maps and some themes, etc. Please make sure blocking Google Fonts isn\'t against the 3rd party\'s Terms Of Service, before enabling this option. <strong>Warning!</strong> Make sure you load the Google Fonts, either manually or by using a plugin (like <a href="%s" target="_blank">Additional Fonts</a>) to prevent the font styling breaks.', $this->plugin_text_domain), 'https://daan.dev/wordpress/omgf-additional-fonts/'),
+			!defined('OMGF_PRO_BLOCK_ASYNC_FONTS')
 		);
 	}
 
@@ -200,7 +200,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			'omgf_pro_force_font_display',
 			defined('OMGF_PRO_FORCE_FONT_DISPLAY') ? OMGF_PRO_FORCE_FONT_DISPLAY : false,
 			__('Force the above <code>font-display</code> attribute on all <code>@font-face</code> statements to ensure all text is user-visible while webfonts and icon sets are loading.', $this->plugin_text_domain),
-			true
+			!defined('OMGF_PRO_FORCE_FONT_DISPLAY')
 		);
 	}
 
@@ -278,7 +278,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 										<span class="family"><em><?= rawurldecode($font->family); ?></em></span> <span class="unload-mass-action">(<a href="#" class="unload-italics"><?= __('Unload italics', $this->plugin_text_domain); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?= __('In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.', $this->plugin_text_domain); ?></span></span> | <a href="#" class="unload-all"><?= __('Unload all', $this->plugin_text_domain); ?></a> | <a href="#" class="load-all"><?= __('Load all', $this->plugin_text_domain); ?></a>)</span>
 									</td>
 									<td class="fallback-font-stack">
-										<select data-handle="<?= $handle; ?>" <?= apply_filters('omgf_pro_fallback_font_stack_setting_disabled', true) ? 'disabled' : ''; ?> name="omgf_pro_fallback_font_stack[<?= $handle; ?>][<?= $font->id; ?>]">
+										<select data-handle="<?= $handle; ?>" <?= !defined('OMGF_PRO_FALLBACK_FONT_STACK') ? 'disabled' : ''; ?> name="omgf_pro_fallback_font_stack[<?= $handle; ?>][<?= $font->id; ?>]">
 											<option value=''><?= __('None (default)', $this->plugin_text_domain); ?></option>
 											<?php foreach (OMGF_Admin_Settings::OMGF_FALLBACK_FONT_STACKS_OPTIONS as $value => $label) : ?>
 												<option <?= defined('OMGF_PRO_FALLBACK_FONT_STACK') && isset(OMGF_PRO_FALLBACK_FONT_STACK[$handle][$font->id]) && OMGF_PRO_FALLBACK_FONT_STACK[$handle][$font->id] == $value ? 'selected' : ''; ?> value="<?= $value; ?>"><?= $label; ?></option>
