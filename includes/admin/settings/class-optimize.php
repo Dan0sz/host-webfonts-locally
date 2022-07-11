@@ -44,7 +44,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 50);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_block_async_google_fonts'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_remove_async_google_fonts'], 60);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -179,14 +179,14 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 * 
 	 * @return void 
 	 */
-	public function do_promo_block_async_google_fonts()
+	public function do_promo_remove_async_google_fonts()
 	{
 		$this->do_checkbox(
-			__('Block Async Google Fonts (Pro)', $this->plugin_text_domain),
-			'omgf_pro_block_async_fonts',
-			defined('OMGF_PRO_BLOCK_ASYNC_FONTS') ? OMGF_PRO_BLOCK_ASYNC_FONTS : false,
-			sprintf(__('Block all Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries, e.g. Google Maps and some themes, etc. Please make sure blocking Google Fonts isn\'t against the 3rd party\'s Terms Of Service, before enabling this option. <strong>Warning!</strong> Make sure you load the Google Fonts, either manually or by using a plugin (like <a href="%s" target="_blank">Additional Fonts</a>) to prevent the font styling breaks.', $this->plugin_text_domain), 'https://daan.dev/wordpress/omgf-additional-fonts/'),
-			!defined('OMGF_PRO_BLOCK_ASYNC_FONTS')
+			__('Remove Async Google Fonts (Pro)', $this->plugin_text_domain),
+			'omgf_pro_remove_async_fonts',
+			defined('OMGF_PRO_REMOVE_ASYNC_FONTS') ? OMGF_PRO_REMOVE_ASYNC_FONTS : false,
+			sprintf(__('Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either manually or by using a plugin (like <a href="%s" target="_blank">Additional Fonts</a>) to prevent styling breaks.', $this->plugin_text_domain), 'https://daan.dev/wordpress/omgf-additional-fonts/'),
+			!defined('OMGF_PRO_REMOVE_ASYNC_FONTS')
 		);
 	}
 
