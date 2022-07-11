@@ -43,6 +43,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 50);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_block_async_google_fonts'], 60);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 60);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_include_file_types'], 70);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_subsets'], 80);
@@ -172,6 +173,22 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_FONT_DISPLAY_OPTIONS,
 			OMGF_DISPLAY_OPTION,
 			__('Select which value to set the font-display attribute to. Defaults to Swap (recommended).', $this->plugin_text_domain)
+		);
+	}
+
+	/**
+	 * Block Async Google Fonts option
+	 * 
+	 * @return void 
+	 */
+	public function do_block_async_google_fonts()
+	{
+		$this->do_checkbox(
+			__('Block Async Google Fonts (Pro)', $this->plugin_text_domain),
+			'omgf_pro_block_async_fonts',
+			defined('OMGF_PRO_BLOCK_ASYNC_FONTS') ? OMGF_PRO_BLOCK_ASYNC_FONTS : false,
+			__('Block all Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries, e.g. Google Maps and some themes, etc. Please make sure blocking Google Fonts isn\'t against the 3rd party\'s Terms Of Service, before enabling this option. <strong>Warning!</strong> Make sure you load the Google Fonts, either manually or by using a plugin (like Additional Fonts) to prevent the font styling breaks.', $this->plugin_text_domain),
+			true
 		);
 	}
 
