@@ -226,10 +226,10 @@ jQuery(document).ready(function ($) {
         /**
          * Unload all fonts for current font family.
          */
-        unload_all: function (e) {
+        unload_all: function (e, self = this) {
             e.preventDefault();
 
-            var id = $(this).parents('.font-family').data('id');
+            var id = $(self).parents('.font-family').data('id');
             var unloads = $('.unload');
 
             unloads.each(function (index, item) {
@@ -320,6 +320,7 @@ jQuery(document).ready(function ($) {
 
     omgf_show_loader = omgf_admin.show_loader;
     omgf_unload_all = omgf_admin.unload_all;
+    omgf_load_all = omgf_admin.load_all;
 
     omgf_admin.init();
 });
