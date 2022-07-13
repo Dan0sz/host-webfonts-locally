@@ -112,6 +112,7 @@ class OMGF_Frontend_Process
 				}
 
 				$font_id          = $font_face->id;
+				// TODO: [OMGF-44] Add Preload Subsets feature.
 				$preload_variants = array_filter(
 					(array) $font_face->variants,
 					function ($variant) use ($preloads_stylesheet, $font_id) {
@@ -394,6 +395,7 @@ class OMGF_Frontend_Process
 				$google_fonts[$key]['id'] = $id;
 			}
 
+			$google_fonts[$key]['link'] = $link;
 			$google_fonts[$key]['href'] = $href['href'];
 		}
 
@@ -474,7 +476,7 @@ class OMGF_Frontend_Process
 			 * attribute to prevent it from loading.
 			 */
 			if (OMGF::unloaded_stylesheets() && in_array($handle, OMGF::unloaded_stylesheets())) {
-				$search[$key]  = $stack['href'];
+				$search[$key]  = $stack['link'];
 				$replace[$key] = '';
 
 				continue;
@@ -508,7 +510,7 @@ class OMGF_Frontend_Process
 			 * TODO: [OMGF-40] Remove entire HTML element 
 			 */
 			if (!isset($query['family'])) {
-				$search[$key]  = $stack['href'];
+				$search[$key]  = $stack['link'];
 				$replace[$key] = '';
 
 				continue;
