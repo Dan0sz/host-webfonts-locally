@@ -106,8 +106,6 @@ class OMGF_Optimize
             $this->url = 'https:' . $this->url;
         }
 
-        $fonts_bak  = $this->grab_fonts_object($this->url);
-        $url        = $this->unload_variants($this->url);
         $local_file = $this->path . '/' . $this->handle . '.css';
 
         /**
@@ -118,13 +116,15 @@ class OMGF_Optimize
                 case 'path':
                     return $local_file;
                 case 'object':
-                    return [$this->original_handle => $fonts_bak];
+                    return [$this->original_handle => OMGF::optimized_fonts()[$this->original_handle]];
                 default:
                     return str_replace(OMGF_UPLOAD_DIR, OMGF_UPLOAD_URL, $local_file);
             }
         }
 
-        $fonts = $this->grab_fonts_object($url);
+        $fonts_bak = $this->grab_fonts_object($this->url);
+        $url       = $this->unload_variants($this->url);
+        $fonts     = $this->grab_fonts_object($url);
 
         if (empty($fonts)) {
             return '';
