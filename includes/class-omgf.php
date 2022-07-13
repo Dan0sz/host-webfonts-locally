@@ -56,6 +56,7 @@ class OMGF
 		define('OMGF_CACHE_IS_STALE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE)));
 		define('OMGF_CURRENT_DB_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION)));
 		define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
+		define('OMGF_PRELOAD_SUBSETS', $this->esc_array(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_SUBSETS, ['latin'])) ?: ['latin']);
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
 		define('OMGF_CACHE_KEYS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '')));
 		define('OMGF_TEST_MODE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE)));
@@ -63,6 +64,18 @@ class OMGF
 		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
 		define('OMGF_UPLOAD_DIR', apply_filters('omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf'));
 		define('OMGF_UPLOAD_URL', apply_filters('omgf_upload_url', WP_CONTENT_URL . '/uploads/omgf'));
+	}
+
+	/**
+	 * Escape each value of an option array.
+	 */
+	private function esc_array($array)
+	{
+		foreach ($array as &$element) {
+			$element = esc_attr($element);
+		}
+
+		return $array;
 	}
 
 	/**
@@ -141,7 +154,7 @@ class OMGF
 		/**
 		 * If the user entered https:// in the Home URL option, it's safe to assume that SSL is used.
 		 */
-		if (!is_ssl() && strpos(get_site_url(), 'https://') !== false) {
+		if (!is_ssl() && strpos(get_home_url(), 'https://') !== false) {
 			$url = str_replace('http://', 'https://', $url);
 		}
 

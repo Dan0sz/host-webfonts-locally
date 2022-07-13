@@ -44,7 +44,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_before'], 30);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_force_font_display'], 50);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_remove_async_google_fonts'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_preload_subsets'], 60);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_remove_async_google_fonts'], 70);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -175,6 +176,37 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	}
 
 	/**
+	 * Force Font-Display Option Site Wide
+	 */
+	public function do_promo_force_font_display()
+	{
+		$this->do_checkbox(
+			__('Apply Font-Display Option Globally (Pro)', $this->plugin_text_domain),
+			'omgf_pro_force_font_display',
+			defined('OMGF_PRO_FORCE_FONT_DISPLAY') ? OMGF_PRO_FORCE_FONT_DISPLAY : false,
+			__('Apply the above <code>font-display</code> attribute to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.', $this->plugin_text_domain),
+			!defined('OMGF_PRO_FORCE_FONT_DISPLAY')
+		);
+	}
+
+	/**
+	 * Preload Subsets
+	 * 
+	 * @return void 
+	 */
+	public function do_preload_subsets()
+	{
+		$this->do_select(
+			__('Preload Subsets', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_SUBSETS,
+			OMGF_Admin_Settings::OMGF_PRELOAD_SUBSETS,
+			OMGF_PRELOAD_SUBSETS,
+			__('Select which subset(s) should be used when the <strong>Preload</strong> box for a font style is checked. Default: latin. <em>Use CTRL + click to select multiple values.</em>.', $this->plugin_text_domain),
+			true
+		);
+	}
+
+	/**
 	 * Block Async Google Fonts option
 	 * 
 	 * @return void 
@@ -187,20 +219,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			defined('OMGF_PRO_REMOVE_ASYNC_FONTS') ? OMGF_PRO_REMOVE_ASYNC_FONTS : false,
 			sprintf(__('Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either manually or by using a plugin (like <a href="%s" target="_blank">Additional Fonts</a>) to prevent styling breaks.', $this->plugin_text_domain), 'https://daan.dev/wordpress/omgf-additional-fonts/'),
 			!defined('OMGF_PRO_REMOVE_ASYNC_FONTS')
-		);
-	}
-
-	/**
-	 * Force Font-Display Option Site Wide
-	 */
-	public function do_promo_force_font_display()
-	{
-		$this->do_checkbox(
-			__('Force Font-Display Option Site Wide (Pro)', $this->plugin_text_domain),
-			'omgf_pro_force_font_display',
-			defined('OMGF_PRO_FORCE_FONT_DISPLAY') ? OMGF_PRO_FORCE_FONT_DISPLAY : false,
-			__('Force the above <code>font-display</code> attribute on all <code>@font-face</code> statements to ensure all text is user-visible while webfonts and icon sets are loading.', $this->plugin_text_domain),
-			!defined('OMGF_PRO_FORCE_FONT_DISPLAY')
 		);
 	}
 
