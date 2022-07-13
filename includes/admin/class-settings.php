@@ -46,7 +46,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 		'fallback' => 'Fallback',
 		'optional' => 'Optional'
 	];
-	const OMGF_PRELOAD_SUBSETS         = [
+	const OMGF_SUBSETS         = [
 		'arabic'              => 'Arabic',
 		'bengali'             => 'Bengali',
 		'chinese-hongkong'    => 'Chinese (Hong Kong)',
@@ -114,7 +114,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Optimize Fonts
 	 */
 	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'omgf_display_option';
-	const OMGF_OPTIMIZE_SETTING_PRELOAD_SUBSETS    = 'omgf_preload_subsets';
+	const OMGF_OPTIMIZE_SETTING_SUBSETS            = 'omgf_subsets';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'omgf_optimized_fonts';
 	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      = 'omgf_preload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS       = 'omgf_unload_fonts';

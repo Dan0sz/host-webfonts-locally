@@ -155,6 +155,13 @@ class OMGF_Optimize
                  */
                 $variant->fontFamily = rawurlencode($variant->fontFamily);
 
+                /**
+                 * @since v5.3.0 No need to continue if this variant belongs to a subset we don't need.
+                 */
+                if (isset($variant->subset) && !in_array($variant->subset, OMGF_SUBSETS)) {
+                    continue;
+                }
+
                 if (isset($variant->woff2)) {
                     $variant->woff2 = OMGF::download($variant->woff2, $filename, 'woff2', $this->path);
                 }

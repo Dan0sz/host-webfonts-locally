@@ -48,6 +48,13 @@ class OMGF_StylesheetGenerator
 		foreach ($this->fonts as $font) {
 			foreach ($font->variants as $variant) {
 				/**
+				 * @since v5.3.0 if a subset is defined for this variant and it's not set to be used, skip it.
+				 */
+				if (isset($variant->subset) && !in_array($variant->subset, OMGF_SUBSETS)) {
+					continue;
+				}
+
+				/**
 				 * Filter font_family name. 
 				 * 
 				 * @since v4.5.1

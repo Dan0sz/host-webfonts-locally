@@ -45,7 +45,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_apply_font_display_globally'], 50);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_remove_async_google_fonts'], 60);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_preload_subsets'], 70);
+		add_filter('omgf_optimize_settings_content', [$this, 'do_use_subsets'], 70);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -194,14 +194,14 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	 * 
 	 * @return void 
 	 */
-	public function do_preload_subsets()
+	public function do_use_subsets()
 	{
 		$this->do_select(
-			__('Preload Subsets', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_SUBSETS,
-			OMGF_Admin_Settings::OMGF_PRELOAD_SUBSETS,
-			OMGF_PRELOAD_SUBSETS,
-			__('Select which subset(s) should be used when the <strong>Preload</strong> box for a font style is checked. Default: latin. <em>Use CTRL + click to select multiple values. Limit the selection to subsets your site actually uses. Selecting all subsets is strongly discouraged.</em>', $this->plugin_text_domain),
+			__('Use Subsets', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS,
+			OMGF_Admin_Settings::OMGF_SUBSETS,
+			OMGF_SUBSETS,
+			__('Select which subset(s) should be used when generating stylesheets and preloads. Default: latin. <em>Use CTRL + click to select multiple values. Limit the selection to subsets your site actually uses. Selecting too many subsets can negatively impact performance!</em>', $this->plugin_text_domain),
 			true
 		);
 	}
