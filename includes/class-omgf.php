@@ -71,6 +71,10 @@ class OMGF
 	 */
 	private function esc_array($array)
 	{
+		if (!is_array($array)) {
+			return $array;
+		}
+
 		foreach ($array as &$element) {
 			$element = esc_attr($element);
 		}
