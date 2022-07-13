@@ -141,8 +141,6 @@ class OMGF_Optimize
             foreach ($font->variants as &$variant) {
                 /**
                  * @since v5.3.0 Variable fonts use one filename for all font weights/styles. That's why we drop the weight from the filename.
-                 * 
-                 * @todo  Perhaps we also need to drop the font style?
                  */
                 if (isset($this->variable_fonts[$id])) {
                     $filename = strtolower($id . '-' . $variant->fontStyle . '-' . (isset($variant->subset) ? $variant->subset : ''));
