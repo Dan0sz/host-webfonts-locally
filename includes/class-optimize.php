@@ -186,13 +186,6 @@ class OMGF_Optimize
          */
         $optimized_fonts = OMGF::optimized_fonts($current_stylesheet);
 
-        /**
-         * When unload is used, this takes care of rewriting the font style URLs in the database.
-         * 
-         * @since v4.5.7
-         */
-        $optimized_fonts = $this->rewrite_variants($optimized_fonts, $current_stylesheet);
-
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
 
         switch ($this->return) {
@@ -280,6 +273,8 @@ class OMGF_Optimize
             preg_match('/src:\surl\((.*?woff2)\)/', $font_face, $font_src);
             preg_match('/\/\*\s([a-z\-]+?)\s\*\//', $font_face, $subset);
             preg_match('/unicode-range:\s(.*?);/', $font_face, $range);
+
+            $key = $subset[1] . '-' . $font_weight[1] . ($font_style[1] == 'normal' ? '' : '-' . $font_style[1]);
 
             $font_object[$key]             = new stdClass();
             $font_object[$key]->id         = $font_weight[1] . ($font_style[1] == 'normal' ? '' : $font_style[1]);
@@ -462,34 +457,5 @@ class OMGF_Optimize
         }
 
         return 'https://fonts.googleapis.com/css?family=' . implode('|', $font_families);
-    }
-
-    /**
-     * When unload is used, insert the cache key in the font URLs for the variants still in use.
-     *
-     * @param array $all_stylesheets    Contains all font styles, loaded and unloaded.
-     * @param array $current_stylesheet Contains just the loaded font styles of current stylesheet.
-     *
-     * @return mixed
-     */
-    private function rewrite_variants($all_stylesheets, $current_stylesheet)
-    {
-        foreach ($all_stylesheets as $stylesheet => &$fonts) {
-            foreach ($fonts as $index => &$font) {
-                if (empty((array) $font->variants)) {
-                    continue;
-                }
-
-                foreach ($font->variants as $variant_index => &$variant) {
-                    $replace_variant = $current_stylesheet[$stylesheet][$index]->variants[$variant_index] ?? (object) [];
-
-                    if (!empty((array) $replace_variant)) {
-                        $variant = $replace_variant;
-                    }
-                }
-            }
-        }
-
-        return $all_stylesheets;
     }
 }
