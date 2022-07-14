@@ -184,7 +184,7 @@ class OMGF_Optimize
          * 
          * @since v4.5.7
          */
-        $optimized_fonts = OMGF::optimized_fonts($current_stylesheet);
+        $optimized_fonts = OMGF::optimized_fonts($current_stylesheet, true);
 
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
 

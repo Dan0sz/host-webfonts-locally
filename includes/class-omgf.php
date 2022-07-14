@@ -208,7 +208,7 @@ class OMGF
 	 * 
 	 * @return array
 	 */
-	public static function optimized_fonts($maybe_add = [])
+	public static function optimized_fonts($maybe_add = [], $force_add = false)
 	{
 		/** @var array $optimized_fonts Cache layer */
 		static $optimized_fonts;
@@ -234,7 +234,7 @@ class OMGF
 		 * 
 		 * @since v4.5.7
 		 */
-		if (!empty($maybe_add) && !isset($optimized_fonts[key($maybe_add)])) {
+		if (!empty($maybe_add) && (!isset($optimized_fonts[key($maybe_add)]) || $force_add)) {
 			$optimized_fonts = array_merge($optimized_fonts, $maybe_add);
 		}
 
