@@ -56,7 +56,7 @@ class OMGF
 		define('OMGF_CACHE_IS_STALE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE)));
 		define('OMGF_CURRENT_DB_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION)));
 		define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
-		define('OMGF_SUBSETS', $this->esc_array(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS, ['latin-ext'])) ?: ['latin-ext']);
+		define('OMGF_SUBSETS', $this->esc_array(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS, ['latin', 'latin-ext'])) ?: ['latin', 'latin-ext']);
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
 		define('OMGF_CACHE_KEYS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '')));
 		define('OMGF_TEST_MODE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE)));
