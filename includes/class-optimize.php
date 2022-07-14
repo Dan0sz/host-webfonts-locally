@@ -54,17 +54,10 @@ class OMGF_Optimize
      * @param string $url             Google Fonts API URL, e.g. "fonts.googleapis.com/css?family="Lato:100,200,300,etc."
      * @param string $handle          The cache handle, generated using $handle + 5 random chars. Used for storing the fonts and stylesheet.
      * @param string $original_handle The stylesheet handle, present in the ID attribute.
-     * @param string $subset          Contents of "subset" parameter. If left empty, the downloaded files will support all subsets.
      * @param string $return          Valid values: 'url' | 'path' | 'object'.
      * @param bool   $return_early    If this is set to true, the optimization will skip out early if the object already exists in the database.
-     * 
-     * @return string Local URL of generated stylesheet.
-     * 
-     * @throws SodiumException 
-     * @throws SodiumException 
-     * @throws TypeError 
-     * @throws TypeError 
-     * @throws TypeError 
+     *  
+     * @return void 
      */
     public function __construct(
         string $url,
@@ -77,19 +70,12 @@ class OMGF_Optimize
         $this->handle          = sanitize_title_with_dashes($handle);
         $this->original_handle = sanitize_title_with_dashes($original_handle);
         $this->path            = OMGF_UPLOAD_DIR . '/' . $this->handle;
-        $this->subsets         = apply_filters('omgf_optimize_query_subset', '');
         $this->return          = $return;
         $this->return_early    = $return_early;
     }
 
     /**
      * @return string|array
-     * 
-     * @throws SodiumException 
-     * @throws SodiumException 
-     * @throws TypeError 
-     * @throws TypeError 
-     * @throws TypeError 
      */
     public function process()
     {
@@ -203,11 +189,9 @@ class OMGF_Optimize
     /**
      * @since v5.3.0 Parse the stylesheet and build it into a font object which OMGF can understand.
      * 
-     * @param $id    Unique identifier for this Font Family, lowercase, dashes instead of spaces.
-     * @param $query
-     * @param $name  The full name of the requested Font Family, e.g. Roboto Condensed, Open Sans or Roboto.
+     * @param $url Google Fonts API request, e.g. https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400italic
      *
-     * @return mixed|void
+     * @return stdClass
      */
     private function grab_fonts_object($url)
     {
