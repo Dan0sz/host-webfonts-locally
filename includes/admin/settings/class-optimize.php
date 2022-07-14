@@ -200,7 +200,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			__('Remove Async Google Fonts (Pro)', $this->plugin_text_domain),
 			'omgf_pro_remove_async_fonts',
 			defined('OMGF_PRO_REMOVE_ASYNC_FONTS') ? OMGF_PRO_REMOVE_ASYNC_FONTS : false,
-			sprintf(__('Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, <a href="%s">either manually</a> or by using a plugin (like <a href="%s" target="_blank">Additional Fonts</a>) to prevent styling breaks.', $this->plugin_text_domain), 'https://daan.dev/wordpress/omgf-additional-fonts/'),
+			sprintf(__('Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, <a href="%s">either manually</a> or by using a plugin (like <a href="%s" target="_blank">Additional Fonts</a>) to prevent styling breaks.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/', 'https://daan.dev/wordpress/omgf-additional-fonts/'),
 			!defined('OMGF_PRO_REMOVE_ASYNC_FONTS')
 		);
 	}
