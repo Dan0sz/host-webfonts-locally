@@ -72,7 +72,7 @@ class OMGF
 	private function esc_array($array)
 	{
 		if (!is_array($array)) {
-			return $array;
+			return [];
 		}
 
 		foreach ($array as &$element) {
