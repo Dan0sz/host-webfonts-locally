@@ -321,6 +321,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 									 * 				  This deals with the duplicate display of font styles. Which also
 									 * 				  means unloading and/or preloading will unload/preload all available
 									 * 				  subsets. It's a bit bloaty, but there's no alternative.
+									 * 
+									 * 				  To better deal with this, I've introduced the Use Subset(s) feature
+									 * 				  in this version.
 									 */
 									if ($id == $variant->fontWeight . $variant->fontStyle) continue;
 									?>
