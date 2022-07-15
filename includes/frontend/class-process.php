@@ -478,8 +478,8 @@ class OMGF_Frontend_Process
 			$original_handle = $handle;
 
 			/**
-			 * If stylesheet with $handle is completely marked for unload, just clean the 'href'
-			 * attribute to prevent it from loading.
+			 * If stylesheet with $handle is completely marked for unload, just remove the element
+			 * to prevent it from loading.
 			 */
 			if (OMGF::unloaded_stylesheets() && in_array($handle, OMGF::unloaded_stylesheets())) {
 				$search[$key]  = $stack['link'];
@@ -512,8 +512,6 @@ class OMGF_Frontend_Process
 
 			/**
 			 * If required parameters aren't set, this request is most likely invalid. Let's just remove it.
-			 * 
-			 * TODO: [OMGF-40] Remove entire HTML element 
 			 */
 			if (!isset($query['family'])) {
 				$search[$key]  = $stack['link'];
