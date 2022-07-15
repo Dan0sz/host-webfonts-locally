@@ -162,7 +162,7 @@ class OMGF_Optimize
 
         file_put_contents($local_file, $stylesheet);
 
-        $fonts_bak          = array_replace_recursive($fonts_bak, $fonts);
+        $fonts_bak          = $this->rewrite_variants($fonts_bak, $fonts);
         $current_stylesheet = [$this->original_handle => $fonts_bak];
 
         /**
@@ -441,5 +441,42 @@ class OMGF_Optimize
         }
 
         return 'https://fonts.googleapis.com/css?family=' . implode('|', $font_families);
+    }
+
+    /**
+     * When unload is used, insert the cache key in the font URLs for the variants still in use.
+     *
+     * @param array $current     Contains all font styles, loaded and unloaded.
+     * @param array $replacement Contains just the loaded font styles of current stylesheet.
+     * 
+     *                           Both parameters follow this structure: 
+     * 
+     *                           (string) Font Family {
+     *                               (string) id, (string) family, (array) variants {
+     *                                   (string) id => (object) {
+     *                                       (string) id, (string) fontFamily, (string) fontStyle, (string) fontWeight, (string) woff2, (string) subset = null, (string) range
+     *                                   }
+     *                               }
+     *                           }
+     *
+     * @return array
+     */
+    private function rewrite_variants($current, $replacement)
+    {
+        foreach ($current as $font_family => &$properties) {
+            if (!isset($properties->variants) || empty($properties->variants)) {
+                continue;
+            }
+
+            foreach ($properties->variants as $id => &$variant) {
+                $replacement_variant = $replacement[$font_family]->variants[$id] ?? '';
+
+                if ($replacement_variant && $replacement_variant != $variant) {
+                    $variant = $replacement_variant;
+                }
+            }
+        }
+
+        return $current;
     }
 }
