@@ -119,15 +119,22 @@ class OMGF_Frontend_Process
 					}
 				);
 
+				/**
+				 * @since v5.3.0 Store all preloaded URLs temporarily, to make sure no duplicate files (Variable Fonts) are preloaded.
+				 */
+				$preloaded = [];
+
 				foreach ($preload_variants as $variant) {
 					$url = rawurldecode($variant->woff2);
 
 					/**
 					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
 					 */
-					if (!file_exists(str_replace(OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, $url))) {
+					if (!file_exists(str_replace(OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, $url)) || in_array($url, $preloaded)) {
 						continue;
 					}
+
+					$preloaded[] = $url;
 
 					echo "<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n";
 					$i++;
