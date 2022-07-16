@@ -9,7 +9,7 @@ OMGF automagically caches the Google Fonts used by your theme/plugins locally. N
 
 **Leverage Browser Cache**, **reduce DNS lookups/requests**, **reduce Cumulative Layout Shift** and make your Google Fonts **100% GDPR compliant** with OMGF!
 
-OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts Helper API to automatically cache the fonts your theme and plugins use to **minimize DNS requests** and speed up your WordPress website.
+OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts API to automatically cache the fonts your theme and plugins use to **minimize DNS requests** and speed up your WordPress website.
 
 ## How Does It Work?
 
@@ -24,10 +24,11 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
 
 ### Other Features include
 
+- **Variable Fonts** support,
+- **Remove unused subsets** to reduce the size of the CSS stylesheet,
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to your Google Fonts,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to all your other fonts! (OMGF Pro required),
-- **Reduce the filesize** of your fonts and stylesheets, by using the *Force subset* and *Include File Types* feature (OMGF Pro required),
 
 ### Additional Features in OMGF Pro
 - **Multisite** support,
