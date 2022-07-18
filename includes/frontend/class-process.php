@@ -119,7 +119,7 @@ class OMGF_Frontend_Process
 				$preload_variants = array_filter(
 					(array) $font_face->variants,
 					function ($variant) use ($preloads_stylesheet, $font_id) {
-						return in_array($variant->id, $preloads_stylesheet[$font_id]) && (isset($variant->subset) ? in_array($variant->subset, OMGF_SUBSETS) : true);
+						return in_array($variant->id, $preloads_stylesheet[$font_id]);
 					}
 				);
 
