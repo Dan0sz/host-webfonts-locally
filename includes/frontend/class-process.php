@@ -79,7 +79,11 @@ class OMGF_Frontend_Process
 		add_action('wp_head', [$this, 'add_preloads'], 3);
 		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
 		add_filter('omgf_buffer_output', [$this, 'remove_resource_hints'], 9);
-		add_filter('omgf_buffer_output', [$this, 'parse']);
+
+		/** Only hook into our own filter if Smart Slider 3 isn't active, as it has its own filter. */
+		if (!function_exists('smart_slider_3_plugins_loaded')) {
+			add_filter('omgf_buffer_output', [$this, 'parse']);
+		}
 
 		/** Smart Slider 3 compatibility */
 		add_filter('wordpress_prepare_output', [$this, 'parse'], 11);
