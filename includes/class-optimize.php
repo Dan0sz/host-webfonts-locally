@@ -144,7 +144,7 @@ class OMGF_Optimize
                 /**
                  * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
                  */
-                if (isset($variant->subset) && !in_array($variant->subset, OMGF_SUBSETS)) {
+                if (isset($variant->subset) && !in_array($variant->subset, apply_filters('omgf_used_subsets', OMGF_SUBSETS))) {
                     unset($font->variants[$variant_id]);
 
                     continue;
@@ -474,7 +474,7 @@ class OMGF_Optimize
                 /**
                  * @since v5.3.0 Get rid of any subsets that aren't in use.
                  */
-                if (isset($variant->subset) && !in_array($variant->subset, OMGF_SUBSETS)) {
+                if (isset($variant->subset) && !in_array($variant->subset, apply_filters('omgf_used_subsets', OMGF_SUBSETS))) {
                     unset($properties->variants[$id]);
                 }
 
