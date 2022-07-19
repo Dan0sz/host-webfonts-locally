@@ -134,6 +134,9 @@
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .unload-mass-action {
   font-size: 0.9em;
 }
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .unload-mass-action:hover {
+  cursor: pointer;
+}
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .family {
   padding: 0 10px 0;
   font-weight: 600;

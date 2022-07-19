@@ -227,13 +227,11 @@ jQuery(document).ready(function ($) {
          * Unload all fonts for current font family.
          */
         unload_all: function (e, self = this) {
-            e.preventDefault();
-
             var id = $(self).parents('.font-family').data('id');
-            var unloads = $('.unload');
+            var unloads = $('input.unload[data-font-id="' + id + '"]');
 
             unloads.each(function (index, item) {
-                if (item.dataset.fontId == id && item.checked == false) {
+                if (item.checked == false) {
                     item.click();
                 }
             });
@@ -243,8 +241,6 @@ jQuery(document).ready(function ($) {
          * Uncheck all unload checkboxes for the current font family.
          */
         load_all: function (e) {
-            e.preventDefault();
-
             var id = $(this).parents('.font-family').data('id');
             var unloads = $('.unload');
 
