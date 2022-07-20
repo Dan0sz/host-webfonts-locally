@@ -213,11 +213,11 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	public function do_use_subsets()
 	{
 		$this->do_select(
-			__('Use Subset(s)', $this->plugin_text_domain),
+			__('Used Subset(s)', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS,
 			OMGF_Admin_Settings::OMGF_SUBSETS,
 			OMGF_SUBSETS,
-			__('Select which subset(s) should be used when generating stylesheets and preloads. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Use CTRL + click to select multiple values.</em>', $this->plugin_text_domain),
+			__('Select which subset(s) sgould be used when generating stylesheets and preloads. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Use CTRL + click to select multiple values.</em>', $this->plugin_text_domain),
 			true
 		);
 	}
@@ -322,7 +322,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 									 * 				  means unloading and/or preloading will unload/preload all available
 									 * 				  subsets. It's a bit bloaty, but there's no alternative.
 									 * 
-									 * 				  To better deal with this, I've introduced the Use Subset(s) feature
+									 * 				  To better deal with this, I've introduced the Used Subset(s) feature
 									 * 				  in this version.
 									 */
 									if ($id == $variant->fontWeight . $variant->fontStyle) continue;
