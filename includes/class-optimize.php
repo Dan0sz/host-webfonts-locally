@@ -250,7 +250,10 @@ class OMGF_Optimize
         }
 
         foreach ($font_faces[0] as $key => $font_face) {
-            if (strpos($font_face, $font_family) === false) {
+            /**
+             * @since v5.3.3 Exact match for font-family attribute, to prevent similar font names from falling thru, e.g. Roboto and Roboto Slab.
+             */
+            if (!preg_match('/font-family:[\s\'"]*?' . $font_family . '[\'"]?;/', $font_face)) {
                 continue;
             }
 
