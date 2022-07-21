@@ -126,6 +126,15 @@ class OMGF_Optimize
 
             foreach ($font->variants as $variant_id => &$variant) {
                 /**
+                 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
+                 */
+                if (isset($variant->subset) && !in_array($variant->subset, apply_filters('omgf_used_subsets', OMGF_SUBSETS))) {
+                    unset($font->variants[$variant_id]);
+
+                    continue;
+                }
+
+                /**
                  * @since v5.3.0 Variable fonts use one filename for all font weights/styles. That's why we drop the weight from the filename.
                  */
                 if (isset($this->variable_fonts[$id])) {
@@ -141,14 +150,6 @@ class OMGF_Optimize
                  */
                 $variant->fontFamily = rawurlencode($variant->fontFamily);
 
-                /**
-                 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
-                 */
-                if (isset($variant->subset) && !in_array($variant->subset, apply_filters('omgf_used_subsets', OMGF_SUBSETS))) {
-                    unset($font->variants[$variant_id]);
-
-                    continue;
-                }
 
                 if (isset($variant->woff2)) {
                     $variant->woff2 = OMGF::download($variant->woff2, $filename, 'woff2', $this->path);
