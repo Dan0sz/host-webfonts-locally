@@ -200,6 +200,10 @@
 .tooltip:hover .tooltip-text {
   visibility: visible;
 }
+.omgf-warning {
+  color: red;
+  font-weight: 600;
+}
 #omgf-help-form .postbox {
   padding: 0 15px 5px;
 }

@@ -29,6 +29,8 @@ class OMGF_AJAX
 		add_action('wp_ajax_omgf_remove_stylesheet_from_db', [$this, 'remove_stylesheet_from_db']);
 		add_action('wp_ajax_omgf_refresh_cache', [$this, 'refresh_cache']);
 		add_action('wp_ajax_omgf_empty_dir', [$this, 'empty_directory']);
+		add_action('wp_ajax_omgf_download_log', [$this, 'download_log']);
+		add_action('wp_ajax_omgf_delete_log', [$this, 'delete_log']);
 	}
 
 	/**
@@ -175,5 +177,59 @@ class OMGF_AJAX
 		foreach ($instructions['queue'] as $option) {
 			delete_option($option);
 		}
+	}
+
+	public function download_log()
+	{
+		check_ajax_referer(OMGF_Admin_Settings::OMGF_ADMIN_PAGE, 'nonce');
+
+		if (!current_user_can('manage_options')) {
+			wp_die(__("Hmmm, you're not supposed to be here.", $this->plugin_text_domain));
+		}
+
+		$filename = OMGF::$log_file;
+
+		/**
+		 * Shouldn't happen, but you never know.
+		 */
+		if (!file_exists($filename)) {
+			wp_die();
+		}
+
+		$basename = basename($filename);
+		$filesize = filesize($filename);
+
+		header('Content-Description: File Transfer');
+		header('Content-Type: text/plain');
+		header("Cache-Control: no-cache, must-revalidate");
+		header("Expires: 0");
+		header("Content-Disposition: attachment; filename=$basename");
+		header("Content-Length: $filesize");
+		header('Pragma: public');
+
+		flush();
+
+		readfile($filename);
+
+		wp_die();
+	}
+
+	public function delete_log()
+	{
+		check_ajax_referer(OMGF_Admin_Settings::OMGF_ADMIN_PAGE, 'nonce');
+
+		if (!current_user_can('manage_options')) {
+			wp_die(__("Hmmm, you're not supposed to be here.", $this->plugin_text_domain));
+		}
+
+		$filename = OMGF::$log_file;
+
+		if (file_exists($filename)) {
+			unlink($filename);
+
+			add_settings_error('general', 'omgf-log-file-deleted', __('Log file successfully deleted', $this->plugin_text_domain), 'success');
+		}
+
+		wp_die();
 	}
 }

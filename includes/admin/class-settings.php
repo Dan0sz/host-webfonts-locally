@@ -126,6 +126,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Advanced Settings
 	 */
 	const OMGF_ADV_SETTING_COMPATIBILITY = 'omgf_compatibility';
+	const OMGF_ADV_SETTING_DEBUG_MODE    = 'omgf_debug';
 	const OMGF_ADV_SETTING_UNINSTALL     = 'omgf_uninstall';
 
 	/**

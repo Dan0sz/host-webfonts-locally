@@ -19,11 +19,18 @@ defined('ABSPATH') || exit;
 class OMGF
 {
 	/**
+	 * @var string $log_file Path where log file is located.
+	 */
+	public static $log_file;
+
+	/**
 	 * OMGF constructor.
 	 */
 	public function __construct()
 	{
 		$this->define_constants();
+
+		self::$log_file = trailingslashit(WP_CONTENT_DIR) . 'omgf-debug.log';
 
 		if (version_compare(OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION) < 0) {
 			add_action('plugins_loaded', [$this, 'do_migrate_db']);
@@ -66,6 +73,7 @@ class OMGF
 		define('OMGF_CACHE_KEYS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '')));
 		define('OMGF_TEST_MODE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE)));
 		define('OMGF_COMPATIBILITY', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_COMPATIBILITY, 'on')));
+		define('OMGF_DEBUG_MODE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_DEBUG_MODE)));
 		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
 		define('OMGF_UPLOAD_DIR', apply_filters('omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf'));
 		define('OMGF_UPLOAD_URL', apply_filters('omgf_upload_url', WP_CONTENT_URL . '/uploads/omgf'));
@@ -415,10 +423,10 @@ class OMGF
 	 */
 	public static function debug($message)
 	{
-		if (!defined('OMGF_DEBUG_MODE') || !OMGF_DEBUG_MODE) {
+		if (OMGF_DEBUG_MODE !== 'on' || filesize(self::$log_file > MB_IN_BYTES)) {
 			return;
 		}
 
-		error_log(current_time('Y-m-d H:i:s') . ' '  . microtime() . ": $message\n", 3, trailingslashit(WP_CONTENT_DIR) . 'omgf-debug.log');
+		error_log(current_time('Y-m-d H:i:s') . ' '  . microtime() . ": $message\n", 3, self::$log_file);
 	}
 }

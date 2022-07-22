@@ -21,7 +21,9 @@ jQuery(document).ready(function ($) {
         optimize_xhr: false,
         cache_prefix: '-mod-',
         flush_action_init: $('.omgf-empty').data('init'),
-        nonce: $('.omgf-empty').data('nonce'),
+        empty_action_nonce: $('.omgf-empty').data('nonce'),
+        delete_log_xhr: false,
+        delete_action_nonce: $('#omgf-delete-log').data('nonce'),
 
         /**
          * Initialize all on click events.
@@ -42,6 +44,7 @@ jQuery(document).ready(function ($) {
             $('#omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
             $('#omgf-optimize-settings-form').on('submit', this.show_loader_before_submit);
+            $('#omgf-delete-log').on('click', this.delete_log);
 
             // Ticker
             setInterval(this.loop_ticker_items, 4000);
@@ -75,7 +78,7 @@ jQuery(document).ready(function ($) {
                 data: {
                     action: 'omgf_remove_stylesheet_from_db',
                     handle: handle,
-                    nonce: omgf_admin.nonce,
+                    nonce: omgf_admin.empty_action_nonce,
                 },
                 beforeSend: function () {
                     omgf_admin.show_loader();
@@ -95,7 +98,7 @@ jQuery(document).ready(function ($) {
                 url: ajaxurl,
                 data: {
                     action: 'omgf_refresh_cache',
-                    nonce: omgf_admin.nonce,
+                    nonce: omgf_admin.empty_action_nonce,
                 },
                 beforeSend: function () {
                     $('.omgf-optimize-fonts-manage table tbody').each(function (key, elem) {
@@ -290,8 +293,29 @@ jQuery(document).ready(function ($) {
                 url: ajaxurl,
                 data: {
                     action: 'omgf_empty_dir',
-                    nonce: omgf_admin.nonce,
+                    nonce: omgf_admin.empty_action_nonce,
                     init: omgf_admin.flush_action_init
+                },
+                beforeSend: function () {
+                    omgf_admin.show_loader();
+                },
+                complete: function () {
+                    location.reload();
+                }
+            });
+        },
+
+        delete_log: function () {
+            if (omgf_admin.delete_log_xhr) {
+                omgf_admin.delete_log_xhr.abort();
+            }
+
+            omgf_admin.delete_log_xhr = $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_delete_log',
+                    nonce: omgf_admin.delete_action_nonce,
                 },
                 beforeSend: function () {
                     omgf_admin.show_loader();

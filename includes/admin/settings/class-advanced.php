@@ -36,6 +36,8 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 50);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_fonts_source_url'], 60);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_compatibility'], 70);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_debug_mode'], 80);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_download_log'], 90);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 100);
 
 		// Close
@@ -68,7 +70,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 				</p>
 			</td>
 		</tr>
-<?php
+	<?php
 	}
 
 	/**
@@ -100,6 +102,43 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			OMGF_COMPATIBILITY,
 			__('Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. However, if you have too many different stylesheets and you want to force the usage of 1 stylesheet throughout all your pages, disabling Divi/Elementor Compatibility might help. Default: on', $this->plugin_text_domain)
 		);
+	}
+
+	public function do_debug_mode()
+	{
+		$this->do_checkbox(
+			__('Debug Mode', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_ADV_SETTING_DEBUG_MODE,
+			OMGF_DEBUG_MODE,
+			__('Don\'t enable this option, unless when asked by me (Daan) or, if you know what you\'re doing.')
+		);
+	}
+
+	/**
+	 * Show Download Log button if debug mode is on and debug file exists.
+	 */
+	public function do_download_log()
+	{
+	?>
+		<tr>
+			<th></th>
+			<td>
+				<?php if (OMGF_DEBUG_MODE === 'on' && file_exists(OMGF::$log_file)) : ?>
+					<?php
+					clearstatcache();
+					$nonce = wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE);
+					?>
+					<a class="button button-secondary" href="<?php echo admin_url("admin-ajax.php?action=omgf_download_log&nonce=$nonce"); ?>"><?php _e('Download Log', $this->plugin_text_domain); ?></a>
+					<?php if (filesize(OMGF::$log_file) > MB_IN_BYTES) : ?>
+						<a id="omgf-delete-log" class="button button-cancel" data-nonce="<?php echo $nonce; ?>"><?php _e('Delete log', $this->plugin_text_domain); ?></a>
+						<p class="omgf-warning"><?php _e('Your log file is currently larger than 1MB. To protect your filesystem logging has stopped. Delete the log file to enable logging again.', $this->plugin_text_domain); ?></p>
+					<?php endif; ?>
+				<?php else : ?>
+					<p class="description"><?php _e('No log file available for download.', $this->plugin_text_domain); ?></p>
+				<?php endif; ?>
+			</td>
+		</tr>
+<?php
 	}
 
 	/**
