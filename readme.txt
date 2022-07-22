@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.3.2
+Stable tag: 5.3.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,14 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.3.3 =
+* Added: Debug Mode with an option to download the log file. Stops logging when file exceeds 1MB for those who forgot to disable it.
+* Fixed: Prevent array to string conversion with new Used Subset(s) option by writing defaults to the database: Latin, Latin Extended.
+* Added: debug logging points in OMGF_Optimize class.
+* Fixed: decode HTML entities in the URL before fetching the stylesheet from the Google Fonts API.
+* Fixed: stricter matching for font-family detection, to prevent similar font names (e.g. Roboto and Roboto Condensed) from getting mixed up in the stylesheet.
+* Fixed: minor performance optimization in OMGF_Optimize class.
 
 = 5.3.2 =
 * Fixed: updated static version to force a browser cache refresh of admin JS files.
