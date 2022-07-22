@@ -25,6 +25,10 @@ class OMGF
 	{
 		$this->define_constants();
 
+		if (version_compare(OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION) < 0) {
+			add_action('plugins_loaded', [$this, 'do_migrate_db']);
+		}
+
 		if (is_admin()) {
 			add_action('_admin_menu', [$this, 'init_admin']);
 
@@ -65,6 +69,16 @@ class OMGF
 		define('OMGF_UNINSTALL', esc_attr(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_UNINSTALL)));
 		define('OMGF_UPLOAD_DIR', apply_filters('omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf'));
 		define('OMGF_UPLOAD_URL', apply_filters('omgf_upload_url', WP_CONTENT_URL . '/uploads/omgf'));
+	}
+
+	/**
+	 * Run any DB migration scripts if needed.
+	 * 
+	 * @return void 
+	 */
+	public function do_migrate_db()
+	{
+		new OMGF_DB_Migrate();
 	}
 
 	/**
