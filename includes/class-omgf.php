@@ -390,6 +390,6 @@ class OMGF
 			return;
 		}
 
-		error_log(current_time('Y-m-d H:i:s') . ' '  . microtime() . ": $message\n", 3, trailingslashit(WP_CONTENT_DIR) . 'omgf-pro-debug.log');
+		error_log(current_time('Y-m-d H:i:s') . ' '  . microtime() . ": $message\n", 3, trailingslashit(WP_CONTENT_DIR) . 'omgf-debug.log');
 	}
 }
