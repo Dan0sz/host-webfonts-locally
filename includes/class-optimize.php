@@ -198,6 +198,10 @@ class OMGF_Optimize
      */
     private function grab_fonts_object($url)
     {
+        /**
+         * @since v5.3.3 Decode HTML entities to prevent URL decoding issues on some systems.
+         */
+        $url      = html_entity_decode($url);
         $response = wp_remote_get($url, [
             'user-agent' => self::USER_AGENT['woff2']
         ]);
