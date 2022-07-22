@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.3.3
+Stable tag: 5.3.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -76,7 +76,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
-= 5.3.3 =
+= 5.3.4 =
+* Fixed: Debug Mode wouldn't stop logging at 1MB.
+* Fixed: "No log file available for download" message would show when Debug Mode was disabled under Advanced Settings.
+
+= 5.3.3 | July 22nd, 2022 =
 * Added: Debug Mode with an option to download the log file. Stops logging when file exceeds 1MB for those who forgot to disable it.
 * Fixed: Prevent array to string conversion with new Used Subset(s) option by writing defaults to the database: Latin, Latin Extended.
 * Added: debug logging points in OMGF_Optimize class.
