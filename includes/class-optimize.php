@@ -198,10 +198,8 @@ class OMGF_Optimize
      */
     private function grab_fonts_object($url)
     {
-        /**
-         * @since v5.3.3 Decode HTML entities to prevent URL decoding issues on some systems.
-         */
-        $url      = html_entity_decode($url);
+        OMGF::debug(__('Fetching stylesheet from: ', $this->plugin_text_domain) . $url);
+
         $response = wp_remote_get($url, [
             'user-agent' => self::USER_AGENT['woff2']
         ]);
@@ -214,6 +212,8 @@ class OMGF_Optimize
 
         $stylesheet = wp_remote_retrieve_body($response);
 
+        OMGF::debug(__('Stylesheet fetched. Parsing for font-families...', $this->plugin_text_domain));
+
         preg_match_all('/font-family:\s\'(.*?)\';/', $stylesheet, $font_families);
 
         if (!isset($font_families[1]) || empty($font_families[1])) {
@@ -221,6 +221,8 @@ class OMGF_Optimize
         }
 
         $font_families = array_unique($font_families[1]);
+
+        OMGF::debug(__('Font-families found: ', $this->plugin_text_domain) . print_r($font_families, true));
 
         foreach ($font_families as $font_family) {
             $id          = strtolower(str_replace(' ', '-', $font_family));
@@ -231,6 +233,8 @@ class OMGF_Optimize
                 'subsets'  => apply_filters('omgf_optimize_fonts_object_subsets', $this->parse_subsets($stylesheet, $font_family), $stylesheet, $font_family, $this->url)
             ];
         }
+
+        OMGF::debug(__('Stylesheet successfully converted to object.', $this->plugin_text_domain));
 
         return $object;
     }
@@ -245,6 +249,8 @@ class OMGF_Optimize
      */
     private function parse_variants($stylesheet, $font_family)
     {
+        OMGF::debug(__('Parsing variants.', $this->plugin_text_domain));
+
         /**
          * This also captures the commented Subset name.
          */
@@ -253,6 +259,8 @@ class OMGF_Optimize
         if (!isset($font_faces[0]) || empty($font_faces[0])) {
             return [];
         }
+
+        OMGF::debug(sprintf(__('Found %s @font-face statements.', $this->plugin_text_domain), count($font_faces[0])));
 
         foreach ($font_faces[0] as $key => $font_face) {
             /**
@@ -290,8 +298,14 @@ class OMGF_Optimize
              */
             if (substr_count($stylesheet, $font_src[1]) > 1) {
                 $this->variable_fonts[strtolower(str_replace(' ', '-', $font_family))] = true;
+
+                OMGF::debug(__('Same file used for multiple @font-face statements. This is a variable font: ', $this->plugin_text_domain) . $$font_family);
             }
         }
+
+        OMGF::debug(__('Generated the following @font-face objects: ', $this->plugin_text_domain) . print_r($font_object, true));
+
+        OMGF::debug(__('All @font-face statements processed.', $this->plugin_text_domain));
 
         return $font_object;
     }
@@ -302,13 +316,19 @@ class OMGF_Optimize
      */
     private function parse_subsets($stylesheet)
     {
+        OMGF::debug(__('Parsing subsets.', $this->plugin_text_domain));
+
         preg_match_all('/\/\*\s([a-z\-]+?)\s\*\//', $stylesheet, $subsets);
 
         if (!isset($subsets[1]) || empty($subsets[1])) {
             return [];
         }
 
-        return array_unique($subsets[1]);
+        $subsets = array_unique($subsets[1]);
+
+        OMGF::debug(__('This stylesheet contains @font-face statements for the following subsets: ', $this->plugin_text_domain) . print_r($subsets, true));
+
+        return $subsets;
     }
 
     /**
@@ -324,6 +344,8 @@ class OMGF_Optimize
         }
 
         $url = urldecode($url);
+
+        OMGF::debug(__('Looking for unloads for: ', $this->plugin_text_domain) . $url);
 
         if (strpos($url, '/css2') !== false) {
             $url = $this->unload_css2($url);
