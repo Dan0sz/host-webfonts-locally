@@ -416,14 +416,17 @@ class OMGF
 	}
 
 	/**
-	 * Global debug logging function.
+	 * Global debug logging function. Stops logging if log size exceeds 1MB.
 	 * 
 	 * @param mixed $message 
 	 * @return void 
 	 */
 	public static function debug($message)
 	{
-		if (OMGF_DEBUG_MODE !== 'on' || filesize(self::$log_file > MB_IN_BYTES)) {
+		if (
+			OMGF_DEBUG_MODE !== 'on' ||
+			(OMGF_DEBUG_MODE === 'on' && filesize(self::$log_file) > MB_IN_BYTES)
+		) {
 			return;
 		}
 
