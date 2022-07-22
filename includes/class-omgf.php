@@ -35,6 +35,7 @@ class OMGF
 			add_action('init', [$this, 'init_frontend'], 50);
 		}
 
+		add_filter('omgf_optimize_url', [$this, 'decode_url']);
 		add_action('admin_init', [$this, 'do_optimize']);
 		add_filter('content_url', [$this, 'force_ssl'], 1000, 2);
 		add_filter('pre_update_option_omgf_optimized_fonts', [$this, 'base64_decode_optimized_fonts']);
@@ -108,6 +109,20 @@ class OMGF
 	public function init_frontend()
 	{
 		return new OMGF_Frontend_Process();
+	}
+
+	/**
+	 * @since v5.3.3 Decode HTML entities to prevent URL decoding issues on some systems.
+	 * 
+	 * @filter omgf_optimize_url
+	 * 
+	 * @param mixed $url 
+	 * 
+	 * @return string 
+	 */
+	public function decode_url($url)
+	{
+		return html_entity_decode($url);
 	}
 
 	/**
