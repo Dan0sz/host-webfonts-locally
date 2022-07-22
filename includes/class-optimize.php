@@ -124,16 +124,9 @@ class OMGF_Optimize
              */
             $font->family = rawurlencode($font->family);
 
+            OMGF::debug(__('Processing downloads for', $this->plugin_text_domain) . ' ' . $font->family . '...');
+
             foreach ($font->variants as $variant_id => &$variant) {
-                /**
-                 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
-                 */
-                if (isset($variant->subset) && !in_array($variant->subset, apply_filters('omgf_used_subsets', OMGF_SUBSETS))) {
-                    unset($font->variants[$variant_id]);
-
-                    continue;
-                }
-
                 /**
                  * @since v5.3.0 Variable fonts use one filename for all font weights/styles. That's why we drop the weight from the filename.
                  */
@@ -152,9 +145,16 @@ class OMGF_Optimize
 
 
                 if (isset($variant->woff2)) {
+                    OMGF::debug(sprintf(__('Downloading %s to %s from %s.'), $filename, $this->path, $variant->woff2));
+
+                    /**
+                     * If file already exists the OMGF_Download class bails early.
+                     */
                     $variant->woff2 = OMGF::download($variant->woff2, $filename, 'woff2', $this->path);
                 }
             }
+
+            OMGF::debug(__('Finished downloading for', $this->plugin_text_domain) . ' ' . $font->family);
         }
 
         $stylesheet = OMGF::generate_stylesheet($fonts);
@@ -276,8 +276,14 @@ class OMGF_Optimize
             preg_match('/\/\*\s([a-z\-]+?)\s\*\//', $font_face, $subset);
             preg_match('/unicode-range:\s(.*?);/', $font_face, $range);
 
-            $key = $subset[1] . '-' . $font_weight[1] . ($font_style[1] == 'normal' ? '' : '-' . $font_style[1]);
+            /**
+             * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
+             */
+            if (!empty($subset) && isset($subset[1]) && !in_array($subset[1], apply_filters('omgf_used_subsets', OMGF_SUBSETS))) {
+                continue;
+            }
 
+            $key                           = $subset[1] . '-' . $font_weight[1] . ($font_style[1] == 'normal' ? '' : '-' . $font_style[1]);
             $font_object[$key]             = new stdClass();
             $font_object[$key]->id         = $font_weight[1] . ($font_style[1] == 'normal' ? '' : $font_style[1]);
             $font_object[$key]->fontFamily = $font_family;
@@ -293,13 +299,15 @@ class OMGF_Optimize
                 $font_object[$key]->range = $range[1];
             }
 
+            $id = strtolower(str_replace(' ', '-', $font_family));
+
             /**
              * @since v5.3.0 Is this a variable font i.e. one font file for multiple font weights/styles?
              */
-            if (substr_count($stylesheet, $font_src[1]) > 1) {
-                $this->variable_fonts[strtolower(str_replace(' ', '-', $font_family))] = true;
+            if (substr_count($stylesheet, $font_src[1]) > 1 && !in_array($id, $this->variable_fonts)) {
+                $this->variable_fonts[$id] = $id;
 
-                OMGF::debug(__('Same file used for multiple @font-face statements. This is a variable font: ', $this->plugin_text_domain) . $$font_family);
+                OMGF::debug(__('Same file used for multiple @font-face statements. This is a variable font: ', $this->plugin_text_domain) . $font_family);
             }
         }
 
@@ -501,13 +509,6 @@ class OMGF_Optimize
             }
 
             foreach ($properties->variants as $id => &$variant) {
-                /**
-                 * @since v5.3.0 Get rid of any subsets that aren't in use.
-                 */
-                if (isset($variant->subset) && !in_array($variant->subset, apply_filters('omgf_used_subsets', OMGF_SUBSETS))) {
-                    unset($properties->variants[$id]);
-                }
-
                 $replacement_variant = $replacement[$font_family]->variants[$id] ?? '';
 
                 if ($replacement_variant && $replacement_variant != $variant) {
