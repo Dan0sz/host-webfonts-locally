@@ -184,7 +184,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			__('Apply Font-Display Option Globally (Pro)', $this->plugin_text_domain),
 			'omgf_pro_force_font_display',
 			defined('OMGF_PRO_FORCE_FONT_DISPLAY') ? OMGF_PRO_FORCE_FONT_DISPLAY : false,
-			__('Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.', $this->plugin_text_domain),
+			__('Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.', $this->plugin_text_domain) . ' ' . $this->promo,
 			!defined('OMGF_PRO_FORCE_FONT_DISPLAY')
 		);
 	}
@@ -200,7 +200,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			__('Remove Async Google Fonts (Pro)', $this->plugin_text_domain),
 			'omgf_pro_remove_async_fonts',
 			defined('OMGF_PRO_REMOVE_ASYNC_FONTS') ? OMGF_PRO_REMOVE_ASYNC_FONTS : false,
-			sprintf(__('Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%s">manually</a> or by using a plugin (like <a href="%s" target="_blank">Additional Fonts</a>) to prevent styling breaks.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/', 'https://daan.dev/wordpress/omgf-additional-fonts/'),
+			sprintf(__('Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%s">manually</a> or by using <a href="%s" target="_blank">a plugin</a> to prevent styling breaks.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/', 'https://daan.dev/wordpress/omgf-additional-fonts/') . ' ' . $this->promo,
 			!defined('OMGF_PRO_REMOVE_ASYNC_FONTS')
 		);
 	}
@@ -272,8 +272,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							<th><?= __('Weight', $this->plugin_text_domain); ?></th>
 							<th><?= __('Preload', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('<a href="%s">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold'); ?></span><img width="230" class="illustration" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/above-the-fold.png'; ?>" /></span></span></th>
 							<th><?= __('Do not load', $this->plugin_text_domain); ?></th>
-							<th><?= __('Fallback Font Stack (Pro)', $this->plugin_text_domain); ?></th>
-							<th><?= __('Replace (Pro)', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('When the <a href="%s">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/#7-4-specify-a-fallback-font-stack'); ?></span></span></span></th>
+							<th><?= __('Fallback Font Stack (Pro)', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo __('Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded.', $this->plugin_text_domain) . ' ' . $this->promo; ?></span></span></span></th>
+							<th><?= __('Replace (Pro)', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('When the <a href="%s">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/#7-4-specify-a-fallback-font-stack') . ' ' . $this->promo; ?></span></span></span></th>
 						</tr>
 					</thead>
 					<?php
