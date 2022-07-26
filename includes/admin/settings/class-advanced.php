@@ -129,8 +129,8 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 						$nonce = wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE);
 						?>
 						<a class="button button-secondary" href="<?php echo admin_url("admin-ajax.php?action=omgf_download_log&nonce=$nonce"); ?>"><?php _e('Download Log', $this->plugin_text_domain); ?></a>
+						<a id="omgf-delete-log" class="button button-cancel" data-nonce="<?php echo $nonce; ?>"><?php _e('Delete log', $this->plugin_text_domain); ?></a>
 						<?php if (filesize(OMGF::$log_file) > MB_IN_BYTES) : ?>
-							<a id="omgf-delete-log" class="button button-cancel" data-nonce="<?php echo $nonce; ?>"><?php _e('Delete log', $this->plugin_text_domain); ?></a>
 							<p class="omgf-warning"><?php _e('Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again.', $this->plugin_text_domain); ?></p>
 						<?php endif; ?>
 					<?php else : ?>
