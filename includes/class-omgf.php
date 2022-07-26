@@ -425,7 +425,7 @@ class OMGF
 	{
 		if (
 			OMGF_DEBUG_MODE !== 'on' ||
-			(OMGF_DEBUG_MODE === 'on' && filesize(self::$log_file) > MB_IN_BYTES)
+			(OMGF_DEBUG_MODE === 'on' && file_exists(self::$log_file) && filesize(self::$log_file) > MB_IN_BYTES)
 		) {
 			return;
 		}
