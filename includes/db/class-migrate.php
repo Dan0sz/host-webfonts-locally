@@ -25,6 +25,10 @@ class OMGF_DB_Migrate
         if ($this->should_run_migration('5.3.3')) {
             new OMGF_DB_Migrate_V533();
         }
+
+        if ($this->should_run_migration('5.3.4')) {
+            new OMGF_DB_Migrate_V534();
+        }
     }
 
     /**
