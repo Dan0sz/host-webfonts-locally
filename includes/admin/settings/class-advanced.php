@@ -100,7 +100,7 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			__('Divi/Elementor Compatibility', $this->plugin_text_domain),
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_COMPATIBILITY,
 			OMGF_COMPATIBILITY,
-			__('Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. However, if you have too many different stylesheets and you want to force the usage of 1 stylesheet throughout all your pages, disabling Divi/Elementor Compatibility might help. Default: on', $this->plugin_text_domain)
+			__('Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off', $this->plugin_text_domain)
 		);
 	}
 
