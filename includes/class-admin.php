@@ -121,8 +121,6 @@ class OMGF_Admin
 				),
 				'omgf-post-update'
 			);
-
-			update_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION);
 		}
 	}
 
