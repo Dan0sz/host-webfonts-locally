@@ -306,15 +306,19 @@ class OMGF_Frontend_Process
 		}
 
 		/**
-		 * Use positive lookaround for stricter matching.
+		 * @since v5.3.5 Use a generic regex and filter them separately.
 		 */
-		preg_match_all('/(?=\<link).+?href=[\'"](https:)?\/\/fonts\.googleapis\.com\/css.+?[\'"].+?(?<=>)/', $html, $links);
+		preg_match_all('/<link.*?[\/]?>/', $html, $links);
 
 		if (!isset($links[0]) || empty($links[0])) {
 			return apply_filters('omgf_processed_html', $html, $this);
 		}
 
-		$google_fonts   = $this->build_fonts_set($links[0]);
+		$links = array_filter($links[0], function ($link) {
+			return strpos($link, 'fonts.googleapis.com/css') !== false;
+		});
+
+		$google_fonts   = $this->build_fonts_set($links);
 		$search_replace = $this->build_search_replace($google_fonts);
 
 		if (empty($search_replace['search']) || empty($search_replace['replace'])) {
