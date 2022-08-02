@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.3.4
+Stable tag: 5.3.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,13 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.3.5 | August 2nd, 2022 =
+* Fixed: use a more reliable regular expression to detect Google Fonts.
+* Fixed: Divi/Elementor compatibility is now disabled by default.
+* Added: DB migration script which invalidates the current stylesheets, if they don't confirm to the new standards yet.
+* Fixed: always allow debug log file to be deleted from the admin screen.
+* Fixed: filestat() failed-warning when enabling Debug Mode for the first time.
 
 = 5.3.4 =
 * Fixed: Debug Mode wouldn't stop logging at 1MB.
