@@ -70,6 +70,8 @@ class OMGF_StylesheetGenerator
 			}
 		}
 
+		$stylesheet = apply_filters('omgf_generate_stylesheet_after', $stylesheet, $this->fonts);
+
 		return $stylesheet;
 	}
 
