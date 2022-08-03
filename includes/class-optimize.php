@@ -198,7 +198,7 @@ class OMGF_Optimize
      */
     private function grab_fonts_object($url)
     {
-        OMGF::debug(__('Fetching stylesheet from: ', $this->plugin_text_domain) . $url);
+        OMGF::debug(__('Fetching stylesheet form: ', $this->plugin_text_domain) . $url);
 
         $response = wp_remote_get($url, [
             'user-agent' => self::USER_AGENT['woff2']
@@ -236,7 +236,7 @@ class OMGF_Optimize
 
         OMGF::debug(__('Stylesheet successfully converted to object.', $this->plugin_text_domain));
 
-        return $object;
+        return apply_filters('omgf_optimize_fonts_object', $object, $url);
     }
 
     /**
