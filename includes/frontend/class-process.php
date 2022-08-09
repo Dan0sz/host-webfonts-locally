@@ -249,7 +249,7 @@ class OMGF_Frontend_Process
 		 * @since v5.1.5 Use a lookaround that matches all link elements, because otherwise
 		 * 				 matches grow past their supposed boundaries.
 		 */
-		preg_match_all('/(?=\<link).+?(?<=>)/', $html, $resource_hints);
+		preg_match_all('/(?=\<link).+?(?<=>)/s', $html, $resource_hints);
 
 		if (!isset($resource_hints[0]) || empty($resource_hints[0])) {
 			return $html;
