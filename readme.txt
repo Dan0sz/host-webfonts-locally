@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.3.5
+Stable tag: 5.3.6
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.3.6 | August 10th, 2022 =
+* Added: compatibility for Download Manager and other plugin who insert stylesheet into the `head` using multiple lines.
+* Added: omgf_generate_stylesheet_after filter.
+* Added: omgf_optimize_fonts_object filter.
 
 = 5.3.5 | August 2nd, 2022 =
 * Fixed: use a more reliable regular expression to detect Google Fonts.
