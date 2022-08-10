@@ -308,7 +308,7 @@ class OMGF_Frontend_Process
 		/**
 		 * @since v5.3.5 Use a generic regex and filter them separately.
 		 */
-		preg_match_all('/<link.*?[\/]?>/', $html, $links);
+		preg_match_all('/<link.*?[\/]?>/s', $html, $links);
 
 		if (!isset($links[0]) || empty($links[0])) {
 			return apply_filters('omgf_processed_html', $html, $this);
