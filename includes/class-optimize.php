@@ -222,7 +222,7 @@ class OMGF_Optimize
 
         $font_families = array_unique($font_families[1]);
 
-        OMGF::debug(__('Font-families found: ', $this->plugin_text_domain) . print_r($font_families, true));
+        OMGF::debug_array(__('Font-families found', $this->plugin_text_domain), $font_families);
 
         foreach ($font_families as $font_family) {
             $id          = strtolower(str_replace(' ', '-', $font_family));
@@ -311,7 +311,7 @@ class OMGF_Optimize
             }
         }
 
-        OMGF::debug(__('Generated the following @font-face objects: ', $this->plugin_text_domain) . print_r($font_object, true));
+        OMGF::debug_array(__('Generated @font-face objects', $this->plugin_text_domain), $font_object);
 
         OMGF::debug(__('All @font-face statements processed.', $this->plugin_text_domain));
 
@@ -334,7 +334,7 @@ class OMGF_Optimize
 
         $subsets = array_unique($subsets[1]);
 
-        OMGF::debug(__('This stylesheet contains @font-face statements for the following subsets: ', $this->plugin_text_domain) . print_r($subsets, true));
+        OMGF::debug_array(__('Subset @font-face statements', $this->plugin_text_domain), $subsets);
 
         return $subsets;
     }

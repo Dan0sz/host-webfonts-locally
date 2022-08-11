@@ -432,4 +432,34 @@ class OMGF
 
 		error_log(current_time('Y-m-d H:i:s') . ' '  . microtime() . ": $message\n", 3, self::$log_file);
 	}
+
+	/**
+	 * To prevent "Cannot use output buffering 	in output buffering display handlers" errors, I introduced a debug array feature,
+	 * to easily display, well, arrays in the debug log (duh!)
+	 * 
+	 * @since v5.3.7
+	 * 
+	 * @param $name  A desriptive name to be shown in the debug log
+	 * @param $array The array to be displayed in the debug log
+	 * 
+	 * @return void
+	 */
+	public static function debug_array($name, $array)
+	{
+		if (!is_array($array) && !is_object($array)) {
+			return;
+		}
+
+		OMGF::debug(__('Showing debug information for', 'host-webfonts-local') . ': ' . $name);
+
+		foreach ($array as $key => $elem) {
+			if (is_array($elem) || is_object($elem)) {
+				OMGF::debug_array(sprintf(__('Subelement %s is array/object', 'host-webfonts-local'), $key), $elem);
+
+				continue;
+			}
+
+			error_log(current_time('Y-m-d H:i:s') . ' ' . microtime() . ": " . $key . ' => ' . $elem . "\n", 3, self::$log_file);
+		}
+	}
 }
