@@ -367,9 +367,7 @@ class OMGF_Frontend_Process
 			 * No valid href attribute provide in link element.
 			 */
 			if (!isset($href['href'])) {
-				if (!isset($href['href'])) {
-					continue;
-				}
+				continue;
 			}
 
 			/**
