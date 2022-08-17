@@ -367,7 +367,16 @@ class OMGF_Frontend_Process
 			 * No valid href attribute provide in link element.
 			 */
 			if (!isset($href['href'])) {
-				continue;
+				if (!isset($href['href'])) {
+					continue;
+				}
+			}
+
+			/**
+			 * Mesmerize Theme compatibility
+			 */
+			if ($href['href'] === '#') {
+				preg_match('/data-href=[\'"](?P<href>.*?)[\'"]/', $link, $href);
 			}
 
 			/**
