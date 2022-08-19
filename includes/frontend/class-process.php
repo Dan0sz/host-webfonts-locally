@@ -417,7 +417,13 @@ class OMGF_Frontend_Process
 			}
 
 			$google_fonts[$key]['link'] = $link;
-			$google_fonts[$key]['href'] = $href['href'];
+
+			/**
+			 * @since v5.3.7 decode URL and special HTML chars, to make sure all params are properly processed later on.
+			 * 
+			 * @see $this->build_search_replace()
+			 */
+			$google_fonts[$key]['href'] = urldecode(htmlspecialchars_decode($href['href']));
 		}
 
 		return $google_fonts;
