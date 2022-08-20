@@ -417,13 +417,10 @@ class OMGF_Frontend_Process
 			}
 
 			$google_fonts[$key]['link'] = $link;
-
 			/**
-			 * @since v5.3.7 decode URL and special HTML chars, to make sure all params are properly processed later on.
-			 * 
-			 * @see $this->build_search_replace()
+			 * This is used for search/replace later on. This shouldn't be tampered with.
 			 */
-			$google_fonts[$key]['href'] = urldecode(htmlspecialchars_decode($href['href']));
+			$google_fonts[$key]['href'] = $href['href'];
 		}
 
 		return $google_fonts;
@@ -528,7 +525,11 @@ class OMGF_Frontend_Process
 				continue;
 			}
 
-			$query = parse_url($stack['href'], PHP_URL_QUERY);
+			/**
+			 * @since v5.3.7 decode URL and special HTML chars, to make sure all params are properly processed later on.
+			 */
+			$href  = urldecode(htmlspecialchars_decode($stack['href']));
+			$query = parse_url($href, PHP_URL_QUERY);
 			parse_str($query, $query);
 
 			/**
