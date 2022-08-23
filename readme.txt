@@ -1,6 +1,6 @@
-=== OMGF | GDPR Compliant, Faster Google Fonts. Easy. ===
+=== OMGF | GDPR/DSVGO Compliant, Faster Google Fonts. Easy. ===
 Contributors: DaanvandenBergh
-Tags: google, fonts, gdpr, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
+Tags: google, fonts, gdpr, dsvgo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
 Stable tag: 5.3.6
