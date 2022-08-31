@@ -325,7 +325,20 @@ class OMGF_Frontend_Process
 			return apply_filters('omgf_processed_html', $html, $this);
 		}
 
-		$html = str_replace($search_replace['search'], $search_replace['replace'], $html);
+		/**
+		 * Use string position of $search to make sure only that instance of the string is replaced.
+		 * 
+		 * This is to prevent duplicate replaces.
+		 * 
+		 * @since v5.3.7 
+		 */
+		foreach ($search_replace['search'] as $key => $search) {
+			$position = strpos($html, $search);
+
+			if ($position !== false && isset($search_replace['replace'][$key])) {
+				$html = substr_replace($html, $search_replace['replace'][$key], $position, strlen($search));
+			}
+		}
 
 		return apply_filters('omgf_processed_html', $html, $this);
 	}
