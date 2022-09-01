@@ -30,7 +30,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 	{
 		parent::__construct();
 
-		$this->title = __('Optimize Google Fonts', $this->plugin_text_domain);
+		$this->title = __('Optimize Local Google Fonts', $this->plugin_text_domain);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_title'], 10);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_description'], 11);
@@ -83,7 +83,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		<div class="omgf-task-manager postbox" style="padding: 0 15px 5px;">
 			<h3><?= __('Task Manager', $this->plugin_text_domain); ?></h3>
 			<p class="description">
-				<?= __('A quick overview of the stylesheets (and their status) currently in your cache folder.', $this->plugin_text_domain); ?>
+				<?= __('A quick overview of all found Google Fonts stylesheets (and their status) currently saved on (and served from) your server.', $this->plugin_text_domain); ?>
 			</p>
 		<?php
 	}
