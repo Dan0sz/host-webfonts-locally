@@ -235,7 +235,7 @@ class OMGF
 	}
 
 	/**
-	 * Manage Optimized Fonts to be displayed in the Optimized Fonts table.
+	 * Optimized Local Fonts to be displayed in the Optimize Local Fonts table.
 	 * 
 	 * Use a static variable to reduce database reads/writes.
 	 * 

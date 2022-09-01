@@ -59,7 +59,7 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			<th scope="row"><?= __('Google Fonts Processing', $this->plugin_text_domain); ?></th>
 			<td>
 				<p class="description">
-					<?= sprintf(__('By default, OMGF replaces Google Fonts stylesheets (e.g. <code>https://fonts.googleapis.com/css?family=Open+Sans</code>) with locally hosted copies. This behavior can be tweaked further using the <strong>Advanced Processing (Pro)</strong> option. To remove/unload Google Fonts, go to <em>Optimize Fonts</em> > <a href="%s"><em>Manage Optimized Fonts</em></a> and click <strong>Unload all</strong> next to the stylesheet handle you\'d like to remove.', $this->plugin_text_domain), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-optimize-settings#omgf-manage-optimized-fonts')); ?>
+					<?= sprintf(__('By default, OMGF replaces Google Fonts stylesheets (e.g. <code>https://fonts.googleapis.com/css?family=Open+Sans</code>) with locally hosted copies. This behavior can be tweaked further using the <strong>Advanced Processing (Pro)</strong> option. To remove/unload Google Fonts, go to <em>Local Fonts</em> > <a href="%s"><em>Optimize Local Fonts</em></a> and click <strong>Unload all</strong> next to the stylesheet handle you\'d like to remove.', $this->plugin_text_domain), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-optimize-settings#omgf-manage-optimized-fonts')); ?>
 				</p>
 			</td>
 		</tr>
