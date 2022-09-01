@@ -396,7 +396,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 			do_action('omgf_after_settings_form_settings');
 
 			?>
-			<?php if ($this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP) : ?>
+			<?php if (!empty($this->get_settings()) && $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP) : ?>
 				<?php submit_button($this->submit_button_text, 'primary', 'submit', false); ?>
 			<?php endif; ?>
 		</form>
