@@ -288,7 +288,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
 	public function optimize_fonts_tab()
 	{
-		$this->generate_tab(self::OMGF_SETTINGS_FIELD_OPTIMIZE, 'dashicons-performance', __('Optimize Fonts', $this->plugin_text_domain));
+		$this->generate_tab(self::OMGF_SETTINGS_FIELD_OPTIMIZE, 'dashicons-performance', __('Local Fonts', $this->plugin_text_domain));
 	}
 
 	/**

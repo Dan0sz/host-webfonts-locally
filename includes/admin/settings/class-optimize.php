@@ -242,7 +242,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		 */
 		$this->optimized_fonts = OMGF::optimized_fonts();
 		?>
-			<span class="option-title"><?= __('Manage Optimized Fonts', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('Don\'t know where or how to start optimizing your Google Fonts? That\'s okay. <a href="%s">This guide</a> will get you sorted.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/'); ?></span></span></span></span>
+			<span class="option-title"><?= __('Optimize Local Fonts', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('Don\'t know where or how to start optimizing your Google Fonts? That\'s okay. <a href="%s">This guide</a> will get you sorted.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/'); ?></span></span></span></span>
 			<?php if (!empty($this->optimized_fonts)) : ?>
 				<?= $this->do_optimized_fonts_manager(); ?>
 			<?php else : ?>
