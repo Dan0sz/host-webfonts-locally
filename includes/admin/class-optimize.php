@@ -74,7 +74,7 @@ class OMGF_Admin_Optimize
      */
     public function verify_ssl($args)
     {
-        $args['sslverify'] = strpos(get_home_url(), 'https:') !== false;
+        $args['sslverify'] = apply_filters('omgf_admin_optimize_verify_ssl', strpos(get_home_url(), 'https:') !== false);
 
         return $args;
     }
