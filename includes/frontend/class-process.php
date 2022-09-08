@@ -189,6 +189,8 @@ class OMGF_Frontend_Process
 			return false;
 		}
 
+		do_action('omgf_frontend_process_before_ob_start');
+
 		/**
 		 * Let's GO!
 		 */
