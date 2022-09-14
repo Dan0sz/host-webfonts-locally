@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsvgo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.3.6
+Stable tag: 5.3.7
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,21 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.3.7 | September 14th, 2022 =
+* Added: output_array() debug function to allow printing arrays in the debug log.
+  * Fixes: Cannot use output buffering in output buffering display handlers
+* Added: Mesmerize theme compatibility
+* Fixed: decode any special HTML entities to make sure all parameters in the URL are properly parsed.
+* Improved: *Preload* option is now reworded to *Load Early*, because many people seemed to confuse it with "Download"
+* Improved: *Do Not Load* is shortened to *Don't Load*
+* Improved: *Manage Optimized Fonts* is reworded to *Optimize Local Fonts* and the **Optimize Fonts** tab is reworded to **Local Fonts** to make more sense as to what its purpose actually is.
+* Fixed: Similar stylesheets would sometimes be replaced twice, causing layout breaks.
+* Fixed: if there are no options on the page, the Save Changes button is now disabled.
+* Added: omgf_admin_optimize_verify_ssl filter for local development areas.
+* Added: omgf_frontend_process_before_ob_start filter so other plugins (hint: OMGF Pro) have a proper way to execute only when OMGF is allowed to run.
+* Added: compatibility fix for Category Slider Pro for WooCommerce (@see: https://wordpress.org/support/topic/adds-a-unique-identifier-to-google-fonts/)
+* Added: Refresh Cache button in Task Manager.
 
 = 5.3.6 | August 10th, 2022 =
 * Added: compatibility for Download Manager and other plugin who insert stylesheet into the `head` using multiple lines.
