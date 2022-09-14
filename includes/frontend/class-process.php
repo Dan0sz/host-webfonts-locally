@@ -427,6 +427,15 @@ class OMGF_Frontend_Process
 				 * 			 	 sure we can make a difference between different Google Fonts configurations.
 				 */
 				$google_fonts[$key]['id'] = str_replace('-1', '-' . strlen($href['href']), $id);
+			} elseif (strpos($id, 'sp-wpcp-google-fonts') !== false) {
+				/**
+				 * Compatibility fix for Category Slider Pro for WooCommerce
+				 * 
+				 * @since v5.3.7 This plugin finds it necessary to provide each Google Fonts stylesheet with a 
+				 * 				 unique identifier, to make sure its never cached. The worst idea eve. On top
+				 * 				 of that, it throws OMGF off the rails entirely, eventually crashing the site.
+				 */
+				$google_fonts[$key]['id'] = 'sp-wpcp-google-fonts';
 			} else {
 				$google_fonts[$key]['id'] = $id;
 			}
