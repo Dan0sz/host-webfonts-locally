@@ -141,9 +141,10 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><?php _e('Flush Cache', $this->plugin_text_domain); ?></th>
+				<th scope="row"><?php _e('Manage Cache', $this->plugin_text_domain); ?></th>
 				<td class="task-manager-row">
 					<a id="omgf-empty" data-init="<?= OMGF_Admin_Settings::OMGF_ADMIN_PAGE; ?>" data-nonce="<?= wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" class="omgf-empty button-cancel"><?php _e('Empty Cache Directory', $this->plugin_text_domain); ?></a>
+					<a id="omgf-refresh" data-init="<?= OMGF_Admin_Settings::OMGF_ADMIN_PAGE; ?>" data-nonce="<?= wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" class="omgf-refresh button-cancel"><?php _e('Refresh Cache (and maintain settings)', $this->plugin_text_domain); ?></a>
 				</td>
 			</tr>
 		<?php

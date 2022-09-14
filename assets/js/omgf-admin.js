@@ -41,7 +41,7 @@ jQuery(document).ready(function ($) {
             // Buttons (AJAX, etc.)
             $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
             $('#omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
-            $('#omgf-cache-refresh').on('click', this.refresh_cache);
+            $('.omgf-refresh, #omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
             $('#omgf-optimize-settings-form').on('submit', this.show_loader_before_submit);
             $('#omgf-delete-log').on('click', this.delete_log);

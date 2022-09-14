@@ -24,7 +24,11 @@
   border-radius: 3px;
   white-space: nowrap;
 }
-.omgf .button-cancel.omgf-empty {
+.omgf .button-cancel.omgf-refresh {
+  color: #FF851B;
+}
+.omgf .button-cancel.omgf-empty,
+.omgf .button-cancel.omgf-refresh {
   padding: 1px 10px !important;
 }
 .omgf .button-cancel:hover {
@@ -32,6 +36,11 @@
   background: #d54e21;
   color: #fff;
   border-color: #d54e21;
+}
+.omgf .button-cancel:hover#omgf-refresh {
+  color: #fff;
+  background: #FF851B;
+  border-color: #FF851B;
 }
 /**
  * Navigation
