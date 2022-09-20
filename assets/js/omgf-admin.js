@@ -30,6 +30,7 @@ jQuery(document).ready(function ($) {
          */
         init: function () {
             // Settings
+            $('.omgf-subsets').on('change', this.maybe_select_latin);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.unload_stylesheets);
             $('.omgf-optimize-fonts-manage .unload, .omgf-optimize-fonts-manage .fallback-font-stack select').on('change', this.generate_cache_key);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.toggle_preload);
@@ -48,6 +49,21 @@ jQuery(document).ready(function ($) {
 
             // Ticker
             setInterval(this.loop_ticker_items, 4000);
+        },
+
+        maybe_select_latin: function (event) {
+            var value = this.value,
+                target = event.target,
+                className = target.className,
+                options = ['latin', 'latin-ext'];
+
+            if (value === 'latin-ext') {
+                options.forEach(function (value) {
+                    var option = document.querySelector('.' + className + ' option[value=' + value + ']');
+
+                    option.selected = true;
+                });
+            }
         },
 
         /**
