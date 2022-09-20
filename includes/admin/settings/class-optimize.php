@@ -218,7 +218,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS,
 			OMGF_Admin_Settings::OMGF_SUBSETS,
 			OMGF_SUBSETS,
-			__('Select which subset(s) sgould be used when generating stylesheets and preloads. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Use CTRL + click to select multiple values.</em>', $this->plugin_text_domain),
+			__('Select which subset(s) should be used when generating stylesheets and preloads. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Use CTRL + click to select multiple values.</em>', $this->plugin_text_domain),
 			true
 		);
 	}
