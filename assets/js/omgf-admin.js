@@ -51,6 +51,11 @@ jQuery(document).ready(function ($) {
             setInterval(this.loop_ticker_items, 4000);
         },
 
+        /**
+         * Also select Latin, if Latin Extended is selected.
+         * 
+         * @param {'change'} event 
+         */
         maybe_select_latin: function (event) {
             var value = this.value,
                 target = event.target,
