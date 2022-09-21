@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsvgo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.3.7
+Stable tag: 5.3.8
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.3.8 | September 21st, 2022 =
+* Fixed: Since Latin Extended is an addon for Latin, it shouldn't be allowed to select it by itself in the Used Subset(s) option.
+* Added: Compatibility fix for Logo Carousel (Pro), which (like Category Slider Pro for WooCommerce) adds a random unique identifier to Google Fonts stylesheets on each pageload. Why? Do you hate cache? :'-(
 
 = 5.3.7 | September 14th, 2022 =
 * Added: output_array() debug function to allow printing arrays in the debug log.
