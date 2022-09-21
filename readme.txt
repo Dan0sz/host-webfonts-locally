@@ -78,7 +78,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 = 5.3.8 | September 21st, 2022 =
 * Fixed: Since Latin Extended is an addon for Latin, it shouldn't be allowed to select it by itself in the Used Subset(s) option.
-* Added: Compatibility fix for Logo Carousel (Pro), which (like Category Slider Pro for WooCommerce) adds a random unique identifier to Google Fonts stylesheets on each pageload. Why? Do you hate cache? :'-(
+* Added: Compatibility fix for Logo Carousel (Pro), which (like Category Slider Pro for WooCommerce) adds a random unique identifier to Google Fonts stylesheets on each pageload. Why? Does it hate cache? :'-(
 
 = 5.3.7 | September 14th, 2022 =
 * Added: output_array() debug function to allow printing arrays in the debug log.
