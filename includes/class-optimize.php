@@ -108,6 +108,11 @@ class OMGF_Optimize
             }
         }
 
+        /**
+         * @since v5.3.8 If any settings were changed, this will make sure the cache is no longer marked as stale.
+         */
+        delete_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE);
+
         $fonts_bak = $this->grab_fonts_object($this->url);
         $url       = $this->unload_variants($this->url);
         $fonts     = $this->grab_fonts_object($url);
