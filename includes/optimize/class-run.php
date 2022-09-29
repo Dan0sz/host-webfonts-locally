@@ -18,6 +18,8 @@ defined('ABSPATH') || exit;
 
 class OMGF_Optimize_Run
 {
+    const DOCS_TEST_URL = 'https://daan.dev/docs/omgf-pro-troubleshooting/test-omgf-pro/';
+
     /** @var string */
     private $plugin_text_domain = 'host-webfonts-local';
 
@@ -89,7 +91,7 @@ class OMGF_Optimize_Run
             $wp_settings_errors = [];
         }
 
-        add_settings_error('general', 'omgf_optimization_success', __('Optimization completed successfully.'), 'success');
+        add_settings_error('general', 'omgf_optimization_success', __('Optimization completed successfully.', $this->plugin_text_domain) . ' ' . sprintf('<a target="_blank" href="%s">', self::DOCS_TEST_URL) . __('How can I verify it\'s working?', $this->plugin_text_domain) . '</a>', 'success');
 
         OMGF_Admin_Notice::set_notice(
             __('If you\'re using any 3rd party optimization plugins (e.g. WP Rocket, Autoptimize, W3 Total Cache, etc.) make sure to flush their caches for OMGF\'s optimizations to take effect.', $this->plugin_text_domain),
