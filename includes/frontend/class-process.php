@@ -37,6 +37,11 @@ class OMGF_Frontend_Process
 		'perfmatters' // Perfmatter's Frontend Script Manager.
 	];
 
+	private $edit_actions = [
+		'edit',
+		'elementor'
+	];
+
 	/** @var string $timestamp */
 	private $timestamp = '';
 
@@ -172,6 +177,17 @@ class OMGF_Frontend_Process
 		foreach ($this->page_builders as $page_builder) {
 			if (array_key_exists($page_builder, $_GET)) {
 				return false;
+			}
+		}
+
+		/**
+		 * Post edit actions
+		 */
+		if (array_key_exists('action', $_GET)) {
+			foreach ($this->edit_actions as $action) {
+				if ($_GET['action'] == $action) {
+					return false;
+				}
 			}
 		}
 
