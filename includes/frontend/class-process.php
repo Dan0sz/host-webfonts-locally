@@ -37,6 +37,11 @@ class OMGF_Frontend_Process
 		'perfmatters' // Perfmatter's Frontend Script Manager.
 	];
 
+	/**
+	 * Populates ?edit= parameter. To make sure OMGF doesn't run while editing posts.
+	 * 
+	 * @var string[]
+	 */
 	private $edit_actions = [
 		'edit',
 		'elementor'
@@ -84,6 +89,10 @@ class OMGF_Frontend_Process
 
 		add_action('wp_head', [$this, 'add_preloads'], 3);
 		add_action('template_redirect', [$this, 'maybe_buffer_output'], 3);
+		/**
+		 * @since v5.3.10 parse() runs on priority 10. Run this afterwards, to make sure e.g. the <preload> -> <noscript> approach some theme
+		 * 				  developers use keeps working.
+		 */
 		add_filter('omgf_buffer_output', [$this, 'remove_resource_hints'], 11);
 
 		/** Only hook into our own filter if Smart Slider 3 isn't active, as it has its own filter. */
@@ -336,7 +345,7 @@ class OMGF_Frontend_Process
 		}
 
 		/**
-		 * @since v5.3.10 This approach is global on purpose. By just matchin <link> elements containing the fonts.googleapis.com/css string,
+		 * @since v5.3.10 This approach is global on purpose. By just matching <link> elements containing the fonts.googleapis.com/css string,
 		 * 				  e.g. preload elements are also properly processed.
 		 */
 		$links = array_filter($links[0], function ($link) {
