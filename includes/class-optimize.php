@@ -508,6 +508,11 @@ class OMGF_Optimize
      */
     private function rewrite_variants($current, $replacement)
     {
+        OMGF::debug(__('Rewriting URLs for each font variant...', $this->plugin_text_domain));
+
+        OMGF::debug_array('Current Fonts Set', $current);
+        OMGF::debug_array('Replacement Fonts Set', $replacement);
+
         foreach ($current as $font_family => &$properties) {
             if (!isset($properties->variants) || empty($properties->variants)) {
                 continue;
