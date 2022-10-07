@@ -186,6 +186,7 @@ class OMGF_AJAX
 				'init'    => $initiator,
 				'exclude' => [],
 				'queue'   => [
+					OMGF_Admin_Settings::OMGF_OPTIMIZE_HAS_RUN,
 					OMGF_Admin_Settings::OMGF_CACHE_IS_STALE,
 					OMGF_Admin_Settings::OMGF_CACHE_TIMESTAMP,
 					OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES,

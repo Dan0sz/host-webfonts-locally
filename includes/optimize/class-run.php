@@ -40,6 +40,8 @@ class OMGF_Optimize_Run
      */
     private function run()
     {
+        update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_HAS_RUN, true);
+
         $front_html = $this->get_front_html(get_home_url());
         $error      = false;
 

@@ -124,7 +124,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						</ul>
 					<?php else : ?>
 						<p>
-							<?= __('No stylesheets found. <a href="#" id="omgf-save-optimize">Start optimization</a>?', $this->plugin_text_domain); ?>
+							<?php echo __('No stylesheets found. <a href="#" id="omgf-save-optimize">Start optimization</a>?', $this->plugin_text_domain); ?> <?php echo get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_HAS_RUN) ? sprintf(__('(If optimization seems to be failing, read <a href="%s" target="_blank">this</a>.)', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/') : ''; ?>
 						</p>
 					<?php endif; ?>
 				</td>
@@ -368,6 +368,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<span class="dashicons-before dashicons-info-outline"></span>
 						<em><?= sprintf(__("This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically if other Google Fonts stylesheets are discovered throughout your site.", $this->plugin_text_domain), get_site_url()); ?></em>
 					</p>
+					<p>
+						<small><?php echo __('', $this->plugin_text_domain); ?>
+					</p>
 				</div>
 				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?= base64_encode(serialize($this->optimized_fonts)); ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= esc_attr(OMGF_UNLOAD_STYLESHEETS); ?>" />
@@ -387,7 +390,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				<div class="omgf-optimize-fonts-tooltip">
 					<p>
 						<span class="dashicons-before dashicons-info-outline"></span>
-						<em><?= sprintf(__('After clicking <strong>Save & Optimize</strong>, this section will be populated with any Google Fonts (along with requested styles and available options) requested on <code>%s</code>. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site.', $this->plugin_text_domain), get_site_url()); ?></em>
+						<em><?= sprintf(__('After clicking <strong>Save & Optimize</strong>, this section will be populated with any Google Fonts (along with requested styles and available options) requested on <code>%s</code>. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site.', $this->plugin_text_domain), get_site_url()); ?></em> [<a href="https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/" target="_blank"><?php echo __('Why aren\'t my Google Fonts showing up on this list?', $this->plugin_text_domain); ?></a>]
 					</p>
 				</div>
 			</div>
