@@ -26,11 +26,39 @@ class OMGF_AJAX
 	 */
 	public function __construct()
 	{
+		add_action('wp_ajax_omgf_hide_notice', [$this, 'hide_notice']);
 		add_action('wp_ajax_omgf_remove_stylesheet_from_db', [$this, 'remove_stylesheet_from_db']);
 		add_action('wp_ajax_omgf_refresh_cache', [$this, 'refresh_cache']);
 		add_action('wp_ajax_omgf_empty_dir', [$this, 'empty_directory']);
 		add_action('wp_ajax_omgf_download_log', [$this, 'download_log']);
 		add_action('wp_ajax_omgf_delete_log', [$this, 'delete_log']);
+	}
+
+	/**
+	 * @since v5.4.0 Remove notice from task manager
+	 */
+	public function hide_notice()
+	{
+		check_ajax_referer(OMGF_Admin_Settings::OMGF_ADMIN_PAGE, 'nonce');
+
+		if (!current_user_can('manage_options')) {
+			wp_die(__('Hmmm, are you lost?', $this->plugin_text_domain));
+		}
+
+		$warning_id     = $_POST['warning_id'];
+		$hidden_notices = get_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES);
+
+		if (!$hidden_notices || empty($hidden_notices)) {
+			update_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES, [$warning_id]);
+
+			wp_send_json_success(__('', $this->plugin_text_domain));
+		}
+
+		if (!in_array($warning_id, $hidden_notices)) {
+			$hidden_notices[] = $warning_id;
+		}
+
+		update_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES, $hidden_notices);
 	}
 
 	/**

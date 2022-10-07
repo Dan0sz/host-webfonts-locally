@@ -63,7 +63,23 @@
 }
 .omgf form .omgf-task-manager .task-manager-row {
   padding-left: 0;
-  line-height: 1;
+  line-height: 1.33;
+}
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice {
+  padding: 18px 12px;
+  border: 1px solid #ececec;
+  border-left: 4px solid #ececec;
+}
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice ol {
+  margin-left: 1em;
+}
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice.warning {
+  border: 1px solid #FFDC00;
+  border-left: 4px solid #FFDC00;
+  background-color: #FFFBDF;
+}
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice h4 {
+  margin-top: 0;
 }
 .omgf form .omgf-task-manager ul {
   margin-top: 5px;

@@ -41,6 +41,7 @@ jQuery(document).ready(function ($) {
 
             // Buttons (AJAX, etc.)
             $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
+            $('a[id^=omgf-hide-notice-]').on('click', this.hide_notice);
             $('#omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
             $('.omgf-refresh, #omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
@@ -88,6 +89,30 @@ jQuery(document).ready(function ($) {
             if (omgf_admin.ticker_index == omgf_admin.ticker_items.length) {
                 omgf_admin.ticker_index = 0;
             }
+        },
+
+        /**
+         * 
+         */
+        hide_notice: function () {
+            var warning_id = $(this).data('warning-id');
+            var nonce = $(this).data('nonce');
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: {
+                    action: 'omgf_hide_notice',
+                    warning_id: warning_id,
+                    nonce: nonce
+                },
+                beforeSend: function () {
+                    omgf_admin.show_loader();
+                },
+                complete: function () {
+                    location.reload();
+                }
+            });
         },
 
         remove_stylesheet_from_db: function () {
@@ -326,6 +351,9 @@ jQuery(document).ready(function ($) {
             });
         },
 
+        /**
+         * 
+         */
         delete_log: function () {
             if (omgf_admin.delete_log_xhr) {
                 omgf_admin.delete_log_xhr.abort();
@@ -347,6 +375,9 @@ jQuery(document).ready(function ($) {
             });
         },
 
+        /**
+         * 
+         */
         show_loader_before_submit: function () {
             omgf_admin.show_loader();
         },
