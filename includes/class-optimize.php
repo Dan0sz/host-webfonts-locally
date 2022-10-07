@@ -203,7 +203,7 @@ class OMGF_Optimize
      */
     private function grab_fonts_object($url)
     {
-        OMGF::debug(__('Fetching stylesheet form: ', $this->plugin_text_domain) . $url);
+        OMGF::debug(__('Fetching stylesheet from: ', $this->plugin_text_domain) . $url);
 
         $response = wp_remote_get($url, [
             'user-agent' => self::USER_AGENT['woff2']
