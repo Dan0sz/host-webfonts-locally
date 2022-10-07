@@ -38,7 +38,8 @@ class OMGF
 		'youtube'            => '//www.youtube.com/embed/', // Youtube Embeds
 		'google-maps-embeds' => '//www.google.com/maps/embed', // Google Maps
 		'google-maps-js-api' => '//maps.google.com/maps/api/js', // Google Maps JS API
-		'recaptcha'          => '//www.google.com/recaptcha/api.js' // Recaptcha
+		'recaptcha'          => '//www.google.com/recaptcha/api.js', // Recaptcha
+		'tawk.to'			 => '//embed.tawk.to' // Tawk.to
 	];
 
 	private $plugin_text_domain = 'host-webfonts-local';
