@@ -129,6 +129,34 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 					<?php endif; ?>
 				</td>
 			</tr>
+			<tr valign="top">
+				<?php $warnings = OMGF::task_manager_warnings(); ?>
+				<?php if (!empty($warnings)) : ?>
+					<td colspan="2" class="task-manager-row">
+						<div class="task-manager-notice warning">
+							<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), $this->plugin_text_domain), count($warnings)); ?></h4>
+							<ol <?php echo count($warnings) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
+								<?php foreach ($warnings as $i => $warning_id) : ?>
+									<li id="omgf-notice-<?php echo $warning_id; ?>">
+										<?php if ($warning_id == 'no_ssl') : ?>
+											<?php echo __('Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.', $this->plugin_text_domain); ?>
+										<?php endif; ?>
+										<?php if (in_array($warning_id, OMGF::THEMES_ADDTNL_CONF)) : ?>
+											<?php $template_id = strtolower($warning_id); ?>
+											<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, follow <a href="%s" target="_blank">these steps</a> to fix it.', $this->plugin_text_domain), ucfirst($warning_id), "https://daan.dev/docs/omgf-pro-faq/$template_id-compatibility"); ?>
+										<?php endif; ?>
+										<?php if (in_array($warning_id, array_keys(OMGF::SCRIPTS_LOADING_IFRAMES))) : ?>
+											<?php $iframe_name = ucwords(str_replace('-', ' ', $warning_id)); ?>
+											<?php echo sprintf(__('%s is loading an embedded iframe on your site. OMGF (Pro) can\'t process Google Fonts inside iframes. <a href="%s" target="_blank">Click here</a> to find out why and what you can do about it.', $this->plugin_text_domain), $iframe_name, 'https://daan.dev/docs/omgf-pro-faq/iframes/'); ?>
+										<?php endif; ?>
+										<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Don\'t show again', $this->plugin_text_domain); ?></a>]</small>
+									</li>
+								<?php endforeach; ?>
+							</ol>
+						</div>
+					</td>
+				<?php endif; ?>
+			</tr>
 			<tr>
 				<th scope="row"><?php _e('Legend', $this->plugin_text_domain); ?></th>
 				<td class="task-manager-row">

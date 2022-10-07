@@ -19,6 +19,30 @@ defined('ABSPATH') || exit;
 class OMGF
 {
 	/**
+	 * @since v5.3.10 List of template handles which require additional configuration to be
+	 * 				  compatible with OMGF.
+	 */
+	const THEMES_ADDTNL_CONF = [
+		'Avada',
+		'customizr',
+		'enfold',
+		'Divi',
+		'Extra'
+	];
+
+	/**
+	 * OMGF-70: Youtube, Google Maps and Recaptcha.
+	 * 
+	 * TODO: Most used Support chat widgets.
+	 */
+	const SCRIPTS_LOADING_IFRAMES = [
+		'google-ads'  => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
+		'youtube'     => '//www.youtube.com/embed/', // Youtube Embeds
+		'google-maps' => '//www.google.com/maps/embed', // Google Maps
+		'recaptcha'   => '//www.google.com/recaptcha/api.js' // Recaptcha
+	];
+
+	/**
 	 * @var string $log_file Path where log file is located.
 	 */
 	public static $log_file;
@@ -383,6 +407,59 @@ class OMGF
 		$generator = new OMGF_StylesheetGenerator($fonts, $plugin);
 
 		return $generator->generate();
+	}
+
+	/**
+	 * Check if WordPress setup has known issues.
+	 * 
+	 * @return array 
+	 */
+	public static function task_manager_warnings()
+	{
+		$warnings       = [];
+		$hidden_notices = get_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES) ?: [];
+
+		/**
+		 * @since v5.4.0 OMGF-50 Not using SSL on your site (or at least, not having it properly configured in WordPress) will cause OMGF to
+		 * 				 add non-ssl (http://) links to stylesheets, and will lead to CORS and/or Mixed Content warnings in your frontend,
+		 * 				 effectively showing nothing but system fonts.
+		 */
+		if (strpos(get_option('home'), 'http://') !== false || strpos(get_option('siteurl'), 'http://') !== false) {
+			$warnings[] = 'no_ssl';
+		}
+
+		/**
+		 * @since v5.4.0 OMGF-60 Warn the user if they're using a theme with known compatibility issues.
+		 */
+		$theme = wp_get_theme();
+
+		if (in_array($theme->template, self::THEMES_ADDTNL_CONF)) {
+			$warnings[] = $theme->template;
+		}
+
+		/**
+		 * @since v5.4.0 OMGF-70 Notify users if they're loading scripts loading embedded iframes, e.g. Google Maps, Youtube, etc.
+		 */
+		$iframe_scripts = get_option(OMGF_Admin_Settings::OMGF_IFRAME_SCRIPTS);
+
+		if (!$iframe_scripts || empty($iframe_scripts)) {
+			return $warnings;
+		}
+
+		foreach ($iframe_scripts as $script_id) {
+			$warnings[] = $script_id;
+		}
+
+		/**
+		 * Process hidden warnings.
+		 */
+		foreach ($warnings as $i => $warning) {
+			if (in_array($warning, $hidden_notices)) {
+				unset($warnings[$i]);
+			}
+		}
+
+		return $warnings;
 	}
 
 
