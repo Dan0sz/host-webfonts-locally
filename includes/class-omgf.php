@@ -36,11 +36,11 @@ class OMGF
 	 * TODO: Most used Support chat widgets.
 	 */
 	const SCRIPTS_LOADING_IFRAMES = [
-		'google-ads'        => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
-		'youtube'           => '//www.youtube.com/embed/', // Youtube Embeds
-		'google-maps-embed' => '//www.google.com/maps/embed', // Google Maps
-		'google-maps-js'	=> '//maps.google.com/maps/api/js', // Google Maps JS API
-		'recaptcha'         => '//www.google.com/recaptcha/api.js' // Recaptcha
+		'google-ads'         => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
+		'youtube'            => '//www.youtube.com/embed/', // Youtube Embeds
+		'google-maps-embeds' => '//www.google.com/maps/embed', // Google Maps
+		'google-maps-js-api' => '//maps.google.com/maps/api/js', // Google Maps JS API
+		'recaptcha'          => '//www.google.com/recaptcha/api.js' // Recaptcha
 	];
 
 	/**
