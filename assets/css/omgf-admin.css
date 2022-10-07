@@ -84,7 +84,7 @@
 .omgf form .omgf-task-manager ul {
   margin-top: 5px;
   list-style: none;
-  margin-left: 0;
+  margin-left: 0.5em;
   padding-left: 0;
 }
 .omgf form .omgf-task-manager ul li {

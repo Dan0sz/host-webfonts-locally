@@ -206,12 +206,12 @@ class OMGF_Admin_Settings_Builder
 	 * @param $checked
 	 * @param $description
 	 */
-	public function do_checkbox($label, $name, $checked, $description, $disabled = false)
+	public function do_checkbox($label, $name, $checked, $description, $disabled = false, $td_classes = '')
 	{
 	?>
 		<tr>
 			<th scope="row"><?= apply_filters($name . '_setting_label', $label); ?></th>
-			<td>
+			<td <?php echo $td_classes ? "class=$td_classes" : ''; ?>>
 				<label for="<?= $name; ?>">
 					<input id="<?= $name; ?>" type="checkbox" <?= apply_filters($name . '_setting_disabled', $disabled) ? 'disabled' : ''; ?> class="<?= str_replace('_', '-', $name); ?>" name="<?= $name; ?>" <?= $checked == "on" ? 'checked = "checked"' : ''; ?> />
 					<?= apply_filters($name . '_setting_description', $description); ?>
