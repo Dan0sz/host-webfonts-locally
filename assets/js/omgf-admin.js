@@ -41,7 +41,7 @@ jQuery(document).ready(function ($) {
 
             // Buttons (AJAX, etc.)
             $('#omgf-save-optimize').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
-            $('a[id^=omgf-hide-notice-]').on('click', this.hide_notice);
+            $(document).on('click', 'a[id^=omgf-hide-notice-]', this.hide_notice);
             $('#omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
             $('.omgf-refresh, #omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
@@ -109,8 +109,12 @@ jQuery(document).ready(function ($) {
                 beforeSend: function () {
                     omgf_admin.show_loader();
                 },
-                complete: function () {
-                    location.reload();
+                complete: function (result) {
+                    if (result.responseJSON !== undefined && result.responseJSON.data !== undefined) {
+                        $('#task-manager-notice-row').replaceWith(result.responseJSON.data);
+                    }
+
+                    omgf_admin.hide_loader();
                 }
             });
         },
@@ -380,6 +384,10 @@ jQuery(document).ready(function ($) {
          */
         show_loader_before_submit: function () {
             omgf_admin.show_loader();
+        },
+
+        hide_loader: function () {
+            $('.omgf-loading').fadeOut(300, function () { $('.omgf-loading').remove() });
         },
 
         /**

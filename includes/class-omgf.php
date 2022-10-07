@@ -31,9 +31,7 @@ class OMGF
 	];
 
 	/**
-	 * OMGF-70: Youtube, Google Maps and Recaptcha.
-	 * 
-	 * TODO: Most used Support chat widgets.
+	 * [OMGF-73] TODO: Most used Support chat widgets.
 	 */
 	const SCRIPTS_LOADING_IFRAMES = [
 		'google-ads'         => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
@@ -42,6 +40,8 @@ class OMGF
 		'google-maps-js-api' => '//maps.google.com/maps/api/js', // Google Maps JS API
 		'recaptcha'          => '//www.google.com/recaptcha/api.js' // Recaptcha
 	];
+
+	private $plugin_text_domain = 'host-webfonts-local';
 
 	/**
 	 * @var string $log_file Path where log file is located.
@@ -411,11 +411,44 @@ class OMGF
 	}
 
 	/**
+	 * Renders the Task Manager Warnings box.
+	 */
+	public static function task_manager_warnings()
+	{
+		$warnings = self::get_task_manager_warnings(); ?>
+		<?php if (!empty($warnings)) : ?>
+			<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
+				<div class="task-manager-notice warning">
+					<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), 'host-webfonts-local'), count($warnings)); ?></h4>
+					<ol <?php echo count($warnings) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
+						<?php foreach ($warnings as $i => $warning_id) : ?>
+							<li id="omgf-notice-<?php echo $warning_id; ?>">
+								<?php if ($warning_id == 'no_ssl') : ?>
+									<?php echo __('Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'); ?>
+								<?php endif; ?>
+								<?php if (in_array($warning_id, OMGF::THEMES_ADDTNL_CONF)) : ?>
+									<?php $template_id = strtolower($warning_id); ?>
+									<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, follow <a href="%s" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'), ucfirst($warning_id), "https://daan.dev/docs/omgf-pro-faq/$template_id-compatibility"); ?>
+								<?php endif; ?>
+								<?php if (in_array($warning_id, array_keys(OMGF::SCRIPTS_LOADING_IFRAMES))) : ?>
+									<?php $iframe_name = ucwords(str_replace('-', ' ', $warning_id)); ?>
+									<?php echo sprintf(__('%s is loading an embedded iframe on your site. OMGF (Pro) can\'t process Google Fonts inside iframes. <a href="%s" target="_blank">Click here</a> to find out why and what you can do about it.', 'host-webfonts-local'), $iframe_name, 'https://daan.dev/docs/omgf-pro-faq/iframes/'); ?>
+								<?php endif; ?>
+								<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Don\'t show again', 'host-webfonts-local'); ?></a>]</small>
+							</li>
+						<?php endforeach; ?>
+					</ol>
+				</div>
+			</td>
+<?php endif;
+	}
+
+	/**
 	 * Check if WordPress setup has known issues.
 	 * 
 	 * @return array 
 	 */
-	public static function task_manager_warnings()
+	public static function get_task_manager_warnings()
 	{
 		$warnings       = [];
 		$hidden_notices = get_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES) ?: [];
@@ -441,11 +474,7 @@ class OMGF
 		/**
 		 * @since v5.4.0 OMGF-70 Notify users if they're loading scripts loading embedded iframes, e.g. Google Maps, Youtube, etc.
 		 */
-		$iframe_scripts = get_option(OMGF_Admin_Settings::OMGF_IFRAME_SCRIPTS);
-
-		if (!$iframe_scripts || empty($iframe_scripts)) {
-			return $warnings;
-		}
+		$iframe_scripts = get_option(OMGF_Admin_Settings::OMGF_IFRAME_SCRIPTS) ?: [];
 
 		foreach ($iframe_scripts as $script_id) {
 			$warnings[] = $script_id;

@@ -35,7 +35,9 @@ class OMGF_AJAX
 	}
 
 	/**
-	 * @since v5.4.0 Remove notice from task manager
+	 * @since v5.4.0 Remove notice from task manager and return new HTML.
+	 * 
+	 * @return string Valid HTML.
 	 */
 	public function hide_notice()
 	{
@@ -46,19 +48,21 @@ class OMGF_AJAX
 		}
 
 		$warning_id     = $_POST['warning_id'];
-		$hidden_notices = get_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES);
-
-		if (!$hidden_notices || empty($hidden_notices)) {
-			update_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES, [$warning_id]);
-
-			wp_send_json_success(__('', $this->plugin_text_domain));
-		}
+		$hidden_notices = get_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES) ?: [];
 
 		if (!in_array($warning_id, $hidden_notices)) {
 			$hidden_notices[] = $warning_id;
 		}
 
 		update_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES, $hidden_notices);
+
+		ob_start();
+
+		OMGF::task_manager_warnings();
+
+		$result = ob_get_clean();
+
+		return wp_send_json_success($result);
 	}
 
 	/**
@@ -184,6 +188,8 @@ class OMGF_AJAX
 				'queue'   => [
 					OMGF_Admin_Settings::OMGF_CACHE_IS_STALE,
 					OMGF_Admin_Settings::OMGF_CACHE_TIMESTAMP,
+					OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES,
+					OMGF_Admin_Settings::OMGF_IFRAME_SCRIPTS,
 					OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
 					OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
 					OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
