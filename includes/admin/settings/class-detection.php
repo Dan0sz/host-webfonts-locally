@@ -82,13 +82,13 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 						$disabled = !defined(strtoupper($name)) ? 'disabled' : '';
 						?>
 						<label for="<?= $name; ?>">
-							<input type="checkbox" name="<?= $name; ?>" id="<?= $name; ?>" <?= $checked ? 'checked="checked"' : ''; ?> <?= $disabled; ?> /><?= $data['label']; ?>
+							<input type="checkbox" name="<?= $name; ?>" id="<?= $name; ?>" <?= $checked ? 'checked="checked"' : ''; ?> <?= apply_filters('omgf_detection_settings_advanced_processing_options_disabled', $disabled, $name); ?> /><?= $data['label']; ?>
 							&nbsp;
 						</label>
 					<?php endforeach; ?>
 				</fieldset>
 				<p class="description">
-					<?= sprintf(__('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to "dig deeper", e.g. inside a theme\'s/plugin\'s CSS stylesheets or (Web Font Loader) JS files, <a href="%s" target="_blank">enable these options</a> to increase its level of detection. Best used in combination with a page caching plugin.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/detection-settings-advanced-processing/') . ' ' . $this->promo; ?>
+					<?= apply_filters('omgf_detection_settings_advanced_processing_description', sprintf(__('By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. If you need OMGF to "dig deeper", e.g. inside a theme\'s/plugin\'s CSS stylesheets or (Web Font Loader) JS files, <a href="%s" target="_blank">enable these options</a> to increase its level of detection. Best used in combination with a page caching plugin.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/detection-settings-advanced-processing/')) . ' ' . $this->promo; ?>
 				</p>
 				<ul>
 					<?php foreach ($this->advanced_processing_pro_options() as $name => $data) : ?>
