@@ -15,22 +15,23 @@ OMGF is written with performance and user-friendliness in mind. It uses the Goog
 
 After installing the plugin, OMGF will automatically start looking for Google Fonts whenever a page is requested on your website.
 
-All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's settings screen. There, you can choose to:
+All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's settings screen. There, you can choose to:
 
-- *Preload* fonts to **reduce Cumulative Layout Shift** above the fold,
-- *Unload* fonts that're not used by you, your theme and/or plugins,
-- Set a *Fallback Font Stack* (OMGF Pro required), to further **reduce Cumulative Layout Shift**, or
-- *Replace* (OMGF Pro required) font-families with system fonts to **speed up page loading times**!
+- _Preload_ fonts to **reduce Cumulative Layout Shift** above the fold,
+- _Unload_ fonts that're not used by you, your theme and/or plugins,
+- Set a _Fallback Font Stack_ (OMGF Pro required), to further **reduce Cumulative Layout Shift**, or
+- _Replace_ (OMGF Pro required) font-families with system fonts to **speed up page loading times**!
 
 ### Other Features include
 
 - **Variable Fonts** support,
 - **Remove unused subsets** to reduce the size of the CSS stylesheet,
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
-- **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to your Google Fonts,
-- **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to all your other fonts! (OMGF Pro required),
+- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to your Google Fonts,
+- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to all your other fonts! (OMGF Pro required),
 
 ### Additional Features in OMGF Pro
+
 - **Multisite** support,
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
   - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
@@ -44,7 +45,7 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
   - Set a relative path to easily migrate from development/staging areas to production/live, or
   - Anything you like!
 
-*[Purchase OMGF Pro](https://daan.dev/wordpress/omgf-pro/) | [Documentation](https://daan.dev/docs/omgf-pro/) | [Tested Plugins & Themes](https://daan.dev/docs/omgf-pro/tested-themes-plugins/)*
+_[Purchase OMGF Pro](https://daan.dev/wordpress/omgf-pro/) | [Documentation](https://daan.dev/docs/omgf-pro/) | [Tested Plugins & Themes](https://daan.dev/docs/omgf-pro/tested-themes-plugins/)_
 
 ## Installation
 
@@ -55,9 +56,9 @@ All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's 
 
 ### From the Wordpress Repository
 
-1. From your WordPress administrator area, go to *Plugins > Add New*
+1. From your WordPress administrator area, go to _Plugins > Add New_
 1. Search for 'Daan van den Bergh'
-1. Click the 'Install' button next to *OMGF | Host Google Fonts Locally*
+1. Click the 'Install' button next to _OMGF | Host Google Fonts Locally_
 1. Click 'Activate'
 
 ## Frequently Asked Questions

@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsvgo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.3.9
+Stable tag: 5.4.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@ OMGF is written with performance and user-friendliness in mind. It uses the Goog
 
 After installing the plugin, OMGF will automatically start looking for Google Fonts whenever a page is requested on your website.
 
-All Google Fonts are listed in the **Manage Optimized Fonts** section of OMGF's settings screen. There, you can choose to:
+All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's settings screen. There, you can choose to:
 
 - *Preload* fonts to **reduce Cumulative Layout Shift** above the fold,
 - *Unload* fonts that're not used by you, your theme and/or plugins,
@@ -70,11 +70,21 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 1. OMGF's Optimize Fonts screen. These settings affect the downloaded files and generated stylesheet(s).
 2. The task manager offers a quick overview of the currently detected stylesheets and their status (e.g. loaded, stale or missing) along with quick links to simple management tasks, e.g. Empty Cache and Configure/Remove.
-3. After you've completed configuring OMGF, the Manage Optimized Fonts section will allow you to tweak all of your Google Fonts stylesheets, by e.g. unloading unused fonts and/or preloading fonts above the fold.
+3. After you've completed configuring OMGF, the Optimize Local Fonts section will allow you to tweak all of your Google Fonts stylesheets, by e.g. unloading unused fonts and/or preloading fonts above the fold.
 4. OMGF Pro users can further tweak its level of detection under Detection Settings.
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.4.0 Codename: Einstein | October 9th, 2022 =
+* Fixed: if permalinks were outdated after setting up SSL, stylesheets would contain non-SSL links to the font files, causing Mixed Content and CORS errors.
+* Fixed: when running Perfmatters' frontend script manager, OMGF would break the page.
+* Added: "Warnings" section to Task Manager, which will refer users to specific parts of the documentation in the following situations:
+  - When using a theme which requires additional configuration to be compatible with OMGF,
+  - When using a theme which uses exotic Google Fonts implementations (WebFont Loader, `@import` statements, etc.),
+  - When embedded content (iframes) loading Google Fonts found, like Google Maps, Youtube, etc.
+* Fixed: preloaded Google Fonts stylesheets would be removed, breaking styling for plugins/themes using the <noscript> approach to load Google Fonts asynchronously.
+* Added: link "How can I verify it's working?" to "Optimization Complete" message.
 
 = 5.3.9 | September 22nd, 2022 =
 * Fixed: v5.3.7 introduced a bug affecting only users of the Jupiter theme only. The needed compatibility fixes wouldn't run on Save & Optimize.
@@ -90,7 +100,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 * Fixed: decode any special HTML entities to make sure all parameters in the URL are properly parsed.
 * Improved: *Preload* option is now reworded to *Load Early*, because many people seemed to confuse it with "Download"
 * Improved: *Do Not Load* is shortened to *Don't Load*
-* Improved: *Manage Optimized Fonts* is reworded to *Optimize Local Fonts* and the **Optimize Fonts** tab is reworded to **Local Fonts** to make more sense as to what its purpose actually is.
+* Improved: *Optimize Local Fonts* is reworded to *Optimize Local Fonts* and the **Optimize Fonts** tab is reworded to **Local Fonts** to make more sense as to what its purpose actually is.
 * Fixed: Similar stylesheets would sometimes be replaced twice, causing layout breaks.
 * Fixed: if there are no options on the page, the Save Changes button is now disabled.
 * Added: omgf_admin_optimize_verify_ssl filter for local development areas.
@@ -165,7 +175,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 = 5.1.3 =
 * Added: workaround for Divi builder to identify unique Google Fonts stylesheets.
-* Added: extra links to documentation in Manage Optimized Fonts section.
+* Added: extra links to documentation in Optimize Local Fonts section.
 * Fixed: Changed links to new documentation hub.
 * Fixed: don't use WP_Filesystem to get and put file contents.
 
