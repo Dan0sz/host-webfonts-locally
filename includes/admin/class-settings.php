@@ -28,7 +28,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_CACHE_IS_STALE     = 'omgf_cache_is_stale';
 	const OMGF_CURRENT_DB_VERSION = 'omgf_current_db_version';
 	const OMGF_CACHE_TIMESTAMP    = 'omgf_cache_timestamp';
-	const OMGF_IFRAME_SCRIPTS     = 'omgf_found_iframe_scripts';
+	const OMGF_FOUND_IFRAMES      = 'omgf_found_iframes';
 	const OMGF_HIDDEN_NOTICES     = 'omgf_hidden_notices';
 
 	/**

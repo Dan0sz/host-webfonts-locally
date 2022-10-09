@@ -374,15 +374,15 @@ class OMGF_Frontend_Process
 			}
 		}
 
-		$present_scripts_loading_iframes = [];
+		$found_iframes = get_option(OMGF_Admin_Settings::OMGF_FOUND_IFRAMES) ?: [];
 
-		foreach (OMGF::SCRIPTS_LOADING_IFRAMES as $script_id => $script) {
-			if (strpos($html, $script) !== false) {
-				$present_scripts_loading_iframes[] = $script_id;
+		foreach (OMGF::IFRAMES_LOADING_FONTS as $script_id => $script) {
+			if (strpos($html, $script) !== false && !in_array($script_id, $found_iframes)) {
+				$found_iframes[] = $script_id;
 			}
 		}
 
-		update_option(OMGF_Admin_Settings::OMGF_IFRAME_SCRIPTS, $present_scripts_loading_iframes);
+		update_option(OMGF_Admin_Settings::OMGF_FOUND_IFRAMES, $found_iframes);
 
 		return apply_filters('omgf_processed_html', $html, $this);
 	}
