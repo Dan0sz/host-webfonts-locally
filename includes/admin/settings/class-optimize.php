@@ -99,6 +99,9 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
 			<tr valign="top">
+				<?php OMGF::task_manager_warnings(); ?>
+			</tr>
+			<tr valign="top">
 				<th scope="row"><?= __('Cache Status', $this->plugin_text_domain); ?></th>
 				<td class="task-manager-row">
 					<?php if (!empty($stylesheets)) : ?>
@@ -129,19 +132,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 					<?php endif; ?>
 				</td>
 			</tr>
-			<?php
-			$this->do_checkbox(
-				__('Enable Auto-Config (Pro)', $this->plugin_text_domain),
-				'omgf_pro_auto_config',
-				defined('OMGF_PRO_AUTO_CONFIG') && OMGF_PRO_AUTO_CONFIG,
-				sprintf(__('Is OMGF not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed.', $this->plugin_text_domain), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-detection-settings')) . ' ' . $this->promo,
-				!defined('OMGF_PRO_AUTO_CONFIG'),
-				'task-manager-row'
-			);
-			?>
-			<tr valign="top">
-				<?php OMGF::task_manager_warnings(); ?>
-			</tr>
 			<tr>
 				<th scope="row"><?php _e('Legend', $this->plugin_text_domain); ?></th>
 				<td class="task-manager-row">
@@ -153,6 +143,16 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 					</ul>
 				</td>
 			</tr>
+			<?php
+			$this->do_checkbox(
+				__('Auto-Configure Adv. Processing (Pro)', $this->plugin_text_domain),
+				'omgf_pro_auto_config',
+				defined('OMGF_PRO_AUTO_CONFIG') && OMGF_PRO_AUTO_CONFIG,
+				sprintf(__('Is OMGF not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed.', $this->plugin_text_domain), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-detection-settings')) . ' ' . $this->promo,
+				!defined('OMGF_PRO_AUTO_CONFIG'),
+				'task-manager-row'
+			);
+			?>
 			<tr>
 				<th scope="row"><?php _e('Manage Cache', $this->plugin_text_domain); ?></th>
 				<td class="task-manager-row">
