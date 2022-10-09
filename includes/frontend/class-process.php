@@ -50,12 +50,25 @@ class OMGF_Frontend_Process
 	/** @var string $timestamp */
 	private $timestamp = '';
 
+	/** 
+	 * Break out early, e.g. if we want to parse other resources and don't need to
+	 * setup all the hooks and filters.
+	 * 
+	 * @since v5.4.0
+	 * 
+	 * @var bool $break
+	 */
+	private $break = false;
+
 	/**
 	 * OMGF_Frontend_Functions constructor.
+	 * 
+	 * @var $break bool
 	 */
-	public function __construct()
+	public function __construct($break = false)
 	{
 		$this->timestamp = get_option(OMGF_Admin_Settings::OMGF_CACHE_TIMESTAMP, '');
+		$this->break     = $break;
 
 		if (!$this->timestamp) {
 			$this->timestamp = time();
@@ -75,12 +88,14 @@ class OMGF_Frontend_Process
 	{
 		/**
 		 * Halt execution if:
+		 * * $break parameter is set.
 		 * * `nomgf` GET-parameter is set.
 		 * * Test Mode is enabled and current user is not an admin.
 		 * * Test Mode is enabled and `omgf` GET-parameter is not set.
 		 */
 		if (
-			isset($_GET['nomgf'])
+			$this->break
+			|| isset($_GET['nomgf'])
 			|| ((OMGF_TEST_MODE == 'on' && !current_user_can('manage_options') && !isset($_GET['omgf_optimize']))
 				&& (OMGF_TEST_MODE == 'on' && !current_user_can('manage_options') && !isset($_GET['omgf_optimize']) && !isset($_GET['omgf'])))
 		) {
