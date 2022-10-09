@@ -85,6 +85,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
   - When embedded content (iframes) loading Google Fonts found, like Google Maps, Youtube, etc.
 * Fixed: preloaded Google Fonts stylesheets would be removed, breaking styling for plugins/themes using the <noscript> approach to load Google Fonts asynchronously.
 * Added: link "How can I verify it's working?" to "Optimization Complete" message.
+* Added: compatibility with Bunny.net's "GDPR compliant" CDN.
 * Added: compatibility with Visual Composer's Grid elements.
 
 = 5.3.9 | September 22nd, 2022 =
