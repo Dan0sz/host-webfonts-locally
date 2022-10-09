@@ -360,11 +360,13 @@ class OMGF_Frontend_Process
 		}
 
 		/**
-		 * @since v5.3.10 This approach is global on purpose. By just matching <link> elements containing the fonts.googleapis.com/css string,
+		 * @since v5.4.0 This approach is global on purpose. By just matching <link> elements containing the fonts.googleapis.com/css string,
 		 * 				  e.g. preload elements are also properly processed.
+		 * 
+		 * @since v5.4.0 Added compatibility for BunnyCDN's "GDPR compliant" Google Fonts API.
 		 */
 		$links = array_filter($links[0], function ($link) {
-			return strpos($link, 'fonts.googleapis.com/css') !== false;
+			return strpos($link, 'fonts.googleapis.com/css') !== false || strpos($link, 'fonts.bunny.net/css') !== false;
 		});
 
 		$google_fonts   = $this->build_fonts_set($links);
