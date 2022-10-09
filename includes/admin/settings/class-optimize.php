@@ -134,7 +134,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 				__('Enable Auto-Config (Pro)', $this->plugin_text_domain),
 				'omgf_pro_auto_config',
 				defined('OMGF_PRO_AUTO_CONFIG') && OMGF_PRO_AUTO_CONFIG,
-				sprintf(__('Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%s">Advanced Processing</a> features and maximize performance.', $this->plugin_text_domain), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-detection-settings')),
+				sprintf(__('Is OMGF not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed.', $this->plugin_text_domain), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-detection-settings')) . ' ' . $this->promo,
 				!defined('OMGF_PRO_AUTO_CONFIG'),
 				'task-manager-row'
 			);
