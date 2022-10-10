@@ -117,6 +117,16 @@
   content: "\f460";
   color: #0074D9;
 }
+.omgf form .advanced-processing-notice {
+  padding: 18px 12px;
+  border: 1px solid #ececec;
+  border-left: 4px solid #ececec;
+}
+.omgf form .advanced-processing-notice.success {
+  border: 1px solid #7FDBFF;
+  border-left: 4px solid #7FDBFF;
+  background-color: #E0EDF3;
+}
 .omgf-optimize-fonts-container {
   text-align: center;
   padding: 25px 50px;
