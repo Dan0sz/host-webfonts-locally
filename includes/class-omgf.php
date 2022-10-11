@@ -462,6 +462,17 @@ class OMGF
 	 */
 	public static function task_manager_warnings()
 	{
+		if (OMGF_TEST_MODE == 'on') : ?>
+			<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
+				<div class="task-manager-notice info">
+					<h4><?php echo __('Test Mode is Enabled', 'host-webfonts-local'); ?></h4>
+					<p>
+						<?php echo sprintf(__('All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone.', 'host-webfonts-local'), apply_filters('omgf_settings_page_title', 'omgf')); ?>
+					</p>
+				</div>
+			</td>
+		<?php endif;
+
 		$warnings = self::get_task_manager_warnings();
 		if (!empty($warnings)) : ?>
 			<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
