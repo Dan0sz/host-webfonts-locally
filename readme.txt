@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsvgo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.4.0
+Stable tag: 5.4.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.4.1 | October 12th, 2022 =
+* Added: make the Auto-Configure Adv. Processing notice under Detection Settings more noticable.
+* Added: Show info box in Task Manager when Test Mode is enabled.
+* Fixed: Links to theme compatibility documentation was broken.
 
 = 5.4.0 Codename: Einstein | October 9th, 2022 =
 * Fixed: if permalinks were outdated after setting up SSL, stylesheets would contain non-SSL links to the font files, causing Mixed Content and CORS errors.
