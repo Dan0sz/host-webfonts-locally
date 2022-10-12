@@ -485,8 +485,8 @@ class OMGF
 									<?php echo __('Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'); ?>
 								<?php endif; ?>
 								<?php if (in_array(str_replace('-addtnl-conf', '', $warning_id), self::THEMES_ADDTNL_CONF)) : ?>
-									<?php $template_id = strtolower($warning_id); ?>
-									<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, follow <a href="%s" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'), ucfirst(str_replace('-addtnl-conf', '', $warning_id)), "https://daan.dev/docs/omgf-pro-faq/$template_id-compatibility"); ?>
+									<?php $template_id = str_replace('-addtnl-conf', '', strtolower($warning_id)); ?>
+									<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, follow <a href="%s" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'), ucfirst($template_id), "https://daan.dev/docs/omgf-pro-faq/$template_id-compatibility"); ?>
 								<?php endif; ?>
 								<?php if (in_array(str_replace('-req-pro', '', $warning_id), self::THEMES_REQ_PRO)) : ?>
 									<?php echo sprintf(__('Due to the exotic way your theme (%s) implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local'), ucfirst(str_replace('-req-pro', '', $warning_id)), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
