@@ -495,7 +495,7 @@ class OMGF
 									<?php $iframe_name = ucwords(str_replace('-', ' ', $warning_id)); ?>
 									<?php echo sprintf(__('%s is loading an embedded iframe on your site. OMGF (Pro) can\'t process Google Fonts inside iframes. <a href="%s" target="_blank">Click here</a> to find out why and what you can do about it.', 'host-webfonts-local'), $iframe_name, 'https://daan.dev/docs/omgf-pro-faq/iframes/'); ?>
 								<?php endif; ?>
-								<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Don\'t show again', 'host-webfonts-local'); ?></a>]</small>
+								<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Mark as fixed', 'host-webfonts-local'); ?></a>]</small>
 							</li>
 						<?php endforeach; ?>
 					</ol>
