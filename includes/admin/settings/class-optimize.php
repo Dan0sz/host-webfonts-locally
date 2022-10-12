@@ -98,9 +98,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		$stylesheets          = OMGF::optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
-			<tr valign="top">
-				<?php OMGF::task_manager_warnings(); ?>
-			</tr>
+			<?php OMGF::task_manager_warnings(); ?>
 			<tr valign="top">
 				<th scope="row"><?= __('Cache Status', $this->plugin_text_domain); ?></th>
 				<td class="task-manager-row">

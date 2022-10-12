@@ -463,44 +463,48 @@ class OMGF
 	public static function task_manager_warnings()
 	{
 		if (OMGF_TEST_MODE == 'on') : ?>
-			<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
-				<div class="task-manager-notice info">
-					<h4><?php echo __('Test Mode is Enabled', 'host-webfonts-local'); ?></h4>
-					<p>
-						<?php echo sprintf(__('All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone.', 'host-webfonts-local'), apply_filters('omgf_settings_page_title', 'omgf')); ?>
-					</p>
-				</div>
-			</td>
+			<tr valign="top">
+				<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
+					<div class="task-manager-notice info">
+						<h4><?php echo __('Test Mode is Enabled', 'host-webfonts-local'); ?></h4>
+						<p>
+							<?php echo sprintf(__('All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone.', 'host-webfonts-local'), apply_filters('omgf_settings_page_title', 'omgf')); ?>
+						</p>
+					</div>
+				</td>
+			</tr>
 		<?php endif;
 
 		$warnings = self::get_task_manager_warnings();
 		if (!empty($warnings)) : ?>
-			<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
-				<div class="task-manager-notice warning">
-					<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), 'host-webfonts-local'), count($warnings)); ?></h4>
-					<ol <?php echo count($warnings) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
-						<?php foreach ($warnings as $warning_id) : ?>
-							<li id="omgf-notice-<?php echo $warning_id; ?>">
-								<?php if ($warning_id == 'no_ssl') : ?>
-									<?php echo __('Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'); ?>
-								<?php endif; ?>
-								<?php if (in_array(str_replace('-addtnl-conf', '', $warning_id), self::THEMES_ADDTNL_CONF)) : ?>
-									<?php $template_id = str_replace('-addtnl-conf', '', strtolower($warning_id)); ?>
-									<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, follow <a href="%s" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'), ucfirst($template_id), "https://daan.dev/docs/omgf-pro-faq/$template_id-compatibility"); ?>
-								<?php endif; ?>
-								<?php if (in_array(str_replace('-req-pro', '', $warning_id), self::THEMES_REQ_PRO)) : ?>
-									<?php echo sprintf(__('Due to the exotic way your theme (%s) implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local'), ucfirst(str_replace('-req-pro', '', $warning_id)), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
-								<?php endif; ?>
-								<?php if (in_array($warning_id, array_keys(self::IFRAMES_LOADING_FONTS))) : ?>
-									<?php $iframe_name = ucwords(str_replace('-', ' ', $warning_id)); ?>
-									<?php echo sprintf(__('%s is loading an embedded iframe on your site. OMGF (Pro) can\'t process Google Fonts inside iframes. <a href="%s" target="_blank">Click here</a> to find out why and what you can do about it.', 'host-webfonts-local'), $iframe_name, 'https://daan.dev/docs/omgf-pro-faq/iframes/'); ?>
-								<?php endif; ?>
-								<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Mark as fixed', 'host-webfonts-local'); ?></a>]</small>
-							</li>
-						<?php endforeach; ?>
-					</ol>
-				</div>
-			</td>
+			<tr valign="top">
+				<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
+					<div class="task-manager-notice warning">
+						<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), 'host-webfonts-local'), count($warnings)); ?></h4>
+						<ol <?php echo count($warnings) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
+							<?php foreach ($warnings as $warning_id) : ?>
+								<li id="omgf-notice-<?php echo $warning_id; ?>">
+									<?php if ($warning_id == 'no_ssl') : ?>
+										<?php echo __('Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'); ?>
+									<?php endif; ?>
+									<?php if (in_array(str_replace('-addtnl-conf', '', $warning_id), self::THEMES_ADDTNL_CONF)) : ?>
+										<?php $template_id = str_replace('-addtnl-conf', '', strtolower($warning_id)); ?>
+										<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, follow <a href="%s" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'), ucfirst($template_id), "https://daan.dev/docs/omgf-pro-faq/$template_id-compatibility"); ?>
+									<?php endif; ?>
+									<?php if (in_array(str_replace('-req-pro', '', $warning_id), self::THEMES_REQ_PRO)) : ?>
+										<?php echo sprintf(__('Due to the exotic way your theme (%s) implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local'), ucfirst(str_replace('-req-pro', '', $warning_id)), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
+									<?php endif; ?>
+									<?php if (in_array($warning_id, array_keys(self::IFRAMES_LOADING_FONTS))) : ?>
+										<?php $iframe_name = ucwords(str_replace('-', ' ', $warning_id)); ?>
+										<?php echo sprintf(__('%s is loading an embedded iframe on your site. OMGF (Pro) can\'t process Google Fonts inside iframes. <a href="%s" target="_blank">Click here</a> to find out why and what you can do about it.', 'host-webfonts-local'), $iframe_name, 'https://daan.dev/docs/omgf-pro-faq/iframes/'); ?>
+									<?php endif; ?>
+									<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Mark as fixed', 'host-webfonts-local'); ?></a>]</small>
+								</li>
+							<?php endforeach; ?>
+						</ol>
+					</div>
+				</td>
+			</tr>
 <?php endif;
 	}
 
