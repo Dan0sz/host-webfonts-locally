@@ -111,9 +111,15 @@ class OMGF_Frontend_Process
 		add_filter('omgf_buffer_output', [$this, 'remove_resource_hints'], 11);
 
 		/** Only hook into our own filter if Smart Slider 3 isn't active, as it has its own filter. */
-		if (!function_exists('smart_slider_3_plugins_loaded')) {
+		if (
+			!function_exists('smart_slider_3_plugins_loaded')
+			|| !function_exists('groovy_menu_init_classes')
+		) {
 			add_filter('omgf_buffer_output', [$this, 'parse']);
 		}
+
+		/** Groovy Menu compatibility */
+		add_filter('groovy_menu_final_output', [$this, 'parse'], 11);
 
 		/** Smart Slider 3 compatibility */
 		add_filter('wordpress_prepare_output', [$this, 'parse'], 11);
