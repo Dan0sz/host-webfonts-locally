@@ -35,6 +35,7 @@ jQuery(document).ready(function ($) {
             $('.omgf-optimize-fonts-manage .unload, .omgf-optimize-fonts-manage .fallback-font-stack select').on('change', this.generate_cache_key);
             $('.omgf-optimize-fonts-manage .unload').on('change', this.toggle_preload);
             $('.omgf-optimize-fonts-manage .preload').on('change', this.toggle_unload);
+            $('.omgf-optimize-fonts-manage .preload').on('change', this.maybe_show_preload_warning);
             $('.omgf-optimize-fonts-manage .unload-italics').on('click', this.unload_italics);
             $('.omgf-optimize-fonts-manage .unload-all').on('click', this.unload_all);
             $('.omgf-optimize-fonts-manage .load-all').on('click', this.load_all);
@@ -47,6 +48,7 @@ jQuery(document).ready(function ($) {
             $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
             $('#omgf-optimize-settings-form').on('submit', this.show_loader_before_submit);
             $('#omgf-delete-log').on('click', this.delete_log);
+            $('.omgf-optimize-preload-warning-close').on('click', this.hide_preload_warning);
 
             // Ticker
             setInterval(this.loop_ticker_items, 4000);
@@ -258,6 +260,22 @@ jQuery(document).ready(function ($) {
          */
         toggle_unload: function () {
             omgf_admin.toggle(this, 'unload');
+        },
+
+        /**
+         * Show users a preload warning when amount of checked preloads equals 5.
+         */
+        maybe_show_preload_warning: function () {
+            if ($('.' + this.className + ':checked').length === 5) {
+                $('#omgf-optimize-preload-warning').fadeIn('300');
+            }
+        },
+
+        /**
+         * When the cross is clicked, hide the preload warning.
+         */
+        hide_preload_warning: function () {
+            $('#omgf-optimize-preload-warning').fadeOut('100');
         },
 
         /**

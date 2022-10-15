@@ -155,6 +155,24 @@
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage {
   text-align: left;
 }
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage #omgf-optimize-preload-warning {
+  position: fixed;
+  top: 50%;
+  left: 33%;
+  width: 33%;
+  padding: 20px 40px;
+  background-color: #fff5b5;
+  border: 2px solid #FFDC00;
+  border-radius: 4px;
+  box-shadow: 1px 1px 333px #333;
+  z-index: 1000;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage #omgf-optimize-preload-warning .omgf-optimize-preload-warning-close {
+  float: right;
+  font-size: 2em;
+  line-height: 0.45;
+  cursor: pointer;
+}
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table {
   width: 100%;
   border-collapse: collapse;

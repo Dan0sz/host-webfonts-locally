@@ -273,6 +273,16 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		{
 			?>
 			<div class="omgf-optimize-fonts-manage">
+				<div id="omgf-optimize-preload-warning" style="display: none;">
+					<span class="omgf-optimize-preload-warning-close">×</span>
+					<h3><?php echo __('Wow! That\'s a lot of Preloads! 😲', $this->plugin_text_domain); ?></h3>
+					<p>
+						<?php echo __('You\'ve selected 5 (!) font styles to load early. Selecting more font styles to preload will affect your site\'s performance. The <code>preload</code> attribute should only be used for font styles loaded above the fold i.e. <strong>The top portion of a web page that\'s visible without scrolling</strong>.', $this->plugin_text_domain); ?>
+					</p>
+					<p>
+						<?php echo sprintf(__('Refer to the <a href="%s" target="_blank">Plugin documentation</a> for more information.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/optimize-local-fonts/'); ?>
+					</p>
+				</div>
 				<p>
 
 				</p>
