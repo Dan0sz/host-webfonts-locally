@@ -200,21 +200,35 @@ class OMGF_Admin
 		if ($value != $old_value && $old_value !== false) {
 			global $wp_settings_errors;
 
+			$show_message = true;
+
 			if (!empty($wp_settings_errors)) {
-				$wp_settings_errors = [];
+				foreach ($wp_settings_errors as $error) {
+					if (strpos($error['code'], 'omgf') !== false) {
+						$show_message = false;
+
+						break;
+					}
+				}
+
+				if ($show_message) {
+					$wp_settings_errors = [];
+				}
 			}
 
-			update_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE, true);
+			if ($show_message) {
+				update_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE, true);
 
-			add_settings_error(
-				'general',
-				'omgf_cache_style',
-				sprintf(
-					__('OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.', $this->plugin_text_domain),
-					admin_url(OMGF_Admin_Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS)
-				),
-				'success'
-			);
+				add_settings_error(
+					'general',
+					'omgf_cache_style',
+					sprintf(
+						__('OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.', $this->plugin_text_domain),
+						admin_url(OMGF_Admin_Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS)
+					),
+					'success'
+				);
+			}
 		}
 
 		return $value;
