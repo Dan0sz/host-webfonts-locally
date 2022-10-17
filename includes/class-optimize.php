@@ -199,7 +199,7 @@ class OMGF_Optimize
      * 
      * @param $url Google Fonts API request, e.g. https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400italic
      *
-     * @return stdClass
+     * @return array
      */
     private function grab_fonts_object($url)
     {
@@ -212,7 +212,7 @@ class OMGF_Optimize
         $code = wp_remote_retrieve_response_code($response);
 
         if ($code !== 200) {
-            return new stdClass();
+            return [];
         }
 
         $stylesheet = wp_remote_retrieve_body($response);
@@ -222,7 +222,7 @@ class OMGF_Optimize
         preg_match_all('/font-family:\s\'(.*?)\';/', $stylesheet, $font_families);
 
         if (!isset($font_families[1]) || empty($font_families[1])) {
-            return new stdClass();
+            return [];
         }
 
         $font_families = array_unique($font_families[1]);
