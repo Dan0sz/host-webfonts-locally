@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsvgo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 5.4.1
+Stable tag: 5.4.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,13 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.4.2 | October 18th, 2022 =
+* Added: Groovy Menu compatibility
+* Added: OMGF now shows a dismissable warning when you're selecting a lot of preloads.
+* Fixed: Cannot use object as array error. This error would be thrown if OMGF temporarily failed to fetch Google Fonts.
+* Fixed: Not all implementations of Google Maps were properly recognized by the Task Manager.
+* Fixed: some debug information was always generated, even when Debug Mode wasn't enabled.
 
 = 5.4.1 | October 12th, 2022 =
 * Added: make the Auto-Configure Adv. Processing notice under Detection Settings more noticable.
