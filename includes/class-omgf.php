@@ -625,6 +625,13 @@ class OMGF
 	 */
 	public static function debug_array($name, $array)
 	{
+		if (
+			OMGF_DEBUG_MODE !== 'on' ||
+			(OMGF_DEBUG_MODE === 'on' && file_exists(self::$log_file) && filesize(self::$log_file) > MB_IN_BYTES)
+		) {
+			return;
+		}
+
 		if (!is_array($array) && !is_object($array)) {
 			return;
 		}
