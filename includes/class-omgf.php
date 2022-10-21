@@ -64,6 +64,7 @@ class OMGF
 		'google-ads'      => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
 		'youtube'         => '//www.youtube.com/embed/', // Youtube Embeds
 		'google-maps'     => '.google.com/maps', // Google Maps
+		'hubspot'		  => '.hs-scripts.com/', // Hubspot
 		'recaptcha'       => '//www.google.com/recaptcha/api.js', // Recaptcha
 		'tawk.to'	      => '//embed.tawk.to' // Tawk.to
 	];
