@@ -60,11 +60,12 @@ class OMGF
 	 * [OMGF-73] TODO: Most used Support chat widgets.
 	 */
 	const IFRAMES_LOADING_FONTS = [
-		'google-ads'  => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
-		'youtube'     => '//www.youtube.com/embed/', // Youtube Embeds
-		'google-maps' => '.google.com/maps', // Google Maps
-		'recaptcha'   => '//www.google.com/recaptcha/api.js', // Recaptcha
-		'tawk.to'	  => '//embed.tawk.to' // Tawk.to
+		'active-campaign' => '.activehosted.com/f/embed.php', // ActiveCampaign
+		'google-ads'      => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
+		'youtube'         => '//www.youtube.com/embed/', // Youtube Embeds
+		'google-maps'     => '.google.com/maps', // Google Maps
+		'recaptcha'       => '//www.google.com/recaptcha/api.js', // Recaptcha
+		'tawk.to'	      => '//embed.tawk.to' // Tawk.to
 	];
 
 	private $plugin_text_domain = 'host-webfonts-local';
