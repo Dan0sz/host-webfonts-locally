@@ -96,9 +96,12 @@ class OMGF_Optimize_Run
         add_settings_error('general', 'omgf_optimization_success', __('Optimization completed successfully.', $this->plugin_text_domain) . ' ' . sprintf('<a target="_blank" href="%s">', self::DOCS_TEST_URL) . __('How can I verify it\'s working?', $this->plugin_text_domain) . '</a>', 'success');
 
         OMGF_Admin_Notice::set_notice(
-            __('If you\'re using any 3rd party optimization plugins (e.g. WP Rocket, Autoptimize, W3 Total Cache, etc.) make sure to flush their caches for OMGF\'s optimizations to take effect.', $this->plugin_text_domain),
-            'omgf-cache-notice',
-            'warning'
+            sprintf(
+                __('Make sure you flush any caches of 3rd party plugins you\'re using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s\'s optimizations to take effect. ', $this->plugin_text_domain),
+                'omgf-cache-notice',
+                'warning'
+            ),
+            apply_filters('omgf_settings_page_title', 'OMGF')
         );
     }
 
@@ -112,7 +115,7 @@ class OMGF_Optimize_Run
             $response = $response->as_error();
         }
 
-        add_settings_error('general', 'omgf_frontend_fetch_failed', __('OMGF encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain) . ': ' . $this->get_error_code($response) . ' - ' . $this->get_error_message($response), 'error');
+        add_settings_error('general', 'omgf_frontend_fetch_failed', sprintf(__('%s encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')) . ': ' . $this->get_error_code($response) . ' - ' . $this->get_error_message($response), 'error');
     }
 
     /**
