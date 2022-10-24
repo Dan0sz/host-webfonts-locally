@@ -61,6 +61,7 @@ class OMGF
 	 */
 	const IFRAMES_LOADING_FONTS = [
 		'active-campaign' => '.activehosted.com/f/embed.php', // ActiveCampaign
+		'channext'		  => '//content.channext.com/js/', // Channext
 		'google-ads'      => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
 		'youtube'         => '//www.youtube.com/embed/', // Youtube Embeds
 		'google-maps'     => '.google.com/maps', // Google Maps
