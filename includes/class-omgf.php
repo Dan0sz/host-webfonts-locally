@@ -483,6 +483,9 @@ class OMGF
 				<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
 					<div class="task-manager-notice warning">
 						<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), 'host-webfonts-local'), count($warnings)); ?></h4>
+						<p>
+							<?php echo __('After making the proposed changes where needed, click <em>Mark as fixed</em> to remove the notice as it won\'t disappear by itself.', $this->plugin_text_domain); ?>
+						</p>
 						<ol <?php echo count($warnings) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
 							<?php foreach ($warnings as $warning_id) : ?>
 								<li id="omgf-notice-<?php echo $warning_id; ?>">
