@@ -641,6 +641,10 @@ class OMGF_Frontend_Process
 			}
 
 			$optimize   = new OMGF_Optimize($stack['href'], $handle, $original_handle);
+
+			/**
+			 * @var string $cached_url Absolute URL or empty string.
+			 */
 			$cached_url = $optimize->process();
 
 			$search[$key]  = $stack['href'];
