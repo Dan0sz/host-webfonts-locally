@@ -643,12 +643,8 @@ class OMGF_Frontend_Process
 			$optimize   = new OMGF_Optimize($stack['href'], $handle, $original_handle);
 			$cached_url = $optimize->process();
 
-			if (!$cached_url) {
-				continue;
-			}
-
 			$search[$key]  = $stack['href'];
-			$replace[$key] = $cached_url . '?ver=' . $this->timestamp;
+			$replace[$key] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : '';
 		}
 
 		return ['search' => $search, 'replace' => $replace];
