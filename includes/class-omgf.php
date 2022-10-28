@@ -62,10 +62,12 @@ class OMGF
 	const IFRAMES_LOADING_FONTS = [
 		'active-campaign' => '.activehosted.com/f/embed.php', // ActiveCampaign
 		'channext'		  => '//content.channext.com/js/', // Channext
+		'conversio'		  => '//app.conversiobot.com', // Conversio
 		'google-ads'      => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
 		'youtube'         => '//www.youtube.com/embed/', // Youtube Embeds
 		'google-maps'     => '.google.com/maps', // Google Maps
 		'hubspot'		  => '.hs-scripts.com/', // Hubspot
+		'manychat'		  => '//widget.manychat.com/', // ManyChat
 		'recaptcha'       => '//www.google.com/recaptcha/api.js', // Recaptcha
 		'tawk.to'	      => '//embed.tawk.to' // Tawk.to
 	];
@@ -482,10 +484,7 @@ class OMGF
 			<tr valign="top">
 				<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
 					<div class="task-manager-notice warning">
-						<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), 'host-webfonts-local'), count($warnings)); ?></h4>
-						<p>
-							<?php echo __('After making the proposed changes where needed, click <em>Mark as fixed</em> to remove the notice as it won\'t disappear by itself.', $this->plugin_text_domain); ?>
-						</p>
+						<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), 'host-webfonts-local'), count($warnings)); ?>*</h4>
 						<ol <?php echo count($warnings) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
 							<?php foreach ($warnings as $warning_id) : ?>
 								<li id="omgf-notice-<?php echo $warning_id; ?>">
@@ -507,6 +506,9 @@ class OMGF
 								</li>
 							<?php endforeach; ?>
 						</ol>
+						<p>
+							<sub>*<em><?php echo __('After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won\'t disappear by itself.', 'host-webfonts-local'); ?></em></sub>
+						</p>
 					</div>
 				</td>
 			</tr>
