@@ -69,7 +69,8 @@ class OMGF
 		'hubspot'		  => '.hs-scripts.com/', // Hubspot
 		'manychat'		  => '//widget.manychat.com/', // ManyChat
 		'recaptcha'       => '//www.google.com/recaptcha/api.js', // Recaptcha
-		'tawk.to'	      => '//embed.tawk.to' // Tawk.to
+		'tawk.to'	      => '//embed.tawk.to', // Tawk.to
+		'tidio'			  => '//code.tidio.co/'
 	];
 
 	private $plugin_text_domain = 'host-webfonts-local';
