@@ -65,6 +65,7 @@ class OMGF
 		'conversio'		  => '//app.conversiobot.com', // Conversio
 		'google-ads'      => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
 		'youtube'         => '//www.youtube.com/embed/', // Youtube Embeds
+		'gastronovi'	  => '//services.gastronovi.com', // Gastronovi
 		'google-maps'     => '.google.com/maps', // Google Maps
 		'hubspot'		  => '.hs-scripts.com/', // Hubspot
 		'manychat'		  => '//widget.manychat.com/', // ManyChat
