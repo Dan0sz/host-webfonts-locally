@@ -71,7 +71,7 @@ class OMGF
 		'manychat'		  => '//widget.manychat.com/', // ManyChat
 		'recaptcha'       => '//www.google.com/recaptcha/api.js', // Recaptcha
 		'tawk.to'	      => '//embed.tawk.to', // Tawk.to
-		'tidio'			  => '//code.tidio.co/'
+		'tidio'			  => '//code.tidio.co/' // Tidio
 	];
 
 	private $plugin_text_domain = 'host-webfonts-local';
