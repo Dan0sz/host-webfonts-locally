@@ -96,12 +96,9 @@ class OMGF_Optimize_Run
         add_settings_error('general', 'omgf_optimization_success', __('Optimization completed successfully.', $this->plugin_text_domain) . ' ' . sprintf('<a target="_blank" href="%s">', self::DOCS_TEST_URL) . __('How can I verify it\'s working?', $this->plugin_text_domain) . '</a>', 'success');
 
         OMGF_Admin_Notice::set_notice(
-            sprintf(
-                __('Make sure you flush any caches of 3rd party plugins you\'re using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s\'s optimizations to take effect. ', $this->plugin_text_domain),
-                'omgf-cache-notice',
-                'warning'
-            ),
-            apply_filters('omgf_settings_page_title', 'OMGF')
+            sprintf(__('Make sure you flush any caches of 3rd party plugins you\'re using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s\'s optimizations to take effect. ', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')),
+            'omgf-cache-notice',
+            'warning'
         );
     }
 
