@@ -78,6 +78,11 @@
   border-left: 4px solid #FFDC00;
   background-color: #FFFBDF;
 }
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice.success {
+  border: 1px solid #2ECC40;
+  border-left: 4px solid #2ECC40;
+  background-color: #DDF7E0;
+}
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice.info {
   border: 1px solid #7FDBFF;
   border-left: 4px solid #7FDBFF;

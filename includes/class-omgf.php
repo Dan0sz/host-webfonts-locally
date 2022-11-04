@@ -480,11 +480,21 @@ class OMGF
 				</td>
 			</tr>
 		<?php endif;
-
-		$warnings = self::get_task_manager_warnings();
-		if (!empty($warnings)) : ?>
-			<tr valign="top">
-				<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
+		?>
+		<tr valign="top">
+			<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
+				<?php $warnings = self::get_task_manager_warnings();
+				if (empty($warnings)) : ?>
+					<div class="task-manager-notice success">
+						<h4><?php echo __('No potential conflicts found in your configuration.', 'host-webfonts-local'); ?></h4>
+						<ol style="list-style: none; margin-left: 0;">
+							<li><?php echo sprintf(__('Great job! %s hasn\'t detected any potential conflicts in your configuration.*', 'host-webfonts-local'), apply_filters('omgf_settings_page_title', 'OMGF')); ?></li>
+						</ol>
+						<p>
+							<sub>*<em><?php echo __('Check back regularly to make sure no conflicts are detected on any of your subpages.', 'host-webfonts-local'); ?></em>
+						</p>
+					</div>
+				<?php else : ?>
 					<div class="task-manager-notice warning">
 						<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), 'host-webfonts-local'), count($warnings)); ?>*</h4>
 						<ol <?php echo count($warnings) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
@@ -512,10 +522,10 @@ class OMGF
 							<sub>*<em><?php echo __('After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won\'t disappear by itself.', 'host-webfonts-local'); ?></em></sub>
 						</p>
 					</div>
-				</td>
-			</tr>
-<?php endif;
-	}
+				<?php endif; ?>
+			</td>
+		</tr>
+<?php }
 
 	/**
 	 * Check if WordPress setup has known issues.
