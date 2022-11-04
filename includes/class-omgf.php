@@ -491,7 +491,7 @@ class OMGF
 							<li><?php echo sprintf(__('Great job! %s hasn\'t detected any potential conflicts in your configuration.*', 'host-webfonts-local'), apply_filters('omgf_settings_page_title', 'OMGF')); ?></li>
 						</ol>
 						<p>
-							<sub>*<em><?php echo __('Check back regularly to make sure no conflicts are detected on any of your subpages.', 'host-webfonts-local'); ?></em>
+							<sub>*<em><?php echo __('Check back regularly to make sure no conflicts are detected on any of your subpages.', 'host-webfonts-local'); ?></em></sub>
 						</p>
 					</div>
 				<?php else : ?>
