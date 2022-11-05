@@ -657,7 +657,8 @@ class OMGF_Frontend_Process
 	/**
 	 * Because all great themes come packed with extra Cumulative Layout Shifting.
 	 * 
-	 * @since v5.4.3 Added compatibility for Highlight Pro; a Mesmerize based theme.
+	 * @since v5.4.3 Added compatibility for Highlight Pro; a Mesmerize based theme and Mesmerize,
+	 * 				 the non-premium theme.
 	 * 
 	 * @param string $tag
 	 *  
@@ -667,7 +668,8 @@ class OMGF_Frontend_Process
 	{
 		if (
 			(wp_get_theme()->template == 'mesmerize-pro'
-				|| wp_get_theme()->template == 'highlight-pro')
+				|| wp_get_theme()->template == 'highlight-pro'
+				|| wp_get_theme()->template == 'mesmerize')
 			&& strpos($tag, 'fonts.googleapis.com') !== false
 		) {
 			return str_replace('href="" data-href', 'href', $tag);
