@@ -60,18 +60,19 @@ class OMGF
 	 * [OMGF-73] TODO: Most used Support chat widgets.
 	 */
 	const IFRAMES_LOADING_FONTS = [
-		'active-campaign' => '.activehosted.com/f/embed.php', // ActiveCampaign
-		'channext'		  => '//content.channext.com/js/', // Channext
-		'conversio'		  => '//app.conversiobot.com', // Conversio
-		'google-ads'      => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
-		'youtube'         => '//www.youtube.com/embed/', // Youtube Embeds
-		'gastronovi'	  => '//services.gastronovi.com', // Gastronovi
-		'google-maps'     => '.google.com/maps', // Google Maps
-		'hubspot'		  => '.hs-scripts.com/', // Hubspot
-		'manychat'		  => '//widget.manychat.com/', // ManyChat
-		'recaptcha'       => '//www.google.com/recaptcha/api.js', // Recaptcha
-		'tawk.to'	      => '//embed.tawk.to', // Tawk.to
-		'tidio'			  => '//code.tidio.co/' // Tidio
+		'active-campaign'             => '.activehosted.com/f/embed.php', // ActiveCampaign
+		'channext'		              => '//content.channext.com/js/', // Channext
+		'conversio'		              => '//app.conversiobot.com', // Conversio
+		'google-ads'                  => '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', // Google Ads
+		'google-campaign-manager-360' => '//www.googletagservices.com/dcm/dcmads.js', // Google Campaign Manager 360
+		'youtube'                     => '//www.youtube.com/embed/', // Youtube Embeds
+		'gastronovi'	              => '//services.gastronovi.com', // Gastronovi
+		'google-maps'                 => '.google.com/maps', // Google Maps
+		'hubspot'		              => '.hs-scripts.com/', // Hubspot
+		'manychat'		              => '//widget.manychat.com/', // ManyChat
+		'recaptcha'                   => '//www.google.com/recaptcha/api.js', // Recaptcha
+		'tawk.to'	                  => '//embed.tawk.to', // Tawk.to
+		'tidio'			              => '//code.tidio.co/' // Tidio
 	];
 
 	private $plugin_text_domain = 'host-webfonts-local';
