@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsvgo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.1
-Stable tag: 5.4.2
+Stable tag: 5.4.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,23 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.4.3 | November 7th, 2022 =
+* Tested with WP 6.1
+* OMGF will now warn you when it detects you're using the following scripts loading Google Fonts in iframes:
+  - Active Campaign
+  - Channext
+  - Conversio 
+  - Gastronovi
+  - Google Campaign Manager 360
+  - HubSpot
+  - ManyChat
+  - Tidio
+* Improved: Success message if no conflicts were detected to clarify the use of the Task Manager.
+* Improved: Notify users that they have to "Mark" possible detected conflicts as "fixed" themselves.
+* Improved: Bad Requests (400) to the Google Fonts API are now removed from the source code.
+* Improved: trim invalid characters from end of requests to the Google Fonts API.
+* Added: compatibility with Mesmerize theme.
 
 = 5.4.2 | October 18th, 2022 =
 * Added: Groovy Menu compatibility
