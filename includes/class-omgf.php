@@ -75,8 +75,6 @@ class OMGF
 		'tidio'			              => '//code.tidio.co/' // Tidio
 	];
 
-	private $plugin_text_domain = 'host-webfonts-local';
-
 	/**
 	 * @var string $log_file Path where log file is located.
 	 */
@@ -475,9 +473,9 @@ class OMGF
 	 */
 	public static function task_manager_warnings()
 	{
-		if (OMGF_TEST_MODE == 'on') : ?>
-			<tr valign="top">
-				<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
+		if (OMGF_TEST_MODE == 'on' && !wp_doing_ajax()) : ?>
+			<tr valign="top" id="task-manager-notice-test-mode-row">
+				<td colspan="2" class="task-manager-row">
 					<div class="task-manager-notice info">
 						<h4><?php echo __('Test Mode is Enabled', 'host-webfonts-local'); ?></h4>
 						<p>
@@ -488,8 +486,8 @@ class OMGF
 			</tr>
 		<?php endif;
 		?>
-		<tr valign="top">
-			<td colspan="2" class="task-manager-row" id="task-manager-notice-row">
+		<tr valign="top" id="task-manager-notice-row">
+			<td colspan="2" class="task-manager-row">
 				<?php $warnings = self::get_task_manager_warnings();
 				if (empty($warnings)) : ?>
 					<div class="task-manager-notice success">
