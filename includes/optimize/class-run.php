@@ -79,7 +79,9 @@ class OMGF_Optimize_Run
      */
     private function no_cache_optimize_url($url)
     {
-        return add_query_arg(['omgf_optimize' => 1, 'nocache' => substr(md5(microtime()), rand(0, 26), 5)], $url);
+        $args = apply_filters('omgf_optimize_run_args', ['omgf_optimize' => 1, 'nocache' => substr(md5(microtime()), rand(0, 26), 5)]);
+
+        return add_query_arg($args, $url);
     }
 
     /**
