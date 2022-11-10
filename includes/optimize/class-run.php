@@ -73,7 +73,11 @@ class OMGF_Optimize_Run
     }
 
     /**
+     * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
+     * 
      * @param $url
+     * 
+     * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
      *
      * @return string
      */
