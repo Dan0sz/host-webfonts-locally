@@ -33,7 +33,7 @@ class OMGF_Frontend_Process
 		'fl_builder',
 		'siteorigin_panels_live_editor',
 		'tve',
-		'vc_action',
+		'vc_action', // WP Bakery
 		'perfmatters' // Perfmatter's Frontend Script Manager.
 	];
 
