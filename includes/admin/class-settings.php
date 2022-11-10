@@ -400,7 +400,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
 			?>
 			<?php if ($this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP) : ?>
-				<?php submit_button($this->submit_button_text, 'primary', 'submit', false, empty($this->get_settings()) || (empty($this->get_settings()) && defined('OMGF_PRO_AUTO_CONFIG') && OMGF_PRO_AUTO_CONFIG) ? 'disabled' : null); ?>
+				<?php submit_button($this->submit_button_text, 'primary', 'submit', false, empty($this->get_settings()) ? 'disabled' : null); ?>
 			<?php endif; ?>
 		</form>
 <?php
