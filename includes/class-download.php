@@ -88,6 +88,6 @@ class OMGF_Download
 		copy($tmp, $file);
 		@unlink($tmp);
 
-		return $file_url;
+		return str_replace(['http:', 'https:'], '', $file_url);
 	}
 }
