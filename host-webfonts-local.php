@@ -3,7 +3,7 @@
 /**
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress/omgf/
- * Description: Increase GDPR/DSVGO compliance, reduce DNS requests and leverage browser cache by automatically downloading Google Fonts to your server.
+ * Description: Increase GDPR/DSGVO compliance, reduce DNS requests and leverage browser cache by automatically downloading Google Fonts to your server.
  * Version: 5.4.3
  * Author: Daan from Daan.dev
  * Author URI: https://daan.dev
