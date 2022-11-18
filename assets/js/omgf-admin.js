@@ -41,7 +41,7 @@ jQuery(document).ready(function ($) {
             $('.omgf-optimize-fonts-manage .load-all').on('click', this.load_all);
 
             // Buttons (AJAX, etc.)
-            $('#omgf-save-optimize, omgf-optimize-again').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
+            $('#omgf-save-optimize, #omgf-optimize-again').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
             $(document).on('click', 'a[id^=omgf-hide-notice-]', this.hide_notice);
             $('#omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
             $('.omgf-refresh, #omgf-cache-refresh').on('click', this.refresh_cache);
