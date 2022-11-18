@@ -23,13 +23,14 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Transients
 	 */
-	const OMGF_NEWS_REEL          = 'omgf_news_reel';
-	const OMGF_OPTIMIZE_HAS_RUN   = 'omgf_optimize_has_run';
-	const OMGF_CACHE_IS_STALE     = 'omgf_cache_is_stale';
-	const OMGF_CURRENT_DB_VERSION = 'omgf_current_db_version';
-	const OMGF_CACHE_TIMESTAMP    = 'omgf_cache_timestamp';
-	const OMGF_FOUND_IFRAMES      = 'omgf_found_iframes';
-	const OMGF_HIDDEN_NOTICES     = 'omgf_hidden_notices';
+	const OMGF_AVAILABLE_USED_SUBSETS = 'omgf_available_used_subsets';
+	const OMGF_NEWS_REEL              = 'omgf_news_reel';
+	const OMGF_OPTIMIZE_HAS_RUN       = 'omgf_optimize_has_run';
+	const OMGF_CACHE_IS_STALE         = 'omgf_cache_is_stale';
+	const OMGF_CURRENT_DB_VERSION     = 'omgf_current_db_version';
+	const OMGF_CACHE_TIMESTAMP        = 'omgf_cache_timestamp';
+	const OMGF_FOUND_IFRAMES          = 'omgf_found_iframes';
+	const OMGF_HIDDEN_NOTICES         = 'omgf_hidden_notices';
 
 	/**
 	 * Settings Fields
@@ -117,13 +118,17 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	 * Optimize Fonts
 	 */
 	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'omgf_display_option';
-	const OMGF_OPTIMIZE_SETTING_SUBSETS            = 'omgf_subsets';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'omgf_optimized_fonts';
 	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      = 'omgf_preload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS       = 'omgf_unload_fonts';
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'omgf_unload_stylesheets';
 	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS         = 'omgf_cache_keys';
 	const OMGF_OPTIMIZE_SETTING_TEST_MODE          = 'omgf_test_mode';
+
+	/**
+	 * Detection Settings
+	 */
+	const OMGF_DETECTION_SETTING_SUBSETS = 'omgf_subsets';
 
 	/**
 	 * Advanced Settings

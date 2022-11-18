@@ -18,6 +18,9 @@ defined('ABSPATH') || exit;
 
 class OMGF_Optimize
 {
+    /**
+     * User Agents set to be used to make requests to the Google Fonts API.
+     */
     const USER_AGENT = [
         'woff2' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0',
     ];
@@ -46,6 +49,13 @@ class OMGF_Optimize
      * @since v5.3.0
      */
     private $variable_fonts = [];
+
+    /**
+     * @var array $available_used_subsets Contains an array_intersect() of subsets that're set to be used AND are actually available.
+     * 
+     * @since v5.4.4 
+     */
+    private $available_used_subsets = [];
 
     /** @var string */
     private $plugin_text_domain = 'host-webfonts-local';
@@ -181,6 +191,13 @@ class OMGF_Optimize
         $optimized_fonts = OMGF::optimized_fonts($current_stylesheet, true);
 
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
+
+        /**
+         * Since v5.4.4 Stores the subsets actually available in this configuration.
+         */
+        $available_used_subsets = OMGF::available_used_subsets($this->available_used_subsets);
+
+        update_option(OMGF_Admin_Settings::OMGF_AVAILABLE_USED_SUBSETS, $available_used_subsets);
 
         switch ($this->return) {
             case 'path':
@@ -327,7 +344,7 @@ class OMGF_Optimize
      * Parse stylesheets for subsets, which in Google Fonts stylesheets are always
      * included, commented above each @font-face statements, e.g. /* latin-ext */ /*
      */
-    private function parse_subsets($stylesheet)
+    private function parse_subsets($stylesheet, $font_family)
     {
         OMGF::debug(__('Parsing subsets.', $this->plugin_text_domain));
 
@@ -338,6 +355,11 @@ class OMGF_Optimize
         }
 
         $subsets = array_unique($subsets[1]);
+
+        /**
+         * @since v5.4.4 Stores all subsets that are selected to be used AND are actually available in this font-family.
+         */
+        $this->available_used_subsets[$font_family] = array_intersect($subsets, OMGF_SUBSETS);
 
         OMGF::debug_array(__('Subset @font-face statements', $this->plugin_text_domain), $subsets);
 

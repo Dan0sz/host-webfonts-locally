@@ -30,10 +30,10 @@ class OMGF_DB_Migrate_V533
      */
     private function init()
     {
-        $subsets = get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS);
+        $subsets = get_option(OMGF_Admin_Settings::OMGF_DETECTION_SETTING_SUBSETS);
 
         if (!$subsets) {
-            update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS, ['latin', 'latin-ext']);
+            update_option(OMGF_Admin_Settings::OMGF_DETECTION_SETTING_SUBSETS, ['latin', 'latin-ext']);
         }
 
         /**

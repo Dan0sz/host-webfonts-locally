@@ -45,7 +45,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_optimize_settings_content', [$this, 'do_display_option'], 40);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_apply_font_display_globally'], 50);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_promo_remove_async_google_fonts'], 60);
-		add_filter('omgf_optimize_settings_content', [$this, 'do_use_subsets'], 70);
 		add_filter('omgf_optimize_settings_content', [$this, 'do_after'], 100);
 
 		add_filter('omgf_optimize_settings_content', [$this, 'do_optimize_fonts_container'], 200);
@@ -214,23 +213,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			defined('OMGF_PRO_REMOVE_ASYNC_FONTS') ? OMGF_PRO_REMOVE_ASYNC_FONTS : false,
 			sprintf(__('Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%s">manually</a> or by using <a href="%s" target="_blank">a plugin</a> to prevent styling breaks.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/', 'https://daan.dev/wordpress/omgf-additional-fonts/') . ' ' . $this->promo,
 			!defined('OMGF_PRO_REMOVE_ASYNC_FONTS')
-		);
-	}
-
-	/**
-	 * Preload Subsets
-	 * 
-	 * @return void 
-	 */
-	public function do_use_subsets()
-	{
-		$this->do_select(
-			__('Used Subset(s)', $this->plugin_text_domain),
-			OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS,
-			OMGF_Admin_Settings::OMGF_SUBSETS,
-			OMGF_SUBSETS,
-			__('A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended is an add-on for Latin and can\'t be used by itself. Use CTRL + click to select multiple values.</em>', $this->plugin_text_domain),
-			true
 		);
 	}
 

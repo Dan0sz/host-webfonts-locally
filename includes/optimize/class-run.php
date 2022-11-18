@@ -43,15 +43,10 @@ class OMGF_Optimize_Run
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_HAS_RUN, true);
 
         $front_html = $this->get_front_html(get_home_url());
-        $error      = false;
 
         if (is_wp_error($front_html) || wp_remote_retrieve_response_code($front_html) != 200) {
             $this->frontend_fetch_failed($front_html);
-
-            $error = true;
-        }
-
-        if (!$error) {
+        } else {
             $this->optimization_succeeded();
         }
     }
@@ -64,12 +59,14 @@ class OMGF_Optimize_Run
      */
     private function get_front_html($url)
     {
-        return wp_remote_get(
+        $result = wp_remote_get(
             $this->no_cache_optimize_url($url),
             [
                 'timeout' => 60
             ]
         );
+
+        return $result;
     }
 
     /**
@@ -106,6 +103,48 @@ class OMGF_Optimize_Run
             'omgf-cache-notice',
             'warning'
         );
+
+        /**
+         * @since v5.4.4 Check if selected Used Subset(s) are actually available in all detected font families,
+         *               and update the Used Subset(s) option if not.
+         */
+        if (!empty($diff = array_diff(OMGF_SUBSETS, OMGF::available_used_subsets(null, true)))) {
+            OMGF_Admin_notice::set_notice(
+                sprintf(
+                    _n(
+                        '%s are removed as Used Subset(s), as not all detected font families are available in this subset. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
+                        '%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
+                        count($diff),
+                        'host-webfonts-local'
+                    ),
+                    $this->fluent_implode($diff)
+                ),
+                'omgf-used-subsets-removed',
+                'info'
+            );
+
+            update_option(OMGF_Admin_Settings::OMGF_DETECTION_SETTING_SUBSETS, OMGF::available_used_subsets(null, true));
+        }
+    }
+
+    /**
+     * Generate a fluent sentence from array, e.g. "1, 2, 3 and 4".
+     * 
+     * @since v5.4.4
+     * 
+     * @param array $array 
+     * 
+     * @return string 
+     */
+    private function fluent_implode($array)
+    {
+        if (count($array) == 1) {
+            return ucfirst(reset($array));
+        }
+
+        $last = array_pop($array);
+
+        return implode(', ', array_map('ucfirst', $array)) . ' and ' . ucfirst($last);
     }
 
     /**

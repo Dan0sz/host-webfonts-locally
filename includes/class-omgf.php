@@ -39,7 +39,9 @@ class OMGF
 		'oxygen',
 		'optimizepress',
 		'popup-maker',
-		'thrive'
+		'premium-stock-market-widgets',
+		'thrive',
+		'woozone'
 	];
 
 	/**
@@ -131,7 +133,7 @@ class OMGF
 		define('OMGF_CACHE_IS_STALE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE)));
 		define('OMGF_CURRENT_DB_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION)));
 		define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
-		define('OMGF_SUBSETS', $this->esc_array(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_SUBSETS, ['latin', 'latin-ext'])) ?: ['latin', 'latin-ext']);
+		define('OMGF_SUBSETS', $this->esc_array(get_option(OMGF_Admin_Settings::OMGF_DETECTION_SETTING_SUBSETS, ['latin', 'latin-ext'])) ?: ['latin', 'latin-ext']);
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
 		define('OMGF_CACHE_KEYS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '')));
 		define('OMGF_TEST_MODE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE)));
@@ -326,6 +328,7 @@ class OMGF
 	 * @since v4.5.7
 	 * 
 	 * @param array $maybe_add If it doesn't exist, it's added to the cache layer.
+	 * @param bool  $force_add
 	 * 
 	 * @return array
 	 */
@@ -437,6 +440,47 @@ class OMGF
 		}
 
 		return '';
+	}
+
+	/**
+	 * @since v5.4.4 Returns the subsets that're available in all requested fonts/stylesheets.
+	 * 
+	 * 				 Functions as a temporary cache layer to reduce DB reads with get_option().
+	 * 
+	 * @return array 
+	 */
+	public static function available_used_subsets($maybe_add = [], $intersect = false)
+	{
+		static $subsets = [];
+
+		if (empty($subsets)) {
+			$subsets = get_option(OMGF_Admin_Settings::OMGF_AVAILABLE_USED_SUBSETS, []) ?: [];
+		}
+
+		/**
+		 * get_option() should take care of this, but sometimes it doesn't.
+		 */
+		if (is_string($subsets)) {
+			$subsets = unserialize($subsets);
+		}
+
+		/**
+		 * If $maybe_add doesn't exist in the cache layer yet, add it.
+		 */
+		if (!empty($maybe_add) && (!isset($subsets[key($maybe_add)]))) {
+			$subsets = array_merge($subsets, $maybe_add);
+		}
+
+		/**
+		 * Return only subsets that're available in all font families.
+		 * 
+		 * @see OMGF_Optimize_Run
+		 */
+		if ($intersect) {
+			return call_user_func_array('array_intersect', array_values(array_filter($subsets)));
+		}
+
+		return $subsets;
 	}
 
 	/**
