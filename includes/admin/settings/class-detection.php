@@ -31,7 +31,8 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 
 		// Settings
 		add_filter('omgf_detection_settings_content', [$this, 'google_fonts_processing'], 30);
-		add_filter('omgf_detection_settings_content', [$this, 'promo_advanced_processing'], 60);
+		add_filter('omgf_detection_settings_content', [$this, 'do_used_subsets'], 40);
+		add_filter('omgf_detection_settings_content', [$this, 'promo_advanced_processing'], 50);
 
 		// Close
 		add_filter('omgf_detection_settings_content', [$this, 'do_after'], 100);
@@ -64,6 +65,23 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder
 			</td>
 		</tr>
 	<?php
+	}
+
+	/**
+	 * Preload Subsets
+	 * 
+	 * @return void 
+	 */
+	public function do_used_subsets()
+	{
+		$this->do_select(
+			__('Used Subset(s)', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_DETECTION_SETTING_SUBSETS,
+			OMGF_Admin_Settings::OMGF_SUBSETS,
+			OMGF_SUBSETS,
+			__('A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended is an add-on for Latin and can\'t be used by itself. Use CTRL + click to select multiple values.</em>', $this->plugin_text_domain),
+			true
+		);
 	}
 
 	/**
