@@ -135,8 +135,8 @@
   border: 1px solid #ececec;
   border-left: 4px solid #ececec;
 }
-.omgf form .advanced-processing-notice.success,
-.omgf form .used-subsets-notice.success {
+.omgf form .advanced-processing-notice.info,
+.omgf form .used-subsets-notice.info {
   border: 1px solid #7FDBFF;
   border-left: 4px solid #7FDBFF;
   background-color: #E0EDF3;
