@@ -117,6 +117,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	/**
 	 * Optimize Fonts
 	 */
+	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS       = 'omgf_auto_subsets';
 	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'omgf_display_option';
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'omgf_optimized_fonts';
 	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      = 'omgf_preload_fonts';
@@ -126,14 +127,10 @@ class OMGF_Admin_Settings extends OMGF_Admin
 	const OMGF_OPTIMIZE_SETTING_TEST_MODE          = 'omgf_test_mode';
 
 	/**
-	 * Detection Settings
-	 */
-	const OMGF_DETECTION_SETTING_SUBSETS = 'omgf_subsets';
-
-	/**
 	 * Advanced Settings
 	 */
 	const OMGF_ADV_SETTING_COMPATIBILITY = 'omgf_compatibility';
+	const OMGF_ADV_SETTING_SUBSETS       = 'omgf_subsets';
 	const OMGF_ADV_SETTING_DEBUG_MODE    = 'omgf_debug';
 	const OMGF_ADV_SETTING_UNINSTALL     = 'omgf_uninstall';
 

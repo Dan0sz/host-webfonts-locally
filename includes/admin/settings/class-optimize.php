@@ -142,10 +142,18 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			</tr>
 			<?php
 			$this->do_checkbox(
+				__('Auto-Configure Used Subsets', $this->plugin_text_domain),
+				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS,
+				OMGF_AUTO_SUBSETS,
+				sprintf(__('When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')),
+				false,
+				'task-manager-row'
+			);
+			$this->do_checkbox(
 				__('Auto-Configure Adv. Processing (Pro)', $this->plugin_text_domain),
 				'omgf_pro_auto_config',
 				defined('OMGF_PRO_AUTO_CONFIG') && OMGF_PRO_AUTO_CONFIG,
-				sprintf(__('Is OMGF not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed.', $this->plugin_text_domain), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-detection-settings')) . ' ' . $this->promo,
+				sprintf(__('Is %s not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed. Novice users are advised to leave this enabled.', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF'), admin_url('options-general.php?page=optimize-webfonts&tab=omgf-detection-settings')) . ' ' . $this->promo,
 				!defined('OMGF_PRO_AUTO_CONFIG'),
 				'task-manager-row'
 			);

@@ -36,9 +36,10 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 		add_filter('omgf_advanced_settings_content', [$this, 'do_cache_dir'], 50);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_promo_fonts_source_url'], 60);
 		add_filter('omgf_advanced_settings_content', [$this, 'do_compatibility'], 70);
-		add_filter('omgf_advanced_settings_content', [$this, 'do_debug_mode'], 80);
-		add_filter('omgf_advanced_settings_content', [$this, 'do_download_log'], 90);
-		add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 100);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_used_subsets'], 80);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_debug_mode'], 90);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_download_log'], 100);
+		add_filter('omgf_advanced_settings_content', [$this, 'do_uninstall'], 110);
 
 		// Close
 		add_filter('omgf_advanced_settings_content', [$this, 'do_after'], 200);
@@ -101,6 +102,23 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_ADV_SETTING_COMPATIBILITY,
 			OMGF_COMPATIBILITY,
 			__('Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off', $this->plugin_text_domain)
+		);
+	}
+
+	/**
+	 * Preload Subsets
+	 * 
+	 * @return void 
+	 */
+	public function do_used_subsets()
+	{
+		$this->do_select(
+			__('Used Subset(s)', $this->plugin_text_domain),
+			OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS,
+			OMGF_Admin_Settings::OMGF_SUBSETS,
+			OMGF_SUBSETS,
+			__('A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended is an add-on for Latin and can\'t be used by itself. Use CTRL + click to select multiple values.</em>', $this->plugin_text_domain),
+			true
 		);
 	}
 

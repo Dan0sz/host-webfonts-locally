@@ -193,11 +193,15 @@ class OMGF_Optimize
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
 
         /**
-         * Since v5.4.4 Stores the subsets actually available in this configuration.
+         * Since v5.4.4 Stores the subsets actually available in this configuration to the database.
+         * 
+         * @see OMGF_Optimize_Run
          */
-        $available_used_subsets = OMGF::available_used_subsets($this->available_used_subsets);
+        if (OMGF_AUTO_SUBSETS == 'on') {
+            $available_used_subsets = OMGF::available_used_subsets($this->available_used_subsets);
 
-        update_option(OMGF_Admin_Settings::OMGF_AVAILABLE_USED_SUBSETS, $available_used_subsets);
+            update_option(OMGF_Admin_Settings::OMGF_AVAILABLE_USED_SUBSETS, $available_used_subsets);
+        }
 
         switch ($this->return) {
             case 'path':
