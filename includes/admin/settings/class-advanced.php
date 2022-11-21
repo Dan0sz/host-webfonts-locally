@@ -118,7 +118,8 @@ class OMGF_Admin_Settings_Advanced extends OMGF_Admin_Settings_Builder
 			OMGF_Admin_Settings::OMGF_SUBSETS,
 			OMGF_SUBSETS,
 			__('A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended is an add-on for Latin and can\'t be used by itself. Use CTRL + click to select multiple values.</em>', $this->plugin_text_domain),
-			true
+			true,
+			OMGF_AUTO_SUBSETS !== 'on'
 		);
 	}
 
