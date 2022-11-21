@@ -127,12 +127,16 @@
   content: "\f460";
   color: #0074D9;
 }
-.omgf form .advanced-processing-notice {
+.omgf form .advanced-processing-notice,
+.omgf form .used-subsets-notice {
+  display: block;
   padding: 18px 12px;
+  margin-bottom: 0.5em;
   border: 1px solid #ececec;
   border-left: 4px solid #ececec;
 }
-.omgf form .advanced-processing-notice.success {
+.omgf form .advanced-processing-notice.success,
+.omgf form .used-subsets-notice.success {
   border: 1px solid #7FDBFF;
   border-left: 4px solid #7FDBFF;
   background-color: #E0EDF3;
