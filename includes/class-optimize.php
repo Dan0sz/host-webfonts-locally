@@ -193,7 +193,7 @@ class OMGF_Optimize
         update_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts);
 
         /**
-         * Since v5.4.4 Stores the subsets actually available in this configuration to the database.
+         * @since v5.4.4 Stores the subsets actually available in this configuration to the database.
          * 
          * @see OMGF_Optimize_Run
          */
