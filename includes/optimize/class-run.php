@@ -108,7 +108,9 @@ class OMGF_Optimize_Run
          * @since v5.4.4 Check if selected Used Subset(s) are actually available in all detected font families,
          *               and update the Used Subset(s) option if not.
          */
-        if (OMGF_AUTO_SUBSETS == 'on' && !empty($diff = array_diff(OMGF_SUBSETS, OMGF::available_used_subsets(null, true)))) {
+        $available_used_subsets = OMGF::available_used_subsets(null, true);
+
+        if (OMGF_AUTO_SUBSETS == 'on' && !empty($diff = array_diff(OMGF_SUBSETS, $available_used_subsets))) {
             OMGF_Admin_notice::set_notice(
                 sprintf(
                     _n(
@@ -123,7 +125,15 @@ class OMGF_Optimize_Run
                 'info'
             );
 
-            update_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, OMGF::available_used_subsets(null, true));
+            if (!empty($available_used_subsets)) {
+                update_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, $available_used_subsets);
+            } else {
+                /**
+                 * If detected fonts aren't available in any of the subsets that were selected, just set Used Subsets to Latin
+                 * to make sure nothing breaks.
+                 */
+                update_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, ['latin']);
+            }
         }
     }
 
