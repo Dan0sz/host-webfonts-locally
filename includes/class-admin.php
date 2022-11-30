@@ -35,7 +35,9 @@ class OMGF_Admin
 		/**
 		 * Filterable list of options that marks the cache as stale.
 		 */
-		$this->stale_cache_options = apply_filters('omgf_admin_stale_cache_options', []);
+		$this->stale_cache_options = apply_filters('omgf_admin_stale_cache_options', [
+			OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS
+		]);
 
 		add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
 		add_action('admin_notices', [$this, 'print_notices']);
