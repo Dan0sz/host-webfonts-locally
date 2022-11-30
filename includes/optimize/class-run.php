@@ -110,28 +110,42 @@ class OMGF_Optimize_Run
          */
         $available_used_subsets = OMGF::available_used_subsets(null, true);
 
-        if (OMGF_AUTO_SUBSETS == 'on' && !empty($diff = array_diff(OMGF_SUBSETS, $available_used_subsets))) {
-            OMGF_Admin_notice::set_notice(
-                sprintf(
-                    _n(
-                        '%s are removed as Used Subset(s), as not all detected font families are available in this subset. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
-                        '%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
-                        count($diff),
-                        'host-webfonts-local'
+        if (OMGF_AUTO_SUBSETS == 'on') {
+            /**
+             * Show a notice 
+             */
+            if ($available_used_subsets && !empty($diff = array_diff(OMGF_SUBSETS, $available_used_subsets))) {
+                OMGF_Admin_Notice::set_notice(
+                    sprintf(
+                        _n(
+                            '%s is removed as a Used Subset, as not all detected font families are available in this subset. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
+                            '%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
+                            count($diff),
+                            'host-webfonts-local'
+                        ),
+                        $this->fluent_implode($diff)
                     ),
-                    $this->fluent_implode($diff)
-                ),
-                'omgf-used-subsets-removed',
-                'info'
-            );
+                    'omgf-used-subsets-removed',
+                    'info'
+                );
+            }
 
-            if (!empty($available_used_subsets)) {
+            if ($available_used_subsets) {
                 update_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, $available_used_subsets);
-            } else {
+            } elseif (!empty($diff = array_diff(OMGF_SUBSETS, ['latin']))) {
                 /**
                  * If detected fonts aren't available in any of the subsets that were selected, just set Used Subsets to Latin
                  * to make sure nothing breaks.
                  */
+                OMGF_Admin_Notice::set_notice(
+                    sprintf(
+                        __('Used Subset(s) is set to Latin, since all detected font-families aren\'t available in %s. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.', 'host-webfonts-local'),
+                        $this->fluent_implode($diff)
+                    ),
+                    'omgf-used-subsets-defaults',
+                    'info'
+                );
+
                 update_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, ['latin']);
             }
         }
