@@ -478,7 +478,10 @@ class OMGF
 		 * @see OMGF_Optimize_Run
 		 */
 		if ($intersect) {
-			return call_user_func_array('array_intersect', array_values(array_filter($subsets)));
+			/**
+			 * We can't always control what's in $subsets and empty arrays could occur, throwing warnings.
+			 */
+			return @call_user_func_array('array_intersect', array_values(array_filter($subsets)));
 		}
 
 		return $subsets;
