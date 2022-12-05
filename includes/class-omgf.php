@@ -157,6 +157,8 @@ class OMGF
 
 	/**
 	 * Escape each value of an option array.
+	 * 
+	 * @since v5.5.0 Make sure sub-elements are properly escaped as well.
 	 */
 	private function esc_array($array)
 	{
@@ -165,6 +167,16 @@ class OMGF
 		}
 
 		foreach ($array as &$element) {
+			if (is_array($element)) {
+				$element = $this->esc_array($element);
+
+				continue;
+			}
+
+			if (!is_string($element)) {
+				continue;
+			}
+
 			$element = esc_attr($element);
 		}
 
