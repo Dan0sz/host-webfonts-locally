@@ -25,7 +25,7 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 ### Other Features include
 
 - **Variable Fonts** support,
-- **Remove unused subsets** to reduce the size of the CSS stylesheet,
+- Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet up to 90%!
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
 - **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to your Google Fonts,
 - **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to all your other fonts! (OMGF Pro required),

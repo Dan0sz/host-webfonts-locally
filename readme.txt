@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.1
-Stable tag: 5.4.3
+Stable tag: 5.5.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -33,7 +33,7 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 = Other Features include =
 
 - **Variable Fonts** support,
-- **Remove unused subsets** to reduce the size of the CSS stylesheet,
+- Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet with ~90%!
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to your Google Fonts,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to all your other fonts! (OMGF Pro required),
@@ -75,6 +75,13 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.5.0 | December 5th, 2022 =
+* Added: 'omgf_optimize_run_args' filter to allow adding attional GET-parameters before running optimization.
+* Improved: always use protocol relative ('//' instead of 'https://') URLs when generating and loading stylesheets to avoid SSL- and permalinks related quirks in WordPress.
+* Added: Auto-Configure Subsets feature and moved the Used Subset(s) option to the Advanced Settings tab.
+* Added: compatibility for WP.com's "GDPR compliant" Google Fonts API.
+* Fixed: Array to string conversion in PHPH 8.1 while escaping arrays.
 
 = 5.4.3 | November 7th, 2022 =
 * Tested with WP 6.1
