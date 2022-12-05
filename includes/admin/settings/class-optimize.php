@@ -142,7 +142,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 			</tr>
 			<?php
 			$this->do_checkbox(
-				__('Auto-Configure Used Subsets', $this->plugin_text_domain),
+				__('Auto-Configure Subsets', $this->plugin_text_domain),
 				OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS,
 				OMGF_AUTO_SUBSETS,
 				sprintf(__('When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')),
