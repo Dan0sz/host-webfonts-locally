@@ -141,6 +141,10 @@ class OMGF_Optimize
 
             OMGF::debug(__('Processing downloads for', $this->plugin_text_domain) . ' ' . $font->family . '...');
 
+            if (!isset($font->variants) || empty($font->variants)) {
+                continue;
+            }
+
             foreach ($font->variants as $variant_id => &$variant) {
                 /**
                  * @since v5.3.0 Variable fonts use one filename for all font weights/styles. That's why we drop the weight from the filename.
@@ -287,6 +291,8 @@ class OMGF_Optimize
         }
 
         OMGF::debug(sprintf(__('Found %s @font-face statements.', $this->plugin_text_domain), count($font_faces[0])));
+
+        $font_object = [];
 
         foreach ($font_faces[0] as $key => $font_face) {
             /**
