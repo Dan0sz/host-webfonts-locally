@@ -96,14 +96,6 @@ class OMGF_Optimize_Run
             $wp_settings_errors = [];
         }
 
-        add_settings_error('general', 'omgf_optimization_success', __('Optimization completed successfully.', $this->plugin_text_domain) . ' ' . sprintf('<a target="_blank" href="%s">', self::DOCS_TEST_URL) . __('How can I verify it\'s working?', $this->plugin_text_domain) . '</a>', 'success');
-
-        OMGF_Admin_Notice::set_notice(
-            sprintf(__('Make sure you flush any caches of 3rd party plugins you\'re using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s\'s optimizations to take effect. ', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')),
-            'omgf-cache-notice',
-            'warning'
-        );
-
         /**
          * @since v5.4.4 Check if selected Used Subset(s) are actually available in all detected font families,
          *               and update the Used Subset(s) option if not.
@@ -112,7 +104,8 @@ class OMGF_Optimize_Run
 
         if (OMGF_AUTO_SUBSETS == 'on') {
             /**
-             * Show a notice 
+             * If $diff is empty, this means that the detected fonts are available in all selected subsets of the 
+             * Used Subset(s) option and no further action is required.
              */
             if ($available_used_subsets && !empty($diff = array_diff(OMGF_SUBSETS, $available_used_subsets))) {
                 OMGF_Admin_Notice::set_notice(
@@ -128,18 +121,25 @@ class OMGF_Optimize_Run
                     'omgf-used-subsets-removed',
                     'info'
                 );
+
+                update_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, $available_used_subsets);
+
+                return;
             }
 
-            if ($available_used_subsets) {
-                update_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, $available_used_subsets);
-            } elseif (!empty($diff = array_diff(OMGF_SUBSETS, ['latin']))) {
+            if (!empty($diff = array_diff(OMGF_SUBSETS, ['latin']))) {
                 /**
                  * If detected fonts aren't available in any of the subsets that were selected, just set Used Subsets to Latin
                  * to make sure nothing breaks.
                  */
                 OMGF_Admin_Notice::set_notice(
                     sprintf(
-                        __('Used Subset(s) is set to Latin, since all detected font-families aren\'t available in %s. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.', 'host-webfonts-local'),
+                        _n(
+                            'Used Subset(s) is set to Latin, since %s isn\'t available in all detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
+                            'Used Subset(s) is set to Latin, since %s aren\'t available in all detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
+                            count($diff),
+                            'host-webfonts-local',
+                        ),
                         $this->fluent_implode($diff)
                     ),
                     'omgf-used-subsets-defaults',
@@ -147,8 +147,18 @@ class OMGF_Optimize_Run
                 );
 
                 update_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, ['latin']);
+
+                return;
             }
         }
+
+        add_settings_error('general', 'omgf_optimization_success', __('Optimization completed successfully.', $this->plugin_text_domain) . ' ' . sprintf('<a target="_blank" href="%s">', self::DOCS_TEST_URL) . __('How can I verify it\'s working?', $this->plugin_text_domain) . '</a>', 'success');
+
+        OMGF_Admin_Notice::set_notice(
+            sprintf(__('Make sure you flush any caches of 3rd party plugins you\'re using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s\'s optimizations to take effect. ', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')),
+            'omgf-cache-notice',
+            'warning'
+        );
     }
 
     /**
