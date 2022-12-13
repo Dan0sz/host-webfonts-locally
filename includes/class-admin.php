@@ -192,6 +192,13 @@ class OMGF_Admin
 	 */
 	public function settings_changed($value, $option_name, $old_value)
 	{
+		/**
+		 * Don't show this message on the Main tab.
+		 */
+		if (array_key_exists('tab', $_GET) && $_GET['tab'] == OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE) {
+			return $value;
+		}
+
 		if (!in_array($option_name, $this->stale_cache_options)) {
 			return $value;
 		}

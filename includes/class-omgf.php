@@ -491,9 +491,16 @@ class OMGF
 		 */
 		if ($intersect) {
 			/**
-			 * We can't always control what's in $subsets and empty arrays could occur, throwing warnings.
+			 * @var array $filtered_subsets Contains an array of Font Families along with the available selected subsets, e.g.
+			 * 								{ 'Lato' => { 'latin', 'latin-ext' } }
 			 */
-			return @call_user_func_array('array_intersect', array_values(array_filter($subsets)));
+			$filtered_subsets = array_values(array_filter($subsets));
+
+			if (!empty($filtered_subsets)) {
+				return call_user_func_array('array_intersect', $filtered_subsets);
+			}
+
+			return $filtered_subsets;
 		}
 
 		return $subsets;
