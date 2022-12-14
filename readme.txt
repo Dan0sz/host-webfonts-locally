@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.1
-Stable tag: 5.5.0
+Stable tag: 5.5.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.5.1 | December 14th, 2022 =
+* Fixed: ArgumentCountError: array_intersect() expects at least 1 argument, 0 given.
+* Improved: don't show "optimization success" message if Auto-configure Subsets needs to run again.
 
 = 5.5.0 | December 5th, 2022 =
 * Added: 'omgf_optimize_run_args' filter to allow adding attional GET-parameters before running optimization.
