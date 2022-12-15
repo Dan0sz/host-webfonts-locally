@@ -17,7 +17,7 @@ defined('ABSPATH') || exit;
  * * * * * * * * * * * * * * * * * * * */
 class OMGF_Frontend_Process
 {
-	const RESOURCE_HINTS_URLS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
+	const RESOURCE_HINTS_URLS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'fonts.bunny.net', 'fonts-api.wp.com'];
 
 	const RESOURCE_HINTS_ATTR = ['dns-prefetch', 'preconnect', 'preload'];
 
@@ -376,7 +376,7 @@ class OMGF_Frontend_Process
 		 * @since v5.5.0 Added compatibility for WP.com's "GDPR compliant" Google Fonts API.
 		 */
 		$links = array_filter($links[0], function ($link) {
-			return strpos($link, 'fonts.googleapis.com/css') !== false || strpos($link, 'fonts.bunny.net/css') !== false || strpos($link, 'fonts-api.wp-com/css') !== false;
+			return strpos($link, 'fonts.googleapis.com/css') !== false || strpos($link, 'fonts.bunny.net/css') !== false || strpos($link, 'fonts-api.wp.com/css') !== false;
 		});
 
 		$google_fonts   = $this->build_fonts_set($links);
