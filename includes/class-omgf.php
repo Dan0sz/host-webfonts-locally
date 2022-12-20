@@ -132,7 +132,7 @@ class OMGF
 		define('OMGF_SITE_URL', 'https://daan.dev');
 		define('OMGF_CACHE_IS_STALE', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CACHE_IS_STALE)));
 		define('OMGF_CURRENT_DB_VERSION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_CURRENT_DB_VERSION)));
-		define('OMGF_AUTO_SUBSETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, 'on')) ?: 'on');
+		define('OMGF_AUTO_SUBSETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, 'on')));
 		define('OMGF_DISPLAY_OPTION', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION, 'swap')) ?: 'swap');
 		define('OMGF_SUBSETS', $this->esc_array(get_option(OMGF_Admin_Settings::OMGF_ADV_SETTING_SUBSETS, ['latin', 'latin-ext'])) ?: ['latin', 'latin-ext']);
 		define('OMGF_UNLOAD_STYLESHEETS', esc_attr(get_option(OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '')));
@@ -495,6 +495,12 @@ class OMGF
 			 * 								{ 'Lato' => { 'latin', 'latin-ext' } }
 			 */
 			$filtered_subsets = array_values(array_filter($subsets));
+
+			OMGF::debug_array(__('Filtered Subsets', 'host-webfonts-local'), $filtered_subsets);
+
+			if (count($filtered_subsets) === 1) {
+				return reset($filtered_subsets);
+			}
 
 			if (!empty($filtered_subsets)) {
 				return call_user_func_array('array_intersect', $filtered_subsets);
