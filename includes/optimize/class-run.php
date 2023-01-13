@@ -138,7 +138,7 @@ class OMGF_Optimize_Run
                             'Used Subset(s) is set to Latin, since %s isn\'t available in all detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
                             'Used Subset(s) is set to Latin, since %s aren\'t available in all detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
                             count($diff),
-                            'host-webfonts-local',
+                            'host-webfonts-local'
                         ),
                         $this->fluent_implode($diff)
                     ),
