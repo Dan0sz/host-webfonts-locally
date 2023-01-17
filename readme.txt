@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.1
-Stable tag: 5.5.2
+Stable tag: 5.5.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.5.3 | January 17th, 2023 =
+* Fixed: Parse error: syntax error, unexpected ')' in host-webfonts-local/includes/optimize/class-run.php on line 142
 
 = 5.5.2 | December 21st, 2022 =
 * Fixed: Auto-Configure Subsets option couldn't be disabled.
