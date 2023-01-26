@@ -108,6 +108,8 @@ class OMGF_Optimize_Run
              * Used Subset(s) option and no further action is required.
              */
             if ($available_used_subsets && !empty($diff = array_diff(OMGF_SUBSETS, $available_used_subsets))) {
+                OMGF::debug_array('Remaining Subsets (compared to Available Used Subsets)', $diff);
+
                 OMGF_Admin_Notice::set_notice(
                     sprintf(
                         _n(
@@ -128,6 +130,8 @@ class OMGF_Optimize_Run
             }
 
             if (!empty($diff = array_diff(OMGF_SUBSETS, ['latin']))) {
+                OMGF::debug_array('Remaining Subsets (compared to Latin)', $diff);
+
                 /**
                  * If detected fonts aren't available in any of the subsets that were selected, just set Used Subsets to Latin
                  * to make sure nothing breaks.
@@ -162,7 +166,7 @@ class OMGF_Optimize_Run
     }
 
     /**
-     * Generate a fluent sentence from array, e.g. "1, 2, 3 and 4".
+     * Generate a fluent sentence from array, e.g. "1, 2, 3 and 4" if element is count is > 1.
      * 
      * @since v5.4.4
      * 
@@ -176,9 +180,10 @@ class OMGF_Optimize_Run
             return ucfirst(reset($array));
         }
 
-        $last = array_pop($array);
+        $last  = array_pop($array);
+        $first = implode(', ', array_map('ucfirst', $array));
 
-        return implode(', ', array_map('ucfirst', $array)) . ' and ' . ucfirst($last);
+        return $first . ' and ' . ucfirst($last);
     }
 
     /**
