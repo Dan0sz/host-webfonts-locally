@@ -168,9 +168,17 @@ class OMGF_Frontend_Process
 					$url = rawurldecode($variant->woff2);
 
 					/**
+					 * @since v5.5.4 Since we're forcing relative URLs since v5.5.0, let's make sure $url is a relative URL to ensure
+					 * 				 backwards compatibility.
+					 */
+					$url = str_replace(['http:', 'https:'], '', $url);
+
+					/**
 					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
 					 */
-					if (!file_exists(str_replace(OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, $url)) || in_array($url, $preloaded)) {
+					$file_path = str_replace(OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, $url);
+
+					if (!file_exists($file_path) || in_array($url, $preloaded)) {
 						continue;
 					}
 
