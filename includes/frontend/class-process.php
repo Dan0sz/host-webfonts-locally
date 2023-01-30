@@ -520,6 +520,17 @@ class OMGF_Frontend_Process
 				 * @since v5.3.8 Same reason as above.
 				 */
 				$google_fonts[$key]['id'] = 'sp-lc-google-fonts';
+			} elseif (apply_filters('omgf_frontend_process_convert_pro_compatibility', strpos($id, 'cp-google-fonts') !== false)) {
+				/**
+				 * Compatibility fix for Convert Pro by Brainstorm Force
+				 * 
+				 * @since v5.5.4 Same reason as above, although it kind of makes sense in this case (since Convert Pro allows
+				 * 				 to create pop-ups and people tend to get creative. I just hope the ID isn't random.)
+				 * 
+				 * @filter omgf_frontend_process_convert_pro_compatibility Allows people to disable this feature, in case the different
+				 * 		   stylesheets are actually needed.
+				 */
+				$google_fonts[$key]['id'] = 'cp-google-fonts';
 			} else {
 				$google_fonts[$key]['id'] = $id;
 			}
