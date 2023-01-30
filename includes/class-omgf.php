@@ -19,6 +19,17 @@ defined('ABSPATH') || exit;
 class OMGF
 {
 	/**
+	 * @since v5.4.? Plugins which require additional configuration to be compatible with
+	 * 				 OMGF Pro.
+	 * 
+	 * 				 TODO: [OMGF-74] Implement feature.
+	 */
+	const PLUGIN_ADDTNL_CONF = [
+		'perfmatters',
+		'thrive-visual-editor'
+	];
+
+	/**
 	 * @since v5.4.0 List of template handles which require additional configuration to be
 	 * 				 compatible with OMGF.
 	 */
@@ -27,7 +38,8 @@ class OMGF
 		'customizr',
 		'enfold',
 		'Divi',
-		'Extra'
+		'Extra',
+		'thrive-theme'
 	];
 
 	/**
@@ -40,7 +52,6 @@ class OMGF
 		'optimizepress',
 		'popup-maker',
 		'premium-stock-market-widgets',
-		'thrive',
 		'woozone'
 	];
 
@@ -55,11 +66,12 @@ class OMGF
 		'jupiter',
 		'jupiterx',
 		'kadence',
-		'oxygen'
+		'oxygen',
+		'thrive-theme'
 	];
 
 	/**
-	 * [OMGF-73] TODO: Most used Support chat widgets.
+	 * JS libraries loading Google Fonts in iframes.
 	 */
 	const IFRAMES_LOADING_FONTS = [
 		'active-campaign'             => '.activehosted.com/f/embed.php', // ActiveCampaign
