@@ -19,14 +19,23 @@ defined('ABSPATH') || exit;
 class OMGF
 {
 	/**
-	 * @since v5.4.? Plugins which require additional configuration to be compatible with
+	 * @since v5.5.4 Plugins which require additional configuration to be compatible with
 	 * 				 OMGF Pro.
-	 * 
-	 * 				 TODO: [OMGF-74] Implement feature.
 	 */
-	const PLUGIN_ADDTNL_CONF = [
+	const PLUGINS_ADDTNL_CONF = [
 		'perfmatters',
 		'thrive-visual-editor'
+	];
+
+	/**
+	 * @since v5.5.4 Plugins which require an upgrade to OMGF Pro.
+	 */
+	const PLUGINS_REQ_PRO = [
+		'oxygen',
+		'optimizepress',
+		'popup-maker',
+		'premium-stock-market-widgets',
+		'woozone'
 	];
 
 	/**
@@ -43,19 +52,6 @@ class OMGF
 	];
 
 	/**
-	 * @since v5.4.? Plugins which require an upgrade to OMGF Pro.
-	 * 
-	 * 				 TODO: [OMGF-74] implement feature.
-	 */
-	const PLUGINS_REQ_PRO = [
-		'oxygen',
-		'optimizepress',
-		'popup-maker',
-		'premium-stock-market-widgets',
-		'woozone'
-	];
-
-	/**
 	 * @since v5.4.0 Themes which require an upgrade to OMGF Pro to properly detect and
 	 * 				 fetch their Google Fonts.
 	 */
@@ -66,7 +62,6 @@ class OMGF
 		'jupiter',
 		'jupiterx',
 		'kadence',
-		'oxygen',
 		'thrive-theme'
 	];
 
@@ -574,6 +569,7 @@ class OMGF
 		<tr valign="top" id="task-manager-notice-row">
 			<td colspan="2" class="task-manager-row">
 				<?php $warnings = self::get_task_manager_warnings();
+				$plugins  = self::get_active_plugins();
 				if (empty($warnings)) : ?>
 					<div class="task-manager-notice success">
 						<h4><?php echo __('No potential conflicts found in your configuration.', 'host-webfonts-local'); ?></h4>
@@ -589,22 +585,38 @@ class OMGF
 						<h4><?php echo sprintf(_n('%s potential conflict found in your configuration.', '%s potential conflicts found in your configuration.', count($warnings), 'host-webfonts-local'), count($warnings)); ?>*</h4>
 						<ol <?php echo count($warnings) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
 							<?php foreach ($warnings as $warning_id) : ?>
+								<?php $show_mark_as_fixed = true; ?>
 								<li id="omgf-notice-<?php echo $warning_id; ?>">
+									<?php if ($warning_id == 'is_multisite') : ?>
+										<?php echo sprintf(__('It seems like Multisite is enabled. OMGF doesn\'t natively support Multisite. If you\'re getting CORS related errors on any of your network\'s sites, consider <a href="%s" target="_blank">upgrading to OMGF Pro</a>.', 'host-webfonts-local'), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
+									<?php endif; ?>
 									<?php if ($warning_id == 'no_ssl') : ?>
 										<?php echo __('Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'); ?>
 									<?php endif; ?>
+									<?php if (in_array(str_replace('-req-pro', '', $warning_id), self::THEMES_REQ_PRO)) : ?>
+										<?php $show_mark_as_fixed = false; ?>
+										<?php echo sprintf(__('Due to the exotic way your theme (%s) implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local'), ucfirst(str_replace('-req-pro', '', $warning_id)), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
+									<?php endif; ?>
 									<?php if (in_array(str_replace('-addtnl-conf', '', $warning_id), self::THEMES_ADDTNL_CONF)) : ?>
 										<?php $template_id = str_replace('-addtnl-conf', '', strtolower($warning_id)); ?>
-										<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, follow <a href="%s" target="_blank">these steps</a> to fix it.', 'host-webfonts-local'), ucfirst($template_id), "https://daan.dev/docs/omgf-pro-faq/$template_id-compatibility"); ?>
+										<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, check the list of <a href="%s" target="_blank">known issues</a> to fix it.', 'host-webfonts-local'), ucfirst($template_id), 'https://daan.dev/docs/omgf-pro/known-issues/'); ?>
 									<?php endif; ?>
-									<?php if (in_array(str_replace('-req-pro', '', $warning_id), self::THEMES_REQ_PRO)) : ?>
-										<?php echo sprintf(__('Due to the exotic way your theme (%s) implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local'), ucfirst(str_replace('-req-pro', '', $warning_id)), OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
+									<?php if (in_array(str_replace('-req-pro', '', $warning_id), self::PLUGINS_REQ_PRO)) : ?>
+										<?php $show_mark_as_fixed = false; ?>
+										<?php $plugin_name = $plugins[str_replace('-req-pro', '', $warning_id)]; ?>
+										<?php echo sprintf(__('Due to the exotic way the plugin, %s, implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local'), $plugin_name, OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
+									<?php endif; ?>
+									<?php if (in_array(str_replace('-addtnl-conf', '', $warning_id), self::PLUGINS_ADDTNL_CONF)) : ?>
+										<?php $plugin_name = $plugins[str_replace('-addtnl-conf', '', $warning_id)]; ?>
+										<?php echo sprintf(__('The plugin, %s, requires additional configuration to be compatible with OMGF. Check the <a href="%s" target="_blank">list of known issues</a> to fix it.', 'host-webfonts-local'), $plugin_name, 'https://daan.dev/docs/omgf-pro/known-issues/'); ?>
 									<?php endif; ?>
 									<?php if (in_array($warning_id, array_keys(self::IFRAMES_LOADING_FONTS))) : ?>
 										<?php $iframe_name = ucwords(str_replace('-', ' ', $warning_id)); ?>
 										<?php echo sprintf(__('%s is loading an embedded iframe on your site. OMGF (Pro) can\'t process Google Fonts inside iframes. <a href="%s" target="_blank">Click here</a> to find out why and what you can do about it.', 'host-webfonts-local'), $iframe_name, 'https://daan.dev/docs/omgf-pro-faq/iframes/'); ?>
 									<?php endif; ?>
-									<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Mark as fixed', 'host-webfonts-local'); ?></a>]</small>
+									<?php if ($show_mark_as_fixed) : ?>
+										<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Mark as fixed', 'host-webfonts-local'); ?></a>]</small>
+									<?php endif; ?>
 								</li>
 							<?php endforeach; ?>
 						</ol>
@@ -628,6 +640,13 @@ class OMGF
 		$hidden_notices = get_option(OMGF_Admin_Settings::OMGF_HIDDEN_NOTICES) ?: [];
 
 		/**
+		 * @since v5.5.4 Throw a warning if Multisite is enabled and OMGF Pro isn't installed/activated.
+		 */
+		if (is_multisite() && !function_exists('omgf_pro_init')) {
+			$warnings[] = 'is_multisite';
+		}
+
+		/**
 		 * @since v5.4.0 OMGF-50 Not using SSL on your site (or at least, not having it properly configured in WordPress) will cause OMGF to
 		 * 				 add non-ssl (http://) links to stylesheets, and will lead to CORS and/or Mixed Content warnings in your frontend,
 		 * 				 effectively showing nothing but system fonts.
@@ -648,8 +667,29 @@ class OMGF
 		/**
 		 * @since v5.4.0 Warn the user if they're using a theme which requires OMGF Pro's Advanced Processing features.
 		 */
-		if (in_array($theme->template, self::THEMES_REQ_PRO)) {
+		if (in_array($theme->template, self::THEMES_REQ_PRO) && !function_exists('omgf_pro_init')) {
 			$warnings[] = $theme->template . '-req-pro';
+		}
+
+		$plugins = self::get_active_plugins();
+		$slugs   = array_keys($plugins);
+
+		/**
+		 * @since v5.5.4 OMGF-74 Notify users if they're using a plugin which requires additional configuration due to known compatibility issues.
+		 */
+		foreach (self::PLUGINS_ADDTNL_CONF as $plugin_addtnl_conf) {
+			if (in_array($plugin_addtnl_conf, $slugs)) {
+				$warnings[] = $plugin_addtnl_conf . '-addtnl-conf';
+			}
+		}
+
+		/**
+		 * @since v5.5.4 OMGF-74 Notify users if they're using a plugin which requires OMGF Pro's Advanced Processing feature.
+		 */
+		foreach (self::PLUGINS_REQ_PRO as $plugin_req_pro) {
+			if (in_array($plugin_req_pro, $slugs) && !function_exists('omgf_pro_init')) {
+				$warnings[] = $plugin_req_pro . '-req-pro';
+			}
 		}
 
 		/**
@@ -671,6 +711,23 @@ class OMGF
 		}
 
 		return $warnings;
+	}
+
+	/**
+	 * @return array List of plugin names { (string) slug => (string) full name }
+	 */
+	private static function get_active_plugins()
+	{
+		$plugins        = [];
+		$active_plugins = array_intersect_key(get_plugins(), array_flip(array_filter(array_keys(get_plugins()), 'is_plugin_active')));
+
+		foreach ($active_plugins as $basename => $plugin) {
+			$slug = preg_replace('/\/.*?\.php$/', '', $basename);
+
+			$plugins[$slug] = $plugin['Name'];
+		}
+
+		return $plugins;
 	}
 
 
