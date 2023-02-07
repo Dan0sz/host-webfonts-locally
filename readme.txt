@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.1
-Stable tag: 5.5.3
+Stable tag: 5.5.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,13 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.5.4 | February 7th, 2023 =
+* Added: backwards compatibility for protocol relative URLs for users configuring their preloads before v5.5.0.
+* Added: compatibility for Convert Pro by Brainstorm Force.
+* Added: several enhancements to Task Manager:
+  * Added: OMGF will now inform users about plugins that might require additional configuration and/or an upgrading to OMGF Pro.
+  * Added: Notices about upgrading to OMGF Pro will disappear automatically when OMGF Pro is installed and activated.
 
 = 5.5.3 | January 17th, 2023 =
 * Fixed: Parse error: syntax error, unexpected ')' in host-webfonts-local/includes/optimize/class-run.php on line 142
