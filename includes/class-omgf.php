@@ -19,10 +19,22 @@ defined('ABSPATH') || exit;
 class OMGF
 {
 	/**
+	 * @since v5.5.6 Plugins which can't run alongside OMGF, mostly plugins which remove Google Fonts.
+	 */
+	const INCOMPATIBLE_PLUGINS = [
+		'disable-google-fonts',
+		'disable-remove-google-fonts',
+		'embed-google-fonts',
+		'local-google-fonts'
+		// 'use-bunnyfont-host-google-fonts' TODO: Since OMGF supports Bunny CDN, this should be tested.
+	];
+
+	/**
 	 * @since v5.5.4 Plugins which require additional configuration to be compatible with
 	 * 				 OMGF Pro.
 	 */
 	const PLUGINS_ADDTNL_CONF = [
+		'autoptimize',
 		'perfmatters',
 		'thrive-visual-editor'
 	];
@@ -599,20 +611,24 @@ class OMGF
 									<?php endif; ?>
 									<?php if (in_array(str_replace('-addtnl-conf', '', $warning_id), self::THEMES_ADDTNL_CONF)) : ?>
 										<?php $template_id = str_replace('-addtnl-conf', '', strtolower($warning_id)); ?>
-										<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with OMGF, check the list of <a href="%s" target="_blank">known issues</a> to fix it.', 'host-webfonts-local'), ucfirst($template_id), 'https://daan.dev/docs/omgf-pro/known-issues/'); ?>
+										<?php echo sprintf(__('Your theme (%s) requires additional configuration to be compatible with %s, check the list of <a href="%s" target="_blank">known issues</a> to fix it.', 'host-webfonts-local'), ucfirst($template_id), apply_filters('omgf_settings_page_title', 'OMGF'), OMGF_Admin_Settings::DAAN_DOCS_OMGF_PRO_KNOWN_ISSUES); ?>
+									<?php endif; ?>
+									<?php if (in_array(str_replace('-incompatible', '', $warning_id), self::INCOMPATIBLE_PLUGINS)) : ?>
+										<?php $plugin_name = $plugins[str_replace('-incompatible', '', $warning_id)]; ?>
+										<?php echo sprintf(__('The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href="%3$s" target="_blank">known issues</a> for more information.', 'host-webfonts-local'), $plugin_name, apply_filters('omgf_settings_page_title', 'OMGF'), OMGF_Admin_Settings::DAAN_DOCS_OMGF_PRO_KNOWN_ISSUES); ?>
 									<?php endif; ?>
 									<?php if (in_array(str_replace('-req-pro', '', $warning_id), self::PLUGINS_REQ_PRO)) : ?>
 										<?php $show_mark_as_fixed = false; ?>
 										<?php $plugin_name = $plugins[str_replace('-req-pro', '', $warning_id)]; ?>
-										<?php echo sprintf(__('Due to the exotic way the plugin, %s, implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local'), $plugin_name, OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
+										<?php echo sprintf(__('Due to the exotic way the plugin, <strong>%s</strong>, implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local'), $plugin_name, OMGF_Admin_Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO); ?>
 									<?php endif; ?>
 									<?php if (in_array(str_replace('-addtnl-conf', '', $warning_id), self::PLUGINS_ADDTNL_CONF)) : ?>
 										<?php $plugin_name = $plugins[str_replace('-addtnl-conf', '', $warning_id)]; ?>
-										<?php echo sprintf(__('The plugin, %s, requires additional configuration to be compatible with OMGF. Check the <a href="%s" target="_blank">list of known issues</a> to fix it.', 'host-webfonts-local'), $plugin_name, 'https://daan.dev/docs/omgf-pro/known-issues/'); ?>
+										<?php echo sprintf(__('The plugin, <strong>%s</strong>, requires additional configuration to be compatible with %s. Check the <a href="%s" target="_blank">list of known issues</a> to fix it.', 'host-webfonts-local'), $plugin_name, apply_filters('omgf_settings_page_title', 'OMGF'), OMGF_Admin_Settings::DAAN_DOCS_OMGF_PRO_KNOWN_ISSUES); ?>
 									<?php endif; ?>
 									<?php if (in_array($warning_id, array_keys(self::IFRAMES_LOADING_FONTS))) : ?>
 										<?php $iframe_name = ucwords(str_replace('-', ' ', $warning_id)); ?>
-										<?php echo sprintf(__('%s is loading an embedded iframe on your site. OMGF (Pro) can\'t process Google Fonts inside iframes. <a href="%s" target="_blank">Click here</a> to find out why and what you can do about it.', 'host-webfonts-local'), $iframe_name, 'https://daan.dev/docs/omgf-pro-faq/iframes/'); ?>
+										<?php echo sprintf(__('%s is loading an embedded iframe on your site. %s can\'t process Google Fonts inside iframes. <a href="%s" target="_blank">Click here</a> to find out why and what you can do about it.', 'host-webfonts-local'), $iframe_name, apply_filters('omgf_settings_page_title', 'OMGF'), 'https://daan.dev/docs/omgf-pro-faq/iframes/'); ?>
 									<?php endif; ?>
 									<?php if ($show_mark_as_fixed) : ?>
 										<small>[<a href="#" class="hide-notice" data-nonce="<?php echo wp_create_nonce(OMGF_Admin_Settings::OMGF_ADMIN_PAGE); ?>" data-warning-id="<?php echo $warning_id; ?>" id="omgf-hide-notice-<?php echo $warning_id; ?>"><?php echo __('Mark as fixed', 'host-webfonts-local'); ?></a>]</small>
@@ -673,6 +689,15 @@ class OMGF
 
 		$plugins = self::get_active_plugins();
 		$slugs   = array_keys($plugins);
+
+		/**
+		 * @since v5.5.6 Notify users if they're using a plugin which is incompatible with OMGF (Pro)
+		 */
+		foreach (self::INCOMPATIBLE_PLUGINS as $incompatible_plugin) {
+			if (in_array($incompatible_plugin, $slugs)) {
+				$warnings[] = $incompatible_plugin . '-incompatible';
+			}
+		}
 
 		/**
 		 * @since v5.5.4 OMGF-74 Notify users if they're using a plugin which requires additional configuration due to known compatibility issues.
