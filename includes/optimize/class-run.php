@@ -197,6 +197,10 @@ class OMGF_Optimize_Run
         }
 
         add_settings_error('general', 'omgf_frontend_fetch_failed', sprintf(__('%s encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain), apply_filters('omgf_settings_page_title', 'OMGF')) . ': ' . $this->get_error_code($response) . ' - ' . $this->get_error_message($response), 'error');
+
+        if ($this->get_error_code($response) == '403') {
+            OMGF_Admin_Notice::set_notice(sprintf(__('It looks like OMGF isn\'t allowed to fetch your frontend. Try <a href="%s" target="_blank">running the optimization manually</a> and return here after the page has finished loading.', 'host-webfonts-local'), $this->no_cache_optimize_url(get_home_url())), 'omgf-forbidden', 'info');
+        }
     }
 
     /**
