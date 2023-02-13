@@ -35,6 +35,7 @@ class OMGF
 	 */
 	const PLUGINS_ADDTNL_CONF = [
 		'autoptimize',
+		'essential-grid',
 		'perfmatters',
 		'thrive-visual-editor'
 	];
@@ -43,8 +44,9 @@ class OMGF
 	 * @since v5.5.4 Plugins which require an upgrade to OMGF Pro.
 	 */
 	const PLUGINS_REQ_PRO = [
-		'oxygen',
+		'essential-grid',
 		'optimizepress',
+		'oxygen',
 		'popup-maker',
 		'premium-stock-market-widgets',
 		'woozone'
