@@ -232,7 +232,13 @@
   font-weight: bold;
 }
 .omgf-optimize-fonts-container .omgf-optimize-fonts-tooltip {
-  padding: 0 15px 5px;
+  margin: 0 0 30px;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-tooltip ul li {
+  line-height: 1.5em;
+}
+.omgf-optimize-fonts-container .omgf-optimize-fonts-tooltip ul li:before {
+  margin-left: -25px;
 }
 .omgf-optimize-fonts-container p,
 .omgf-optimize-fonts-container ul {

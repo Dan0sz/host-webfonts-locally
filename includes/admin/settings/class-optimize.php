@@ -244,7 +244,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 		 */
 		$this->optimized_fonts = OMGF::optimized_fonts();
 		?>
-			<span class="option-title"><?= __('Optimize Local Fonts', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('Don\'t know where or how to start optimizing your Google Fonts? That\'s okay. <a href="%s">This guide</a> will get you sorted.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/'); ?></span></span></span></span>
+			<span class="option-title"><?= __('Optimize Local Fonts', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('All fonts listed here are loaded locally. Don\'t know where or how to start optimizing your Google Fonts? That\'s okay. <a href="%s">This guide</a> will get you sorted.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/'); ?></span></span></span></span>
 			<?php if (!empty($this->optimized_fonts)) : ?>
 				<?= $this->do_optimized_fonts_manager(); ?>
 			<?php else : ?>
@@ -273,9 +273,13 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						<?php echo sprintf(__('Refer to the <a href="%s" target="_blank">Plugin documentation</a> for more information.', $this->plugin_text_domain), 'https://daan.dev/docs/omgf-pro/optimize-local-fonts/'); ?>
 					</p>
 				</div>
-				<p>
-
-				</p>
+				<div class="omgf-optimize-fonts-tooltip">
+					<ul>
+						<li class="dashicons-before dashicons-info-outline">
+							<em><?= sprintf(__("This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically if other Google Fonts stylesheets are discovered throughout your site.", $this->plugin_text_domain), get_site_url()); ?></em>
+						</li>
+					</ul>
+				</div>
 				<table>
 					<thead>
 						<tr>
@@ -283,7 +287,7 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 							<th><?= __('Style', $this->plugin_text_domain); ?></th>
 							<th><?= __('Weight', $this->plugin_text_domain); ?></th>
 							<th><?= __('Load Early', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('<a href="%s">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold'); ?></span><img width="230" class="illustration" src="<?= plugin_dir_url(OMGF_PLUGIN_FILE) . 'assets/images/above-the-fold.png'; ?>" /></span></span></th>
-							<th><?= __('Don\'t Load', $this->plugin_text_domain); ?></th>
+							<th><?= __('Don\'t Load', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo __('Many themes/plugins load Google Fonts you\'re not using. Checking <strong>Don\'t Load</strong> will make sure they\'re not loaded in the frontend to save bandwidth!', 'host-webfonts-local'); ?></span></span></span></th>
 							<th><?= __('Fallback (Pro)', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo __('Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded.', $this->plugin_text_domain) . ' ' . $this->promo; ?></span></span></span></th>
 							<th><?= __('Replace (Pro)', $this->plugin_text_domain); ?><span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span class="inline-text"><?php echo sprintf(__('When the <a href="%s">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback.', $this->plugin_text_domain), 'https://daan.dev/blog/how-to/wordpress-google-fonts/#7-4-specify-a-fallback-font-stack') . ' ' . $this->promo; ?></span></span></span></th>
 						</tr>
@@ -361,15 +365,6 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder
 						</tbody>
 					<?php endforeach; ?>
 				</table>
-				<div class="omgf-optimize-fonts-tooltip">
-					<p>
-						<span class="dashicons-before dashicons-info-outline"></span>
-						<em><?= sprintf(__("This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically if other Google Fonts stylesheets are discovered throughout your site.", $this->plugin_text_domain), get_site_url()); ?></em>
-					</p>
-					<p>
-						<small><?php echo __('', $this->plugin_text_domain); ?>
-					</p>
-				</div>
 				<input type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?= base64_encode(serialize($this->optimized_fonts)); ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" value="<?= esc_attr(OMGF_UNLOAD_STYLESHEETS); ?>" />
 				<input id="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" type="hidden" name="<?= OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" value="<?= esc_attr(implode(',', $cache_handles)); ?>" />
