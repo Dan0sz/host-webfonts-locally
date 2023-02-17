@@ -305,14 +305,23 @@ class OMGF_Optimize
             preg_match('/font-style:\s(normal|italic);/', $font_face, $font_style);
             preg_match('/font-weight:\s([0-9]+);/', $font_face, $font_weight);
             preg_match('/src:\surl\((.*?woff2)\)/', $font_face, $font_src);
-            preg_match('/\/\*\s([a-z\-]+?)\s\*\//', $font_face, $subset);
+            preg_match('/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset);
             preg_match('/unicode-range:\s(.*?);/', $font_face, $range);
+
+            $subset[1] = trim($subset[1], '[]');
 
             /**
              * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
              */
-            if (!empty($subset) && isset($subset[1]) && !in_array($subset[1], apply_filters('omgf_used_subsets', OMGF_SUBSETS))) {
+            if (!empty($subset) && isset($subset[1]) && !in_array($subset[1], apply_filters('omgf_used_subsets', OMGF_SUBSETS)) && !is_numeric($subset[1])) {
                 continue;
+            }
+
+            /**
+             * If $subset is empty, assume it's a Chinese (or similar built up) subset.
+             */
+            if (is_numeric($subset[1])) {
+                $subset[1] = 'chinese-' . $subset[1];
             }
 
             $key                           = $subset[1] . '-' . $font_weight[1] . ($font_style[1] == 'normal' ? '' : '-' . $font_style[1]);
