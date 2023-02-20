@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.1
-Stable tag: 5.5.4
+Stable tag: 5.5.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,13 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.5.5 | February 20th, 2023 =
+* Added: compatibility for languages using logograms, like Traditional Chinese and Japanese.
+* Added: Task Manager will now notify users when known incompatible plugins are activated.
+* Added: when the 403 (Forbidden) error occurs, the error message now includes a link allowing users to trigger a workaround.
+* Added: Essential Grid users are now notified to upgrade to OMGF Pro and the additional configuration required to make it work.
+* Improved: Optimize Local Fonts and Don't Load options now contain a clearer tooltip and the info-box has been moved to the top to (hopefully) clarify how it works.
 
 = 5.5.4 | February 7th, 2023 =
 * Added: backwards compatibility for protocol relative URLs for users configuring their preloads before v5.5.0.
