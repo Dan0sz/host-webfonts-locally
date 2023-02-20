@@ -318,10 +318,12 @@ class OMGF_Optimize
             }
 
             /**
-             * If $subset is empty, assume it's a Chinese (or similar built up) subset.
+             * If $subset is empty, assume it's a logographic (Chinese, Japanese, etc.) character set.
+             * 
+             * TODO: [OMGF-87] the Used Subsets option doesn't work here. Can we make it work?
              */
             if (is_numeric($subset[1])) {
-                $subset[1] = 'chinese-' . $subset[1];
+                $subset[1] = 'logogram-' . $subset[1];
             }
 
             $key                           = $subset[1] . '-' . $font_weight[1] . ($font_style[1] == 'normal' ? '' : '-' . $font_style[1]);
