@@ -49,6 +49,10 @@ class OMGF_Optimize_Run
         } else {
             $this->optimization_succeeded();
         }
+
+        // if ($this->get_error_code($response) == '403') {
+        OMGF_Admin_Notice::set_notice(sprintf(__('It looks like OMGF isn\'t allowed to fetch your frontend. Try <a class="omgf-optimize-forbidden" href="%s" target="_blank">running the optimization manually</a> (you might have to allow pop-ups) and return here after the page has finished loading.', 'host-webfonts-local'), $this->no_cache_optimize_url(get_home_url())), 'omgf-forbidden', 'info');
+        // }
     }
 
     /**

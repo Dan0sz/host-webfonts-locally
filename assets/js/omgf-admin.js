@@ -49,6 +49,7 @@ jQuery(document).ready(function ($) {
             $('#omgf-optimize-settings-form').on('submit', this.show_loader_before_submit);
             $('#omgf-delete-log').on('click', this.delete_log);
             $('.omgf-optimize-preload-warning-close').on('click', this.hide_preload_warning);
+            $('.omgf-optimize-forbidden').on('click', this.wait_for_page_reload);
 
             // Ticker
             setInterval(this.loop_ticker_items, 4000);
@@ -276,6 +277,24 @@ jQuery(document).ready(function ($) {
          */
         hide_preload_warning: function () {
             $('#omgf-optimize-preload-warning').fadeOut('100');
+        },
+
+        /**
+         * 
+         */
+        wait_for_page_reload: function (e) {
+            e.preventDefault();
+
+            omgf_admin.show_loader();
+
+            var interval = window.setInterval(function () {
+                if (document.hasFocus()) {
+                    window.location.reload();
+                    window.clearInterval(interval);
+                }
+            }, 500);
+
+            window.open(this.href, '_blank');
         },
 
         /**
