@@ -425,7 +425,7 @@ class OMGF_Frontend_Process
 	}
 
 	/**
-	 * Adds a little success message to the HTML, to create a more logic flow when manually optimizing pages.
+	 * Adds a little success message to the HTML, to create a more logic user flow when manually optimizing pages.
 	 * 
 	 * @param string $html Valid HTML
 	 * 
