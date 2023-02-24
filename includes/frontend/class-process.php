@@ -118,6 +118,8 @@ class OMGF_Frontend_Process
 			add_filter('omgf_buffer_output', [$this, 'parse']);
 		}
 
+		add_filter('omgf_buffer_output', [$this, 'add_success_message']);
+
 		/** Groovy Menu compatibility */
 		add_filter('groovy_menu_final_output', [$this, 'parse'], 11);
 
@@ -420,6 +422,32 @@ class OMGF_Frontend_Process
 		update_option(OMGF_Admin_Settings::OMGF_FOUND_IFRAMES, $found_iframes);
 
 		return apply_filters('omgf_processed_html', $html, $this);
+	}
+
+	/**
+	 * Adds a little success message to the HTML, to create a more logic flow when manually optimizing pages.
+	 * 
+	 * @param string $html Valid HTML
+	 * 
+	 * @return string 
+	 */
+	public function add_success_message($html)
+	{
+		if (!isset($_GET['omgf_optimize']) || wp_doing_ajax()) {
+			return $html;
+		}
+
+		$parts = preg_split('/(<body.*?>)/', $html, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+		if (!isset($parts[0]) || !isset($parts[1]) || !isset($parts[2])) {
+			return $html;
+		}
+
+		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
+
+		$html = $parts[0] . $parts[1] . sprintf($message_div, __('Optimization completed successfully. You can close this tab/window.', 'host-webfonts-local')) . $parts[2];
+
+		return $html;
 	}
 
 	/**
