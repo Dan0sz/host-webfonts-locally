@@ -250,6 +250,9 @@
   line-height: 16px;
   height: 12px;
 }
+.tooltip.omgf-save-optimize {
+  vertical-align: middle;
+}
 .tooltip .tooltip-text {
   visibility: hidden;
   position: absolute;

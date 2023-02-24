@@ -403,7 +403,7 @@ class OMGF_Admin_Settings extends OMGF_Admin
 
 			?>
 			<?php if ($this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP) : ?>
-				<?php submit_button($this->submit_button_text, 'primary', 'submit', false, empty($this->get_settings()) ? 'disabled' : null); ?>
+				<?php submit_button($this->submit_button_text, 'primary', 'submit', false, empty($this->get_settings()) ? 'disabled' : null); ?> <span class="dashicons dashicons-info-outline tooltip omgf-save-optimize"><span class="tooltip-text"><?php _e('<strong>Did you know?</strong> You can trigger a manual optimization by appending <code>?omgf_optimize=1</code> to any URL in your site\'s frontend.', 'host-webfonts-local'); ?></span></span>
 			<?php endif; ?>
 		</form>
 <?php
