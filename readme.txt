@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.1
-Stable tag: 5.5.5
+Stable tag: 5.5.5.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.5.5.1 | February 25th, 2023 =
+* Fixed: 403 (Forbidden) error would be thrown every time when Save & Optimize ran.
+* Added: Tooltip to Save & Optimize button.
+* Improved: a success message is shown in the frontend when ?omgf_optimize=1 is appended to the URL.
 
 = 5.5.5 | February 20th, 2023 =
 * Added: compatibility for languages using logograms, like Traditional Chinese and Japanese.
