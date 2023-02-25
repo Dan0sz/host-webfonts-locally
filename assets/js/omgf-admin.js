@@ -67,8 +67,18 @@ jQuery(document).ready(function ($) {
                 options = ['latin', 'latin-ext'];
 
             if (value === 'latin-ext') {
-                options.forEach(function (value) {
-                    var option = document.querySelector('.' + className + ' option[value=' + value + ']');
+                options.forEach(function (element) {
+                    var option = document.querySelector('.' + className + ' option[value=' + element + ']');
+
+                    option.selected = true;
+                });
+            }
+
+            var options = ['latin', 'vietnamese'];
+
+            if (value === 'vietnamese') {
+                options.forEach(function (element) {
+                    var option = document.querySelector('.' + className + ' option[value=' + element + ']');
 
                     option.selected = true;
                 });
