@@ -7,4 +7,5 @@
 .distignore
 .gitignore
 
+package.json
 readme.md
