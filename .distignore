@@ -1,0 +1,10 @@
+/.wordpress-org
+/.git
+/.github
+/.vscode
+/node_modules
+
+.distignore
+.gitignore
+
+readme.md
