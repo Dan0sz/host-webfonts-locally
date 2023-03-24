@@ -6,6 +6,8 @@
 
 .distignore
 .gitignore
+.svnignore
+.gitattributes
 
 package.json
 readme.md
