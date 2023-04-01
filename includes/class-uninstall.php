@@ -14,68 +14,45 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-class OMGF_Uninstall
-{
-    /** @var QM_DB $wpdb */
-    private $wpdb;
+class OMGF_Uninstall {
+	/** @var string $cache_dir */
+	private $cache_dir;
 
-    /** @var array $options */
-    private $options;
+	/**
+	 * 
+	 */
+	public function __construct() {
+		$this->cache_dir = OMGF_UPLOAD_DIR;
 
-    /** @var string $cacheDir */
-    private $cacheDir;
+		$this->remove_db_entries();
+		$this->delete_files();
+		$this->delete_dir();
+	}
 
-    /**
-     * OMGF_Uninstall constructor.
-     * @throws ReflectionException
-     */
-    public function __construct()
-    {
-        if (OMGF_UNINSTALL !== 'on') {
-            return;
-        }
+	/**
+	 * Remove all settings stored in the wp_options table.
+	 */
+	private function remove_db_entries() {
+		delete_option( 'omgf_settings' );
+	}
 
-        global $wpdb;
-        $settings = new OMGF_Admin_Settings();
+	/**
+	 * Delete all files stored in the cache directory.
+	 *
+	 * @return array
+	 */
+	private function delete_files() {
+		array_map( 'unlink', glob( $this->cache_dir . '/*.*' ) );
+	}
 
-        $this->wpdb     = $wpdb;
-        $this->options  = $settings->get_settings();
-        $this->cacheDir = OMGF_UPLOAD_DIR;
-
-        $this->remove_db_entries();
-        $this->delete_files();
-        $this->delete_dir();
-    }
-
-    /**
-     * Remove all settings stored in the wp_options table.
-     */
-    private function remove_db_entries()
-    {
-        foreach ($this->options as $key => $option) {
-            delete_option($option);
-        }
-    }
-
-    /**
-     * Delete all files stored in the cache directory.
-     *
-     * @return array
-     */
-    private function delete_files()
-    {
-        return array_map('unlink', glob($this->cacheDir . '/*.*'));
-    }
-
-    /**
-     * Delete the cache directory.
-     *
-     * @return bool
-     */
-    private function delete_dir()
-    {
-        return rmdir($this->cacheDir);
-    }
+	/**
+	 * Delete the cache directory.
+	 *
+	 * @return bool
+	 */
+	private function delete_dir() {
+		rmdir( $this->cache_dir );
+	}
 }
