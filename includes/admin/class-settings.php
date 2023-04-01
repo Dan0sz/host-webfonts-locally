@@ -117,22 +117,22 @@ class OMGF_Admin_Settings extends OMGF_Admin {
 	/**
 	 * Optimize Fonts
 	 */
-	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS       = 'omgf_auto_subsets';
-	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'omgf_display_option';
-	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'omgf_optimized_fonts';
-	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      = 'omgf_preload_fonts';
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS       = 'omgf_unload_fonts';
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'omgf_unload_stylesheets';
-	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS         = 'omgf_cache_keys';
-	const OMGF_OPTIMIZE_SETTING_TEST_MODE          = 'omgf_test_mode';
+	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS       = 'auto_subsets';
+	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'display_option';
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'optimized_fonts';
+	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      = 'preload_fonts';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS       = 'unload_fonts';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'unload_stylesheets';
+	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS         = 'cache_keys';
+	const OMGF_OPTIMIZE_SETTING_TEST_MODE          = 'test_mode';
 
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_COMPATIBILITY = 'omgf_compatibility';
-	const OMGF_ADV_SETTING_SUBSETS       = 'omgf_subsets';
-	const OMGF_ADV_SETTING_DEBUG_MODE    = 'omgf_debug';
-	const OMGF_ADV_SETTING_UNINSTALL     = 'omgf_uninstall';
+	const OMGF_ADV_SETTING_COMPATIBILITY = 'compatibility';
+	const OMGF_ADV_SETTING_SUBSETS       = 'subsets';
+	const OMGF_ADV_SETTING_DEBUG_MODE    = 'debug';
+	const OMGF_ADV_SETTING_UNINSTALL     = 'uninstall';
 
 	/**
 	 * Miscellaneous
@@ -171,7 +171,7 @@ class OMGF_Admin_Settings extends OMGF_Admin {
 		}
 
 		if ( $this->active_tab == self::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
-			$this->submit_button_text = __( 'Save & Optimize', $this->plugin_text_domain );
+			$this->submit_button_text = __( 'Save & Optimize', 'host-webfonts-local' );
 		}
 
 		// Footer Text
@@ -211,11 +211,11 @@ class OMGF_Admin_Settings extends OMGF_Admin {
 	 */
 	public function create_settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "You're not cool enough to access this page.", $this->plugin_text_domain ) );
+			wp_die( __( "You're not cool enough to access this page.", 'host-webfonts-local' ) );
 		}
 		?>
 		<div class="wrap omgf">
-			<h1><?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', $this->plugin_text_domain ) ); ?></h1>
+			<h1><?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?></h1>
 
 			<p>
 				<?php echo get_plugin_data( OMGF_PLUGIN_FILE )['Description']; ?>
@@ -295,21 +295,21 @@ class OMGF_Admin_Settings extends OMGF_Admin {
 	}
 
 	public function optimize_fonts_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_OPTIMIZE, 'dashicons-performance', __( 'Local Fonts', $this->plugin_text_domain ) );
+		$this->generate_tab( self::OMGF_SETTINGS_FIELD_OPTIMIZE, 'dashicons-performance', __( 'Local Fonts', 'host-webfonts-local' ) );
 	}
 
 	/**
 	 * Add Basic Settings Tab to Settings Screen.
 	 */
 	public function detection_settings_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_DETECTION, 'dashicons-search', __( 'Detection Settings', $this->plugin_text_domain ) );
+		$this->generate_tab( self::OMGF_SETTINGS_FIELD_DETECTION, 'dashicons-search', __( 'Detection Settings', 'host-webfonts-local' ) );
 	}
 
 	/**
 	 * Add Advanced Settings Tab to Settings Screen.
 	 */
 	public function advanced_settings_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_ADVANCED, 'dashicons-admin-settings', __( 'Advanced Settings', $this->plugin_text_domain ) );
+		$this->generate_tab( self::OMGF_SETTINGS_FIELD_ADVANCED, 'dashicons-admin-settings', __( 'Advanced Settings', 'host-webfonts-local' ) );
 	}
 
 	/**
@@ -318,7 +318,7 @@ class OMGF_Admin_Settings extends OMGF_Admin {
 	 * @return void 
 	 */
 	public function help_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_HELP, 'dashicons-editor-help', __( 'Help', $this->plugin_text_domain ) );
+		$this->generate_tab( self::OMGF_SETTINGS_FIELD_HELP, 'dashicons-editor-help', __( 'Help', 'host-webfonts-local' ) );
 	}
 
 	/**
@@ -428,7 +428,7 @@ class OMGF_Admin_Settings extends OMGF_Admin {
 	 * @return string 
 	 */
 	public function footer_text_left() {
-		$text = sprintf( __( 'Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', $this->plugin_text_domain ), '❤️' );
+		$text = sprintf( __( 'Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', 'host-webfonts-local' ), '❤️' );
 
 		return '<span id="footer-thankyou">' . $text . '</span>';
 	}
@@ -488,7 +488,7 @@ class OMGF_Admin_Settings extends OMGF_Admin {
 			return $text;
 		}
 
-		$text  = sprintf( __( 'Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', $this->plugin_text_domain ), 'https://daan.dev/blog/tag/omgf' ) . ' ';
+		$text  = sprintf( __( 'Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', 'host-webfonts-local' ), 'https://daan.dev/blog/tag/omgf' ) . ' ';
 		$text .= '<span id="omgf-ticker-wrap">';
 		$i     = 0;
 
