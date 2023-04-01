@@ -150,8 +150,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder {
 			);
 			$this->do_checkbox(
 				__( 'Auto-Configure Adv. Processing (Pro)', 'host-webfonts-local' ),
-				'omgf_pro_auto_config',
-				! empty( OMGF::get( 'omgf_pro_auto_config' ) ),
+				'auto_config',
+				! empty( OMGF::get( 'auto_config' ) ),
 				sprintf( __( 'Is %1$s not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%2$s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed. Novice users are advised to leave this enabled.', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'OMGF' ), admin_url( 'options-general.php?page=optimize-webfonts&tab=omgf-detection-settings' ) ) . ' ' . $this->promo,
 				! defined( 'OMGF_PRO_ACTIVE' ),
 				'task-manager-row'
@@ -197,8 +197,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder {
 	public function do_promo_apply_font_display_globally() {
 		$this->do_checkbox(
 			__( 'Apply Font-Display Option Globally (Pro)', 'host-webfonts-local' ),
-			'omgf_pro_force_font_display',
-			! empty( OMGF::get( 'omgf_pro_force_font_display' ) ),
+			'force_font_display',
+			! empty( OMGF::get( 'force_font_display' ) ),
 			__( 'Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.', 'host-webfonts-local' ) . ' ' . $this->promo,
 			! defined( 'OMGF_PRO_ACTIVE' )
 		);
@@ -212,8 +212,8 @@ class OMGF_Admin_Settings_Optimize extends OMGF_Admin_Settings_Builder {
 	public function do_promo_remove_async_google_fonts() {
 		$this->do_checkbox(
 			__( 'Remove Async Google Fonts (Pro)', 'host-webfonts-local' ),
-			'omgf_pro_remove_async_fonts',
-			! empty( OMGF::get( 'omgf_pro_remove_async_fonts' ) ),
+			'remove_async_fonts',
+			! empty( OMGF::get( 'remove_async_fonts' ) ),
 			sprintf( __( 'Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%1$s">manually</a> or by using <a href="%2$s" target="_blank">a plugin</a> to prevent styling breaks.', 'host-webfonts-local' ), 'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/', 'https://daan.dev/wordpress/omgf-additional-fonts/' ) . ' ' . $this->promo,
 			! defined( 'OMGF_PRO_ACTIVE' )
 		);

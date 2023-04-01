@@ -100,19 +100,19 @@ class OMGF_Admin_Settings_Detection extends OMGF_Admin_Settings_Builder {
 	 */
 	private function advanced_processing_pro_options() {
 		return [
-			'omgf_pro_process_inline_styles'     => [
+			'process_inline_styles'     => [
 				'label'       => __( 'Process Inline Styles', 'host-webfonts-local' ),
 				'description' => __( 'Process all inline <code>@font-face</code> and <code>@import</code> rules loading Google Fonts.', 'host-webfonts-local' ),
 			],
-			'omgf_pro_process_local_stylesheets' => [
+			'process_local_stylesheets' => [
 				'label'       => __( 'Process Local Stylesheets', 'host-webfonts-local' ),
 				'description' => __( 'Scan stylesheets loaded by your theme and plugins for <code>@import</code> and <code>@font-face</code> statements loading Google Fonts and process them.', 'host-webfonts-local' ),
 			],
-			'omgf_pro_process_webfont_loader'    => [
+			'process_webfont_loader'    => [
 				'label'       => __( 'Process Webfont Loader', 'host-webfonts-local' ),
 				'description' => __( 'Process <code>webfont.js</code> libraries and the corresponding configuration defining which Google Fonts to load.', 'host-webfonts-local' ),
 			],
-			'omgf_pro_process_early_access'      => [
+			'process_early_access'      => [
 				'label'       => __( 'Process Early Access', 'host-webfonts-local' ),
 				'description' => __( 'Process Google Fonts loaded from <code>fonts.googleapis.com/earlyaccess</code> or <code>fonts.gstatic.com/ea</code>.', 'host-webfonts-local' ),
 			],

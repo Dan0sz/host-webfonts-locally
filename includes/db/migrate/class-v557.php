@@ -45,7 +45,7 @@ class OMGF_DB_Migrate_V557 {
 	 * @return void 
 	 */
 	private function init() {
-		$new_settings = [];
+		$new_settings = get_option( 'omgf_settings', [] );
 		
 		foreach ( $this->rows as $row ) {
 			$new_settings[ $row ] = get_option( "omgf_$row" );
