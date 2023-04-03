@@ -1,0 +1,15 @@
+{
+    "name": "daandev/omgf",
+    "autoload": {
+        "psr-4": {
+            "OMGF\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Daan from Daan.dev",
+            "email": "18595395+Dan0sz@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}

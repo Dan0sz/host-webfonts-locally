@@ -28,37 +28,11 @@ define( 'OMGF_DB_VERSION', '5.5.7' );
  *
  * @return mixed|void
  */
-function omgf_autoload( $class ) {
-	$path = explode( '_', $class );
-
-	if ( $path[0] != 'OMGF' ) {
-		return;
-	}
-
-	if ( ! class_exists( 'FFWP_Autoloader' ) ) {
-		require_once OMGF_PLUGIN_DIR . 'ffwp-autoload.php';
-	}
-
-	$autoload = new FFWP_Autoloader( $class );
-
-	return include OMGF_PLUGIN_DIR . 'includes/' . $autoload->load();
-}
-
-spl_autoload_register( 'omgf_autoload' );
+require_once OMGF_PLUGIN_DIR . 'vendor/autoload.php';
 
 /**
  * All systems GO!!!
  *
- * @return OMGF
+ * @return Plugin
  */
-function omgf_init() {
-	static $omgf = null;
-
-	if ( $omgf === null ) {
-		$omgf = new OMGF();
-	}
-
-	return $omgf;
-}
-
-omgf_init();
+$omgf = new OMGF\Plugin();
