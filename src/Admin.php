@@ -16,6 +16,7 @@
 
 namespace OMGF;
 
+use OMGF\Plugin as OMGF;
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 
@@ -118,12 +119,12 @@ class Admin {
 	 */
 	private function maybe_do_after_update_notice() {
 		if ( OMGF_CURRENT_DB_VERSION != false && version_compare( OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<' ) ) {
-			OMGF_Admin_Notice::set_notice(
+			Notice::set_notice(
 				sprintf(
 					__( 'Thank you for updating OMGF to v%1$s! This version contains database changes. <a href="%2$s">Verify your settings</a> and make sure everything is as you left it or, <a href="%3$s">view the changelog</a> for details. ', $this->plugin_text_domain ),
 					OMGF_DB_VERSION,
-					admin_url( OMGF_Admin_Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS ),
-					admin_url( OMGF_Admin_Settings::OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION )
+					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS ),
+					admin_url( Settings::OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION )
 				),
 				'omgf-post-update'
 			);
@@ -142,10 +143,10 @@ class Admin {
 	 */
 	public function force_optimized_fonts_from_db( $alloptions ) {
 		if (
-			isset( $alloptions[ OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] )
-			&& $alloptions[ OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] == false
+			isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] )
+			&& $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] == false
 		) {
-			unset( $alloptions[ OMGF_Admin_Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] );
+			unset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] );
 		}
 
 		return $alloptions;
@@ -196,7 +197,7 @@ class Admin {
 		/**
 		 * Don't show this message on the Main tab.
 		 */
-		if ( array_key_exists( 'tab', $_GET ) && $_GET['tab'] == OMGF_Admin_Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
+		if ( array_key_exists( 'tab', $_GET ) && $_GET['tab'] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
 			return $value;
 		}
 
@@ -227,14 +228,14 @@ class Admin {
 			}
 
 			if ( $show_message ) {
-				update_option( OMGF_Admin_Settings::OMGF_CACHE_IS_STALE, true );
+				update_option( Settings::OMGF_CACHE_IS_STALE, true );
 
 				add_settings_error(
 					'general',
 					'omgf_cache_style',
 					sprintf(
 						__( 'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.', $this->plugin_text_domain ),
-						admin_url( OMGF_Admin_Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )
+						admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )
 					),
 					'success'
 				);

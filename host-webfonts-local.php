@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress/omgf/

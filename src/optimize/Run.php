@@ -16,7 +16,7 @@
 
 namespace OMGF\Optimize;
 
-use OMGF;
+use OMGF\Plugin as OMGF;
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 

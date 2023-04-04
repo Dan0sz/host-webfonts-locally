@@ -169,7 +169,7 @@ class Plugin {
 	 * @return void 
 	 */
 	public function do_migrate_db() {
-		new OMGF\DB\Migrate();
+		new \OMGF\DB\Migrate();
 	}
 
 	/**
@@ -297,14 +297,14 @@ class Plugin {
 	 * 
 	 */
 	private function add_ajax_hooks() {
-		new OMGF\Ajax();
+		new Ajax();
 	}
 
 	/**
 	 * 
 	 */
 	public function init_frontend() {
-		new OMGF\Frontend\Process();
+		new \OMGF\Frontend\Process();
 	}
 
 	/**
@@ -332,7 +332,7 @@ class Plugin {
 	 * @return void 
 	 */
 	public function do_optimize() {
-		new OMGF\Admin\Optimize();
+		new \OMGF\Admin\Optimize();
 	}
 
 	/**
@@ -826,7 +826,7 @@ class Plugin {
 	 * @return void 
 	 */
 	public static function do_uninstall() {
-		new OMGF\Uninstall();
+		new \OMGF\Uninstall();
 	}
 
 	/**

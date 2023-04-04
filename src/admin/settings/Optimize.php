@@ -16,7 +16,7 @@
 
 namespace OMGF\Admin\Settings;
 
-use OMGF;
+use OMGF\Plugin as OMGF;
 use OMGF\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit;
