@@ -14,6 +14,8 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
+namespace OMGF;
+
 use OMGF\Admin\Settings;
 use OMGF\Download;
 use OMGF\Frontend\Process;
