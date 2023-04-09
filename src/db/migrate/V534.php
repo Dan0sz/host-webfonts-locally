@@ -16,6 +16,7 @@
 
 namespace OMGF\DB\Migrate;
 
+use OMGF\Plugin as OMGF;
 use OMGF\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit;
@@ -40,7 +41,7 @@ class V534 {
 	 * @return void 
 	 */
 	private function init() {
-		$optimized_fonts = \OMGF::optimized_fonts() ?? [];
+		$optimized_fonts = OMGF::optimized_fonts() ?? [];
 		$upgrade_req     = false;
 
 		foreach ( $optimized_fonts as $stylesheet => $fonts ) {

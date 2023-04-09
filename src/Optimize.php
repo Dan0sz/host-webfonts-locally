@@ -16,7 +16,7 @@
 
 namespace OMGF;
 
-use OMGF;
+use OMGF\Plugin as OMGF;
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 
@@ -323,16 +323,16 @@ class Optimize {
 
 			/**
 			 * If $subset is empty, assume it's a logographic (Chinese, Japanese, etc.) character set.
-			 * 
+			 *
 			 * TODO: [OMGF-87] the Used Subsets option doesn't work here. Can we make it work?
 			 */
 			if ( is_numeric( $subset[1] ) ) {
 				$subset[1] = 'logogram-' . $subset[1];
 			}
 
-			$key                             = $subset[1] . '-' . $font_weight[1] . ( $font_style[1] == 'normal' ? '' : '-' . $font_style[1] );
-			$font_object[ $key ]             = new stdClass();
-			$font_object[ $key ]->id         = $font_weight[1] . ( $font_style[1] == 'normal' ? '' : $font_style[1] );
+			$key                             = $subset[1] . '-' . $font_weight[1] . ( $font_style[1] === 'normal' ? '' : '-' . $font_style[1] );
+			$font_object[ $key ]             = new \stdClass();
+			$font_object[ $key ]->id         = $font_weight[1] . ( $font_style[1] === 'normal' ? '' : $font_style[1] );
 			$font_object[ $key ]->fontFamily = $font_family;
 			$font_object[ $key ]->fontStyle  = $font_style[1];
 			$font_object[ $key ]->fontWeight = $font_weight[1];

@@ -18,6 +18,7 @@ namespace OMGF;
 
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
+use OMGF\Plugin as OMGF;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,7 +37,7 @@ class Ajax {
 
 	/**
 	 * @since v5.4.0 Remove notice from task manager and return new HTML.
-	 * 
+	 *
 	 * @return string Valid HTML.
 	 */
 	public function hide_notice() {
@@ -57,7 +58,7 @@ class Ajax {
 
 		ob_start();
 
-		\OMGF::task_manager_warnings();
+		OMGF::task_manager_warnings();
 
 		$result = ob_get_clean();
 
@@ -75,11 +76,11 @@ class Ajax {
 		}
 
 		$handle               = $_POST['handle'];
-		$optimized_fonts      = \OMGF::optimized_fonts();
-		$unloaded_fonts       = \OMGF::unloaded_fonts();
-		$unloaded_stylesheets = \OMGF::unloaded_stylesheets();
-		$preloaded_fonts      = \OMGF::preloaded_fonts();
-		$cache_keys           = \OMGF::cache_keys();
+		$optimized_fonts      = OMGF::optimized_fonts();
+		$unloaded_fonts       = OMGF::unloaded_fonts();
+		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
+		$preloaded_fonts      = OMGF::preloaded_fonts();
+		$cache_keys           = OMGF::cache_keys();
 
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, $cache_keys, $handle, true );
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts, $handle );
@@ -90,19 +91,19 @@ class Ajax {
 
 	/**
 	 * Unset a $key from $array and update $option_name. Optionally store array as comma separated string.
-	 * 
+	 *
 	 * @param string $option_name     The option name to update.
 	 * @param array  $array           The array to saarch.
 	 * @param string $key             The key to unset when found.
-	 * @param bool   $comma_separated When true, $array is converted to a comma separated string before saving it 
-	 *                                to the database. 
-	 * 
-	 * @return void 
+	 * @param bool   $comma_separated When true, $array is converted to a comma separated string before saving it
+	 *                                to the database.
+	 *
+	 * @return void
 	 */
 	private function maybe_unset( $option_name, $array, $key, $comma_separated = false ) {
 		if ( isset( $array[ $key ] ) || in_array( $key, $array ) ) {
 			if ( $comma_separated ) {
-				$cache_key = \OMGF::get_cache_key( $key ) ?: $key;
+				$cache_key = OMGF::get_cache_key( $key ) ?: $key;
 				$key_key   = array_search( $cache_key, $array );
 
 				unset( $array[ $key_key ] );
@@ -148,7 +149,7 @@ class Ajax {
 
 	/**
 	 * Empty cache directory.
-	 * 
+	 *
 	 * @since v4.5.3: Hardened security.
 	 * @since v4.5.5: Added authentication.
 	 */
@@ -203,9 +204,8 @@ class Ajax {
 				continue;
 			}
 
-			\OMGF::delete( $entry );
+			OMGF::delete( $entry );
 		}
-
 
 		foreach ( $instructions['queue'] as $option ) {
 			delete_option( $option );
@@ -219,7 +219,7 @@ class Ajax {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
 		}
 
-		$filename = \OMGF::$log_file;
+		$filename = OMGF::$log_file;
 
 		/**
 		 * Shouldn't happen, but you never know.
@@ -253,7 +253,7 @@ class Ajax {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
 		}
 
-		$filename = \OMGF::$log_file;
+		$filename = OMGF::$log_file;
 
 		if ( file_exists( $filename ) ) {
 			unlink( $filename );

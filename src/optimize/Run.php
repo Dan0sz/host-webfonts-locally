@@ -23,7 +23,6 @@ use OMGF\Admin\Settings;
 defined( 'ABSPATH' ) || exit;
 
 class Run {
-
 	const DOCS_TEST_URL = 'https://daan.dev/docs/omgf-pro-troubleshooting/test-omgf-pro/';
 
 	/** @var string */
@@ -31,7 +30,7 @@ class Run {
 
 	/**
 	 * Build class.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -40,8 +39,8 @@ class Run {
 
 	/**
 	 * Does a quick fetch to the site_url to trigger all the action.
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function run() {
 		update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
@@ -74,9 +73,9 @@ class Run {
 
 	/**
 	 * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
-	 * 
+	 *
 	 * @param $url
-	 * 
+	 *
 	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
 	 *
 	 * @return string
@@ -88,10 +87,10 @@ class Run {
 				'omgf_optimize' => 1,
 				'nocache'       => substr(
 					md5( microtime() ),
-					rand( 0, 26 ),
-					5 
+					wp_rand( 0, 26 ),
+					5
 				),
-			] 
+			]
 		);
 
 		return add_query_arg( $args, $url );
@@ -116,7 +115,7 @@ class Run {
 
 		if ( ! empty( OMGF::get( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) ) {
 			/**
-			 * If $diff is empty, this means that the detected fonts are available in all selected subsets of the 
+			 * If $diff is empty, this means that the detected fonts are available in all selected subsets of the
 			 * Used Subset(s) option and no further action is required.
 			 */
 			if ( $available_used_subsets && ! empty( $diff = array_diff( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ), $available_used_subsets ) ) ) {
@@ -179,12 +178,12 @@ class Run {
 
 	/**
 	 * Generate a fluent sentence from array, e.g. "1, 2, 3 and 4" if element is count is > 1.
-	 * 
+	 *
 	 * @since v5.4.4
-	 * 
-	 * @param array $array 
-	 * 
-	 * @return string 
+	 *
+	 * @param array $array
+	 *
+	 * @return string
 	 */
 	private function fluent_implode( $array ) {
 		if ( count( $array ) == 1 ) {
@@ -214,9 +213,9 @@ class Run {
 	}
 
 	/**
-	 * @param WP_REST_Response|WP_Error|array $response 
-	 * 
-	 * @return int|string 
+	 * @param WP_REST_Response|WP_Error|array $response
+	 *
+	 * @return int|string
 	 */
 	private function get_error_code( $response ) {
 		if ( is_wp_error( $response ) ) {
@@ -227,9 +226,9 @@ class Run {
 	}
 
 	/**
-	 * @param WP_REST_Response|WP_Error|array $response 
-	 * 
-	 * @return int|string 
+	 * @param WP_REST_Response|WP_Error|array $response
+	 *
+	 * @return int|string
 	 */
 	private function get_error_message( $response ) {
 		if ( is_wp_error( $response ) ) {

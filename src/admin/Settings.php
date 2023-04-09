@@ -22,6 +22,7 @@ defined( 'ABSPATH' ) || exit;
 
 class Settings extends Admin {
 
+
 	const OMGF_ADMIN_PAGE = 'optimize-webfonts';
 
 	/**
@@ -121,14 +122,18 @@ class Settings extends Admin {
 	/**
 	 * Optimize Fonts
 	 */
-	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS       = 'auto_subsets';
-	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'display_option';
-	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'optimized_fonts';
-	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      = 'preload_fonts';
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS       = 'unload_fonts';
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'unload_stylesheets';
-	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS         = 'cache_keys';
-	const OMGF_OPTIMIZE_SETTING_TEST_MODE          = 'test_mode';
+	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS   = 'auto_subsets';
+	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION = 'display_option';
+	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS  = 'preload_fonts';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS   = 'unload_fonts';
+	const OMGF_OPTIMIZE_SETTING_TEST_MODE      = 'test_mode';
+
+	/**
+	 * Optimize Fonts (Hidden Settings)
+	 */
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'omgf_optimized_fonts';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'omgf_unload_stylesheets';
+	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS         = 'omgf_cache_keys';
 
 	/**
 	 * Advanced Settings
@@ -143,7 +148,7 @@ class Settings extends Admin {
 	 */
 	const OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS = 'options-general.php?page=optimize-webfonts';
 	const OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION      = 'plugin-install.php?tab=plugin-information&plugin=host-webfonts-local&TB_iframe=true&width=772&height=1015&section=changelog';
-	const FFWP_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://daan.dev/wordpress/omgf-pro/';
+	const DAAN_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://daan.dev/wordpress/omgf-pro/';
 	const DAAN_DOCS_OMGF_PRO_KNOWN_ISSUES             = 'https://daan.dev/docs/omgf-pro/known-issues/';
 
 	/** @var string $active_tab */
@@ -151,9 +156,6 @@ class Settings extends Admin {
 
 	/** @var string $page */
 	private $page;
-
-	/** @var string $plugin_text_domain */
-	private $plugin_text_domain = 'host-webfonts-local';
 
 	/** @var string|null  */
 	private $submit_button_text = null;
@@ -174,7 +176,7 @@ class Settings extends Admin {
 			return;
 		}
 
-		if ( $this->active_tab == self::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
+		if ( $this->active_tab === self::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
 			$this->submit_button_text = __( 'Save & Optimize', 'host-webfonts-local' );
 		}
 
@@ -292,7 +294,7 @@ class Settings extends Admin {
 		);
 
 		foreach ( $settings as &$setting ) {
-			$setting = "omgf_settings[$setting]";
+			$setting = apply_filters( 'omgf_settings_option_name', "omgf_settings[$setting]", $setting, $settings, $needle );
 		}
 
 		return $settings;
@@ -300,8 +302,8 @@ class Settings extends Admin {
 
 	/**
 	 * Add Local Fonts tab to Settings Screen.
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function optimize_fonts_tab() {
 		$this->generate_tab( self::OMGF_SETTINGS_FIELD_OPTIMIZE, 'dashicons-performance', __( 'Local Fonts', 'host-webfonts-local' ) );
@@ -323,8 +325,8 @@ class Settings extends Admin {
 
 	/**
 	 * Add Help Tab to Settings Screen.
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function help_tab() {
 		$this->generate_tab( self::OMGF_SETTINGS_FIELD_HELP, 'dashicons-editor-help', __( 'Help', 'host-webfonts-local' ) );
@@ -375,8 +377,8 @@ class Settings extends Admin {
 
 	/**
 	 * Render Help content
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function help_content() {
 		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_HELP );
@@ -386,17 +388,17 @@ class Settings extends Admin {
 	 * @param $field
 	 */
 	private function do_settings_content( $field ) {
-		if ( $this->active_tab != $field ) {
+		if ( $this->active_tab !== $field ) {
 			return;
 		}
 		?>
-		<form id="<?php echo $field; ?>-form" name="omgf-settings-form" method="post" action="<?php echo apply_filters( 'omgf_form_action', admin_url( 'options.php?tab=' . $this->active_tab ), $this->page, $this->active_tab ); ?>" autocomplete="off">
+		<form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post" action="<?php echo apply_filters( 'omgf_form_action', admin_url( 'options.php?tab=' . $this->active_tab ), $this->page, $this->active_tab ); ?>" autocomplete="off">
 			<?php
 			ob_start();
 			settings_fields( $field );
 			/**
 			 * We use a custom update action, so we can group all settings in one DB row upon form submit.
-			 * 
+			 *
 			 * @see OMGF::update_options()
 			 */
 			$settings_fields = ob_get_clean();
@@ -433,8 +435,8 @@ class Settings extends Admin {
 
 	/**
 	 * Changes footer text.
-	 * 
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	public function footer_text_left() {
 		$text = sprintf( __( 'Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', 'host-webfonts-local' ), '❤️' );
@@ -444,11 +446,11 @@ class Settings extends Admin {
 
 	/**
 	 * All logic to generate the news reel in the bottom right of the footer on all of OMGF's settings pages.
-	 * 
+	 *
 	 * Includes multiple checks to make sure the reel is only shown if a recent post is available.
-	 * 
-	 * @param mixed $text 
-	 * @return mixed 
+	 *
+	 * @param mixed $text
+	 * @return mixed
 	 */
 	public function footer_text_right( $text ) {
 		if ( ! extension_loaded( 'simplexml' ) ) {

@@ -16,7 +16,7 @@
 
 namespace OMGF\Admin\Settings;
 
-use OMGF;
+use OMGF\Plugin as OMGF;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -53,7 +53,7 @@ class Detection extends Builder {
 	/**
 	 *
 	 */
-	public function google_fonts_processing() {         
+	public function google_fonts_processing() {
 		?>
 		<tr>
 			<th scope="row"><?php echo __( 'Google Fonts Processing', 'host-webfonts-local' ); ?></th>
