@@ -3,3 +3,7 @@
 .git
 .svn
 .svnignore
+
+vendor/*
+!vendor/composer/
+!vendor/autoload.php
