@@ -17,6 +17,7 @@
 namespace OMGF\DB;
 
 use OMGF\Admin\Settings;
+use OMGF\Plugin as OMGF;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,7 +33,7 @@ class Migrate {
 		/**
 		 * Can be used to block migration scripts that shouldn't be run on a fresh install.
 		 */
-		$this->current_version = get_option( Settings::OMGF_CURRENT_DB_VERSION );
+		$this->current_version = OMGF::get( Settings::OMGF_CURRENT_DB_VERSION );
 
 		if ( $this->should_run_migration( '5.3.3' ) ) {
 			new Migrate\V533();
@@ -42,16 +43,16 @@ class Migrate {
 			new Migrate\V534();
 		}
 
-		if ( $this->should_run_migration( '5.5.7' ) ) {
-			new Migrate\V557();
+		if ( $this->should_run_migration( '5.6.0' ) ) {
+			new Migrate\V560();
 		}
 	}
 
 	/**
 	 * Checks whether migration script has been run.
-	 * 
-	 * @param mixed $version 
-	 * @return bool 
+	 *
+	 * @param mixed $version
+	 * @return bool
 	 */
 	private function should_run_migration( $version ) {
 		return version_compare( $this->current_version, $version ) < 0;

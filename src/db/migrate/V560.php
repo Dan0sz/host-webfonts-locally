@@ -17,6 +17,7 @@
 namespace OMGF\DB\Migrate;
 
 use OMGF\Admin\Settings;
+use OMGF\Plugin as OMGF;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -59,18 +60,19 @@ class V560 {
 	 * @return void
 	 */
 	private function init() {
-		$new_settings = get_option( 'omgf_settings', [] );
+		$new_settings = OMGF::get_settings();
 
 		foreach ( $this->rows as $row ) {
 			$new_settings[ $row ] = get_option( "omgf_$row" );
+
 			delete_option( "omgf_$row" );
 		}
 
-		update_option( 'omgf_settings', $new_settings );
+		OMGF::update( 'omgf_settings', $new_settings );
 
 		/**
 		 * Update stored version number.
 		 */
-		update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
+		OMGF::update( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
 	}
 }

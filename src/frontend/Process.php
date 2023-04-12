@@ -73,7 +73,7 @@ class Process {
 	 * @var $break bool
 	 */
 	public function __construct( $break = false ) {
-		$this->timestamp = get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
+		$this->timestamp = OMGF::get( Settings::OMGF_CACHE_TIMESTAMP, '' );
 		$this->break     = $break;
 
 		if ( ! $this->timestamp ) {
@@ -415,7 +415,7 @@ class Process {
 			}
 		}
 
-		$found_iframes = get_option( Settings::OMGF_FOUND_IFRAMES ) ?: [];
+		$found_iframes = OMGF::get( Settings::OMGF_FOUND_IFRAMES, [] );
 
 		foreach ( OMGF::IFRAMES_LOADING_FONTS as $script_id => $script ) {
 			if ( strpos( $html, $script ) !== false && ! in_array( $script_id, $found_iframes ) ) {

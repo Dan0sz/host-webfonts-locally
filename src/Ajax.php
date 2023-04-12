@@ -48,7 +48,7 @@ class Ajax {
 		}
 
 		$warning_id     = $_POST['warning_id'];
-		$hidden_notices = get_option( Settings::OMGF_HIDDEN_NOTICES ) ?: [];
+		$hidden_notices = OMGF::get( Settings::OMGF_HIDDEN_NOTICES, [] );
 
 		if ( ! in_array( $warning_id, $hidden_notices ) ) {
 			$hidden_notices[] = $warning_id;

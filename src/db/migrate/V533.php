@@ -17,6 +17,7 @@
 namespace OMGF\DB\Migrate;
 
 use OMGF\Admin\Settings;
+use OMGF\Plugin as OMGF;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,8 +28,8 @@ class V533 {
 
 	/**
 	 * Buid
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function __construct() {
 		$this->init();
@@ -36,19 +37,19 @@ class V533 {
 
 	/**
 	 * Initialize
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function init() {
-		$subsets = get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
+		$subsets = OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS );
 
 		if ( ! $subsets ) {
-			update_option( Settings::OMGF_ADV_SETTING_SUBSETS, [ 'latin', 'latin-ext' ] );
+			OMGF::update( Settings::OMGF_ADV_SETTING_SUBSETS, [ 'latin', 'latin-ext' ] );
 		}
 
 		/**
 		 * Update stored version number.
 		 */
-		update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
+		OMGF::update( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
 	}
 }

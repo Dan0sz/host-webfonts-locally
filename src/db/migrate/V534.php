@@ -28,8 +28,8 @@ class V534 {
 
 	/**
 	 * Buid
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function __construct() {
 		$this->init();
@@ -37,8 +37,8 @@ class V534 {
 
 	/**
 	 * Initialize
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function init() {
 		$optimized_fonts = OMGF::optimized_fonts() ?? [];
@@ -51,7 +51,7 @@ class V534 {
 				foreach ( $variants as $key => $variant ) {
 					/**
 					 * Optimized Fonts needs upgrading if $variants is still an indexed array.
-					 * 
+					 *
 					 * @since v5.3.0 $variants should be an associative array.
 					 */
 					if ( is_numeric( $key ) ) {
@@ -75,12 +75,12 @@ class V534 {
 		 * Mark cache as stale if upgrade is required.
 		 */
 		if ( $upgrade_req ) {
-			update_option( Settings::OMGF_CACHE_IS_STALE, $upgrade_req );
+			OMGF::update( Settings::OMGF_CACHE_IS_STALE, $upgrade_req );
 		}
 
 		/**
 		 * Update stored version number.
 		 */
-		update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
+		OMGF::update( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
 	}
 }

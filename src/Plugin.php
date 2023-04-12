@@ -158,8 +158,8 @@ class Plugin {
 		/** Prevents undefined constant in OMGF Pro, if its not at version v3.3.0 (yet) */
 		define( 'OMGF_OPTIMIZATION_MODE', false );
 		define( 'OMGF_SITE_URL', 'https://daan.dev' );
-		define( 'OMGF_CACHE_IS_STALE', esc_attr( get_option( Settings::OMGF_CACHE_IS_STALE ) ) );
-		define( 'OMGF_CURRENT_DB_VERSION', esc_attr( get_option( Settings::OMGF_CURRENT_DB_VERSION ) ) );
+		define( 'OMGF_CACHE_IS_STALE', esc_attr( self::get( Settings::OMGF_CACHE_IS_STALE ) ) );
+		define( 'OMGF_CURRENT_DB_VERSION', esc_attr( self::get( Settings::OMGF_CURRENT_DB_VERSION ) ) );
 		define( 'OMGF_UPLOAD_DIR', apply_filters( 'omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf' ) );
 		define( 'OMGF_UPLOAD_URL', apply_filters( 'omgf_upload_url', str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' ) ) );
 	}
@@ -193,7 +193,9 @@ class Plugin {
 	}
 
 	/**
-	 * Method to retrieve settings from database.
+	 * Method to retrieve OMGF's settings from database.
+	 *
+	 * WARNING: DO NOT ATTEMPT TO RETRIEVE WP CORE SETTINGS USING THIS METHOD. IT WILL FAIL.
 	 *
 	 * @filter omgf_setting_{$name}
 	 *
@@ -203,7 +205,7 @@ class Plugin {
 	 * @since v5.6.0
 	 */
 	public static function get( $name, $default = null ) {
-		// If $name starts with 'omgf_' it means it is saved on its separate row.
+		// If $name starts with 'omgf_' it means it is saved in a separate row.
 		if ( strpos( $name, 'omgf_' ) === 0 ) {
 			$value = get_option( $name, $default );
 
@@ -273,7 +275,7 @@ class Plugin {
 			if ( is_string( $option_value ) ) {
 				$merged = $option_value;
 			} else {
-				$current_options = get_option( $option_name );
+				$current_options = self::get( $option_name );
 				$merged          = array_replace( $current_options, $option_value );
 			}
 
