@@ -214,7 +214,7 @@ class Plugin {
 
 		$value = self::get_settings()[ $name ] ?? '';
 
-		if ( ! $default && $name === Settings::OMGF_ADV_SETTING_SUBSETS ) {
+		if ( empty( $value ) && ! $default && $name === Settings::OMGF_ADV_SETTING_SUBSETS ) {
 			$default = [ 'latin', 'latin-ext' ];
 		}
 
