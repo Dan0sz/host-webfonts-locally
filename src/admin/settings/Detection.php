@@ -77,7 +77,7 @@ class Detection extends Builder {
 				<fieldset id="" class="scheme-list">
 					<?php foreach ( $this->advanced_processing_pro_options() as $name => $data ) : ?>
 						<?php
-						$checked  = ! empty( OMGF::get( $name ) );
+						$checked  = ! empty( OMGF::get_option( $name ) );
 						$disabled = ! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled' : '';
 						?>
 						<label for="<?php echo esc_attr( $name ); ?>">

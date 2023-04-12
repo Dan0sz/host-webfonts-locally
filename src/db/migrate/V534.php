@@ -75,12 +75,12 @@ class V534 {
 		 * Mark cache as stale if upgrade is required.
 		 */
 		if ( $upgrade_req ) {
-			OMGF::update( Settings::OMGF_CACHE_IS_STALE, $upgrade_req );
+			OMGF::update_option( Settings::OMGF_CACHE_IS_STALE, $upgrade_req );
 		}
 
 		/**
 		 * Update stored version number.
 		 */
-		OMGF::update( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
+		OMGF::update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
 	}
 }

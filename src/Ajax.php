@@ -48,13 +48,13 @@ class Ajax {
 		}
 
 		$warning_id     = $_POST['warning_id'];
-		$hidden_notices = OMGF::get( Settings::OMGF_HIDDEN_NOTICES, [] );
+		$hidden_notices = OMGF::get_option( Settings::OMGF_HIDDEN_NOTICES, [] );
 
 		if ( ! in_array( $warning_id, $hidden_notices ) ) {
 			$hidden_notices[] = $warning_id;
 		}
 
-		OMGF::update( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices );
+		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices );
 
 		ob_start();
 
@@ -115,7 +115,7 @@ class Ajax {
 				$array = implode( ',', $array );
 			}
 
-			OMGF::update( $option_name, $array );
+			OMGF::update_option( $option_name, $array );
 		}
 	}
 

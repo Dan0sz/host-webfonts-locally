@@ -217,7 +217,7 @@ class Plugin {
 	 *
 	 * @since v5.6.0
 	 */
-	public static function get( $name, $default = null ) {
+	public static function get_option( $name, $default = null ) {
 		// If $name starts with 'omgf_' it means it is saved in a separate row.
 		if ( strpos( $name, 'omgf_' ) === 0 ) {
 			$value = get_option( $name, $default );
@@ -249,7 +249,7 @@ class Plugin {
 	 *
 	 * @return void
 	 */
-	public static function update( $setting, $value ) {
+	public static function update_option( $setting, $value ) {
 		// If $setting starts with 'omgf_' it should be saved in a separate row.
 		if ( strpos( $setting, 'omgf_' ) === 0 ) {
 			update_option( $setting, $value );
@@ -259,6 +259,30 @@ class Plugin {
 
 		$settings             = self::get_settings();
 		$settings[ $setting ] = $value;
+
+		update_option( 'omgf_settings', $settings );
+	}
+
+	/**
+	 * This is basically a wrapper around delete_option() to offer a centralized interface for
+	 * removing OMGF's settings in the wp_options table.
+	 *
+	 * @since v5.6.0
+	 *
+	 * @param string $setting
+	 *
+	 * @return void
+	 */
+	public static function delete_option( $setting ) {
+		if ( strpos( $setting, 'omgf_' ) === 0 ) {
+			delete_option( $setting );
+
+			return;
+		}
+
+		$settings = self::get_settings();
+
+		unset( $settings[ $setting ] );
 
 		update_option( 'omgf_settings', $settings );
 	}

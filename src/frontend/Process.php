@@ -73,7 +73,7 @@ class Process {
 	 * @var $break bool
 	 */
 	public function __construct( $break = false ) {
-		$this->timestamp = OMGF::get( Settings::OMGF_CACHE_TIMESTAMP, '' );
+		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
 		$this->break     = $break;
 
 		if ( ! $this->timestamp ) {
@@ -98,7 +98,7 @@ class Process {
 		 * * Test Mode is enabled and current user is not an admin.
 		 * * Test Mode is enabled and `omgf` GET-parameter is not set.
 		 */
-		$test_mode_enabled = ! empty( OMGF::get( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) );
+		$test_mode_enabled = ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) );
 
 		if (
 			$this->break
@@ -415,7 +415,7 @@ class Process {
 			}
 		}
 
-		$found_iframes = OMGF::get( Settings::OMGF_FOUND_IFRAMES, [] );
+		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 
 		foreach ( OMGF::IFRAMES_LOADING_FONTS as $script_id => $script ) {
 			if ( strpos( $html, $script ) !== false && ! in_array( $script_id, $found_iframes ) ) {
@@ -521,9 +521,9 @@ class Process {
 			 *               many different Google Fonts stylesheets configured throughout their pages and
 			 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
 			 */
-			if ( OMGF::get( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && strpos( $id, 'et-builder-googlefonts' ) !== false ) {
+			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && strpos( $id, 'et-builder-googlefonts' ) !== false ) {
 				$google_fonts[ $key ]['id'] = $id . '-' . strlen( $href['href'] );
-			} elseif ( OMGF::get( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
+			} elseif ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
 				/**
 				 * Compatibility fix for Elementor
 				 *

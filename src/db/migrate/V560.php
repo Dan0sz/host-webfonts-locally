@@ -68,11 +68,11 @@ class V560 {
 			delete_option( "omgf_$row" );
 		}
 
-		OMGF::update( 'omgf_settings', $new_settings );
+		OMGF::update_option( 'omgf_settings', $new_settings );
 
 		/**
 		 * Update stored version number.
 		 */
-		OMGF::update( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
+		OMGF::update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
 	}
 }

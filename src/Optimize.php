@@ -195,17 +195,17 @@ class Optimize {
 		 */
 		$optimized_fonts = OMGF::optimized_fonts( $current_stylesheet, true );
 
-		OMGF::update( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts );
 
 		/**
 		 * @since v5.4.4 Stores the subsets actually available in this configuration to the database.
 		 *
 		 * @see OMGF_Optimize_Run
 		 */
-		if ( ! empty( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ) ) ) {
+		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) ) ) {
 			$available_used_subsets = OMGF::available_used_subsets( $this->available_used_subsets );
 
-			OMGF::update( Settings::OMGF_AVAILABLE_USED_SUBSETS, $available_used_subsets );
+			OMGF::update_option( Settings::OMGF_AVAILABLE_USED_SUBSETS, $available_used_subsets );
 		}
 
 		switch ( $this->return ) {
@@ -316,7 +316,7 @@ class Optimize {
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
 			 */
-			if ( ! empty( $subset ) && isset( $subset[1] ) && ! in_array( $subset[1], OMGF::get( settings::OMGF_ADV_SETTING_SUBSETS ) ) && ! is_numeric( $subset[1] ) ) {
+			if ( ! empty( $subset ) && isset( $subset[1] ) && ! in_array( $subset[1], OMGF::get_option( settings::OMGF_ADV_SETTING_SUBSETS ) ) && ! is_numeric( $subset[1] ) ) {
 				continue;
 			}
 
@@ -382,7 +382,7 @@ class Optimize {
 		/**
 		 * @since v5.4.4 Stores all subsets that are selected to be used AND are actually available in this font-family.
 		 */
-		$this->available_used_subsets[ $font_family ] = array_intersect( $subsets, OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ) );
+		$this->available_used_subsets[ $font_family ] = array_intersect( $subsets, OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
 
 		OMGF::debug_array( __( 'Subset @font-face statements', 'host-webfonts-local' ), $subsets );
 

@@ -41,15 +41,15 @@ class V533 {
 	 * @return void
 	 */
 	private function init() {
-		$subsets = OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS );
+		$subsets = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 
 		if ( ! $subsets ) {
-			OMGF::update( Settings::OMGF_ADV_SETTING_SUBSETS, [ 'latin', 'latin-ext' ] );
+			OMGF::update_option( Settings::OMGF_ADV_SETTING_SUBSETS, [ 'latin', 'latin-ext' ] );
 		}
 
 		/**
 		 * Update stored version number.
 		 */
-		OMGF::update( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
+		OMGF::update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
 	}
 }

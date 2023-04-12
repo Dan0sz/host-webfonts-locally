@@ -129,7 +129,7 @@ class Optimize extends Builder {
 						</ul>
 					<?php else : ?>
 						<p>
-							<?php echo __( 'No stylesheets found. <a href="#" id="omgf-save-optimize">Start optimization</a>?', 'host-webfonts-local' ); ?> <?php echo OMGF::get( Settings::OMGF_OPTIMIZE_HAS_RUN ) ? sprintf( __( '(If optimization seems to be failing, read <a href="%s" target="_blank">this</a>.)', 'host-webfonts-local' ), 'https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/' ) : ''; ?>
+							<?php echo __( 'No stylesheets found. <a href="#" id="omgf-save-optimize">Start optimization</a>?', 'host-webfonts-local' ); ?> <?php echo OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ? sprintf( __( '(If optimization seems to be failing, read <a href="%s" target="_blank">this</a>.)', 'host-webfonts-local' ), 'https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/' ) : ''; ?>
 						</p>
 					<?php endif; ?>
 				</td>
@@ -149,7 +149,7 @@ class Optimize extends Builder {
 			$this->do_checkbox(
 				__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
 				Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS,
-				! empty( OMGF::get( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ),
+				! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ),
 				sprintf( __( 'When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'OMGF' ) ),
 				false,
 				'task-manager-row'
@@ -157,7 +157,7 @@ class Optimize extends Builder {
 			$this->do_checkbox(
 				__( 'Auto-Configure Adv. Processing (Pro)', 'host-webfonts-local' ),
 				'auto_config',
-				! empty( OMGF::get( 'auto_config' ) ),
+				! empty( OMGF::get_option( 'auto_config' ) ),
 				sprintf( __( 'Is %1$s not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%2$s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed. Novice users are advised to leave this enabled.', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'OMGF' ), admin_url( 'options-general.php?page=optimize-webfonts&tab=omgf-detection-settings' ) ) . ' ' . $this->promo,
 				! defined( 'OMGF_PRO_ACTIVE' ),
 				'task-manager-row'
@@ -192,7 +192,7 @@ class Optimize extends Builder {
 			__( 'Font-Display Option', 'host-webfonts-local' ),
 			Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION,
 			Settings::OMGF_FONT_DISPLAY_OPTIONS,
-			OMGF::get( Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION ),
+			OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION ),
 			__( 'Select which value to set the font-display attribute to. Defaults to Swap (recommended).', 'host-webfonts-local' )
 		);
 	}
@@ -204,7 +204,7 @@ class Optimize extends Builder {
 		$this->do_checkbox(
 			__( 'Apply Font-Display Option Globally (Pro)', 'host-webfonts-local' ),
 			'force_font_display',
-			! empty( OMGF::get( 'force_font_display' ) ),
+			! empty( OMGF::get_option( 'force_font_display' ) ),
 			__( 'Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.', 'host-webfonts-local' ) . ' ' . $this->promo,
 			! defined( 'OMGF_PRO_ACTIVE' )
 		);
@@ -219,7 +219,7 @@ class Optimize extends Builder {
 		$this->do_checkbox(
 			__( 'Remove Async Google Fonts (Pro)', 'host-webfonts-local' ),
 			'remove_async_fonts',
-			! empty( OMGF::get( 'remove_async_fonts' ) ),
+			! empty( OMGF::get_option( 'remove_async_fonts' ) ),
 			sprintf( __( 'Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%1$s">manually</a> or by using <a href="%2$s" target="_blank">a plugin</a> to prevent styling breaks.', 'host-webfonts-local' ), 'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/', 'https://daan.dev/wordpress/omgf-additional-fonts/' ) . ' ' . $this->promo,
 			! defined( 'OMGF_PRO_ACTIVE' )
 		);
@@ -410,7 +410,7 @@ class Optimize extends Builder {
 		$this->do_checkbox(
 			__( 'Test Mode', 'host-webfonts-local' ),
 			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE,
-			! empty( OMGF::get( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ),
+			! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ),
 			__( 'With this setting enabled, OMGF\'s optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend.', 'host-webfonts-local' )
 		);
 	}

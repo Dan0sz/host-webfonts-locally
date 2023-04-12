@@ -228,7 +228,7 @@ class Admin {
 			}
 
 			if ( $show_message ) {
-				OMGF::update( Settings::OMGF_CACHE_IS_STALE, true );
+				OMGF::update_option( Settings::OMGF_CACHE_IS_STALE, true );
 
 				add_settings_error(
 					'general',
