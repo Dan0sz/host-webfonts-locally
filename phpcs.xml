@@ -29,19 +29,23 @@
 	<rule ref="PSR2.Methods.FunctionClosingBrace"/>
 
 	<rule ref="WordPress-Extra">
-        <exclude name="WordPress.PHP.YodaConditions"/>
 		<exclude name="Generic.Arrays.DisallowShortArraySyntax" />
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
 		<exclude name="WordPress.PHP.YodaConditions" />
+		<exclude name="WordPress.PHP.StrictInArray" />
     </rule>
 
+	<rule ref="Squiz.PHP.DisallowMultipleAssignments.Found">
+		<severity>0</severity>
+	</rule>
+
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax.Found">
-	  <type>warning</type>
+		<type>warning</type>
 	</rule>
 
 	<rule ref="Squiz.Arrays.ArrayDeclaration.NoCommaAfterLast">
-    	<severity>0</severity>
+		<severity>0</severity>
   	</rule>
 </ruleset>
