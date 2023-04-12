@@ -80,8 +80,9 @@ class Detection extends Builder {
 						$checked  = ! empty( OMGF::get( $name ) );
 						$disabled = ! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled' : '';
 						?>
-						<label for="<?php echo $name; ?>">
-							<input type="checkbox" name="omgf_settings[<?php echo $name; ?>]" id="<?php echo $name; ?>" <?php echo $checked ? 'checked="checked"' : ''; ?> <?php echo apply_filters( 'omgf_detection_settings_advanced_processing_options_disabled', $disabled, $name ); ?> /><?php echo $data['label']; ?>
+						<label for="<?php echo esc_attr( $name ); ?>">
+							<input type="hidden" name="omgf_settings[<?php echo esc_attr( $name ); ?>]" value="0" />
+							<input type="checkbox" name="omgf_settings[<?php echo esc_attr( $name ); ?>]" id="<?php echo esc_attr( $name ); ?>" <?php echo esc_attr( $checked ? 'checked="checked"' : '' ); ?> <?php echo esc_attr( $disabled ); ?> value="on" /><?php echo wp_kses( $data['label'], $this->allowed_html ); ?>
 							&nbsp;
 						</label>
 					<?php endforeach; ?>
@@ -91,7 +92,7 @@ class Detection extends Builder {
 				</p>
 				<ul>
 					<?php foreach ( $this->advanced_processing_pro_options() as $name => $data ) : ?>
-						<li><strong><?php echo $data['label']; ?></strong>: <?php echo $data['description']; ?></li>
+						<li><strong><?php echo wp_kses( $data['label'], $this->allowed_html ); ?></strong>: <?php echo wp_kses( $data['description'], $this->allowed_html ); ?></li>
 					<?php endforeach; ?>
 				</ul>
 			</td>

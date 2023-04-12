@@ -185,11 +185,24 @@ class Plugin {
 	public static function get_settings() {
 		static $settings;
 
+		$defaults = apply_filters(
+			'omgf_settings_defaults',
+			[
+				Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS => '',
+				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION => '',
+				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE => '',
+				Settings::OMGF_ADV_SETTING_COMPATIBILITY  => '',
+				Settings::OMGF_ADV_SETTING_SUBSETS        => [],
+				Settings::OMGF_ADV_SETTING_DEBUG_MODE     => '',
+				Settings::OMGF_ADV_SETTING_UNINSTALL      => '',
+			]
+		);
+
 		if ( empty( $settings ) ) {
 			$settings = get_option( 'omgf_settings', [] );
 		}
 
-		return apply_filters( 'omgf_settings', $settings );
+		return apply_filters( 'omgf_settings', wp_parse_args( $settings, $defaults ) );
 	}
 
 	/**
@@ -272,10 +285,12 @@ class Plugin {
 				continue;
 			}
 
+			$merged = [];
+
 			if ( is_string( $option_value ) ) {
 				$merged = $option_value;
 			} else {
-				$current_options = self::get( $option_name );
+				$current_options = self::get( $option_name, [] );
 				$merged          = array_replace( $current_options, $option_value );
 			}
 
