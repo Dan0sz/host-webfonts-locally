@@ -45,8 +45,8 @@ class Optimize {
 
 	/**
 	 * Run either manual or auto mode after settings are updated.
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function init() {
 		if ( Settings::OMGF_ADMIN_PAGE !== $this->settings_page ) {
@@ -83,8 +83,8 @@ class Optimize {
 
 	/**
 	 * Run Force mode.
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function run() {
 		new Run();

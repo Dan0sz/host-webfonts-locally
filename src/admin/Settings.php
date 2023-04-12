@@ -122,18 +122,18 @@ class Settings extends Admin {
 	/**
 	 * Optimize Fonts
 	 */
-	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS   = 'auto_subsets';
-	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION = 'display_option';
-	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS  = 'preload_fonts';
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS   = 'unload_fonts';
-	const OMGF_OPTIMIZE_SETTING_TEST_MODE      = 'test_mode';
+	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS       = 'auto_subsets';
+	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'display_option';
+	const OMGF_OPTIMIZE_SETTING_TEST_MODE          = 'test_mode';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'unload_stylesheets';
+	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS         = 'cache_keys';
 
 	/**
 	 * Optimize Fonts (Hidden Settings)
 	 */
-	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS    = 'omgf_optimized_fonts';
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'omgf_unload_stylesheets';
-	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS         = 'omgf_cache_keys';
+	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS   = 'omgf_preload_fonts';
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS    = 'omgf_unload_fonts';
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS = 'omgf_optimized_fonts';
 
 	/**
 	 * Advanced Settings
@@ -148,7 +148,7 @@ class Settings extends Admin {
 	 */
 	const OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS = 'options-general.php?page=optimize-webfonts';
 	const OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION      = 'plugin-install.php?tab=plugin-information&plugin=host-webfonts-local&TB_iframe=true&width=772&height=1015&section=changelog';
-	const DAAN_WORDPRESS_PLUGINS_OMGF_PRO             = 'https://daan.dev/wordpress/omgf-pro/';
+	const DAAN_WORDPRESS_OMGF_PRO                     = 'https://daan.dev/wordpress/omgf-pro/';
 	const DAAN_DOCS_OMGF_PRO_KNOWN_ISSUES             = 'https://daan.dev/docs/omgf-pro/known-issues/';
 
 	/** @var string $active_tab */
@@ -399,7 +399,7 @@ class Settings extends Admin {
 			/**
 			 * We use a custom update action, so we can group all settings in one DB row upon form submit.
 			 *
-			 * @see OMGF::update_options()
+			 * @see \OMGF\Plugin update_options()
 			 */
 			$settings_fields = ob_get_clean();
 			$settings_fields = str_replace( 'value="update"', 'value="omgf-update"', $settings_fields );

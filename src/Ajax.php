@@ -54,7 +54,7 @@ class Ajax {
 			$hidden_notices[] = $warning_id;
 		}
 
-		update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices );
+		OMGF::update( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices );
 
 		ob_start();
 
@@ -115,7 +115,7 @@ class Ajax {
 				$array = implode( ',', $array );
 			}
 
-			update_option( $option_name, $array );
+			OMGF::update( $option_name, $array );
 		}
 	}
 

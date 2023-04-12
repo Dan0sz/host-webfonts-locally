@@ -25,9 +25,6 @@ defined( 'ABSPATH' ) || exit;
 class Run {
 	const DOCS_TEST_URL = 'https://daan.dev/docs/omgf-pro-troubleshooting/test-omgf-pro/';
 
-	/** @var string */
-	private $plugin_text_domain = 'host-webfonts-local';
-
 	/**
 	 * Build class.
 	 *
@@ -118,7 +115,9 @@ class Run {
 			 * If $diff is empty, this means that the detected fonts are available in all selected subsets of the
 			 * Used Subset(s) option and no further action is required.
 			 */
-			if ( $available_used_subsets && ! empty( $diff = array_diff( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ), $available_used_subsets ) ) ) {
+			$diff = array_diff( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ), $available_used_subsets );
+
+			if ( $available_used_subsets && ! empty( $diff ) ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Available Used Subsets)', $diff );
 
 				Notice::set_notice(
@@ -135,12 +134,14 @@ class Run {
 					'info'
 				);
 
-				update_option( Settings::OMGF_ADV_SETTING_SUBSETS, $available_used_subsets );
+				OMGF::update( Settings::OMGF_ADV_SETTING_SUBSETS, $available_used_subsets );
 
 				return;
 			}
 
-			if ( ! empty( $diff = array_diff( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ), [ 'latin' ] ) ) ) {
+			$diff = array_diff( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ), [ 'latin' ] );
+
+			if ( ! empty( $diff ) ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Latin)', $diff );
 
 				/**
@@ -161,16 +162,16 @@ class Run {
 					'info'
 				);
 
-				update_option( Settings::OMGF_ADV_SETTING_SUBSETS, [ 'latin' ] );
+				OMGF::update( Settings::OMGF_ADV_SETTING_SUBSETS, [ 'latin' ] );
 
 				return;
 			}
 		}
 
-		add_settings_error( 'general', 'omgf_optimization_success', __( 'Optimization completed successfully.', $this->plugin_text_domain ) . ' ' . sprintf( '<a target="_blank" href="%s">', self::DOCS_TEST_URL ) . __( 'How can I verify it\'s working?', $this->plugin_text_domain ) . '</a>', 'success' );
+		add_settings_error( 'general', 'omgf_optimization_success', __( 'Optimization completed successfully.', 'host-webfonts-local' ) . ' ' . sprintf( '<a target="_blank" href="%s">', self::DOCS_TEST_URL ) . __( 'How can I verify it\'s working?', 'host-webfonts-local' ) . '</a>', 'success' );
 
 		Notice::set_notice(
-			sprintf( __( 'Make sure you flush any caches of 3rd party plugins you\'re using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s\'s optimizations to take effect. ', $this->plugin_text_domain ), apply_filters( 'omgf_settings_page_title', 'OMGF' ) ),
+			sprintf( __( 'Make sure you flush any caches of 3rd party plugins you\'re using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s\'s optimizations to take effect. ', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'OMGF' ) ),
 			'omgf-cache-notice',
 			'warning'
 		);
@@ -205,7 +206,7 @@ class Run {
 			$response = $response->as_error();
 		}
 
-		add_settings_error( 'general', 'omgf_frontend_fetch_failed', sprintf( __( '%s encountered an error while fetching this site\'s frontend HTML', $this->plugin_text_domain ), apply_filters( 'omgf_settings_page_title', 'OMGF' ) ) . ': ' . $this->get_error_code( $response ) . ' - ' . $this->get_error_message( $response ), 'error' );
+		add_settings_error( 'general', 'omgf_frontend_fetch_failed', sprintf( __( '%s encountered an error while fetching this site\'s frontend HTML', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'OMGF' ) ) . ': ' . $this->get_error_code( $response ) . ' - ' . $this->get_error_message( $response ), 'error' );
 
 		if ( $this->get_error_code( $response ) == '403' ) {
 			Notice::set_notice( sprintf( __( 'It looks like OMGF isn\'t allowed to fetch your frontend. Try <a class="omgf-optimize-forbidden" href="%s" target="_blank">running the optimization manually</a> (you might have to allow pop-ups) and return here after the page has finished loading.', 'host-webfonts-local' ), $this->no_cache_optimize_url( get_home_url() ) ), 'omgf-forbidden', 'info' );

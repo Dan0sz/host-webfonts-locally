@@ -49,17 +49,17 @@ class Optimize {
 	/** @var string */
 	private $path = '';
 
-	/** 
+	/**
 	 * @var array $variable_fonts An array of font families in the current stylesheets that're Variable Fonts.
-	 * 
+	 *
 	 * @since v5.3.0
 	 */
 	private $variable_fonts = [];
 
 	/**
 	 * @var array $available_used_subsets Contains an array_intersect() of subsets that're set to be used AND are actually available.
-	 * 
-	 * @since v5.4.4 
+	 *
+	 * @since v5.4.4
 	 */
 	private $available_used_subsets = [];
 
@@ -69,8 +69,8 @@ class Optimize {
 	 * @param string $original_handle The stylesheet handle, present in the ID attribute.
 	 * @param string $return          Valid values: 'url' | 'path' | 'object'.
 	 * @param bool   $return_early    If this is set to true, the optimization will skip out early if the object already exists in the database.
-	 *  
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function __construct(
 		string $url,
@@ -136,7 +136,7 @@ class Optimize {
 		foreach ( $fonts as $id => &$font ) {
 			/**
 			 * Sanitize font family, because it may contain spaces.
-			 * 
+			 *
 			 * @since v4.5.6
 			 */
 			$font->family = rawurlencode( $font->family );
@@ -159,11 +159,10 @@ class Optimize {
 
 				/**
 				 * Encode font family, because it may contain spaces.
-				 * 
+				 *
 				 * @since v4.5.6
 				 */
 				$variant->fontFamily = rawurlencode( $variant->fontFamily );
-
 
 				if ( isset( $variant->woff2 ) ) {
 					OMGF::debug( sprintf( __( 'Downloading %1$s to %2$s from %3$s.' ), $filename, $this->path, $variant->woff2 ) );
@@ -191,22 +190,22 @@ class Optimize {
 
 		/**
 		 * $current_stylesheet is added to temporary cache layer, if it isn't present in database.
-		 * 
+		 *
 		 * @since v4.5.7
 		 */
 		$optimized_fonts = OMGF::optimized_fonts( $current_stylesheet, true );
 
-		update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts );
+		OMGF::update( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts );
 
 		/**
 		 * @since v5.4.4 Stores the subsets actually available in this configuration to the database.
-		 * 
+		 *
 		 * @see OMGF_Optimize_Run
 		 */
 		if ( ! empty( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ) ) ) {
 			$available_used_subsets = OMGF::available_used_subsets( $this->available_used_subsets );
 
-			update_option( Settings::OMGF_AVAILABLE_USED_SUBSETS, $available_used_subsets );
+			OMGF::update( Settings::OMGF_AVAILABLE_USED_SUBSETS, $available_used_subsets );
 		}
 
 		switch ( $this->return ) {
@@ -223,7 +222,7 @@ class Optimize {
 
 	/**
 	 * @since v5.3.0 Parse the stylesheet and build it into a font object which OMGF can understand.
-	 * 
+	 *
 	 * @param $url Google Fonts API request, e.g. https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400italic
 	 *
 	 * @return array
@@ -276,10 +275,10 @@ class Optimize {
 
 	/**
 	 * Parse a stylesheet from Google Fonts' API into a valid Font Object.
-	 * 
-	 * @param string $stylesheet 
-	 * @param string $font_family 
-	 * 
+	 *
+	 * @param string $stylesheet
+	 * @param string $font_family
+	 *
 	 * @return array
 	 */
 	private function parse_variants( $stylesheet, $font_family ) {
@@ -392,9 +391,9 @@ class Optimize {
 
 	/**
 	 * Modifies the URL to not include unloaded variants.
-	 * 
-	 * @param mixed $url 
-	 * @return void 
+	 *
+	 * @param mixed $url
+	 * @return void
 	 */
 	private function unload_variants( $url ) {
 		if ( ! isset( OMGF::unloaded_fonts()[ $this->original_handle ] ) ) {
@@ -416,9 +415,9 @@ class Optimize {
 
 	/**
 	 * Process unload for Variable Fonts API requests.
-	 * 
+	 *
 	 * @param string $url full request to Variable Fonts API.
-	 * 
+	 *
 	 * @return string full requests (excluding unloaded variants)
 	 */
 	private function unload_css2( $url ) {
@@ -480,9 +479,9 @@ class Optimize {
 
 	/**
 	 * Process unload for Google Fonts API.
-	 * 
+	 *
 	 * @param string $url Full request to Google Fonts API.
-	 * 
+	 *
 	 * @return string     Full request (excluding unloaded variants)
 	 */
 	private function unload_css( $url ) {
@@ -536,9 +535,9 @@ class Optimize {
 	 *
 	 * @param array $current     Contains all font styles, loaded and unloaded.
 	 * @param array $replacement Contains just the loaded font styles of current stylesheet.
-	 * 
-	 *                           Both parameters follow this structure: 
-	 * 
+	 *
+	 *                           Both parameters follow this structure:
+	 *
 	 *                           (string) Font Family {
 	 *                               (string) id, (string) family, (array) variants {
 	 *                                   (string) id => (object) {

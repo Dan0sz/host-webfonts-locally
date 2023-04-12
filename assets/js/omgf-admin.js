@@ -182,7 +182,7 @@ jQuery(document).ready(function ($) {
             var id = handle[0].id;
             var checked = $('tbody' + '#' + id + ' input.unload:checked').length;
             var total = $('tbody' + '#' + id + ' input.unload').length;
-            var unloaded_stylesheets_option = $('#omgf_unload_stylesheets');
+            var unloaded_stylesheets_option = $('#unload_stylesheets');
             var unloaded_stylesheets = unloaded_stylesheets_option.val().split(',');
 
             if (checked === total) {
@@ -212,7 +212,7 @@ jQuery(document).ready(function ($) {
                 var current_handle = $(this).data('handle');
             }
 
-            var cache_keys_input = $('#omgf_cache_keys'),
+            var cache_keys_input = $('#cache_keys'),
                 cache_keys = cache_keys_input.val().split(','),
                 checked = $('#' + current_handle + ' input.unload:checked').length,
                 total = $('#' + current_handle + ' input.unload').length,

@@ -46,7 +46,7 @@ class Process {
 
 	/**
 	 * Populates ?edit= parameter. To make sure OMGF doesn't run while editing posts.
-	 * 
+	 *
 	 * @var string[]
 	 */
 	private $edit_actions = [
@@ -57,19 +57,19 @@ class Process {
 	/** @var string $timestamp */
 	private $timestamp = '';
 
-	/** 
+	/**
 	 * Break out early, e.g. if we want to parse other resources and don't need to
 	 * setup all the hooks and filters.
-	 * 
+	 *
 	 * @since v5.4.0
-	 * 
+	 *
 	 * @var bool $break
 	 */
 	private $break = false;
 
 	/**
 	 * OMGF_Frontend_Functions constructor.
-	 * 
+	 *
 	 * @var $break bool
 	 */
 	public function __construct( $break = false ) {
@@ -87,17 +87,17 @@ class Process {
 
 	/**
 	 * Actions and hooks.
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function init() {
 		/**
-		  * Halt execution if:
-		  * * $break parameter is set.
-		  * * `nomgf` GET-parameter is set.
-		  * * Test Mode is enabled and current user is not an admin.
-		  * * Test Mode is enabled and `omgf` GET-parameter is not set.
-		  */
+		 * Halt execution if:
+		 * * $break parameter is set.
+		 * * `nomgf` GET-parameter is set.
+		 * * Test Mode is enabled and current user is not an admin.
+		 * * Test Mode is enabled and `omgf` GET-parameter is not set.
+		 */
 		$test_mode_enabled = ! empty( OMGF::get( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) );
 
 		if (
@@ -201,15 +201,15 @@ class Process {
 
 	/**
 	 * Start output buffer.
-	 * 
+	 *
 	 * @action template_redirect
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function maybe_buffer_output() {
-		 /**
-		 * Always run, if the omgf_optimize parameter (added by Save & Optimize) is set.
-		 */
+		/**
+		* Always run, if the omgf_optimize parameter (added by Save & Optimize) is set.
+		*/
 		if ( isset( $_GET['omgf_optimize'] ) ) {
 			do_action( 'omgf_frontend_process_before_ob_start' );
 
@@ -236,15 +236,14 @@ class Process {
 			}
 		}
 
-		/** 
+		/**
 		 * Honor PageSpeed=off parameter as used by mod_pagespeed, in use by some pagebuilders,
-		 * 
+		 *
 		 * @see https://www.modpagespeed.com/doc/experiment#ModPagespeed
 		 */
 		if ( array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET['PageSpeed'] ) {
 			return false;
 		}
-
 
 		/**
 		 * Customizer previews shouldn't get optimized content.
@@ -263,7 +262,7 @@ class Process {
 
 	/**
 	 * Returns the buffer for filtering, so page cache doesn't break.
-	 * 
+	 *
 	 * @since v5.0.0 Tested with:
 	 *               - Asset Cleanup Pro
 	 *                 - Works
@@ -285,11 +284,11 @@ class Process {
 	 *                 - JS/CSS minify/combine: Enabled
 	 *               - WP Super Cache v1.7.4
 	 *                 - Page Cache: Enabled
-	 * 
+	 *
 	 * Not tested (yet):
 	 * TODO: [OMGF-41] - Swift Performance
-	 *  
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function return_buffer( $html ) {
 		if ( ! $html ) {
@@ -301,11 +300,11 @@ class Process {
 
 	/**
 	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
-	 * 
+	 *
 	 * @since v5.0.5 Use a regular expression to match all resource hints.
-	 * 
+	 *
 	 * @param  string $html Valid HTML.
-	 *  
+	 *
 	 * @return string Valid HTML.
 	 */
 	public function remove_resource_hints( $html ) {
@@ -325,9 +324,9 @@ class Process {
 			/**
 			 * @since v5.1.5 Filter out any resource hints with a href pointing to Google Fonts' APIs.
 			 * @since v5.2.1 Use preg_match() to exactly match an element's attribute, since 3rd party
-			 *               plugins (e.g. Asset Cleanup) also tend to include their own custom attributes, 
+			 *               plugins (e.g. Asset Cleanup) also tend to include their own custom attributes,
 			 *               e.g. data-wpacu-to-be-preloaded
-			 * 
+			 *
 			 * TODO: [OMGF-42] I think I should be able to use an array_filter here or something?
 			 */
 			foreach ( self::RESOURCE_HINTS_URLS as $url ) {
@@ -345,22 +344,22 @@ class Process {
 	}
 
 	/**
-	 * This method uses Regular Expressions to parse the HTML. It's tested to be at least 
+	 * This method uses Regular Expressions to parse the HTML. It's tested to be at least
 	 * twice as fast compared to using Xpath.
-	 * 
+	 *
 	 * Test results (in seconds, with XDebug enabled)
-	 * 
+	 *
 	 * Uncached:    17.81094789505
 	 *              18.687641859055
 	 *              18.301512002945
 	 * Cached:      0.00046515464782715
 	 *              0.00037288665771484
 	 *              0.00053095817565918
-	 * 
+	 *
 	 * Using Xpath proved to be untestable, because it varied anywhere between 38 seconds and, well, timeouts.
-	 * 
+	 *
 	 * @param string $html Valid HTML.
-	 * 
+	 *
 	 * @return string Valid HTML, filtered by @filter omgf_processed_html.
 	 */
 	public function parse( $html ) {
@@ -380,11 +379,11 @@ class Process {
 		/**
 		 * @since v5.4.0 This approach is global on purpose. By just matching <link> elements containing the fonts.googleapis.com/css string,
 		 *                e.g. preload elements are also properly processed.
-		 * 
+		 *
 		 * @since v5.4.0 Added compatibility for BunnyCDN's "GDPR compliant" Google Fonts API.
-		 * 
+		 *
 		 * @since v5.4.1 Make sure hitting the domain, not a subfolder generated by some plugins.
-		 * 
+		 *
 		 * @since v5.5.0 Added compatibility for WP.com's "GDPR compliant" Google Fonts API.
 		 */
 		$links = array_filter(
@@ -403,10 +402,10 @@ class Process {
 
 		/**
 		 * Use string position of $search to make sure only that instance of the string is replaced.
-		 * 
+		 *
 		 * This is to prevent duplicate replaces.
-		 * 
-		 * @since v5.3.7 
+		 *
+		 * @since v5.3.7
 		 */
 		foreach ( $search_replace['search'] as $key => $search ) {
 			$position = strpos( $html, $search );
@@ -431,10 +430,10 @@ class Process {
 
 	/**
 	 * Adds a little success message to the HTML, to create a more logic user flow when manually optimizing pages.
-	 * 
+	 *
 	 * @param string $html Valid HTML
-	 * 
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	public function add_success_message( $html ) {
 		if ( ! isset( $_GET['omgf_optimize'] ) || wp_doing_ajax() ) {
@@ -456,8 +455,8 @@ class Process {
 
 	/**
 	 * @since v5.0.5 Check if current page is AMP page.
-	 * 
-	 * @return bool 
+	 *
+	 * @return bool
 	 */
 	private function is_amp() {
 		 return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() )
@@ -466,10 +465,10 @@ class Process {
 
 	/**
 	 * Builds a processable array of Google Fonts' ID and (external) URL.
-	 * 
-	 * @param array  $links 
+	 *
+	 * @param array  $links
 	 * @param string $handle If an ID attribute is not defined, this will be used instead.
-	 * 
+	 *
 	 * @return array [ 0 => [ 'id' => (string), 'href' => (string) ] ]
 	 */
 	public function build_fonts_set( $links, $handle = 'omgf-stylesheet' ) {
@@ -503,7 +502,7 @@ class Process {
 			 * If no valid id attribute was found then this means that this stylesheet wasn't enqueued
 			 * using proper WordPress conventions. We generate our own using the length of the href attribute
 			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
-			 * 
+			 *
 			 * @since v5.1.4
 			 */
 			if ( ! $id ) {
@@ -512,14 +511,14 @@ class Process {
 
 			/**
 			 * Compatibility fix for Divi Builder
-			 * 
+			 *
 			 * @since v5.1.3 Because Divi Builder uses the same handle for Google Fonts on each page,
 			 *               even when these contain Google Fonts, let's append a (kind of) unique
-			 *               identifier to the string, to make sure we can make a difference between 
+			 *               identifier to the string, to make sure we can make a difference between
 			 *               different Google Fonts configurations.
-			 * 
-			 * @since v5.2.0 Allow Divi/Elementor compatibility fixes to be disabled, for those who have too 
-			 *               many different Google Fonts stylesheets configured throughout their pages and 
+			 *
+			 * @since v5.2.0 Allow Divi/Elementor compatibility fixes to be disabled, for those who have too
+			 *               many different Google Fonts stylesheets configured throughout their pages and
 			 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
 			 */
 			if ( OMGF::get( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && strpos( $id, 'et-builder-googlefonts' ) !== false ) {
@@ -527,36 +526,36 @@ class Process {
 			} elseif ( OMGF::get( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
 				/**
 				 * Compatibility fix for Elementor
-				 * 
-				 * @since v5.1.4 Because Elementor uses the same (annoyingly generic) handle for Google Fonts 
-				 *               stylesheets on each page, even when these contain different Google Fonts than 
-				 *               other pages, let's append a (kind of) unique identifier to the string, to make 
+				 *
+				 * @since v5.1.4 Because Elementor uses the same (annoyingly generic) handle for Google Fonts
+				 *               stylesheets on each page, even when these contain different Google Fonts than
+				 *               other pages, let's append a (kind of) unique identifier to the string, to make
 				 *               sure we can make a difference between different Google Fonts configurations.
 				 */
 				$google_fonts[ $key ]['id'] = str_replace( '-1', '-' . strlen( $href['href'] ), $id );
 			} elseif ( strpos( $id, 'sp-wpcp-google-fonts' ) !== false ) {
 				/**
 				 * Compatibility fix for Category Slider Pro for WooCommerce by ShapedPlugin
-				 * 
-				 * @since v5.3.7 This plugin finds it necessary to provide each Google Fonts stylesheet with a 
-				 *               unique identifier on each pageload, to make sure its never cached. The worst idea ever. 
+				 *
+				 * @since v5.3.7 This plugin finds it necessary to provide each Google Fonts stylesheet with a
+				 *               unique identifier on each pageload, to make sure its never cached. The worst idea ever.
 				 *               On top of that, it throws OMGF off the rails entirely, eventually crashing the site.
 				 */
 				$google_fonts[ $key ]['id'] = 'sp-wpcp-google-fonts';
 			} elseif ( strpos( $id, 'sp-lc-google-fonts' ) !== false ) {
 				/**
 				 * Compatibility fix for Logo Carousel Pro by ShapedPlugin
-				 * 
+				 *
 				 * @since v5.3.8 Same reason as above.
 				 */
 				$google_fonts[ $key ]['id'] = 'sp-lc-google-fonts';
 			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', strpos( $id, 'cp-google-fonts' ) !== false ) ) {
 				/**
 				 * Compatibility fix for Convert Pro by Brainstorm Force
-				 * 
+				 *
 				 * @since v5.5.4 Same reason as above, although it kind of makes sense in this case (since Convert Pro allows
 				 *               to create pop-ups and people tend to get creative. I just hope the ID isn't random.)
-				 * 
+				 *
 				 * @filter omgf_frontend_process_convert_pro_compatibility Allows people to disable this feature, in case the different
 				 *         stylesheets are actually needed.
 				 */
@@ -577,11 +576,11 @@ class Process {
 
 	/**
 	 * Strip "-css" from the end of the stylesheet id, which WordPress adds to properly enqueued stylesheets.
-	 * 
+	 *
 	 * @since v5.0.1 This eases the migration from v4.6.0.
-	 * 
-	 * @param  mixed $handle 
-	 * @return mixed 
+	 *
+	 * @param  mixed $handle
+	 * @return mixed
 	 */
 	private function strip_css_tag( $handle ) {
 		if ( ! $this->ends_with( $handle, '-css' ) ) {
@@ -599,13 +598,13 @@ class Process {
 
 	/**
 	 * Checks if a $string ends with $end.
-	 * 
+	 *
 	 * @since v5.0.2
-	 * 
-	 * @param string $string 
+	 *
+	 * @param string $string
 	 * @param string $end
-	 *  
-	 * @return bool 
+	 *
+	 * @return bool
 	 */
 	private function ends_with( $string, $end ) {
 		$len = strlen( $end );
@@ -619,16 +618,16 @@ class Process {
 
 	/**
 	 * Build a Search/Replace array for all found Google Fonts.
-	 * 
+	 *
 	 * @param mixed $google_fonts A processable set generated by $this->build_fonts_set().
-	 * 
-	 * @return array 
-	 * 
-	 * @throws SodiumException 
-	 * @throws SodiumException 
-	 * @throws TypeError 
-	 * @throws TypeError 
-	 * @throws TypeError 
+	 *
+	 * @return array
+	 *
+	 * @throws SodiumException
+	 * @throws SodiumException
+	 * @throws TypeError
+	 * @throws TypeError
+	 * @throws TypeError
 	 */
 	public function build_search_replace( $google_fonts ) {
 		$search  = [];
@@ -707,13 +706,13 @@ class Process {
 
 	/**
 	 * Because all great themes come packed with extra Cumulative Layout Shifting.
-	 * 
+	 *
 	 * @since v5.4.3 Added compatibility for Highlight Pro; a Mesmerize based theme and Mesmerize,
 	 *               the non-premium theme.
-	 * 
+	 *
 	 * @param string $tag
-	 *  
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	public function remove_mesmerize_filter( $tag ) {
 		if (

@@ -20,45 +20,47 @@ use OMGF\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
-class V557 {
+class V560 {
 
 	/** @var $version string The version number this migration script was introduced with. */
-	private $version = '5.5.7';
+	private $version = '5.6.0';
 
 	/**
 	 * All DB rows that need to be migrated and removed.
-	 * 
+	 *
 	 * @var string[]
 	 */
 	private $rows = [];
 
 	/**
 	 * Buid
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function __construct() {
 		$this->rows = [
 			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS,
 			Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION,
 			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE,
+			Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
+			Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS,
 			Settings::OMGF_ADV_SETTING_COMPATIBILITY,
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_ADV_SETTING_DEBUG_MODE,
 			Settings::OMGF_ADV_SETTING_UNINSTALL,
 		];
-		
+
 		$this->init();
 	}
 
 	/**
 	 * Initialize
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function init() {
 		$new_settings = get_option( 'omgf_settings', [] );
-		
+
 		foreach ( $this->rows as $row ) {
 			$new_settings[ $row ] = get_option( "omgf_$row" );
 			delete_option( "omgf_$row" );

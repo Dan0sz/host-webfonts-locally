@@ -81,7 +81,7 @@ class Admin {
 	}
 
 	/**
-	 * Local Fonts tab 
+	 * Local Fonts tab
 	 */
 	private function do_optimize_settings() {
 		new Admin\Settings\Optimize();
@@ -89,8 +89,8 @@ class Admin {
 
 	/**
 	 * Detection Settings tab
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function do_detection_settings() {
 		new Admin\Settings\Detection();
@@ -98,8 +98,8 @@ class Admin {
 
 	/**
 	 * Advanced Settings tab
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function do_advanced_settings() {
 		new Admin\Settings\Advanced();
@@ -107,8 +107,8 @@ class Admin {
 
 	/**
 	 * Help Tab
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	private function do_help() {
 		new Admin\Settings\Help();
@@ -121,7 +121,7 @@ class Admin {
 		if ( OMGF_CURRENT_DB_VERSION != false && version_compare( OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<' ) ) {
 			Notice::set_notice(
 				sprintf(
-					__( 'Thank you for updating OMGF to v%1$s! This version contains database changes. <a href="%2$s">Verify your settings</a> and make sure everything is as you left it or, <a href="%3$s">view the changelog</a> for details. ', $this->plugin_text_domain ),
+					__( 'Thank you for updating OMGF to v%1$s! This version contains database changes. <a href="%2$s">Verify your settings</a> and make sure everything is as you left it or, <a href="%3$s">view the changelog</a> for details. ', 'host-webfonts-local' ),
 					OMGF_DB_VERSION,
 					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS ),
 					admin_url( Settings::OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION )
@@ -134,12 +134,12 @@ class Admin {
 	/**
 	 * @since  v5.0.5 Forces get_option() to fetch a fresh copy of omgf_optimized_fonts from the database,
 	 *               we're doing plenty to limit reads from the DB already. So, this is warranted.
-	 * 
+	 *
 	 * @see    OMGF::optimized_fonts()
-	 * 
-	 * @param  array $alloptions 
-	 * 
-	 * @return array 
+	 *
+	 * @param  array $alloptions
+	 *
+	 * @return array
 	 */
 	public function force_optimized_fonts_from_db( $alloptions ) {
 		if (
@@ -185,10 +185,10 @@ class Admin {
 
 	/**
 	 * Shows notice if $option_name is in $show_notice array.
-	 * 
+	 *
 	 * @param $new_value
 	 * @param $old_settings
-	 * 
+	 *
 	 * @see $show_notice
 	 *
 	 * @return mixed
@@ -228,13 +228,13 @@ class Admin {
 			}
 
 			if ( $show_message ) {
-				update_option( Settings::OMGF_CACHE_IS_STALE, true );
+				OMGF::update( Settings::OMGF_CACHE_IS_STALE, true );
 
 				add_settings_error(
 					'general',
 					'omgf_cache_style',
 					sprintf(
-						__( 'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.', $this->plugin_text_domain ),
+						__( 'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.', 'host-webfonts-local' ),
 						admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )
 					),
 					'success'

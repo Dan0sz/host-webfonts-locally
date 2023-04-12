@@ -16,6 +16,8 @@
 
 namespace OMGF\Admin\Settings;
 
+use OMGF\Admin\Settings;
+
 defined( 'ABSPATH' ) || exit;
 
 class Builder {
@@ -35,7 +37,7 @@ class Builder {
 	 * Settings_Builder constructor.
 	 */
 	public function __construct() {
-		 add_filter( 'omgf_optimize_settings_content', [ $this, 'do_promo' ] );
+		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_promo' ] );
 		add_filter( 'omgf_detection_settings_content', [ $this, 'do_promo' ] );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo' ] );
 	}
@@ -45,7 +47,7 @@ class Builder {
 	 */
 	public function do_promo() {
 		if ( apply_filters( 'apply_omgf_pro_promo', true ) ) {
-			$this->promo = apply_filters( 'omgf_pro_promo', sprintf( __( '<a href="%s" target="_blank">Upgrade to Pro</a> to unlock this option.', 'host-webfonts-local' ), Settings::FFWP_WORDPRESS_PLUGINS_OMGF_PRO ) );
+			$this->promo = apply_filters( 'omgf_pro_promo', sprintf( __( '<a href="%s" target="_blank">Upgrade to Pro</a> to unlock this option.', 'host-webfonts-local' ), Settings::DAAN_WORDPRESS_OMGF_PRO ) );
 		}
 	}
 
@@ -60,7 +62,7 @@ class Builder {
 	/**
 	 *
 	 */
-	public function do_after() {        
+	public function do_after() {
 		?>
 		</table>
 		<?php
@@ -69,9 +71,9 @@ class Builder {
 	/**
 	 *
 	 */
-	public function do_title() {        
+	public function do_title() {
 		?>
-		<h3><?php echo $this->title; ?></h3>
+		<h3><?php echo esc_html( $this->title ); ?></h3>
 		<?php
 	}
 

@@ -115,7 +115,7 @@ class Plugin {
 	 * OMGF constructor.
 	 */
 	public function __construct() {
-		 $this->define_constants();
+		$this->define_constants();
 
 		self::$log_file = trailingslashit( WP_CONTENT_DIR ) . 'omgf-debug.log';
 
@@ -176,12 +176,14 @@ class Plugin {
 	/**
 	 * Gets all settings for OMGF.
 	 *
+	 * @filter omgf_settings
+	 *
 	 * @since 5.5.7
 	 *
 	 * @return array
 	 */
 	public static function get_settings() {
-		 static $settings;
+		static $settings;
 
 		if ( empty( $settings ) ) {
 			$settings = get_option( 'omgf_settings', [] );
@@ -193,14 +195,21 @@ class Plugin {
 	/**
 	 * Method to retrieve settings from database.
 	 *
-	 * @filter omgf_get_setting_{$name}
+	 * @filter omgf_setting_{$name}
 	 *
 	 * @param string $name
 	 * @param mixed  $default (optional)
 	 *
-	 * @since v5.5.7
+	 * @since v5.6.0
 	 */
 	public static function get( $name, $default = null ) {
+		// If $name starts with 'omgf_' it means it is saved on its separate row.
+		if ( strpos( $name, 'omgf_' ) === 0 ) {
+			$value = get_option( $name, $default );
+
+			return apply_filters( 'omgf_setting_' . str_replace( 'omgf_', '', $name ), $value );
+		}
+
 		$value = self::get_settings()[ $name ] ?? '';
 
 		if ( ! $default && $name === Settings::OMGF_ADV_SETTING_SUBSETS ) {
@@ -215,14 +224,40 @@ class Plugin {
 	}
 
 	/**
+	 * This is basically a wrapper around update_option() to offer a centralized interface for
+	 * storing OMGF's settings in the wp_options table.
+	 *
+	 * @since v5.6.0
+	 *
+	 * @param string $setting
+	 * @param mixed  $value
+	 *
+	 * @return void
+	 */
+	public static function update( $setting, $value ) {
+		// If $setting starts with 'omgf_' it should be saved in a separate row.
+		if ( strpos( $setting, 'omgf_' ) === 0 ) {
+			update_option( $setting, $value );
+
+			return;
+		}
+
+		$settings             = self::get_settings();
+		$settings[ $setting ] = $value;
+
+		update_option( 'omgf_settings', $settings );
+	}
+
+	/**
 	 * We use a custom update action, because we're storing multidimensional arrays upon form submit.
 	 *
 	 * This prevents us from having to use AJAX, serialize(), stringify() and eventually having to json_decode() it, i.e.
 	 * a lot of headaches.
 	 *
-	 * @since v5.5.7
+	 * @since v5.6.0
 	 */
-	public function update_settings() {         // phpcs:ignore WordPress.Security
+	public function update_settings() {
+		// phpcs:ignore WordPress.Security
 		if ( empty( $_POST['action'] ) || $_POST['action'] !== 'omgf-update' ) {
 			return;
 		}
@@ -230,33 +265,25 @@ class Plugin {
 		// phpcs:ignore
 		$post_data = $this->clean($_POST);
 
-		$options = apply_filters(
-			/**
-			 * Any options that're better off in their own DB row (e.g. due to size) can be added using this filter.
-			 *
-			 * @since v5.5.7
-			 */
-			'omgf_update_settings_serialized',
-			[
-				'omgf_settings',
-				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
-				Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
-				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
-				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS,
-				Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
-			]
-		);
-
-		foreach ( $options as $option ) {
-			if ( ! empty( $post_data[ $option ] ) ) {
-				update_option( $option, $post_data[ $option ] );
+		foreach ( $post_data as $option_name => $option_value ) {
+			if ( strpos( $option_name, 'omgf_' ) !== 0 || empty( $option_value ) ) {
+				continue;
 			}
+
+			if ( is_string( $option_value ) ) {
+				$merged = $option_value;
+			} else {
+				$current_options = get_option( $option_name );
+				$merged          = array_replace( $current_options, $option_value );
+			}
+
+			self::update( $option_name, $merged );
 		}
 
 		/**
 		 * Additional update actions can be added here.
 		 *
-		 * @since v5.5.7
+		 * @since v5.6.0
 		 */
 		do_action( 'omgf_update_settings' );
 
@@ -297,7 +324,7 @@ class Plugin {
 	 *
 	 */
 	private function add_ajax_hooks() {
-		 new Ajax();
+		new Ajax();
 	}
 
 	/**
@@ -332,7 +359,7 @@ class Plugin {
 	 * @return void
 	 */
 	public function do_optimize() {
-		 new \OMGF\Admin\Optimize();
+		new \OMGF\Admin\Optimize();
 	}
 
 	/**
@@ -445,7 +472,7 @@ class Plugin {
 		 * Get a fresh copy from the database if $optimized_fonts is empty|null|false (on 1st run)
 		 */
 		if ( empty( $optimized_fonts ) ) {
-			$optimized_fonts = get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] ) ?: [];
+			$optimized_fonts = self::get( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
 		}
 
 		/**
@@ -476,7 +503,7 @@ class Plugin {
 		static $preloaded_fonts = [];
 
 		if ( empty( $preloaded_fonts ) ) {
-			$preloaded_fonts = get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] ) ?: [];
+			$preloaded_fonts = self::get( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
 		}
 
 		return $preloaded_fonts;
@@ -489,7 +516,7 @@ class Plugin {
 		static $unloaded_fonts = [];
 
 		if ( empty( $unloaded_fonts ) ) {
-			$unloaded_fonts = get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] ) ?: [];
+			$unloaded_fonts = self::get( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
 		}
 
 		return $unloaded_fonts;
@@ -499,10 +526,10 @@ class Plugin {
 	 * @return array
 	 */
 	public static function unloaded_stylesheets() {
-		 static $unloaded_stylesheets = [];
+		static $unloaded_stylesheets = [];
 
 		if ( empty( $unloaded_stylesheets ) ) {
-			$unloaded_stylesheets = explode( ',', get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
+			$unloaded_stylesheets = explode( ',', self::get( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
 		}
 
 		return array_filter( $unloaded_stylesheets );
@@ -515,7 +542,7 @@ class Plugin {
 		static $cache_keys = [];
 
 		if ( empty( $cache_keys ) ) {
-			$cache_keys = explode( ',', get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) );
+			$cache_keys = explode( ',', self::get( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) );
 		}
 
 		return array_filter( $cache_keys );
@@ -552,7 +579,7 @@ class Plugin {
 		static $subsets = [];
 
 		if ( empty( $subsets ) ) {
-			$subsets = get_option( Settings::OMGF_AVAILABLE_USED_SUBSETS, [] ) ?: [];
+			$subsets = self::get( Settings::OMGF_AVAILABLE_USED_SUBSETS, [] );
 		}
 
 		/**
@@ -666,14 +693,14 @@ class Plugin {
 								<?php $show_mark_as_fixed = true; ?>
 								<li id="omgf-notice-<?php echo $warning_id; ?>">
 									<?php if ( $warning_id == 'is_multisite' ) : ?>
-										<?php echo sprintf( __( 'It seems like Multisite is enabled. OMGF doesn\'t natively support Multisite. If you\'re getting CORS related errors on any of your network\'s sites, consider <a href="%s" target="_blank">upgrading to OMGF Pro</a>.', 'host-webfonts-local' ), Settings::DAAN_WORDPRESS_PLUGINS_OMGF_PRO ); ?>
+										<?php echo sprintf( __( 'It seems like Multisite is enabled. OMGF doesn\'t natively support Multisite. If you\'re getting CORS related errors on any of your network\'s sites, consider <a href="%s" target="_blank">upgrading to OMGF Pro</a>.', 'host-webfonts-local' ), Settings::DAAN_WORDPRESS_OMGF_PRO ); ?>
 									<?php endif; ?>
 									<?php if ( $warning_id == 'no_ssl' ) : ?>
 										<?php echo __( 'Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.', 'host-webfonts-local' ); ?>
 									<?php endif; ?>
 									<?php if ( in_array( str_replace( '-req-pro', '', $warning_id ), self::THEMES_REQ_PRO ) ) : ?>
 										<?php $show_mark_as_fixed = false; ?>
-										<?php echo sprintf( __( 'Due to the exotic way your theme (%1$s) implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%2$s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local' ), ucfirst( str_replace( '-req-pro', '', $warning_id ) ), Settings::DAAN_WORDPRESS_PLUGINS_OMGF_PRO ); ?>
+										<?php echo sprintf( __( 'Due to the exotic way your theme (%1$s) implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%2$s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local' ), ucfirst( str_replace( '-req-pro', '', $warning_id ) ), Settings::DAAN_WORDPRESS_OMGF_PRO ); ?>
 									<?php endif; ?>
 									<?php if ( in_array( str_replace( '-addtnl-conf', '', $warning_id ), self::THEMES_ADDTNL_CONF ) ) : ?>
 										<?php $template_id = str_replace( '-addtnl-conf', '', strtolower( $warning_id ) ); ?>
@@ -686,7 +713,7 @@ class Plugin {
 									<?php if ( in_array( str_replace( '-req-pro', '', $warning_id ), self::PLUGINS_REQ_PRO ) ) : ?>
 										<?php $show_mark_as_fixed = false; ?>
 										<?php $plugin_name = $plugins[ str_replace( '-req-pro', '', $warning_id ) ]; ?>
-										<?php echo sprintf( __( 'Due to the exotic way the plugin, <strong>%1$s</strong>, implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%2$s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local' ), $plugin_name, Settings::DAAN_WORDPRESS_PLUGINS_OMGF_PRO ); ?>
+										<?php echo sprintf( __( 'Due to the exotic way the plugin, <strong>%1$s</strong>, implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%2$s" target="_blank">Upgrade and install OMGF Pro</a> to continue.', 'host-webfonts-local' ), $plugin_name, Settings::DAAN_WORDPRESS_OMGF_PRO ); ?>
 									<?php endif; ?>
 									<?php if ( in_array( str_replace( '-addtnl-conf', '', $warning_id ), self::PLUGINS_ADDTNL_CONF ) ) : ?>
 										<?php $plugin_name = $plugins[ str_replace( '-addtnl-conf', '', $warning_id ) ]; ?>
@@ -719,7 +746,7 @@ class Plugin {
 	 */
 	public static function get_task_manager_warnings() {
 		$warnings       = [];
-		$hidden_notices = get_option( Settings::OMGF_HIDDEN_NOTICES ) ?: [];
+		$hidden_notices = self::get( Settings::OMGF_HIDDEN_NOTICES, [] );
 
 		/**
 		 * @since v5.5.4 Throw a warning if Multisite is enabled and OMGF Pro isn't installed/activated.
@@ -786,7 +813,7 @@ class Plugin {
 		/**
 		 * @since v5.4.0 OMGF-70 Notify users if they're loading scripts loading embedded iframes, e.g. Google Maps, Youtube, etc.
 		 */
-		$iframe_scripts = get_option( Settings::OMGF_FOUND_IFRAMES ) ?: [];
+		$iframe_scripts = self::get( Settings::OMGF_FOUND_IFRAMES, [] );
 
 		foreach ( $iframe_scripts as $script_id ) {
 			$warnings[] = $script_id;
