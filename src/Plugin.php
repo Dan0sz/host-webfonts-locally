@@ -158,8 +158,8 @@ class Plugin {
 		/** Prevents undefined constant in OMGF Pro, if its not at version v3.3.0 (yet) */
 		define( 'OMGF_OPTIMIZATION_MODE', false );
 		define( 'OMGF_SITE_URL', 'https://daan.dev' );
-		define( 'OMGF_CACHE_IS_STALE', esc_attr( self::get( Settings::OMGF_CACHE_IS_STALE ) ) );
-		define( 'OMGF_CURRENT_DB_VERSION', esc_attr( self::get( Settings::OMGF_CURRENT_DB_VERSION ) ) );
+		define( 'OMGF_CACHE_IS_STALE', esc_attr( self::get_option( Settings::OMGF_CACHE_IS_STALE ) ) );
+		define( 'OMGF_CURRENT_DB_VERSION', esc_attr( self::get_option( Settings::OMGF_CURRENT_DB_VERSION ) ) );
 		define( 'OMGF_UPLOAD_DIR', apply_filters( 'omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf' ) );
 		define( 'OMGF_UPLOAD_URL', apply_filters( 'omgf_upload_url', str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' ) ) );
 	}
@@ -314,11 +314,11 @@ class Plugin {
 			if ( is_string( $option_value ) ) {
 				$merged = $option_value;
 			} else {
-				$current_options = self::get( $option_name, [] );
+				$current_options = self::get_option( $option_name, [] );
 				$merged          = array_replace( $current_options, $option_value );
 			}
 
-			self::update( $option_name, $merged );
+			self::update_option( $option_name, $merged );
 		}
 
 		/**
@@ -513,7 +513,7 @@ class Plugin {
 		 * Get a fresh copy from the database if $optimized_fonts is empty|null|false (on 1st run)
 		 */
 		if ( empty( $optimized_fonts ) ) {
-			$optimized_fonts = self::get( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
+			$optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
 		}
 
 		/**
@@ -544,7 +544,7 @@ class Plugin {
 		static $preloaded_fonts = [];
 
 		if ( empty( $preloaded_fonts ) ) {
-			$preloaded_fonts = self::get( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
+			$preloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
 		}
 
 		return $preloaded_fonts;
@@ -557,7 +557,7 @@ class Plugin {
 		static $unloaded_fonts = [];
 
 		if ( empty( $unloaded_fonts ) ) {
-			$unloaded_fonts = self::get( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
+			$unloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
 		}
 
 		return $unloaded_fonts;
@@ -570,7 +570,7 @@ class Plugin {
 		static $unloaded_stylesheets = [];
 
 		if ( empty( $unloaded_stylesheets ) ) {
-			$unloaded_stylesheets = explode( ',', self::get( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
+			$unloaded_stylesheets = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
 		}
 
 		return array_filter( $unloaded_stylesheets );
@@ -583,7 +583,7 @@ class Plugin {
 		static $cache_keys = [];
 
 		if ( empty( $cache_keys ) ) {
-			$cache_keys = explode( ',', self::get( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) );
+			$cache_keys = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) );
 		}
 
 		return array_filter( $cache_keys );
@@ -620,7 +620,7 @@ class Plugin {
 		static $subsets = [];
 
 		if ( empty( $subsets ) ) {
-			$subsets = self::get( Settings::OMGF_AVAILABLE_USED_SUBSETS, [] );
+			$subsets = self::get_option( Settings::OMGF_AVAILABLE_USED_SUBSETS, [] );
 		}
 
 		/**
@@ -696,7 +696,7 @@ class Plugin {
 	 * Renders the Task Manager Warnings box.
 	 */
 	public static function task_manager_warnings() {
-		if ( ! empty( self::get( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
+		if ( ! empty( self::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
 			<tr valign="top" id="task-manager-notice-test-mode-row">
 				<td colspan="2" class="task-manager-row">
 					<div class="task-manager-notice info">
@@ -787,7 +787,7 @@ class Plugin {
 	 */
 	public static function get_task_manager_warnings() {
 		$warnings       = [];
-		$hidden_notices = self::get( Settings::OMGF_HIDDEN_NOTICES, [] );
+		$hidden_notices = self::get_option( Settings::OMGF_HIDDEN_NOTICES, [] );
 
 		/**
 		 * @since v5.5.4 Throw a warning if Multisite is enabled and OMGF Pro isn't installed/activated.
@@ -854,7 +854,7 @@ class Plugin {
 		/**
 		 * @since v5.4.0 OMGF-70 Notify users if they're loading scripts loading embedded iframes, e.g. Google Maps, Youtube, etc.
 		 */
-		$iframe_scripts = self::get( Settings::OMGF_FOUND_IFRAMES, [] );
+		$iframe_scripts = self::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 
 		foreach ( $iframe_scripts as $script_id ) {
 			$warnings[] = $script_id;
@@ -924,8 +924,8 @@ class Plugin {
 	 */
 	public static function debug( $message ) {
 		if (
-			! self::get( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-			( self::get( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::$log_file ) && filesize( self::$log_file ) > MB_IN_BYTES )
+			! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
+			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::$log_file ) && filesize( self::$log_file ) > MB_IN_BYTES )
 		) {
 			return;
 		}
@@ -946,8 +946,8 @@ class Plugin {
 	 */
 	public static function debug_array( $name, $array ) {
 		if (
-			! self::get( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-			( self::get( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::$log_file ) && filesize( self::$log_file ) > MB_IN_BYTES )
+			! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
+			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::$log_file ) && filesize( self::$log_file ) > MB_IN_BYTES )
 		) {
 			return;
 		}
