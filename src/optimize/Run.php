@@ -110,14 +110,18 @@ class Run {
 		 */
 		$available_used_subsets = OMGF::available_used_subsets( null, true );
 
-		if ( ! empty( OMGF::get( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) ) {
+		if ( ! empty( OMGF::get( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) && ! empty( $diff ) ) {
 			/**
 			 * If $diff is empty, this means that the detected fonts are available in all selected subsets of the
 			 * Used Subset(s) option and no further action is required.
 			 */
 			$diff = array_diff( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ), $available_used_subsets );
 
-			if ( $available_used_subsets && ! empty( $diff ) ) {
+			if ( empty( $diff ) ) {
+				$break = true;
+			}
+
+			if ( ! $break && $available_used_subsets && ! empty( $diff ) ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Available Used Subsets)', $diff );
 
 				Notice::set_notice(
@@ -141,7 +145,7 @@ class Run {
 
 			$diff = array_diff( OMGF::get( Settings::OMGF_ADV_SETTING_SUBSETS ), [ 'latin' ] );
 
-			if ( ! empty( $diff ) ) {
+			if ( ! $break && ! empty( $diff ) ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Latin)', $diff );
 
 				/**
