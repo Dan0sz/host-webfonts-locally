@@ -25,7 +25,7 @@ class Uninstall {
 	private $cache_dir;
 
 	/**
-	 * 
+	 *
 	 */
 	public function __construct() {
 		$this->cache_dir = OMGF_UPLOAD_DIR;
@@ -39,11 +39,27 @@ class Uninstall {
 	 * Remove all settings stored in the wp_options table.
 	 */
 	private function remove_db_entries() {
-		delete_option( 'omgf_settings' );
-		delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
-		delete_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
-		delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
-		delete_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS );
+		$db_entries = apply_filters(
+			'omgf_uninstall_db_entries',
+			[
+				'omgf_settings',
+				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
+				Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
+				Settings::OMGF_AVAILABLE_USED_SUBSETS,
+				Settings::OMGF_NEWS_REEL,
+				Settings::OMGF_OPTIMIZE_HAS_RUN,
+				Settings::OMGF_CACHE_IS_STALE,
+				Settings::OMGF_CURRENT_DB_VERSION,
+				Settings::OMGF_CACHE_TIMESTAMP,
+				Settings::OMGF_FOUND_IFRAMES,
+				Settings::OMGF_HIDDEN_NOTICES,
+			]
+		);
+
+		foreach ( $db_entries as $entry ) {
+			delete_option( $entry );
+		}
 	}
 
 	/**
