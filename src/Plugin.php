@@ -34,7 +34,7 @@ class Plugin {
 
 		if ( is_admin() ) {
 			new \OMGF\Admin\Actions();
-			new \OMGF\Ajax();
+			new \OMGF\Admin\Ajax();
 		}
 
 		if ( ! is_admin() ) {
@@ -44,7 +44,9 @@ class Plugin {
 
 		new \OMGF\Filters();
 
-		register_uninstall_hook( OMGF_PLUGIN_FILE, [ $this, 'do_uninstall' ] );
+		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
+			register_uninstall_hook( OMGF_PLUGIN_FILE, [ $this, 'do_uninstall' ] );
+		}
 	}
 
 	/**

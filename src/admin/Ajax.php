@@ -14,7 +14,7 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
-namespace OMGF;
+namespace OMGF\Admin;
 
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
