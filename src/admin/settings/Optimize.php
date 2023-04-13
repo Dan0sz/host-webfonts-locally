@@ -16,8 +16,9 @@
 
 namespace OMGF\Admin\Settings;
 
-use OMGF\Plugin as OMGF;
+use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
+use OMGF\TaskManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -95,10 +96,10 @@ class Optimize extends Builder {
 	 * @return void
 	 */
 	public function task_manager_status() {
-		 $stylesheets         = OMGF::optimized_fonts();
+		$stylesheets          = OMGF::optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
-			<?php OMGF::task_manager_warnings(); ?>
+			<?php TaskManager::render_warnings(); ?>
 			<tr valign="top">
 				<th scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
 				<td class="task-manager-row">

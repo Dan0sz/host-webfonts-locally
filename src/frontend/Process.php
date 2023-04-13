@@ -16,7 +16,7 @@
 
 namespace OMGF\Frontend;
 
-use OMGF\Plugin as OMGF;
+use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 use OMGF\Optimize;
 

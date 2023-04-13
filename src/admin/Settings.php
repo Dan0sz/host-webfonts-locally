@@ -399,7 +399,7 @@ class Settings extends Admin {
 			/**
 			 * We use a custom update action, so we can group all settings in one DB row upon form submit.
 			 *
-			 * @see \OMGF\Plugin update_options()
+			 * @see \OMGF\Helper update_options()
 			 */
 			$settings_fields = ob_get_clean();
 			$settings_fields = str_replace( 'value="update"', 'value="omgf-update"', $settings_fields );

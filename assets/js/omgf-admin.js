@@ -9,7 +9,7 @@
  *
  * @package  : OMGF
  * @author   : Daan van den Bergh
- * @copyright: © 2022 Daan van den Bergh
+ * @copyright: © 2017 - 2023 Daan van den Bergh
  * @url      : https://ffw.press
  * * * * * * * * * * * * * * * * * * * */
 

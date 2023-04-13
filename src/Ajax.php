@@ -10,7 +10,7 @@
  *
  * @package  : OMGF
  * @author   : Daan van den Bergh
- * @copyright: © 2022 Daan van den Bergh
+ * @copyright: © 2017 - 2023 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
@@ -18,7 +18,8 @@ namespace OMGF;
 
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
-use OMGF\Plugin as OMGF;
+use OMGF\Helper as OMGF;
+use OMGF\TaskManager as TaskManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,7 +28,7 @@ class Ajax {
 	 * OMGF\Ajax constructor.
 	 */
 	public function __construct() {
-		 add_action( 'wp_ajax_omgf_hide_notice', [ $this, 'hide_notice' ] );
+		add_action( 'wp_ajax_omgf_hide_notice', [ $this, 'hide_notice' ] );
 		add_action( 'wp_ajax_omgf_remove_stylesheet_from_db', [ $this, 'remove_stylesheet_from_db' ] );
 		add_action( 'wp_ajax_omgf_refresh_cache', [ $this, 'refresh_cache' ] );
 		add_action( 'wp_ajax_omgf_empty_dir', [ $this, 'empty_directory' ] );
@@ -41,7 +42,7 @@ class Ajax {
 	 * @return string Valid HTML.
 	 */
 	public function hide_notice() {
-		 check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
+		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'Hmmm, are you lost?', 'host-webfonts-local' ) );
@@ -58,7 +59,7 @@ class Ajax {
 
 		ob_start();
 
-		OMGF::task_manager_warnings();
+		TaskManager::render_warnings();
 
 		$result = ob_get_clean();
 
