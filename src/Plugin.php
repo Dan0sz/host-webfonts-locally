@@ -24,8 +24,6 @@ use OMGF\StylesheetGenerator;
 defined( 'ABSPATH' ) || exit;
 
 class Plugin {
-
-
 	/**
 	 * @since v5.5.6 Plugins which can't run alongside OMGF, mostly plugins which remove Google Fonts.
 	 */
@@ -274,13 +272,18 @@ class Plugin {
 	 * @return void
 	 */
 	public static function delete_option( $setting ) {
+		static $settings;
+
 		if ( strpos( $setting, 'omgf_' ) === 0 ) {
 			delete_option( $setting );
 
 			return;
 		}
 
-		$settings = self::get_settings();
+		// This prevents settings from 'mysteriously' returning after being unset.
+		if ( empty( $settings ) ) {
+			$settings = self::get_settings();
+		}
 
 		unset( $settings[ $setting ] );
 
