@@ -22,6 +22,11 @@ use OMGF\StylesheetGenerator;
 
 class Helper {
 	/**
+	 * @var string $log_file Path where log file is located.
+	 */
+	public static $log_file;
+
+	/**
 	 * Gets all settings for OMGF.
 	 *
 	 * @filter omgf_settings
@@ -367,12 +372,12 @@ class Helper {
 	public static function debug( $message ) {
 		if (
 			! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::$log_file ) && filesize( self::$log_file ) > MB_IN_BYTES )
+			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES )
 		) {
 			return;
 		}
 
-		error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ": $message\n", 3, self::$log_file );
+		error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ": $message\n", 3, self::log_file() );
 	}
 
 	/**
@@ -389,7 +394,7 @@ class Helper {
 	public static function debug_array( $name, $array ) {
 		if (
 			! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::$log_file ) && filesize( self::$log_file ) > MB_IN_BYTES )
+			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES )
 		) {
 			return;
 		}
@@ -407,7 +412,20 @@ class Helper {
 				continue;
 			}
 
-			error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ': ' . $key . ' => ' . $elem . "\n", 3, self::$log_file );
+			error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ': ' . $key . ' => ' . $elem . "\n", 3, self::log_file() );
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	private function log_file() {
+		static $log_file;
+
+		if ( empty( $log_file ) ) {
+			$log_file = trailingslashit( WP_CONTENT_DIR ) . 'omgf-debug.log';
+		}
+
+		return $log_file;
 	}
 }
