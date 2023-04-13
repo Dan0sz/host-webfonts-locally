@@ -22,11 +22,6 @@ use OMGF\StylesheetGenerator;
 
 class Helper {
 	/**
-	 * @var string $log_file Path where log file is located.
-	 */
-	public static $log_file;
-
-	/**
 	 * Gets all settings for OMGF.
 	 *
 	 * @filter omgf_settings
@@ -174,6 +169,7 @@ class Helper {
 		 * @since v4.5.6
 		 */
 		if ( is_string( $optimized_fonts ) ) {
+			// phpcs:ignore
 			$optimized_fonts = unserialize( $optimized_fonts );
 		}
 
@@ -279,6 +275,7 @@ class Helper {
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 */
 		if ( is_string( $subsets ) ) {
+			// phpcs:ignore
 			$subsets = unserialize( $subsets );
 		}
 
@@ -377,6 +374,7 @@ class Helper {
 			return;
 		}
 
+		// phpcs:ignore
 		error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ": $message\n", 3, self::log_file() );
 	}
 
@@ -412,6 +410,7 @@ class Helper {
 				continue;
 			}
 
+			// phpcs:ignore
 			error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ': ' . $key . ' => ' . $elem . "\n", 3, self::log_file() );
 		}
 	}

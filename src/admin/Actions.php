@@ -16,6 +16,8 @@
 
 namespace OMGF\Admin;
 
+use OMGF\Helper as OMGF;
+
 class Actions {
 	/**
 	 * Execute all actions required in wp-admin.
@@ -74,11 +76,11 @@ class Actions {
 			if ( is_string( $option_value ) ) {
 				$merged = $option_value;
 			} else {
-				$current_options = self::get_option( $option_name, [] );
+				$current_options = OMGF::get_option( $option_name, [] );
 				$merged          = array_replace( $current_options, $option_value );
 			}
 
-			self::update_option( $option_name, $merged );
+			OMGF::update_option( $option_name, $merged );
 		}
 
 		/**
@@ -90,6 +92,7 @@ class Actions {
 
 		// Redirect back to the settings page that was submitted.
 		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+		// phpcs:ignore
 		wp_redirect( $goback );
 		exit;
 	}
@@ -136,16 +139,12 @@ class Actions {
 				return;
 			}
 
-			wp_kses(
-				printf(
-					' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.' ) . '</strong>',
-					$update_notices[ $new_version ]->url
-				),
-				[
-					'strong' => [],
-					'a'      => [],
-				]
-			);
+			$allowed_html = [
+				'strong' => [],
+				'a'      => [],
+			];
+
+			wp_kses( sprintf( ' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.' ) . '</strong>', $update_notices[ $new_version ]->url ), $allowed_html );
 		}
 	}
 }
