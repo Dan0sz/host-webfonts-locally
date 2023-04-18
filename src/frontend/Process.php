@@ -19,6 +19,7 @@ namespace OMGF\Frontend;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 use OMGF\Optimize;
+use OMGF\TaskManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -79,7 +80,7 @@ class Process {
 		if ( ! $this->timestamp ) {
 			$this->timestamp = time();
 
-			update_option( Settings::OMGF_CACHE_TIMESTAMP, $this->timestamp );
+			OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, $this->timestamp );
 		}
 
 		$this->init();
@@ -417,13 +418,13 @@ class Process {
 
 		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 
-		foreach ( OMGF::IFRAMES_LOADING_FONTS as $script_id => $script ) {
+		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
 			if ( strpos( $html, $script ) !== false && ! in_array( $script_id, $found_iframes ) ) {
 				$found_iframes[] = $script_id;
 			}
 		}
 
-		update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
+		OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
 
 		return apply_filters( 'omgf_processed_html', $html, $this );
 	}
@@ -651,10 +652,12 @@ class Process {
 				continue;
 			}
 
+			$cache_key = OMGF::get_cache_key( $stack['id'] );
+
 			/**
 			 * $cache_key is used for caching. $handle contains the original handle.
 			 */
-			if ( ( OMGF::unloaded_fonts() && $cache_key = OMGF::get_cache_key( $stack['id'] ) )
+			if ( ( OMGF::unloaded_fonts() && $cache_key )
 				|| apply_filters( 'omgf_frontend_update_cache_key', false )
 			) {
 				$handle = $cache_key;
@@ -716,9 +719,9 @@ class Process {
 	 */
 	public function remove_mesmerize_filter( $tag ) {
 		if (
-			( wp_get_theme()->template == 'mesmerize-pro'
-				|| wp_get_theme()->template == 'highlight-pro'
-				|| wp_get_theme()->template == 'mesmerize' )
+			( wp_get_theme()->template === 'mesmerize-pro'
+				|| wp_get_theme()->template === 'highlight-pro'
+				|| wp_get_theme()->template === 'mesmerize' )
 			&& strpos( $tag, 'fonts.googleapis.com' ) !== false
 		) {
 			return str_replace( 'href="" data-href', 'href', $tag );

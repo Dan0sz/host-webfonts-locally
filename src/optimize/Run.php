@@ -40,7 +40,7 @@ class Run {
 	 * @return void
 	 */
 	private function run() {
-		update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
 
 		$front_html = $this->get_front_html( get_home_url() );
 
@@ -110,12 +110,14 @@ class Run {
 		 */
 		$available_used_subsets = OMGF::available_used_subsets( null, true );
 
+		/**
+		 * If $diff is empty, this means that the detected fonts are available in all selected subsets of the
+		 * Used Subset(s) option and no further action is required.
+		 */
+		$diff = array_diff( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ), $available_used_subsets );
+
 		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) && ! empty( $diff ) ) {
-			/**
-			 * If $diff is empty, this means that the detected fonts are available in all selected subsets of the
-			 * Used Subset(s) option and no further action is required.
-			 */
-			$diff = array_diff( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ), $available_used_subsets );
+			$break = false;
 
 			if ( empty( $diff ) ) {
 				$break = true;
