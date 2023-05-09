@@ -104,11 +104,8 @@ class TaskManager {
 	 * Renders the Task Manager Warnings box.
 	 */
 	public static function render_warnings() {
-		$allowed_html = [
-			'strong' => [],
-			'a'      => [],
-			'code'   => [],
-		];
+		$allowed_html = wp_kses_allowed_html( 'post' );
+
 		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
 			<tr valign="top" id="task-manager-notice-test-mode-row">
 				<td colspan="2" class="task-manager-row">
