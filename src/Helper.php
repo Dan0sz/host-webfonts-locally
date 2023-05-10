@@ -22,6 +22,13 @@ use OMGF\StylesheetGenerator;
 
 class Helper {
 	/**
+	 * Property to hold all settings.
+	 *
+	 * @var mixed
+	 */
+	private static $settings;
+
+	/**
 	 * Gets all settings for OMGF.
 	 *
 	 * @filter omgf_settings
@@ -31,8 +38,6 @@ class Helper {
 	 * @return array
 	 */
 	public static function get_settings() {
-		static $settings;
-
 		$defaults = apply_filters(
 			'omgf_settings_defaults',
 			[
@@ -46,11 +51,11 @@ class Helper {
 			]
 		);
 
-		if ( empty( $settings ) ) {
-			$settings = get_option( 'omgf_settings', [] );
+		if ( empty( self::$settings ) ) {
+			self::$settings = get_option( 'omgf_settings', [] );
 		}
 
-		return apply_filters( 'omgf_settings', wp_parse_args( $settings, $defaults ) );
+		return apply_filters( 'omgf_settings', wp_parse_args( self::$settings, $defaults ) );
 	}
 
 	/**
@@ -105,10 +110,13 @@ class Helper {
 			return;
 		}
 
-		$settings             = self::get_settings();
-		$settings[ $setting ] = $value;
+		if ( self::$settings === null ) {
+			self::$settings = self::get_settings();
+		}
 
-		update_option( 'omgf_settings', $settings );
+		self::$settings[ $setting ] = $value;
+
+		update_option( 'omgf_settings', self::$settings );
 	}
 
 	/**
@@ -122,8 +130,6 @@ class Helper {
 	 * @return void
 	 */
 	public static function delete_option( $setting ) {
-		static $settings;
-
 		if ( strpos( $setting, 'omgf_' ) === 0 ) {
 			delete_option( $setting );
 
@@ -131,13 +137,13 @@ class Helper {
 		}
 
 		// This prevents settings from 'mysteriously' returning after being unset.
-		if ( empty( $settings ) ) {
-			$settings = self::get_settings();
+		if ( empty( self::$settings ) ) {
+			self::$settings = self::get_settings();
 		}
 
-		unset( $settings[ $setting ] );
+		unset( self::$settings[ $setting ] );
 
-		update_option( 'omgf_settings', $settings );
+		update_option( 'omgf_settings', self::$settings );
 	}
 
 	/**
