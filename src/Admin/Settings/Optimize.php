@@ -311,24 +311,24 @@ class Optimize extends Builder {
 									continue;
 								}
 								?>
-								<tr class="font-family" data-id="<?php echo $handle . '-' . $font->id; ?>">
+								<tr class="font-family" data-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>">
 									<td colspan="5">
-										<span class="family"><em><?php echo rawurldecode( $font->family ); ?></em></span> <span class="unload-mass-action">(<a class="unload-italics"><?php echo __( 'Unload italics', 'host-webfonts-local' ); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?php echo __( 'In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.', 'host-webfonts-local' ); ?></span></span> | <a class="unload-all"><?php echo __( 'Unload all', 'host-webfonts-local' ); ?></a> | <a class="load-all"><?php echo __( 'Load all', 'host-webfonts-local' ); ?></a>)</span>
+										<span class="family"><em><?php echo esc_html( rawurldecode( $font->family ) ); ?></em></span> <span class="unload-mass-action">(<a class="unload-italics"><?php echo esc_html__( 'Unload italics', 'host-webfonts-local' ); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?php echo __( 'In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.', 'host-webfonts-local' ); ?></span></span> | <a class="unload-all"><?php echo esc_html__( 'Unload all', 'host-webfonts-local' ); ?></a> | <a class="load-all"><?php echo esc_html__( 'Load all', 'host-webfonts-local' ); ?></a>)</span>
 									</td>
 									<td class="fallback-font-stack">
-										<select data-handle="<?php echo $handle; ?>" <?php echo ! defined( 'OMGF_PRO_FALLBACK_FONT_STACK' ) ? 'disabled' : ''; ?> name="omgf_pro_fallback_font_stack[<?php echo $handle; ?>][<?php echo $font->id; ?>]">
-											<option value=''><?php echo __( 'None (default)', 'host-webfonts-local' ); ?></option>
+										<select data-handle="<?php echo esc_attr( $handle ); ?>" <?php echo esc_attr( ! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled' : '' ); ?> name="omgf_pro_fallback_font_stack[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]">
+											<option value=''><?php echo esc_attr__( 'None (default)', 'host-webfonts-local' ); ?></option>
 											<?php foreach ( Settings::OMGF_FALLBACK_FONT_STACKS_OPTIONS as $value => $label ) : ?>
-												<option <?php echo defined( 'OMGF_PRO_FALLBACK_FONT_STACK' ) && isset( OMGF_PRO_FALLBACK_FONT_STACK[ $handle ][ $font->id ] ) && OMGF_PRO_FALLBACK_FONT_STACK[ $handle ][ $font->id ] == $value ? 'selected' : ''; ?> value="<?php echo $value; ?>"><?php echo $label; ?></option>
+												<option <?php echo esc_attr( defined( 'OMGF_PRO_ACTIVE' ) && isset( OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] ) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] === $value ? 'selected' : '' ); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
 											<?php endforeach; ?>
 										</select>
 									</td>
 									<td class="replace">
 										<?php
-										$replace  = defined( 'OMGF_PRO_REPLACE_FONT' ) && isset( OMGF_PRO_REPLACE_FONT[ $handle ][ $font->id ] ) && OMGF_PRO_REPLACE_FONT[ $handle ][ $font->id ] == 'on' ? 'checked' : '';
-										$fallback = defined( 'OMGF_PRO_FALLBACK_FONT_STACK' ) && isset( OMGF_PRO_FALLBACK_FONT_STACK[ $handle ][ $font->id ] ) && OMGF_PRO_FALLBACK_FONT_STACK[ $handle ][ $font->id ] !== '';
+										$replace  = defined( 'OMGF_PRO_ACTIVE' ) && isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) && OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
+										$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset( OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] ) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';
 										?>
-										<input autocomplete="off" type="checkbox" class="replace" <?php echo $replace; ?> <?php echo $fallback ? '' : 'disabled'; ?> <?php echo ! defined( 'OMGF_PRO_REPLACE_FONT' ) ? 'disabled' : ''; ?> name="omgf_pro_replace_font[<?php echo $handle; ?>][<?php echo $font->id; ?>]" />
+										<input autocomplete="off" type="checkbox" class="replace" <?php echo esc_attr( $replace ); ?> <?php echo esc_attr( $fallback ? '' : 'disabled' ); ?> <?php echo ! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled' : ''; ?> name="omgf_pro_replace_font[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]" />
 									</td>
 								</tr>
 								<?php $id = ''; ?>
@@ -345,11 +345,14 @@ class Optimize extends Builder {
 									 *                To better deal with this, I've introduced the Used Subset(s) feature
 									 *                in this version.
 									 */
-									if ( $id == $variant->fontWeight . $variant->fontStyle ) {
+									// phpcs:ignore
+									if ( $id === $variant->fontWeight . $variant->fontStyle ) {
 										continue;
 									}
+
+									// phpcs:ignore
+									$id = $variant->fontWeight . $variant->fontStyle;
 									?>
-									<?php $id = $variant->fontWeight . $variant->fontStyle; ?>
 									<tr>
 										<td></td>
 										<?php
@@ -360,10 +363,10 @@ class Optimize extends Builder {
 										<td><?php echo $variant->fontStyle; ?></td>
 										<td><?php echo $variant->fontWeight; ?></td>
 										<td class="preload-<?php echo $class; ?>">
-											<input data-handle="<?php echo $handle; ?>" data-font-id="<?php echo $handle . '-' . $font->id; ?>" autocomplete="off" type="checkbox" class="preload" name="<?php echo Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS; ?>[<?php echo $handle; ?>][<?php echo $font->id; ?>][<?php echo $variant->id; ?>]" value="<?php echo $variant->id; ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload ? 'disabled' : ''; ?> />
+											<input data-handle="<?php echo esc_attr( $handle ); ?>" data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>" autocomplete="off" type="checkbox" class="preload" name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo $handle; ?>][<?php echo $font->id; ?>][<?php echo $variant->id; ?>]" value="<?php echo $variant->id; ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload ? 'disabled' : ''; ?> />
 										</td>
 										<td class="unload-<?php echo $class; ?>">
-											<input data-handle="<?php echo $handle; ?>" data-font-id="<?php echo $handle . '-' . $font->id; ?>" autocomplete="off" type="checkbox" class="unload" name="<?php echo Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS; ?>[<?php echo $handle; ?>][<?php echo $font->id; ?>][<?php echo $variant->id; ?>]" value="<?php echo $variant->id; ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload ? 'disabled' : ''; ?> />
+											<input data-handle="<?php echo esc_attr( $handle ); ?>" data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>" autocomplete="off" type="checkbox" class="unload" name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ); ?>[<?php echo $handle; ?>][<?php echo $font->id; ?>][<?php echo $variant->id; ?>]" value="<?php echo $variant->id; ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload ? 'disabled' : ''; ?> />
 										</td>
 									</tr>
 								<?php endforeach; ?>
