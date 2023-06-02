@@ -149,6 +149,8 @@ class Process {
 	}
 
 	/**
+	 * Add Preloads to wp_head().
+	 *
 	 * TODO: When setting all preloads at once (different stylesheet handles) combined with unloads, not all URLs are rewritten with their cache keys properly.
 	 *       When configured handle by handle, it works fine. PHP multi-threading issues?
 	 */
@@ -244,7 +246,7 @@ class Process {
 		 */
 		if ( array_key_exists( 'action', $_GET ) ) {
 			foreach ( $this->edit_actions as $action ) {
-				if ( $_GET['action'] == $action ) {
+				if ( $_GET['action'] === $action ) {
 					return false;
 				}
 			}
@@ -623,7 +625,7 @@ class Process {
 	private function ends_with( $string, $end ) {
 		$len = strlen( $end );
 
-		if ( $len == 0 ) {
+		if ( $len === 0 ) {
 			return true;
 		}
 
