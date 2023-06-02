@@ -24,6 +24,16 @@ use OMGF\TaskManager;
 defined( 'ABSPATH' ) || exit;
 
 class Process {
+	const PRELOAD_ALLOWED_HTML = [
+		'link' => [
+			'id'          => true,
+			'rel'         => true,
+			'href'        => true,
+			'as'          => true,
+			'type'        => true,
+			'crossorigin' => true,
+		],
+	];
 
 	const RESOURCE_HINTS_URLS = [ 'fonts.googleapis.com', 'fonts.gstatic.com', 'fonts.bunny.net', 'fonts-api.wp.com' ];
 
@@ -195,16 +205,7 @@ class Process {
 
 					echo wp_kses(
 						"<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n",
-						[
-							'link' => [
-								'id'          => true,
-								'rel'         => true,
-								'href'        => true,
-								'as'          => true,
-								'type'        => true,
-								'crossorigin' => true,
-							],
-						]
+						self::PRELOAD_ALLOWED_HTML
 					);
 					$i++;
 				}
