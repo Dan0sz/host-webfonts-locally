@@ -43,7 +43,7 @@ jQuery(document).ready(function ($) {
             // Buttons (AJAX, etc.)
             $('#omgf-save-optimize, #omgf-optimize-again').on('click', function () { $('#omgf-optimize-settings-form #submit').click(); });
             $(document).on('click', 'a[id^=omgf-hide-notice-]', this.hide_notice);
-            $('#omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
+            $('.omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
             $('.omgf-refresh, #omgf-cache-refresh').on('click', this.refresh_cache);
             $('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
             $('#omgf-optimize-settings-form').on('submit', this.show_loader_before_submit);
@@ -99,7 +99,7 @@ jQuery(document).ready(function ($) {
 
             omgf_admin.ticker_index++;
 
-            if (omgf_admin.ticker_index == omgf_admin.ticker_items.length) {
+            if (omgf_admin.ticker_index === omgf_admin.ticker_items.length) {
                 omgf_admin.ticker_index = 0;
             }
         },
@@ -317,7 +317,7 @@ jQuery(document).ready(function ($) {
             var unloads = $('.unload');
 
             unloads.each(function (index, item) {
-                if (item.value.includes('italic') && item.dataset.fontId == id && item.checked == false) {
+                if (item.value.includes('italic') && item.dataset.fontId === id && item.checked === false) {
                     item.click();
                 }
             });
@@ -331,7 +331,7 @@ jQuery(document).ready(function ($) {
                 unloads = $('input.unload[data-font-id="' + id + '"]');
 
             unloads.each(function (i, item) {
-                if (item.checked == false) {
+                if (item.checked === false) {
                     item.click();
                 }
             });
@@ -345,7 +345,7 @@ jQuery(document).ready(function ($) {
                 unloads = $('input.unload[data-font-id="' + id + '"]');
 
             unloads.each(function (i, item) {
-                if (item.checked == true) {
+                if (item.checked === true) {
                     item.click();
                 }
             });

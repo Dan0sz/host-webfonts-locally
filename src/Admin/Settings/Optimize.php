@@ -121,7 +121,7 @@ class Optimize extends Builder {
 									<?php
 									if ( ! $unloaded ) :
 										?>
-										<a href="<?php echo $downloaded ? "#$handle" : '#'; ?>" data-handle="<?php echo esc_attr( $handle ); ?>" id="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>" title="<?php echo sprintf( __( 'Manage %s', 'host-webfonts-local' ), $cache_key ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) : _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
+										<a href="<?php echo $downloaded ? "#$handle" : '#'; ?>" data-handle="<?php echo esc_attr( $handle ); ?>" class="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>" title="<?php echo sprintf( __( 'Manage %s', 'host-webfonts-local' ), $cache_key ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) : _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
 								</li>
 							<?php endforeach; ?>
 							<?php if ( OMGF_CACHE_IS_STALE ) : ?>
