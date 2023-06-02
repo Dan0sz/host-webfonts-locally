@@ -193,7 +193,19 @@ class Process {
 
 					$preloaded[] = $url;
 
-					echo "<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n";
+					echo wp_kses(
+						"<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n",
+						[
+							'link' => [
+								'id'          => true,
+								'rel'         => true,
+								'href'        => true,
+								'as'          => true,
+								'type'        => true,
+								'crossorigin' => true,
+							],
+						]
+					);
 					$i++;
 				}
 			}
@@ -460,7 +472,7 @@ class Process {
 	 * @return bool
 	 */
 	private function is_amp() {
-		 return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() )
+		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() )
 			|| ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() );
 	}
 
