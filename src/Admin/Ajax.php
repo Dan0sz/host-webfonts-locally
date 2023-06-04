@@ -155,7 +155,7 @@ class Ajax {
 	 * @since v4.5.5: Added authentication.
 	 */
 	public function empty_directory() {
-		 check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
+		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
@@ -177,6 +177,12 @@ class Ajax {
 		}
 	}
 
+	/**
+	 * Empties the cache directory.
+	 *
+	 * @param string $initiator
+	 * @return void
+	 */
 	private function empty_cache( $initiator = 'optimize-webfonts' ) {
 		$entries      = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*' ) );
 		$instructions = apply_filters(
@@ -209,10 +215,13 @@ class Ajax {
 		}
 
 		foreach ( $instructions['queue'] as $option ) {
-			delete_option( $option );
+			OMGF::delete_option( $option );
 		}
 	}
 
+	/**
+	 * Returns the debug log file as a download prompt to the browser (if it exists)
+	 */
 	public function download_log() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
@@ -220,7 +229,7 @@ class Ajax {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
 		}
 
-		$filename = OMGF::$log_file;
+		$filename = OMGF::log_file();
 
 		/**
 		 * Shouldn't happen, but you never know.
@@ -254,7 +263,7 @@ class Ajax {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
 		}
 
-		$filename = OMGF::$log_file;
+		$filename = OMGF::log_file();
 
 		if ( file_exists( $filename ) ) {
 			unlink( $filename );
