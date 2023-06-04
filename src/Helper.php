@@ -348,6 +348,8 @@ class Helper {
 	}
 
 	/**
+	 * Delete file or directory from filesystem.
+	 *
 	 * @param $entry
 	 */
 	public static function delete( $entry ) {
@@ -390,7 +392,7 @@ class Helper {
 	 *
 	 * @since v5.3.7
 	 *
-	 * @param $name  A desriptive name to be shown in the debug log
+	 * @param $name  A descriptive name to be shown in the debug log
 	 * @param $array The array to be displayed in the debug log
 	 *
 	 * @return void
@@ -422,9 +424,11 @@ class Helper {
 	}
 
 	/**
+	 * Returns the absolute path to the log file.
+	 *
 	 * @return string
 	 */
-	private function log_file() {
+	public static function log_file() {
 		static $log_file;
 
 		if ( empty( $log_file ) ) {
