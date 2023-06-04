@@ -21,8 +21,8 @@ defined( 'ABSPATH' ) || exit;
 class Help extends Builder {
 
 	/**
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	public function __construct() {
 		$this->title = __( 'Help & Documentation', 'host-webfonts-local' );
@@ -35,8 +35,7 @@ class Help extends Builder {
 	}
 
 	public function do_content() {
-		$utm_tags  = '?utm_source=omgf&utm_medium=plugin&utm_campaign=support_tab';
-		$tweet_url = sprintf( 'https://twitter.com/intent/tweet?text=I+am+using+%s+to+speed+up+Google+Fonts+for+@WordPress!+Try+it+for+yourself:&via=Dan0sz&hashtags=GoogleFonts,WordPress,Pagespeed,Insights&url=%s', str_replace( ' ', '+', apply_filters( 'omgf_settings_page_title', 'OMGF' ) ), apply_filters( 'omgf_help_tab_plugin_url', 'https://wordpress.org/plugins/host-webfonts-local/' ) );
+		$tweet_url = sprintf( 'https://twitter.com/intent/tweet?text=Thanks+to+OMGF+for+@WordPress,+my+Google+Fonts+are+GDPR+compliant!+Try+it+for+yourself:&via=Dan0sz&hashtags=GDPR,DSGVO,GoogleFonts,WordPress&url=%s', str_replace( ' ', '+', apply_filters( 'omgf_settings_page_title', 'OMGF' ) ), apply_filters( 'omgf_help_tab_plugin_url', 'https://wordpress.org/plugins/host-webfonts-local/' ) );
 		?>
 		<div class="postbox">
 			<div class="content">
