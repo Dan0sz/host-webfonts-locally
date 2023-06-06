@@ -63,9 +63,13 @@ class V560 {
 		$new_settings = OMGF::get_settings();
 
 		foreach ( $this->rows as $row ) {
-			$new_settings[ $row ] = get_option( "omgf_$row" );
+			$option_value = get_option( "omgf_$row" );
 
-			delete_option( "omgf_$row" );
+			if ( $option_value !== false ) {
+				$new_settings[ $row ] = get_option( "omgf_$row" );
+
+				delete_option( "omgf_$row" );
+			}
 		}
 
 		OMGF::update_option( 'omgf_settings', $new_settings );
