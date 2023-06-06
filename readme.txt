@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.1
-Stable tag: 5.5.6
+Stable tag: 5.6.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,16 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.6.0 | May 6th, 2023 =
+* Major improvements under the hood leading to:
+  - ~30% increase of overall performance in code execution.
+  - ~33% less DB reads.
+* Re-factored code to largely comply with WP coding standards.
+* A few minor bug fixes:
+  - If there were more than one non-existent stylesheets visible in the Task Manager, only the first one would respond to clicks on the "Remove" link.
+  - When Test Mode was enable, OMGF would be spelled in lowercase in the info bubble.
+  - Updated the Tweet text to include the #GDPR and #DSVGO hashtags.
 
 = 5.5.6 | March 24th, 2023 =
 * Improved: Used Subset(s) - Latin now stays selected when Vietnamese is selected (because it's an add-on)
