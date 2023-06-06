@@ -110,7 +110,7 @@ class TaskManager {
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Test Mode is Enabled', 'host-webfonts-local' ); ?></h4>
 						<p>
-							<?php echo wp_kses( sprintf( __( 'All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone.', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'omgf' ) ), 'post' ); ?>
+							<?php echo wp_kses( sprintf( __( 'All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone.', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'OMGF' ) ), 'post' ); ?>
 						</p>
 					</div>
 				</td>
