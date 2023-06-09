@@ -130,7 +130,7 @@ class Helper {
 	 * @return void
 	 */
 	public static function delete_option( $setting ) {
-		if ( strpos( $setting, 'omgf_' ) === 0 ) {
+		if ( strpos( $setting, 'omgf_' ) === 0 || apply_filters( 'omgf_delete_option', false, $setting ) ) {
 			delete_option( $setting );
 
 			return;
