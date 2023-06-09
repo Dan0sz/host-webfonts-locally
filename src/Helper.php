@@ -116,7 +116,7 @@ class Helper {
 
 		self::$settings[ $setting ] = $value;
 
-		update_option( 'omgf_settings', self::$settings );
+		return update_option( 'omgf_settings', self::$settings );
 	}
 
 	/**
@@ -143,7 +143,7 @@ class Helper {
 
 		unset( self::$settings[ $setting ] );
 
-		update_option( 'omgf_settings', self::$settings );
+		return update_option( 'omgf_settings', self::$settings );
 	}
 
 	/**
