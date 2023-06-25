@@ -64,17 +64,19 @@ class Actions {
 		}
 
 		// phpcs:ignore
-		$post_data = $this->clean($_POST);
+		$updated_settings = $this->clean($_POST);
 
-		foreach ( $post_data as $option_name => $option_value ) {
-			if ( strpos( $option_name, 'omgf_' ) !== 0 || empty( $option_value ) ) {
+		foreach ( $updated_settings as $option_name => $option_value ) {
+			if ( strpos( $option_name, 'omgf_' ) !== 0 || ( empty( $option_value ) && $option_value !== '0' ) ) {
 				continue;
 			}
 
 			$merged = [];
 
-			if ( is_string( $option_value ) ) {
+			if ( is_string( $option_value ) && $option_value !== '0' ) {
 				$merged = $option_value;
+			} elseif ( $option_value === '0' ) {
+				$merged = [];
 			} else {
 				$current_options = OMGF::get_option( $option_name, [] );
 				$merged          = array_replace( $current_options, $option_value );

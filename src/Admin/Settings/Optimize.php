@@ -280,6 +280,17 @@ class Optimize extends Builder {
 						</li>
 					</ul>
 				</div>
+				<?php
+				/**
+				 * @since v5.6.1 These hidden fields will make sure these options always appear in POST, even when
+				 *               no boxes are checked.
+				 *
+				 * @action omgf_optimize_fonts_hidden_fields Allow add-ons to add hidden fields.
+				 */
+				?>
+				<input type="hidden" name="<?php echo Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS; ?>" value="0" />
+				<input type="hidden" name="<?php echo Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS; ?>" value="0" />
+				<?php do_action( 'omgf_optimize_fonts_hidden_fields' ); ?>
 				<table>
 					<thead>
 						<tr>
@@ -357,8 +368,14 @@ class Optimize extends Builder {
 										<td></td>
 										<?php
 										$preload = OMGF::preloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] ?? '';
-										$unload  = OMGF::unloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] ?? '';
-										$class   = $handle . '-' . $font->id . '-' . $variant->id;
+
+										if ( $preload ) {
+											$unload = false;
+										} else {
+											$unload = OMGF::unloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] ?? '';
+										}
+
+										$class = $handle . '-' . $font->id . '-' . $variant->id;
 										?>
 										<td><?php echo $variant->fontStyle; ?></td>
 										<td><?php echo $variant->fontWeight; ?></td>
@@ -377,7 +394,6 @@ class Optimize extends Builder {
 				<input type="hidden" name="<?php echo Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>" value="<?php echo base64_encode( serialize( $this->optimized_fonts ) ); ?>" />
 				<input id="<?php echo Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden" name="omgf_settings[<?php echo Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>]" value="<?php echo esc_attr( implode( ',', OMGF::unloaded_stylesheets() ) ); ?>" />
 				<input id="<?php echo Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>" type="hidden" name="omgf_settings[<?php echo Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>]" value="<?php echo esc_attr( implode( ',', $cache_handles ) ); ?>" />
-				<?php echo apply_filters( 'omgf_optimize_fonts_hidden_fields', '' ); ?>
 			</div>
 		<?php
 	}
