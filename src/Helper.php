@@ -131,9 +131,7 @@ class Helper {
 	 */
 	public static function delete_option( $setting ) {
 		if ( strpos( $setting, 'omgf_' ) === 0 || apply_filters( 'omgf_delete_option', false, $setting ) ) {
-			delete_option( $setting );
-
-			return;
+			return delete_option( $setting );
 		}
 
 		// This prevents settings from 'mysteriously' returning after being unset.
