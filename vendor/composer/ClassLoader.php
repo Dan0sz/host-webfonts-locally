@@ -560,6 +560,13 @@ class ClassLoader
         return false;
     }
 
+    /**
+     * @since OMGF v5.6.3 removed the void return type, to support PHP 7.0.
+     * 
+     * @see   https://github.com/composer/composer/issues/11245
+     * 
+     * @return void 
+     */
     private static function initializeIncludeClosure()
     {
         if (self::$includeFile !== null) {
