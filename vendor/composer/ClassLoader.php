@@ -560,7 +560,7 @@ class ClassLoader
         return false;
     }
 
-    private static function initializeIncludeClosure(): void
+    private static function initializeIncludeClosure()
     {
         if (self::$includeFile !== null) {
             return;
