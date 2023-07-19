@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.2
-Stable tag: 5.6.1
+Stable tag: 5.6.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -75,6 +75,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.6.2 | July 19th, 2023 =
+* Fixed: notices in Task Manager suggesting to install Pro wouldn't disappear after Pro was activated.
 
 = 5.6.1 | July 16th, 2023 =
 * Added filter: omgf_delete_option
