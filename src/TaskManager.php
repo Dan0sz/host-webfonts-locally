@@ -201,7 +201,7 @@ class TaskManager {
 		/**
 		 * @since v5.5.4 Throw a warning if Multisite is enabled and OMGF Pro isn't installed/activated.
 		 */
-		if ( is_multisite() && ! function_exists( 'omgf_pro_init' ) ) {
+		if ( is_multisite() && ! class_exists( '\OMGF\Pro\Plugin' ) ) {
 			$warnings[] = 'is_multisite';
 		}
 
@@ -226,7 +226,7 @@ class TaskManager {
 		/**
 		 * @since v5.4.0 Warn the user if they're using a theme which requires OMGF Pro's Advanced Processing features.
 		 */
-		if ( in_array( $theme->template, self::THEMES_REQ_PRO ) && ! function_exists( 'omgf_pro_init' ) ) {
+		if ( in_array( $theme->template, self::THEMES_REQ_PRO ) && ! class_exists( '\OMGF\Pro\Plugin' ) ) {
 			$warnings[] = $theme->template . '-req-pro';
 		}
 
@@ -255,7 +255,7 @@ class TaskManager {
 		 * @since v5.5.4 OMGF-74 Notify users if they're using a plugin which requires OMGF Pro's Advanced Processing feature.
 		 */
 		foreach ( self::PLUGINS_REQ_PRO as $plugin_req_pro ) {
-			if ( in_array( $plugin_req_pro, $slugs ) && ! function_exists( 'omgf_pro_init' ) ) {
+			if ( in_array( $plugin_req_pro, $slugs ) && ! class_exists( '\OMGF\Pro\Plugin' ) ) {
 				$warnings[] = $plugin_req_pro . '-req-pro';
 			}
 		}
