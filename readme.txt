@@ -36,16 +36,17 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 - Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet with ~90%!
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
 - **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to your Google Fonts,
-- **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to all your other fonts! (OMGF Pro required),
 
 = Additional Features in OMGF Pro =
+
 - **Multisite** support,
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
   - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
   - `@font-face` and `@import` statements inside **local stylesheets** loaded by your theme and/or plugins,
   - Web Font Loader (`webfont.js`),
-  - Early Access Google Fonts.
-  - Material Icons support.
+  - Early Access Google Fonts,
+  - Material Icons.
+- **Ensure text remains visible during webfont load** by adding the selected *font-display* attribute to *all* fonts on your website,
 - Modify the stylesheet's `src: url()` attribute to fully integrate with your configuration,
   - Use this to serve fonts and the stylesheets from your CDN, or
   - To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide, etc.), or
