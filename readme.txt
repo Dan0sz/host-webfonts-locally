@@ -46,7 +46,7 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
   - Web Font Loader (`webfont.js`),
   - Early Access Google Fonts.
   - Material Icons support.
-- Modify your fonts' `src: url()` attribute fully integrate with your configuration,
+- Modify the stylesheet's `src: url()` attribute to fully integrate with your configuration,
   - Use this to serve fonts and the stylesheets from your CDN, or
   - To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide, etc.), or
   - Set a relative path to easily migrate from development/staging areas to production/live, or
