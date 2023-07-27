@@ -187,6 +187,10 @@ class Updates {
 		}
 
 		foreach ( $this->premium_plugins as $id => $plugin ) {
+			if ( ! is_plugin_active( WP_PLUGIN_DIR . '/' . $plugin['basename'] ) ) {
+				continue;
+			}
+
 			if ( $this->update_already_displayed( $plugin['basename'] ) ) {
 				continue;
 			}
