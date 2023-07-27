@@ -19,6 +19,7 @@ namespace OMGF;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
+use OMGF\Admin\Updates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,9 +30,6 @@ class Admin {
 
 	/** @var array $stale_cache_options */
 	private $stale_cache_options = [];
-
-	/** @var string $plugin_text_domain */
-	private $plugin_text_domain = 'host-webfonts-local';
 
 	/**
 	 * OMGF_Admin constructor.
@@ -54,6 +52,7 @@ class Admin {
 		$this->do_detection_settings();
 		$this->do_advanced_settings();
 		$this->do_help();
+		$this->maybe_handle_failed_premium_plugin_updates();
 		$this->maybe_do_after_update_notice();
 
 		add_filter( 'alloptions', [ $this, 'force_optimized_fonts_from_db' ] );
@@ -112,6 +111,15 @@ class Admin {
 	 */
 	private function do_help() {
 		new Admin\Settings\Help();
+	}
+
+	/**
+	 * Add failsafe for failing premium plugin updates.
+	 *
+	 * @return Updates
+	 */
+	private function maybe_handle_failed_premium_plugin_updates() {
+		return new Admin\Updates();
 	}
 
 	/**
