@@ -20,10 +20,12 @@ class Updates {
 	/** @var array $premium_plugins */
 	private $premium_plugins = [
 		'4027' => [
+			'slug'            => 'host-google-fonts-pro',
 			'basename'        => 'host-google-fonts-pro/host-google-fonts-pro.php',
 			'transient_label' => 'omgf_pro',
 		],
 		'8887' => [
+			'slug'            => 'omgf-additional-fonts',
 			'basename'        => 'omgf-additional-fonts/omgf-additional-fonts.php',
 			'transient_label' => 'omgf_af',
 		],
@@ -37,6 +39,7 @@ class Updates {
 	public function __construct() {
 		add_filter( 'all_plugins', [ $this, 'maybe_display_premium_update_notice' ] );
 		add_filter( 'wp_get_update_data', [ $this, 'maybe_add_update_count' ], 10, 1 );
+		add_filter( 'site_transient_update_plugins', [ $this, 'maybe_add_to_update_list' ] );
 	}
 
 	/**
@@ -146,8 +149,8 @@ class Updates {
 	 * @return void
 	 */
 	public function display_premium_update_notice( $file, $plugin_data ) {
-		$slug   = $plugin_data['slug'];
-		$label  = $plugin_data['name'] ?? 'this plugin';
+		$slug   = explode( '/', $file )[0] ?? '';
+		$label  = $plugin_data['Name'] ?? $plugin_data['name'] ?? 'this plugin';
 		$notice = sprintf( __( 'An update for %1$s is available, but we\'re having trouble retrieving it. Download it from <a href=\'%2$s\' target=\'_blank\'>your account area</a> and install it manually. <a href=\'%3$s\' target=\'_blank\'>Need help</a>?', $this->plugin_text_domain ), $label, 'https://daan.dev/account/orders/', 'https://daan.dev/docs/pre-sales/download-files/' );
 
 		/**
@@ -205,5 +208,50 @@ class Updates {
 		}
 
 		return $update_data;
+	}
+
+	/**
+	 * Run a few checks before adding the plugin to the list of updates.
+	 *
+	 * @param mixed $transient
+	 *
+	 * @return mixed
+	 */
+	public function maybe_add_to_update_list( $transient ) {
+		global $pagenow;
+
+		/**
+		 * Don't do anything if we're on the Dashboard > Updates page.
+		 */
+		if ( $pagenow === 'update-core.php' ) {
+			return $transient;
+		}
+
+		if ( $transient === false ) {
+			return $transient;
+		}
+
+		foreach ( $this->premium_plugins as $id => $plugin ) {
+			$latest_version  = $this->get_latest_version( $id, $plugin['transient_label'] );
+			$plugin_data     = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin['basename'] );
+			$current_version = $plugin_data['Version'] ?? '';
+
+			if ( version_compare( $current_version, $latest_version, '==' ) ) {
+				continue;
+			}
+
+			$plugin_file = $plugin['basename'];
+
+			// If an update is already displayed, there's no need for us to recreate this object.
+			if ( ! isset( $transient->response[ $plugin_file ] ) ) {
+				$transient->response[ $plugin_file ] = (object) [
+					'slug'        => explode( '/', $plugin_file )[0],
+					'plugin'      => $plugin_file,
+					'new_version' => '',
+				];
+			}
+		}
+
+		return $transient;
 	}
 }
