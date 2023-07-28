@@ -35,7 +35,7 @@ class Updates {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'all_plugins', [ $this, 'maybe_display_premium_update_notice' ] );
+		add_filter( 'all_plugins', [ $this, 'maybe_display_premium_update_notice' ] );
 		add_filter( 'wp_get_update_data', [ $this, 'maybe_add_update_count' ], 10, 1 );
 	}
 
