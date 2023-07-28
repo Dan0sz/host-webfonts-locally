@@ -233,7 +233,12 @@ class Optimize {
 		$response = wp_remote_get(
 			$url,
 			[
-				'user-agent' => self::USER_AGENT['woff2'],
+				/**
+				 * Allow WP devs to use a different User-Agent, e.g. for compatibility with older browsers/OSes.
+				 *
+				 * @filter omgf_optimize_user_agent
+				 */
+				'user-agent' => apply_filters( 'omgf_optimize_user_agent', self::USER_AGENT['woff2'] ),
 			]
 		);
 
