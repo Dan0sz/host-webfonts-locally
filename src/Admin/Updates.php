@@ -159,7 +159,11 @@ class Updates {
 		?>
 		<script>
 			var row = document.getElementById('<?php echo esc_attr( $slug ); ?>-update');
-			var div = row.getElementsByClassName('notice-warning');
+			var div = '';
+
+			if (row instanceof HTMLCollection) {
+				div = row.getElementsByClassName('notice-warning');
+			}
 
 			if (div instanceof HTMLCollection && "0" in div) {
 				div[0].getElementsByTagName('p')[0].innerHTML = "<?php echo wp_kses( $notice, 'post' ); ?>";
