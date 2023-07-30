@@ -17,6 +17,9 @@ class Updates {
 	/** @var string $plugin_text_domain */
 	private $plugin_text_domain = '';
 
+	/** @var string $plugin_text_domain */
+	private $transient_label = '';
+
 	/** @var array $premium_plugins */
 	private $premium_plugins = [];
 
@@ -25,9 +28,10 @@ class Updates {
 	 *
 	 * @return void
 	 */
-	public function __construct( $premium_plugins, $plugin_text_domain ) {
+	public function __construct( $premium_plugins, $plugin_text_domain, $transient_label ) {
 		$this->premium_plugins    = $premium_plugins;
 		$this->plugin_text_domain = $plugin_text_domain;
+		$this->transient_label    = $transient_label;
 
 		$this->init();
 	}
@@ -113,25 +117,28 @@ class Updates {
 	/**
 	 * Gets the latest available version of the current premium plugin.
 	 */
-	private function get_latest_version( $id, $transient_label ) {
-		static $latest_version;
+	private function get_latest_version( $id ) {
+		static $latest_versions;
 
 		/**
 		 * This prevents duplicate DB reads.
 		 */
-		if ( $latest_version === null ) {
-			$latest_version = get_transient( $transient_label . '_latest_available_version' );
+		if ( $latest_versions === null ) {
+			$latest_versions = get_transient( $this->transient_label . '_addons_latest_available_versions' );
 		}
 
-		/**
-		 * If $latest_version is an empty string, that probably means something went wrong before. So,
-		 * we should try and refresh it. If $latest_version is false, then the transient doesn't exist.
-		 */
-		if ( $latest_version === false || $latest_version === '' ) {
-			$response       = wp_remote_get( 'https://daan.dev/?edd_action=get_version&item_id=' . $id );
-			$latest_version = json_decode( wp_remote_retrieve_body( $response ) )->new_version ?? '';
+		$latest_version = $latest_versions[ $id ] ?? '';
 
-			set_transient( $transient_label . '_latest_available_version', $latest_version, DAY_IN_SECONDS );
+		/**
+		 * If $latest_versions is an empty string, that probably means something went wrong before. So,
+		 * we should try and refresh it. If $latest_versions is false, then the transient doesn't exist.
+		 */
+		if ( $latest_version === '' ) {
+			$response               = wp_remote_get( 'https://daan.dev/?edd_action=get_version&item_id=' . $id );
+			$latest_version         = json_decode( wp_remote_retrieve_body( $response ) )->new_version ?? '';
+			$latest_versions[ $id ] = $latest_version;
+
+			set_transient( $this->transient_label . '_addons_latest_available_version', $latest_versions, DAY_IN_SECONDS );
 		}
 
 		return $latest_version;

@@ -132,7 +132,8 @@ class Admin {
 					'transient_label' => 'omgf_af',
 				],
 			],
-			'host-webfonts-local'
+			'host-webfonts-local',
+			'omgf'
 		);
 	}
 
