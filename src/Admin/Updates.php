@@ -161,7 +161,7 @@ class Updates {
 			var row = document.getElementById('<?php echo esc_attr( $slug ); ?>-update');
 			var div = '';
 
-			if (row instanceof HTMLCollection) {
+			if (row !== null) {
 				div = row.getElementsByClassName('notice-warning');
 			}
 
