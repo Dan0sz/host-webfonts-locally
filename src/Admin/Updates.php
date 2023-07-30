@@ -15,28 +15,28 @@ defined( 'ABSPATH' ) || exit;
  */
 class Updates {
 	/** @var string $plugin_text_domain */
-	private $plugin_text_domain = 'host-webfonts-local';
+	private $plugin_text_domain = '';
 
 	/** @var array $premium_plugins */
-	private $premium_plugins = [
-		'4027' => [
-			'slug'            => 'host-google-fonts-pro',
-			'basename'        => 'host-google-fonts-pro/host-google-fonts-pro.php',
-			'transient_label' => 'omgf_pro',
-		],
-		'8887' => [
-			'slug'            => 'omgf-additional-fonts',
-			'basename'        => 'omgf-additional-fonts/omgf-additional-fonts.php',
-			'transient_label' => 'omgf_af',
-		],
-	];
+	private $premium_plugins = [];
 
 	/**
-	 * Action & Filter hooks.
+	 * Build hooks.
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $premium_plugins, $plugin_text_domain ) {
+		$this->premium_plugins    = $premium_plugins;
+		$this->plugin_text_domain = $plugin_text_domain;
+
+		$this->init();
+	}
+
+	/**
+	 * Action & Filter hooks.
+	 * @return void
+	 */
+	private function init() {
 		add_filter( 'all_plugins', [ $this, 'maybe_display_premium_update_notice' ] );
 		add_filter( 'wp_get_update_data', [ $this, 'maybe_add_update_count' ], 10, 1 );
 		add_filter( 'site_transient_update_plugins', [ $this, 'maybe_add_to_update_list' ] );

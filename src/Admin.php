@@ -119,7 +119,21 @@ class Admin {
 	 * @return Updates
 	 */
 	private function maybe_handle_failed_premium_plugin_updates() {
-		return new Admin\Updates();
+		return new Admin\Updates(
+			[
+				'4027' => [
+					'slug'            => 'host-google-fonts-pro',
+					'basename'        => 'host-google-fonts-pro/host-google-fonts-pro.php',
+					'transient_label' => 'omgf_pro',
+				],
+				'8887' => [
+					'slug'            => 'omgf-additional-fonts',
+					'basename'        => 'omgf-additional-fonts/omgf-additional-fonts.php',
+					'transient_label' => 'omgf_af',
+				],
+			],
+			'host-webfonts-local'
+		);
 	}
 
 	/**
