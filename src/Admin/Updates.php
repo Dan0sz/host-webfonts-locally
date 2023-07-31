@@ -243,6 +243,10 @@ class Updates {
 		}
 
 		foreach ( $this->premium_plugins as $id => $plugin ) {
+			if ( ! is_plugin_active( $plugin['basename'] ) ) {
+				continue;
+			}
+
 			$latest_version  = $this->get_latest_version( $id, $plugin['transient_label'] );
 			$plugin_data     = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin['basename'] );
 			$current_version = $plugin_data['Version'] ?? '';
