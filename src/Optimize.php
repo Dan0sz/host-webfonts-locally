@@ -23,12 +23,15 @@ use OMGF\Admin\Settings;
 defined( 'ABSPATH' ) || exit;
 
 class Optimize {
-
 	/**
 	 * User Agents set to be used to make requests to the Google Fonts API.
+	 *
+	 * @since v5.6.4 Using Win7 User-Agent to prevent rendering issues on older systems.
+	 *               This results in 0,2KB larger WOFF2 files, but seems like a fair trade off.
+	 *               @see https://wordpress.org/support/topic/wrong-font-weight-only-in-firefox-2/
 	 */
 	const USER_AGENT = [
-		'woff2' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0',
+		'woff2' => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
 	];
 
 	/** @var string $url */
