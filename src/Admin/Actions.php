@@ -78,7 +78,7 @@ class Actions {
 			} elseif ( $option_value === '0' ) {
 				$merged = [];
 			} else {
-				$current_options = OMGF::get_option( $option_name, [] );
+				$current_options = ! empty( OMGF::get_option( $option_name, [] ) ) ? OMGF::get_option( $option_name ) : [];
 				$merged          = array_replace( $current_options, $option_value );
 			}
 
