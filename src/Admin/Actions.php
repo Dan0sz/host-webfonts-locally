@@ -161,8 +161,8 @@ class Actions {
 	 * Cleans up the old (unused) cache directories.
 	 */
 	public function clean_stale_cache( $option_name, $option_value ) {
+		$old_keys = OMGF::cache_keys();
 		$new_keys = explode( ',', $option_value );
-		$old_keys = explode( ',', OMGF::get_option( $option_name ) );
 		$diff     = array_diff( $new_keys, $old_keys );
 
 		foreach ( $diff as $new_cache_key ) {
