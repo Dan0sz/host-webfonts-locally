@@ -290,7 +290,7 @@ class Optimize extends Builder {
 				?>
 				<input type="hidden" name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>" value="0" />
 				<input type="hidden" name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ); ?>" value="0" />
-				<?php do_action( 'omgf_optimize_fonts_hidden_fields' ); ?>
+				<?php do_action( 'omgf_optimize_local_fonts_hidden_fields' ); ?>
 				<table>
 					<thead>
 						<tr>
@@ -339,7 +339,7 @@ class Optimize extends Builder {
 										$replace  = defined( 'OMGF_PRO_ACTIVE' ) && isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) && OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
 										$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset( OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] ) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';
 										?>
-										<?php do_action( 'omgf_replace_hidden_fields', $handle, $font->id ); ?>
+										<?php do_action( 'omgf_optimize_local_fonts_replace', $handle, $font->id ); ?>
 										<input autocomplete="off" type="checkbox" class="replace" <?php echo esc_attr( $replace ); ?> <?php echo esc_attr( $fallback ? '' : 'disabled' ); ?> <?php echo ! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled' : ''; ?> name="omgf_pro_replace_font[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]" />
 									</td>
 								</tr>
