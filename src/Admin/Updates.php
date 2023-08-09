@@ -96,7 +96,7 @@ class Updates {
 
 		$plugin_slugs = array_keys( $available_updates->response );
 
-		return in_array( $basename, $plugin_slugs );
+		return in_array( $basename, $plugin_slugs ) && ! empty( $available_updates->response[ $basename ]->new_version );
 	}
 
 	/**
@@ -141,8 +141,16 @@ class Updates {
 		 * we should try and refresh it. If $latest_versions is false, then the transient doesn't exist.
 		 */
 		if ( $latest_version === '' ) {
-			$response               = wp_remote_get( 'https://daan.dev/?edd_action=get_version&item_id=' . $id );
-			$latest_version         = json_decode( wp_remote_retrieve_body( $response ) )->new_version ?? '';
+			$response       = wp_remote_get( 'https://daan.dev/?edd_action=get_version&item_id=' . $id );
+			$latest_version = json_decode( wp_remote_retrieve_body( $response ) )->new_version ?? '';
+
+			/**
+			 * Don't write transient if request failed for some reason.
+			 */
+			if ( empty( $latest_version ) ) {
+				return '';
+			}
+
 			$latest_versions[ $id ] = $latest_version;
 
 			set_transient( $this->transient_label . '_addons_latest_available_version', $latest_versions, DAY_IN_SECONDS );
