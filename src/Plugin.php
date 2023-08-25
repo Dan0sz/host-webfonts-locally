@@ -45,7 +45,7 @@ class Plugin {
 		new \OMGF\Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
-			register_uninstall_hook( OMGF_PLUGIN_FILE, [ $this, 'do_uninstall' ] );
+			register_uninstall_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'do_uninstall' ] );
 		}
 	}
 
@@ -76,7 +76,7 @@ class Plugin {
 	 *
 	 * @return void
 	 */
-	public function do_uninstall() {
+	public static function do_uninstall() {
 		new \OMGF\Uninstall();
 	}
 }
