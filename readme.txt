@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.3
-Stable tag: 5.6.6
+Stable tag: 5.6.7
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -76,6 +76,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.6.7 | August 28th, 2023 =
+* Fixed: Don't Load option couldn't be used on Google Fonts URLs using shorthand syntax (e.g. 400i, instead of 400italic).
 
 = 5.6.6 | August 25th, 2023 =
 * Fixed: non-static class method was used to register uninstall hook.
