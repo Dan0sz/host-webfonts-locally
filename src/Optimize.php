@@ -515,6 +515,16 @@ class Optimize {
 				$tuples = explode( ',', $tuples );
 			}
 
+			/**
+			 * Let's normalize the request, before we move on.
+			 */
+			foreach ($tuples as &$tuple) {
+				// Convert shorthand syntax to regular syntax.
+				if (strpos($tuple, 'i') !== false && strpos($tuple, 'italic') === false) {
+					$tuple = str_replace('i', 'italic', $tuple);
+				}
+			}
+
 			$unloaded_fonts = OMGF::unloaded_fonts()[ $this->original_handle ][ $id ];
 			$tuples         = array_filter(
 				$tuples,
