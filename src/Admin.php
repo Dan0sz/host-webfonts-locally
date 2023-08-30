@@ -35,7 +35,7 @@ class Admin {
 	 * OMGF_Admin constructor.
 	 */
 	public function __construct() {
-		 /**
+		/**
 		 * Filterable list of options that marks the cache as stale.
 		 */
 		$this->stale_cache_options = apply_filters(
@@ -57,7 +57,7 @@ class Admin {
 
 		add_filter( 'alloptions', [ $this, 'force_optimized_fonts_from_db' ] );
 		add_filter( 'pre_update_option_omgf_cache_keys', [ $this, 'clean_up_cache' ], 10, 3 );
-		add_filter( 'pre_update_option', [ $this, 'settings_changed' ], 10, 3 );
+		add_filter( 'pre_update_option_omgf_settings', [ $this, 'settings_changed' ], 10, 3 );
 	}
 
 	/**
@@ -216,22 +216,44 @@ class Admin {
 	 *
 	 * @return mixed
 	 */
-	public function settings_changed( $value, $option_name, $old_value ) {
+	public function settings_changed( $values, $old_values, $option_name ) {
 		/**
 		 * Don't show this message on the Main tab.
 		 */
 		if ( array_key_exists( 'tab', $_GET ) && $_GET['tab'] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
-			return $value;
+			return $values;
 		}
 
-		if ( ! in_array( $option_name, $this->stale_cache_options ) ) {
-			return $value;
+		/**
+		 * If either of these isn't an array, this means they haven't been set before.
+		 */
+		if ( ! is_array( $old_values ) || ! is_array( $values ) ) {
+			return $values;
 		}
+
+		/**
+		 * Fetch options from array, so we can compare both.
+		 */
+		$old  = array_filter(
+			$old_values,
+			function ( $key ) {
+				return in_array( $key, $this->stale_cache_options, true );
+			},
+			ARRAY_FILTER_USE_KEY
+		);
+		$new  = array_filter(
+			$values,
+			function ( $key ) {
+				return in_array( $key, $this->stale_cache_options, true );
+			},
+			ARRAY_FILTER_USE_KEY
+		);
+		$diff = $this->array_diff( $new, $old );
 
 		/**
 		 * If $old_value equals false, that means it's never been set before.
 		 */
-		if ( $value != $old_value && $old_value !== false ) {
+		if ( $diff ) {
 			global $wp_settings_errors;
 
 			$show_message = true;
@@ -265,6 +287,39 @@ class Admin {
 			}
 		}
 
-		return $value;
+		return $values;
+	}
+
+	/**
+	 * This functions makes a few assumptions:
+	 *
+	 * - Both arrays have the same keys.
+	 * - Both arrays have an equal amount of elements.
+	 *
+	 * @param array $array1
+	 * @param array $array2
+	 *
+	 * @return bool Whether $array1 contains different values, $compared to array2.
+	 */
+	private function array_diff( $array1, $array2 ) {
+		foreach ( $array1 as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$diff = $this->array_diff( $value, $array2[ $key ] );
+
+				if ( $diff ) {
+					break;
+				}
+
+				continue;
+			}
+
+			$diff = $value !== $array2[ $key ];
+
+			if ( $diff ) {
+				break;
+			}
+		}
+
+		return $diff;
 	}
 }
