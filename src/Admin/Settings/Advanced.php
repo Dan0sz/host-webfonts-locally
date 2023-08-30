@@ -83,7 +83,7 @@ class Advanced extends Builder {
 	 */
 	public function do_promo_whitelabel_css() {
 		$this->do_checkbox(
-			__( 'Whitelabel CSS (Pro)', 'host-webfonts-local' ),
+			__( 'Whitelabel Stylesheets (Pro)', 'host-webfonts-local' ),
 			'whitelabel',
 			! empty( OMGF::get_option( 'whitelabel' ) ),
 			__( 'Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size.', 'host-webfonts-local' ) . ' ' . $this->promo,
