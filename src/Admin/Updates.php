@@ -90,7 +90,7 @@ class Updates {
 	private function update_already_displayed( $basename ) {
 		$available_updates = $this->get_available_updates();
 
-		if ( ! is_object( $available_updates ) ) {
+		if ( ! is_object( $available_updates ) || ! isset( $available_updates->response ) || ! is_array( $available_updates->response ) ) {
 			return false;
 		}
 
