@@ -291,10 +291,7 @@ class Admin {
 	}
 
 	/**
-	 * This functions makes a few assumptions:
-	 *
-	 * - Both arrays have the same keys.
-	 * - Both arrays have an equal amount of elements.
+	 * Recursively compares two arrays.
 	 *
 	 * @param array $array1
 	 * @param array $array2
@@ -313,7 +310,7 @@ class Admin {
 				continue;
 			}
 
-			$diff = $value !== $array2[ $key ];
+			$diff = isset( $array2[ $key ] ) ? $value !== $array2[ $key ] : true;
 
 			if ( $diff ) {
 				break;
