@@ -284,6 +284,8 @@ class Admin {
 					),
 					'success'
 				);
+
+				set_transient( 'settings_errors', get_settings_errors(), 30 ); // 30 seconds.
 			}
 		}
 

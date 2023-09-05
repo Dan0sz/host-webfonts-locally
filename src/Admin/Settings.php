@@ -164,7 +164,7 @@ class Settings extends Admin {
 	 * OMGF_Admin_Settings constructor.
 	 */
 	public function __construct() {
-		 parent::__construct();
+		parent::__construct();
 
 		$this->active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : self::OMGF_SETTINGS_FIELD_OPTIMIZE;
 		$this->page       = isset( $_GET['page'] ) ? $_GET['page'] : '';
@@ -506,7 +506,7 @@ class Settings extends Admin {
 		foreach ( $items as $item ) {
 			$hide  = $i > 0 ? 'style="display: none;"' : '';
 			$text .= "<span class='ticker-item' $hide>" . sprintf( '<a target="_blank" href="%s"><em>%s</em></a>', $item->link, $item->title ) . '</span>';
-			$i++;
+			++$i;
 		}
 
 		$text .= '</span>';
