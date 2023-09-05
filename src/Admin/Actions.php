@@ -99,6 +99,9 @@ class Actions {
 		 */
 		do_action( 'omgf_update_settings', $updated_settings );
 
+		// Display settings errors.
+		set_transient( 'settings_errors', get_settings_errors(), 30 );
+
 		// Redirect back to the settings page that was submitted.
 		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
 		// phpcs:ignore
