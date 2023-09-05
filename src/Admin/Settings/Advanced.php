@@ -39,7 +39,7 @@ class Advanced extends Builder {
 
 		// Settings
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_cache_dir' ], 50 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_whitelabel_css' ], 60 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_white_label_css' ], 60 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 70 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 80 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 90 );
@@ -81,11 +81,11 @@ class Advanced extends Builder {
 	/**
 	 * @return void
 	 */
-	public function do_promo_whitelabel_css() {
+	public function do_promo_white_label_css() {
 		$this->do_checkbox(
-			__( 'Whitelabel Stylesheets (Pro)', 'host-webfonts-local' ),
-			'whitelabel',
-			! empty( OMGF::get_option( 'whitelabel' ) ),
+			__( 'White-label Stylesheets (Pro)', 'host-webfonts-local' ),
+			'white_label',
+			! empty( OMGF::get_option( 'white_label' ) ),
 			__( 'Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size.', 'host-webfonts-local' ) . ' ' . $this->promo,
 			! defined( 'OMGF_PRO_ACTIVE' )
 		);
