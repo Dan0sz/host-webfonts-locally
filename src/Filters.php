@@ -27,7 +27,6 @@ class Filters {
 		add_filter( 'home_url', [ $this, 'force_ssl' ], 1000, 2 );
 		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'base64_decode_optimized_fonts' ] );
 		add_filter( 'vc_get_vc_grid_data_response', [ $this, 'parse_vc_grid_data' ], 10 );
-		add_filter( 'omgf_generate_stylesheet_after', [ $this, 'maybe_minify' ] );
 	}
 
 		/**
@@ -89,29 +88,5 @@ class Filters {
 		$data      = $processor->parse( $data );
 
 		return $data;
-	}
-
-	/**
-	 * Minify the stylesheet (remove spaces and newlines) unless SCRIPT_DEBUG is enabled.
-	 *
-	 * @see https://wordpress.org/documentation/article/debugging-in-wordpress/
-	 *
-	 * @param string $stylesheet
-	 *
-	 * @return string (Non-)minified stylesheet
-	 */
-	public function maybe_minify( $stylesheet ) {
-		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ) {
-			return $stylesheet;
-		}
-
-		$parts = preg_split( '/(\*\/\n)/', $stylesheet, -1, PREG_SPLIT_DELIM_CAPTURE );
-
-		if ( ! isset( $parts[2] ) ) {
-			// Something went wrong. Bail.
-			return $stylesheet;
-		}
-
-		return $parts[0] . $parts[1] . str_replace( array( "\n", ' ' ), '', $parts[2] );
 	}
 }
