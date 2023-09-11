@@ -276,7 +276,7 @@ class Updates {
 			$plugin_file = $plugin['basename'];
 
 			// If an update is already displayed, there's no need for us to recreate this object.
-			if ( ! isset( $transient->response[ $plugin_file ] ) ) {
+			if ( is_object( $transient ) && isset( $transient->response ) && ! isset( $transient->response[ $plugin_file ] ) ) {
 				$transient->response[ $plugin_file ] = (object) [
 					'slug'        => explode( '/', $plugin_file )[0],
 					'plugin'      => $plugin_file,
