@@ -158,7 +158,7 @@ class Helper {
 	 */
 	public static function optimized_fonts( $maybe_add = [], $force_add = false ) {
 		/** @var array $optimized_fonts Cache layer */
-		static $optimized_fonts;
+		static $optimized_fonts = [];
 
 		/**
 		 * Get a fresh copy from the database if $optimized_fonts is empty|null|false (on 1st run)
