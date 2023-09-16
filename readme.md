@@ -1,5 +1,7 @@
 # OMGF | GDPR Compliant, Faster Google Fonts. Easy.
 
+**OMGF can be downloaded for free without any paid subscription from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).**
+
 OMGF automagically caches the Google Fonts used by your theme/plugins locally. No configuration (or brains) required!
 
 ## Description
