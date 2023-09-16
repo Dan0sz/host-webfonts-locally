@@ -8,6 +8,8 @@ Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
+**OMGF can be downloaded for free without any paid subscription from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).**
+
 OMGF automagically caches the Google Fonts used by your theme/plugins locally. No configuration (or brains) required!
 
 == Description ==
