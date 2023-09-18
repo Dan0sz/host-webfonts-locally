@@ -16,7 +16,11 @@
 
 namespace OMGF;
 
+use OMGF\Admin\Ajax;
 use OMGF\Admin\Settings;
+use OMGF\DB\Migrate;
+use OMGF\Frontend\Actions;
+use OMGF\Frontend\Filters;
 use OMGF\Helper as OMGF;
 
 defined( 'ABSPATH' ) || exit;
@@ -33,13 +37,13 @@ class Plugin {
 		}
 
 		if ( is_admin() ) {
-			new \OMGF\Admin\Actions();
-			new \OMGF\Admin\Ajax();
+			new Admin\Actions();
+			new Ajax();
 		}
 
 		if ( ! is_admin() ) {
-			new \OMGF\Frontend\Actions();
-			new \OMGF\Frontend\Filters();
+			new Actions();
+			new Filters();
 		}
 
 		new \OMGF\Filters();
@@ -51,7 +55,7 @@ class Plugin {
 
 	/**
 	 * Define constants.
-	 */
+     */
 	public function define_constants() {
 		/** Prevents undefined constant in OMGF Pro, if its not at version v3.3.0 (yet) */
 		define( 'OMGF_OPTIMIZATION_MODE', false );
@@ -68,7 +72,7 @@ class Plugin {
 	 * @return void
 	 */
 	public function do_migrate_db() {
-		new \OMGF\DB\Migrate();
+		new Migrate();
 	}
 
 	/**
@@ -77,6 +81,6 @@ class Plugin {
 	 * @return void
 	 */
 	public static function do_uninstall() {
-		new \OMGF\Uninstall();
+		new Uninstall();
 	}
 }
