@@ -2,12 +2,11 @@
 /**
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress/omgf/
- * Description: Increase GDPR/DSGVO compliance, reduce DNS requests and leverage browser cache by automatically downloading Google Fonts to your server.
- * Version: 5.7.4
+ * Description: Increase GDPR/DSGVO compliance and leverage browser cache by automatically self-hosting Google Fonts.
+ * Version: 5.7.5
  * Author: Daan from Daan.dev
  * Author URI: https://daan.dev
- * License: GPL2v2 or later
- * Text Domain: host-webfonts-local
+ * License: GPL2v2 or later Text Domain: host-webfonts-local
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -31,7 +30,6 @@ require_once OMGF_PLUGIN_DIR . 'vendor/autoload.php';
 
 /**
  * All systems GO!!!
- *
  * @return Plugin
  */
 $omgf = new OMGF\Plugin();
