@@ -105,7 +105,7 @@ class Advanced extends Builder {
 	 *
 	 */
 	public function do_promo_fonts_source_url() {
-		$description = OMGF::get_option( 'apply_relative_url' ) === 'on' ? __(
+		$description = OMGF::get_option( 'dtap' ) === 'on' ? __(
 			'This option is disabled, because <strong>Optimize for DTAP/Multisite</strong> is enabled.',
 			'host-webfonts-local'
 		) : sprintf(
@@ -121,7 +121,7 @@ class Advanced extends Builder {
 			'source_url',
 			__( 'e.g. https://cdn.mydomain.com/alternate/relative-path', 'host-webfonts-local' ),
 			OMGF::get_option( 'source_url' ),
-			$description . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' ) || OMGF::get_option( 'apply_relative_url' ) === 'on'
+			$description . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' ) || OMGF::get_option( 'dtap' ) === 'on'
 		);
 	}
 

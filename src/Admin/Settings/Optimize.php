@@ -134,8 +134,7 @@ class Optimize extends Builder {
 									?>
                                     <a href="<?php echo $downloaded ? "#$handle" : '#'; ?>"
                                        data-handle="<?php echo esc_attr( $handle ); ?>"
-                                       class="<?php echo $downloaded ? 'omgf-manage-stylesheet' :
-										   'omgf-remove-stylesheet'; ?>"
+                                       class="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>"
                                        title="<?php echo sprintf(
 										   __( 'Manage %s', 'host-webfonts-local' ),
 										   $cache_key
@@ -191,11 +190,11 @@ class Optimize extends Builder {
         </tr>
 		<?php
 		$this->do_checkbox(
-			__( 'Optimize for (D)TAP/Multisite (Pro)', 'host-webfonts-local' ),
-			'apply_relative_url', ! empty( OMGF::get_option( 'apply_relative_url' ) ),
+			__( 'Optimize for (D)TAP (Pro)', 'host-webfonts-local' ),
+			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
 			sprintf(
 				__(
-					'Enable this option if you\'re planning to use this plugin in a Development/Testing/Acceptance/Production street and/or Multisite environment.'
+					'Enable this option (on all instances) if you\'re planning to use this plugin in a (variation of a) Development/Testing/Acceptance/Production street.'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' ),
@@ -203,8 +202,7 @@ class Optimize extends Builder {
 		);
 		$this->do_checkbox(
 			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
-			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS,
-			! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ),
+			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ),
 			sprintf(
 				__(
 					'When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.',
@@ -511,15 +509,12 @@ class Optimize extends Builder {
 								$replace  =
 									defined( 'OMGF_PRO_ACTIVE' ) &&
 									isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
-									OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ?
-										'checked' : '';
-								$fallback = defined( 'OMGF_PRO_ACTIVE' ) &&
-									isset(
+									OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
+								$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset(
 										OMGF::get_option(
 											'omgf_pro_fallback_font_stack'
 										)[ $handle ][ $font->id ]
-									) &&
-									OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';
+									) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';
 								?>
 								<?php do_action( 'omgf_optimize_local_fonts_replace', $handle, $font->id ); ?>
                                 <input autocomplete="off" type="checkbox" class="replace" <?php echo esc_attr(
@@ -587,8 +582,8 @@ class Optimize extends Builder {
 									       ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
 										       $variant->id
 									       ); ?>]"
-                                           value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ?
-										'checked="checked"' : ''; ?> <?php echo $unload ? 'disabled' : ''; ?> />
+                                           value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' :
+										''; ?> <?php echo $unload ? 'disabled' : ''; ?> />
                                 </td>
                                 <td class="unload-<?php echo esc_attr( $class ); ?>">
                                     <input type="hidden"
@@ -610,8 +605,8 @@ class Optimize extends Builder {
 									       ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
 										       $variant->id
 									       ); ?>]"
-                                           value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ?
-										'checked="checked"' : ''; ?> <?php echo $preload ? 'disabled' : ''; ?> />
+                                           value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' :
+										''; ?> <?php echo $preload ? 'disabled' : ''; ?> />
                                 </td>
                             </tr>
 						<?php endforeach; ?>
@@ -672,8 +667,7 @@ class Optimize extends Builder {
 	public function do_test_mode() {
 		$this->do_checkbox(
 			__( 'Test Mode', 'host-webfonts-local' ),
-			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE,
-			! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ),
+			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ),
 			__(
 				'With this setting enabled, OMGF\'s optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend.',
 				'host-webfonts-local'
