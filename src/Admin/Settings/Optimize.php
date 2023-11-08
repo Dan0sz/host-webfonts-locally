@@ -194,7 +194,7 @@ class Optimize extends Builder {
 			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
 			sprintf(
 				__(
-					'Enable this option (on all instances) if you\'re planning to use this plugin in a (variation of a) Development/Testing/Acceptance/Production street.'
+					'Enable this option (on all instances) if you\'re planning to use this plugin in a (variation of a) Development > Testing > Acceptance > Production street.'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' ),
