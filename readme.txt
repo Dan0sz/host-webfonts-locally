@@ -79,6 +79,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 5.7.6 | November 8th, 2023 =
+* Added: Optimize for (D)TAP (Pro) option.
+* Tested with WP 6.4
+
 = 5.7.5 | November 2nd, 2023 =
 * Fixed: checkboxes couldn't be disabled if their default value was 'on'.
 
