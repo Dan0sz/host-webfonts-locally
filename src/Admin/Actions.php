@@ -58,10 +58,12 @@ class Actions {
 			return;
 		}
 
-		$action = $_GET[ 'tab' ] ?? 'omgf-optimize-settings';
+		$action = $_GET[ 'tab' ] ? $_GET[ 'tab' ] . '-options' : 'omgf-optimize-settings-options';
 		$nonce  = $_POST[ '_wpnonce' ] ?? '';
 
-		wp_verify_nonce( $nonce, $action );
+		if ( wp_verify_nonce( $nonce, $action ) < 1 ) {
+			return;
+		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
@@ -105,6 +107,7 @@ class Actions {
 
 		// Redirect back to the settings page that was submitted.
 		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+
 		// phpcs:ignore
 		wp_redirect( $goback );
 		exit;
