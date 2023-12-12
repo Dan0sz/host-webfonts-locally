@@ -21,7 +21,6 @@ use OMGF\Helper as OMGF;
 class Actions {
 	/**
 	 * Execute all actions required in wp-admin.
-	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -34,7 +33,6 @@ class Actions {
 
 	/**
 	 * Needs to run before admin_menu and admin_init.
-	 *
 	 * @action _admin_menu
 	 */
 	public function init_admin() {
@@ -43,7 +41,6 @@ class Actions {
 
 	/**
 	 * Initialize the Save & Optimize routine.
-	 *
 	 * @return void
 	 */
 	public function do_optimize() {
@@ -52,20 +49,24 @@ class Actions {
 
 	/**
 	 * We use a custom update action, because we're storing multidimensional arrays upon form submit.
-	 *
 	 * This prevents us from having to use AJAX, serialize(), stringify() and eventually having to json_decode() it, i.e.
 	 * a lot of headaches.
-	 *
 	 * @since v5.6.0
 	 */
 	public function update_settings() {
-		// phpcs:ignore WordPress.Security
-		if ( empty( $_POST['action'] ) || $_POST['action'] !== 'omgf-update' ) {
+		$action = $_GET[ 'tab' ] ?? 'omgf-optimize-settings';
+
+		wp_verify_nonce( $_POST[ '_wpnonce' ], $action );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
-		// phpcs:ignore
-		$updated_settings = $this->clean($_POST);
+		if ( empty( $_POST[ 'action' ] ) || $_POST[ 'action' ] !== 'omgf-update' ) {
+			return;
+		}
+
+		$updated_settings = $this->clean( $_POST );
 
 		foreach ( $updated_settings as $option_name => $option_value ) {
 			if ( strpos( $option_name, 'omgf_' ) !== 0 || ( empty( $option_value ) && $option_value !== '0' ) ) {
@@ -94,7 +95,6 @@ class Actions {
 
 		/**
 		 * Additional update actions can be added here.
-		 *
 		 * @since v5.6.0
 		 */
 		do_action( 'omgf_update_settings', $updated_settings );
@@ -112,10 +112,9 @@ class Actions {
 	/**
 	 * Clean variables using `sanitize_text_field`.
 	 * Arrays are cleaned recursively. Non-scalar values are ignored.
+	 * @since 5.5.7
 	 *
 	 * @param string|array $var Sanitize the variable.
-	 *
-	 * @since 5.5.7
 	 *
 	 * @return string|array
 	 */
@@ -132,14 +131,15 @@ class Actions {
 	 *
 	 * @param mixed $plugin
 	 * @param mixed $response
+	 *
 	 * @return void
 	 */
 	public function render_update_notice( $plugin, $response ) {
-		$current_version = $plugin['Version'];
-		$new_version     = $plugin['new_version'];
+		$current_version = $plugin[ 'Version' ];
+		$new_version     = $plugin[ 'new_version' ];
 
 		if ( version_compare( $current_version, $new_version, '<' ) ) {
-			$response = wp_remote_get( 'https://daan.dev/omgf-update-notices.json?' . substr( uniqid( '', true ), -5 ) );
+			$response = wp_remote_get( 'https://daan.dev/omgf-update-notices.json?' . substr( uniqid( '', true ), - 5 ) );
 
 			if ( is_wp_error( $response ) ) {
 				return;
@@ -156,7 +156,15 @@ class Actions {
 				'a'      => [],
 			];
 
-			wp_kses( sprintf( ' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.' ) . '</strong>', $update_notices[ $new_version ]->url ), $allowed_html );
+			wp_kses(
+				sprintf(
+					' <strong>' .
+					__( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.' ) .
+					'</strong>',
+					$update_notices[ $new_version ]->url
+				),
+				$allowed_html
+			);
 		}
 	}
 
@@ -207,11 +215,11 @@ class Actions {
 
 	/**
 	 * Check if directory is empty.
-	 *
 	 * This works because a new FilesystemIterator will initially point to the first file in the folder -
 	 * if there are no files in the folder, valid() will return false
 	 *
 	 * @param mixed $dir
+	 *
 	 * @return bool
 	 */
 	private function dir_is_empty( $dir ) {
