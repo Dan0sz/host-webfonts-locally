@@ -54,15 +54,16 @@ class Actions {
 	 * @since v5.6.0
 	 */
 	public function update_settings() {
-		$action = $_GET[ 'tab' ] ?? 'omgf-optimize-settings';
-
-		wp_verify_nonce( $_POST[ '_wpnonce' ], $action );
-
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( empty( $_POST[ 'action' ] ) || $_POST[ 'action' ] !== 'omgf-update' ) {
 			return;
 		}
 
-		if ( empty( $_POST[ 'action' ] ) || $_POST[ 'action' ] !== 'omgf-update' ) {
+		$action = $_GET[ 'tab' ] ?? 'omgf-optimize-settings';
+		$nonce  = $_POST[ '_wpnonce' ] ?? '';
+
+		wp_verify_nonce( $nonce, $action );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
