@@ -30,6 +30,6 @@ require_once OMGF_PLUGIN_DIR . 'vendor/autoload.php';
 
 /**
  * All systems GO!!!
- * @return Plugin
+ * @return OMGF\Plugin
  */
 $omgf = new OMGF\Plugin();
