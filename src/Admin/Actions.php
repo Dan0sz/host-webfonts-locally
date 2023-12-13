@@ -196,10 +196,9 @@ class Actions {
 				continue;
 			}
 
-			$dir      = OMGF_UPLOAD_DIR . '/' . $dir_to_remove;
-			$realpath = realpath( $dir );
+			$dir = OMGF_UPLOAD_DIR . '/' . $dir_to_remove;
 
-			if ( $dir !== $realpath ) {
+			if ( $dir !== realpath( $dir ) ) {
 				continue;
 			}
 
