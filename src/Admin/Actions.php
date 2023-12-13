@@ -196,7 +196,12 @@ class Actions {
 				continue;
 			}
 
-			$dir = OMGF_UPLOAD_DIR . '/' . $dir_to_remove;
+			$dir      = OMGF_UPLOAD_DIR . '/' . $dir_to_remove;
+			$realpath = realpath( $dir );
+
+			if ( $dir !== $realpath ) {
+				continue;
+			}
 
 			$this->delete_files( $dir );
 
