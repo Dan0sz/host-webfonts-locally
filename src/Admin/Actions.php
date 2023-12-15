@@ -54,7 +54,7 @@ class Actions {
 	 * @since v5.6.0
 	 */
 	public function update_settings() {
-		if ( empty( $_POST[ 'action' ] ) || $_POST[ 'action' ] !== 'omgf-update' ) {
+		if ( wp_doing_cron() || wp_doing_ajax() || empty( $_POST[ 'action' ] ) || $_POST[ 'action' ] !== 'omgf-update' ) {
 			return;
 		}
 
