@@ -2,7 +2,7 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
-Tested up to: 6.3
+Tested up to: 6.4
 Stable tag: 5.7.10
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -78,6 +78,12 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.7.11 =
+* Tested with WP 6.4.
+
+= 5.7.10 =
+* Minor performance improvements.
 
 = 5.7.9 =
 * Fixed: this time a proper CSRF fix! It's been a long day.
