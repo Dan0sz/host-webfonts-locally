@@ -138,10 +138,10 @@ class Optimize {
 		delete_option( Settings::OMGF_CACHE_IS_STALE );
 
 		$stylesheet_bak = $this->fetch_stylesheet( $this->url );
-		$fonts_bak      = $this->grab_fonts_object( $stylesheet_bak );
+		$fonts_bak      = $this->convert_to_fonts_object( $stylesheet_bak );
 		$url            = $this->unload_variants( $this->url );
 		$stylesheet     = $this->fetch_stylesheet( $url );
-		$fonts          = $this->grab_fonts_object( $stylesheet );
+		$fonts          = $this->convert_to_fonts_object( $stylesheet );
 
 		if ( empty( $fonts ) ) {
 			return '';
@@ -268,7 +268,7 @@ class Optimize {
 	 *
 	 * @return array
 	 */
-	private function grab_fonts_object( $stylesheet ) {
+	private function convert_to_fonts_object( $stylesheet ) {
 		OMGF::debug( __( 'Stylesheet fetched. Parsing for font-families...', 'host-webfonts-local' ) );
 
 		preg_match_all( '/font-family:\s\'(.*?)\';/', $stylesheet, $font_families );
