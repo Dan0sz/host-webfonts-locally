@@ -36,17 +36,21 @@ class Plugin {
 			add_action( 'plugins_loaded', [ $this, 'do_migrate_db' ] );
 		}
 
+		// Only load in wp-admin.
 		if ( is_admin() ) {
 			new Admin\Actions();
 			new Ajax();
 		}
 
+		// Only load in frontend.
 		if ( ! is_admin() ) {
 			new Actions();
 			new Filters();
 		}
 
-		new \OMGF\Filters();
+		// Always load.
+		new Compatibility();
+		new Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
 			register_uninstall_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'do_uninstall' ] );
@@ -55,7 +59,7 @@ class Plugin {
 
 	/**
 	 * Define constants.
-     */
+	 */
 	public function define_constants() {
 		/** Prevents undefined constant in OMGF Pro, if its not at version v3.3.0 (yet) */
 		define( 'OMGF_OPTIMIZATION_MODE', false );
@@ -67,20 +71,18 @@ class Plugin {
 	}
 
 	/**
-	 * Run any DB migration scripts if needed.
-	 *
-	 * @return void
-	 */
-	public function do_migrate_db() {
-		new Migrate();
-	}
-
-	/**
 	 * Run uninstall script
-	 *
 	 * @return void
 	 */
 	public static function do_uninstall() {
 		new Uninstall();
+	}
+
+	/**
+	 * Run any DB migration scripts if needed.
+	 * @return void
+	 */
+	public function do_migrate_db() {
+		new Migrate();
 	}
 }
