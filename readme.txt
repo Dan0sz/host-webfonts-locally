@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.4
-Stable tag: 5.7.12
+Stable tag: 5.7.13
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -79,7 +79,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
-= 5.7.12 =
+= 5.7.13 =
+* Fixed: Optimize Local Fonts table wouldn't get populated when running a fresh scan in v5.7.12.
+* Fixed: OMGF would always assume Avada was the active theme.
+
+= 5.7.12 | Januari 16th, 2023 =
 * Improved: Avada compatibility.
 * Minor code clean-up.
 
