@@ -50,7 +50,7 @@ class Plugin {
 
 		// Always load.
 		new Compatibility();
-		new Filters();
+		new \OMGF\Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
 			register_uninstall_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'do_uninstall' ] );
