@@ -306,7 +306,7 @@ class Optimize {
 
 		OMGF::debug( __( 'Stylesheet successfully converted to object.', 'host-webfonts-local' ) );
 
-		return apply_filters( 'omgf_optimize_fonts_object', $object, $url );
+		return apply_filters( 'omgf_optimize_fonts_object', $object, $stylesheet );
 	}
 
 	/**
