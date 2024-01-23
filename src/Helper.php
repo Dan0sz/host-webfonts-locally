@@ -168,8 +168,7 @@ class Helper {
 		static $unloaded_stylesheets = [];
 
 		if ( empty( $unloaded_stylesheets ) ) {
-			$unloaded_stylesheets =
-				explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
+			$unloaded_stylesheets = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
 		}
 
 		return array_filter( $unloaded_stylesheets );
@@ -234,7 +233,6 @@ class Helper {
 	 * @return array
 	 */
 	public static function optimized_fonts( $maybe_add = [], $force_add = false ) {
-		/** @var array $optimized_fonts Cache layer */
 		static $optimized_fonts = [];
 
 		/**
@@ -261,7 +259,7 @@ class Helper {
 			$optimized_fonts = array_merge( $optimized_fonts, $maybe_add );
 		}
 
-		return $optimized_fonts;
+		return $optimized_fonts ?? [];
 	}
 
 	/**
