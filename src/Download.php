@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2023 Daan van den Bergh
+* @copyright: © 2024 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -50,11 +50,9 @@ class Download {
 
 	/**
 	 * Download $url to $path and return OMGF_UPLOAD_URL to $filename.
-	 * 
-	 * @return string 
-	 * 
-	 * @throws SodiumException 
-	 * @throws TypeError 
+	 * @return string
+	 * @throws SodiumException
+	 * @throws TypeError
 	 */
 	public function download() {
 		if ( ! function_exists( 'download_url' ) ) {
@@ -78,7 +76,12 @@ class Download {
 
 		if ( is_wp_error( $tmp ) ) {
 			/** @var WP_Error $tmp */
-			Notice::set_notice( __( 'OMGF encountered an error while downloading fonts', 'host-webfonts-local' ) . ': ' . $tmp->get_error_message(), 'omgf-download-failed', 'error', $tmp->get_error_code() );
+			Notice::set_notice(
+				__( 'OMGF encountered an error while downloading fonts', 'host-webfonts-local' ) . ': ' . $tmp->get_error_message(),
+				'omgf-download-failed',
+				'error',
+				$tmp->get_error_code()
+			);
 
 			return '';
 		}

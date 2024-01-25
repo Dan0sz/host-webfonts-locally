@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2023 Daan van den Bergh
+* @copyright: © 2024 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -22,7 +22,6 @@ use OMGF\Admin\Settings;
 defined( 'ABSPATH' ) || exit;
 
 class StylesheetGenerator {
-
 	/** @var $fonts */
 	private $fonts;
 
@@ -42,7 +41,6 @@ class StylesheetGenerator {
 
 	/**
 	 * Generate a stylesheet based on the provided $fonts.
-	 *
 	 * @return string
 	 */
 	public function generate() {
@@ -58,27 +56,24 @@ class StylesheetGenerator {
 			foreach ( $font->variants as $variant ) {
 				/**
 				 * Filter $variant to allow custom modifications of e.g. unicode range, etc.
-				 *
 				 * @filter omgf_generate_stylesheet_font_variant
-				 *
-				 * @since v5.6.0
+				 * @since  v5.6.0
 				 */
 				$variant = apply_filters( 'omgf_generate_stylesheet_font_variant', $variant );
 				/**
 				 * Filter font_family name.
-				 *
 				 * @since v4.5.1
 				 */
 				// phpcs:disable
 				$font_family = apply_filters( 'omgf_generate_stylesheet_font_family', rawurldecode( $variant->fontFamily ) );
-				$font_style  = $variant->fontStyle; 
+				$font_style  = $variant->fontStyle;
 				$font_weight = $variant->fontWeight;
-				$stylesheet .= "@font-face{{$n}";
-				$stylesheet .= "font-family:'$font_family';$n"; 
-				$stylesheet .= "font-style:$font_style;$n";
-				$stylesheet .= "font-weight:$font_weight;$n";
-				$stylesheet .= "font-display:$font_display;$n";
-				$stylesheet .= 'src:' . $this->build_source_string( [ 'woff2' => $variant->woff2 ] );
+				$stylesheet  .= "@font-face{{$n}";
+				$stylesheet  .= "font-family:'$font_family';$n";
+				$stylesheet  .= "font-style:$font_style;$n";
+				$stylesheet  .= "font-weight:$font_weight;$n";
+				$stylesheet  .= "font-display:$font_display;$n";
+				$stylesheet  .= 'src:' . $this->build_source_string( [ 'woff2' => $variant->woff2 ] );
 
 				if ( isset( $variant->range ) ) {
 					$stylesheet .= "unicode-range:$variant->range;$n";

@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2023 Daan van den Bergh
+* @copyright: © 2024 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -24,8 +24,8 @@ use OMGF\Admin\Updates;
 defined( 'ABSPATH' ) || exit;
 
 class Admin {
-
 	const OMGF_ADMIN_JS_HANDLE  = 'omgf-admin-js';
+
 	const OMGF_ADMIN_CSS_HANDLE = 'omgf-admin-css';
 
 	/** @var array $stale_cache_options */
@@ -61,25 +61,6 @@ class Admin {
 	}
 
 	/**
-	 * Enqueues the necessary JS and CSS and passes options as a JS object.
-	 *
-	 * @param $hook
-	 */
-	public function enqueue_admin_scripts( $hook ) {
-		if ( $hook == 'settings_page_optimize-webfonts' ) {
-			wp_enqueue_script( self::OMGF_ADMIN_JS_HANDLE, plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-admin.js', [ 'jquery' ], filemtime( OMGF_PLUGIN_DIR . 'assets/js/omgf-admin.js' ), true );
-			wp_enqueue_style( self::OMGF_ADMIN_CSS_HANDLE, plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/css/omgf-admin.css', [], filemtime( OMGF_PLUGIN_DIR . 'assets/css/omgf-admin.css' ) );
-		}
-	}
-
-	/**
-	 * Add notice to admin screen.
-	 */
-	public function print_notices() {
-		Notice::print_notices();
-	}
-
-	/**
 	 * Local Fonts tab
 	 */
 	private function do_optimize_settings() {
@@ -88,7 +69,6 @@ class Admin {
 
 	/**
 	 * Detection Settings tab
-	 *
 	 * @return void
 	 */
 	private function do_detection_settings() {
@@ -97,7 +77,6 @@ class Admin {
 
 	/**
 	 * Advanced Settings tab
-	 *
 	 * @return void
 	 */
 	private function do_advanced_settings() {
@@ -106,7 +85,6 @@ class Admin {
 
 	/**
 	 * Help Tab
-	 *
 	 * @return void
 	 */
 	private function do_help() {
@@ -115,7 +93,6 @@ class Admin {
 
 	/**
 	 * Add failsafe for failing premium plugin updates.
-	 *
 	 * @return Updates
 	 */
 	private function maybe_handle_failed_premium_plugin_updates() {
@@ -131,9 +108,7 @@ class Admin {
 					'basename'        => 'omgf-additional-fonts/omgf-additional-fonts.php',
 					'transient_label' => 'omgf_af',
 				],
-			],
-			'host-webfonts-local',
-			'omgf'
+			], 'host-webfonts-local', 'omgf'
 		);
 	}
 
@@ -144,7 +119,10 @@ class Admin {
 		if ( OMGF_CURRENT_DB_VERSION != false && version_compare( OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<' ) ) {
 			Notice::set_notice(
 				sprintf(
-					__( 'Thank you for updating OMGF to v%1$s! This version contains database changes. <a href="%2$s">Verify your settings</a> and make sure everything is as you left it or, <a href="%3$s">view the changelog</a> for details. ', 'host-webfonts-local' ),
+					__(
+						'Thank you for updating OMGF to v%1$s! This version contains database changes. <a href="%2$s">Verify your settings</a> and make sure everything is as you left it or, <a href="%3$s">view the changelog</a> for details. ',
+						'host-webfonts-local'
+					),
 					OMGF_DB_VERSION,
 					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS ),
 					admin_url( Settings::OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION )
@@ -155,20 +133,47 @@ class Admin {
 	}
 
 	/**
+	 * Enqueues the necessary JS and CSS and passes options as a JS object.
+	 *
+	 * @param $hook
+	 */
+	public function enqueue_admin_scripts( $hook ) {
+		if ( $hook == 'settings_page_optimize-webfonts' ) {
+			wp_enqueue_script(
+				self::OMGF_ADMIN_JS_HANDLE,
+				plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-admin.js',
+				[ 'jquery' ],
+				filemtime( OMGF_PLUGIN_DIR . 'assets/js/omgf-admin.js' ),
+				true
+			);
+			wp_enqueue_style(
+				self::OMGF_ADMIN_CSS_HANDLE,
+				plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/css/omgf-admin.css',
+				[],
+				filemtime( OMGF_PLUGIN_DIR . 'assets/css/omgf-admin.css' )
+			);
+		}
+	}
+
+	/**
+	 * Add notice to admin screen.
+	 */
+	public function print_notices() {
+		Notice::print_notices();
+	}
+
+	/**
+	 * @see    OMGF::optimized_fonts()
 	 * @since  v5.0.5 Forces get_option() to fetch a fresh copy of omgf_optimized_fonts from the database,
 	 *               we're doing plenty to limit reads from the DB already. So, this is warranted.
 	 *
-	 * @see    OMGF::optimized_fonts()
-	 *
-	 * @param  array $alloptions
+	 * @param array $alloptions
 	 *
 	 * @return array
 	 */
 	public function force_optimized_fonts_from_db( $alloptions ) {
-		if (
-			isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] )
-			&& $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] == false
-		) {
+		if ( isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) &&
+			$alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] == false ) {
 			unset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] );
 		}
 
@@ -177,7 +182,6 @@ class Admin {
 
 	/**
 	 * Triggered when unload settings is changed, cleans up old cache files.
-	 *
 	 * TODO: Clean up doesn't work on 2nd run?
 	 *
 	 * @param $old_value
@@ -208,11 +212,10 @@ class Admin {
 
 	/**
 	 * Shows notice if $option_name is in $show_notice array.
-	 *
-	 * @param $new_value
-	 * @param $old_settings
-	 *
 	 * @see $show_notice
+	 *
+	 * @param $old_settings
+	 * @param $new_value
 	 *
 	 * @return mixed
 	 */
@@ -220,7 +223,7 @@ class Admin {
 		/**
 		 * Don't show this message on the Main tab.
 		 */
-		if ( array_key_exists( 'tab', $_GET ) && $_GET['tab'] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
+		if ( array_key_exists( 'tab', $_GET ) && $_GET[ 'tab' ] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
 			return $values;
 		}
 
@@ -260,7 +263,7 @@ class Admin {
 
 			if ( ! empty( $wp_settings_errors ) ) {
 				foreach ( $wp_settings_errors as $error ) {
-					if ( strpos( $error['code'], 'omgf' ) !== false ) {
+					if ( strpos( $error[ 'code' ], 'omgf' ) !== false ) {
 						$show_message = false;
 
 						break;
@@ -279,7 +282,10 @@ class Admin {
 					'general',
 					'omgf_cache_style',
 					sprintf(
-						__( 'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.', 'host-webfonts-local' ),
+						__(
+							'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.',
+							'host-webfonts-local'
+						),
 						admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )
 					),
 					'success'
