@@ -259,7 +259,7 @@ class Helper {
 			$optimized_fonts = array_merge( $optimized_fonts, $maybe_add );
 		}
 
-		return $optimized_fonts ?? [];
+		return $optimized_fonts ?: [];
 	}
 
 	/**
