@@ -48,8 +48,6 @@ class Plugin {
 			new Filters();
 		}
 
-		// Always load.
-		new Compatibility();
 		new \OMGF\Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
