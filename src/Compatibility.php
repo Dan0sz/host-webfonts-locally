@@ -25,7 +25,7 @@ class Compatibility {
 	public function avada_compatibility( $user_agent ) {
 		$theme = wp_get_theme();
 
-		if ( $theme->name !== 'Avada' ) {
+		if ( $theme->name !== 'Avada' && $theme->parent() !== 'Avada' ) {
 			return $user_agent;
 		}
 
