@@ -194,10 +194,11 @@ class Optimize extends Builder {
 			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
 			sprintf(
 				__(
-					'Enable this option (on all instances) if you\'re planning to use this plugin in a (variation of a) Development > Testing > Acceptance > Production street.'
+					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance > Production street. %s'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
-			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' ),
+				$this->promo
+			), ! defined( 'OMGF_PRO_ACTIVE' ),
 			'task-manager-row'
 		);
 		$this->do_checkbox(
@@ -218,12 +219,13 @@ class Optimize extends Builder {
 			'auto_config', ! empty( OMGF::get_option( 'auto_config' ) ),
 			sprintf(
 				__(
-					'Is %1$s not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%2$s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed. Novice users are advised to leave this enabled.',
+					'Is %1$s not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%2$s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed. Novice users are advised to leave this enabled. %s',
 					'host-webfonts-local'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
-				admin_url( 'options-general.php?page=optimize-webfonts&tab=omgf-detection-settings' )
-			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' ),
+				admin_url( 'options-general.php?page=optimize-webfonts&tab=omgf-detection-settings' ),
+				$this->promo
+			), ! defined( 'OMGF_PRO_ACTIVE' ),
 			'task-manager-row'
 		);
 		?>
@@ -297,12 +299,13 @@ class Optimize extends Builder {
 			'remove_async_fonts', ! empty( OMGF::get_option( 'remove_async_fonts' ) ),
 			sprintf(
 				__(
-					'Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%1$s">manually</a> or by using <a href="%2$s" target="_blank">a plugin</a> to prevent styling breaks.',
+					'Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%1$s">manually</a> or by using <a href="%2$s" target="_blank">a plugin</a> to prevent styling breaks. %s',
 					'host-webfonts-local'
 				),
 				'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/',
-				'https://daan.dev/wordpress/omgf-additional-fonts/'
-			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
+				'https://daan.dev/wordpress/omgf-additional-fonts/',
+				$this->promo
+			), ! defined( 'OMGF_PRO_ACTIVE' )
 		);
 	}
 
@@ -419,19 +422,23 @@ class Optimize extends Builder {
 									); ?></span></span></span></th>
                     <th><?php echo __( 'Fallback (Pro)', 'host-webfonts-local' ); ?><span
                                 class="dashicons dashicons-info tooltip"><span
-                                    class="tooltip-text"><span class="inline-text"><?php echo __(
-											'Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded.',
+                                    class="tooltip-text"><span class="inline-text"><?php echo sprintf(
+										__(
+											'Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded. %s',
 											'host-webfonts-local'
-										) . ' ' . $this->promo; ?></span></span></span></th>
+										),
+										$this->promo
+									); ?></span></span></span></th>
                     <th><?php echo __( 'Replace (Pro)', 'host-webfonts-local' ); ?><span
                                 class="dashicons dashicons-info tooltip"><span
                                     class="tooltip-text"><span class="inline-text"><?php echo sprintf(
-											__(
-												'When the <a href="%s">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback.',
-												'host-webfonts-local'
-											),
-											'https://daan.dev/blog/how-to/wordpress-google-fonts/#7-4-specify-a-fallback-font-stack'
-										) . ' ' . $this->promo; ?></span></span></span></th>
+										__(
+											'When the <a href="%s">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback. %s',
+											'host-webfonts-local'
+										),
+										'https://daan.dev/blog/how-to/wordpress-google-fonts/#7-4-specify-a-fallback-font-stack',
+										$this->promo
+									); ?></span></span></span></th>
                 </tr>
                 </thead>
 				<?php
