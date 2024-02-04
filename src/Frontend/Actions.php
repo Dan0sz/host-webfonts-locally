@@ -48,7 +48,7 @@ class Actions {
 
 		$admin_bar->add_menu(
 			[
-				'id'     => 'omgf-pro',
+				'id'     => 'omgf',
 				'parent' => null,
 				'title'  => apply_filters( 'omgf_settings_page_title', __( 'OMGF', 'host-webfonts-local' ) ),
 				'href'   => admin_url( 'options-general.php?page=optimize-webfonts' ),
@@ -59,8 +59,8 @@ class Actions {
 
 		$admin_bar->add_menu(
 			[
-				'id'     => 'omgf-pro-refresh-cache',
-				'parent' => 'omgf-pro',
+				'id'     => 'omgf-refresh-cache',
+				'parent' => 'omgf',
 				'title'  => __( 'Refresh cached fonts', 'host-webfonts-local' ),
 				'href'   => home_url( $wp->request . '?omgf_optimize=1' ),
 			]
@@ -68,8 +68,8 @@ class Actions {
 
 		$admin_bar->add_menu(
 			[
-				'id'     => 'omgf-pro-refresh-cache-current-page',
-				'parent' => 'omgf-pro',
+				'id'     => 'omgf-refresh-cache-current-page',
+				'parent' => 'omgf',
 				'title'  => __( 'Refresh cached fonts for this page', 'host-webfonts-local' ),
 				'href'   => home_url( $wp->request . '?omgf_optimize=1' ),
 			]
