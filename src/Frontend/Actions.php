@@ -65,5 +65,14 @@ class Actions {
 				'href'   => home_url( $wp->request . '?omgf_optimize=1' ),
 			]
 		);
+
+		$admin_bar->add_menu(
+			[
+				'id'     => 'omgf-pro-refresh-cache-current-page',
+				'parent' => 'omgf-pro',
+				'title'  => __( 'Refresh cached fonts for this page', 'host-webfonts-local' ),
+				'href'   => home_url( $wp->request . '?omgf_optimize=1' ),
+			]
+		);
 	}
 }
