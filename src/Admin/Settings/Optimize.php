@@ -496,7 +496,12 @@ class Optimize extends Builder {
 											'None (default)',
 											'host-webfonts-local'
 										); ?></option>
-									<?php foreach ( Settings::OMGF_FALLBACK_FONT_STACKS_OPTIONS as $value => $label ) : ?>
+									<?php foreach (
+										apply_filters(
+											'omgf_pro_fallback_font_stacks',
+											Settings::OMGF_FALLBACK_FONT_STACKS_OPTIONS
+										) as $value => $label
+									) : ?>
                                         <option <?php echo esc_attr(
 											defined( 'OMGF_PRO_ACTIVE' ) && isset(
 												OMGF::get_option(
