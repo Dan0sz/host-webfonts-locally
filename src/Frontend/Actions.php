@@ -55,14 +55,32 @@ class Actions {
 			]
 		);
 
+		$admin_bar->add_menu(
+			[
+				'id'     => 'omgf-optimize',
+				'parent' => 'omgf',
+				'title'  => __( 'Re-run fonts optimization', 'host-webfonts-local' ),
+				'href'   => add_query_arg( 'omgf_optimize', '1', home_url() ),
+			]
+		);
+
 		global $wp;
+
+		$permalink_structure = get_option( 'permalink_structure' );
+		$site_url            = home_url( $wp->request );
+
+		if ( ! $permalink_structure ) {
+			foreach ( $wp->query_vars as $query_var_key => $query_var_value ) {
+				$site_url = add_query_arg( $query_var_key, $query_var_value, $site_url );
+			}
+		}
 
 		$admin_bar->add_menu(
 			[
-				'id'     => 'omgf-refresh-cache',
+				'id'     => 'omgf-optimize-this',
 				'parent' => 'omgf',
-				'title'  => __( 'Re-run fonts optimization for this page', 'host-webfonts-local' ),
-				'href'   => home_url( $wp->request . '?omgf_optimize=1' ),
+				'title'  => __( 'Re-run fonts optimization for current page', 'host-webfonts-local' ),
+				'href'   => add_query_arg( 'omgf_optimize', '1', $site_url ),
 			]
 		);
 	}
