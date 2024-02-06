@@ -81,6 +81,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 = 5.8.0 =
 * Added: Top menu item that gives logged in administrators easy access to OMGF's settings, re-run fonts optimization and re-run fonts optimization for the current page.
+  - If you don't expect to use it, you can disable the top menu in the plugin's Advanced Settings tab.
 
 = 5.7.16 =
 * Improved: PHP 7.2 was no longer supported, due to some string concatenation issues. Fixed this to support 7.2 again.
