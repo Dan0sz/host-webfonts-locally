@@ -42,9 +42,10 @@ class Advanced extends Builder {
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 70 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 80 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 90 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 100 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 110 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 120 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 100 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 110 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 120 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 130 );
 
 		// Close
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_after' ], 200 );
@@ -164,6 +165,20 @@ class Advanced extends Builder {
 				'host-webfonts-local'
 			),
 			true
+		);
+	}
+
+	public function do_disable_quick_access_menu() {
+		$this->do_checkbox(
+			__( 'Disable Quick Access Menu', 'host-webfonts-local' ),
+			Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ),
+			sprintf(
+				__(
+					'Disable the top menu links that give logged in administrators quick access to %s\'s settings and allow you to refresh its cache from the frontend. Re-running fonts optimizations for a page can still be done by appending <code>?omgf_optimize=1</code> to an URL.',
+					'host-webfonts-local'
+				),
+				apply_filters( 'omgf_settings_page_title', 'OMGF' )
+			)
 		);
 	}
 

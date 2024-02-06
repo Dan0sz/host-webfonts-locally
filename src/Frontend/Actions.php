@@ -16,6 +16,9 @@
 
 namespace OMGF\Frontend;
 
+use OMGF\Admin\Settings;
+use OMGF\Helper as OMGF;
+
 class Actions {
 	/**
 	 * Execute all classes required in the frontend.
@@ -27,7 +30,7 @@ class Actions {
 	}
 
 	/**
-	 *
+	 * Initializes everything required to process frontend optimization.
 	 */
 	public function init_frontend() {
 		new \OMGF\Frontend\Process();
@@ -42,7 +45,7 @@ class Actions {
 		/**
 		 * Display only in frontend, for logged in admins.
 		 */
-		if ( ! current_user_can( 'manage_options' ) || is_admin() ) {
+		if ( ! current_user_can( 'manage_options' ) || is_admin() || OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) {
 			return;
 		}
 
