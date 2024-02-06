@@ -61,16 +61,7 @@ class Actions {
 			[
 				'id'     => 'omgf-refresh-cache',
 				'parent' => 'omgf',
-				'title'  => __( 'Refresh cached fonts', 'host-webfonts-local' ),
-				'href'   => home_url( $wp->request . '?omgf_optimize=1' ),
-			]
-		);
-
-		$admin_bar->add_menu(
-			[
-				'id'     => 'omgf-refresh-cache-current-page',
-				'parent' => 'omgf',
-				'title'  => __( 'Refresh cached fonts for this page', 'host-webfonts-local' ),
+				'title'  => __( 'Re-run fonts optimization for this page', 'host-webfonts-local' ),
 				'href'   => home_url( $wp->request . '?omgf_optimize=1' ),
 			]
 		);
