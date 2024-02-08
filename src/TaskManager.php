@@ -134,18 +134,18 @@ class TaskManager {
 				if ( empty( $warnings ) ) :
 					?>
                     <div class="task-manager-notice success">
-                        <h4><?php echo esc_html__( 'No potential conflicts found in your configuration.', 'host-webfonts-local' ); ?></h4>
+                        <h4><?php echo esc_html__( 'No potential issues found in your configuration.', 'host-webfonts-local' ); ?></h4>
                         <ol style="list-style: none; margin-left: 0;">
                             <li><?php echo esc_html(
 									sprintf(
-										__( 'Great job! %s hasn\'t detected any potential conflicts in your configuration.*', 'host-webfonts-local' ),
+										__( 'Great job! %s hasn\'t detected any potential issues in your configuration.*', 'host-webfonts-local' ),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
 									)
 								); ?></li>
                         </ol>
                         <p>
                             <sub>*<em><?php echo esc_html__(
-										'Check back regularly to make sure no conflicts are detected on any of your subpages.',
+										'Check back regularly to make sure no issues are detected on any of your subpages.',
 										'host-webfonts-local'
 									); ?></em></sub>
                         </p>
@@ -155,8 +155,8 @@ class TaskManager {
                         <h4><?php echo sprintf(
 								esc_html(
 									_n(
-										'%s potential conflict found in your configuration.',
-										'%s potential conflicts found in your configuration.',
+										'%s potential issue found in your configuration.',
+										'%s potential issues found in your configuration.',
 										count( $warnings ),
 										'host-webfonts-local'
 									)
