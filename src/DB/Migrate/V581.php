@@ -14,51 +14,38 @@
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
-namespace OMGF\DB;
+namespace OMGF\DB\Migrate;
 
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
 defined( 'ABSPATH' ) || exit;
 
-class Migrate {
-	/** @var string */
-	private $current_version = '';
+class V581 {
+	/** @var $version string The version number this migration script was introduced with. */
+	private $version = '5.8.1';
 
 	/**
-	 * DB Migration constructor.
+	 * Build class
+	 * @return void
 	 */
 	public function __construct() {
-		/**
-		 * Can be used to block migration scripts that shouldn't be run on a fresh install.
-		 */
-		$this->current_version = OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION, '1.0.0' );
-
-		if ( $this->should_run_migration( '5.3.3' ) ) {
-			new Migrate\V533();
-		}
-
-		if ( $this->should_run_migration( '5.3.4' ) ) {
-			new Migrate\V534();
-		}
-
-		if ( $this->should_run_migration( '5.6.0' ) ) {
-			new Migrate\V560();
-		}
-
-		if ( $this->should_run_migration( '5.8.1' ) ) {
-			new Migrate\V581();
-		}
+		$this->init();
 	}
 
 	/**
-	 * Checks whether migration script has been run.
-	 *
-	 * @param mixed $version
-	 *
-	 * @return bool
+	 * Initialize
+	 * @return void
 	 */
-	private function should_run_migration( $version ) {
-		return version_compare( $this->current_version, $version ) < 0;
+	private function init() {
+		/**
+		 * Delete the omgf_fonts object which is no longer used.
+		 */
+		OMGF::delete_option( 'omgf_fonts' );
+
+		/**
+		 * Update stored version number.
+		 */
+		OMGF::update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
 	}
 }
