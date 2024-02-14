@@ -35,7 +35,13 @@ class Process {
 		],
 	];
 
-	const RESOURCE_HINTS_URLS  = [ 'fonts.googleapis.com', 'fonts.gstatic.com', 'fonts.bunny.net', 'fonts-api.wp.com' ];
+	const RESOURCE_HINTS_URLS  = [
+		'fonts.googleapis.com',
+		'fonts.gstatic.com',
+		'fonts.bunny.net',
+		'fonts-api.wp.com',
+		'fonts.mailerlite.com',
+	];
 
 	const RESOURCE_HINTS_ATTR  = [ 'dns-prefetch', 'preconnect', 'preload' ];
 
@@ -153,7 +159,7 @@ class Process {
 			return;
 		}
 
-		$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', OMGF::optimized_fonts() );
+		$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', OMGF::admin_optimized_fonts() );
 		$i               = 0;
 
 		foreach ( $optimized_fonts as $stylesheet_handle => $font_faces ) {
@@ -201,6 +207,7 @@ class Process {
 						"<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n",
 						self::PRELOAD_ALLOWED_HTML
 					);
+
 					$i ++;
 				}
 			}
@@ -313,30 +320,32 @@ class Process {
 		 */
 		preg_match_all( '/(?=\<link).+?(?<=>)/s', $html, $resource_hints );
 
-		if ( ! isset( $resource_hints[ 0 ] ) || empty( $resource_hints[ 0 ] ) ) {
+		if ( empty( $resource_hints[ 0 ] ) ) {
 			return $html;
 		}
 
-		$search = [];
+		/**
+		 * @since v5.1.5 Filter out any resource hints with a href pointing to Google Fonts' APIs.
+		 * @since v5.2.1 Use preg_match() to exactly match an element's attribute, since 3rd party
+		 *               plugins (e.g. Asset Cleanup) also tend to include their own custom attributes,
+		 *               e.g. data-wpacu-to-be-preloaded, which would also match in strpos('preload', $match).
+		 */
+		$search = array_filter(
+			$resource_hints[ 0 ],
+			function ( $resource_hint ) {
+				preg_match( '/href=[\'"](https?:)?\/\/(.*?)[\'"\/]/', $resource_hint, $url );
+				preg_match( '/rel=[\'"](.*?)[ \'"]/', $resource_hint, $attr );
 
-		foreach ( $resource_hints[ 0 ] as $key => $match ) {
-			/**
-			 * @since v5.1.5 Filter out any resource hints with a href pointing to Google Fonts' APIs.
-			 * @since v5.2.1 Use preg_match() to exactly match an element's attribute, since 3rd party
-			 *               plugins (e.g. Asset Cleanup) also tend to include their own custom attributes,
-			 *               e.g. data-wpacu-to-be-preloaded
-			 * TODO: [OMGF-42] I think I should be able to use an array_filter here or something?
-			 */
-			foreach ( self::RESOURCE_HINTS_URLS as $url ) {
-				if ( strpos( $match, $url ) !== false ) {
-					foreach ( self::RESOURCE_HINTS_ATTR as $attr ) {
-						if ( preg_match( "/['\"]{$attr}['\"]/", $match ) === 1 ) {
-							$search[] = $match;
-						}
-					}
+				if ( empty( $url[ 2 ] ) || empty( $attr[ 1 ] ) ) {
+					return false;
 				}
+
+				$url  = $url[ 2 ];
+				$attr = $attr[ 1 ];
+
+				return ! empty( preg_grep( "/$url/", self::RESOURCE_HINTS_URLS ) ) && in_array( $attr, self::RESOURCE_HINTS_ATTR );
 			}
-		}
+		);
 
 		return str_replace( $search, '', $html );
 	}
@@ -367,7 +376,7 @@ class Process {
 		 */
 		preg_match_all( '/<link.*?[\/]?>/s', $html, $links );
 
-		if ( ! isset( $links[ 0 ] ) || empty( $links[ 0 ] ) ) {
+		if ( empty( $links[ 0 ] ) ) {
 			return apply_filters( 'omgf_processed_html', $html, $this );
 		}
 
@@ -677,16 +686,14 @@ class Process {
 
 		$parts = preg_split( '/(<body.*?>)/', $html, - 1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
 
-		if ( ! isset( $parts[ 0 ] ) || ! isset( $parts[ 1 ] ) || ! isset( $parts[ 2 ] ) ) {
+		if ( empty( $parts[ 0 ] ) || empty( $parts[ 1 ] ) || empty( $parts[ 2 ] ) ) {
 			return $html;
 		}
 
 		$message_div =
 			'<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
 
-		$html = $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Cache refreshed successful!', 'host-webfonts-local' ) ) . $parts[ 2 ];
-
-		return $html;
+		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Cache refreshed successful!', 'host-webfonts-local' ) ) . $parts[ 2 ];
 	}
 
 	/**

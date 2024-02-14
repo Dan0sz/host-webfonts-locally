@@ -163,7 +163,7 @@ class Admin {
 	}
 
 	/**
-	 * @see    OMGF::optimized_fonts()
+	 * @see    OMGF::admin_optimized_fonts()
 	 * @since  v5.0.5 Forces get_option() to fetch a fresh copy of omgf_optimized_fonts from the database,
 	 *               we're doing plenty to limit reads from the DB already. So, this is warranted.
 	 *

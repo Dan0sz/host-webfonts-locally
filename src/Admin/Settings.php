@@ -145,11 +145,13 @@ class Settings extends Admin {
 	/**
 	 * Optimize Fonts (Hidden Settings)
 	 */
-	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS = 'omgf_optimized_fonts';
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS          = 'omgf_optimized_fonts';
 
-	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS   = 'omgf_preload_fonts';
+	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND = 'omgf_optimized_fonts_frontend';
 
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS    = 'omgf_unload_fonts';
+	const OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS            = 'omgf_preload_fonts';
+
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS             = 'omgf_unload_fonts';
 
 	/**
 	 * Advanced Settings

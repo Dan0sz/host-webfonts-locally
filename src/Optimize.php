@@ -139,7 +139,7 @@ class Optimize {
 
 		$stylesheet_bak = $this->fetch_stylesheet( $this->url );
 		$fonts_bak      = $this->convert_to_fonts_object( $stylesheet_bak );
-		$url            = $this->unload_variants( $this->url );
+		$url            = $this->remove_unloaded_variants( $this->url );
 		$stylesheet     = $this->fetch_stylesheet( $url );
 		$fonts          = $this->convert_to_fonts_object( $stylesheet );
 
@@ -199,16 +199,25 @@ class Optimize {
 
 		file_put_contents( $local_file, $stylesheet );
 
-		$fonts_bak          = $this->rewrite_variants( $fonts_bak, $fonts );
-		$current_stylesheet = [ $this->original_handle => $fonts_bak ];
+		/**
+		 * @var object $fonts_bak is used to list the fonts in wp-admin (and for loading preloads in the frontend.)
+		 * @var object $fonts     Same as $fonts_bak but without any unloaded fonts.
+		 */
+		$fonts_bak              = $this->rewrite_variants( $fonts_bak, $fonts );
+		$current_stylesheet_bak = [ $this->original_handle => $fonts_bak ];
+		$current_stylesheet     = [ $this->original_handle => $fonts ];
 
 		/**
 		 * $current_stylesheet is added to temporary cache layer, if it isn't present in database.
 		 * @since v4.5.7
 		 */
-		$optimized_fonts = OMGF::optimized_fonts( $current_stylesheet, true );
+		$optimized_fonts = OMGF::admin_optimized_fonts( $current_stylesheet_bak, true );
 
-		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts, false );
+
+		$optimized_fonts_frontend = OMGF::optimized_fonts( $current_stylesheet, true );
+
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND, $optimized_fonts_frontend );
 
 		/**
 		 * @see   OMGF_Optimize_Run
@@ -439,7 +448,7 @@ class Optimize {
 	 *
 	 * @return string
 	 */
-	private function unload_variants( $url ) {
+	private function remove_unloaded_variants( $url ) {
 		if ( ! isset( OMGF::unloaded_fonts()[ $this->original_handle ] ) ) {
 			return $url;
 		}
@@ -587,17 +596,19 @@ class Optimize {
 	/**
 	 * When unload is used, insert the cache key in the font URLs for the variants still in use.
 	 *
-	 * @param array $current                 Contains all font styles, loaded and unloaded.
-	 * @param array $replacement             Contains just the loaded font styles of current stylesheet.
-	 *                                       Both parameters follow this structure:
-	 *                                       (string) Font Family {
-	 *                                       (string) id, (string) family, (array) variants {
-	 *                                       (string) id => (object) {
-	 *                                       (string) id, (string) fontFamily, (string) fontStyle, (string) fontWeight, (string) woff2, (string)
-	 *                                       subset = null, (string) range
-	 *                                       }
-	 *                                       }
-	 *                                       }
+	 * @param object $current     Contains all font styles, loaded and unloaded.
+	 * @param object $replacement Contains just the loaded font styles of current stylesheet.
+	 *
+	 * Both parameters follow this structure:
+	 * @formatter:off
+	 * (string) Font Family {
+	 *      (string) id, (string) family, (array) variants {
+	 *          (string) id => (object) {
+	 *              (string) id, (string) fontFamily, (string) fontStyle, (string) fontWeight, (string) woff2, (string) subset = null, (string) range
+	 *          }
+	 *      }
+	 * }
+	 * @formatter:on
 	 *
 	 * @return array
 	 */

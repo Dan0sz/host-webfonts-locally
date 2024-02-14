@@ -103,7 +103,7 @@ class Optimize extends Builder {
 	 * @return void
 	 */
 	public function task_manager_status() {
-		$stylesheets          = OMGF::optimized_fonts();
+		$stylesheets          = OMGF::admin_optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
 		<?php TaskManager::render_warnings(); ?>
@@ -325,7 +325,7 @@ class Optimize extends Builder {
 		/**
 		 * Note: moving this to the constructor doesn't get it properly refreshed after a page reload.
 		 */
-		$this->optimized_fonts = OMGF::optimized_fonts();
+		$this->optimized_fonts = OMGF::admin_optimized_fonts();
 		?>
         <span class="option-title"><?php echo __( 'Optimize Local Fonts', 'host-webfonts-local' ); ?><span
                     class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span

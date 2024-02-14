@@ -38,7 +38,6 @@ class Ajax {
 
 	/**
 	 * @since v5.4.0 Remove notice from task manager and return new HTML.
-	 *
 	 * @return string Valid HTML.
 	 */
 	public function hide_notice() {
@@ -48,7 +47,7 @@ class Ajax {
 			wp_die( __( 'Hmmm, are you lost?', 'host-webfonts-local' ) );
 		}
 
-		$warning_id     = $_POST['warning_id'];
+		$warning_id     = $_POST[ 'warning_id' ];
 		$hidden_notices = OMGF::get_option( Settings::OMGF_HIDDEN_NOTICES, [] );
 
 		if ( ! in_array( $warning_id, $hidden_notices ) ) {
@@ -76,8 +75,8 @@ class Ajax {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
 		}
 
-		$handle               = $_POST['handle'];
-		$optimized_fonts      = OMGF::optimized_fonts();
+		$handle               = $_POST[ 'handle' ];
+		$optimized_fonts      = OMGF::admin_optimized_fonts();
 		$unloaded_fonts       = OMGF::unloaded_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		$preloaded_fonts      = OMGF::preloaded_fonts();
@@ -149,38 +148,10 @@ class Ajax {
 	}
 
 	/**
-	 * Empty cache directory.
-	 *
-	 * @since v4.5.3: Hardened security.
-	 * @since v4.5.5: Added authentication.
-	 */
-	public function empty_directory() {
-		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
-		}
-
-		try {
-			$init = $_POST['init'] ?? '';
-
-			$this->empty_cache( $init );
-
-			Notice::set_notice( __( 'Cache directory successfully emptied.', 'host-webfonts-local' ) );
-		} catch ( \Exception $e ) {
-			Notice::set_notice(
-				__( 'OMGF encountered an error while emptying the cache directory: ', 'host-webfonts-local' ) . $e->getMessage(),
-				'omgf-cache-error',
-				'error',
-				$e->getCode()
-			);
-		}
-	}
-
-	/**
 	 * Empties the cache directory.
 	 *
 	 * @param string $initiator
+	 *
 	 * @return void
 	 */
 	private function empty_cache( $initiator = 'optimize-webfonts' ) {
@@ -207,15 +178,43 @@ class Ajax {
 		);
 
 		foreach ( $entries as $entry ) {
-			if ( in_array( $entry, $instructions['exclude'] ) ) {
+			if ( in_array( $entry, $instructions[ 'exclude' ] ) ) {
 				continue;
 			}
 
 			OMGF::delete( $entry );
 		}
 
-		foreach ( $instructions['queue'] as $option ) {
+		foreach ( $instructions[ 'queue' ] as $option ) {
 			OMGF::delete_option( $option );
+		}
+	}
+
+	/**
+	 * Empty cache directory.
+	 * @since v4.5.3: Hardened security.
+	 * @since v4.5.5: Added authentication.
+	 */
+	public function empty_directory() {
+		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+		}
+
+		try {
+			$init = $_POST[ 'init' ] ?? '';
+
+			$this->empty_cache( $init );
+
+			Notice::set_notice( __( 'Cache directory successfully emptied.', 'host-webfonts-local' ) );
+		} catch ( \Exception $e ) {
+			Notice::set_notice(
+				__( 'OMGF encountered an error while emptying the cache directory: ', 'host-webfonts-local' ) . $e->getMessage(),
+				'omgf-cache-error',
+				'error',
+				$e->getCode()
+			);
 		}
 	}
 
