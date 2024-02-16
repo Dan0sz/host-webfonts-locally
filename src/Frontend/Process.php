@@ -159,7 +159,7 @@ class Process {
 			return;
 		}
 
-		$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', OMGF::admin_optimized_fonts() );
+		$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', OMGF::optimized_fonts() );
 		$i               = 0;
 
 		foreach ( $optimized_fonts as $stylesheet_handle => $font_faces ) {
