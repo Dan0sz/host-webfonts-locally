@@ -395,7 +395,6 @@ class Helper {
 				continue;
 			}
 
-			// phpcs:ignore
 			error_log(
 				current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ': ' . $key . ' => ' . $elem . "\n",
 				3,
@@ -433,7 +432,6 @@ class Helper {
 			return;
 		}
 
-		// phpcs:ignore
 		error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ": $message\n", 3, self::log_file() );
 	}
 
