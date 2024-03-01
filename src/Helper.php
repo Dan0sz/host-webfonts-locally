@@ -366,8 +366,8 @@ class Helper {
 	 * array feature, to easily display, well, arrays in the debug log (duh!)
 	 * @since v5.3.7
 	 *
-	 * @param $array The array to be displayed in the debug log
-	 * @param $name  A descriptive name to be shown in the debug log
+	 * @param array  $array The array to be displayed in the debug log
+	 * @param string $name  A descriptive name to be shown in the debug log
 	 *
 	 * @return void
 	 */
