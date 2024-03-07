@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
 Requires at least: 4.6
 Tested up to: 6.4
-Stable tag: 5.8.0
+Stable tag: 5.8.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -78,6 +78,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.8.1 =
+* Improved: double check if the omgf_fonts row is still present in the wp_options table and remove it.
+* Improved: separate the fonts used for displaying the Optimize Local Fonts and fonts used in the frontend, for a small autoload related performance improvement.
+* Added: Process External Stylesheets promo option.
 
 = 5.8.0 =
 * Added: Top menu item that gives logged in administrators easy access to OMGF's settings, re-run fonts optimization and re-run fonts optimization for the current page.
