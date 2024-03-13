@@ -284,7 +284,7 @@ class Helper {
 		 * Fallback to original Optimized Fonts table.
 		 */
 		if ( empty( $optimized_fonts ) ) {
-			$optimized_fonts = self::optimized_fonts();
+			$optimized_fonts = self::admin_optimized_fonts();
 		}
 
 		/**
