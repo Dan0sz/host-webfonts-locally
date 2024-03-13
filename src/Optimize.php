@@ -126,7 +126,9 @@ class Optimize {
 				case 'path':
 					return $local_file;
 				case 'object':
-					return [ $this->original_handle => OMGF::optimized_fonts()[ $this->original_handle ] ];
+					$object = OMGF::optimized_fonts()[ $this->original_handle ] ?? (object) [];
+
+					return [ $this->original_handle => $object ];
 				default:
 					return str_replace( OMGF_UPLOAD_DIR, OMGF_UPLOAD_URL, $local_file );
 			}
