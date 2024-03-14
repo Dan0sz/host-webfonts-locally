@@ -144,7 +144,7 @@ class Detection extends Builder {
 				),
 			],
 			'process_external_stylesheets' => [
-				'label'       => __( 'Process External Stylesheets', 'host-webfonts-local', ),
+				'label'       => __( 'Process External Stylesheets', 'host-webfonts-local' ),
 				'description' => sprintf(
 					__(
 						'Scan stylesheets from external sources (i.e. not <code>%s</code>) loaded by your theme and plugins for <code>@import</code> and <code>@font-face</code> statements loading Google Fonts and process them. Since this option contacts 3rd party servers, it can affect initial pageload times, i.e. when the external stylesheet is not yet cached.',
