@@ -25,6 +25,9 @@ class ComposerStaticInit20ffbdf9670d31d6ed9d94ce50faf1c3
         ),
         'O' => 
         array (
+            'OMGF\\Tests\\Unit\\' => 16,
+            'OMGF\\Tests\\Integration\\' => 23,
+            'OMGF\\Tests\\' => 11,
             'OMGF\\' => 5,
         ),
         'M' => 
@@ -58,6 +61,18 @@ class ComposerStaticInit20ffbdf9670d31d6ed9d94ce50faf1c3
         'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
         array (
             0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
+        ),
+        'OMGF\\Tests\\Unit\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests/unit',
+        ),
+        'OMGF\\Tests\\Integration\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests/integration',
+        ),
+        'OMGF\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
         ),
         'OMGF\\' => 
         array (
