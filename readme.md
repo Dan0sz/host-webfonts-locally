@@ -1,17 +1,23 @@
 # OMGF | GDPR Compliant, Faster Google Fonts. Easy.
 
-**OMGF can be downloaded for free without any paid subscription from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).**
+[![Github CI](https://github.com/Dan0sz/host-webfonts-locally/actions/workflows/tests.yml/badge.svg)](https://github.com/Dan0sz/host-webfonts-locally/actions/workflows/tests.yml) [![codecov](https://codecov.io/gh/Dan0sz/host-webfonts-locally/graph/badge.svg?token=VNS22P8ZH2)](https://codecov.io/gh/Dan0sz/host-webfonts-locally)
+
+**OMGF can be downloaded for free without any paid subscription
+from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).**
 
 OMGF automagically caches the Google Fonts used by your theme/plugins locally. No configuration (or brains) required!
 
 ## Description
 
-> How could using fonts via Google's service possibly run afoul of GDPR? The fact of the matter is that, when a font is requested by the user's browser, their IP is logged by Google and used for analytics.
+> How could using fonts via Google's service possibly run afoul of GDPR? The fact of the matter is that, when a font is requested by the user's
+> browser, their IP is logged by Google and used for analytics.
 > — Lifehacker
 
-**Leverage Browser Cache**, **reduce DNS lookups/requests**, **reduce Cumulative Layout Shift** and make your Google Fonts **100% GDPR compliant** with OMGF!
+**Leverage Browser Cache**, **reduce DNS lookups/requests**, **reduce Cumulative Layout Shift** and make your Google Fonts **100% GDPR compliant**
+with OMGF!
 
-OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts API to automatically cache the fonts your theme and plugins use to **minimize DNS requests** and speed up your WordPress website.
+OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts API to automatically cache the fonts your theme and plugins
+use to **minimize DNS requests** and speed up your WordPress website.
 
 ## How Does It Work?
 
@@ -36,16 +42,16 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 
 - **Multisite** support,
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
-  - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
-  - `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,
-  - Web Font Loader (`webfont.js`),
-  - Early Access Google Fonts.
-  - Material Icons support.
+	- `@font-face` and `@import` statements inside **inline `<style>` blocks**,
+	- `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,
+	- Web Font Loader (`webfont.js`),
+	- Early Access Google Fonts.
+	- Material Icons support.
 - Modify your fonts' `src: url()` attribute to fully integrate with your configuration,
-  - Use this to serve fonts and the stylesheets from your CDN, or
-  - To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide, etc.), or
-  - Set a relative path to easily migrate from development/staging areas to production/live, or
-  - Anything you like!
+	- Use this to serve fonts and the stylesheets from your CDN, or
+	- To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide, etc.), or
+	- Set a relative path to easily migrate from development/staging areas to production/live, or
+	- Anything you like!
 
 _[Purchase OMGF Pro](https://daan.dev/wordpress/omgf-pro/) | [Documentation](https://daan.dev/docs/omgf-pro/) | [Tested Plugins & Themes](https://daan.dev/docs/omgf-pro/tested-themes-plugins/)_
 
