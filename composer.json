@@ -1,25 +1,50 @@
 {
-    "name": "daandev/omgf",
-    "autoload": {
-        "psr-4": {
-            "OMGF\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Daan from Daan.dev",
-            "email": "18595395+Dan0sz@users.noreply.github.com"
-        }
-    ],
-    "require": {},
-    "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "*",
-        "phpcompatibility/phpcompatibility-wp": "*",
-        "wp-coding-standards/wpcs": "*"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
+  "name": "daandev/omgf",
+  "autoload": {
+    "psr-4": {
+      "OMGF\\": "src/",
+      "OMGF\\Tests\\Integration\\": "tests/integration/",
+      "OMGF\\Tests\\Unit\\": "tests/unit/",
+      "OMGF\\Tests\\": "tests/"
     }
+  },
+  "authors": [
+    {
+      "name": "Daan from Daan.dev",
+      "email": "18595395+Dan0sz@users.noreply.github.com"
+    }
+  ],
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "*",
+    "phpcompatibility/phpcompatibility-wp": "*",
+    "wp-coding-standards/wpcs": "*",
+    "php-parallel-lint/php-console-highlighter": "*",
+    "php-parallel-lint/php-parallel-lint": "*",
+    "yoast/wp-test-utils": "*"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "lint": [
+      "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --show-deprecated --exclude vendor --exclude .git"
+    ],
+    "unit": [
+      "@php ./vendor/bin/phpunit --no-coverage"
+    ],
+    "integration": [
+      "@php ./vendor/bin/phpunit --configuration phpunit-with-integration.xml --no-coverage"
+    ],
+    "coverage": [
+      "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover ./build/clover.xml"
+    ]
+  },
+  "scripts-descriptions": {
+    "lint": "Check the PHP files for parse errors.",
+    "unit": "Run the unit tests without code coverage.",
+    "integration": "Run unit and integration tests without code coverage.",
+    "coverage": "Shorthand for running unit and integration tests with code coverage (best used on local machines only)."
+  }
 }
