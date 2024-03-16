@@ -21,7 +21,7 @@ class ProcessTest extends TestCase {
 
 		$html = $class->parse( $test_html );
 
-		$this->AssertStringContainsString( '//example.org/wp-content/uploads/omgf/astra-google-fonts/astra-google-fonts.css?ver=1710592996', $html );
+		$this->AssertStringContainsString( '//example.org/wp-content/uploads/omgf/astra-google-fonts/astra-google-fonts.css', $html );
 	}
 
 	/**
