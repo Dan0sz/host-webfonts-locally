@@ -4,6 +4,14 @@
 .svn
 .svnignore
 
+.phpunit.result.cache
+.phpunit.cache
+
+test_error.log
+
+build/
+build/*
+
 vendor/*
 !vendor/composer/
 !vendor/autoload.php
