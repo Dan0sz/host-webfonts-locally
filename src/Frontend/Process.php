@@ -197,7 +197,7 @@ class Process {
 					 */
 					$file_path = str_replace( OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, apply_filters( 'omgf_frontend_process_url', $url ) );
 
-					if ( ! file_exists( $file_path ) || in_array( $url, $preloaded ) ) {
+					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) || in_array( $url, $preloaded ) ) {
 						continue;
 					}
 
