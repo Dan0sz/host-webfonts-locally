@@ -42,9 +42,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          submodules: 'true'
-          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Wait if other jobs are running
         uses: ahmadnassri/action-workflow-queue@v1
