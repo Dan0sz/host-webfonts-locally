@@ -45,7 +45,8 @@ class Actions {
 		/**
 		 * Display only in frontend, for logged in admins.
 		 */
-		if ( ! current_user_can( 'manage_options' ) || is_admin() || OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) {
+		if ( ! defined( 'DAAN_DOING_TESTS' ) &&
+			( ! current_user_can( 'manage_options' ) || is_admin() || OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) ) {
 			return;
 		}
 

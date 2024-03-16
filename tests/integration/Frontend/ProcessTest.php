@@ -1,6 +1,6 @@
 <?php
 /**
- * Actions Tests
+ * Process Tests
  * @package OMGF
  * @author  Daan van den Bergh
  */
