@@ -12,7 +12,57 @@ use OMGF\Tests\TestCase;
 
 class ProcessTest extends TestCase {
 	/**
+	 * @see Process::remove_mesmerize_filter()
+	 * @return void
+	 */
+	public function testRemoveMesmerizeFilter() {
+		$class     = new Process ( true );
+		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/mesmerize.html' );
+
+		add_filter( 'stylesheet', [ $this, 'setMesmerizeTheme' ] );
+
+		// When Mesmerize is active theme.
+		$html = $class->remove_mesmerize_filter( $test_html );
+
+		$this->assertStringNotContainsString( 'data-href', $html );
+
+		remove_filter( 'stylesheet', [ $this, 'setMesmerizeTheme' ] );
+
+		$html = $class->remove_mesmerize_filter( $test_html );
+
+		// When any other theme is active theme.
+		$this->assertStringContainsString( 'data-href', $html );
+	}
+
+	public function setMesmerizeTheme() {
+		return 'mesmerize';
+	}
+
+	/**
+	 * Is Success message added properly?
+	 * @see Process::add_success_message()
+	 * @return void
+	 */
+	public function testAddSuccessMessage() {
+		$class = new Process ( true );
+		$html  = $class->add_success_message( '' );
+
+		$this->assertEmpty( $html );
+
+		$_GET[ 'omgf_optimize' ] = 1;
+
+		$html = $class->add_success_message( '' );
+
+		$this->assertEmpty( $html );
+
+		$html = $class->add_success_message( '<head></head><body></body>' );
+
+		$this->assertStringContainsString( 'omgf-optimize-success-message', $html );
+	}
+
+	/**
 	 * Are Google Fonts properly downloaded/replaced?
+	 * @see Process::parse()
 	 * @return void
 	 */
 	public function testParse() {
@@ -26,6 +76,7 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are preloads output properly?
+	 * @see Process::add_preloads()
 	 * @return void
 	 */
 	public function testAddPreloads() {
@@ -69,6 +120,7 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are resource hints properly removed from HTML?
+	 * @see Process::remove_resource_hints()
 	 * @return void
 	 */
 	public function testRemoveResourceHints() {
