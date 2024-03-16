@@ -12,6 +12,19 @@ use OMGF\Tests\TestCase;
 
 class ProcessTest extends TestCase {
 	/**
+	 * Are Google Fonts properly downloaded/replaced?
+	 * @return void
+	 */
+	public function testParse() {
+		$class     = new Process( true );
+		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/google-fonts.html' );
+
+		$html = $class->parse( $test_html );
+
+		$this->AssertStringContainsString( '//example.org/wp-content/uploads/omgf/astra-google-fonts/astra-google-fonts.css?ver=1710592996', $html );
+	}
+
+	/**
 	 * Are preloads output properly?
 	 * @return void
 	 */
@@ -59,7 +72,7 @@ class ProcessTest extends TestCase {
 	 * @return void
 	 */
 	public function testRemoveResourceHints() {
-		$class = new Process( true );
+		$class     = new Process( true );
 		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/resource-hints.html' );
 
 		$html = $class->remove_resource_hints( $test_html );
