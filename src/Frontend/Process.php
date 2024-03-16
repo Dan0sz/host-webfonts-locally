@@ -553,7 +553,7 @@ class Process {
 	 * @return mixed
 	 */
 	private function strip_css_tag( $handle ) {
-		if ( ! $this->ends_with( $handle, '-css' ) ) {
+		if ( ! str_ends_with( $handle, '-css' ) ) {
 			return $handle;
 		}
 
@@ -564,25 +564,6 @@ class Process {
 		}
 
 		return $handle;
-	}
-
-	/**
-	 * Checks if a $string ends with $end.
-	 * @since v5.0.2
-	 *
-	 * @param string $end
-	 * @param string $string
-	 *
-	 * @return bool
-	 */
-	private function ends_with( $string, $end ) {
-		$len = strlen( $end );
-
-		if ( $len === 0 ) {
-			return true;
-		}
-
-		return ( substr( $string, - $len ) === $end );
 	}
 
 	/**
