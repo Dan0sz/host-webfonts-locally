@@ -1,6 +1,6 @@
 # OMGF | GDPR Compliant, Faster Google Fonts. Easy.
 
-[![Github CI](https://github.com/Dan0sz/host-webfonts-locally/actions/workflows/tests.yml/badge.svg)](https://github.com/Dan0sz/host-webfonts-locally/actions/workflows/tests.yml) [![codecov](https://codecov.io/gh/Dan0sz/host-webfonts-locally/graph/badge.svg?token=VNS22P8ZH2)](https://codecov.io/gh/Dan0sz/host-webfonts-locally)
+[![Github CI](https://github.com/Dan0sz/host-webfonts-locally/actions/workflows/tests.yml/badge.svg)](https://github.com/Dan0sz/host-webfonts-locally/actions/workflows/tests.yml) [![codecov](https://codecov.io/gh/Dan0sz/host-webfonts-locally/graph/badge.svg?token=VNS22P8ZH2)](https://codecov.io/gh/Dan0sz/host-webfonts-locally) ![WordPress version](https://img.shields.io/wordpress/plugin/v/host-webfonts-local.svg) ![WordPress Rating](https://img.shields.io/wordpress/plugin/r/host-webfonts-local.svg) ![WordPress Downloads](https://img.shields.io/wordpress/plugin/dt/host-webfonts-local.svg)
 
 **OMGF can be downloaded for free without any paid subscription
 from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).**
