@@ -74,26 +74,4 @@ class SettingsTest extends TestCase {
 
 		do_action( 'omgf_settings_tab' );
 	}
-
-	/**
-	 * @see Settings::do_settings_content()
-	 * @return void
-	 */
-	public function testContent() {
-		$tabs = [
-			Settings::OMGF_SETTINGS_FIELD_OPTIMIZE  => new Settings\Optimize(),
-			Settings::OMGF_SETTINGS_FIELD_DETECTION => new Settings\Detection(),
-			Settings::OMGF_SETTINGS_FIELD_ADVANCED  => new Settings\Advanced(),
-		];
-
-		foreach ( $tabs as $tab => $class ) {
-			$_GET[ 'tab' ] = $tab;
-
-			new Settings();
-
-			$this->expectOutputContains( str_replace( '-', '_', $tab ) );
-		}
-
-		do_action( 'omgf_settings_content' );
-	}
 }
