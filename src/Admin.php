@@ -297,6 +297,8 @@ class Admin {
 	 * @return bool Whether $array1 contains different values, $compared to array2.
 	 */
 	private function array_diff( $array1, $array2 ) {
+		$diff = false;
+
 		foreach ( $array1 as $key => $value ) {
 			if ( is_array( $value ) ) {
 				$diff = $this->array_diff( $value, $array2[ $key ] );
