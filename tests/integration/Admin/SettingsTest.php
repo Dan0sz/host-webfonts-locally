@@ -92,8 +92,8 @@ class SettingsTest extends TestCase {
 			new Settings();
 
 			$this->expectOutputContains( str_replace( '-', '_', $tab ) );
-
-			do_action( 'omgf_settings_content' );
 		}
+
+		do_action( 'omgf_settings_content' );
 	}
 }
