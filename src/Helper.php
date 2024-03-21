@@ -180,7 +180,7 @@ class Helper {
 	public static function get_cache_key( $handle ) {
 		$cache_keys = self::cache_keys();
 
-		foreach ( $cache_keys as $index => $key ) {
+		foreach ( $cache_keys as $key ) {
 			/**
 			 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
 			 */
