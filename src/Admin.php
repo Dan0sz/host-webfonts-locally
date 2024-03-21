@@ -56,8 +56,8 @@ class Admin {
 		$this->maybe_do_after_update_notice();
 
 		add_filter( 'alloptions', [ $this, 'force_optimized_fonts_from_db' ] );
-		add_filter( 'pre_update_option_omgf_cache_keys', [ $this, 'clean_up_cache' ], 10, 3 );
-		add_filter( 'pre_update_option_omgf_settings', [ $this, 'settings_changed' ], 10, 3 );
+		add_action( 'update_option_omgf_cache_keys', [ $this, 'clean_up_cache' ], 10, 2 );
+		add_action( 'update_option_omgf_settings', [ $this, 'maybe_show_stale_cache_notice' ], 10, 2 );
 	}
 
 	/**
@@ -173,7 +173,7 @@ class Admin {
 	 */
 	public function force_optimized_fonts_from_db( $alloptions ) {
 		if ( isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) &&
-			$alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] == false ) {
+			! $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) {
 			unset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] );
 		}
 
@@ -183,18 +183,14 @@ class Admin {
 	/**
 	 * Triggered when unload settings is changed, cleans up old cache files.
 	 * TODO: Clean up doesn't work on 2nd run?
-	 *
-	 * @param $old_value
-	 * @param $value
-	 * @param $option_name
 	 */
 	public function clean_up_cache( $value, $old_value ) {
 		if ( $old_value == $value ) {
-			return $value;
+			return;
 		}
 
 		if ( $old_value == null ) {
-			return $value;
+			return;
 		}
 
 		$cache_keys = explode( ',', $old_value );
@@ -206,32 +202,30 @@ class Admin {
 				OMGF::delete( $entry );
 			}
 		}
-
-		return $value;
 	}
 
 	/**
 	 * Shows notice if $option_name is in $show_notice array.
-	 * @see $show_notice
+	 * @see $show_message
 	 *
-	 * @param $old_settings
-	 * @param $new_value
+	 * @param $old_values
+	 * @param $values
 	 *
-	 * @return mixed
+	 * @return void
 	 */
-	public function settings_changed( $values, $old_values, $option_name ) {
+	public function maybe_show_stale_cache_notice( $old_values, $values ) {
 		/**
 		 * Don't show this message on the Main tab.
 		 */
-		if ( array_key_exists( 'tab', $_GET ) && $_GET[ 'tab' ] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) {
-			return $values;
+		if ( ! array_key_exists( 'tab', $_GET ) || ( $_GET[ 'tab' ] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) ) {
+			return;
 		}
 
 		/**
 		 * If either of these isn't an array, this means they haven't been set before.
 		 */
 		if ( ! is_array( $old_values ) || ! is_array( $values ) ) {
-			return $values;
+			return;
 		}
 
 		/**
@@ -254,7 +248,7 @@ class Admin {
 		$diff = $this->array_diff( $new, $old );
 
 		/**
-		 * If $old_value equals false, that means it's never been set before.
+		 * If $old equals false, that means it's never been set before.
 		 */
 		if ( $diff ) {
 			global $wp_settings_errors;
@@ -292,8 +286,6 @@ class Admin {
 				);
 			}
 		}
-
-		return $values;
 	}
 
 	/**
