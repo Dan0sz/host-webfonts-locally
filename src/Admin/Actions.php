@@ -27,7 +27,7 @@ class Actions {
 		add_action( '_admin_menu', [ $this, 'init_admin' ] );
 		add_action( 'admin_init', [ $this, 'do_optimize' ] );
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
-		add_action( 'in_plugin_update_message-' . OMGF_PLUGIN_BASENAME, [ $this, 'render_update_notice' ], 11, 2 );
+		add_action( 'in_plugin_update_message-' . OMGF_PLUGIN_BASENAME, [ $this, 'render_update_notice' ], 11 );
 		add_action( 'omgf_pre_update_setting_cache_keys', [ $this, 'clean_stale_cache' ], 10, 2 );
 	}
 
@@ -137,7 +137,7 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function render_update_notice( $plugin, $response ) {
+	public function render_update_notice( $plugin ) {
 		$current_version = $plugin[ 'Version' ];
 		$new_version     = $plugin[ 'new_version' ];
 
