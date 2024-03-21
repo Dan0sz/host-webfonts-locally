@@ -43,7 +43,11 @@ class PluginTest extends TestCase {
 	public function testMigrateDb() {
 		new Plugin();
 
+		add_filter( 'omgf_setting_omgf_current_db_version', '__return_false' );
+
 		do_action( 'plugins_loaded' );
+
+		add_filter( 'omgf_setting_omgf_current_db_version', '__return_false' );
 
 		$this->assertTrue( true );
 	}
