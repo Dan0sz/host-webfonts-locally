@@ -54,6 +54,7 @@ class Filters {
 	 * @param mixed $url
 	 *
 	 * @return mixed
+	 * @todo  Is this still needed, since we're using protocol relative URLs now?
 	 */
 	public function force_ssl( $url ) {
 		/**
