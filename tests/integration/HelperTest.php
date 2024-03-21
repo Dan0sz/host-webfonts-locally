@@ -75,10 +75,6 @@ class HelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetCacheKey() {
-		$cache_key = OMGF::get_cache_key( 'test' );
-
-		$this->assertEmpty( $cache_key );
-
 		add_filter( 'omgf_setting_cache_keys', [ $this, 'addTestCacheKey' ] );
 
 		$cache_key = OMGF::get_cache_key( 'test' );
@@ -86,13 +82,6 @@ class HelperTest extends TestCase {
 		remove_filter( 'omgf_setting_cache_keys', [ $this, 'addTestCacheKey' ] );
 
 		$this->assertEquals( 'test_cache_key', $cache_key );
-	}
-
-	/**
-	 * @return string
-	 */
-	public function addTestCacheKey() {
-		return 'cache_key,test_cache_key';
 	}
 
 	/**

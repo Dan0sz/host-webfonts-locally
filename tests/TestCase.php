@@ -30,4 +30,11 @@ class TestCase extends YoastTestCase {
 
 		parent::__construct();
 	}
+
+	/**
+	 * @return string
+	 */
+	public function addTestCacheKey() {
+		return 'cache_key,test_cache_key';
+	}
 }
