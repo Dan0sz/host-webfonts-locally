@@ -39,7 +39,7 @@ class Filters {
 	 * @return bool|array
 	 */
 	public function base64_decode_optimized_fonts( $value ) {
-		if ( is_string( $value ) && base64_decode( $value, true ) ) {
+		if ( is_string( $value ) && base64_encode( ( base64_encode( base64_decode( base64_decode( $value, true ) ) ) ) ) === $value ) {
 			return base64_decode( $value );
 		}
 
