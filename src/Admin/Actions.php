@@ -72,7 +72,7 @@ class Actions {
 		$updated_settings = $this->clean( $_POST );
 
 		foreach ( $updated_settings as $option_name => $option_value ) {
-			if ( strpos( $option_name, 'omgf_' ) !== 0 || ( empty( $option_value ) && $option_value !== '0' ) ) {
+			if ( ! str_starts_with( $option_name, 'omgf_' ) || ( empty( $option_value ) && $option_value !== '0' ) ) {
 				continue;
 			}
 
@@ -185,7 +185,7 @@ class Actions {
 			$base_key      = preg_replace( '/-mod.*?$/', '', $new_cache_key );
 
 			foreach ( $old_keys as $old_cache_key ) {
-				if ( strpos( $old_cache_key, $base_key ) !== false ) {
+				if ( str_contains( $old_cache_key, $base_key ) ) {
 					$dir_to_remove = $old_cache_key;
 
 					break;

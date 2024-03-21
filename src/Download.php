@@ -68,7 +68,7 @@ class Download {
 			return $file_url;
 		}
 
-		if ( strpos( $this->url, '//' ) === 0 ) {
+		if ( str_starts_with( $this->url, '//' ) ) {
 			$this->url = 'https:' . $this->url;
 		}
 

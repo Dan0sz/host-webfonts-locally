@@ -39,7 +39,7 @@ class Helper {
 	 */
 	public static function update_option( $setting, $value, $autoload = true ) {
 		// If $setting starts with 'omgf_' it should be saved in a separate row.
-		if ( strpos( $setting, 'omgf_' ) === 0 ) {
+		if ( str_starts_with( $setting, 'omgf_' ) ) {
 			return update_option( $setting, $value, $autoload );
 		}
 
@@ -86,10 +86,10 @@ class Helper {
 	 *
 	 * @param string $setting
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public static function delete_option( $setting ) {
-		if ( strpos( $setting, 'omgf_' ) === 0 || apply_filters( 'omgf_delete_option', false, $setting ) ) {
+		if ( str_starts_with( $setting, 'omgf_' ) || apply_filters( 'omgf_delete_option', false, $setting ) ) {
 			return delete_option( $setting );
 		}
 
@@ -127,7 +127,7 @@ class Helper {
 	 */
 	public static function get_option( $name, $default = null ) {
 		// If $name starts with 'omgf_' it means it is saved in a separate row.
-		if ( strpos( $name, 'omgf_' ) === 0 ) {
+		if ( str_starts_with( $name, 'omgf_' ) ) {
 			$value = get_option( $name, $default );
 
 			return apply_filters( 'omgf_setting_' . str_replace( 'omgf_', '', $name ), $value );
@@ -184,7 +184,7 @@ class Helper {
 			/**
 			 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
 			 */
-			if ( strpos( $key, strtolower( $handle ) ) !== false ) {
+			if ( str_contains( $key, strtolower( $handle ) ) ) {
 				return $key;
 			}
 		}

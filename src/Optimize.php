@@ -112,7 +112,7 @@ class Optimize {
 		/**
 		 * Convert protocol relative URLs.
 		 */
-		if ( strpos( $this->url, '//' ) === 0 ) {
+		if ( str_starts_with( $this->url, '//' ) ) {
 			$this->url = 'https:' . $this->url;
 		}
 
@@ -459,7 +459,7 @@ class Optimize {
 
 		OMGF::debug( __( 'Looking for unloads for: ', 'host-webfonts-local' ) . $url );
 
-		if ( strpos( $url, '/css2' ) !== false ) {
+		if ( str_contains( $url, '/css2' ) ) {
 			$url = $this->unload_css2( $url );
 		} else {
 			$url = $this->unload_css( $url );
@@ -567,7 +567,7 @@ class Optimize {
 			 */
 			foreach ( $tuples as &$tuple ) {
 				// Convert shorthand syntax to regular syntax.
-				if ( strpos( $tuple, 'i' ) !== false && strpos( $tuple, 'italic' ) === false ) {
+				if ( str_contains( $tuple, 'i' ) && ! str_contains( $tuple, 'italic' ) ) {
 					$tuple = str_replace( 'i', 'italic', $tuple );
 				}
 			}

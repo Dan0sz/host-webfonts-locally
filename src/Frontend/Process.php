@@ -390,9 +390,9 @@ class Process {
 		$links = array_filter(
 			$links[ 0 ],
 			function ( $link ) {
-				return strpos( $link, 'fonts.googleapis.com/css' ) !== false ||
-					strpos( $link, 'fonts.bunny.net/css' ) !== false ||
-					strpos( $link, 'fonts-api.wp.com/css' ) !== false;
+				return str_contains( $link, 'fonts.googleapis.com/css' ) ||
+					str_contains( $link, 'fonts.bunny.net/css' ) ||
+					str_contains( $link, 'fonts-api.wp.com/css' );
 			}
 		);
 
@@ -420,7 +420,7 @@ class Process {
 		$count_iframes = count( $found_iframes );
 
 		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
-			if ( strpos( $html, $script ) !== false && ! in_array( $script_id, $found_iframes ) ) {
+			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
 				$found_iframes[] = $script_id;
 			}
 		}
@@ -496,7 +496,7 @@ class Process {
 			 *               many different Google Fonts stylesheets configured throughout their pages and
 			 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
 			 */
-			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && strpos( $id, 'et-builder-googlefonts' ) !== false ) {
+			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && str_contains( $id, 'et-builder-googlefonts' ) ) {
 				$google_fonts[ $key ][ 'id' ] = $id . '-' . strlen( $href[ 'href' ] );
 			} elseif ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
 				/**
@@ -507,7 +507,7 @@ class Process {
 				 *               sure we can make a difference between different Google Fonts configurations.
 				 */
 				$google_fonts[ $key ][ 'id' ] = str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id );
-			} elseif ( strpos( $id, 'sp-wpcp-google-fonts' ) !== false ) {
+			} elseif ( str_contains( $id, 'sp-wpcp-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Category Slider Pro for WooCommerce by ShapedPlugin
 				 * @since v5.3.7 This plugin finds it necessary to provide each Google Fonts stylesheet with a
@@ -515,13 +515,13 @@ class Process {
 				 *               On top of that, it throws OMGF off the rails entirely, eventually crashing the site.
 				 */
 				$google_fonts[ $key ][ 'id' ] = 'sp-wpcp-google-fonts';
-			} elseif ( strpos( $id, 'sp-lc-google-fonts' ) !== false ) {
+			} elseif ( str_contains( $id, 'sp-lc-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Logo Carousel Pro by ShapedPlugin
 				 * @since v5.3.8 Same reason as above.
 				 */
 				$google_fonts[ $key ][ 'id' ] = 'sp-lc-google-fonts';
-			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', strpos( $id, 'cp-google-fonts' ) !== false ) ) {
+			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', str_contains( $id, 'cp-google-fonts' ) ) ) {
 				/**
 				 * Compatibility fix for Convert Pro by Brainstorm Force
 				 * @since  v5.5.4 Same reason as above, although it kind of makes sense in this case (since Convert Pro allows
@@ -689,7 +689,7 @@ class Process {
 	public function remove_mesmerize_filter( $tag ) {
 		if ( ( wp_get_theme()->template === 'mesmerize-pro' ||
 				wp_get_theme()->template === 'highlight-pro' ||
-				wp_get_theme()->template === 'mesmerize' ) && strpos( $tag, 'fonts.googleapis.com' ) !== false ) {
+				wp_get_theme()->template === 'mesmerize' ) && str_contains( $tag, 'fonts.googleapis.com' ) ) {
 			return str_replace( 'href="" data-href', 'href', $tag );
 		}
 

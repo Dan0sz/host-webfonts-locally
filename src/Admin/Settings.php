@@ -246,21 +246,21 @@ class Settings extends Admin {
 			wp_die( __( "You're not cool enough to access this page.", 'host-webfonts-local' ) );
 		}
 		?>
-        <div class="wrap omgf">
-            <h1><?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?></h1>
+		<div class="wrap omgf">
+			<h1><?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?></h1>
 
-            <p>
+			<p>
 				<?php echo get_plugin_data( OMGF_PLUGIN_FILE )[ 'Description' ]; ?>
-            </p>
+			</p>
 
-            <div class="settings-column">
-                <h2 class="omgf-nav nav-tab-wrapper">
+			<div class="settings-column">
+				<h2 class="omgf-nav nav-tab-wrapper">
 					<?php do_action( 'omgf_settings_tab' ); ?>
-                </h2>
+				</h2>
 
 				<?php do_action( 'omgf_settings_content' ); ?>
-            </div>
-        </div>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -310,7 +310,7 @@ class Settings extends Admin {
 		$settings = array_filter(
 			$constants,
 			function ( $key ) use ( $needle ) {
-				return strpos( $key, $needle ) !== false;
+				return str_contains( $key, $needle );
 			},
 			ARRAY_FILTER_USE_KEY
 		);
@@ -337,10 +337,10 @@ class Settings extends Admin {
 	 */
 	private function generate_tab( $id, $icon = null, $label = null ) {
 		?>
-        <a class="nav-tab dashicons-before <?php echo $icon; ?> <?php echo $this->active_tab == $id ? 'nav-tab-active' : ''; ?>"
-           href="<?php echo $this->generate_tab_link( $id ); ?>">
+		<a class="nav-tab dashicons-before <?php echo $icon; ?> <?php echo $this->active_tab == $id ? 'nav-tab-active' : ''; ?>"
+		   href="<?php echo $this->generate_tab_link( $id ); ?>">
 			<?php echo $label; ?>
-        </a>
+		</a>
 		<?php
 	}
 
@@ -390,7 +390,7 @@ class Settings extends Admin {
 			return;
 		}
 		?>
-        <form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post" action="<?php echo apply_filters(
+		<form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post" action="<?php echo apply_filters(
 			'omgf_form_action',
 			admin_url( 'options.php?tab=' . $this->active_tab ),
 			$this->page,
@@ -418,7 +418,7 @@ class Settings extends Admin {
 			<?php if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) : ?>
 				<?php submit_button( $this->submit_button_text, 'primary', 'submit', false, empty( $this->get_settings() ) ? 'disabled' : null ); ?>
 			<?php endif; ?>
-        </form>
+		</form>
 		<?php
 	}
 
@@ -483,7 +483,7 @@ class Settings extends Admin {
 		/**
 		 * If a WordPress update is available, show the original text.
 		 */
-		if ( strpos( $text, 'Get Version' ) !== false ) {
+		if ( str_contains( $text, 'Get Version' ) ) {
 			return $text;
 		}
 

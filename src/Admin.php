@@ -263,7 +263,7 @@ class Admin {
 
 			if ( ! empty( $wp_settings_errors ) ) {
 				foreach ( $wp_settings_errors as $error ) {
-					if ( strpos( $error[ 'code' ], 'omgf' ) !== false ) {
+					if ( str_contains( $error[ 'code' ], 'omgf' ) ) {
 						$show_message = false;
 
 						break;

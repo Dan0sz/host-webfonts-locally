@@ -105,11 +105,11 @@ class TaskManager {
 	 */
 	public static function render_warnings() {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
-            <tr valign="top" id="task-manager-notice-test-mode-row">
-                <td colspan="2" class="task-manager-row">
-                    <div class="task-manager-notice info">
-                        <h4><?php echo esc_html__( 'Test Mode is Enabled', 'host-webfonts-local' ); ?></h4>
-                        <p>
+			<tr valign="top" id="task-manager-notice-test-mode-row">
+				<td colspan="2" class="task-manager-row">
+					<div class="task-manager-notice info">
+						<h4><?php echo esc_html__( 'Test Mode is Enabled', 'host-webfonts-local' ); ?></h4>
+						<p>
 							<?php echo wp_kses(
 								sprintf(
 									__(
@@ -120,39 +120,39 @@ class TaskManager {
 								),
 								'post'
 							); ?>
-                        </p>
-                    </div>
-                </td>
-            </tr>
+						</p>
+					</div>
+				</td>
+			</tr>
 		<?php endif; ?>
-        <tr valign="top" id="task-manager-notice-row">
-            <td colspan="2" class="task-manager-row">
+		<tr valign="top" id="task-manager-notice-row">
+			<td colspan="2" class="task-manager-row">
 				<?php
 				$warnings = self::get_warnings();
 				$plugins  = self::get_active_plugins();
 
 				if ( empty( $warnings ) ) :
 					?>
-                    <div class="task-manager-notice success">
-                        <h4><?php echo esc_html__( 'No potential issues found in your configuration.', 'host-webfonts-local' ); ?></h4>
-                        <ol style="list-style: none; margin-left: 0;">
-                            <li><?php echo esc_html(
+					<div class="task-manager-notice success">
+						<h4><?php echo esc_html__( 'No potential issues found in your configuration.', 'host-webfonts-local' ); ?></h4>
+						<ol style="list-style: none; margin-left: 0;">
+							<li><?php echo esc_html(
 									sprintf(
 										__( 'Great job! %s hasn\'t detected any potential issues in your configuration.*', 'host-webfonts-local' ),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
 									)
 								); ?></li>
-                        </ol>
-                        <p>
-                            <sub>*<em><?php echo esc_html__(
+						</ol>
+						<p>
+							<sub>*<em><?php echo esc_html__(
 										'Check back regularly to make sure no issues are detected on any of your subpages.',
 										'host-webfonts-local'
 									); ?></em></sub>
-                        </p>
-                    </div>
+						</p>
+					</div>
 				<?php else : ?>
-                    <div class="task-manager-notice warning">
-                        <h4><?php echo sprintf(
+					<div class="task-manager-notice warning">
+						<h4><?php echo sprintf(
 								esc_html(
 									_n(
 										'%s potential issue found in your configuration.',
@@ -163,10 +163,10 @@ class TaskManager {
 								),
 								count( $warnings )
 							); ?>*</h4>
-                        <ol <?php echo count( $warnings ) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
+						<ol <?php echo count( $warnings ) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
 							<?php foreach ( $warnings as $warning_id ) : ?>
 								<?php $show_mark_as_fixed = true; ?>
-                                <li id="omgf-notice-<?php echo esc_attr( $warning_id ); ?>">
+								<li id="omgf-notice-<?php echo esc_attr( $warning_id ); ?>">
 									<?php if ( $warning_id === 'is_multisite' ) : ?>
 										<?php echo wp_kses(
 											sprintf(
@@ -280,30 +280,30 @@ class TaskManager {
 										); ?>
 									<?php endif; ?>
 									<?php if ( $show_mark_as_fixed ) : ?>
-                                        <small>[<a href="#" class="hide-notice"
-                                                   data-nonce="<?php echo esc_attr( wp_create_nonce( Settings::OMGF_ADMIN_PAGE ) ); ?>"
-                                                   data-warning-id="<?php echo esc_attr( $warning_id ); ?>"
-                                                   id="omgf-hide-notice-<?php echo esc_attr( $warning_id ); ?>"><?php echo esc_html__(
+										<small>[<a href="#" class="hide-notice"
+												   data-nonce="<?php echo esc_attr( wp_create_nonce( Settings::OMGF_ADMIN_PAGE ) ); ?>"
+												   data-warning-id="<?php echo esc_attr( $warning_id ); ?>"
+												   id="omgf-hide-notice-<?php echo esc_attr( $warning_id ); ?>"><?php echo esc_html__(
 													'Mark as fixed',
 													'host-webfonts-local'
 												); ?></a>]</small>
 									<?php endif; ?>
-                                </li>
+								</li>
 							<?php endforeach; ?>
-                        </ol>
-                        <p>
-                            <sub>*<em><?php echo wp_kses(
+						</ol>
+						<p>
+							<sub>*<em><?php echo wp_kses(
 										__(
 											'After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won\'t disappear by itself.',
 											'host-webfonts-local'
 										),
 										'post'
 									); ?></em></sub>
-                        </p>
-                    </div>
+						</p>
+					</div>
 				<?php endif; ?>
-            </td>
-        </tr>
+			</td>
+		</tr>
 		<?php
 	}
 
@@ -327,7 +327,7 @@ class TaskManager {
 		 *               add non-ssl (http://) links to stylesheets, and will lead to CORS and/or Mixed Content warnings in your frontend,
 		 *               effectively showing nothing but system fonts.
 		 */
-		if ( strpos( get_option( 'home' ), 'http://' ) !== false || strpos( get_option( 'siteurl' ), 'http://' ) !== false ) {
+		if ( str_contains( get_option( 'home' ), 'http://' ) || str_contains( get_option( 'siteurl' ), 'http://' ) ) {
 			$warnings[] = 'no_ssl';
 		}
 
