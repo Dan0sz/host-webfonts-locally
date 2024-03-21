@@ -75,7 +75,7 @@ class Process {
 
 	/**
 	 * Break out early, e.g. if we want to parse other resources and don't need to
-	 * setup all the hooks and filters.
+	 * set up all the hooks and filters.
 	 * @since v5.4.0
 	 * @var bool $break
 	 */
@@ -115,10 +115,7 @@ class Process {
 		if ( $this->break ||
 			isset( $_GET[ 'nomgf' ] ) ||
 			( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf_optimize' ] ) ) &&
-				( $test_mode_enabled &&
-					! current_user_can( 'manage_options' ) &&
-					! isset( $_GET[ 'omgf_optimize' ] ) &&
-					! isset( $_GET[ 'omgf' ] ) ) ) ) {
+				( ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf' ] ) ) ) ) {
 			return;
 		}
 
