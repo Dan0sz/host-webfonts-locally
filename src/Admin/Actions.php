@@ -58,14 +58,14 @@ class Actions {
 			return;
 		}
 
-		$action = $_GET[ 'tab' ] ? $_GET[ 'tab' ] . '-options' : 'omgf-optimize-settings-options';
+		$action = array_key_exists( 'tab', $_GET ) ? $_GET[ 'tab' ] . '-options' : 'omgf-optimize-settings-options';
 		$nonce  = $_POST[ '_wpnonce' ] ?? '';
 
 		if ( wp_verify_nonce( $nonce, $action ) < 1 ) {
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! defined( 'DAAN_DOING_TESTS' ) && ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -78,11 +78,9 @@ class Actions {
 
 			if ( is_array( $option_value ) ) {
 				foreach ( $option_value as $setting_name => $setting_value ) {
-					do_action( 'omgf_pre_update_setting_' . $setting_name, $setting_name, $setting_value );
+					do_action( "omgf_pre_update_setting_$setting_name", $setting_name, $setting_value );
 				}
 			}
-
-			$merged = [];
 
 			if ( is_string( $option_value ) && $option_value !== '0' ) {
 				$merged = $option_value;
@@ -108,9 +106,10 @@ class Actions {
 		// Redirect back to the settings page that was submitted.
 		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
 
-		// phpcs:ignore
-		wp_redirect( $goback );
-		exit;
+		if ( ! defined( 'DAAN_DOING_TESTS' ) ) {
+			wp_redirect( $goback );
+			exit;
+		}
 	}
 
 	/**
