@@ -30,7 +30,7 @@ class Migrate {
 	 */
 	public function __construct() {
 		/**
-		 * Can be used to block migration scripts that shouldn't be run on a fresh install.
+		 * Can be used to block migration scripts that shouldn't be run on a fresh installation.
 		 */
 		$this->current_version = OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION, '1.0.0' );
 
