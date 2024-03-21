@@ -59,13 +59,20 @@ class Plugin {
 	 * Define constants.
 	 */
 	public function define_constants() {
+		if ( defined( 'OMGF_UPLOAD_URL' ) ) {
+			return;
+		}
+
 		/** Prevents undefined constant in OMGF Pro, if its not at version v3.3.0 (yet) */
 		define( 'OMGF_OPTIMIZATION_MODE', false );
 		define( 'OMGF_SITE_URL', 'https://daan.dev' );
 		define( 'OMGF_CACHE_IS_STALE', esc_attr( OMGF::get_option( Settings::OMGF_CACHE_IS_STALE ) ) );
 		define( 'OMGF_CURRENT_DB_VERSION', esc_attr( OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION ) ) );
 		define( 'OMGF_UPLOAD_DIR', apply_filters( 'omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf' ) );
-		define( 'OMGF_UPLOAD_URL', apply_filters( 'omgf_upload_url', str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' ) ) );
+		define(
+			'OMGF_UPLOAD_URL',
+			apply_filters( 'omgf_upload_url', str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' ) )
+		);
 	}
 
 	/**
