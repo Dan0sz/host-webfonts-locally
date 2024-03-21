@@ -123,7 +123,7 @@ class Actions {
 	 */
 	private function clean( $var ) {
 		if ( is_array( $var ) ) {
-			return array_map( [ __CLASS__, __METHOD__ ], $var );
+			return array_map( [ $this, 'clean' ], $var );
 		}
 
 		return is_scalar( $var ) ? sanitize_text_field( wp_unslash( $var ) ) : $var;
