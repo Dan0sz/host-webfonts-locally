@@ -310,7 +310,7 @@ class Admin {
 				continue;
 			}
 
-			$diff = isset( $array2[ $key ] ) ? $value !== $array2[ $key ] : true;
+			$diff = ! isset( $array2[ $key ] ) || $value !== $array2[ $key ];
 
 			if ( $diff ) {
 				break;
