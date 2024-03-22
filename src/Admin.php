@@ -228,8 +228,6 @@ class Admin {
 			return;
 		}
 
-		echo "Both are an array";
-
 		/**
 		 * Fetch options from array, so we can compare both.
 		 */
@@ -248,60 +246,45 @@ class Admin {
 			ARRAY_FILTER_USE_KEY
 		);
 
-		echo 'old: ' . var_dump( $old );
-
-		echo 'new: ' . var_dump( $new );
-
 		$diff = $this->array_diff( $new, $old );
 
-		/**
-		 * If $old equals false, that means it's never been set before.
-		 */
-		if ( $diff ) {
-			echo 'diff detected.';
+		if ( empty( $diff ) ) {
+			return;
+		}
 
-			global $wp_settings_errors;
+		global $wp_settings_errors;
 
-			$show_message = true;
+		$show_message = true;
 
-			if ( ! empty( $wp_settings_errors ) ) {
-				echo "Settings errors not empty";
+		if ( ! empty( $wp_settings_errors ) ) {
+			foreach ( $wp_settings_errors as $error ) {
+				if ( str_contains( $error[ 'code' ], 'omgf' ) ) {
+					$show_message = false;
 
-				foreach ( $wp_settings_errors as $error ) {
-					if ( str_contains( $error[ 'code' ], 'omgf' ) ) {
-						echo "error code contains omgf";
-
-						echo $error[ 'code' ];
-
-						$show_message = false;
-
-						break;
-					}
-				}
-
-				if ( $show_message ) {
-					$wp_settings_errors = [];
+					break;
 				}
 			}
 
 			if ( $show_message ) {
-				echo "message shown";
-
-				OMGF::update_option( Settings::OMGF_CACHE_IS_STALE, true );
-
-				add_settings_error(
-					'general',
-					'omgf_cache_style',
-					sprintf(
-						__(
-							'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.',
-							'host-webfonts-local'
-						),
-						admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )
-					),
-					'success'
-				);
+				$wp_settings_errors = [];
 			}
+		}
+
+		if ( $show_message ) {
+			OMGF::update_option( Settings::OMGF_CACHE_IS_STALE, true );
+
+			add_settings_error(
+				'general',
+				'omgf_cache_stale',
+				sprintf(
+					__(
+						'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.',
+						'host-webfonts-local'
+					),
+					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )
+				),
+				'success'
+			);
 		}
 	}
 

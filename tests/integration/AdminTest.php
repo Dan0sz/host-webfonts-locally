@@ -64,6 +64,13 @@ class AdminTest extends TestCase {
 	 * @return void
 	 */
 	public function testShowStaleCacheNotice() {
+		global $wp_settings_errors;
+		
+		/**
+		 * Make sure it's empty.
+		 */
+		$wp_settings_errors = [];
+
 		$class = new Admin();
 
 		$_GET[ 'page' ] = Settings::OMGF_ADMIN_PAGE;
