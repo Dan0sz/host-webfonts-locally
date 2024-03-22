@@ -228,36 +228,51 @@ class Admin {
 			return;
 		}
 
+		echo "Both are an array";
+
 		/**
 		 * Fetch options from array, so we can compare both.
 		 */
-		$old  = array_filter(
+		$old = array_filter(
 			$old_values,
 			function ( $key ) {
 				return in_array( $key, $this->stale_cache_options, true );
 			},
 			ARRAY_FILTER_USE_KEY
 		);
-		$new  = array_filter(
+		$new = array_filter(
 			$values,
 			function ( $key ) {
 				return in_array( $key, $this->stale_cache_options, true );
 			},
 			ARRAY_FILTER_USE_KEY
 		);
+
+		echo 'old: ' . var_dump( $old );
+
+		echo 'new: ' . var_dump( $new );
+
 		$diff = $this->array_diff( $new, $old );
 
 		/**
 		 * If $old equals false, that means it's never been set before.
 		 */
 		if ( $diff ) {
+			echo 'diff detected.';
+
 			global $wp_settings_errors;
 
 			$show_message = true;
 
 			if ( ! empty( $wp_settings_errors ) ) {
+				echo "Settings errors not empty";
+
 				foreach ( $wp_settings_errors as $error ) {
 					if ( str_contains( $error[ 'code' ], 'omgf' ) ) {
+						echo "error code contains omgf";
+
+						echo $error[ 'code' ];
+
 						$show_message = false;
 
 						break;
@@ -270,6 +285,8 @@ class Admin {
 			}
 
 			if ( $show_message ) {
+				echo "message shown";
+
 				OMGF::update_option( Settings::OMGF_CACHE_IS_STALE, true );
 
 				add_settings_error(
