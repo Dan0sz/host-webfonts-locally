@@ -24,13 +24,23 @@ defined( 'ABSPATH' ) || exit;
 
 class Optimize {
 	/**
-	 * User Agents set to be used to make requests to the Google Fonts API.
+	 * User Agent set to be used to make requests to the Google Fonts API in Compatibility Mode.
+	 *
 	 * @see          https://wordpress.org/support/topic/wrong-font-weight-only-in-firefox-2/
 	 * @since        v5.6.4 Using Win7 User-Agent to prevent rendering issues on older systems.
 	 *               This results in 0,2KB larger WOFF2 files, but seems like a fair trade off.
+	 *
+	 * @todo         Add Compatibility Mode option.
+	 */
+	const USER_AGENT_COMPATIBILITY = [
+		'woff2' => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
+	];
+
+	/**
+	 * User Agent to be used to make requests to the Google Fonts API.
 	 */
 	const USER_AGENT = [
-		'woff2' => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
+		'woff2' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
 	];
 
 	/** @var string $url */
@@ -152,21 +162,29 @@ class Optimize {
 		foreach ( $fonts as $id => &$font ) {
 			/**
 			 * Sanitize font family, because it may contain spaces.
+			 *
 			 * @since v4.5.6
 			 */
 			$font->family = rawurlencode( $font->family );
 
 			OMGF::debug( __( 'Processing downloads for', 'host-webfonts-local' ) . ' ' . $font->family . '...' );
 
-			if ( ! isset( $font->variants ) || empty( $font->variants ) ) {
+			if ( empty( $font->variants ) ) {
 				continue;
+			}
+
+			$filenames        = array_column( $font->variants, 'woff2' );
+			$is_variable_font = false;
+
+			if ( $filenames != array_unique( $filenames ) ) {
+				$is_variable_font = true;
 			}
 
 			foreach ( $font->variants as $variant_id => &$variant ) {
 				/**
 				 * @since v5.3.0 Variable fonts use one filename for all font weights/styles. That's why we drop the weight from the filename.
 				 */
-				if ( isset( $this->variable_fonts[ $id ] ) ) {
+				if ( $is_variable_font ) {
 					$filename = strtolower( $id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset : '' ) );
 				} else {
 					$filename = strtolower(
@@ -176,6 +194,7 @@ class Optimize {
 
 				/**
 				 * Encode font family, because it may contain spaces.
+				 *
 				 * @since v4.5.6
 				 */
 				$variant->fontFamily = rawurlencode( $variant->fontFamily );
@@ -211,6 +230,7 @@ class Optimize {
 
 		/**
 		 * $current_stylesheet is added to temporary cache layer, if it isn't present in database.
+		 *
 		 * @since v4.5.7
 		 */
 		$optimized_fonts = OMGF::admin_optimized_fonts( $current_stylesheet_bak, true );
@@ -258,6 +278,7 @@ class Optimize {
 			[
 				/**
 				 * Allow WP devs to use a different User-Agent, e.g. for compatibility with older browsers/OSes.
+				 *
 				 * @filter omgf_optimize_user_agent
 				 */ 'user-agent' => apply_filters( 'omgf_optimize_user_agent', self::USER_AGENT[ 'woff2' ] ),
 			]
