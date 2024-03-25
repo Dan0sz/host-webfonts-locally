@@ -5,7 +5,9 @@
 
 namespace OMGF\Tests\Integration;
 
+use OMGF\Admin\Settings;
 use OMGF\Filters;
+use OMGF\Optimize;
 use OMGF\Tests\TestCase;
 
 class FiltersTest extends TestCase {
@@ -23,6 +25,18 @@ class FiltersTest extends TestCase {
 		$url = apply_filters( 'content_url', OMGF_UPLOAD_URL . '/test' );
 
 		$this->assertEquals( '//example.org/wp-content/uploads/omgf/test', $url );
+	}
+
+	/**
+	 * @see Filters::maybe_do_legacy_mode()
+	 * @return void
+	 */
+	public function testLegacyMode() {
+		new Filters();
+
+		$user_agent = apply_filters( 'omgf_optimize_user_agent', Optimize::USER_AGENT );
+
+		$this->assertEquals( Optimize::USER_AGENT_COMPATIBILITY, $user_agent );
 	}
 
 	/**
