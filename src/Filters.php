@@ -39,7 +39,7 @@ class Filters {
 	 * @return bool|array
 	 */
 	public function base64_decode_optimized_fonts( $value ) {
-		if ( is_string( $value ) && base64_encode( ( base64_encode( base64_decode( base64_decode( $value, true ) ) ) ) ) === $value ) {
+		if ( is_string( $value ) && base64_decode( $value, true ) ) {
 			return base64_decode( $value );
 		}
 
@@ -49,6 +49,7 @@ class Filters {
 	/**
 	 * content_url uses is_ssl() to detect whether SSL is used. This fails for servers behind
 	 * load balancers and/or reverse proxies. So, we double-check with this filter.
+	 *
 	 * @since v4.4.4
 	 *
 	 * @param mixed $url
