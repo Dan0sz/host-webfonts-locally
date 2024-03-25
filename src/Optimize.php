@@ -254,10 +254,8 @@ class Optimize {
 		switch ( $this->return ) {
 			case 'path':
 				return $local_file;
-				break;
 			case 'object':
 				return $current_stylesheet;
-				break;
 			default: // 'url'
 				return str_replace( OMGF_UPLOAD_DIR, OMGF_UPLOAD_URL, $local_file );
 		}
