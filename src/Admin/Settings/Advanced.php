@@ -139,7 +139,7 @@ class Advanced extends Builder {
 			__( 'Legacy Browser Compatibility', 'host-webfonts-local' ),
 			Settings::OMGF_ADV_SETTING_LEGACY_MODE, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE ) ),
 			__(
-				'Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Default: off.',
+				'Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Enabling this option effectively increases filesize and disables Variable Fonts support. Default: off.',
 				'host-webfonts-local'
 			)
 		);
