@@ -156,6 +156,8 @@ class Settings extends Admin {
 	/**
 	 * Advanced Settings
 	 */
+	const OMGF_ADV_SETTING_LEGACY_MODE          = 'legacy';
+
 	const OMGF_ADV_SETTING_COMPATIBILITY        = 'compatibility';
 
 	const OMGF_ADV_SETTING_SUBSETS              = 'subsets';
@@ -266,6 +268,7 @@ class Settings extends Admin {
 
 	/**
 	 * Register all settings.
+	 *
 	 * @throws ReflectionException
 	 */
 	public function register_settings() {
@@ -286,6 +289,7 @@ class Settings extends Admin {
 
 	/**
 	 * Get all settings using the constants in this class.
+	 *
 	 * @return array
 	 * @throws ReflectionException
 	 */
@@ -324,6 +328,7 @@ class Settings extends Admin {
 
 	/**
 	 * Add Local Fonts tab to Settings Screen.
+	 *
 	 * @return void
 	 */
 	public function optimize_fonts_tab() {
@@ -369,6 +374,7 @@ class Settings extends Admin {
 
 	/**
 	 * Add Help Tab to Settings Screen.
+	 *
 	 * @return void
 	 */
 	public function help_tab() {
@@ -401,6 +407,7 @@ class Settings extends Admin {
 			settings_fields( $field );
 			/**
 			 * We use a custom update action, so we can group all settings in one DB row upon form submit.
+			 *
 			 * @see \OMGF\Helper update_options()
 			 */
 			$settings_fields = ob_get_clean();
@@ -438,6 +445,7 @@ class Settings extends Admin {
 
 	/**
 	 * Render Help content
+	 *
 	 * @return void
 	 */
 	public function help_content() {
@@ -459,6 +467,7 @@ class Settings extends Admin {
 
 	/**
 	 * Changes footer text.
+	 *
 	 * @return string
 	 */
 	public function footer_text_left() {

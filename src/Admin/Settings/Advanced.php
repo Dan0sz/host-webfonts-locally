@@ -40,12 +40,13 @@ class Advanced extends Builder {
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_cache_dir' ], 50 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_white_label_css' ], 60 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 70 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 80 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 90 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 100 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 110 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 120 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 130 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 80 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 90 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 100 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 110 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 120 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 130 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 140 );
 
 		// Close
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_after' ], 200 );
@@ -56,12 +57,12 @@ class Advanced extends Builder {
 	 */
 	public function do_description() {
 		?>
-        <p>
+		<p>
 			<?php echo __(
 				'Use these settings to make OMGF work with your specific configuration.',
 				'host-webfonts-local'
 			); ?>
-        </p>
+		</p>
 		<?php
 	}
 
@@ -70,10 +71,10 @@ class Advanced extends Builder {
 	 */
 	public function do_cache_dir() {
 		?>
-        <tr>
-            <th scope="row"><?php echo __( 'Fonts Cache Directory', 'host-webfonts-local' ); ?></th>
-            <td>
-                <p class="description">
+		<tr>
+			<th scope="row"><?php echo __( 'Fonts Cache Directory', 'host-webfonts-local' ); ?></th>
+			<td>
+				<p class="description">
 					<?php printf(
 						__(
 							'Downloaded stylesheets and font files %1$s are stored in: <code>%2$s</code>.',
@@ -82,9 +83,9 @@ class Advanced extends Builder {
 						is_multisite() ? __( '(for this site)', 'host-webfonts-local' ) : '',
 						str_replace( ABSPATH, '', OMGF_UPLOAD_DIR )
 					); ?>
-                </p>
-            </td>
-        </tr>
+				</p>
+			</td>
+		</tr>
 		<?php
 	}
 
@@ -133,6 +134,20 @@ class Advanced extends Builder {
 	/**
 	 *
 	 */
+	public function do_legacy_mode() {
+		$this->do_checkbox(
+			__( 'Legacy Browser Compatibility', 'host-webfonts-local' ),
+			Settings::OMGF_ADV_SETTING_LEGACY_MODE, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE ) ),
+			__(
+				'Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Default: off.',
+				'host-webfonts-local'
+			)
+		);
+	}
+
+	/**
+	 *
+	 */
 	public function do_compatibility() {
 		$this->do_checkbox(
 			__( 'Divi/Elementor Compatibility', 'host-webfonts-local' ),
@@ -146,6 +161,7 @@ class Advanced extends Builder {
 
 	/**
 	 * Preload Subsets
+	 *
 	 * @return void
 	 */
 	public function do_used_subsets() {
@@ -199,40 +215,40 @@ class Advanced extends Builder {
 	public function do_download_log() {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ) ) :
 			?>
-            <tr>
-                <th></th>
-                <td>
+			<tr>
+				<th></th>
+				<td>
 					<?php if ( file_exists( Helper::log_file() ) ) : ?>
 						<?php
 						clearstatcache();
 						$nonce = wp_create_nonce( Settings::OMGF_ADMIN_PAGE );
 						?>
-                        <a class="button button-secondary"
-                           href="<?php echo admin_url(
+						<a class="button button-secondary"
+						   href="<?php echo admin_url(
 							   "admin-ajax.php?action=omgf_download_log&nonce=$nonce"
 						   ); ?>"><?php _e(
 								'Download Log',
 								'host-webfonts-local'
 							); ?></a>
-                        <a id="omgf-delete-log" class="button button-cancel"
-                           data-nonce="<?php echo $nonce; ?>"><?php _e(
+						<a id="omgf-delete-log" class="button button-cancel"
+						   data-nonce="<?php echo $nonce; ?>"><?php _e(
 								'Delete log',
 								'host-webfonts-local'
 							); ?></a>
 						<?php if ( filesize( Helper::log_file() ) > MB_IN_BYTES ) : ?>
-                            <p class="omgf-warning"><?php _e(
+							<p class="omgf-warning"><?php _e(
 									'Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again.',
 									'host-webfonts-local'
 								); ?></p>
 						<?php endif; ?>
 					<?php else : ?>
-                        <p class="description"><?php _e(
+						<p class="description"><?php _e(
 								'No log file available for download.',
 								'host-webfonts-local'
 							); ?></p>
 					<?php endif; ?>
-                </td>
-            </tr>
+				</td>
+			</tr>
 		<?php
 		endif;
 	}

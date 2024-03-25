@@ -16,6 +16,7 @@
 
 namespace OMGF;
 
+use OMGF\Admin\Settings;
 use OMGF\Frontend\Process;
 
 class Filters {
@@ -25,6 +26,7 @@ class Filters {
 	public function __construct() {
 		add_filter( 'content_url', [ $this, 'force_ssl' ], 1000 );
 		add_filter( 'home_url', [ $this, 'force_ssl' ], 1000, 2 );
+		add_filter( 'omgf_optimize_user_agent', [ $this, 'maybe_do_legacy_mode' ] );
 		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'base64_decode_optimized_fonts' ] );
 		add_filter( 'vc_get_vc_grid_data_response', [ $this, 'parse_vc_grid_data' ], 10 );
 	}
@@ -73,6 +75,19 @@ class Filters {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * @param $user_agent
+	 *
+	 * @return mixed|string[]
+	 */
+	public function maybe_do_legacy_mode( $user_agent ) {
+		if ( ! empty( Helper::get_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE ) ) ) {
+			return Optimize::USER_AGENT_COMPATIBILITY;
+		}
+
+		return $user_agent;
 	}
 
 	/**

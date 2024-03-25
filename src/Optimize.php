@@ -26,11 +26,11 @@ class Optimize {
 	/**
 	 * User Agent set to be used to make requests to the Google Fonts API in Compatibility Mode.
 	 *
-	 * @see          https://wordpress.org/support/topic/wrong-font-weight-only-in-firefox-2/
-	 * @since        v5.6.4 Using Win7 User-Agent to prevent rendering issues on older systems.
+	 * @see   https://wordpress.org/support/topic/wrong-font-weight-only-in-firefox-2/
+	 * @since v5.6.4 Using Win7 User-Agent to prevent rendering issues on older systems.
 	 *               This results in 0,2KB larger WOFF2 files, but seems like a fair trade off.
-	 *
-	 * @todo         Add Compatibility Mode option.
+	 * @since v5.9.0 Moved this User Agent to the new Legacy Mode option, because this user agent
+	 *               no longer supports variable fonts.
 	 */
 	const USER_AGENT_COMPATIBILITY = [
 		'woff2' => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
