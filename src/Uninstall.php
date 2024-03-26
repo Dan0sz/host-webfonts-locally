@@ -20,6 +20,9 @@ use OMGF\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Uninstall {
 	/** @var string $cache_dir */
 	private $cache_dir;
