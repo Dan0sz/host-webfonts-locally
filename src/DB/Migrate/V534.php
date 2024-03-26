@@ -19,11 +19,11 @@ namespace OMGF\DB\Migrate;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * @codeCoverageIgnore
  */
-defined( 'ABSPATH' ) || exit;
-
 class V534 {
 	/** @var $version string The version number this migration script was introduced with. */
 	private $version = '5.3.4';
