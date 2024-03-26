@@ -19,6 +19,9 @@ namespace OMGF\DB\Migrate;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
+/**
+ * @codeCoverageIgnore
+ */
 defined( 'ABSPATH' ) || exit;
 
 class V581 {
@@ -27,6 +30,7 @@ class V581 {
 
 	/**
 	 * Build class
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -35,6 +39,7 @@ class V581 {
 
 	/**
 	 * Initialize
+	 *
 	 * @return void
 	 */
 	private function init() {

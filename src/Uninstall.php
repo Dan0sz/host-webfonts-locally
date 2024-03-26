@@ -18,11 +18,11 @@ namespace OMGF;
 
 use OMGF\Admin\Settings;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */
+defined( 'ABSPATH' ) || exit;
+
 class Uninstall {
 	/** @var string $cache_dir */
 	private $cache_dir;

@@ -19,6 +19,9 @@ namespace OMGF\DB\Migrate;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 
+/**
+ * @codeCoverageIgnore
+ */
 defined( 'ABSPATH' ) || exit;
 
 class V534 {
@@ -27,6 +30,7 @@ class V534 {
 
 	/**
 	 * Buid
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -35,6 +39,7 @@ class V534 {
 
 	/**
 	 * Initialize
+	 *
 	 * @return void
 	 */
 	private function init() {
@@ -48,6 +53,7 @@ class V534 {
 				foreach ( $variants as $key => $variant ) {
 					/**
 					 * Optimized Fonts needs upgrading if $variants is still an indexed array.
+					 *
 					 * @since v5.3.0 $variants should be an associative array.
 					 */
 					if ( is_numeric( $key ) ) {

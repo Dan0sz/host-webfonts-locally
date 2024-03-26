@@ -19,6 +19,9 @@ namespace OMGF\DB;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
+/**
+ * @codeCoverageIgnore
+ */
 defined( 'ABSPATH' ) || exit;
 
 class Migrate {
