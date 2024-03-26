@@ -84,7 +84,7 @@ class Filters {
 	 */
 	public function maybe_do_legacy_mode( $user_agent ) {
 		if ( ! empty( Helper::get_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE ) ) ) {
-			return Optimize::USER_AGENT_COMPATIBILITY;
+			return Optimize::USER_AGENT_COMPATIBILITY[ 'woff2' ];
 		}
 
 		return $user_agent;

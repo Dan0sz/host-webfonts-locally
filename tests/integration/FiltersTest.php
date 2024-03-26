@@ -37,11 +37,35 @@ class FiltersTest extends TestCase {
 
 		Helper::update_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE, 'on' );
 
-		$user_agent = apply_filters( 'omgf_optimize_user_agent', Optimize::USER_AGENT );
+		$user_agent = apply_filters( 'omgf_optimize_user_agent', Optimize::USER_AGENT[ 'woff2' ] );
 
 		Helper::update_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE, '' );
 
-		$this->assertEquals( Optimize::USER_AGENT_COMPATIBILITY, $user_agent );
+		$this->assertEquals( Optimize::USER_AGENT_COMPATIBILITY[ 'woff2' ], $user_agent );
+	}
+
+	/**
+	 * @see Optimize::process()
+	 * @return void
+	 */
+	public function testLegacyModeAgainstVariableFontsSupport() {
+		Helper::update_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE, 'on' );
+
+		$class = new Optimize(
+			'https://fonts.googleapis.com/css?family=Open+Sans:300,400,700', 'traditional-fonts', 'variable-fonts'
+		);
+		$class->process();
+
+		$this->assertFileExists( OMGF_UPLOAD_DIR . '/traditional-fonts/open-sans-normal-latin-300.woff2' );
+
+		Helper::update_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE, '' );
+
+		$class = new Optimize(
+			'https://fonts.googleapis.com/css?family=Open+Sans:300,400,700', 'variable-fonts', 'variable-fonts'
+		);
+		$class->process();
+
+		$this->assertFileExists( OMGF_UPLOAD_DIR . '/variable-fonts/open-sans-normal-latin.woff2' );
 	}
 
 	/**
