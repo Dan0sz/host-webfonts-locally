@@ -1,6 +1,6 @@
 === OMGF | GDPR/DSGVO Compliant, Faster Google Fonts. Easy. ===
 Contributors: DaanvandenBergh
-Tags: google, fonts, gdpr, dsgvo, cache, speed, preload, font-display, webfonts, subsets, remove, minimize, external, requests
+Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.4
 Stable tag: 5.8.3
@@ -8,11 +8,11 @@ Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-**OMGF can be downloaded for free without any paid subscription from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).**
-
 OMGF automagically caches the Google Fonts used by your theme/plugins locally. No configuration (or brains) required!
 
 == Description ==
+
+**OMGF can be downloaded for free without any paid subscription from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).**
 
 > How could using fonts via Google's service possibly run afoul of GDPR? The fact of the matter is that, when a font is requested by the user's browser, their IP is logged by Google and used for analytics.
 > — Lifehacker
