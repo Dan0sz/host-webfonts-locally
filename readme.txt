@@ -2,7 +2,7 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
-Tested up to: 6.4
+Tested up to: 6.5
 Stable tag: 5.8.3
 Requires PHP: 7.0
 License: GPLv2 or later
