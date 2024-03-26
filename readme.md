@@ -44,6 +44,7 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
 	- `@font-face` and `@import` statements inside **inline `<style>` blocks**,
 	- `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,
+	- `@font-face` and `@import` statements inside **externally hosted stylesheets** loaded by your theme and/or plugins,
 	- Web Font Loader (`webfont.js`),
 	- Early Access Google Fonts.
 	- Material Icons support.
@@ -57,17 +58,19 @@ _[Purchase OMGF Pro](https://daan.dev/wordpress/omgf-pro/) | [Documentation](htt
 
 ## Installation
 
-### Using GIT
+### Manually
 
-1. From your terminal, `cd` to your plugins directory (usually `wp-content/plugins`)
-1. Run the following command: `git clone https://github.com/Dan0sz/host-webfonts-locally.git host-webfonts-local`
+1. Download the [latest release](https://github.com/Dan0sz/host-webfonts-locally/releases/latest/download/host-webfonts-local.zip)
+2. From your WordPress administrator area, go to _Plugins > Add New_
+3. Click _Upload Plugin_ and select the ZIP file you downloaded in step 1
+4. Activate the plugin
 
 ### From the Wordpress Repository
 
 1. From your WordPress administrator area, go to _Plugins > Add New_
-1. Search for 'Daan van den Bergh'
-1. Click the 'Install' button next to _OMGF | Host Google Fonts Locally_
-1. Click 'Activate'
+2. Search for 'Daan van den Bergh'
+3. Click the 'Install' button next to _OMGF | Host Google Fonts Locally_
+4. Click 'Activate'
 
 ## Frequently Asked Questions
 
