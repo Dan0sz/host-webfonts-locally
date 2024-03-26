@@ -319,7 +319,7 @@ class Helper {
 	}
 
 	/**
-	 * @since v5.4.4 Returns the subsets that're available in all requested fonts/stylesheets.
+	 * @since v5.4.4 Returns the available subsets in all requested fonts/stylesheets.
 	 *               Functions as a temporary cache layer to reduce DB reads with get_option().
 	 * @return array
 	 */
@@ -334,7 +334,6 @@ class Helper {
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 */
 		if ( is_string( $subsets ) ) {
-			// phpcs:ignore
 			$subsets = unserialize( $subsets );
 		}
 
@@ -346,7 +345,7 @@ class Helper {
 		}
 
 		/**
-		 * Return only subsets that're available in all font families.
+		 * Return only subsets that are available in all font families.
 		 *
 		 * @see OMGF_Optimize_Run
 		 */
@@ -355,7 +354,7 @@ class Helper {
 			 * @var array $filtered_subsets Contains an array of Font Families along with the available selected subsets, e.g.
 			 *                              { 'Lato' => { 'latin', 'latin-ext' } }
 			 */
-			$filtered_subsets = array_values( array_filter( $subsets ) );
+			$filtered_subsets = apply_filters( 'omgf_available_filtered_subsets', array_values( array_filter( $subsets ) ) );
 
 			self::debug_array( __( 'Filtered Subsets', 'host-webfonts-local' ), $filtered_subsets );
 
@@ -370,7 +369,7 @@ class Helper {
 			return $filtered_subsets;
 		}
 
-		return $subsets;
+		return apply_filters( 'omgf_available_subsets', $subsets );
 	}
 
 	/**
