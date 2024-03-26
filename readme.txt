@@ -45,6 +45,7 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 - "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
   - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
   - `@font-face` and `@import` statements inside **local stylesheets** loaded by your theme and/or plugins,
+  - `@font-face` and `@import` statements inside **externally hosted stylesheets** loaded by your theme and/or plugins,
   - Web Font Loader (`webfont.js`),
   - Early Access Google Fonts,
   - Material Icons.
