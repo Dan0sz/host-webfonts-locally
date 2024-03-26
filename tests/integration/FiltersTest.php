@@ -45,6 +45,11 @@ class FiltersTest extends TestCase {
 	}
 
 	/**
+	 * At the time of writing this test, the Legacy Mode User Agent no longer supports Variable Fonts for Open Sans, which I believe was the case
+	 * before.
+	 *
+	 * If compatibility for our current user agent changes in the future, this test should capture it.
+	 *
 	 * @see Optimize::process()
 	 * @return void
 	 */
