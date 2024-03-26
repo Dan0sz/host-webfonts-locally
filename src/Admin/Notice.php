@@ -19,8 +19,8 @@ namespace OMGF\Admin;
 defined( 'ABSPATH' ) || exit;
 
 class Notice {
-
 	const OMGF_ADMIN_NOTICE_TRANSIENT  = 'omgf_admin_notice';
+
 	const OMGF_ADMIN_NOTICE_EXPIRATION = 60;
 
 	/** @var array $notices */
@@ -74,7 +74,7 @@ class Notice {
 			$current_screen = get_current_screen();
 
 			foreach ( $admin_notices as $screen => $notice ) {
-				if ( $current_screen->id != $screen && $screen != 'all' ) {
+				if ( ! defined( 'DAAN_DOING_TESTS' ) && $current_screen->id != $screen && $screen != 'all' ) {
 					continue;
 				}
 
