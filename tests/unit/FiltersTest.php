@@ -14,12 +14,12 @@ class FiltersTest extends TestCase {
 	 */
 	public function testBase64DecodeOptimizeFonts() {
 		$class = new Filters();
-		$value = $class->base64_decode_optimized_fonts( 'test' );
+		$value = $class->base64_decode_optimized_fonts( 'testing' );
 
-		$this->assertEquals( 'test', $value );
+		$this->assertEquals( 'testing', $value );
 
-		$value = $class->base64_decode_optimized_fonts( 'dGVzdA==' );
+		$value = $class->base64_decode_optimized_fonts( 'dGVzdGluZw==' );
 
-		$this->assertEquals( 'test', $value );
+		$this->assertEquals( 'testing', $value );
 	}
 }

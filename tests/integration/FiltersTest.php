@@ -7,6 +7,7 @@ namespace OMGF\Tests\Integration;
 
 use OMGF\Admin\Settings;
 use OMGF\Filters;
+use OMGF\Helper;
 use OMGF\Optimize;
 use OMGF\Tests\TestCase;
 
@@ -34,7 +35,11 @@ class FiltersTest extends TestCase {
 	public function testLegacyMode() {
 		new Filters();
 
+		Helper::update_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE, 'on' );
+
 		$user_agent = apply_filters( 'omgf_optimize_user_agent', Optimize::USER_AGENT );
+
+		Helper::update_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE, '' );
 
 		$this->assertEquals( Optimize::USER_AGENT_COMPATIBILITY, $user_agent );
 	}
