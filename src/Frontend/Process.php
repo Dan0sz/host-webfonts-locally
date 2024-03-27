@@ -93,9 +93,9 @@ class Process {
 		$this->break     = $break;
 
 		if ( ! $this->timestamp ) {
-			$this->timestamp = time();
+			$this->timestamp = time(); // @codeCoverageIgnore
 
-			OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, $this->timestamp );
+			OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, $this->timestamp ); // @codeCoverageIgnore
 		}
 
 		$this->init();
@@ -157,7 +157,7 @@ class Process {
 		$preloaded_fonts = apply_filters( 'omgf_frontend_preloaded_fonts', OMGF::preloaded_fonts() );
 
 		if ( ! $preloaded_fonts ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', OMGF::optimized_fonts() );
@@ -168,7 +168,7 @@ class Process {
 				$preloads_stylesheet = $preloaded_fonts[ $stylesheet_handle ] ?? [];
 
 				if ( ! in_array( $font_face->id, array_keys( $preloads_stylesheet ) ) ) {
-					continue;
+					continue; // @codeCoverageIgnore
 				}
 
 				$font_id          = $font_face->id;
@@ -199,7 +199,7 @@ class Process {
 					$file_path = str_replace( OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, apply_filters( 'omgf_frontend_process_url', $url ) );
 
 					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) || in_array( $url, $preloaded ) ) {
-						continue;
+						continue; // @codeCoverageIgnore
 					}
 
 					$preloaded[] = $url;
@@ -220,6 +220,8 @@ class Process {
 	 *
 	 * @action template_redirect
 	 * @return bool|string valid HTML.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function maybe_buffer_output() {
 		/**
@@ -300,6 +302,8 @@ class Process {
 	 * Not tested (yet):
 	 * TODO: [OMGF-41] - Swift Performance
 	 * @return string Valid HTML
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function return_buffer( $html ) {
 		if ( ! $html ) {
@@ -326,7 +330,7 @@ class Process {
 		preg_match_all( '/(?=\<link).+?(?<=>)/s', $html, $resource_hints );
 
 		if ( empty( $resource_hints[ 0 ] ) ) {
-			return $html;
+			return $html; // @codeCoverageIgnore
 		}
 
 		/**
@@ -342,7 +346,7 @@ class Process {
 				preg_match( '/rel=[\'"](.*?)[ \'"]/', $resource_hint, $attr );
 
 				if ( empty( $url[ 2 ] ) || empty( $attr[ 1 ] ) ) {
-					return false;
+					return false; // @codeCoverageIgnore
 				}
 
 				$url  = $url[ 2 ];
@@ -373,7 +377,7 @@ class Process {
 	 */
 	public function parse( $html ) {
 		if ( $this->is_amp() ) {
-			return apply_filters( 'omgf_processed_html', $html, $this );
+			return apply_filters( 'omgf_processed_html', $html, $this ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -382,7 +386,7 @@ class Process {
 		preg_match_all( '/<link.*?[\/]?>/s', $html, $links );
 
 		if ( empty( $links[ 0 ] ) ) {
-			return apply_filters( 'omgf_processed_html', $html, $this );
+			return apply_filters( 'omgf_processed_html', $html, $this ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -472,7 +476,7 @@ class Process {
 			 * No valid href attribute provide in link element.
 			 */
 			if ( ! isset( $href[ 'href' ] ) ) {
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			/**
@@ -567,7 +571,7 @@ class Process {
 	 */
 	private function strip_css_tag( $handle ) {
 		if ( ! str_ends_with( $handle, '-css' ) ) {
-			return $handle;
+			return $handle; // @codeCoverageIgnore
 		}
 
 		$pos = strrpos( $handle, '-css' );

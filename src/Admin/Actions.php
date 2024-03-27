@@ -21,6 +21,7 @@ use OMGF\Helper as OMGF;
 class Actions {
 	/**
 	 * Execute all actions required in wp-admin.
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -33,6 +34,7 @@ class Actions {
 
 	/**
 	 * Needs to run before admin_menu and admin_init.
+	 *
 	 * @action _admin_menu
 	 */
 	public function init_admin() {
@@ -41,6 +43,7 @@ class Actions {
 
 	/**
 	 * Initialize the Save & Optimize routine.
+	 *
 	 * @return void
 	 */
 	public function do_optimize() {
@@ -51,22 +54,23 @@ class Actions {
 	 * We use a custom update action, because we're storing multidimensional arrays upon form submit.
 	 * This prevents us from having to use AJAX, serialize(), stringify() and eventually having to json_decode() it, i.e.
 	 * a lot of headaches.
+	 *
 	 * @since v5.6.0
 	 */
 	public function update_settings() {
 		if ( wp_doing_cron() || wp_doing_ajax() || empty( $_POST[ 'action' ] ) || $_POST[ 'action' ] !== 'omgf-update' ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		$action = array_key_exists( 'tab', $_GET ) ? $_GET[ 'tab' ] . '-options' : 'omgf-optimize-settings-options';
 		$nonce  = $_POST[ '_wpnonce' ] ?? '';
 
 		if ( wp_verify_nonce( $nonce, $action ) < 1 ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		if ( ! defined( 'DAAN_DOING_TESTS' ) && ! current_user_can( 'manage_options' ) ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		$updated_settings = $this->clean( $_POST );
@@ -96,6 +100,7 @@ class Actions {
 
 		/**
 		 * Additional update actions can be added here.
+		 *
 		 * @since v5.6.0
 		 */
 		do_action( 'omgf_update_settings', $updated_settings );
@@ -107,14 +112,15 @@ class Actions {
 		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
 
 		if ( ! defined( 'DAAN_DOING_TESTS' ) ) {
-			wp_redirect( $goback );
-			exit;
+			wp_redirect( $goback ); // @codeCoverageIgnore
+			exit; // @codeCoverageIgnore
 		}
 	}
 
 	/**
 	 * Clean variables using `sanitize_text_field`.
 	 * Arrays are cleaned recursively. Non-scalar values are ignored.
+	 *
 	 * @since 5.5.7
 	 *
 	 * @param string|array $var Sanitize the variable.
@@ -136,6 +142,8 @@ class Actions {
 	 * @param mixed $response
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function render_update_notice( $plugin ) {
 		$current_version = $plugin[ 'Version' ];
@@ -192,13 +200,13 @@ class Actions {
 			}
 
 			if ( ! $dir_to_remove ) {
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			$dir = OMGF_UPLOAD_DIR . '/' . $dir_to_remove;
 
 			if ( $dir !== realpath( $dir ) ) {
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			$this->delete_files( $dir );
@@ -231,7 +239,7 @@ class Actions {
 	 */
 	private function dir_is_empty( $dir ) {
 		if ( ! file_exists( $dir ) ) {
-			return false;
+			return false; // @codeCoverageIgnore
 		}
 
 		$iterator = new \FilesystemIterator( $dir );

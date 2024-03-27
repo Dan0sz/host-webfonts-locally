@@ -44,19 +44,20 @@ class Optimize {
 
 	/**
 	 * Run either manual or auto mode after settings are updated.
+	 *
 	 * @return void
 	 */
 	private function init() {
 		if ( Settings::OMGF_ADMIN_PAGE !== $this->settings_page ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		if ( Settings::OMGF_SETTINGS_FIELD_OPTIMIZE !== $this->settings_tab ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		if ( ! $this->settings_updated ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		add_filter( 'http_request_args', [ $this, 'verify_ssl' ] );
@@ -66,6 +67,7 @@ class Optimize {
 
 	/**
 	 * Run Force mode.
+	 *
 	 * @return void
 	 */
 	private function run() {

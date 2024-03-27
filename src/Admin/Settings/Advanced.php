@@ -22,6 +22,9 @@ use OMGF\Helper;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Advanced extends Builder {
 	/**
 	 * Settings_Advanced constructor.

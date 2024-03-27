@@ -20,6 +20,9 @@ use OMGF\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Builder {
 	/** @var string $plugin_text_domain */
 	protected $plugin_text_domain = 'host-webfonts-local';

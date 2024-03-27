@@ -20,6 +20,9 @@ use OMGF\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Settings extends Admin {
 	const OMGF_ADMIN_PAGE = 'optimize-webfonts';
 

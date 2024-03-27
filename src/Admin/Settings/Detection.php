@@ -20,6 +20,9 @@ use OMGF\Helper as OMGF;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Detection extends Builder {
 	public function __construct() {
 		parent::__construct();

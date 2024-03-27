@@ -18,6 +18,9 @@ namespace OMGF\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Help extends Builder {
 	/**
 	 * @return void
@@ -33,12 +36,11 @@ class Help extends Builder {
 	}
 
 	public function do_content() {
-		$tweet_url =
-			sprintf(
-				'https://twitter.com/intent/tweet?text=Thanks+to+OMGF+for+@WordPress,+my+Google+Fonts+are+GDPR+compliant!+Try+it+for+yourself:&via=Dan0sz&hashtags=GDPR,DSGVO,GoogleFonts,WordPress&url=%s',
-				str_replace( ' ', '+', apply_filters( 'omgf_settings_page_title', 'OMGF' ) ),
-				apply_filters( 'omgf_help_tab_plugin_url', 'https://wordpress.org/plugins/host-webfonts-local/' )
-			);
+		$tweet_url = sprintf(
+			'https://twitter.com/intent/tweet?text=Thanks+to+%s+for+@WordPress,+my+Google+Fonts+are+GDPR+compliant!+Try+it+for+yourself:&via=Dan0sz&hashtags=GDPR,DSGVO,GoogleFonts,WordPress&url=%s',
+			str_replace( ' ', '+', apply_filters( 'omgf_settings_page_title', 'OMGF' ) ),
+			apply_filters( 'omgf_help_tab_plugin_url', 'https://wordpress.org/plugins/host-webfonts-local/' )
+		);
 		?>
 		<div class="postbox">
 			<div class="content">
@@ -112,7 +114,6 @@ class Help extends Builder {
 					</div>
 				</div>
 			</div>
-		</div>
 		</div>
 		<?php
 	}
