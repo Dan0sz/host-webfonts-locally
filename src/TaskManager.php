@@ -19,9 +19,6 @@ namespace OMGF;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 
-/**
- * @codeCoverageIgnore
- */
 class TaskManager {
 	/**
 	 * @since v5.5.6 Plugins which can't run alongside OMGF, mostly plugins which remove Google Fonts.
@@ -105,6 +102,8 @@ class TaskManager {
 
 	/**
 	 * Renders the Task Manager Warnings box.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function render_warnings() {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
