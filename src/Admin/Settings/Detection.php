@@ -43,12 +43,12 @@ class Detection extends Builder {
 	 * Description
 	 */
 	public function do_description() { ?>
-        <p>
+		<p>
 			<?php echo __(
 				'These settings affect the detection mechanism and in which areas it searches (i.e. how deep it digs) to find Google Fonts. If you want to remove (instead of replace) the Google Fonts your WordPress configuration currently uses, set <strong>Google Fonts Processing</strong> to Remove.',
 				'host-webfonts-local'
 			); ?>
-        </p>
+		</p>
 		<?php
 	}
 
@@ -57,10 +57,10 @@ class Detection extends Builder {
 	 */
 	public function google_fonts_processing() {
 		?>
-        <tr>
-            <th scope="row"><?php echo __( 'Google Fonts Processing', 'host-webfonts-local' ); ?></th>
-            <td>
-                <p class="description">
+		<tr>
+			<th scope="row"><?php echo __( 'Google Fonts Processing', 'host-webfonts-local' ); ?></th>
+			<td>
+				<p class="description">
 					<?php echo sprintf(
 						__(
 							'By default, OMGF replaces Google Fonts stylesheets (e.g. <code>https://fonts.googleapis.com/css?family=Open+Sans</code>) with locally hosted copies. This behavior can be tweaked further using the <strong>Advanced Processing (Pro)</strong> option. To remove/unload Google Fonts, go to <em>Local Fonts</em> > <a href="%s"><em>Optimize Local Fonts</em></a> and click <strong>Unload all</strong> next to the stylesheet handle you\'d like to remove.',
@@ -68,9 +68,9 @@ class Detection extends Builder {
 						),
 						admin_url( 'options-general.php?page=optimize-webfonts&tab=omgf-optimize-settings#omgf-manage-optimized-fonts' )
 					); ?>
-                </p>
-            </td>
-        </tr>
+				</p>
+			</td>
+		</tr>
 		<?php
 	}
 
@@ -79,26 +79,26 @@ class Detection extends Builder {
 	 */
 	public function promo_advanced_processing() {
 		?>
-        <tr>
-            <th scope="row"><?php echo __( 'Advanced Processing (Pro)', 'host-webfonts-local' ); ?></th>
-            <td>
-                <fieldset id="" class="scheme-list">
+		<tr>
+			<th scope="row"><?php echo __( 'Advanced Processing (Pro)', 'host-webfonts-local' ); ?></th>
+			<td>
+				<fieldset id="" class="scheme-list">
 					<?php foreach ( $this->advanced_processing_pro_options() as $name => $data ) : ?>
 						<?php
 						$checked  = ! empty( OMGF::get_option( $name ) );
 						$disabled = ! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled' : '';
 						?>
-                        <label for="<?php echo esc_attr( $name ); ?>">
-                            <input type="hidden" name="omgf_settings[<?php echo esc_attr( $name ); ?>]" value="0"/>
-                            <input type="checkbox" name="omgf_settings[<?php echo esc_attr( $name ); ?>]"
-                                   id="<?php echo esc_attr( $name ); ?>" <?php echo esc_attr(
+						<label for="<?php echo esc_attr( $name ); ?>">
+							<input type="hidden" name="omgf_settings[<?php echo esc_attr( $name ); ?>]" value="0"/>
+							<input type="checkbox" name="omgf_settings[<?php echo esc_attr( $name ); ?>]"
+								   id="<?php echo esc_attr( $name ); ?>" <?php echo esc_attr(
 								$checked ? 'checked="checked"' : ''
 							); ?> <?php echo esc_attr( $disabled ); ?> value="on"/><?php echo wp_kses( $data[ 'label' ], $this->allowed_html ); ?>
-                            &nbsp;
-                        </label>
+							&nbsp;
+						</label>
 					<?php endforeach; ?>
-                </fieldset>
-                <p class="description">
+				</fieldset>
+				<p class="description">
 					<?php echo apply_filters(
 						'omgf_detection_settings_advanced_processing_description',
 						sprintf(
@@ -110,17 +110,17 @@ class Detection extends Builder {
 							$this->promo
 						)
 					); ?>
-                </p>
-                <ul>
+				</p>
+				<ul>
 					<?php foreach ( $this->advanced_processing_pro_options() as $name => $data ) : ?>
-                        <li><strong><?php echo wp_kses( $data[ 'label' ], $this->allowed_html ); ?></strong>: <?php echo wp_kses(
+						<li><strong><?php echo wp_kses( $data[ 'label' ], $this->allowed_html ); ?></strong>: <?php echo wp_kses(
 								$data[ 'description' ],
 								$this->allowed_html
 							); ?></li>
 					<?php endforeach; ?>
-                </ul>
-            </td>
-        </tr>
+				</ul>
+			</td>
+		</tr>
 		<?php
 	}
 
@@ -157,13 +157,6 @@ class Detection extends Builder {
 				'label'       => __( 'Process Webfont Loader', 'host-webfonts-local' ),
 				'description' => __(
 					'Process <code>webfont.js</code> libraries and the corresponding configuration defining which Google Fonts to load.',
-					'host-webfonts-local'
-				),
-			],
-			'process_early_access'         => [
-				'label'       => __( 'Process Early Access', 'host-webfonts-local' ),
-				'description' => __(
-					'Process Google Fonts loaded from <code>fonts.googleapis.com/earlyaccess</code> or <code>fonts.gstatic.com/ea</code>.',
 					'host-webfonts-local'
 				),
 			],

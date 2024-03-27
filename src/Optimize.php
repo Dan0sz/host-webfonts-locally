@@ -303,7 +303,7 @@ class Optimize {
 
 		preg_match_all( '/font-family:\s\'(.*?)\';/', $stylesheet, $font_families );
 
-		if ( ! isset( $font_families[ 1 ] ) || empty( $font_families[ 1 ] ) ) {
+		if ( empty( $font_families[ 1 ] ) ) {
 			return [];
 		}
 
@@ -363,7 +363,7 @@ class Optimize {
 
 		$font_object = [];
 
-		foreach ( $font_faces[ 0 ] as $key => $font_face ) {
+		foreach ( $font_faces[ 0 ] as $font_face ) {
 			/**
 			 * @since v5.3.3 Exact match for font-family attribute, to prevent similar font names from falling thru, e.g. Roboto and Roboto Slab.
 			 */
@@ -377,15 +377,12 @@ class Optimize {
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
 
-			$subset[ 1 ] = trim( $subset[ 1 ], '[]' );
+			$subset = ! empty( $subset[ 1 ] ) ? trim( $subset[ 1 ], '[]' ) : '';
 
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
 			 */
-			if ( ! empty( $subset ) &&
-				isset( $subset[ 1 ] ) &&
-				! in_array( $subset[ 1 ], OMGF::get_option( settings::OMGF_ADV_SETTING_SUBSETS ) ) &&
-				! is_numeric( $subset[ 1 ] ) ) {
+			if ( ! empty( $subset ) && ! in_array( $subset, OMGF::get_option( settings::OMGF_ADV_SETTING_SUBSETS ) ) && ! is_numeric( $subset ) ) {
 				continue;
 			}
 
@@ -393,12 +390,11 @@ class Optimize {
 			 * If $subset is empty, assume it's a logographic (Chinese, Japanese, etc.) character set.
 			 * TODO: [OMGF-87] the Used Subsets option doesn't work here. Can we make it work?
 			 */
-			if ( is_numeric( $subset[ 1 ] ) ) {
-				$subset[ 1 ] = 'logogram-' . $subset[ 1 ];
+			if ( is_numeric( $subset ) ) {
+				$subset = 'logogram-' . $subset;
 			}
 
-			$key                             =
-				$subset[ 1 ] . '-' . $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
+			$key                             = $subset . '-' . $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
 			$font_object[ $key ]             = new \stdClass();
 			$font_object[ $key ]->id         = $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : $font_style[ 1 ] );
 			$font_object[ $key ]->fontFamily = $font_family;
@@ -406,8 +402,8 @@ class Optimize {
 			$font_object[ $key ]->fontWeight = $font_weight[ 1 ];
 			$font_object[ $key ]->woff2      = $font_src[ 1 ];
 
-			if ( ! empty( $subset ) && isset( $subset[ 1 ] ) ) {
-				$font_object[ $key ]->subset = $subset[ 1 ];
+			if ( ! empty( $subset ) ) {
+				$font_object[ $key ]->subset = $subset;
 			}
 
 			if ( ! empty( $range ) && isset( $range[ 1 ] ) ) {

@@ -63,6 +63,7 @@ class Process {
 
 	/**
 	 * Populates ?edit= parameter. To make sure OMGF doesn't run while editing posts.
+	 *
 	 * @var string[]
 	 */
 	private $edit_actions = [
@@ -76,6 +77,7 @@ class Process {
 	/**
 	 * Break out early, e.g. if we want to parse other resources and don't need to
 	 * set up all the hooks and filters.
+	 *
 	 * @since v5.4.0
 	 * @var bool $break
 	 */
@@ -83,6 +85,7 @@ class Process {
 
 	/**
 	 * OMGF_Frontend_Functions constructor.
+	 *
 	 * @var $break bool
 	 */
 	public function __construct( $break = false ) {
@@ -100,6 +103,7 @@ class Process {
 
 	/**
 	 * Actions and hooks.
+	 *
 	 * @return void
 	 */
 	private function init() {
@@ -213,6 +217,7 @@ class Process {
 
 	/**
 	 * Start output buffer.
+	 *
 	 * @action template_redirect
 	 * @return bool|string valid HTML.
 	 */
@@ -246,6 +251,7 @@ class Process {
 
 		/**
 		 * Honor PageSpeed=off parameter as used by mod_pagespeed, in use by some pagebuilders,
+		 *
 		 * @see https://www.modpagespeed.com/doc/experiment#ModPagespeed
 		 */
 		if ( array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET[ 'PageSpeed' ] ) {
@@ -269,6 +275,7 @@ class Process {
 
 	/**
 	 * Returns the buffer for filtering, so page cache doesn't break.
+	 *
 	 * @since v5.0.0 Tested with:
 	 *               - Asset Cleanup Pro
 	 *                 - Works
@@ -304,6 +311,7 @@ class Process {
 
 	/**
 	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
+	 *
 	 * @since v5.0.5 Use a regular expression to match all resource hints.
 	 *
 	 * @param string $html Valid HTML.
@@ -403,6 +411,7 @@ class Process {
 		/**
 		 * Use string position of $search to make sure only that instance of the string is replaced.
 		 * This is to prevent duplicate replaces.
+		 *
 		 * @since v5.3.7
 		 */
 		foreach ( $search_replace[ 'search' ] as $key => $search ) {
@@ -477,6 +486,7 @@ class Process {
 			 * If no valid id attribute was found then this means that this stylesheet wasn't enqueued
 			 * using proper WordPress conventions. We generate our own using the length of the href attribute
 			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
+			 *
 			 * @since v5.1.4
 			 */
 			if ( ! $id ) {
@@ -485,6 +495,7 @@ class Process {
 
 			/**
 			 * Compatibility fix for Divi Builder
+			 *
 			 * @since v5.1.3 Because Divi Builder uses the same handle for Google Fonts on each page,
 			 *               even when these contain Google Fonts, let's append a (kind of) unique
 			 *               identifier to the string, to make sure we can make a difference between
@@ -498,6 +509,7 @@ class Process {
 			} elseif ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
 				/**
 				 * Compatibility fix for Elementor
+				 *
 				 * @since v5.1.4 Because Elementor uses the same (annoyingly generic) handle for Google Fonts
 				 *               stylesheets on each page, even when these contain different Google Fonts than
 				 *               other pages, let's append a (kind of) unique identifier to the string, to make
@@ -507,6 +519,7 @@ class Process {
 			} elseif ( str_contains( $id, 'sp-wpcp-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Category Slider Pro for WooCommerce by ShapedPlugin
+				 *
 				 * @since v5.3.7 This plugin finds it necessary to provide each Google Fonts stylesheet with a
 				 *               unique identifier on each pageload, to make sure its never cached. The worst idea ever.
 				 *               On top of that, it throws OMGF off the rails entirely, eventually crashing the site.
@@ -515,12 +528,14 @@ class Process {
 			} elseif ( str_contains( $id, 'sp-lc-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Logo Carousel Pro by ShapedPlugin
+				 *
 				 * @since v5.3.8 Same reason as above.
 				 */
 				$google_fonts[ $key ][ 'id' ] = 'sp-lc-google-fonts';
 			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', str_contains( $id, 'cp-google-fonts' ) ) ) {
 				/**
 				 * Compatibility fix for Convert Pro by Brainstorm Force
+				 *
 				 * @since  v5.5.4 Same reason as above, although it kind of makes sense in this case (since Convert Pro allows
 				 *               to create pop-ups and people tend to get creative. I just hope the ID isn't random.)
 				 * @filter omgf_frontend_process_convert_pro_compatibility Allows people to disable this feature, in case the different
@@ -543,6 +558,7 @@ class Process {
 
 	/**
 	 * Strip "-css" from the end of the stylesheet id, which WordPress adds to properly enqueued stylesheets.
+	 *
 	 * @since v5.0.1 This eases the migration from v4.6.0.
 	 *
 	 * @param mixed $handle
@@ -626,7 +642,7 @@ class Process {
 			/**
 			 * If required parameters aren't set, this request is most likely invalid. Let's just remove it.
 			 */
-			if ( ! isset( $query[ 'family' ] ) ) {
+			if ( apply_filters( 'omgf_frontend_process_invalid_request', ! isset( $query[ 'family' ] ), $href ) ) {
 				$search[ $key ]  = $stack[ 'link' ];
 				$replace[ $key ] = '';
 
@@ -676,6 +692,7 @@ class Process {
 
 	/**
 	 * Because all great themes come packed with extra Cumulative Layout Shifting.
+	 *
 	 * @since v5.4.3 Added compatibility for Highlight Pro; a Mesmerize based theme and Mesmerize,
 	 *               the non-premium theme.
 	 *
