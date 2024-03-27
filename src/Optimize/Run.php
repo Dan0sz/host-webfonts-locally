@@ -28,6 +28,7 @@ class Run {
 
 	/**
 	 * Build class.
+	 *
 	 * @return void
 	 */
 	public function __construct() {
@@ -36,6 +37,7 @@ class Run {
 
 	/**
 	 * Does a quick fetch to the site_url to trigger all the action.
+	 *
 	 * @return void
 	 */
 	private function run() {
@@ -70,6 +72,7 @@ class Run {
 
 	/**
 	 * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
+	 *
 	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
 	 *
 	 * @param $url
@@ -94,6 +97,8 @@ class Run {
 
 	/**
 	 * @param $response WP_Error|array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private function frontend_fetch_failed( $response ) {
 		if ( $response instanceof \WP_REST_Response && $response->is_error() ) {
@@ -130,6 +135,8 @@ class Run {
 	 * @param WP_Error|array $response
 	 *
 	 * @return int|string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private function get_error_code( $response ) {
 		if ( is_wp_error( $response ) ) {
@@ -145,6 +152,8 @@ class Run {
 	 * @param WP_Error|array $response
 	 *
 	 * @return int|string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private function get_error_message( $response ) {
 		if ( is_wp_error( $response ) ) {
@@ -261,11 +270,14 @@ class Run {
 
 	/**
 	 * Generate a fluent sentence from array, e.g. "1, 2, 3 and 4" if element is count is > 1.
+	 *
 	 * @since v5.4.4
 	 *
 	 * @param array $array
 	 *
 	 * @return string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private function fluent_implode( $array ) {
 		if ( count( $array ) == 1 ) {
