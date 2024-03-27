@@ -19,6 +19,9 @@ namespace OMGF;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 
+/**
+ * @codeCoverageIgnore
+ */
 class TaskManager {
 	/**
 	 * @since v5.5.6 Plugins which can't run alongside OMGF, mostly plugins which remove Google Fonts.
@@ -309,6 +312,7 @@ class TaskManager {
 
 	/**
 	 * Check if WordPress setup has known issues.
+	 *
 	 * @return array
 	 */
 	public static function get_warnings() {
