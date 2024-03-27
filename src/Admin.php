@@ -69,6 +69,7 @@ class Admin {
 
 	/**
 	 * Detection Settings tab
+	 *
 	 * @return void
 	 */
 	private function do_detection_settings() {
@@ -77,6 +78,7 @@ class Admin {
 
 	/**
 	 * Advanced Settings tab
+	 *
 	 * @return void
 	 */
 	private function do_advanced_settings() {
@@ -85,6 +87,7 @@ class Admin {
 
 	/**
 	 * Help Tab
+	 *
 	 * @return void
 	 */
 	private function do_help() {
@@ -93,6 +96,7 @@ class Admin {
 
 	/**
 	 * Add failsafe for failing premium plugin updates.
+	 *
 	 * @return Updates
 	 */
 	private function maybe_handle_failed_premium_plugin_updates() {
@@ -114,6 +118,8 @@ class Admin {
 
 	/**
 	 * Checks if an update notice should be displayed after updating.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private function maybe_do_after_update_notice() {
 		if ( OMGF_CURRENT_DB_VERSION != false && version_compare( OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<' ) ) {
@@ -157,6 +163,8 @@ class Admin {
 
 	/**
 	 * Add notice to admin screen.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function print_notices() {
 		Notice::print_notices();
@@ -186,11 +194,11 @@ class Admin {
 	 */
 	public function clean_up_cache( $value, $old_value ) {
 		if ( $old_value == $value ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		if ( $old_value == null ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		$cache_keys = explode( ',', $old_value );
@@ -206,6 +214,7 @@ class Admin {
 
 	/**
 	 * Shows notice if $option_name is in $show_notice array.
+	 *
 	 * @see $show_message
 	 *
 	 * @param $old_values
@@ -218,14 +227,14 @@ class Admin {
 		 * Don't show this message on the Main tab.
 		 */
 		if ( ! array_key_exists( 'tab', $_GET ) || ( $_GET[ 'tab' ] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		/**
 		 * If either of these isn't an array, this means they haven't been set before.
 		 */
 		if ( ! is_array( $old_values ) || ! is_array( $values ) ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		/**
@@ -266,7 +275,7 @@ class Admin {
 			}
 
 			if ( $show_message ) {
-				$wp_settings_errors = [];
+				$wp_settings_errors = []; // @codeCoverageIgnore
 			}
 		}
 

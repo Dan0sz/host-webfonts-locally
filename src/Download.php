@@ -50,13 +50,14 @@ class Download {
 
 	/**
 	 * Download $url to $path and return OMGF_UPLOAD_URL to $filename.
+	 *
 	 * @return string
 	 * @throws SodiumException
 	 * @throws TypeError
 	 */
 	public function download() {
 		if ( ! function_exists( 'download_url' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/file.php'; // @codeCoverageIgnore
 		}
 
 		wp_mkdir_p( $this->path );
@@ -69,7 +70,7 @@ class Download {
 		}
 
 		if ( str_starts_with( $this->url, '//' ) ) {
-			$this->url = 'https:' . $this->url;
+			$this->url = 'https:' . $this->url; // @codeCoverageIgnore
 		}
 
 		$tmp = download_url( $this->url );

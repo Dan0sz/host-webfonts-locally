@@ -51,12 +51,23 @@ class Plugin {
 		new \OMGF\Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
-			register_uninstall_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'do_uninstall' ] );
+			register_uninstall_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'do_uninstall' ] ); // @codeCoverageIgnore
 		}
 	}
 
 	/**
+	 * Run uninstall script
+	 *
+	 * @return void
+	 */
+	public static function do_uninstall() {
+		new Uninstall();
+	}
+
+	/**
 	 * Define constants.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function define_constants() {
 		if ( defined( 'OMGF_UPLOAD_URL' ) ) {
@@ -76,16 +87,10 @@ class Plugin {
 	}
 
 	/**
-	 * Run uninstall script
-	 * @return void
-	 */
-	public static function do_uninstall() {
-		new Uninstall();
-	}
-
-	/**
 	 * Run any DB migration scripts if needed.
+	 *
 	 * @return void
+	 * @codeCoverageIgnore
 	 */
 	public function do_migrate_db() {
 		new Migrate();

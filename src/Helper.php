@@ -46,7 +46,7 @@ class Helper {
 		}
 
 		if ( self::$settings === null ) {
-			self::$settings = self::get_settings();
+			self::$settings = self::get_settings(); // @codeCoverageIgnore
 		}
 
 		self::$settings[ $setting ] = $value;
@@ -76,7 +76,7 @@ class Helper {
 		);
 
 		if ( empty( self::$settings ) ) {
-			self::$settings = get_option( 'omgf_settings', [] );
+			self::$settings = get_option( 'omgf_settings', [] ); // @codeCoverageIgnore
 		}
 
 		return apply_filters( 'omgf_settings', wp_parse_args( self::$settings, $defaults ) );
@@ -99,7 +99,7 @@ class Helper {
 
 		// This prevents settings from 'mysteriously' returning after being unset.
 		if ( empty( self::$settings ) ) {
-			self::$settings = self::get_settings();
+			self::$settings = self::get_settings(); // @codeCoverageIgnore
 		}
 
 		unset( self::$settings[ $setting ] );
@@ -218,9 +218,9 @@ class Helper {
 		 * the (default) stylesheet handles from the optimized fonts option.
 		 */
 		if ( empty( $cache_keys ) ) {
-			$optimized_fonts = self::admin_optimized_fonts();
+			$optimized_fonts = self::admin_optimized_fonts(); // @codeCoverageIgnore
 
-			$cache_keys = array_keys( $optimized_fonts );
+			$cache_keys = array_keys( $optimized_fonts ); //@codeCoverageIgnore
 		}
 
 		return $cache_keys;
@@ -253,7 +253,7 @@ class Helper {
 		 * @since v4.5.6
 		 */
 		if ( is_string( $optimized_fonts ) ) {
-			$optimized_fonts = unserialize( $optimized_fonts );
+			$optimized_fonts = unserialize( $optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -302,8 +302,7 @@ class Helper {
 		 * @since v4.5.6
 		 */
 		if ( is_string( $optimized_fonts ) ) {
-			// phpcs:ignore
-			$optimized_fonts = unserialize( $optimized_fonts );
+			$optimized_fonts = unserialize( $optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -334,7 +333,7 @@ class Helper {
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 */
 		if ( is_string( $subsets ) ) {
-			$subsets = unserialize( $subsets );
+			$subsets = unserialize( $subsets ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -359,7 +358,7 @@ class Helper {
 			self::debug_array( __( 'Filtered Subsets', 'host-webfonts-local' ), $filtered_subsets );
 
 			if ( count( $filtered_subsets ) === 1 ) {
-				return reset( $filtered_subsets );
+				return reset( $filtered_subsets ); // @codeCoverageIgnore
 			}
 
 			if ( ! empty( $filtered_subsets ) ) {
@@ -378,10 +377,12 @@ class Helper {
 	 *
 	 * @since v5.3.7
 	 *
-	 * @param array  $array The array to be displayed in the debug log
-	 * @param string $name  A descriptive name to be shown in the debug log
+	 * @param array|object $array The array to be displayed in the debug log
+	 * @param string       $name  A descriptive name to be shown in the debug log
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function debug_array( $name, $array ) {
 		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
@@ -419,6 +420,8 @@ class Helper {
 	 * Returns the absolute path to the log file.
 	 *
 	 * @return string
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function log_file() {
 		static $log_file;
@@ -436,6 +439,8 @@ class Helper {
 	 * @param mixed $message
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function debug( $message ) {
 		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
@@ -445,7 +450,7 @@ class Helper {
 			return;
 		}
 
-		error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ": $message\n", 3, self::log_file() );
+		error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ": $message\n", 3, self::log_file() ); // @codeCoverageIgnore
 	}
 
 	/**

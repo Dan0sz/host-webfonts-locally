@@ -71,7 +71,7 @@ class Filters {
 		 * If the user entered https:// in the Home URL option, it's safe to assume that SSL is used.
 		 */
 		if ( ! is_ssl() && str_contains( get_home_url(), 'https://' ) ) {
-			$url = str_replace( 'http://', 'https://', $url );
+			$url = str_replace( 'http://', 'https://', $url ); // @codeCoverageIgnore
 		}
 
 		return $url;
