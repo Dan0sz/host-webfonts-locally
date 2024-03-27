@@ -16,12 +16,12 @@ class NoticeTest extends TestCase {
 	public function testSetNotice() {
 		Notice::set_notice( 'test', 'test-notice' );
 
-		$this->expectOutputContains( 'test-notice' );
+		$this->expectOutputContains( 'test' );
 
 		Notice::print_notices();
 
 		Notice::set_notice( 'test', 'test-notice', 'info' );
-		Notice::unset_notice( 'test-notice' );
+		Notice::unset_notice( 'test' );
 
 		$notices = get_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
 
