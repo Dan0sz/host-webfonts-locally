@@ -21,7 +21,7 @@ class NoticeTest extends TestCase {
 		Notice::print_notices();
 
 		Notice::set_notice( 'test', 'test-notice', 'info' );
-		Notice::unset_notice( 'test' );
+		Notice::unset_notice( 'test-notice' );
 
 		$notices = get_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
 
