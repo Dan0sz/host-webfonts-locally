@@ -159,7 +159,7 @@ class Updates {
 
 			$latest_versions[ $id ] = $latest_version;
 
-			set_transient( $this->transient_label . '_addons_latest_available_version', $latest_versions, DAY_IN_SECONDS );
+			set_transient( $this->transient_label . '_addons_latest_available_versions', $latest_versions, DAY_IN_SECONDS );
 		}
 
 		return $latest_version;
