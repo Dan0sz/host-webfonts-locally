@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.5
-Stable tag: 5.8.3
+Stable tag: 5.9.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -79,6 +79,18 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.9.0 =
+* Removed: Early Access promo setting from Detection Settings tab, because it's considered "obsolete and unsupported by Google" and therefore will soon be removed from OMGF Pro.
+  - If you have it enabled now in OMGF Pro, it will still work, until you update OMGF Pro (update isn't released yet).
+* Improved: OMGF now recognizes the `math` and `symbols` unicode ranges.
+* Added: Legacy Mode - anyone running into the broken 'A' issue, should enable it. Be warned that it will impact font compression rates.
+* Improved: PHP 8 compatibility (using constants as callable is deprecated in PHP 8)
+* Fixed: using Auto-config Used Subsets would cause warnings on new installs.
+* Fixed: updating settings would fail if tab parameter wasn't set.
+* Improved: prevent duplicate constant defines.
+* Several minor code improvements.
+* Tested with WP 6.5
 
 = 5.8.3 =
 * Fixed: removed a trailing comma to support PHP 7.0 and 7.1.
