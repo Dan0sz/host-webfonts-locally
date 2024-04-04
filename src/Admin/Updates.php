@@ -19,6 +19,8 @@ defined( 'ABSPATH' ) || exit;
  * @codeCoverageIgnore
  */
 class Updates {
+	const TRANSIENT_LABEL_APPENDIX = '_addons_latest_available_versions';
+
 	/** @var string $plugin_text_domain */
 	private $plugin_text_domain = '';
 
@@ -130,7 +132,7 @@ class Updates {
 		 * This prevents duplicate DB reads.
 		 */
 		if ( $latest_versions === null ) {
-			$latest_versions = get_transient( $this->transient_label . '_addons_latest_available_versions' );
+			$latest_versions = get_transient( $this->transient_label . self::TRANSIENT_LABEL_APPENDIX );
 		}
 
 		/**
@@ -159,7 +161,7 @@ class Updates {
 
 			$latest_versions[ $id ] = $latest_version;
 
-			set_transient( $this->transient_label . '_addons_latest_available_versions', $latest_versions, DAY_IN_SECONDS );
+			set_transient( $this->transient_label . self::TRANSIENT_LABEL_APPENDIX, $latest_versions, DAY_IN_SECONDS );
 		}
 
 		return $latest_version;
