@@ -268,10 +268,13 @@ class Optimize extends Builder {
 	 *
 	 */
 	public function do_display_option() {
+		$options           = Settings::OMGF_FONT_DISPLAY_OPTIONS;
+		$options[ 'swap' ] .= ' (' . __( 'recommended', 'host-webfonts-local' ) . ')';
+
 		$this->do_select(
 			__( 'Font-Display Option', 'host-webfonts-local' ),
 			Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION,
-			Settings::OMGF_FONT_DISPLAY_OPTIONS,
+			$options,
 			OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION ),
 			__(
 				'Select which value to set the font-display attribute to. Defaults to Swap (recommended).',

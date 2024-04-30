@@ -60,7 +60,7 @@ class Settings extends Admin {
 	 * Option values for (multi)selects.
 	 */
 	const OMGF_FONT_DISPLAY_OPTIONS         = [
-		'swap'     => 'Swap (recommended)',
+		'swap'     => 'Swap',
 		'auto'     => 'Auto',
 		'block'    => 'Block',
 		'fallback' => 'Fallback',
