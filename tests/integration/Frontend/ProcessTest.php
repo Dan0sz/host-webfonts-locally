@@ -1,12 +1,14 @@
 <?php
 /**
  * Process Tests
+ *
  * @package OMGF
  * @author  Daan van den Bergh
  */
 
 namespace OMGF\Tests\Integration\Frontend;
 
+use OMGF\Frontend\Filters;
 use OMGF\Frontend\Process;
 use OMGF\Tests\TestCase;
 
@@ -40,6 +42,7 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Is Success message added properly?
+	 *
 	 * @see Process::add_success_message()
 	 * @return void
 	 */
@@ -62,6 +65,7 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are Google Fonts properly downloaded/replaced?
+	 *
 	 * @see Process::parse()
 	 * @return void
 	 */
@@ -75,7 +79,23 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * Tests the omgf_optimize_url filter.
+	 *
+	 * @see Filters::decode_url()
+	 * @return void
+	 */
+	public function testParseWithEncodedUrls() {
+		$class     = new Process( true );
+		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/encoded-urls.html' );
+
+		$html = $class->parse( $test_html );
+
+		$this->assertStringContainsString( '//example.org/wp-content-uploads/omgf/encoded-urls/encoded-urls.css', $html );
+	}
+
+	/**
 	 * Are preloads output properly?
+	 *
 	 * @see Process::add_preloads()
 	 * @return void
 	 */
@@ -120,6 +140,7 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are resource hints properly removed from HTML?
+	 *
 	 * @see Process::remove_resource_hints()
 	 * @return void
 	 */
