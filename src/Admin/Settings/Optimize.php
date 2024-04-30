@@ -198,7 +198,8 @@ class Optimize extends Builder {
 			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
 			sprintf(
 				__(
-					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance > Production street. %s'
+					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance > Production street. %s',
+					'host-webfonts-local'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 				$this->promo
