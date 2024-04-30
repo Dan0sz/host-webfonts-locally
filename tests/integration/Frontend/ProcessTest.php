@@ -90,7 +90,7 @@ class ProcessTest extends TestCase {
 
 		$html = $class->parse( $test_html );
 
-		$this->assertStringContainsString( '//example.org/wp-content-uploads/omgf/encoded-urls/encoded-urls.css', $html );
+		$this->assertStringContainsString( '//example.org/wp-content/uploads/omgf/encoded-urls/encoded-urls.css', $html );
 	}
 
 	/**
