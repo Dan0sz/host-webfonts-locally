@@ -224,7 +224,7 @@ class Optimize extends Builder {
 			'auto_config', ! empty( OMGF::get_option( 'auto_config' ) ),
 			sprintf(
 				__(
-					'Is %1$s not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%2$s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed. Novice users are advised to leave this enabled. %s',
+					'Is %1$s not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%2$s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed. Novice users are advised to leave this enabled. %3$s',
 					'host-webfonts-local'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
