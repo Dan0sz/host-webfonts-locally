@@ -306,7 +306,7 @@ class Optimize extends Builder {
 			'remove_async_fonts', ! empty( OMGF::get_option( 'remove_async_fonts' ) ),
 			sprintf(
 				__(
-					'Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%1$s">manually</a> or by using <a href="%2$s" target="_blank">a plugin</a> to prevent styling breaks. %s',
+					'Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with embedded content (i.e. <code>iframe</code>). <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%1$s">manually</a> or by using <a href="%2$s" target="_blank">a plugin</a> to prevent styling breaks. %3$s',
 					'host-webfonts-local'
 				),
 				'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/',
