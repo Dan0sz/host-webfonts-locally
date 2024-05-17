@@ -5,6 +5,7 @@
 
 namespace OMGF\Tests\Integration;
 
+use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 use OMGF\Tests\TestCase;
 
@@ -98,5 +99,19 @@ class HelperTest extends TestCase {
 
 		$this->assertFileDoesNotExist( OMGF_UPLOAD_DIR . '/test/test.log' );
 		$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/test/' );
+	}
+
+	/**
+	 * @see Helper::get_settings()
+	 * @return void
+	 */
+	public function testGetDefaultSettings() {
+		$subsets = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
+
+		$this->assertEquals( [ 'latin', 'latin-ext' ], $subsets );
+
+		$font_display = OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION );
+
+		$this->assertEquals( 'swap', $font_display );
 	}
 }
