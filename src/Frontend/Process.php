@@ -540,7 +540,7 @@ class Process {
 				/**
 				 * Compatibility fix for Fruitful theme by Fruitful Code.
 				 *
-				 * @since v5.9.0 Same reason as above.
+				 * @since v5.9.1 Same reason as above.
 				 */
 				$google_fonts[ $key ][ 'id' ] = 'custom_fonts';
 			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', str_contains( $id, 'cp-google-fonts' ) ) ) {
