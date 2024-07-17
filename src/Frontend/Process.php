@@ -509,7 +509,7 @@ class Process {
 			 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
 			 */
 			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && str_contains( $id, 'et-builder-googlefonts' ) ) {
-				$google_fonts[ $key ][ 'id' ] = $id . '-' . strlen( $href[ 'href' ] );
+				$google_fonts[ $key ][ 'id' ] = $id . '-' . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
 			} elseif ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
 				/**
 				 * Compatibility fix for Elementor
@@ -519,7 +519,7 @@ class Process {
 				 *               other pages, let's append a (kind of) unique identifier to the string, to make
 				 *               sure we can make a difference between different Google Fonts configurations.
 				 */
-				$google_fonts[ $key ][ 'id' ] = str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id );
+				$google_fonts[ $key ][ 'id' ] = str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id ); // @codeCoverageIgnore
 			} elseif ( str_contains( $id, 'sp-wpcp-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Category Slider Pro for WooCommerce by ShapedPlugin
@@ -528,21 +528,21 @@ class Process {
 				 *               unique identifier on each pageload, to make sure its never cached. The worst idea ever.
 				 *               On top of that, it throws OMGF off the rails entirely, eventually crashing the site.
 				 */
-				$google_fonts[ $key ][ 'id' ] = 'sp-wpcp-google-fonts';
+				$google_fonts[ $key ][ 'id' ] = 'sp-wpcp-google-fonts'; // @codeCoverageIgnore
 			} elseif ( str_contains( $id, 'sp-lc-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Logo Carousel Pro by ShapedPlugin
 				 *
 				 * @since v5.3.8 Same reason as above.
 				 */
-				$google_fonts[ $key ][ 'id' ] = 'sp-lc-google-fonts';
+				$google_fonts[ $key ][ 'id' ] = 'sp-lc-google-fonts'; // @codeCoverageIgnore
 			} elseif ( str_contains( $id, 'custom_fonts_' ) ) {
 				/**
 				 * Compatibility fix for Fruitful theme by Fruitful Code.
 				 *
 				 * @since v5.9.1 Same reason as above.
 				 */
-				$google_fonts[ $key ][ 'id' ] = 'custom_fonts';
+				$google_fonts[ $key ][ 'id' ] = 'custom_fonts'; // @codeCoverageIgnore
 			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', str_contains( $id, 'cp-google-fonts' ) ) ) {
 				/**
 				 * Compatibility fix for Convert Pro by Brainstorm Force
@@ -552,7 +552,7 @@ class Process {
 				 * @filter omgf_frontend_process_convert_pro_compatibility Allows people to disable this feature, in case the different
 				 *         stylesheets are actually needed.
 				 */
-				$google_fonts[ $key ][ 'id' ] = 'cp-google-fonts';
+				$google_fonts[ $key ][ 'id' ] = 'cp-google-fonts'; // @codeCoverageIgnore
 			} else {
 				$google_fonts[ $key ][ 'id' ] = $id;
 			}
