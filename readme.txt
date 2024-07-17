@@ -2,8 +2,8 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
-Tested up to: 6.5
-Stable tag: 5.9.0
+Tested up to: 6.6
+Stable tag: 5.9.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -80,7 +80,13 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
-= 5.9.0 =
+= 5.9.1 | July 17th, 2024 =
+* Tested with WP 6.6
+* Fixed: some strings weren't translatable.
+* Improved: incorrect Google Fonts URLs are now somewhat handled to improve UX.
+* Added: Compatibility fix for Fruitful theme.
+
+= 5.9.0 | April 4th, 2024 =
 * Removed: Early Access promo setting from Detection Settings tab, because it's considered "obsolete and unsupported by Google" and therefore will soon be removed from OMGF Pro.
   - If you have it enabled now in OMGF Pro, it will still work, until you update OMGF Pro (update isn't released yet).
 * Improved: OMGF now recognizes the `math` and `symbols` unicode ranges.
