@@ -41,6 +41,8 @@ class Run {
 	 * @return void
 	 */
 	private function run() {
+		$this->generate_timestamp();
+
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
 
 		$front_html = $this->get_front_html( get_home_url() );
@@ -50,6 +52,16 @@ class Run {
 		} else {
 			$this->optimization_succeeded();
 		}
+	}
+
+	/**
+	 * Generates a timestamp and stores it to the DB, which is appended to the stylesheet and fonts URLs.
+	 *
+	 * @see StylesheetGenerator::build_source_string()
+	 * @see self::build_search_replace()
+	 */
+	private function generate_timestamp() {
+		OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, time() ); // @codeCoverageIgnore
 	}
 
 	/**

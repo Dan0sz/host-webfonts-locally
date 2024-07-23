@@ -71,9 +71,6 @@ class Process {
 		'elementor',
 	];
 
-	/** @var string $timestamp */
-	private $timestamp = '';
-
 	/**
 	 * Break out early, e.g. if we want to parse other resources and don't need to
 	 * set up all the hooks and filters.
@@ -84,19 +81,18 @@ class Process {
 	private $break = false;
 
 	/**
+	 * @var string $timestamp
+	 */
+	private $timestamp;
+
+	/**
 	 * OMGF_Frontend_Functions constructor.
 	 *
 	 * @var $break bool
 	 */
 	public function __construct( $break = false ) {
-		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
 		$this->break     = $break;
-
-		if ( ! $this->timestamp ) {
-			$this->timestamp = time(); // @codeCoverageIgnore
-
-			OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, $this->timestamp ); // @codeCoverageIgnore
-		}
+		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
 
 		$this->init();
 	}

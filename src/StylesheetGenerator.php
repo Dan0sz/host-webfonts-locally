@@ -28,6 +28,9 @@ class StylesheetGenerator {
 	/** @var string $plugin */
 	private $plugin;
 
+	/** @var int $timestamp */
+	private $timestamp;
+
 	/**
 	 * OMGF_GenerateStylesheet constructor.
 	 */
@@ -35,8 +38,9 @@ class StylesheetGenerator {
 		$fonts,
 		string $plugin
 	) {
-		$this->fonts  = $fonts;
-		$this->plugin = $plugin;
+		$this->fonts     = $fonts;
+		$this->plugin    = $plugin;
+		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP );
 	}
 
 	/**
@@ -101,7 +105,8 @@ class StylesheetGenerator {
 		$n        = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ? "\n" : '';
 
 		foreach ( $sources as $format => $url ) {
-			$source .= "$type('$url')" . ( ! is_numeric( $format ) ? "format('$format')" : '' );
+			$source_url = $url . '?ver=' . $this->timestamp;
+			$source     .= "$type('$source_url')" . ( ! is_numeric( $format ) ? "format('$format')" : '' );
 
 			if ( $url === $last_src && $end_semi_colon ) {
 				$source .= ";$n";
