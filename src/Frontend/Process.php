@@ -203,7 +203,7 @@ class Process {
 					$url         = "$url?ver=$timestamp";
 
 					echo wp_kses(
-						"<link id='omgf-preload-$i' rel='preload' href='$url'as='font' type='font/woff2' crossorigin />\n",
+						"<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n",
 						self::PRELOAD_ALLOWED_HTML
 					);
 
