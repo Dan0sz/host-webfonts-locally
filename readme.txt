@@ -1,9 +1,9 @@
-=== OMGF | GDPR/DSGVO Compliant, Faster Google Fonts. Easy. ===
+ === OMGF | GDPR/DSGVO Compliant, Faster Google Fonts. Easy. ===
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
-Tested up to: 6.6
-Stable tag: 5.9.1
+Tested up to: 6.7
+Stable tag: 5.9.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -79,6 +79,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 5. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 5.9.2 | December 24th, 2024 =
+* Tested with WP 6.7
+* Added: a version parameter is now added to cached files, to make sure browser cache is busted when the OMGF cache is refreshed.
+* Fixed: minor HTML syntax typo in output of preloaded files.
 
 = 5.9.1 | July 17th, 2024 =
 * Tested with WP 6.6
