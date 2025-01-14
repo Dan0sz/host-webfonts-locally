@@ -80,7 +80,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
-= 5.9.2 | December 24th, 2024 =
+= 5.9.2 | January 14th, 2025 =
 * Tested with WP 6.7
 * Added: a version parameter is now added to cached files, to make sure browser cache is busted when the OMGF cache is refreshed.
 * Fixed: minor HTML syntax typo in output of preloaded files.
