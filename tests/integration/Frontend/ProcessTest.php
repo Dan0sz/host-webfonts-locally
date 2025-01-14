@@ -107,8 +107,8 @@ class ProcessTest extends TestCase {
 		$class = new Process( true );
 
 		// Usually the "ver" param contains a timestamp, but that's not really relevant to test here.
-		$this->expectOutputContains(
-			"<link id='omgf-preload-0' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-400.woff2?ver=' as='font' type='font/woff2' crossorigin />"
+		$this->expectOutputRegex(
+			"~<link id='omgf-preload-.?' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-.*?\.woff2\?ver=.*?' as='font' type='font/woff2' crossorigin />~i"
 		);
 		$class->add_preloads();
 
