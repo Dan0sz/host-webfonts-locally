@@ -40,6 +40,9 @@ jobs:
           --health-retries 10
 
     steps:
+      - name: Install SVN
+        run: sudo apt-get install -y subversion
+
       - name: Checkout code
         uses: actions/checkout@v4
 
