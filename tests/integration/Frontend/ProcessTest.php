@@ -1,7 +1,6 @@
 <?php
 /**
  * Process Tests
- *
  * @package OMGF
  * @author  Daan van den Bergh
  */
@@ -42,7 +41,6 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Is Success message added properly?
-	 *
 	 * @see Process::add_success_message()
 	 * @return void
 	 */
@@ -52,7 +50,7 @@ class ProcessTest extends TestCase {
 
 		$this->assertEmpty( $html );
 
-		$_GET[ 'omgf_optimize' ] = 1;
+		$_GET['omgf_optimize'] = 1;
 
 		$html = $class->add_success_message( '' );
 
@@ -65,7 +63,6 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are Google Fonts properly downloaded/replaced?
-	 *
 	 * @see Process::parse()
 	 * @return void
 	 */
@@ -75,12 +72,14 @@ class ProcessTest extends TestCase {
 
 		$html = $class->parse( $test_html );
 
-		$this->AssertStringContainsString( '//example.org/wp-content/uploads/omgf/astra-google-fonts/astra-google-fonts.css', $html );
+		$this->AssertStringContainsString(
+			'//example.org/wp-content/uploads/omgf/astra-google-fonts/astra-google-fonts.css',
+			$html
+		);
 	}
 
 	/**
 	 * Tests the omgf_optimize_url filter.
-	 *
 	 * @see Filters::decode_url()
 	 * @return void
 	 */
@@ -90,12 +89,14 @@ class ProcessTest extends TestCase {
 
 		$html = $class->parse( $test_html );
 
-		$this->assertStringContainsString( '//example.org/wp-content/uploads/omgf/encoded-urls/encoded-urls.css', $html );
+		$this->assertStringContainsString(
+			'//example.org/wp-content/uploads/omgf/encoded-urls/encoded-urls.css',
+			$html
+		);
 	}
 
 	/**
 	 * Are preloads output properly?
-	 *
 	 * @see Process::add_preloads()
 	 * @return void
 	 */
@@ -105,8 +106,9 @@ class ProcessTest extends TestCase {
 
 		$class = new Process( true );
 
+		// Usually the "ver" param contains a timestamp, but that's not really relevant to test here.
 		$this->expectOutputContains(
-			"<link id='omgf-preload-0' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-400.woff2' as='font' type='font/woff2' crossorigin />"
+			"<link id='omgf-preload-0' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-400.woff2?ver=' as='font' type='font/woff2' crossorigin />"
 		);
 		$class->add_preloads();
 
@@ -140,7 +142,6 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are resource hints properly removed from HTML?
-	 *
 	 * @see Process::remove_resource_hints()
 	 * @return void
 	 */
