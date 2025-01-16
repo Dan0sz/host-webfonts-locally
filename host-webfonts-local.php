@@ -21,16 +21,10 @@ define( 'OMGF_DB_VERSION', '5.8.1' );
 
 /**
  * Takes care of loading classes on demand.
- *
- * @param $class
- *
- * @return mixed|void
  */
 require_once OMGF_PLUGIN_DIR . 'vendor/autoload.php';
 
 /**
  * All systems GO!!!
- *
- * @return OMGF\Plugin
  */
 $omgf = new OMGF\Plugin();
