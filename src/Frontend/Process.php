@@ -325,7 +325,7 @@ class Process {
 		 * @since v5.1.5 Use a lookaround that matches all link elements, because otherwise
 		 *               matches grow past their supposed boundaries.
 		 */
-		preg_match_all( '/(?=\<link).+?(?<=>)/s', $html, $resource_hints );
+		preg_match_all( '/(?=<link).+?(?<=>)/s', $html, $resource_hints );
 
 		if ( empty( $resource_hints[ 0 ] ) ) {
 			return $html; // @codeCoverageIgnore
@@ -424,6 +424,18 @@ class Process {
 			}
 		}
 
+		$this->parse_iframes($html);
+
+		return apply_filters( 'omgf_processed_html', $html, $this );
+	}
+
+	/**
+	 * Parse $html for present iframes loading Google Fonts.
+	 *
+	 * @param $html
+	 * @return void
+	 */
+	private function parse_iframes($html) {
 		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 		$count_iframes = count( $found_iframes );
 
@@ -436,8 +448,6 @@ class Process {
 		if ( $count_iframes !== count( $found_iframes ) ) {
 			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
 		}
-
-		return apply_filters( 'omgf_processed_html', $html, $this );
 	}
 
 	/**
@@ -615,7 +625,7 @@ class Process {
 			 * If stylesheet with $handle is completely marked for unload, just remove the element
 			 * to prevent it from loading.
 			 */
-			if ( OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() ) ) {
+			if ( apply_filters('omgf_unloaded_stylesheets', OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() ) ) ) {
 				$search[ $key ]  = $stack[ 'link' ];
 				$replace[ $key ] = '';
 

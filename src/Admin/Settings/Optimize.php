@@ -194,16 +194,16 @@ class Optimize extends Builder {
 		</tr>
 		<?php
 		$this->do_checkbox(
-			__( 'Optimize for (D)TAP (Pro)', 'host-webfonts-local' ),
-			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
+			__('Add Fonts Inline (Pro)', 'host-webfonts-local'),
+			'inline_fonts', ! empty( OMGF::get_option( 'inline_fonts' ) ),
 			sprintf(
 				__(
-					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance > Production street. %s',
+					'Enable this option to add all fonts related styles inline to the <code>head</code>. This reduces the amount of chained critical requests and increases performance and Pagespeed score in most cases. %s',
 					'host-webfonts-local'
 				),
-				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 				$this->promo
-			), ! defined( 'OMGF_PRO_ACTIVE' ),
+			),
+			!defined('OMGF_PRO_ACTIVE'),
 			'task-manager-row'
 		);
 		$this->do_checkbox(
@@ -229,6 +229,19 @@ class Optimize extends Builder {
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 				admin_url( 'options-general.php?page=optimize-webfonts&tab=omgf-detection-settings' ),
+				$this->promo
+			), ! defined( 'OMGF_PRO_ACTIVE' ),
+			'task-manager-row'
+		);
+		$this->do_checkbox(
+			__( 'Optimize for (D)TAP (Pro)', 'host-webfonts-local' ),
+			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
+			sprintf(
+				__(
+					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production street. %s',
+					'host-webfonts-local'
+				),
+				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 				$this->promo
 			), ! defined( 'OMGF_PRO_ACTIVE' ),
 			'task-manager-row'
