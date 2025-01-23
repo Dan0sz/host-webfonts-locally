@@ -247,8 +247,8 @@ class Helper {
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 * @since v4.5.6
 		 */
-		if ( is_string( $optimized_fonts ) ) {
-			$optimized_fonts = unserialize( $optimized_fonts ) ?: []; // @codeCoverageIgnore
+		if ( is_string( $optimized_fonts ) && $optimized_fonts !== '' ) {
+			$optimized_fonts = unserialize( $optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -293,8 +293,8 @@ class Helper {
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 * @since v4.5.6
 		 */
-		if ( is_string( $optimized_fonts ) ) {
-			$optimized_fonts = unserialize( $optimized_fonts ) ?: []; // @codeCoverageIgnore
+		if ( is_string( $optimized_fonts ) && $optimized_fonts !== '' ) {
+			$optimized_fonts = unserialize( $optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
