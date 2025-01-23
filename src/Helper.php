@@ -23,7 +23,6 @@ use OMGF\StylesheetGenerator;
 class Helper {
 	/**
 	 * Property to hold all settings.
-	 *
 	 * @var mixed
 	 */
 	private static $settings;
@@ -31,7 +30,6 @@ class Helper {
 	/**
 	 * This is basically a wrapper around update_option() to offer a centralized interface for
 	 * storing OMGF's settings in the wp_options table.
-	 *
 	 * @since v5.6.0
 	 *
 	 * @param mixed  $value
@@ -56,7 +54,6 @@ class Helper {
 
 	/**
 	 * Gets all settings for OMGF.
-	 *
 	 * @filter omgf_settings
 	 * @since  5.5.7
 	 * @return array
@@ -87,7 +84,6 @@ class Helper {
 	/**
 	 * This is basically a wrapper around delete_option() to offer a centralized interface for
 	 * removing OMGF's settings in the wp_options table.
-	 *
 	 * @since v5.6.0
 	 *
 	 * @param string $setting
@@ -125,7 +121,6 @@ class Helper {
 	/**
 	 * Method to retrieve OMGF's settings from database.
 	 * WARNING: DO NOT ATTEMPT TO RETRIEVE WP CORE SETTINGS USING THIS METHOD. IT WILL FAIL.
-	 *
 	 * @filter omgf_setting_{$name}
 	 * @since  v5.6.0
 	 *
@@ -173,7 +168,8 @@ class Helper {
 		static $unloaded_stylesheets = [];
 
 		if ( empty( $unloaded_stylesheets ) ) {
-			$unloaded_stylesheets = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
+			$unloaded_stylesheets =
+				explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
 		}
 
 		return array_filter( $unloaded_stylesheets );
@@ -201,7 +197,6 @@ class Helper {
 
 	/**
 	 * Fetch cache keys from the DB.
-	 *
 	 * @since v5.6.4 Extract cache keys from Optimized Fonts option if the option itself appears empty.
 	 * @return array
 	 */
@@ -231,7 +226,6 @@ class Helper {
 	/**
 	 * Optimized Local Fonts to be displayed in the Optimize Local Fonts table.
 	 * Use a static variable to reduce database reads/writes.
-	 *
 	 * @since v4.5.7
 	 *
 	 * @param bool  $force_add
@@ -251,16 +245,14 @@ class Helper {
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
-		 *
 		 * @since v4.5.6
 		 */
 		if ( is_string( $optimized_fonts ) ) {
-			$optimized_fonts = unserialize( $optimized_fonts ); // @codeCoverageIgnore
+			$optimized_fonts = unserialize( $optimized_fonts ) ?: []; // @codeCoverageIgnore
 		}
 
 		/**
 		 * If $maybe_add doesn't exist in the cache layer yet, add it.
-		 *
 		 * @since v4.5.7
 		 */
 		if ( ! empty( $maybe_add ) && ( ! isset( $optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
@@ -273,7 +265,6 @@ class Helper {
 	/**
 	 * Optimized Local Fonts to be used in the frontend. Doesn\'t contain unloaded fonts.
 	 * Use a static variable to reduce database reads/writes.
-	 *
 	 * @since v5.8.1
 	 *
 	 * @param bool  $force_add
@@ -300,7 +291,6 @@ class Helper {
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
-		 *
 		 * @since v4.5.6
 		 */
 		if ( is_string( $optimized_fonts ) ) {
@@ -309,7 +299,6 @@ class Helper {
 
 		/**
 		 * If $maybe_add doesn't exist in the cache layer yet, add it.
-		 *
 		 * @since v4.5.7
 		 */
 		if ( ! empty( $maybe_add ) && ( ! isset( $optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
@@ -347,7 +336,6 @@ class Helper {
 
 		/**
 		 * Return only subsets that are available in all font families.
-		 *
 		 * @see OMGF_Optimize_Run
 		 */
 		if ( $intersect ) {
@@ -355,7 +343,8 @@ class Helper {
 			 * @var array $filtered_subsets Contains an array of Font Families along with the available selected subsets, e.g.
 			 *                              { 'Lato' => { 'latin', 'latin-ext' } }
 			 */
-			$filtered_subsets = apply_filters( 'omgf_available_filtered_subsets', array_values( array_filter( $subsets ) ) );
+			$filtered_subsets =
+				apply_filters( 'omgf_available_filtered_subsets', array_values( array_filter( $subsets ) ) );
 
 			self::debug_array( __( 'Filtered Subsets', 'host-webfonts-local' ), $filtered_subsets );
 
@@ -376,14 +365,12 @@ class Helper {
 	/**
 	 * To prevent "Cannot use output buffering  in output buffering display handlers" errors, I introduced a debug
 	 * array feature, to easily display, well, arrays in the debug log (duh!)
-	 *
 	 * @since v5.3.7
 	 *
 	 * @param array|object $array The array to be displayed in the debug log
 	 * @param string       $name  A descriptive name to be shown in the debug log
 	 *
 	 * @return void
-	 *
 	 * @codeCoverageIgnore
 	 */
 	public static function debug_array( $name, $array ) {
@@ -420,9 +407,7 @@ class Helper {
 
 	/**
 	 * Returns the absolute path to the log file.
-	 *
 	 * @return string
-	 *
 	 * @codeCoverageIgnore
 	 */
 	public static function log_file() {
@@ -441,7 +426,6 @@ class Helper {
 	 * @param mixed $message
 	 *
 	 * @return void
-	 *
 	 * @codeCoverageIgnore
 	 */
 	public static function debug( $message ) {
@@ -452,7 +436,11 @@ class Helper {
 			return;
 		}
 
-		error_log( current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ": $message\n", 3, self::log_file() ); // @codeCoverageIgnore
+		error_log(
+			current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ": $message\n",
+			3,
+			self::log_file()
+		); // @codeCoverageIgnore
 	}
 
 	/**
