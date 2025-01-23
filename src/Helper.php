@@ -294,7 +294,7 @@ class Helper {
 		 * @since v4.5.6
 		 */
 		if ( is_string( $optimized_fonts ) ) {
-			$optimized_fonts = unserialize( $optimized_fonts ); // @codeCoverageIgnore
+			$optimized_fonts = unserialize( $optimized_fonts ) ?: []; // @codeCoverageIgnore
 		}
 
 		/**
