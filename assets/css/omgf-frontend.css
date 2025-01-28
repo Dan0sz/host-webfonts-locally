@@ -20,10 +20,18 @@
 }
 
 @-webkit-keyframes blinking-alert {
-	17%, 51%, 85% {
+	12.5%, 37.5%, 67.5%, 87.5% {
 		background-color: transparent;
 	}
-	0%, 34%, 68%, 100% {
+	0%, 25%, 50%, 75%, 100% {
 		background-color: #FF4136;
 	}
+}
+
+#wp-admin-bar-omgf-info {
+	background-color: #FF4136 !important;
+}
+
+#wp-admin-bar-omgf-info .ab-item {
+	color: white !important;
 }
