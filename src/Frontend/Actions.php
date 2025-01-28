@@ -27,6 +27,7 @@ class Actions {
 		add_action( 'init', [ $this, 'init_frontend' ], 50 );
 
 		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_item' ], 1000 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_frontend_assets' ] );
 	}
 
 	/**
@@ -46,7 +47,9 @@ class Actions {
 		 * Display only in frontend, for logged in admins.
 		 */
 		if ( ! defined( 'DAAN_DOING_TESTS' ) &&
-			( ! current_user_can( 'manage_options' ) || is_admin() || OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) ) {
+			( ! current_user_can( 'manage_options' ) ||
+				is_admin() ||
+				OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) ) {
 			return; // @codeCoverageIgnore
 		}
 
@@ -87,5 +90,24 @@ class Actions {
 				'href'   => add_query_arg( 'omgf_optimize', '1', $site_url ),
 			]
 		);
+	}
+
+	/**
+	 * This script is only loaded for logged in administrators.
+	 *
+	 * @return void
+	 */
+	public function maybe_add_frontend_assets() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$js_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-frontend.js';
+
+		wp_enqueue_script( 'omgf-frontend', $js_file, [], filemtime( $js_file ) );
+
+		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/css/omgf-frontend.css';
+
+		wp_enqueue_style( 'omgf-frontend', $css_file, [], filemtime( $css_file ) );
 	}
 }

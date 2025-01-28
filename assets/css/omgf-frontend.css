@@ -1,0 +1,29 @@
+/**
+ * @author Daan van den Bergh
+ * @package OMGF
+ */
+
+/*#wp-admin-bar-omgf.alert {*/
+/*	background-color: #FF4136;*/
+/*}*/
+
+#wp-admin-bar-omgf.success {
+	background-color: #2ECC40;
+}
+
+#wp-admin-bar-omgf.alert {
+	background-color: #FF4136;
+	-webkit-animation: blinking-alert 2.5s; /* Safari 4+ */
+	-moz-animation: blinking-alert 2.5s; /* Fx 5+ */
+	-o-animation: blinking-alert 2.5s; /* Opera 12+ */
+	animation: blinking-alert 2.5s; /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes blinking-alert {
+	17%, 51%, 85% {
+		background-color: transparent;
+	}
+	0%, 34%, 68%, 100% {
+		background-color: #FF4136;
+	}
+}
