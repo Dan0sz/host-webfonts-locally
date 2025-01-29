@@ -48,6 +48,12 @@ class Ajax {
 		$path           = $_POST[ 'path' ];
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
+		// This issue has been solved, so remove it from the results.
+		if ( empty( $urls ) && ! empty( $stored_results[ $path ] ) ) {
+			unset( $stored_results[ $path ] );
+		}
+
+		// Store Google Fonts Checker results.
 		foreach ( $urls as $url ) {
 			if ( ! isset( $stored_results[ $path ] ) ) {
 				$stored_results[ $path ] = [];
