@@ -27,21 +27,23 @@ class Settings extends Admin {
 	/**
 	 * Transients
 	 */
-	const OMGF_AVAILABLE_USED_SUBSETS = 'omgf_available_used_subsets';
+	const OMGF_AVAILABLE_USED_SUBSETS       = 'omgf_available_used_subsets';
 
-	const OMGF_NEWS_REEL              = 'omgf_news_reel';
+	const OMGF_NEWS_REEL                    = 'omgf_news_reel';
 
-	const OMGF_OPTIMIZE_HAS_RUN       = 'omgf_optimize_has_run';
+	const OMGF_OPTIMIZE_HAS_RUN             = 'omgf_optimize_has_run';
 
-	const OMGF_CACHE_IS_STALE         = 'omgf_cache_is_stale';
+	const OMGF_CACHE_IS_STALE               = 'omgf_cache_is_stale';
 
-	const OMGF_CURRENT_DB_VERSION     = 'omgf_current_db_version';
+	const OMGF_CURRENT_DB_VERSION           = 'omgf_current_db_version';
 
-	const OMGF_CACHE_TIMESTAMP        = 'omgf_cache_timestamp';
+	const OMGF_CACHE_TIMESTAMP              = 'omgf_cache_timestamp';
 
-	const OMGF_FOUND_IFRAMES          = 'omgf_found_iframes';
+	const OMGF_FOUND_IFRAMES                = 'omgf_found_iframes';
 
-	const OMGF_HIDDEN_NOTICES         = 'omgf_hidden_notices';
+	const OMGF_GOOGLE_FONTS_CHECKER_RESULTS = 'omgf_google_fonts_checker_results';
+
+	const OMGF_HIDDEN_NOTICES               = 'omgf_hidden_notices';
 
 	/**
 	 * Settings Fields

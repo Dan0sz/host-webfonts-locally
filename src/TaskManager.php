@@ -130,17 +130,57 @@ class TaskManager {
 		<tr valign="top" id="task-manager-notice-row">
 			<td colspan="2" class="task-manager-row">
 				<?php
-				$warnings = self::get_warnings();
-				$plugins  = self::get_active_plugins();
+				$plugins                      = self::get_active_plugins();
+				$warnings                     = self::get_warnings();
+				$google_fonts_checker_results = $warnings[ 'google_fonts_checker' ] ?? [];
 
-				if ( empty( $warnings ) ) :
-					?>
+				if ( ! empty( $google_fonts_checker_results ) ) {
+					unset( $warnings[ 'google_fonts_checker' ] );
+				}
+				?>
+				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
+					<div class="task-manager-notice alert">
+						<strong>
+							<?php echo wp_kses(
+								sprintf(
+									__(
+										'%1$s has found Google Fonts on the following URLs:',
+										'host-webfonts-local'
+									),
+									apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+								),
+								'post'
+							); ?>
+						</strong>
+						<ol>
+							<?php foreach ( $google_fonts_checker_results as $path => $urls ) : ?>
+								<?php
+								$href = home_url( $path );
+								$path = $path === '/' ? '/ (home)' : $path;
+								?>
+								<li><strong><a href="<?php echo $href; ?>" target="_blank"><?php echo $path; ?></a></strong></li>
+								<ul>
+									<?php foreach ( $urls as $url ) : ?>
+										<li><?php echo $url; ?></li>
+									<?php endforeach; ?>
+								</ul>
+							<?php endforeach; ?>
+						</ol>
+					</div>
+				<?php endif; ?>
+				<?php if ( empty( $warnings ) ) : ?>
 					<div class="task-manager-notice success">
-						<h4><?php echo esc_html__( 'No potential issues found in your configuration.', 'host-webfonts-local' ); ?></h4>
+						<h4><?php echo esc_html__(
+								'No potential issues found in your configuration.',
+								'host-webfonts-local'
+							); ?></h4>
 						<ol style="list-style: none; margin-left: 0;">
 							<li><?php echo esc_html(
 									sprintf(
-										__( 'Great job! %s hasn\'t detected any potential issues in your configuration.*', 'host-webfonts-local' ),
+										__(
+											'Great job! %s hasn\'t detected any potential issues in your configuration.*',
+											'host-webfonts-local'
+										),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
 									)
 								); ?></li>
@@ -190,7 +230,10 @@ class TaskManager {
 											'post'
 										); ?>
 									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-req-pro', '', $warning_id ), self::THEMES_REQ_PRO ) ) : ?>
+									<?php if ( in_array(
+										str_replace( '-req-pro', '', $warning_id ),
+										self::THEMES_REQ_PRO
+									) ) : ?>
 										<?php $show_mark_as_fixed = false; ?>
 										<?php echo wp_kses(
 											sprintf(
@@ -204,8 +247,15 @@ class TaskManager {
 											'post'
 										); ?>
 									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-addtnl-conf', '', $warning_id ), self::THEMES_ADDTNL_CONF ) ) : ?>
-										<?php $template_id = str_replace( '-addtnl-conf', '', strtolower( $warning_id ) ); ?>
+									<?php if ( in_array(
+										str_replace( '-addtnl-conf', '', $warning_id ),
+										self::THEMES_ADDTNL_CONF
+									) ) : ?>
+										<?php $template_id = str_replace(
+											'-addtnl-conf',
+											'',
+											strtolower( $warning_id )
+										); ?>
 										<?php echo wp_kses(
 											sprintf(
 												__(
@@ -219,8 +269,15 @@ class TaskManager {
 											'post'
 										); ?>
 									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-incompatible', '', $warning_id ), self::INCOMPATIBLE_PLUGINS ) ) : ?>
-										<?php $plugin_name = $plugins[ str_replace( '-incompatible', '', $warning_id ) ]; ?>
+									<?php if ( in_array(
+										str_replace( '-incompatible', '', $warning_id ),
+										self::INCOMPATIBLE_PLUGINS
+									) ) : ?>
+										<?php $plugin_name = $plugins[ str_replace(
+											'-incompatible',
+											'',
+											$warning_id
+										) ]; ?>
 										<?php echo wp_kses(
 											sprintf(
 												__(
@@ -234,7 +291,10 @@ class TaskManager {
 											'post'
 										); ?>
 									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-req-pro', '', $warning_id ), self::PLUGINS_REQ_PRO ) ) : ?>
+									<?php if ( in_array(
+										str_replace( '-req-pro', '', $warning_id ),
+										self::PLUGINS_REQ_PRO
+									) ) : ?>
 										<?php $show_mark_as_fixed = false; ?>
 										<?php $plugin_name = $plugins[ str_replace( '-req-pro', '', $warning_id ) ]; ?>
 										<?php echo wp_kses(
@@ -249,8 +309,15 @@ class TaskManager {
 											'post'
 										); ?>
 									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-addtnl-conf', '', $warning_id ), self::PLUGINS_ADDTNL_CONF ) ) : ?>
-										<?php $plugin_name = $plugins[ str_replace( '-addtnl-conf', '', $warning_id ) ]; ?>
+									<?php if ( in_array(
+										str_replace( '-addtnl-conf', '', $warning_id ),
+										self::PLUGINS_ADDTNL_CONF
+									) ) : ?>
+										<?php $plugin_name = $plugins[ str_replace(
+											'-addtnl-conf',
+											'',
+											$warning_id
+										) ]; ?>
 										<?php
 										echo wp_kses(
 											sprintf(
@@ -283,9 +350,13 @@ class TaskManager {
 									<?php endif; ?>
 									<?php if ( $show_mark_as_fixed ) : ?>
 										<small>[<a href="#" class="hide-notice"
-												   data-nonce="<?php echo esc_attr( wp_create_nonce( Settings::OMGF_ADMIN_PAGE ) ); ?>"
+												   data-nonce="<?php echo esc_attr(
+													   wp_create_nonce( Settings::OMGF_ADMIN_PAGE )
+												   ); ?>"
 												   data-warning-id="<?php echo esc_attr( $warning_id ); ?>"
-												   id="omgf-hide-notice-<?php echo esc_attr( $warning_id ); ?>"><?php echo esc_html__(
+												   id="omgf-hide-notice-<?php echo esc_attr(
+													   $warning_id
+												   ); ?>"><?php echo esc_html__(
 													'Mark as fixed',
 													'host-webfonts-local'
 												); ?></a>]</small>
@@ -307,6 +378,25 @@ class TaskManager {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * @return array List of plugin names { (string) slug => (string) full name }
+	 */
+	private static function get_active_plugins() {
+		$plugins        = [];
+		$active_plugins = array_intersect_key(
+			get_plugins(),
+			array_flip( array_filter( array_keys( get_plugins() ), 'is_plugin_active' ) )
+		);
+
+		foreach ( $active_plugins as $basename => $plugin ) {
+			$slug = preg_replace( '/\/.*?\.php$/', '', $basename );
+
+			$plugins[ $slug ] = $plugin[ 'Name' ];
+		}
+
+		return $plugins;
 	}
 
 	/**
@@ -389,6 +479,12 @@ class TaskManager {
 			$warnings[] = $script_id;
 		}
 
+		$google_fonts_checker_results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+
+		foreach ( $google_fonts_checker_results as $path => $found_urls ) {
+			$warnings[ 'google_fonts_checker' ][ $path ] = $found_urls;
+		}
+
 		/**
 		 * Process hidden warnings.
 		 */
@@ -399,21 +495,5 @@ class TaskManager {
 		}
 
 		return $warnings;
-	}
-
-	/**
-	 * @return array List of plugin names { (string) slug => (string) full name }
-	 */
-	private static function get_active_plugins() {
-		$plugins        = [];
-		$active_plugins = array_intersect_key( get_plugins(), array_flip( array_filter( array_keys( get_plugins() ), 'is_plugin_active' ) ) );
-
-		foreach ( $active_plugins as $basename => $plugin ) {
-			$slug = preg_replace( '/\/.*?\.php$/', '', $basename );
-
-			$plugins[ $slug ] = $plugin[ 'Name' ];
-		}
-
-		return $plugins;
 	}
 }

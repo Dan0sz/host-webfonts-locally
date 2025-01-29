@@ -16,6 +16,8 @@
 
 namespace OMGF;
 
+use OMGF\Admin\Settings;
+
 class Ajax {
 	/**
 	 * Build class.
@@ -42,18 +44,22 @@ class Ajax {
 	public function store_checker_results() {
 		check_ajax_referer( 'omgf_store_checker_results', '_wpnonce' );
 
-		$urls           = $_POST[ 'urls' ];
+		$urls           = $_POST[ 'urls' ] ?? [];
 		$path           = $_POST[ 'path' ];
-		$stored_results = get_option( 'omgf_google_fonts_checker_results', [] );
+		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		foreach ( $urls as $url ) {
+			if ( ! isset( $stored_results[ $path ] ) ) {
+				$stored_results[ $path ] = [];
+			}
+
 			if ( ! in_array( $url, $stored_results[ $path ], true ) ) {
 				$stored_results[ $path ][] = $url;
 			}
 		}
 
-		update_option( 'omgf_google_fonts_checker_results', $stored_results, false );
+		update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
-		wp_send_json_success();
+		wp_send_json_success( sprintf( __( '%1$s - Google Fonts Checker results saved.', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'OMGF' ) ) );
 	}
 }

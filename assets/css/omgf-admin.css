@@ -69,6 +69,7 @@
   padding: 18px 12px;
   border: 1px solid #ececec;
   border-left: 4px solid #ececec;
+  margin-bottom: 1em;
 }
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice ol {
   margin-left: 1em;
@@ -87,6 +88,11 @@
   border: 1px solid #7FDBFF;
   border-left: 4px solid #7FDBFF;
   background-color: #E0EDF3;
+}
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice.alert {
+  border: 1px solid #FF4136;
+  border-left: 4px solid #FF4136;
+  background-color: #FF41362B;
 }
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice h4 {
   margin-top: 0;
@@ -356,4 +362,3 @@
 #footer-thankyou .signature-image {
   width: 96px;
 }
-/*# sourceMappingURL=./omgf-admin.css.map */
