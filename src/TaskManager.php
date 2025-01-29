@@ -235,6 +235,7 @@ class TaskManager {
 										self::THEMES_REQ_PRO
 									) ) : ?>
 										<?php $show_mark_as_fixed = false; ?>
+										<?php // TODO: This can probably removed in v6 ?>
 										<?php echo wp_kses(
 											sprintf(
 												__(
@@ -297,6 +298,7 @@ class TaskManager {
 									) ) : ?>
 										<?php $show_mark_as_fixed = false; ?>
 										<?php $plugin_name = $plugins[ str_replace( '-req-pro', '', $warning_id ) ]; ?>
+										<?php // TODO: This can probably be deleted in v6 ?>
 										<?php echo wp_kses(
 											sprintf(
 												__(
