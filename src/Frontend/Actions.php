@@ -97,7 +97,7 @@ class Actions {
 	 * @return void
 	 */
 	public function maybe_add_frontend_assets() {
-		if ( apply_filters( 'omgf_add_frontend_assets', ! current_user_can( 'manage_options' ) ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
