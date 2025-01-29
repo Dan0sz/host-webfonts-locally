@@ -48,10 +48,7 @@ class Actions {
 		/**
 		 * Display only in frontend, for logged in admins.
 		 */
-		if ( ! defined( 'DAAN_DOING_TESTS' ) &&
-			( ! current_user_can( 'manage_options' ) ||
-				is_admin() ||
-				OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) ) {
+		if ( ! defined( 'DAAN_DOING_TESTS' ) && ( ! current_user_can( 'manage_options' ) || is_admin() || OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) ) {
 			return; // @codeCoverageIgnore
 		}
 
@@ -100,7 +97,7 @@ class Actions {
 	 * @return void
 	 */
 	public function maybe_add_frontend_assets() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( apply_filters( 'omgf_add_frontend_assets', ! current_user_can( 'manage_options' ) ) ) {
 			return;
 		}
 
