@@ -139,7 +139,7 @@ class TaskManager {
 				}
 				?>
 				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
-					<div class="task-manager-notice alert">
+					<div class="task-manager-notice <?php echo apply_filters( 'omgf_task_manager_notice_class', 'alert' ); ?>">
 						<h4>
 							<?php echo wp_kses(
 								sprintf(
@@ -153,11 +153,15 @@ class TaskManager {
 								'post'
 							); ?>
 						</h4>
+						<?php do_action( 'omgf_google_fonts_checker_warning_before_list', ! empty( $warnings ) ); ?>
 						<?php if ( ! empty( $warnings ) ): ?>
 							<p>
-								<?php echo __(
-									'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results.',
-									'host-webfonts-local'
+								<?php echo apply_filters(
+									'omgf_google_fonts_checker_potential_issues',
+									__(
+										'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results.',
+										'host-webfonts-local'
+									)
 								); ?>
 							</p>
 						<?php endif; ?>
@@ -167,7 +171,7 @@ class TaskManager {
 								$href = home_url( $path );
 								$path = $path === '/' ? '/ (home)' : $path;
 								?>
-								<li><strong><a href="<?php echo $href; ?>" target="_blank"><?php echo $path; ?></a></strong></li>
+								<li><strong><a href="<?php echo apply_filters( 'omgf_google_fonts_checker_result_path', $href ); ?>" target="_blank"><?php echo $path; ?></a></strong></li>
 								<ul>
 									<?php foreach ( $urls as $url ) : ?>
 										<li><?php echo $url; ?></li>
@@ -189,7 +193,7 @@ class TaskManager {
 						<ol style="list-style= none; margin-left: 0;">
 							<?php echo esc_html__(
 								sprintf(
-									__( 'Cool! %s hasn\'t found any externally hosted Google Fonts on your site.', 'host-webfonts-local' ),
+									__( 'Cool! %s is successfully hosting all Google Fonts locally on your site.', 'host-webfonts-local' ),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
 								)
 							); ?>
