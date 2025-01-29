@@ -35,3 +35,21 @@
 #wp-admin-bar-omgf-info .ab-item {
 	color: white !important;
 }
+
+#wp-admin-bar-omgf.warning {
+	background-color: #FF851B;
+	-webkit-animation: blinking-warning 2.5s; /* Safari 4+ */
+	-moz-animation: blinking-warning 2.5s; /* Fx 5+ */
+	-o-animation: blinking-warning 2.5s; /* Opera 12+ */
+	animation: blinking-warning 2.5s; /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes blinking-warning {
+	12.5%, 37.5%, 67.5%, 87.5% {
+		background-color: transparent;
+	}
+	0%, 25%, 50%, 75%, 100% {
+		background-color: #FF851B;
+	}
+}
+
