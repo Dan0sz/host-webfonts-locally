@@ -106,8 +106,7 @@ class Actions {
 
 		$js_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-frontend.js';
 
-		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_file ) );
-
+		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [ 'wp-util' ], filemtime( $js_file ) );
 		wp_localize_script(
 			self::FRONTEND_ASSET_HANDLE,
 			'omgf_frontend_i18n',
@@ -115,11 +114,11 @@ class Actions {
 				'info_box_text'      => __( 'Google Fonts were found on this page. Click here for more information.' ),
 				'info_box_admin_url' => admin_url( 'options-general.php?page=optimize-webfonts' ),
 				'ajax_url'           => admin_url( 'admin-ajax.php' ),
-				'nonce'              => wp_create_nonce( 'omgf_frontend_nonce' ),
+				'nonce'              => wp_create_nonce( 'omgf_store_checker_results' ),
 			]
 		);
-
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
+		wp_enqueue_script( 'wp-util' );
 
 		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/css/omgf-frontend.css';
 

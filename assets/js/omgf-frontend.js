@@ -74,21 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
 				return;
 			}
 
-			let data = new FormData();
-			let results = {'urls': urls, 'path': document.location.pathname};
-			data.append('results', results);
-			data.append('action', 'omgf_store_checker_results');
-			data.append('_wpnonce', omgf_frontend_i18n.nonce);
+			let action = 'omgf_store_checker_results';
+			let results = {'urls': urls, 'path': document.location.pathname, '_wpnonce': omgf_frontend_i18n.nonce};
 
-
-			omgf_frontend.google_fonts_xhr = fetch(
-				omgf_frontend_i18n.ajax_url, {
-					method: 'POST',
-					body: urls
-				}
-			).then(response => {
+			omgf_frontend.google_fonts_xhr = window.wp.ajax.send(action, {'data': results});
+			omgf_frontend.google_fonts_xhr.done(function (response) {
 				console.log(response);
-			})
+			});
 		}
 	}
 

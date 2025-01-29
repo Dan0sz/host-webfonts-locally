@@ -25,6 +25,8 @@ class Ajax {
 	}
 
 	/**
+	 * Actions hooks.
+	 *
 	 * @return void
 	 */
 	private function init() {
@@ -33,9 +35,25 @@ class Ajax {
 	}
 
 	/**
+	 * Store results of Google Fonts checker in database, for rendering in the Task Manager.
+	 *
 	 * @return void
 	 */
 	public function store_checker_results() {
 		check_ajax_referer( 'omgf_store_checker_results', '_wpnonce' );
+
+		$urls           = $_POST[ 'urls' ];
+		$path           = $_POST[ 'path' ];
+		$stored_results = get_option( 'omgf_google_fonts_checker_results', [] );
+
+		foreach ( $urls as $url ) {
+			if ( ! in_array( $url, $stored_results[ $path ], true ) ) {
+				$stored_results[ $path ][] = $url;
+			}
+		}
+
+		update_option( 'omgf_google_fonts_checker_results', $stored_results, false );
+
+		wp_send_json_success();
 	}
 }
