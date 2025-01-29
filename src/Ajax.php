@@ -53,6 +53,11 @@ class Ajax {
 			unset( $stored_results[ $path ] );
 		}
 
+		// We won't show results for more than 5 URLs on the Task Manager, to limit the size of the database entry.
+		if ( count( $stored_results ) > 5 ) {
+			return;
+		}
+
 		// Store Google Fonts Checker results.
 		foreach ( $urls as $url ) {
 			if ( ! isset( $stored_results[ $path ] ) ) {
