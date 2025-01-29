@@ -20,6 +20,8 @@ use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
 class Actions {
+	const FRONTEND_ASSET_HANDLE = 'omgf-frontend';
+
 	/**
 	 * Execute all classes required in the frontend.
 	 */
@@ -93,7 +95,7 @@ class Actions {
 	}
 
 	/**
-	 * This script is only loaded for logged in administrators.
+	 * This script is only loaded for logged in administrators, unless Enable Google Fonts checker is enabled.
 	 *
 	 * @return void
 	 */
@@ -104,10 +106,23 @@ class Actions {
 
 		$js_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-frontend.js';
 
-		wp_enqueue_script( 'omgf-frontend', $js_file, [], filemtime( $js_file ) );
+		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_file ) );
+
+		wp_localize_script(
+			self::FRONTEND_ASSET_HANDLE,
+			'omgf_frontend_i18n',
+			[
+				'info_box_text'      => __( 'Google Fonts were found on this page. Click here for more information.' ),
+				'info_box_admin_url' => admin_url( 'options-general.php?page=optimize-webfonts' ),
+				'ajax_url'           => admin_url( 'admin-ajax.php' ),
+				'nonce'              => wp_create_nonce( 'omgf_frontend_nonce' ),
+			]
+		);
+
+		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
 
 		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/css/omgf-frontend.css';
 
-		wp_enqueue_style( 'omgf-frontend', $css_file, [], filemtime( $css_file ) );
+		wp_enqueue_style( self::FRONTEND_ASSET_HANDLE, $css_file, [], filemtime( $css_file ) );
 	}
 }
