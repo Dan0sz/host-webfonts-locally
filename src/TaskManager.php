@@ -168,7 +168,7 @@ class TaskManager {
 						<ol>
 							<?php foreach ( $google_fonts_checker_results as $path => $urls ) : ?>
 								<?php
-								$href = home_url( $path );
+								$href = home_url( $path . '?omgf_optimize=1' );
 								$path = $path === '/' ? '/ (home)' : $path;
 								?>
 								<li><strong><a href="<?php echo apply_filters( 'omgf_google_fonts_checker_result_path', $href ); ?>" target="_blank"><?php echo $path; ?></a></strong></li>
@@ -189,11 +189,11 @@ class TaskManager {
 					</div>
 				<?php else: ?>
 					<div class="task-manager-notice success">
-						<h4><?php echo esc_html__( 'No external Google Fonts found.', 'host-webfonts-local' ); ?></h4>
+						<h4><?php echo esc_html__( 'No external Google Fonts found on your site.', 'host-webfonts-local' ); ?></h4>
 						<ol style="list-style= none; margin-left: 0;">
 							<?php echo esc_html__(
 								sprintf(
-									__( 'Cool! %s is successfully hosting all Google Fonts locally on your site.', 'host-webfonts-local' ),
+									__( 'Cool! %s is successfully hosting all Google Fonts locally.', 'host-webfonts-local' ),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
 								)
 							); ?>
@@ -210,19 +210,13 @@ class TaskManager {
 							<li><?php echo esc_html(
 									sprintf(
 										__(
-											'Great job! %s hasn\'t detected any potential issues in your configuration.*',
+											'Great job! Your configuration allows %s to run smoothly.',
 											'host-webfonts-local'
 										),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
 									)
 								); ?></li>
 						</ol>
-						<p>
-							<sub>*<em><?php echo esc_html__(
-										'Check back regularly to make sure no issues are detected on any of your subpages.',
-										'host-webfonts-local'
-									); ?></em></sub>
-						</p>
 					</div>
 				<?php else : ?>
 					<div class="task-manager-notice warning">
