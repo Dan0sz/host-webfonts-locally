@@ -140,18 +140,27 @@ class TaskManager {
 				?>
 				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
 					<div class="task-manager-notice alert">
-						<strong>
+						<h4>
 							<?php echo wp_kses(
 								sprintf(
 									__(
-										'%1$s has found Google Fonts on the following URLs:',
+										'%1$s has found externally hosted Google Fonts on your site. %2$s',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+									count( $google_fonts_checker_results ) === 5 ? '*' : '',
 								),
 								'post'
 							); ?>
-						</strong>
+						</h4>
+						<?php if ( ! empty( $warnings ) ): ?>
+							<p>
+								<?php echo __(
+									'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results.',
+									'host-webfonts-local'
+								); ?>
+							</p>
+						<?php endif; ?>
 						<ol>
 							<?php foreach ( $google_fonts_checker_results as $path => $urls ) : ?>
 								<?php
@@ -165,6 +174,25 @@ class TaskManager {
 									<?php endforeach; ?>
 								</ul>
 							<?php endforeach; ?>
+						</ol>
+						<?php if ( count( $google_fonts_checker_results ) === 5 ): ?>
+							<sub>* <em><?php echo wp_kses(
+										__( 'This list is limited to 5 pages, because most entries will most likely be duplicates.', 'host-webfonts-local' ),
+										'post'
+									); ?></em>
+							</sub>
+						<?php endif; ?>
+					</div>
+				<?php else: ?>
+					<div class="task-manager-notice success">
+						<h4><?php echo esc_html__( 'No external Google Fonts found.', 'host-webfonts-local' ); ?></h4>
+						<ol style="list-style= none; margin-left: 0;">
+							<?php echo esc_html__(
+								sprintf(
+									__( 'Cool! %s hasn\'t found any externally hosted Google Fonts on your site.', 'host-webfonts-local' ),
+									apply_filters( 'omgf_settings_page_title', 'OMGF' )
+								)
+							); ?>
 						</ol>
 					</div>
 				<?php endif; ?>
