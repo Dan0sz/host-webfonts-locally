@@ -21,8 +21,6 @@ use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 use OMGF\Admin\Updates;
 
-defined( 'ABSPATH' ) || exit;
-
 class Admin {
 	const OMGF_ADMIN_JS_HANDLE  = 'omgf-admin-js';
 

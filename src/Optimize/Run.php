@@ -21,8 +21,6 @@ use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 use WP_Error;
 
-defined( 'ABSPATH' ) || exit;
-
 class Run {
 	const DOCS_TEST_URL = 'https://daan.dev/docs/omgf-pro-troubleshooting/test-omgf-pro/';
 

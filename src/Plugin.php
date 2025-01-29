@@ -23,8 +23,6 @@ use OMGF\Frontend\Actions;
 use OMGF\Frontend\Filters;
 use OMGF\Helper as OMGF;
 
-defined( 'ABSPATH' ) || exit;
-
 class Plugin {
 	/**
 	 * OMGF constructor.
@@ -71,7 +69,13 @@ class Plugin {
 		define( 'OMGF_CACHE_IS_STALE', esc_attr( OMGF::get_option( Settings::OMGF_CACHE_IS_STALE ) ) );
 		define( 'OMGF_CURRENT_DB_VERSION', esc_attr( OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION ) ) );
 		define( 'OMGF_UPLOAD_DIR', apply_filters( 'omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf' ) );
-		define( 'OMGF_UPLOAD_URL', apply_filters( 'omgf_upload_url', str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' ) ) );
+		define(
+			'OMGF_UPLOAD_URL',
+			apply_filters(
+				'omgf_upload_url',
+				str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' )
+			)
+		);
 	}
 
 	/**

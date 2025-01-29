@@ -18,8 +18,6 @@ namespace OMGF;
 
 use OMGF\Admin\Settings;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */

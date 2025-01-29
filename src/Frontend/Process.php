@@ -21,8 +21,6 @@ use OMGF\Admin\Settings;
 use OMGF\Optimize;
 use OMGF\TaskManager;
 
-defined( 'ABSPATH' ) || exit;
-
 class Process {
 	const PRELOAD_ALLOWED_HTML = [
 		'link' => [
@@ -192,9 +190,15 @@ class Process {
 					/**
 					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
 					 */
-					$file_path = str_replace( OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, apply_filters( 'omgf_frontend_process_url', $url ) );
+					$file_path = str_replace(
+						OMGF_UPLOAD_URL,
+						OMGF_UPLOAD_DIR,
+						apply_filters( 'omgf_frontend_process_url', $url )
+					);
 
-					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) || in_array( $url, $preloaded ) ) {
+					if ( ! defined( 'DAAN_DOING_TESTS' ) &&
+						! file_exists( $file_path ) ||
+						in_array( $url, $preloaded ) ) {
 						continue; // @codeCoverageIgnore
 					}
 
@@ -350,7 +354,8 @@ class Process {
 				$url  = $url[ 2 ];
 				$attr = $attr[ 1 ];
 
-				return ! empty( preg_grep( "/$url/", self::RESOURCE_HINTS_URLS ) ) && in_array( $attr, self::RESOURCE_HINTS_ATTR );
+				return ! empty( preg_grep( "/$url/", self::RESOURCE_HINTS_URLS ) ) &&
+					in_array( $attr, self::RESOURCE_HINTS_ATTR );
 			}
 		);
 
@@ -424,30 +429,9 @@ class Process {
 			}
 		}
 
-		$this->parse_iframes($html);
+		$this->parse_iframes( $html );
 
 		return apply_filters( 'omgf_processed_html', $html, $this );
-	}
-
-	/**
-	 * Parse $html for present iframes loading Google Fonts.
-	 *
-	 * @param $html
-	 * @return void
-	 */
-	private function parse_iframes($html) {
-		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
-		$count_iframes = count( $found_iframes );
-
-		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
-			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
-				$found_iframes[] = $script_id;
-			}
-		}
-
-		if ( $count_iframes !== count( $found_iframes ) ) {
-			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
-		}
 	}
 
 	/**
@@ -516,7 +500,8 @@ class Process {
 			 *               many different Google Fonts stylesheets configured throughout their pages and
 			 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
 			 */
-			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && str_contains( $id, 'et-builder-googlefonts' ) ) {
+			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) &&
+				str_contains( $id, 'et-builder-googlefonts' ) ) {
 				$google_fonts[ $key ][ 'id' ] = $id . '-' . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
 			} elseif ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
 				/**
@@ -527,7 +512,11 @@ class Process {
 				 *               other pages, let's append a (kind of) unique identifier to the string, to make
 				 *               sure we can make a difference between different Google Fonts configurations.
 				 */
-				$google_fonts[ $key ][ 'id' ] = str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id ); // @codeCoverageIgnore
+				$google_fonts[ $key ][ 'id' ] = str_replace(
+					'-1',
+					'-' . strlen( $href[ 'href' ] ),
+					$id
+				); // @codeCoverageIgnore
 			} elseif ( str_contains( $id, 'sp-wpcp-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Category Slider Pro for WooCommerce by ShapedPlugin
@@ -551,7 +540,10 @@ class Process {
 				 * @since v5.9.1 Same reason as above.
 				 */
 				$google_fonts[ $key ][ 'id' ] = 'custom_fonts'; // @codeCoverageIgnore
-			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', str_contains( $id, 'cp-google-fonts' ) ) ) {
+			} elseif ( apply_filters(
+				'omgf_frontend_process_convert_pro_compatibility',
+				str_contains( $id, 'cp-google-fonts' )
+			) ) {
 				/**
 				 * Compatibility fix for Convert Pro by Brainstorm Force
 				 *
@@ -625,7 +617,10 @@ class Process {
 			 * If stylesheet with $handle is completely marked for unload, just remove the element
 			 * to prevent it from loading.
 			 */
-			if ( apply_filters('omgf_unloaded_stylesheets', OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() ) ) ) {
+			if ( apply_filters(
+				'omgf_unloaded_stylesheets',
+				OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() )
+			) ) {
 				$search[ $key ]  = $stack[ 'link' ];
 				$replace[ $key ] = '';
 
@@ -637,7 +632,8 @@ class Process {
 			/**
 			 * $cache_key is used for caching. $handle contains the original handle.
 			 */
-			if ( ( OMGF::unloaded_fonts() && $cache_key ) || apply_filters( 'omgf_frontend_update_cache_key', false ) ) {
+			if ( ( OMGF::unloaded_fonts() && $cache_key ) ||
+				apply_filters( 'omgf_frontend_update_cache_key', false ) ) {
 				$handle = $cache_key;
 			}
 
@@ -686,6 +682,28 @@ class Process {
 	}
 
 	/**
+	 * Parse $html for present iframes loading Google Fonts.
+	 *
+	 * @param $html
+	 *
+	 * @return void
+	 */
+	private function parse_iframes( $html ) {
+		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
+		$count_iframes = count( $found_iframes );
+
+		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
+			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
+				$found_iframes[] = $script_id;
+			}
+		}
+
+		if ( $count_iframes !== count( $found_iframes ) ) {
+			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
+		}
+	}
+
+	/**
 	 * Adds a little success message to the HTML, to create a more logic user flow when manually optimizing pages.
 	 *
 	 * @param string $html Valid HTML
@@ -703,10 +721,12 @@ class Process {
 			return $html;
 		}
 
-		$message_div =
-			'<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
+		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
 
-		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Cache refreshed successful!', 'host-webfonts-local' ) ) . $parts[ 2 ];
+		return $parts[ 0 ] .
+			$parts[ 1 ] .
+			sprintf( $message_div, __( 'Cache refreshed successful!', 'host-webfonts-local' ) ) .
+			$parts[ 2 ];
 	}
 
 	/**

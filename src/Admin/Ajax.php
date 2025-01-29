@@ -21,8 +21,6 @@ use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 use OMGF\TaskManager as TaskManager;
 
-defined( 'ABSPATH' ) || exit;
-
 class Ajax {
 	/**
 	 * OMGF\Ajax constructor.
@@ -210,7 +208,8 @@ class Ajax {
 			Notice::set_notice( __( 'Cache directory successfully emptied.', 'host-webfonts-local' ) );
 		} catch ( \Exception $e ) {
 			Notice::set_notice(
-				__( 'OMGF encountered an error while emptying the cache directory: ', 'host-webfonts-local' ) . $e->getMessage(),
+				__( 'OMGF encountered an error while emptying the cache directory: ', 'host-webfonts-local' ) .
+				$e->getMessage(),
 				'omgf-cache-error',
 				'error',
 				$e->getCode()
@@ -267,7 +266,12 @@ class Ajax {
 		if ( file_exists( $filename ) ) {
 			unlink( $filename );
 
-			add_settings_error( 'general', 'omgf-log-file-deleted', __( 'Log file successfully deleted', 'host-webfonts-local' ), 'success' );
+			add_settings_error(
+				'general',
+				'omgf-log-file-deleted',
+				__( 'Log file successfully deleted', 'host-webfonts-local' ),
+				'success'
+			);
 		}
 
 		wp_die();

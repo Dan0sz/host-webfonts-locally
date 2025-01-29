@@ -18,8 +18,6 @@ namespace OMGF\Admin\Settings;
 
 use OMGF\Admin\Settings;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */
@@ -58,7 +56,10 @@ class Builder {
 			$this->promo = apply_filters(
 				'omgf_pro_promo',
 				sprintf(
-					__( '<a href="%s" target="_blank">Upgrade to Pro</a> to unlock this option.', 'host-webfonts-local' ),
+					__(
+						'<a href="%s" target="_blank">Upgrade to Pro</a> to unlock this option.',
+						'host-webfonts-local'
+					),
 					Settings::DAAN_WORDPRESS_OMGF_PRO
 				)
 			);
@@ -108,9 +109,11 @@ class Builder {
 				<?php foreach ( $inputs as $option => $option_label ) : ?>
 					<label>
 						<input type="radio" <?php echo esc_attr(
-							str_contains( $option_label, '(Pro)' ) ? apply_filters( $name . '_' . $option . '_setting_disabled', 'disabled' ) : ''
+							str_contains( $option_label, '(Pro)' ) ?
+								apply_filters( $name . '_' . $option . '_setting_disabled', 'disabled' ) : ''
 						); ?> class="<?php echo esc_attr( str_replace( '_', '-', $name . '_' . $option ) ); ?>"
-							   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" value="<?php echo esc_attr( $option ); ?>" <?php echo esc_attr(
+							   name="omgf_settings[<?php echo esc_attr( $name ); ?>]"
+							   value="<?php echo esc_attr( $option ); ?>" <?php echo esc_attr(
 							$option === $checked ? 'checked="checked"' : ''
 						); ?> />
 						<?php echo esc_html( $option_label ); ?>
@@ -135,16 +138,29 @@ class Builder {
 	 * @param      $description
 	 * @param bool $update_required
 	 */
-	public function do_select( $label, $name, $options, $selected, $description, $is_multiselect = false, $disabled = false ) {
+	public function do_select(
+		$label,
+		$name,
+		$options,
+		$selected,
+		$description,
+		$is_multiselect = false,
+		$disabled = false
+	) {
 		?>
 		<tr>
 			<th scope="row">
 				<?php echo esc_html( apply_filters( $name . '_setting_label', $label ) ); ?>
 			</th>
 			<td>
-				<select name="omgf_settings[<?php echo esc_attr( $name ); ?>]<?php echo esc_attr( $is_multiselect ? '[]' : '' ); ?>"
+				<select name="omgf_settings[<?php echo esc_attr( $name ); ?>]<?php echo esc_attr(
+					$is_multiselect ? '[]' : ''
+				); ?>"
 						class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>" <?php echo $is_multiselect ?
-					'size="6" multiple="multiple"' : ''; ?> <?php echo apply_filters( $name . '_setting_disabled', $disabled ) ? 'disabled' : ''; ?>>
+					'size="6" multiple="multiple"' : ''; ?> <?php echo apply_filters(
+					$name . '_setting_disabled',
+					$disabled
+				) ? 'disabled' : ''; ?>>
 					<?php
 					$options = apply_filters( $name . '_setting_options', $options );
 					?>
@@ -162,7 +178,10 @@ class Builder {
 					<?php endforeach; ?>
 				</select>
 				<p class="description">
-					<?php echo wp_kses( apply_filters( $name . '_setting_description', $description ), $this->allowed_html ); ?>
+					<?php echo wp_kses(
+						apply_filters( $name . '_setting_description', $description ),
+						$this->allowed_html
+					); ?>
 				</p>
 			</td>
 		</tr>
@@ -186,7 +205,10 @@ class Builder {
 					   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" min="<?php echo esc_attr( $min ); ?>"
 					   value="<?php echo esc_attr( $value ); ?>"/>
 				<p class="description">
-					<?php echo wp_kses( apply_filters( $name . '_setting_description', $description ), $this->allowed_html ); ?>
+					<?php echo wp_kses(
+						apply_filters( $name . '_setting_description', $description ),
+						$this->allowed_html
+					); ?>
 				</p>
 			</td>
 		</tr>
@@ -210,10 +232,14 @@ class Builder {
 			<td>
 				<input <?php echo apply_filters( $name . '_setting_disabled', $disabled ) ? 'disabled' : ''; ?>
 					class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>" type="text"
-					name="omgf_settings[<?php echo esc_attr( $name ); ?>]" placeholder="<?php echo esc_attr( $placeholder ); ?>"
+					name="omgf_settings[<?php echo esc_attr( $name ); ?>]"
+					placeholder="<?php echo esc_attr( $placeholder ); ?>"
 					value="<?php echo esc_attr( $value ); ?>"/>
 				<p class="description">
-					<?php echo wp_kses( apply_filters( $name . 'setting_description', $description ), $this->allowed_html ); ?>
+					<?php echo wp_kses(
+						apply_filters( $name . 'setting_description', $description ),
+						$this->allowed_html
+					); ?>
 				</p>
 			</td>
 		</tr>
@@ -237,11 +263,18 @@ class Builder {
 					<?php if ( ! $disabled ) : ?>
 						<input type="hidden" name="omgf_settings[<?php echo esc_attr( $name ); ?>]" value="0"/>
 					<?php endif; ?>
-					<input id="<?php echo esc_attr( $name ); ?>" type="checkbox" <?php echo apply_filters( $name . '_setting_disabled', $disabled ) ?
-						'disabled' : ''; ?> class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>"
-						   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" <?php echo esc_attr( $checked ? 'checked = "checked"' : '' ); ?>
+					<input id="<?php echo esc_attr( $name ); ?>" type="checkbox" <?php echo apply_filters(
+						$name . '_setting_disabled',
+						$disabled
+					) ? 'disabled' : ''; ?> class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>"
+						   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" <?php echo esc_attr(
+						$checked ? 'checked = "checked"' : ''
+					); ?>
 						   value="on"/>
-					<?php echo wp_kses( apply_filters( $name . '_setting_description', $description ), $this->allowed_html ); ?>
+					<?php echo wp_kses(
+						apply_filters( $name . '_setting_description', $description ),
+						$this->allowed_html
+					); ?>
 				</label>
 			</td>
 		</tr>

@@ -20,8 +20,6 @@ use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 
-defined( 'ABSPATH' ) || exit;
-
 class Optimize {
 	/**
 	 * User Agent set to be used to make requests to the Google Fonts API in Compatibility Mode.
@@ -189,10 +187,17 @@ class Optimize {
 				 * @since v5.3.0 Variable fonts use one filename for all font weights/styles. That's why we drop the weight from the filename.
 				 */
 				if ( $is_variable_font ) {
-					$filename = strtolower( $id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset : '' ) );
+					$filename = strtolower(
+						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset : '' )
+					);
 				} else {
 					$filename = strtolower(
-						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset . '-' : '' ) . $variant->fontWeight
+						$id .
+						'-' .
+						$variant->fontStyle .
+						'-' .
+						( isset( $variant->subset ) ? $variant->subset . '-' : '' ) .
+						$variant->fontWeight
 					);
 				}
 
@@ -204,7 +209,9 @@ class Optimize {
 				$variant->fontFamily = rawurlencode( $variant->fontFamily );
 
 				if ( isset( $variant->woff2 ) ) {
-					OMGF::debug( sprintf( __( 'Downloading %1$s to %2$s from %3$s.' ), $filename, $this->path, $variant->woff2 ) );
+					OMGF::debug(
+						sprintf( __( 'Downloading %1$s to %2$s from %3$s.' ), $filename, $this->path, $variant->woff2 )
+					);
 
 					/**
 					 * If file already exists the OMGF_Download class bails early.
@@ -357,13 +364,19 @@ class Optimize {
 		/**
 		 * This also captures the commented Subset name.
 		 */
-		preg_match_all( apply_filters( 'omgf_optimize_parse_variants_regex', '/\/\*\s.*?}/s', $this->url ), $stylesheet, $font_faces );
+		preg_match_all(
+			apply_filters( 'omgf_optimize_parse_variants_regex', '/\/\*\s.*?}/s', $this->url ),
+			$stylesheet,
+			$font_faces
+		);
 
 		if ( empty( $font_faces[ 0 ] ) ) {
 			return []; // @codeCoverageIgnore
 		}
 
-		OMGF::debug( sprintf( __( 'Found %s @font-face statements.', 'host-webfonts-local' ), count( $font_faces[ 0 ] ) ) );
+		OMGF::debug(
+			sprintf( __( 'Found %s @font-face statements.', 'host-webfonts-local' ), count( $font_faces[ 0 ] ) )
+		);
 
 		$font_object = [];
 
@@ -386,7 +399,9 @@ class Optimize {
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
 			 */
-			if ( ! empty( $subset ) && ! in_array( $subset, OMGF::get_option( settings::OMGF_ADV_SETTING_SUBSETS ) ) && ! is_numeric( $subset ) ) {
+			if ( ! empty( $subset ) &&
+				! in_array( $subset, OMGF::get_option( settings::OMGF_ADV_SETTING_SUBSETS ) ) &&
+				! is_numeric( $subset ) ) {
 				continue;
 			}
 
@@ -398,9 +413,13 @@ class Optimize {
 				$subset = 'logogram-' . $subset;
 			}
 
-			$key                             = $subset . '-' . $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
+			$key                             = $subset .
+				'-' .
+				$font_weight[ 1 ] .
+				( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
 			$font_object[ $key ]             = new \stdClass();
-			$font_object[ $key ]->id         = $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : $font_style[ 1 ] );
+			$font_object[ $key ]->id         = $font_weight[ 1 ] .
+				( $font_style[ 1 ] === 'normal' ? '' : $font_style[ 1 ] );
 			$font_object[ $key ]->fontFamily = $font_family;
 			$font_object[ $key ]->fontStyle  = $font_style[ 1 ];
 			$font_object[ $key ]->fontWeight = $font_weight[ 1 ];
@@ -423,7 +442,10 @@ class Optimize {
 				$this->variable_fonts[ $id ] = $id;
 
 				OMGF::debug(
-					__( 'Same file used for multiple @font-face statements. This is a variable font: ', 'host-webfonts-local' ) . $font_family
+					__(
+						'Same file used for multiple @font-face statements. This is a variable font: ',
+						'host-webfonts-local'
+					) . $font_family
 				);
 			}
 		}
@@ -455,7 +477,10 @@ class Optimize {
 		/**
 		 * @since v5.4.4 Stores all subsets that are selected to be used AND are actually available in this font-family.
 		 */
-		$this->available_used_subsets[ $font_family ] = array_intersect( $subsets, OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
+		$this->available_used_subsets[ $font_family ] = array_intersect(
+			$subsets,
+			OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS )
+		);
 
 		OMGF::debug_array( __( 'Subset @font-face statements', 'host-webfonts-local' ), $subsets );
 

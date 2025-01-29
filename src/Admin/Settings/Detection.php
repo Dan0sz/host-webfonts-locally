@@ -18,8 +18,6 @@ namespace OMGF\Admin\Settings;
 
 use OMGF\Helper as OMGF;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */
@@ -69,7 +67,9 @@ class Detection extends Builder {
 							'By default, OMGF replaces Google Fonts stylesheets (e.g. <code>https://fonts.googleapis.com/css?family=Open+Sans</code>) with locally hosted copies. This behavior can be tweaked further using the <strong>Advanced Processing (Pro)</strong> option. To remove/unload Google Fonts, go to <em>Local Fonts</em> > <a href="%s"><em>Optimize Local Fonts</em></a> and click <strong>Unload all</strong> next to the stylesheet handle you\'d like to remove.',
 							'host-webfonts-local'
 						),
-						admin_url( 'options-general.php?page=optimize-webfonts&tab=omgf-optimize-settings#omgf-manage-optimized-fonts' )
+						admin_url(
+							'options-general.php?page=optimize-webfonts&tab=omgf-optimize-settings#omgf-manage-optimized-fonts'
+						)
 					); ?>
 				</p>
 			</td>
@@ -96,7 +96,10 @@ class Detection extends Builder {
 							<input type="checkbox" name="omgf_settings[<?php echo esc_attr( $name ); ?>]"
 								   id="<?php echo esc_attr( $name ); ?>" <?php echo esc_attr(
 								$checked ? 'checked="checked"' : ''
-							); ?> <?php echo esc_attr( $disabled ); ?> value="on"/><?php echo wp_kses( $data[ 'label' ], $this->allowed_html ); ?>
+							); ?> <?php echo esc_attr( $disabled ); ?> value="on"/><?php echo wp_kses(
+								$data[ 'label' ],
+								$this->allowed_html
+							); ?>
 							&nbsp;
 						</label>
 					<?php endforeach; ?>
@@ -116,7 +119,10 @@ class Detection extends Builder {
 				</p>
 				<ul>
 					<?php foreach ( $this->advanced_processing_pro_options() as $name => $data ) : ?>
-						<li><strong><?php echo wp_kses( $data[ 'label' ], $this->allowed_html ); ?></strong>: <?php echo wp_kses(
+						<li><strong><?php echo wp_kses(
+									$data[ 'label' ],
+									$this->allowed_html
+								); ?></strong>: <?php echo wp_kses(
 								$data[ 'description' ],
 								$this->allowed_html
 							); ?></li>

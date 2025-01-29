@@ -18,8 +18,6 @@ namespace OMGF\Admin;
 
 use OMGF\Admin;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */
@@ -254,7 +252,10 @@ class Settings extends Admin {
 		}
 		?>
 		<div class="wrap omgf">
-			<h1><?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?></h1>
+			<h1><?php echo apply_filters(
+					'omgf_settings_page_title',
+					__( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' )
+				); ?></h1>
 
 			<p>
 				<?php echo get_plugin_data( OMGF_PLUGIN_FILE )[ 'Description' ]; ?>
@@ -325,7 +326,13 @@ class Settings extends Admin {
 		);
 
 		foreach ( $settings as &$setting ) {
-			$setting = apply_filters( 'omgf_settings_option_name', "omgf_settings[$setting]", $setting, $settings, $needle );
+			$setting = apply_filters(
+				'omgf_settings_option_name',
+				"omgf_settings[$setting]",
+				$setting,
+				$settings,
+				$needle
+			);
 		}
 
 		return $settings;
@@ -337,7 +344,11 @@ class Settings extends Admin {
 	 * @return void
 	 */
 	public function optimize_fonts_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_OPTIMIZE, 'dashicons-performance', __( 'Local Fonts', 'host-webfonts-local' ) );
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_OPTIMIZE,
+			'dashicons-performance',
+			__( 'Local Fonts', 'host-webfonts-local' )
+		);
 	}
 
 	/**
@@ -347,7 +358,8 @@ class Settings extends Admin {
 	 */
 	private function generate_tab( $id, $icon = null, $label = null ) {
 		?>
-		<a class="nav-tab dashicons-before <?php echo $icon; ?> <?php echo $this->active_tab == $id ? 'nav-tab-active' : ''; ?>"
+		<a class="nav-tab dashicons-before <?php echo $icon; ?> <?php echo $this->active_tab == $id ? 'nav-tab-active' :
+			''; ?>"
 		   href="<?php echo $this->generate_tab_link( $id ); ?>">
 			<?php echo $label; ?>
 		</a>
@@ -367,14 +379,22 @@ class Settings extends Admin {
 	 * Add Basic Settings Tab to Settings Screen.
 	 */
 	public function detection_settings_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_DETECTION, 'dashicons-search', __( 'Detection Settings', 'host-webfonts-local' ) );
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_DETECTION,
+			'dashicons-search',
+			__( 'Detection Settings', 'host-webfonts-local' )
+		);
 	}
 
 	/**
 	 * Add Advanced Settings Tab to Settings Screen.
 	 */
 	public function advanced_settings_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_ADVANCED, 'dashicons-admin-settings', __( 'Advanced Settings', 'host-webfonts-local' ) );
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_ADVANCED,
+			'dashicons-admin-settings',
+			__( 'Advanced Settings', 'host-webfonts-local' )
+		);
 	}
 
 	/**
@@ -383,7 +403,11 @@ class Settings extends Admin {
 	 * @return void
 	 */
 	public function help_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_HELP, 'dashicons-editor-help', __( 'Help', 'host-webfonts-local' ) );
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_HELP,
+			'dashicons-editor-help',
+			__( 'Help', 'host-webfonts-local' )
+		);
 	}
 
 	/**
@@ -401,12 +425,13 @@ class Settings extends Admin {
 			return;
 		}
 		?>
-		<form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post" action="<?php echo apply_filters(
-			'omgf_form_action',
-			admin_url( 'options.php?tab=' . $this->active_tab ),
-			$this->page,
-			$this->active_tab
-		); ?>" autocomplete="off">
+		<form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post"
+			  action="<?php echo apply_filters(
+				  'omgf_form_action',
+				  admin_url( 'options.php?tab=' . $this->active_tab ),
+				  $this->page,
+				  $this->active_tab
+			  ); ?>" autocomplete="off">
 			<?php
 			ob_start();
 			settings_fields( $field );
@@ -428,7 +453,13 @@ class Settings extends Admin {
 
 			?>
 			<?php if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) : ?>
-				<?php submit_button( $this->submit_button_text, 'primary', 'submit', false, empty( $this->get_settings() ) ? 'disabled' : null ); ?>
+				<?php submit_button(
+					$this->submit_button_text,
+					'primary',
+					'submit',
+					false,
+					empty( $this->get_settings() ) ? 'disabled' : null
+				); ?>
 			<?php endif; ?>
 		</form>
 		<?php
@@ -476,7 +507,10 @@ class Settings extends Admin {
 	 * @return string
 	 */
 	public function footer_text_left() {
-		$text = sprintf( __( 'Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', 'host-webfonts-local' ), '❤️' );
+		$text = sprintf(
+			__( 'Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', 'host-webfonts-local' ),
+			'❤️'
+		);
 
 		return '<span id="footer-thankyou">' . $text . '</span>';
 	}
@@ -537,7 +571,10 @@ class Settings extends Admin {
 		}
 
 		$text = sprintf(
-				__( 'Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', 'host-webfonts-local' ),
+				__(
+					'Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:',
+					'host-webfonts-local'
+				),
 				'https://daan.dev/blog/tag/omgf'
 			) . ' ';
 		$text .= '<span id="omgf-ticker-wrap">';

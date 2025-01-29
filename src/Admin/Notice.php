@@ -16,10 +16,8 @@
 
 namespace OMGF\Admin;
 
-defined( 'ABSPATH' ) || exit;
-
 class Notice {
-	const OMGF_ADMIN_NOTICE_TRANSIENT  = 'omgf_admin_notice';
+	const OMGF_ADMIN_NOTICE_TRANSIENT = 'omgf_admin_notice';
 
 	const OMGF_ADMIN_NOTICE_EXPIRATION = 60;
 
@@ -33,7 +31,13 @@ class Notice {
 	 * @param bool   $json
 	 * @param int    $code
 	 */
-	public static function set_notice( $message, $message_id = '', $type = 'success', $code = 200, $screen_id = 'all' ) {
+	public static function set_notice(
+		$message,
+		$message_id = '',
+		$type = 'success',
+		$code = 200,
+		$screen_id = 'all'
+	) {
 		self::$notices = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
 
 		if ( ! self::$notices ) {
