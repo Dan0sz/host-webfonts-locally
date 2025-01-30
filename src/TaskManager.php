@@ -131,7 +131,7 @@ class TaskManager {
 							<?php echo wp_kses(
 								sprintf(
 									__(
-										'Due to the exotic way your theme, a plugin or script has implemented Google Fonts, %s wasn\'t able to process all of them.',
+										'Due to the exotic way your theme, a plugin or script has implemented Google Fonts, %s isn\'t able to process all of them.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
@@ -142,7 +142,7 @@ class TaskManager {
 						<?php if ( empty( $warnings ) ): ?>
 							<p>
 								<?php echo apply_filters(
-									'omgf_google_fonts_checker_warning_before_list',
+									'omgf_google_fonts_checker_no_potential_issues',
 									sprintf(
 										__(
 											'You can read <a href="%s" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
@@ -150,7 +150,7 @@ class TaskManager {
 										),
 										'', // TODO: Add link to docs.
 										Settings::DAAN_WORDPRESS_OMGF_PRO
-									), ! empty( $warnings )
+									)
 								); ?>
 							</p>
 						<?php else: ?>
