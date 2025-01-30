@@ -116,13 +116,16 @@ class TaskManager {
 					<div class="task-manager-notice <?php echo apply_filters( 'omgf_task_manager_notice_class', 'alert' ); ?>">
 						<h4>
 							<?php echo wp_kses(
-								sprintf(
-									__(
-										'%1$s wasn\'t able to process all Google Fonts on your site. %2$s',
-										'host-webfonts-local'
+								apply_filters(
+									'omgf_google_fonts_checker_title',
+									sprintf(
+										__(
+											'%1$s wasn\'t able to process all Google Fonts on your site. %2$s',
+											'host-webfonts-local'
+										),
+										apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+										count( $google_fonts_checker_results ) === 5 ? '*' : '',
 									),
-									apply_filters( 'omgf_settings_page_title', 'OMGF' ),
-									count( $google_fonts_checker_results ) === 5 ? '*' : '',
 								),
 								'post'
 							); ?>
