@@ -164,7 +164,6 @@ class Ajax {
 					Settings::OMGF_CACHE_IS_STALE,
 					Settings::OMGF_CACHE_TIMESTAMP,
 					Settings::OMGF_FOUND_IFRAMES,
-					Settings::OMGF_HIDDEN_NOTICES,
 					Settings::OMGF_OPTIMIZE_HAS_RUN,
 					Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
 					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
