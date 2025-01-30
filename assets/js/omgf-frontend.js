@@ -21,6 +21,8 @@ window.addEventListener('load', () => {
 			if (status === 'alert') {
 				this.addInfoBox();
 			}
+
+			document.dispatchEvent(new Event('omgf_frontend_loaded'));
 		},
 
 		/**
