@@ -129,12 +129,15 @@ class TaskManager {
 						</h4>
 						<p>
 							<?php echo wp_kses(
-								sprintf(
-									__(
-										'Due to the exotic way your theme, a plugin or script has implemented Google Fonts, %s isn\'t able to process all of them.',
-										'host-webfonts-local'
-									),
-									apply_filters( 'omgf_settings_page_title', 'OMGF' )
+								apply_filters(
+									'omgf_google_fonts_checker_general_text',
+									sprintf(
+										__(
+											'Due to the exotic way your theme, a plugin or script has implemented Google Fonts, %s isn\'t able to process all of them.',
+											'host-webfonts-local'
+										),
+										apply_filters( 'omgf_settings_page_title', 'OMGF' )
+									)
 								),
 								'post'
 							); ?>
