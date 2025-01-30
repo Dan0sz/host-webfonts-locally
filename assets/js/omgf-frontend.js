@@ -14,11 +14,11 @@ window.addEventListener('load', () => {
 			let google_fonts = this.filterGoogleFonts(window.performance.getEntries());
 			let status = await this.getStatus(google_fonts);
 
-			if (status) {
+			if (status && this - menu_item !== null) {
 				this.menu_item.classList.add(status);
 			}
 
-			if (status === 'alert') {
+			if (status === 'alert' && this.sub_menu !== null) {
 				this.addInfoBox();
 			}
 
