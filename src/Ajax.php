@@ -45,16 +45,19 @@ class Ajax {
 		check_ajax_referer( 'omgf_frontend_nonce', '_wpnonce' );
 
 		$stored_results = $this->store_results();
+		$status         = 'success';
 
 		if ( ! empty( $stored_results ) ) {
-			wp_send_json_success( 'alert' );
+			$status = 'alert';
 		}
 
 		if ( empty( $stored_results ) && $this->has_warnings() ) {
-			wp_send_json_success( 'warning' );
+			$status = 'warning';
 		}
 
-		wp_send_json_success( 'success' );
+		$status = apply_filters( 'omgf_ajax_admin_bar_status', $status );
+
+		wp_send_json_success( $status );
 	}
 
 	/**
