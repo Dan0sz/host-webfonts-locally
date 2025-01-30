@@ -112,8 +112,7 @@ class Process {
 
 		if ( $this->break ||
 			isset( $_GET[ 'nomgf' ] ) ||
-			( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf_optimize' ] ) ) &&
-				( ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf' ] ) ) ) ) {
+			( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf_optimize' ] ) ) && ( ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf' ] ) ) ) ) {
 			return;
 		}
 
@@ -196,9 +195,7 @@ class Process {
 						apply_filters( 'omgf_frontend_process_url', $url )
 					);
 
-					if ( ! defined( 'DAAN_DOING_TESTS' ) &&
-						! file_exists( $file_path ) ||
-						in_array( $url, $preloaded ) ) {
+					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) || in_array( $url, $preloaded ) ) {
 						continue; // @codeCoverageIgnore
 					}
 
@@ -354,8 +351,7 @@ class Process {
 				$url  = $url[ 2 ];
 				$attr = $attr[ 1 ];
 
-				return ! empty( preg_grep( "/$url/", self::RESOURCE_HINTS_URLS ) ) &&
-					in_array( $attr, self::RESOURCE_HINTS_ATTR );
+				return ! empty( preg_grep( "/$url/", self::RESOURCE_HINTS_URLS ) ) && in_array( $attr, self::RESOURCE_HINTS_ATTR );
 			}
 		);
 
@@ -402,9 +398,7 @@ class Process {
 		$links = array_filter(
 			$links[ 0 ],
 			function ( $link ) {
-				return str_contains( $link, 'fonts.googleapis.com/css' ) ||
-					str_contains( $link, 'fonts.bunny.net/css' ) ||
-					str_contains( $link, 'fonts-api.wp.com/css' );
+				return str_contains( $link, 'fonts.googleapis.com/css' ) || str_contains( $link, 'fonts.bunny.net/css' ) || str_contains( $link, 'fonts-api.wp.com/css' );
 			}
 		);
 
@@ -439,8 +433,7 @@ class Process {
 	 * @return bool
 	 */
 	private function is_amp() {
-		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
-			( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() );
+		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) || ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() );
 	}
 
 	/**
@@ -500,8 +493,7 @@ class Process {
 			 *               many different Google Fonts stylesheets configured throughout their pages and
 			 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
 			 */
-			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) &&
-				str_contains( $id, 'et-builder-googlefonts' ) ) {
+			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && str_contains( $id, 'et-builder-googlefonts' ) ) {
 				$google_fonts[ $key ][ 'id' ] = $id . '-' . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
 			} elseif ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
 				/**
@@ -632,8 +624,7 @@ class Process {
 			/**
 			 * $cache_key is used for caching. $handle contains the original handle.
 			 */
-			if ( ( OMGF::unloaded_fonts() && $cache_key ) ||
-				apply_filters( 'omgf_frontend_update_cache_key', false ) ) {
+			if ( ( OMGF::unloaded_fonts() && $cache_key ) || apply_filters( 'omgf_frontend_update_cache_key', false ) ) {
 				$handle = $cache_key;
 			}
 
@@ -723,10 +714,7 @@ class Process {
 
 		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
 
-		return $parts[ 0 ] .
-			$parts[ 1 ] .
-			sprintf( $message_div, __( 'Cache refreshed successful!', 'host-webfonts-local' ) ) .
-			$parts[ 2 ];
+		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Cache refresh was successful. You can close this window.', 'host-webfonts-local' ) ) . $parts[ 2 ];
 	}
 
 	/**
@@ -740,9 +728,7 @@ class Process {
 	 * @return string
 	 */
 	public function remove_mesmerize_filter( $tag ) {
-		if ( ( wp_get_theme()->template === 'mesmerize-pro' ||
-				wp_get_theme()->template === 'highlight-pro' ||
-				wp_get_theme()->template === 'mesmerize' ) && str_contains( $tag, 'fonts.googleapis.com' ) ) {
+		if ( ( wp_get_theme()->template === 'mesmerize-pro' || wp_get_theme()->template === 'highlight-pro' || wp_get_theme()->template === 'mesmerize' ) && str_contains( $tag, 'fonts.googleapis.com' ) ) {
 			return str_replace( 'href="" data-href', 'href', $tag );
 		}
 
