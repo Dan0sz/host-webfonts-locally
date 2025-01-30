@@ -153,8 +153,21 @@ class TaskManager {
 								'post'
 							); ?>
 						</h4>
-						<?php do_action( 'omgf_google_fonts_checker_warning_before_list', ! empty( $warnings ) ); ?>
-						<?php if ( ! empty( $warnings ) ): ?>
+						<?php if ( empty( $warnings ) ): ?>
+							<p>
+								<?php echo apply_filters(
+									'omgf_google_fonts_checker_warning_before_list',
+									sprintf(
+										__(
+											'You can read <a href="%s" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
+											'host-webfonts-local'
+										),
+										'', // TODO: Add link to docs.
+										Settings::DAAN_WORDPRESS_OMGF_PRO
+									), ! empty( $warnings )
+								); ?>
+							</p>
+						<?php else: ?>
 							<p>
 								<?php echo apply_filters(
 									'omgf_google_fonts_checker_potential_issues',
