@@ -2,86 +2,76 @@
  * @package OMGF
  * @author Daan van den Bergh
  */
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
 	let omgf_frontend = {
-		status: 'success',
 		menu_item: document.getElementById('wp-admin-bar-omgf'),
 		sub_menu: document.getElementById('wp-admin-bar-omgf-default'),
-		google_fonts: [],
-		google_fonts_xhr: false,
-		run: true,
 
 		/**
 		 * Run it all.
 		 */
-		init: function () {
-			const observer = new PerformanceObserver(this.checkGoogleFonts);
+		init: async function () {
+			let google_fonts = this.filterGoogleFonts(window.performance.getEntries());
+			let status = await this.getStatus(google_fonts);
 
-			if (this.run) {
-				observer.observe({type: "resource", buffered: true});
+			if (status) {
+				this.menu_item.classList.add(status);
+			}
+
+			if (status === 'alert') {
+				this.addInfoBox();
 			}
 		},
 
 		/**
-		 * Checks for requests to the Google Fonts API in the list of Network Requests.
+		 * Filter the list of entries for calls to the Google Fonts API for further processing.
 		 *
-		 * This checker can't detect requests in iframes.
-		 *
-		 * @param list
+		 * @param entries
 		 */
-		checkGoogleFonts: function (list) {
-			list.getEntries().forEach((entry) => {
-				let request_url = entry.name;
+		filterGoogleFonts: (entries) => {
+			let google_fonts = entries.filter((entry) => entry.name.indexOf('/fonts.googleapis.com/css') > 0 || entry.name.indexOf('/fonts.gstatic.com/') > 0)
 
-				if (request_url.indexOf('/fonts.googleapis.com/css') > 0 || request_url.indexOf('/fonts.gstatic.com/') > 0) {
-					console.log('Request to Google Fonts API found: ' + request_url + '.');
-
-					if (!omgf_frontend.google_fonts.includes(request_url)) {
-						omgf_frontend.google_fonts.push(request_url);
-					}
-
-					omgf_frontend.status = 'alert';
-
-					// Maybe check in the set transients, if something was already captured, and if not, display a general message? Maybe say something: contact me if you need more help?
-
-					// That will lead to a surge in support requests, but also possible sales?
-
-					// Add option to enable it on every page, instead of just for administrators.
-				}
-
-			});
-
-			omgf_frontend.menu_item.classList.add(omgf_frontend.status);
-			omgf_frontend.storeResults(omgf_frontend.google_fonts);
-			omgf_frontend.run = false;
-
-			let sub_menu_item = document.getElementById('wp-admin-bar-omgf-info');
-
-			if (omgf_frontend.status === 'alert' && sub_menu_item === null) {
-				let info_box = document.createElement('li');
-				info_box.innerHTML = `<li id="wp-admin-bar-omgf-info"><a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${omgf_frontend_i18n.info_box_text}</a><li>`;
-				omgf_frontend.sub_menu.prepend(info_box);
+			if (google_fonts.length === 0) {
+				return [];
 			}
+
+			console.log('OMGF has found the following Google Fonts API calls:');
+
+			let urls = [];
+
+			google_fonts.forEach((entry) => {
+				urls.push(entry.name);
+
+				console.log(' - ' + entry.name);
+			})
+
+			return urls;
 		},
 
 		/**
-		 * Do an AJAX request to set a transient, containing the URL, to be read by the Task Manager.
+		 * Stores google_fonts in the DB and retrieves the status to be added to the admin bar classList.
 		 *
-		 * @param urls An array of Google Fonts requests.
+		 * @param google_fonts
+		 * @returns {*}
 		 */
-		storeResults: function (urls) {
-			if (omgf_frontend.google_fonts_xhr) {
-				return;
-			}
+		getStatus: (google_fonts) => {
+			let action = 'omgf_admin_bar_status';
+			let data = {'urls': google_fonts, 'path': document.location.pathname, '_wpnonce': omgf_frontend_i18n.nonce};
+			let status = window.wp.ajax.send(action, {'data': data});
 
-			let action = 'omgf_store_checker_results';
-			let results = {'urls': urls, 'path': document.location.pathname, '_wpnonce': omgf_frontend_i18n.nonce};
-
-			omgf_frontend.google_fonts_xhr = window.wp.ajax.send(action, {'data': results});
-			omgf_frontend.google_fonts_xhr.done(function (response) {
-				console.log(response);
+			return status.done((response) => {
+				return response;
 			});
-		}
+		},
+
+		/**
+		 * Adds the info box to the submenu.
+		 */
+		addInfoBox: () => {
+			let info_box = document.createElement('li');
+			info_box.innerHTML = `<li id="wp-admin-bar-omgf-info"><a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${omgf_frontend_i18n.info_box_text}</a><li>`;
+			omgf_frontend.sub_menu.prepend(info_box);
+		},
 	}
 
 	omgf_frontend.init();

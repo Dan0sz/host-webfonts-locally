@@ -110,8 +110,7 @@ class Actions {
 			[
 				'info_box_text'      => __( 'Google Fonts were found on this page. Click here for more information.' ),
 				'info_box_admin_url' => admin_url( 'options-general.php?page=optimize-webfonts' ),
-				'ajax_url'           => admin_url( 'admin-ajax.php' ),
-				'nonce'              => wp_create_nonce( 'omgf_store_checker_results' ),
+				'nonce'              => wp_create_nonce( 'omgf_frontend_nonce' ),
 			]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );

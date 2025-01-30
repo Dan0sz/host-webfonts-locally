@@ -32,18 +32,37 @@ class Ajax {
 	 * @return void
 	 */
 	private function init() {
-		add_action( 'wp_ajax_omgf_store_checker_results', [ $this, 'store_checker_results' ] );
-		add_action( 'wp_ajax_nopriv_omgf_store_checker_results', [ $this, 'store_checker_results' ] );
+		add_action( 'wp_ajax_omgf_admin_bar_status', [ $this, 'get_admin_bar_status' ] );
+		add_action( 'wp_ajax_nopriv_omgf_admin_bar_status', [ $this, 'get_admin_bar_status' ] );
+	}
+
+	/**
+	 * Determines the status of our admin bar menu based on stored results and warnings.
+	 *
+	 * @return void Sends a JSON response with one of the statuses: 'alert', 'warning', or 'success'.
+	 */
+	public function get_admin_bar_status() {
+		check_ajax_referer( 'omgf_frontend_nonce', '_wpnonce' );
+
+		$stored_results = $this->store_results();
+
+		if ( ! empty( $stored_results ) ) {
+			wp_send_json_success( 'alert' );
+		}
+
+		if ( empty( $stored_results ) && $this->has_warnings() ) {
+			wp_send_json_success( 'warning' );
+		}
+
+		wp_send_json_success( 'success' );
 	}
 
 	/**
 	 * Store results of Google Fonts checker in database, for rendering in the Task Manager.
 	 *
-	 * @return void
+	 * @return array
 	 */
-	public function store_checker_results() {
-		check_ajax_referer( 'omgf_store_checker_results', '_wpnonce' );
-
+	private function store_results() {
 		$urls           = $_POST[ 'urls' ] ?? [];
 		$path           = $_POST[ 'path' ];
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
@@ -55,7 +74,7 @@ class Ajax {
 
 		// We won't show results for more than 5 URLs on the Task Manager, to limit the size of the database entry.
 		if ( count( $stored_results ) > 5 ) {
-			return;
+			return $stored_results;
 		}
 
 		// Store Google Fonts Checker results.
@@ -71,6 +90,18 @@ class Ajax {
 
 		update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
-		wp_send_json_success( sprintf( __( '%1$s - Google Fonts Checker results saved.', 'host-webfonts-local' ), apply_filters( 'omgf_settings_page_title', 'OMGF' ) ) );
+		return $stored_results;
+	}
+
+	/**
+	 * Check if OMGF has logged any configuration issues that require attention.
+	 *
+	 * @return bool
+	 */
+	private function has_warnings() {
+		$task_manager = new TaskManager();
+		$warnings     = $task_manager->get_warnings();
+
+		return ! empty( $warnings );
 	}
 }
