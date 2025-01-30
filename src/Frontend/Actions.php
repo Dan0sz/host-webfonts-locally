@@ -100,7 +100,8 @@ class Actions {
 			return;
 		}
 
-		$js_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-frontend.js';
+		$file_ext = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$js_file  = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/js/omgf-frontend$file_ext.js";
 
 		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [ 'wp-util' ], filemtime( $js_file ) );
 		wp_localize_script(
@@ -116,7 +117,7 @@ class Actions {
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
 		wp_enqueue_script( 'wp-util' );
 
-		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/css/omgf-frontend.css';
+		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/css/omgf-frontend$file_ext.css";
 
 		wp_enqueue_style( self::FRONTEND_ASSET_HANDLE, $css_file, [], filemtime( $css_file ) );
 	}
