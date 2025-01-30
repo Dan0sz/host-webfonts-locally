@@ -52,7 +52,7 @@ class Ajax {
 			$hidden_notices[] = $warning_id;
 		}
 
-		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices );
+		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices, 'off' );
 
 		ob_start();
 
@@ -208,8 +208,7 @@ class Ajax {
 			Notice::set_notice( __( 'Cache directory successfully emptied.', 'host-webfonts-local' ) );
 		} catch ( \Exception $e ) {
 			Notice::set_notice(
-				__( 'OMGF encountered an error while emptying the cache directory: ', 'host-webfonts-local' ) .
-				$e->getMessage(),
+				__( 'OMGF encountered an error while emptying the cache directory: ', 'host-webfonts-local' ) . $e->getMessage(),
 				'omgf-cache-error',
 				'error',
 				$e->getCode()
