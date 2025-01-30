@@ -27,7 +27,6 @@ class Actions {
 	 */
 	public function __construct() {
 		add_action( 'init', [ $this, 'init_frontend' ], 50 );
-
 		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_item' ], 1000 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_frontend_assets' ] );
 	}
@@ -108,9 +107,10 @@ class Actions {
 			self::FRONTEND_ASSET_HANDLE,
 			'omgf_frontend_i18n',
 			[
-				'info_box_text'      => __( 'Google Fonts were found on this page. Click here for more information.' ),
-				'info_box_admin_url' => admin_url( 'options-general.php?page=optimize-webfonts' ),
-				'nonce'              => wp_create_nonce( 'omgf_frontend_nonce' ),
+				'info_box_alert_text'  => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
+				'info_box_notice_text' => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
+				'info_box_admin_url'   => admin_url( 'options-general.php?page=optimize-webfonts' ),
+				'nonce'                => wp_create_nonce( 'omgf_frontend_nonce' ),
 			]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );

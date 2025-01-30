@@ -18,8 +18,8 @@ window.addEventListener('load', () => {
 				this.menu_item.classList.add(status);
 			}
 
-			if (status === 'alert' && this.sub_menu !== null) {
-				this.addInfoBox();
+			if ((status !== 'success' || status !== 'warning') && this.sub_menu !== null) {
+				this.addInfoBox(status);
 			}
 
 			document.dispatchEvent(new Event('omgf_frontend_loaded'));
@@ -69,9 +69,17 @@ window.addEventListener('load', () => {
 		/**
 		 * Adds the info box to the submenu.
 		 */
-		addInfoBox: () => {
+		addInfoBox: (status) => {
 			let info_box = document.createElement('li');
-			info_box.innerHTML = `<li id="wp-admin-bar-omgf-info"><a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${omgf_frontend_i18n.info_box_text}</a><li>`;
+
+			if (status === 'alert') {
+				info_box.innerHTML = `<li id="wp-admin-bar-omgf-info"><a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${omgf_frontend_i18n.info_box_alert_text}</a><li>`;
+			}
+
+			if (status === 'notice') {
+				info_box.innerHTML = `<li id="wp-admin-bar-omgf-info"><a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${omgf_frontend_i18n.info_box_notice_text}</a><li>`;
+			}
+
 			omgf_frontend.sub_menu.prepend(info_box);
 		},
 	}

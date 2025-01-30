@@ -36,6 +36,14 @@
 	color: white !important;
 }
 
+#wp-admin-bar-omgf.notice #wp-admin-bar-omgf-info {
+	background-color: #FFDC00 !important;
+}
+
+#wp-admin-bar-omgf.notice #wp-admin-bar-omgf-info .ab-item {
+	color: black !important;
+}
+
 #wp-admin-bar-omgf.warning {
 	background-color: #FF851B;
 	-webkit-animation: blinking-warning 2.5s; /* Safari 4+ */
