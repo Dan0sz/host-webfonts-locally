@@ -52,7 +52,7 @@ class Ajax {
 		}
 
 		if ( empty( $stored_results ) && $this->has_warnings() ) {
-			$status = 'warning';
+			$status = 'notice';
 		}
 
 		$status = apply_filters( 'omgf_ajax_admin_bar_status', $status );
