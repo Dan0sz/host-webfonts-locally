@@ -90,7 +90,7 @@ class Detection extends Builder {
 						'omgf_detection_settings_advanced_processing_description',
 						sprintf(
 							__(
-								'By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. Since v6, OMGF configures these (Pro) enhancements automatically when following instructions provided by the Google Fonts Checker in the <a href="%s">Dashboard</a>.',
+								'By default, OMGF scans each page for mentions of URLs pointing to fonts.googleapis.com. OMGF Pro v4 configures these enhancements automatically when following instructions provided by the Google Fonts Checker in the <a href="%s">Dashboard</a>.',
 								'host-webfonts-local'
 							),
 							admin_url( 'admin.php?page=' . Settings::OMGF_ADMIN_PAGE . '&tab=' . Settings::OMGF_SETTINGS_FIELD_OPTIMIZE )
