@@ -49,9 +49,10 @@ class Optimize extends Builder {
 		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 27 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 30 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 40 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 50 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_remove_async_google_fonts' ], 60 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_inline_option' ], 40 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 50 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 60 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_remove_async_google_fonts' ], 70 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 100 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 200 );
@@ -192,18 +193,6 @@ class Optimize extends Builder {
 		</tr>
 		<?php
 		$this->do_checkbox(
-			__( 'Add Fonts Inline (Pro)', 'host-webfonts-local' ),
-			'inline_fonts', ! empty( OMGF::get_option( 'inline_fonts' ) ),
-			sprintf(
-				__(
-					'Enable this option to add all fonts related styles inline to the <code>head</code>. This reduces the amount of chained critical requests and increases performance and Pagespeed score in most cases. %s',
-					'host-webfonts-local'
-				),
-				$this->promo
-			), ! defined( 'OMGF_PRO_ACTIVE' ),
-			'task-manager-row'
-		);
-		$this->do_checkbox(
 			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
 			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ),
 			sprintf(
@@ -274,6 +263,21 @@ class Optimize extends Builder {
 		?>
 		</div>
 		<?php
+	}
+
+	public function do_inline_option() {
+		$this->do_checkbox(
+			__( 'Add Fonts Inline (Pro)', 'host-webfonts-local' ),
+			'inline_fonts', ! empty( OMGF::get_option( 'inline_fonts' ) ),
+			sprintf(
+				__(
+					'Enable this option to add all fonts related styles inline to the <code>head</code>. This reduces the amount of chained critical requests and increases performance and Pagespeed score in most cases. %s',
+					'host-webfonts-local'
+				),
+				$this->promo
+			), ! defined( 'OMGF_PRO_ACTIVE' ),
+			'task-manager-row'
+		);
 	}
 
 	/**
