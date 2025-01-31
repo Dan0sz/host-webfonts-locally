@@ -84,6 +84,10 @@
 	margin-bottom: 1em;
 }
 
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice:first-child {
+	margin-top: 1em;
+}
+
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice ol {
 	margin-left: 1em;
 }
