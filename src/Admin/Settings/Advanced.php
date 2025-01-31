@@ -44,11 +44,12 @@ class Advanced extends Builder {
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 80 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 90 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 100 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 110 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 120 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 130 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 140 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 150 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_auto_config_subsets' ], 110 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 120 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 130 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 140 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 150 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 160 );
 
 		// Close
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_after' ], 200 );
@@ -174,6 +175,22 @@ class Advanced extends Builder {
 				'Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off',
 				'host-webfonts-local'
 			)
+		);
+	}
+
+	public function do_auto_config_subsets() {
+		$this->do_checkbox(
+			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
+			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ),
+			sprintf(
+				__(
+					'When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.',
+					'host-webfonts-local'
+				),
+				apply_filters( 'omgf_settings_page_title', 'OMGF' )
+			),
+			false,
+			'task-manager-row'
 		);
 	}
 
