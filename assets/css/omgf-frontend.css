@@ -17,6 +17,10 @@
 	display: inline-block;
 }
 
+#wp-admin-bar-omgf-info > .ab-item {
+	color: white !important;
+}
+
 #wp-admin-bar-omgf.dot.success > .ab-item:after {
 	background-color: #2ECC40;
 }
