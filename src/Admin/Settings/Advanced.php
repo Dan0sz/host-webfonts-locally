@@ -40,14 +40,15 @@ class Advanced extends Builder {
 		// Settings
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_cache_dir' ], 50 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_white_label_css' ], 60 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 70 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 80 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 90 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 100 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 110 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 120 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 130 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 140 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_dtap' ], 70 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 80 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 90 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 100 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 110 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 120 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 130 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 140 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 150 );
 
 		// Close
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_after' ], 200 );
@@ -107,6 +108,22 @@ class Advanced extends Builder {
 		);
 	}
 
+	public function do_promo_dtap() {
+		$this->do_checkbox(
+			__( 'Optimize for (D)TAP (Pro)', 'host-webfonts-local' ),
+			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
+			sprintf(
+				__(
+					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production street. %s',
+					'host-webfonts-local'
+				),
+				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+				$this->promo
+			), ! defined( 'OMGF_PRO_ACTIVE' ),
+			'task-manager-row'
+		);
+	}
+
 	/**
 	 *
 	 */
@@ -138,8 +155,7 @@ class Advanced extends Builder {
 	public function do_legacy_mode() {
 		$this->do_checkbox(
 			__( 'Legacy Browser Compatibility', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_LEGACY_MODE,
-			! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE ) ),
+			Settings::OMGF_ADV_SETTING_LEGACY_MODE, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE ) ),
 			__(
 				'Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Enabling this option negatively impacts file compression and disables Variable Fonts support. Default: off.',
 				'host-webfonts-local'
@@ -153,8 +169,7 @@ class Advanced extends Builder {
 	public function do_compatibility() {
 		$this->do_checkbox(
 			__( 'Divi/Elementor Compatibility', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_COMPATIBILITY,
-			! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) ),
+			Settings::OMGF_ADV_SETTING_COMPATIBILITY, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) ),
 			__(
 				'Divi and Elementor use the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off',
 				'host-webfonts-local'
@@ -173,8 +188,7 @@ class Advanced extends Builder {
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_SUBSETS,
 			OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ),
-			( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) ?
-				'<span class="used-subsets-notice info">' . sprintf(
+			( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . sprintf(
 					__(
 						'Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. <a href="%s">Disable it</a> if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn\'t change this setting</u>!',
 						'host-webfonts-local'
@@ -191,8 +205,7 @@ class Advanced extends Builder {
 	public function do_disable_quick_access_menu() {
 		$this->do_checkbox(
 			__( 'Disable Quick Access Menu', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS,
-			! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ),
+			Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ),
 			sprintf(
 				__(
 					'Disable the top menu links that give logged in administrators quick access to %s\'s settings and allow you to refresh its cache from the frontend. Re-running fonts optimizations for a page can still be done by appending <code>?omgf_optimize=1</code> to an URL.',

@@ -205,34 +205,6 @@ class Optimize extends Builder {
 			false,
 			'task-manager-row'
 		);
-		// TODO: Should we remove this option, since we're leveraging the parameter much better now?
-		$this->do_checkbox(
-			__( 'Auto-Configure Adv. Processing (Pro)', 'host-webfonts-local' ),
-			'auto_config', ! empty( OMGF::get_option( 'auto_config' ) ),
-			sprintf(
-				__(
-					'Is %1$s not detecting all Google Fonts? Check this box <u>before</u> starting the optimization to auto-configure OMGF Pro\'s <a href="%2$s">Advanced Processing</a> features and "dig deeper" for Google Fonts where needed. Novice users are advised to leave this enabled. %3$s',
-					'host-webfonts-local'
-				),
-				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
-				admin_url( 'options-general.php?page=optimize-webfonts&tab=omgf-detection-settings' ),
-				$this->promo
-			), ! defined( 'OMGF_PRO_ACTIVE' ),
-			'task-manager-row'
-		);
-		$this->do_checkbox(
-			__( 'Optimize for (D)TAP (Pro)', 'host-webfonts-local' ),
-			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
-			sprintf(
-				__(
-					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production street. %s',
-					'host-webfonts-local'
-				),
-				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
-				$this->promo
-			), ! defined( 'OMGF_PRO_ACTIVE' ),
-			'task-manager-row'
-		);
 		?>
 		<tr>
 			<th scope="row"><?php _e( 'Manage Cache', 'host-webfonts-local' ); ?></th>
