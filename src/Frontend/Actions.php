@@ -115,7 +115,6 @@ class Actions {
 			]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
-		wp_enqueue_script( 'wp-util' );
 
 		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/css/omgf-frontend$file_ext.css";
 
