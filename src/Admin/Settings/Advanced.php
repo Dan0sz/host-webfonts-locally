@@ -112,7 +112,7 @@ class Advanced extends Builder {
 	public function do_promo_dtap() {
 		$this->do_checkbox(
 			__( 'Optimize for (D)TAP (Pro)', 'host-webfonts-local' ),
-			'dtap', ! empty( OMGF::get_option( 'dtap' ) ),
+			'dtap', ! empty( OMGF::get_option( 'dtap', 'on' ) ),
 			sprintf(
 				__(
 					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production street. %s',
