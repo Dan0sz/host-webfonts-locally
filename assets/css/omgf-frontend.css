@@ -7,11 +7,21 @@
 /*	background-color: #FF4136;*/
 /*}*/
 
-#wp-admin-bar-omgf.success {
+#wp-admin-bar-omgf.dot > .ab-item:after {
+	content: '';
+	width: 10px;
+	height: 10px;
+	margin-left: 5px;
+	border-radius: 50%;
+	background-color: grey;
+	display: inline-block;
+}
+
+#wp-admin-bar-omgf.dot.success > .ab-item:after {
 	background-color: #2ECC40;
 }
 
-#wp-admin-bar-omgf.alert {
+#wp-admin-bar-omgf.dot.alert > .ab-item:after {
 	background-color: #FF4136;
 	-webkit-animation: blinking-alert 2.5s; /* Safari 4+ */
 	-moz-animation: blinking-alert 2.5s; /* Fx 5+ */
@@ -28,23 +38,7 @@
 	}
 }
 
-#wp-admin-bar-omgf-info {
-	background-color: #FF4136 !important;
-}
-
-#wp-admin-bar-omgf-info .ab-item {
-	color: white !important;
-}
-
-#wp-admin-bar-omgf.notice #wp-admin-bar-omgf-info {
-	background-color: #FFDC00 !important;
-}
-
-#wp-admin-bar-omgf.notice #wp-admin-bar-omgf-info .ab-item {
-	color: black !important;
-}
-
-#wp-admin-bar-omgf.warning {
+#wp-admin-bar-omgf.dot.warning > .ab-item:after {
 	background-color: #FF851B;
 	-webkit-animation: blinking-warning 2.5s; /* Safari 4+ */
 	-moz-animation: blinking-warning 2.5s; /* Fx 5+ */
@@ -61,20 +55,12 @@
 	}
 }
 
-#wp-admin-bar-omgf.notice {
+#wp-admin-bar-omgf.dot.notice > .ab-item:after {
 	background-color: #FFDC00;
 	-webkit-animation: blinking-notice 2.5s; /* Safari 4+ */
 	-moz-animation: blinking-notice 2.5s; /* Fx 5+ */
 	-o-animation: blinking-notice 2.5s; /* Opera 12+ */
 	animation: blinking-notice 2.5s; /* IE 10+, Fx 29+ */
-}
-
-#wp-admin-bar-omgf.notice > .ab-item {
-	color: black !important;
-}
-
-#wp-admin-bar-omgf.notice.hover > .ab-item {
-	color: rgba(240, 246, 252, .7) !important;
 }
 
 @-webkit-keyframes blinking-notice {
@@ -84,5 +70,18 @@
 	0%, 25%, 50%, 75%, 100% {
 		background-color: #FFDC00;
 	}
+}
+
+
+#wp-admin-bar-omgf-info {
+	background-color: #FF4136 !important;
+}
+
+#wp-admin-bar-omgf.notice #wp-admin-bar-omgf-info {
+	background-color: #FFDC00 !important;
+}
+
+#wp-admin-bar-omgf.notice #wp-admin-bar-omgf-info .ab-item {
+	color: black !important;
 }
 

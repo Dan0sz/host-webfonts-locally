@@ -77,9 +77,6 @@
 }
 
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice {
-	display: inline-block;
-	min-height: 80px;
-	width: 47%;
 	padding: 18px 12px;
 	border: 1px solid #ececec;
 	border-left: 4px solid #ececec;

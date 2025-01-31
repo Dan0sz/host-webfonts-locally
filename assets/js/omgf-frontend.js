@@ -11,6 +11,8 @@ window.addEventListener('load', () => {
 		 * Run it all.
 		 */
 		init: async function () {
+			this.menu_item.classList.add('dot');
+
 			let google_fonts = this.filterGoogleFonts(window.performance.getEntries());
 			let status = await this.getStatus(google_fonts);
 
