@@ -714,7 +714,7 @@ class Process {
 
 		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
 
-		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Cache refresh was successful. You can close this window.', 'host-webfonts-local' ) ) . $parts[ 2 ];
+		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Google Fonts optimization succeeded. You may close this window.', 'host-webfonts-local' ) ) . $parts[ 2 ];
 	}
 
 	/**
