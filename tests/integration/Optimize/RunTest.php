@@ -30,7 +30,7 @@ class RunTest extends TestCase {
 	 */
 	public function testAutoConfigSubsets() {
 		Helper::update_option( Settings::OMGF_ADV_SETTING_SUBSETS, [ 'latin', 'latin-ext', 'devanagari', 'gurmukhi' ] );
-		Helper::update_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, 'on' );
+		Helper::update_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, 'on' );
 
 		new Run();
 

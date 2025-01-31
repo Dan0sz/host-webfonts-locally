@@ -181,7 +181,7 @@ class Advanced extends Builder {
 	public function do_auto_config_subsets() {
 		$this->do_checkbox(
 			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
-			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, 'on' ) ),
+			Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, 'on' ) ),
 			sprintf(
 				__(
 					'When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.',
@@ -205,7 +205,7 @@ class Advanced extends Builder {
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_SUBSETS,
 			OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ),
-			( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . sprintf(
+			( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . sprintf(
 					__(
 						'Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. <a href="%s">Disable it</a> if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn\'t change this setting</u>!',
 						'host-webfonts-local'

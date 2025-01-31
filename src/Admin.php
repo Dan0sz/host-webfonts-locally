@@ -142,7 +142,7 @@ class Admin {
 	 * @param $hook
 	 */
 	public function enqueue_admin_scripts( $hook ) {
-		if ( $hook == 'settings_page_optimize-webfonts' ) {
+		if ( $hook == 'settings_page_' . Settings::OMGF_ADMIN_PAGE ) {
 			wp_enqueue_script(
 				self::OMGF_ADMIN_JS_HANDLE,
 				plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-admin.js',

@@ -56,7 +56,7 @@ class Actions {
 				'id'     => 'omgf',
 				'parent' => null,
 				'title'  => apply_filters( 'omgf_settings_page_title', __( 'OMGF', 'host-webfonts-local' ) ),
-				'href'   => admin_url( 'options-general.php?page=optimize-webfonts' ),
+				'href'   => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
 			]
 		);
 
@@ -110,7 +110,7 @@ class Actions {
 			[
 				'info_box_alert_text'  => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
 				'info_box_notice_text' => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
-				'info_box_admin_url'   => admin_url( 'options-general.php?page=optimize-webfonts' ),
+				'info_box_admin_url'   => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
 				'nonce'                => wp_create_nonce( 'omgf_frontend_nonce' ),
 			]
 		);

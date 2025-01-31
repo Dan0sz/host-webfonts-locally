@@ -137,7 +137,6 @@ class Settings extends Admin {
 	/**
 	 * Optimize Fonts
 	 */
-	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS       = 'auto_subsets';
 
 	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'display_option';
 
@@ -164,6 +163,8 @@ class Settings extends Admin {
 	const OMGF_ADV_SETTING_LEGACY_MODE          = 'legacy';
 
 	const OMGF_ADV_SETTING_COMPATIBILITY        = 'compatibility';
+
+	const OMGF_ADV_SETTING_AUTO_SUBSETS         = 'auto_subsets';
 
 	const OMGF_ADV_SETTING_SUBSETS              = 'subsets';
 
@@ -360,8 +361,7 @@ class Settings extends Admin {
 	 */
 	private function generate_tab( $id, $icon = null, $label = null ) {
 		?>
-		<a class="nav-tab dashicons-before <?php echo $icon; ?> <?php echo $this->active_tab == $id ? 'nav-tab-active' :
-			''; ?>"
+		<a class="nav-tab dashicons-before <?php echo $icon; ?> <?php echo $this->active_tab == $id ? 'nav-tab-active' : ''; ?>"
 		   href="<?php echo $this->generate_tab_link( $id ); ?>">
 			<?php echo $label; ?>
 		</a>
@@ -584,9 +584,7 @@ class Settings extends Admin {
 
 		foreach ( $items as $item ) {
 			$hide = $i > 0 ? 'style="display: none;"' : '';
-			$text .= "<span class='ticker-item' $hide>" .
-				sprintf( '<a target="_blank" href="%s"><em>%s</em></a>', $item->link, $item->title ) .
-				'</span>';
+			$text .= "<span class='ticker-item' $hide>" . sprintf( '<a target="_blank" href="%s"><em>%s</em></a>', $item->link, $item->title ) . '</span>';
 			++ $i;
 		}
 

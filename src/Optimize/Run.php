@@ -202,7 +202,7 @@ class Run {
 			$break = true;
 		}
 
-		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) ) {
+		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ) {
 			if ( ! $break && $available_used_subsets ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Available Used Subsets)', $diff );
 
