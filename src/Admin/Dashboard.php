@@ -14,10 +14,9 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
-namespace OMGF;
+namespace OMGF\Admin;
 
 use OMGF\Helper as OMGF;
-use OMGF\Admin\Settings;
 
 class Dashboard {
 	/**
@@ -32,8 +31,7 @@ class Dashboard {
 	];
 
 	/**
-	 * @since v5.5.4 Plugins which require additional configuration to be compatible with
-	 *               OMGF Pro.
+	 * @since v5.5.4 Plugins which require additional configuration to be compatible with OMGF Pro.
 	 */
 	const PLUGINS_ADDTNL_CONF = [
 		'autoptimize',
@@ -43,8 +41,7 @@ class Dashboard {
 	];
 
 	/**
-	 * @since v5.4.0 List of template handles which require additional configuration to be
-	 *               compatible with OMGF.
+	 * @since v5.4.0 List of template handles which require additional configuration to be compatible with OMGF.
 	 */
 	const THEMES_ADDTNL_CONF = [
 		'Avada',
@@ -75,6 +72,19 @@ class Dashboard {
 	];
 
 	/**
+	 * Generates the HTML for the dashboard by rendering any warnings and capturing the output buffer.
+	 *
+	 * @return string The rendered dashboard HTML content.
+	 */
+	public static function get_dashboard_html() {
+		ob_start();
+
+		self::render_warnings();
+
+		return ob_get_clean();
+	}
+
+	/**
 	 * Renders the Dashboard Warnings boxes.
 	 *
 	 * @codeCoverageIgnore
@@ -101,6 +111,7 @@ class Dashboard {
 				</td>
 			</tr>
 		<?php endif; ?>
+		<?php $nonce = wp_create_nonce( Settings::OMGF_ADMIN_PAGE ); ?>
 		<tr valign="top" id="task-manager-notice-row">
 			<td colspan="2" class="task-manager-row">
 				<?php
@@ -179,7 +190,10 @@ class Dashboard {
 								$href = home_url( $path . '?omgf_optimize=1' );
 								$path = $path === '/' ? '/ (home)' : $path;
 								?>
-								<li><strong><a href="<?php echo apply_filters( 'omgf_google_fonts_checker_result_path', $href ); ?>" target="_blank"><?php echo $path; ?></a></strong></li>
+								<li><strong><a class="omgf-google-fonts-checker-result" href="<?php echo apply_filters(
+											'omgf_google_fonts_checker_result_path',
+											$href
+										); ?>" data-nonce="<?php echo $nonce; ?>" target="_blank"><?php echo $path; ?></a></strong></li>
 								<ul>
 									<?php foreach ( $urls as $url ) : ?>
 										<li><?php echo $url; ?></li>
@@ -349,9 +363,7 @@ class Dashboard {
 									<?php endif; ?>
 									<?php if ( $show_mark_as_fixed ) : ?>
 										<small>[<a href="#" class="hide-notice"
-												   data-nonce="<?php echo esc_attr(
-													   wp_create_nonce( Settings::OMGF_ADMIN_PAGE )
-												   ); ?>"
+												   data-nonce="<?php echo esc_attr( $nonce ); ?>"
 												   data-warning-id="<?php echo esc_attr( $warning_id ); ?>"
 												   id="omgf-hide-notice-<?php echo esc_attr(
 													   $warning_id

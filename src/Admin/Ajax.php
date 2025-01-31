@@ -17,7 +17,6 @@
 namespace OMGF\Admin;
 
 use OMGF\Helper as OMGF;
-use OMGF\Dashboard;
 
 class Ajax {
 	/**
@@ -34,7 +33,7 @@ class Ajax {
 
 	/**
 	 * @since v5.4.0 Remove notice from dashboard and return new HTML.
-	 * @return string Valid HTML.
+	 * @return void Valid HTML.
 	 */
 	public function hide_notice() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -52,11 +51,7 @@ class Ajax {
 
 		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices, 'off' );
 
-		ob_start();
-
-		Dashboard::render_warnings();
-
-		$result = ob_get_clean();
+		$result = Dashboard::get_dashboard_html();
 
 		wp_send_json_success( $result );
 	}

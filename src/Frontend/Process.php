@@ -16,10 +16,10 @@
 
 namespace OMGF\Frontend;
 
-use OMGF\Helper as OMGF;
+use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
+use OMGF\Helper as OMGF;
 use OMGF\Optimize;
-use OMGF\Dashboard;
 
 class Process {
 	const PRELOAD_ALLOWED_HTML = [

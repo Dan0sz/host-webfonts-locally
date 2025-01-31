@@ -16,9 +16,9 @@
 
 namespace OMGF\Admin\Settings;
 
-use OMGF\Helper as OMGF;
+use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
-use OMGF\Dashboard;
+use OMGF\Helper as OMGF;
 
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 

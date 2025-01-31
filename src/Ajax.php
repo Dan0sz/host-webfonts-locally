@@ -16,6 +16,7 @@
 
 namespace OMGF;
 
+use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
 
 class Ajax {
