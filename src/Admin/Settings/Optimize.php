@@ -18,7 +18,7 @@ namespace OMGF\Admin\Settings;
 
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
-use OMGF\TaskManager;
+use OMGF\Dashboard;
 
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
@@ -93,7 +93,7 @@ class Optimize extends Builder {
 	public function open_task_manager() {
 		?>
 		<div class="omgf-task-manager postbox" style="padding: 0 15px 5px;">
-		<h3><?php echo __( 'Task Manager', 'host-webfonts-local' ); ?></h3>
+		<h3><?php echo __( 'Dashboard', 'host-webfonts-local' ); ?></h3>
 		<p class="description">
 			<?php echo __(
 				'A quick overview of all found Google Fonts stylesheets (and their status) currently saved on (and served from) your server.',
@@ -110,7 +110,7 @@ class Optimize extends Builder {
 		$stylesheets          = OMGF::admin_optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
-		<?php TaskManager::render_warnings(); ?>
+		<?php Dashboard::render_warnings(); ?>
 		<tr valign="top">
 			<th scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
 			<td class="task-manager-row">

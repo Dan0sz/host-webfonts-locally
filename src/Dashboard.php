@@ -19,7 +19,7 @@ namespace OMGF;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 
-class TaskManager {
+class Dashboard {
 	/**
 	 * @since v5.5.6 Plugins which can't run alongside OMGF, mostly plugins which remove Google Fonts.
 	 */
@@ -75,7 +75,7 @@ class TaskManager {
 	];
 
 	/**
-	 * Renders the Task Manager Warnings box.
+	 * Renders the Dashboard Warnings boxes.
 	 *
 	 * @codeCoverageIgnore
 	 */

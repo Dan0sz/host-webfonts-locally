@@ -61,7 +61,7 @@ class Ajax {
 	}
 
 	/**
-	 * Store results of Google Fonts checker in database, for rendering in the Task Manager.
+	 * Store results of Google Fonts checker in database, for rendering in the Dashboard.
 	 *
 	 * @return array
 	 */
@@ -75,7 +75,7 @@ class Ajax {
 			unset( $stored_results[ $path ] );
 		}
 
-		// We won't show results for more than 5 URLs on the Task Manager, to limit the size of the database entry.
+		// We won't show results for more than 5 URLs on the Dashboard, to limit the size of the database entry.
 		if ( count( $stored_results ) > 5 ) {
 			return $stored_results;
 		}
@@ -102,7 +102,7 @@ class Ajax {
 	 * @return bool
 	 */
 	private function has_warnings() {
-		$task_manager = new TaskManager();
+		$task_manager = new Dashboard();
 		$warnings     = $task_manager->get_warnings();
 
 		return ! empty( $warnings );

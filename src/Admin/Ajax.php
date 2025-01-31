@@ -16,10 +16,8 @@
 
 namespace OMGF\Admin;
 
-use OMGF\Admin\Notice;
-use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
-use OMGF\TaskManager as TaskManager;
+use OMGF\Dashboard;
 
 class Ajax {
 	/**
@@ -35,7 +33,7 @@ class Ajax {
 	}
 
 	/**
-	 * @since v5.4.0 Remove notice from task manager and return new HTML.
+	 * @since v5.4.0 Remove notice from dashboard and return new HTML.
 	 * @return string Valid HTML.
 	 */
 	public function hide_notice() {
@@ -56,11 +54,11 @@ class Ajax {
 
 		ob_start();
 
-		TaskManager::render_warnings();
+		Dashboard::render_warnings();
 
 		$result = ob_get_clean();
 
-		return wp_send_json_success( $result );
+		wp_send_json_success( $result );
 	}
 
 	/**

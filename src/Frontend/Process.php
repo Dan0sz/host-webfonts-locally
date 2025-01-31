@@ -19,7 +19,7 @@ namespace OMGF\Frontend;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 use OMGF\Optimize;
-use OMGF\TaskManager;
+use OMGF\Dashboard;
 
 class Process {
 	const PRELOAD_ALLOWED_HTML = [
@@ -683,7 +683,7 @@ class Process {
 		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 		$count_iframes = count( $found_iframes );
 
-		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
+		foreach ( Dashboard::IFRAMES_LOADING_FONTS as $script_id => $script ) {
 			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
 				$found_iframes[] = $script_id;
 			}
