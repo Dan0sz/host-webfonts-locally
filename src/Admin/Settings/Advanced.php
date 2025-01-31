@@ -181,7 +181,7 @@ class Advanced extends Builder {
 	public function do_auto_config_subsets() {
 		$this->do_checkbox(
 			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
-			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ),
+			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, 'on' ) ),
 			sprintf(
 				__(
 					'When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.',
