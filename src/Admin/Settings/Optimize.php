@@ -49,7 +49,7 @@ class Optimize extends Builder {
 		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 27 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 30 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_inline_option' ], 40 );
+		//		add_action( 'omgf_optimize_settings_content', [ $this, 'do_inline_option' ], 40 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 50 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 60 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 100 );
