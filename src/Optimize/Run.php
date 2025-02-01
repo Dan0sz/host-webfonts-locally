@@ -257,11 +257,7 @@ class Run {
 		add_settings_error(
 			'general',
 			'omgf_optimization_success',
-			__( 'Optimization completed successfully.', 'host-webfonts-local' ) .
-			' ' .
-			sprintf( '<a target="_blank" href="%s">', self::DOCS_TEST_URL ) .
-			__( 'How can I verify it\'s working?', 'host-webfonts-local' ) .
-			'</a>',
+			__( 'Optimization completed successfully. If any situations arise at a later point, you\'ll be notified in the top admin bar and the dashboard.', 'host-webfonts-local' ) . '</a>',
 			'success'
 		);
 
