@@ -165,7 +165,7 @@ class Dashboard {
 											'You can read <a href="%s" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
 											'host-webfonts-local'
 										),
-										'', // TODO: Add link to docs.
+										'https://daan.dev/docs/omgf-pro-troubleshooting/external-requests/',
 										Settings::DAAN_WORDPRESS_OMGF_PRO
 									)
 								); ?>
