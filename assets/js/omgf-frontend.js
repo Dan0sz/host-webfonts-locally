@@ -11,17 +11,17 @@ window.addEventListener('load', () => {
 		 * Run it all.
 		 */
 		init: async function () {
-			this.menu_item.classList.add('dot');
+			omgf_frontend.menu_item.classList.add('dot');
 
-			let google_fonts = this.filterGoogleFonts(window.performance.getEntries());
-			let status = await this.getStatus(google_fonts);
+			let google_fonts = omgf_frontend.filterGoogleFonts();
+			let status = await omgf_frontend.getStatus(google_fonts);
 
-			if (status && this.menu_item !== null) {
-				this.menu_item.classList.add(status);
+			if (status && omgf_frontend.menu_item !== null) {
+				omgf_frontend.menu_item.classList.add(status);
 			}
 
-			if ((status !== 'success' || status !== 'warning') && this.sub_menu !== null) {
-				this.addInfoBox(status);
+			if ((status !== 'success' || status !== 'warning') && omgf_frontend.sub_menu !== null) {
+				omgf_frontend.addInfoBox(status);
 			}
 
 			document.dispatchEvent(new Event('omgf_frontend_loaded'));
@@ -29,10 +29,9 @@ window.addEventListener('load', () => {
 
 		/**
 		 * Filter the list of entries for calls to the Google Fonts API for further processing.
-		 *
-		 * @param entries
 		 */
-		filterGoogleFonts: (entries) => {
+		filterGoogleFonts: () => {
+			let entries = window.performance.getEntries();
 			let google_fonts = entries.filter((entry) => entry.name.indexOf('/fonts.googleapis.com/css') > 0 || entry.name.indexOf('/fonts.gstatic.com/') > 0)
 
 			if (google_fonts.length === 0) {
@@ -87,5 +86,7 @@ window.addEventListener('load', () => {
 		},
 	}
 
-	omgf_frontend.init();
+	// This timeout allows the window.performance object to complete.
+	setTimeout(omgf_frontend.init, 1000);
 });
+
