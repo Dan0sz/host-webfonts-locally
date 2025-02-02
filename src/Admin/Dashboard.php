@@ -45,8 +45,6 @@ class Dashboard {
 	 */
 	const THEMES_ADDTNL_CONF = [
 		'Avada',
-		'customizr',
-		'enfold',
 		'Divi',
 		'Extra',
 		'thrive-theme',
