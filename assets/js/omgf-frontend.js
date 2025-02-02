@@ -11,17 +11,17 @@ window.addEventListener('load', () => {
 		 * Run it all.
 		 */
 		init: async function () {
-			omgf_frontend.menu_item.classList.add('dot');
+			this.menu_item.classList.add('dot');
 
-			let google_fonts = omgf_frontend.filterGoogleFonts();
-			let status = await omgf_frontend.getStatus(google_fonts);
+			let google_fonts = this.filterGoogleFonts();
+			let status = await this.getStatus(google_fonts);
 
-			if (status && omgf_frontend.menu_item !== null) {
-				omgf_frontend.menu_item.classList.add(status);
+			if (status && this.menu_item !== null) {
+				this.menu_item.classList.add(status);
 			}
 
-			if ((status !== 'success' || status !== 'warning') && omgf_frontend.sub_menu !== null) {
-				omgf_frontend.addInfoBox(status);
+			if ((status !== 'success' || status !== 'warning') && this.sub_menu !== null) {
+				this.addInfoBox(status);
 			}
 
 			document.dispatchEvent(new Event('omgf_frontend_loaded'));
@@ -86,7 +86,18 @@ window.addEventListener('load', () => {
 		},
 	}
 
-	// This timeout allows the window.performance object to complete.
-	setTimeout(omgf_frontend.init, 1000);
+	// Make sure we've collected all resources before continuing.
+	let entries = window.performance.getEntries();
+	let interval = setInterval(() => {
+		if (entries.length < window.performance.getEntries().length) {
+			entries = window.performance.getEntries();
+		}
+
+		if (entries.length === window.performance.getEntries().length) {
+			clearInterval(interval);
+
+			omgf_frontend.init();
+		}
+	}, 500);
 });
 
