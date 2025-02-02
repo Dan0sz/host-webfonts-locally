@@ -22,8 +22,6 @@ use OMGF\Admin\Settings;
 use WP_Error;
 
 class Run {
-	const DOCS_TEST_URL = 'https://daan.dev/docs/omgf-pro-troubleshooting/test-omgf-pro/';
-
 	/**
 	 * Build class.
 	 *
