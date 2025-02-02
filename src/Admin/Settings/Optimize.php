@@ -191,23 +191,6 @@ class Optimize extends Builder {
 			</td>
 		</tr>
 		<tr>
-			<?php
-			$this->do_checkbox(
-				__( 'Remove Async Google Fonts (Pro)', 'host-webfonts-local' ),
-				'remove_async_fonts', ! empty( OMGF::get_option( 'remove_async_fonts' ) ),
-				sprintf(
-					__(
-						'Remove Google Fonts loaded (asynchronously) by (3rd party) JavaScript libraries used by some themes/plugins. This won\'t work with content embedded using an <code>iframe</code>. <strong>Warning!</strong> Make sure you load the Google Fonts, either <a href="%1$s">manually</a> or by using <a href="%2$s" target="_blank">a plugin</a> to prevent styling breaks. %3$s',
-						'host-webfonts-local'
-					),
-					'https://daan.dev/docs/omgf-pro/remove-async-google-fonts/',
-					'https://daan.dev/wordpress/omgf-additional-fonts/',
-					$this->promo
-				), ! defined( 'OMGF_PRO_ACTIVE' )
-			);
-			?>
-		</tr>
-		<tr>
 			<th scope="row"><?php _e( 'Manage Cache', 'host-webfonts-local' ); ?></th>
 			<td class="task-manager-row">
 				<a id="omgf-empty" data-init="<?php echo Settings::OMGF_ADMIN_PAGE; ?>"
