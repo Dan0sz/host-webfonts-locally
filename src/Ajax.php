@@ -40,7 +40,7 @@ class Ajax {
 	/**
 	 * Determines the status of our admin bar menu based on stored results and warnings.
 	 *
-	 * @return void Sends a JSON response with one of the statuses: 'alert', 'warning', or 'success'.
+	 * @return void Sends a JSON response with one of the statuses: 'alert', 'notice', or 'success'.
 	 */
 	public function get_admin_bar_status() {
 		check_ajax_referer( 'omgf_frontend_nonce', '_wpnonce' );
@@ -67,8 +67,9 @@ class Ajax {
 	 * @return array
 	 */
 	private function store_results() {
-		$urls           = $_POST[ 'urls' ] ?? [];
-		$path           = $_POST[ 'path' ];
+		$post           = $this->clean( $_POST );
+		$path           = $post[ 'path' ];
+		$urls           = apply_filters( 'omgf_ajax_results', $post[ 'urls' ] ?? [], $path );
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		// This issue has been solved, so remove it from the results.
@@ -95,6 +96,37 @@ class Ajax {
 		update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
 		return $stored_results;
+	}
+
+	/**
+	 * Cleans a given variable by sanitizing its value.
+	 *
+	 * @param mixed $var The variable to be cleaned. Can be a scalar value or an array of values.
+	 *
+	 * @return mixed Returns the cleaned variable. If the input is scalar, it will be sanitized accordingly.
+	 *               If an array is passed, the method is applied recursively to each element.
+	 */
+	private function clean( $var ) {
+		// If the variable is an array, recursively apply the function to each element of the array.
+		if ( is_array( $var ) ) {
+			return array_map( [ $this, 'clean' ], $var );
+		}
+
+		// If the variable is a scalar value (string, integer, float, boolean).
+		if ( is_scalar( $var ) ) {
+			// Parse the variable using the wp_parse_url function.
+			$parsed = wp_parse_url( $var );
+			// If the variable has a scheme (e.g. http:// or https://), sanitize the variable using the esc_url_raw function.
+			if ( isset( $parsed[ 'scheme' ] ) ) {
+				return esc_url_raw( wp_unslash( $var ), [ $parsed[ 'scheme' ] ] );
+			}
+
+			// If the variable does not have a scheme, sanitize the variable using the sanitize_text_field function.
+			return sanitize_text_field( wp_unslash( $var ) );
+		}
+
+		// If the variable is not an array or a scalar value, return the variable unchanged.
+		return $var;
 	}
 
 	/**
