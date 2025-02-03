@@ -119,7 +119,7 @@ class Process {
 		add_action( 'wp_head', [ $this, 'add_preloads' ], 3 );
 		add_action( 'template_redirect', [ $this, 'maybe_buffer_output' ], 3 );
 		/**
-		 * @since v5.3.10 parse() runs on priority 10. Run this afterwards, to make sure e.g. the <preload> -> <noscript> approach some theme
+		 * @since v5.3.10 parse() runs on priority 10. Run this afterward, to make sure e.g. the <preload> -> <noscript> approach some theme
 		 *                developers use keeps working.
 		 */
 		add_filter( 'omgf_buffer_output', [ $this, 'remove_resource_hints' ], 11 );
