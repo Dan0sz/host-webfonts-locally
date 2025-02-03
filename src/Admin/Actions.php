@@ -47,7 +47,7 @@ class Actions {
 	 * @return void
 	 */
 	public function do_optimize() {
-		new \OMGF\Admin\Optimize();
+		new Optimize();
 	}
 
 	/**
@@ -169,9 +169,7 @@ class Actions {
 
 			wp_kses(
 				sprintf(
-					' <strong>' .
-					__( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.' ) .
-					'</strong>',
+					' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.' ) . '</strong>',
 					$update_notices[ $new_version ]->url
 				),
 				$allowed_html
