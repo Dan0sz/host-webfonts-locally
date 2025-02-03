@@ -58,8 +58,11 @@ window.addEventListener('load', () => {
 		 * @returns {*}
 		 */
 		getStatus: (google_fonts) => {
+			const urlSearchParams = new URLSearchParams(window.location.search);
+			const params = Object.fromEntries(urlSearchParams.entries());
+
 			let action = 'omgf_admin_bar_status';
-			let data = {'urls': google_fonts, 'path': document.location.pathname, '_wpnonce': omgf_frontend_i18n.nonce};
+			let data = {'urls': google_fonts, 'path': document.location.pathname, '_wpnonce': omgf_frontend_i18n.nonce, 'params': params};
 			let status = window.wp.ajax.send(action, {'data': data});
 
 			return status.done((response) => {
