@@ -35,7 +35,7 @@ class Actions {
 	 * Initializes everything required to process frontend optimization.
 	 */
 	public function init_frontend() {
-		new \OMGF\Frontend\Process();
+		new Process();
 	}
 
 	/**
