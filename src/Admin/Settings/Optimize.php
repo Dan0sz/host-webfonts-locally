@@ -153,16 +153,7 @@ class Optimize extends Builder {
 					</ul>
 				<?php else : ?>
 					<p>
-						<?php echo __(
-							'No stylesheets found. <a href="#" id="omgf-save-optimize">Start optimization</a>?',
-							'host-webfonts-local'
-						); ?><?php echo OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ? sprintf(
-							__(
-								'(If optimization seems to be failing, read <a href="%s" target="_blank">this</a>.)',
-								'host-webfonts-local'
-							),
-							'https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/'
-						) : ''; ?>
+						<?php echo __( 'No stylesheets in cache.', 'host-webfonts-local' ); ?>
 					</p>
 				<?php endif; ?>
 			</td>
@@ -196,7 +187,7 @@ class Optimize extends Builder {
 				<a id="omgf-empty" data-init="<?php echo Settings::OMGF_ADMIN_PAGE; ?>"
 				   data-nonce="<?php echo wp_create_nonce( Settings::OMGF_ADMIN_PAGE ); ?>"
 				   class="omgf-empty button-cancel"><?php _e(
-						'Empty Cache Directory',
+						'Empty Cache',
 						'host-webfonts-local'
 					); ?></a>
 				<a id="omgf-refresh" data-init="<?php echo Settings::OMGF_ADMIN_PAGE; ?>"
