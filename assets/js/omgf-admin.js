@@ -44,6 +44,7 @@ jQuery(document).ready(function ($) {
 			$('#omgf-save-optimize, #omgf-optimize-again').on('click', function () {
 				$('#omgf-optimize-settings-form #submit').click();
 			});
+			$(document).on('click', '.omgf-google-fonts-checker-result', this.refresh_results);
 			$(document).on('click', 'a[id^=omgf-hide-notice-]', this.hide_notice);
 			$('.omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
 			$('.omgf-refresh, #omgf-cache-refresh').on('click', this.refresh_cache);
@@ -55,6 +56,25 @@ jQuery(document).ready(function ($) {
 
 			// Ticker
 			setInterval(this.loop_ticker_items, 4000);
+		},
+
+		/**
+		 * Refresh the Dashboard Notices when a Google Fonts Checker result is clicked.
+		 *
+		 * @param e
+		 */
+		refresh_results: function (e) {
+			e.preventDefault();
+
+			let href = $(this).attr('href');
+			window.open(href);
+
+			let monitorInterval = window.setInterval(() => {
+				if (document.hasFocus()) {
+					window.location.reload();
+					window.clearInterval(monitorInterval);
+				}
+			}, 500);
 		},
 
 		/**
