@@ -490,13 +490,17 @@ class Helper {
 	 *
 	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
 	 *
-	 * @param $url
+	 * @param $url A (relative or absolute) URL, defaults to home URL.
 	 *
 	 * @return string
 	 */
 	public static function no_cache_optimize_url( $url = '' ) {
 		if ( ! $url ) {
 			$url = get_home_url();
+		}
+
+		if ( wp_make_link_relative( $url ) === $url ) {
+			$url = home_url( $url );
 		}
 
 		$args = apply_filters(

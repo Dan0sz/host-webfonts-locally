@@ -185,7 +185,7 @@ class Dashboard {
 						<ol>
 							<?php foreach ( $google_fonts_checker_results as $path => $urls ) : ?>
 								<?php
-								$href = OMGF::no_cache_optimize_url( get_home_url( $path ) );
+								$href = OMGF::no_cache_optimize_url( $path );
 								$path = $path === '/' ? '/ (home)' : $path;
 								?>
 								<li><strong><a class="omgf-google-fonts-checker-result" href="<?php echo $href; ?>" data-nonce="<?php echo $nonce; ?>" target="_blank"><?php echo $path; ?></a></strong></li>
