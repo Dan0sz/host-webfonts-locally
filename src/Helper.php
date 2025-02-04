@@ -484,4 +484,33 @@ class Helper {
 			unlink( $entry );
 		}
 	}
+
+	/**
+	 * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
+	 *
+	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
+	 *
+	 * @param $url
+	 *
+	 * @return string
+	 */
+	public static function no_cache_optimize_url( $url = '' ) {
+		if ( ! $url ) {
+			$url = get_home_url();
+		}
+
+		$args = apply_filters(
+			'omgf_optimize_run_args',
+			[
+				'omgf_optimize' => 1,
+				'nocache'       => substr(
+					md5( microtime() ),
+					wp_rand( 0, 26 ),
+					5
+				),
+			]
+		);
+
+		return add_query_arg( $args, $url );
+	}
 }

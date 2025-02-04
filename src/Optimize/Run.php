@@ -69,38 +69,13 @@ class Run {
 	 */
 	private function get_front_html( $url ) {
 		$result = wp_remote_get(
-			$this->no_cache_optimize_url( $url ),
+			OMGF::no_cache_optimize_url( $url ),
 			[
 				'timeout' => 60,
 			]
 		);
 
 		return $result;
-	}
-
-	/**
-	 * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
-	 *
-	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
-	 *
-	 * @param $url
-	 *
-	 * @return string
-	 */
-	private function no_cache_optimize_url( $url ) {
-		$args = apply_filters(
-			'omgf_optimize_run_args',
-			[
-				'omgf_optimize' => 1,
-				'nocache'       => substr(
-					md5( microtime() ),
-					wp_rand( 0, 26 ),
-					5
-				),
-			]
-		);
-
-		return add_query_arg( $args, $url );
 	}
 
 	/**
