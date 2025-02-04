@@ -139,7 +139,7 @@ class Ajax {
 	}
 
 	/**
-	 * Empties the cache directory.
+	 * Empties all cache related entries in the database.
 	 *
 	 * @param string $initiator
 	 *
@@ -153,6 +153,7 @@ class Ajax {
 				'init'    => $initiator,
 				'exclude' => [],
 				'queue'   => [
+					Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS,
 					Settings::OMGF_AVAILABLE_USED_SUBSETS,
 					Settings::OMGF_CACHE_IS_STALE,
 					Settings::OMGF_CACHE_TIMESTAMP,
