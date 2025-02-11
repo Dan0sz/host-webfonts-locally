@@ -240,14 +240,15 @@ class Dashboard {
 				<?php else: ?>
 					<div class="task-manager-notice success">
 						<h4><?php echo esc_html__( 'No external Google Fonts found on your site.', 'host-webfonts-local' ); ?></h4>
-						<ol style="list-style= none; margin-left: 0;">
+						<p>
 							<?php echo esc_html__(
 								sprintf(
 									__( 'Cool! %s is successfully hosting all Google Fonts locally.', 'host-webfonts-local' ),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
 								)
 							); ?>
-						</ol>
+						</p>
+						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
 				<?php if ( empty( $warnings ) ) : ?>
@@ -256,17 +257,17 @@ class Dashboard {
 								'No potential issues found in your configuration.',
 								'host-webfonts-local'
 							); ?></h4>
-						<ol style="list-style: none; margin-left: 0;">
-							<li><?php echo esc_html(
-									sprintf(
-										__(
-											'Great job! Your configuration allows %s to run smoothly.',
-											'host-webfonts-local'
-										),
-										apply_filters( 'omgf_settings_page_title', 'OMGF' )
-									)
-								); ?></li>
-						</ol>
+						<p>
+							<?php echo esc_html(
+								sprintf(
+									__(
+										'Great job! Your configuration allows %s to run smoothly.',
+										'host-webfonts-local'
+									),
+									apply_filters( 'omgf_settings_page_title', 'OMGF' )
+								)
+							); ?>
+						</p>
 					</div>
 				<?php else : ?>
 					<div class="task-manager-notice warning">
