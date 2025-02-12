@@ -96,7 +96,7 @@ class Actions {
 	 * @return void
 	 */
 	public function maybe_add_frontend_assets() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( apply_filters( 'omgf_do_not_load_frontend_assets', ! current_user_can( 'manage_options' ) ) ) {
 			return;
 		}
 
@@ -115,6 +115,11 @@ class Actions {
 			]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
+
+		// Even if the above filter forces the JS to load, we'll never need the CSS.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/css/omgf-frontend$file_ext.css";
 
