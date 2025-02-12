@@ -11,6 +11,10 @@ window.addEventListener('load', () => {
 		 * Run it all.
 		 */
 		init: async function () {
+			if (this.menu_item === null) {
+				return;
+			}
+
 			this.menu_item.classList.add('dot');
 
 			let google_fonts = this.filterGoogleFonts();
