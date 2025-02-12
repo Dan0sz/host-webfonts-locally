@@ -141,7 +141,10 @@ class Optimize {
 
 					return [ $this->original_handle => $object ];
 				default:
-					return str_replace( OMGF_UPLOAD_DIR, OMGF_UPLOAD_URL, $local_file );
+					// 'url'
+					$timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP );
+
+					return str_replace( OMGF_UPLOAD_DIR, OMGF_UPLOAD_URL, $local_file ) . '?ver=' . $timestamp;
 			}
 			// @codeCoverageIgnoreEnd
 		}
@@ -192,12 +195,7 @@ class Optimize {
 					);
 				} else {
 					$filename = strtolower(
-						$id .
-						'-' .
-						$variant->fontStyle .
-						'-' .
-						( isset( $variant->subset ) ? $variant->subset . '-' : '' ) .
-						$variant->fontWeight
+						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset . '-' : '' ) . $variant->fontWeight
 					);
 				}
 
@@ -399,9 +397,7 @@ class Optimize {
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
 			 */
-			if ( ! empty( $subset ) &&
-				! in_array( $subset, OMGF::get_option( settings::OMGF_ADV_SETTING_SUBSETS ) ) &&
-				! is_numeric( $subset ) ) {
+			if ( ! empty( $subset ) && ! in_array( $subset, OMGF::get_option( settings::OMGF_ADV_SETTING_SUBSETS ) ) && ! is_numeric( $subset ) ) {
 				continue;
 			}
 
@@ -413,13 +409,9 @@ class Optimize {
 				$subset = 'logogram-' . $subset;
 			}
 
-			$key                             = $subset .
-				'-' .
-				$font_weight[ 1 ] .
-				( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
+			$key                             = $subset . '-' . $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
 			$font_object[ $key ]             = new \stdClass();
-			$font_object[ $key ]->id         = $font_weight[ 1 ] .
-				( $font_style[ 1 ] === 'normal' ? '' : $font_style[ 1 ] );
+			$font_object[ $key ]->id         = $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : $font_style[ 1 ] );
 			$font_object[ $key ]->fontFamily = $font_family;
 			$font_object[ $key ]->fontStyle  = $font_style[ 1 ];
 			$font_object[ $key ]->fontWeight = $font_weight[ 1 ];
