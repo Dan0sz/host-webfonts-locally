@@ -11,14 +11,15 @@ window.addEventListener('load', () => {
 		 * Run it all.
 		 */
 		init: async function () {
+			let google_fonts = this.filterGoogleFonts();
+			let status = await this.getStatus(google_fonts);
+
+			// menu_item only exists if the logged-in user has manage_options cap.
 			if (this.menu_item === null) {
 				return;
 			}
 
 			this.menu_item.classList.add('dot');
-
-			let google_fonts = this.filterGoogleFonts();
-			let status = await this.getStatus(google_fonts);
 
 			if (status && this.menu_item !== null) {
 				this.menu_item.classList.add(status);
