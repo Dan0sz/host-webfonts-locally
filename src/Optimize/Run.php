@@ -37,8 +37,6 @@ class Run {
 	 * @return void
 	 */
 	private function run() {
-		$this->generate_timestamp();
-
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
 
 		$front_html = $this->get_front_html( get_home_url() );
