@@ -241,10 +241,13 @@ class Dashboard {
 					<div class="task-manager-notice success">
 						<h4><?php echo esc_html__( 'No external Google Fonts found on your site.', 'host-webfonts-local' ); ?></h4>
 						<p>
-							<?php echo esc_html__(
-								sprintf(
-									__( 'Cool! %s is successfully hosting all Google Fonts locally.', 'host-webfonts-local' ),
-									apply_filters( 'omgf_settings_page_title', 'OMGF' )
+							<?php echo apply_filters(
+								'omgf_dashboard_success_message',
+								esc_html__(
+									sprintf(
+										__( 'Cool! %s is successfully hosting all Google Fonts locally.', 'host-webfonts-local' ),
+										apply_filters( 'omgf_settings_page_title', 'OMGF' )
+									)
 								)
 							); ?>
 						</p>
