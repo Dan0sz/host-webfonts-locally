@@ -55,6 +55,7 @@ class Process {
 		'et_fb',
 		'fb-edit',
 		'fl_builder',
+		'op3editor', // OptimizePress 3
 		'siteorigin_panels_live_editor',
 		'tve',
 		'vc_action', // WP Bakery
@@ -114,8 +115,7 @@ class Process {
 
 		if ( $this->break ||
 			isset( $_GET[ 'nomgf' ] ) ||
-			( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf_optimize' ] ) ) &&
-				( ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf' ] ) ) ) ) {
+			( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf_optimize' ] ) ) && ( ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf' ] ) ) ) ) {
 			return;
 		}
 
@@ -397,9 +397,7 @@ class Process {
 		$links = array_filter(
 			$links[ 0 ],
 			function ( $link ) {
-				return str_contains( $link, 'fonts.googleapis.com/css' ) ||
-					str_contains( $link, 'fonts.bunny.net/css' ) ||
-					str_contains( $link, 'fonts-api.wp.com/css' );
+				return str_contains( $link, 'fonts.googleapis.com/css' ) || str_contains( $link, 'fonts.bunny.net/css' ) || str_contains( $link, 'fonts-api.wp.com/css' );
 			}
 		);
 
@@ -424,30 +422,9 @@ class Process {
 			}
 		}
 
-		$this->parse_iframes($html);
+		$this->parse_iframes( $html );
 
 		return apply_filters( 'omgf_processed_html', $html, $this );
-	}
-
-	/**
-	 * Parse $html for present iframes loading Google Fonts.
-	 *
-	 * @param $html
-	 * @return void
-	 */
-	private function parse_iframes($html) {
-		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
-		$count_iframes = count( $found_iframes );
-
-		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
-			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
-				$found_iframes[] = $script_id;
-			}
-		}
-
-		if ( $count_iframes !== count( $found_iframes ) ) {
-			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
-		}
 	}
 
 	/**
@@ -455,8 +432,7 @@ class Process {
 	 * @return bool
 	 */
 	private function is_amp() {
-		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
-			( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() );
+		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) || ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() );
 	}
 
 	/**
@@ -625,7 +601,7 @@ class Process {
 			 * If stylesheet with $handle is completely marked for unload, just remove the element
 			 * to prevent it from loading.
 			 */
-			if ( apply_filters('omgf_unloaded_stylesheets', OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() ) ) ) {
+			if ( apply_filters( 'omgf_unloaded_stylesheets', OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() ) ) ) {
 				$search[ $key ]  = $stack[ 'link' ];
 				$replace[ $key ] = '';
 
@@ -686,6 +662,28 @@ class Process {
 	}
 
 	/**
+	 * Parse $html for present iframes loading Google Fonts.
+	 *
+	 * @param $html
+	 *
+	 * @return void
+	 */
+	private function parse_iframes( $html ) {
+		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
+		$count_iframes = count( $found_iframes );
+
+		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
+			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
+				$found_iframes[] = $script_id;
+			}
+		}
+
+		if ( $count_iframes !== count( $found_iframes ) ) {
+			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
+		}
+	}
+
+	/**
 	 * Adds a little success message to the HTML, to create a more logic user flow when manually optimizing pages.
 	 *
 	 * @param string $html Valid HTML
@@ -703,8 +701,7 @@ class Process {
 			return $html;
 		}
 
-		$message_div =
-			'<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
+		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
 
 		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Cache refreshed successful!', 'host-webfonts-local' ) ) . $parts[ 2 ];
 	}
@@ -720,9 +717,7 @@ class Process {
 	 * @return string
 	 */
 	public function remove_mesmerize_filter( $tag ) {
-		if ( ( wp_get_theme()->template === 'mesmerize-pro' ||
-				wp_get_theme()->template === 'highlight-pro' ||
-				wp_get_theme()->template === 'mesmerize' ) && str_contains( $tag, 'fonts.googleapis.com' ) ) {
+		if ( ( wp_get_theme()->template === 'mesmerize-pro' || wp_get_theme()->template === 'highlight-pro' || wp_get_theme()->template === 'mesmerize' ) && str_contains( $tag, 'fonts.googleapis.com' ) ) {
 			return str_replace( 'href="" data-href', 'href', $tag );
 		}
 
