@@ -51,16 +51,6 @@ class Run {
 	}
 
 	/**
-	 * Generates a timestamp and stores it to the DB, which is appended to the stylesheet and fonts URLs.
-	 *
-	 * @see StylesheetGenerator::build_source_string()
-	 * @see self::build_search_replace()
-	 */
-	private function generate_timestamp() {
-		OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, time() ); // @codeCoverageIgnore
-	}
-
-	/**
 	 * Wrapper for wp_remote_get() with preset params.
 	 *
 	 * @param mixed $url

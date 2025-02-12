@@ -93,7 +93,27 @@ class Process {
 		$this->break     = $break;
 		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
 
+		if ( ! $this->timestamp ) {
+			$this->timestamp = $this->generate_timestamp();
+		}
+
 		$this->init();
+	}
+
+	/**
+	 * Generates a timestamp and stores it to the DB, which is appended to the stylesheet and fonts URLs.
+	 *
+	 * @see StylesheetGenerator::build_source_string()
+	 * @see self::build_search_replace()
+	 *
+	 * @return int
+	 */
+	private function generate_timestamp() {
+		$timestamp = time();
+
+		OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, $timestamp ); // @codeCoverageIgnore
+
+		return $timestamp;
 	}
 
 	/**
