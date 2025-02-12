@@ -430,27 +430,6 @@ class Process {
 	}
 
 	/**
-	 * Parse $html for present iframes loading Google Fonts.
-	 *
-	 * @param $html
-	 * @return void
-	 */
-	private function parse_iframes($html) {
-		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
-		$count_iframes = count( $found_iframes );
-
-		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
-			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
-				$found_iframes[] = $script_id;
-			}
-		}
-
-		if ( $count_iframes !== count( $found_iframes ) ) {
-			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
-		}
-	}
-
-	/**
 	 * @since v5.0.5 Check if current page is AMP page.
 	 * @return bool
 	 */
@@ -692,6 +671,28 @@ class Process {
 			'search'  => $search,
 			'replace' => $replace,
 		];
+	}
+
+	/**
+	 * Parse $html for present iframes loading Google Fonts.
+	 *
+	 * @param $html
+	 *
+	 * @return void
+	 */
+	private function parse_iframes( $html ) {
+		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
+		$count_iframes = count( $found_iframes );
+
+		foreach ( Dashboard::IFRAMES_LOADING_FONTS as $script_id => $script ) {
+			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
+				$found_iframes[] = $script_id;
+			}
+		}
+
+		if ( $count_iframes !== count( $found_iframes ) ) {
+			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
+		}
 	}
 
 	/**
