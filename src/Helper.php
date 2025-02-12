@@ -17,8 +17,6 @@
 namespace OMGF;
 
 use OMGF\Admin\Settings;
-use OMGF\Download;
-use OMGF\StylesheetGenerator;
 
 class Helper {
 	/**
