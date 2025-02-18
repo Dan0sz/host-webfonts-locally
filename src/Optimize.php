@@ -192,7 +192,7 @@ class Optimize {
 					$filename = strtolower( $id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset : '' ) );
 				} else {
 					$filename = strtolower(
-						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset . '-' : '' ) . $variant->fontWeight
+						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset . '-' : '' ) . str_replace( ' ', '-', $variant->fontWeight )
 					);
 				}
 
@@ -376,7 +376,7 @@ class Optimize {
 			}
 
 			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
-			preg_match( '/font-weight:\s([0-9]+);/', $font_face, $font_weight );
+			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
 			preg_match( '/src:\surl\((.*?woff2)\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
@@ -398,9 +398,11 @@ class Optimize {
 				$subset = 'logogram-' . $subset;
 			}
 
-			$key                             = $subset . '-' . $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
+			$font_weight_id = str_replace( ' ', '-', $font_weight[ 1 ] );
+
+			$key                             = $subset . '-' . $font_weight_id . ( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
 			$font_object[ $key ]             = new \stdClass();
-			$font_object[ $key ]->id         = $font_weight[ 1 ] . ( $font_style[ 1 ] === 'normal' ? '' : $font_style[ 1 ] );
+			$font_object[ $key ]->id         = $font_weight_id . ( $font_style[ 1 ] === 'normal' ? '' : $font_style[ 1 ] );
 			$font_object[ $key ]->fontFamily = $font_family;
 			$font_object[ $key ]->fontStyle  = $font_style[ 1 ];
 			$font_object[ $key ]->fontWeight = $font_weight[ 1 ];
