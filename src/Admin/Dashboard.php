@@ -14,12 +14,11 @@
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
-namespace OMGF;
+namespace OMGF\Admin;
 
 use OMGF\Helper as OMGF;
-use OMGF\Admin\Settings;
 
-class TaskManager {
+class Dashboard {
 	/**
 	 * @since v5.5.6 Plugins which can't run alongside OMGF, mostly plugins which remove Google Fonts.
 	 */
@@ -32,8 +31,7 @@ class TaskManager {
 	];
 
 	/**
-	 * @since v5.5.4 Plugins which require additional configuration to be compatible with
-	 *               OMGF Pro.
+	 * @since v5.5.4 Plugins which require additional configuration to be compatible with OMGF Pro.
 	 */
 	const PLUGINS_ADDTNL_CONF = [
 		'autoptimize',
@@ -43,41 +41,12 @@ class TaskManager {
 	];
 
 	/**
-	 * @since v5.5.4 Plugins which require an upgrade to OMGF Pro.
-	 */
-	const PLUGINS_REQ_PRO = [
-		'essential-grid',
-		'optimizepress',
-		'oxygen',
-		'popup-maker',
-		'premium-stock-market-widgets',
-		'woozone',
-	];
-
-	/**
-	 * @since v5.4.0 List of template handles which require additional configuration to be
-	 *               compatible with OMGF.
+	 * @since v5.4.0 List of template handles which require additional configuration to be compatible with OMGF.
 	 */
 	const THEMES_ADDTNL_CONF = [
 		'Avada',
-		'customizr',
-		'enfold',
 		'Divi',
 		'Extra',
-		'thrive-theme',
-	];
-
-	/**
-	 * @since v5.4.0 Themes which require an upgrade to OMGF Pro to properly detect and
-	 *               fetch their Google Fonts.
-	 */
-	const THEMES_REQ_PRO = [
-		'Avada',
-		'customizr',
-		'enfold',
-		'jupiter',
-		'jupiterx',
-		'kadence',
 		'thrive-theme',
 	];
 
@@ -101,7 +70,20 @@ class TaskManager {
 	];
 
 	/**
-	 * Renders the Task Manager Warnings box.
+	 * Generates the HTML for the dashboard by rendering any warnings and capturing the output buffer.
+	 *
+	 * @return string The rendered dashboard HTML content.
+	 */
+	public static function get_dashboard_html() {
+		ob_start();
+
+		self::render_warnings();
+
+		return ob_get_clean();
+	}
+
+	/**
+	 * Renders the Dashboard Warnings boxes.
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -127,29 +109,167 @@ class TaskManager {
 				</td>
 			</tr>
 		<?php endif; ?>
+		<?php $nonce = wp_create_nonce( Settings::OMGF_ADMIN_PAGE ); ?>
 		<tr valign="top" id="task-manager-notice-row">
 			<td colspan="2" class="task-manager-row">
 				<?php
-				$warnings = self::get_warnings();
-				$plugins  = self::get_active_plugins();
+				$plugins                      = self::get_active_plugins();
+				$warnings                     = self::get_warnings();
+				$google_fonts_checker_results = $warnings[ 'google_fonts_checker' ] ?? [];
 
-				if ( empty( $warnings ) ) :
-					?>
-					<div class="task-manager-notice success">
-						<h4><?php echo esc_html__( 'No potential issues found in your configuration.', 'host-webfonts-local' ); ?></h4>
-						<ol style="list-style: none; margin-left: 0;">
-							<li><?php echo esc_html(
+				if ( ! empty( $google_fonts_checker_results ) ) {
+					unset( $warnings[ 'google_fonts_checker' ] );
+				}
+				?>
+				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
+					<div class="task-manager-notice <?php echo apply_filters( 'omgf_task_manager_notice_class', 'alert' ); ?>">
+						<h4>
+							<?php echo wp_kses(
+								apply_filters(
+									'omgf_google_fonts_checker_title',
 									sprintf(
-										__( 'Great job! %s hasn\'t detected any potential issues in your configuration.*', 'host-webfonts-local' ),
+										__(
+											'%1$s wasn\'t able to process all Google Fonts on your site. %2$s',
+											'host-webfonts-local'
+										),
+										apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+										count( $google_fonts_checker_results ) === 5 ? '*' : '',
+									),
+								),
+								'post'
+							); ?>
+						</h4>
+						<p>
+							<?php echo wp_kses(
+								apply_filters(
+									'omgf_google_fonts_checker_general_text',
+									sprintf(
+										__(
+											'Due to the exotic way your theme, a plugin or script has implemented Google Fonts, %s isn\'t able to process all of them.',
+											'host-webfonts-local'
+										),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
 									)
-								); ?></li>
+								),
+								'post'
+							); ?>
+						</p>
+						<?php if ( empty( $warnings ) ): ?>
+							<p>
+								<?php echo apply_filters(
+									'omgf_google_fonts_checker_no_potential_issues',
+									sprintf(
+										__(
+											'You can read <a href="%s" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
+											'host-webfonts-local'
+										),
+										'https://daan.dev/docs/omgf-pro-troubleshooting/external-requests/',
+										Settings::DAAN_WORDPRESS_OMGF_PRO
+									)
+								); ?>
+							</p>
+						<?php else: ?>
+							<p>
+								<?php echo apply_filters(
+									'omgf_google_fonts_checker_potential_issues',
+									sprintf(
+										__(
+											'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href="%s" target="_blank">upgrade to OMGF Pro</a> might be required.',
+											'host-webfonts-local'
+										),
+										Settings::DAAN_WORDPRESS_OMGF_PRO
+									)
+								); ?>
+							</p>
+						<?php endif; ?>
+						<ol>
+							<?php foreach ( $google_fonts_checker_results as $path => $urls ) : ?>
+								<?php
+								$href = OMGF::no_cache_optimize_url( $path );
+								$path = $path === '/' ? '/ (home)' : $path;
+								?>
+								<li><strong><a class="omgf-google-fonts-checker-result" href="<?php echo $href; ?>" data-nonce="<?php echo $nonce; ?>" target="_blank"><?php echo $path; ?></a></strong></li>
+								<ul>
+									<?php foreach ( $urls as $url ) : ?>
+										<li><?php echo $url; ?></li>
+									<?php endforeach; ?>
+								</ul>
+							<?php endforeach; ?>
 						</ol>
+						<?php if ( count( $google_fonts_checker_results ) === 5 ): ?>
+							<sub>* <em><?php echo wp_kses(
+										__( 'This list is limited to 5 pages, because most entries will most likely be duplicates.', 'host-webfonts-local' ),
+										'post'
+									); ?></em>
+							</sub>
+						<?php endif; ?>
+					</div>
+				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && ! OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
+					<div class="task-manager-notice info">
+						<h4><?php echo esc_html__( 'Let\'s get started by running your first Google Fonts optimization.', 'host-webfonts-local' ); ?></h4>
 						<p>
-							<sub>*<em><?php echo esc_html__(
-										'Check back regularly to make sure no issues are detected on any of your subpages.',
+							<?php echo wp_kses(
+								sprintf(
+									__(
+										'Hit the <strong>Save & Optimize</strong> at the bottom of this page to run the Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can\'t detect and optimize automatically.',
 										'host-webfonts-local'
-									); ?></em></sub>
+									),
+									apply_filters( 'omgf_settings_page_title', 'OMGF' )
+								),
+								'post'
+							); ?>
+						</p>
+					</div>
+				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
+					<div class="task-manager-notice warning">
+						<h4><?php echo esc_html__( 'Google Fonts optimization seems to be failing.', 'host-webfonts-local' ); ?></h4>
+						<p>
+							<?php echo wp_kses(
+								sprintf(
+									__(
+										'%s isn\'t detecting any Google Fonts on your homepage. This could be for several reasons. <a href="%s" target="_blank" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
+										'host-webfonts-local'
+									),
+									apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+									OMGF::no_cache_optimize_url()
+								),
+								'post'
+							); ?>
+						</p>
+					</div>
+				<?php else: ?>
+					<div class="task-manager-notice success">
+						<h4><?php echo esc_html__( 'No external Google Fonts found on your site.', 'host-webfonts-local' ); ?></h4>
+						<p>
+							<?php echo apply_filters(
+								'omgf_dashboard_success_message',
+								esc_html__(
+									sprintf(
+										__( 'Cool! %s is successfully hosting all Google Fonts locally.', 'host-webfonts-local' ),
+										apply_filters( 'omgf_settings_page_title', 'OMGF' )
+									)
+								)
+							); ?>
+						</p>
+						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
+					</div>
+				<?php endif; ?>
+				<?php if ( empty( $warnings ) ) : ?>
+					<div class="task-manager-notice success">
+						<h4><?php echo esc_html__(
+								'No potential issues found in your configuration.',
+								'host-webfonts-local'
+							); ?></h4>
+						<p>
+							<?php echo esc_html(
+								sprintf(
+									__(
+										'Great job! Your configuration allows %s to run smoothly.',
+										'host-webfonts-local'
+									),
+									apply_filters( 'omgf_settings_page_title', 'OMGF' )
+								)
+							); ?>
 						</p>
 					</div>
 				<?php else : ?>
@@ -190,22 +310,15 @@ class TaskManager {
 											'post'
 										); ?>
 									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-req-pro', '', $warning_id ), self::THEMES_REQ_PRO ) ) : ?>
-										<?php $show_mark_as_fixed = false; ?>
-										<?php echo wp_kses(
-											sprintf(
-												__(
-													'Due to the exotic way your theme (%1$s) implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%2$s" target="_blank">Upgrade and install OMGF Pro</a> to continue.',
-													'host-webfonts-local'
-												),
-												ucfirst( str_replace( '-req-pro', '', $warning_id ) ),
-												Settings::DAAN_WORDPRESS_OMGF_PRO
-											),
-											'post'
+									<?php if ( in_array(
+										str_replace( '-addtnl-conf', '', $warning_id ),
+										self::THEMES_ADDTNL_CONF
+									) ) : ?>
+										<?php $template_id = str_replace(
+											'-addtnl-conf',
+											'',
+											strtolower( $warning_id )
 										); ?>
-									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-addtnl-conf', '', $warning_id ), self::THEMES_ADDTNL_CONF ) ) : ?>
-										<?php $template_id = str_replace( '-addtnl-conf', '', strtolower( $warning_id ) ); ?>
 										<?php echo wp_kses(
 											sprintf(
 												__(
@@ -219,8 +332,15 @@ class TaskManager {
 											'post'
 										); ?>
 									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-incompatible', '', $warning_id ), self::INCOMPATIBLE_PLUGINS ) ) : ?>
-										<?php $plugin_name = $plugins[ str_replace( '-incompatible', '', $warning_id ) ]; ?>
+									<?php if ( in_array(
+										str_replace( '-incompatible', '', $warning_id ),
+										self::INCOMPATIBLE_PLUGINS
+									) ) : ?>
+										<?php $plugin_name = $plugins[ str_replace(
+											'-incompatible',
+											'',
+											$warning_id
+										) ]; ?>
 										<?php echo wp_kses(
 											sprintf(
 												__(
@@ -234,23 +354,15 @@ class TaskManager {
 											'post'
 										); ?>
 									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-req-pro', '', $warning_id ), self::PLUGINS_REQ_PRO ) ) : ?>
-										<?php $show_mark_as_fixed = false; ?>
-										<?php $plugin_name = $plugins[ str_replace( '-req-pro', '', $warning_id ) ]; ?>
-										<?php echo wp_kses(
-											sprintf(
-												__(
-													'Due to the exotic way the plugin, <strong>%1$s</strong>, implements Google Fonts, OMGF Pro\'s Advanced Processing features are required to detect them. <a href="%2$s" target="_blank">Upgrade and install OMGF Pro</a> to continue.',
-													'host-webfonts-local'
-												),
-												$plugin_name,
-												Settings::DAAN_WORDPRESS_OMGF_PRO
-											),
-											'post'
-										); ?>
-									<?php endif; ?>
-									<?php if ( in_array( str_replace( '-addtnl-conf', '', $warning_id ), self::PLUGINS_ADDTNL_CONF ) ) : ?>
-										<?php $plugin_name = $plugins[ str_replace( '-addtnl-conf', '', $warning_id ) ]; ?>
+									<?php if ( in_array(
+										str_replace( '-addtnl-conf', '', $warning_id ),
+										self::PLUGINS_ADDTNL_CONF
+									) ) : ?>
+										<?php $plugin_name = $plugins[ str_replace(
+											'-addtnl-conf',
+											'',
+											$warning_id
+										) ]; ?>
 										<?php
 										echo wp_kses(
 											sprintf(
@@ -283,9 +395,11 @@ class TaskManager {
 									<?php endif; ?>
 									<?php if ( $show_mark_as_fixed ) : ?>
 										<small>[<a href="#" class="hide-notice"
-												   data-nonce="<?php echo esc_attr( wp_create_nonce( Settings::OMGF_ADMIN_PAGE ) ); ?>"
+												   data-nonce="<?php echo esc_attr( $nonce ); ?>"
 												   data-warning-id="<?php echo esc_attr( $warning_id ); ?>"
-												   id="omgf-hide-notice-<?php echo esc_attr( $warning_id ); ?>"><?php echo esc_html__(
+												   id="omgf-hide-notice-<?php echo esc_attr(
+													   $warning_id
+												   ); ?>"><?php echo esc_html__(
 													'Mark as fixed',
 													'host-webfonts-local'
 												); ?></a>]</small>
@@ -307,6 +421,25 @@ class TaskManager {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * @return array List of plugin names { (string) slug => (string) full name }
+	 */
+	private static function get_active_plugins() {
+		$plugins        = [];
+		$active_plugins = array_intersect_key(
+			get_plugins(),
+			array_flip( array_filter( array_keys( get_plugins() ), 'is_plugin_active' ) )
+		);
+
+		foreach ( $active_plugins as $basename => $plugin ) {
+			$slug = preg_replace( '/\/.*?\.php$/', '', $basename );
+
+			$plugins[ $slug ] = $plugin[ 'Name' ];
+		}
+
+		return $plugins;
 	}
 
 	/**
@@ -343,13 +476,6 @@ class TaskManager {
 			$warnings[] = $theme->template . '-addtnl-conf';
 		}
 
-		/**
-		 * @since v5.4.0 Warn the user if they're using a theme which requires OMGF Pro's Advanced Processing features.
-		 */
-		if ( in_array( $theme->template, self::THEMES_REQ_PRO ) && ! class_exists( '\OMGF\Pro\Plugin' ) ) {
-			$warnings[] = $theme->template . '-req-pro';
-		}
-
 		$plugins = self::get_active_plugins();
 		$slugs   = array_keys( $plugins );
 
@@ -372,21 +498,18 @@ class TaskManager {
 		}
 
 		/**
-		 * @since v5.5.4 OMGF-74 Notify users if they're using a plugin which requires OMGF Pro's Advanced Processing feature.
-		 */
-		foreach ( self::PLUGINS_REQ_PRO as $plugin_req_pro ) {
-			if ( in_array( $plugin_req_pro, $slugs ) && ! class_exists( '\OMGF\Pro\Plugin' ) ) {
-				$warnings[] = $plugin_req_pro . '-req-pro';
-			}
-		}
-
-		/**
 		 * @since v5.4.0 OMGF-70 Notify users if they're loading scripts loading embedded iframes, e.g. Google Maps, Youtube, etc.
 		 */
 		$iframe_scripts = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 
 		foreach ( $iframe_scripts as $script_id ) {
 			$warnings[] = $script_id;
+		}
+
+		$google_fonts_checker_results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+
+		foreach ( $google_fonts_checker_results as $path => $found_urls ) {
+			$warnings[ 'google_fonts_checker' ][ $path ] = $found_urls;
 		}
 
 		/**
@@ -399,21 +522,5 @@ class TaskManager {
 		}
 
 		return $warnings;
-	}
-
-	/**
-	 * @return array List of plugin names { (string) slug => (string) full name }
-	 */
-	private static function get_active_plugins() {
-		$plugins        = [];
-		$active_plugins = array_intersect_key( get_plugins(), array_flip( array_filter( array_keys( get_plugins() ), 'is_plugin_active' ) ) );
-
-		foreach ( $active_plugins as $basename => $plugin ) {
-			$slug = preg_replace( '/\/.*?\.php$/', '', $basename );
-
-			$plugins[ $slug ] = $plugin[ 'Name' ];
-		}
-
-		return $plugins;
 	}
 }

@@ -19,8 +19,6 @@ namespace OMGF\DB\Migrate;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */
@@ -42,12 +40,12 @@ class V560 {
 	 */
 	public function __construct() {
 		$this->rows = [
-			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS,
 			Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION,
 			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE,
 			Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
 			Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS,
 			Settings::OMGF_ADV_SETTING_COMPATIBILITY,
+			Settings::OMGF_ADV_SETTING_AUTO_SUBSETS,
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_ADV_SETTING_DEBUG_MODE,
 			Settings::OMGF_ADV_SETTING_UNINSTALL,

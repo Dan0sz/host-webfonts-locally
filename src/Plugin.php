@@ -16,14 +16,9 @@
 
 namespace OMGF;
 
-use OMGF\Admin\Ajax;
 use OMGF\Admin\Settings;
 use OMGF\DB\Migrate;
-use OMGF\Frontend\Actions;
-use OMGF\Frontend\Filters;
 use OMGF\Helper as OMGF;
-
-defined( 'ABSPATH' ) || exit;
 
 class Plugin {
 	/**
@@ -39,16 +34,18 @@ class Plugin {
 		// Only load in wp-admin.
 		if ( is_admin() ) {
 			new Admin\Actions();
-			new Ajax();
+			new Admin\Ajax();
 		}
 
 		// Only load in frontend.
 		if ( ! is_admin() ) {
-			new Actions();
-			new Filters();
+			new Frontend\Actions();
+			new Frontend\Filters();
 		}
 
-		new \OMGF\Filters();
+		// Load globally.
+		new Ajax();
+		new Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
 			register_uninstall_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'do_uninstall' ] ); // @codeCoverageIgnore

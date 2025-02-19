@@ -17,8 +17,6 @@
 namespace OMGF;
 
 use OMGF\Admin\Settings;
-use OMGF\Download;
-use OMGF\StylesheetGenerator;
 
 class Helper {
 	/**
@@ -62,11 +60,11 @@ class Helper {
 		$defaults = apply_filters(
 			'omgf_settings_defaults',
 			[
-				Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS    => '',
 				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION  => 'swap',
 				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE       => '',
 				Settings::OMGF_ADV_SETTING_LEGACY_MODE          => '',
 				Settings::OMGF_ADV_SETTING_COMPATIBILITY        => '',
+				Settings::OMGF_ADV_SETTING_AUTO_SUBSETS         => 'on',
 				Settings::OMGF_ADV_SETTING_SUBSETS              => [ 'latin', 'latin-ext' ],
 				Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS => '',
 				Settings::OMGF_ADV_SETTING_DEBUG_MODE           => '',
@@ -168,8 +166,7 @@ class Helper {
 		static $unloaded_stylesheets = [];
 
 		if ( empty( $unloaded_stylesheets ) ) {
-			$unloaded_stylesheets =
-				explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
+			$unloaded_stylesheets = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
 		}
 
 		return array_filter( $unloaded_stylesheets );
@@ -343,8 +340,7 @@ class Helper {
 			 * @var array $filtered_subsets Contains an array of Font Families along with the available selected subsets, e.g.
 			 *                              { 'Lato' => { 'latin', 'latin-ext' } }
 			 */
-			$filtered_subsets =
-				apply_filters( 'omgf_available_filtered_subsets', array_values( array_filter( $subsets ) ) );
+			$filtered_subsets = apply_filters( 'omgf_available_filtered_subsets', array_values( array_filter( $subsets ) ) );
 
 			self::debug_array( __( 'Filtered Subsets', 'host-webfonts-local' ), $filtered_subsets );
 
@@ -375,9 +371,7 @@ class Helper {
 	 */
 	public static function debug_array( $name, $array ) {
 		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) &&
-				file_exists( self::log_file() ) &&
-				filesize( self::log_file() ) > MB_IN_BYTES ) ) {
+			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES ) ) {
 			return;
 		}
 
@@ -430,9 +424,7 @@ class Helper {
 	 */
 	public static function debug( $message ) {
 		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) &&
-				file_exists( self::log_file() ) &&
-				filesize( self::log_file() ) > MB_IN_BYTES ) ) {
+			( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES ) ) {
 			return;
 		}
 
@@ -489,5 +481,38 @@ class Helper {
 		} else {
 			unlink( $entry );
 		}
+	}
+
+	/**
+	 * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
+	 *
+	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
+	 *
+	 * @param $url A (relative or absolute) URL, defaults to home URL.
+	 *
+	 * @return string
+	 */
+	public static function no_cache_optimize_url( $url = '' ) {
+		if ( ! $url ) {
+			$url = get_home_url();
+		}
+
+		if ( wp_make_link_relative( $url ) === $url ) {
+			$url = home_url( $url );
+		}
+
+		$args = apply_filters(
+			'omgf_optimize_run_args',
+			[
+				'omgf_optimize' => 1,
+				'nocache'       => substr(
+					md5( microtime() ),
+					wp_rand( 0, 26 ),
+					5
+				),
+			]
+		);
+
+		return add_query_arg( $args, $url );
 	}
 }

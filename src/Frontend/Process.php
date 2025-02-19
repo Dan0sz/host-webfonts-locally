@@ -16,12 +16,10 @@
 
 namespace OMGF\Frontend;
 
-use OMGF\Helper as OMGF;
+use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
+use OMGF\Helper as OMGF;
 use OMGF\Optimize;
-use OMGF\TaskManager;
-
-defined( 'ABSPATH' ) || exit;
 
 class Process {
 	const PRELOAD_ALLOWED_HTML = [
@@ -95,7 +93,27 @@ class Process {
 		$this->break     = $break;
 		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
 
+		if ( ! $this->timestamp ) {
+			$this->timestamp = $this->generate_timestamp();
+		}
+
 		$this->init();
+	}
+
+	/**
+	 * Generates a timestamp and stores it to the DB, which is appended to the stylesheet and fonts URLs.
+	 *
+	 * @see StylesheetGenerator::build_source_string()
+	 * @see self::build_search_replace()
+	 *
+	 * @return int
+	 */
+	private function generate_timestamp() {
+		$timestamp = time();
+
+		OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, $timestamp ); // @codeCoverageIgnore
+
+		return $timestamp;
 	}
 
 	/**
@@ -122,7 +140,7 @@ class Process {
 		add_action( 'wp_head', [ $this, 'add_preloads' ], 3 );
 		add_action( 'template_redirect', [ $this, 'maybe_buffer_output' ], 3 );
 		/**
-		 * @since v5.3.10 parse() runs on priority 10. Run this afterwards, to make sure e.g. the <preload> -> <noscript> approach some theme
+		 * @since v5.3.10 parse() runs on priority 10. Run this afterward, to make sure e.g. the <preload> -> <noscript> approach some theme
 		 *                developers use keeps working.
 		 */
 		add_filter( 'omgf_buffer_output', [ $this, 'remove_resource_hints' ], 11 );
@@ -192,7 +210,11 @@ class Process {
 					/**
 					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
 					 */
-					$file_path = str_replace( OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, apply_filters( 'omgf_frontend_process_url', $url ) );
+					$file_path = str_replace(
+						OMGF_UPLOAD_URL,
+						OMGF_UPLOAD_DIR,
+						apply_filters( 'omgf_frontend_process_url', $url )
+					);
 
 					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) || in_array( $url, $preloaded ) ) {
 						continue; // @codeCoverageIgnore
@@ -503,7 +525,11 @@ class Process {
 				 *               other pages, let's append a (kind of) unique identifier to the string, to make
 				 *               sure we can make a difference between different Google Fonts configurations.
 				 */
-				$google_fonts[ $key ][ 'id' ] = str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id ); // @codeCoverageIgnore
+				$google_fonts[ $key ][ 'id' ] = str_replace(
+					'-1',
+					'-' . strlen( $href[ 'href' ] ),
+					$id
+				); // @codeCoverageIgnore
 			} elseif ( str_contains( $id, 'sp-wpcp-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Category Slider Pro for WooCommerce by ShapedPlugin
@@ -527,7 +553,10 @@ class Process {
 				 * @since v5.9.1 Same reason as above.
 				 */
 				$google_fonts[ $key ][ 'id' ] = 'custom_fonts'; // @codeCoverageIgnore
-			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', str_contains( $id, 'cp-google-fonts' ) ) ) {
+			} elseif ( apply_filters(
+				'omgf_frontend_process_convert_pro_compatibility',
+				str_contains( $id, 'cp-google-fonts' )
+			) ) {
 				/**
 				 * Compatibility fix for Convert Pro by Brainstorm Force
 				 *
@@ -601,7 +630,10 @@ class Process {
 			 * If stylesheet with $handle is completely marked for unload, just remove the element
 			 * to prevent it from loading.
 			 */
-			if ( apply_filters( 'omgf_unloaded_stylesheets', OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() ) ) ) {
+			if ( apply_filters(
+				'omgf_unloaded_stylesheets',
+				OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() )
+			) ) {
 				$search[ $key ]  = $stack[ 'link' ];
 				$replace[ $key ] = '';
 
@@ -672,7 +704,7 @@ class Process {
 		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 		$count_iframes = count( $found_iframes );
 
-		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
+		foreach ( Dashboard::IFRAMES_LOADING_FONTS as $script_id => $script ) {
 			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
 				$found_iframes[] = $script_id;
 			}
@@ -703,7 +735,7 @@ class Process {
 
 		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
 
-		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Cache refreshed successful!', 'host-webfonts-local' ) ) . $parts[ 2 ];
+		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Google Fonts optimization completed. Return to the settings screen to see the results.', 'host-webfonts-local' ) ) . $parts[ 2 ];
 	}
 
 	/**

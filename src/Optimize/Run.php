@@ -21,11 +21,7 @@ use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 use WP_Error;
 
-defined( 'ABSPATH' ) || exit;
-
 class Run {
-	const DOCS_TEST_URL = 'https://daan.dev/docs/omgf-pro-troubleshooting/test-omgf-pro/';
-
 	/**
 	 * Build class.
 	 *
@@ -41,8 +37,6 @@ class Run {
 	 * @return void
 	 */
 	private function run() {
-		$this->generate_timestamp();
-
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
 
 		$front_html = $this->get_front_html( get_home_url() );
@@ -55,16 +49,6 @@ class Run {
 	}
 
 	/**
-	 * Generates a timestamp and stores it to the DB, which is appended to the stylesheet and fonts URLs.
-	 *
-	 * @see StylesheetGenerator::build_source_string()
-	 * @see self::build_search_replace()
-	 */
-	private function generate_timestamp() {
-		OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, time() ); // @codeCoverageIgnore
-	}
-
-	/**
 	 * Wrapper for wp_remote_get() with preset params.
 	 *
 	 * @param mixed $url
@@ -73,38 +57,13 @@ class Run {
 	 */
 	private function get_front_html( $url ) {
 		$result = wp_remote_get(
-			$this->no_cache_optimize_url( $url ),
+			OMGF::no_cache_optimize_url( $url ),
 			[
 				'timeout' => 60,
 			]
 		);
 
 		return $result;
-	}
-
-	/**
-	 * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
-	 *
-	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
-	 *
-	 * @param $url
-	 *
-	 * @return string
-	 */
-	private function no_cache_optimize_url( $url ) {
-		$args = apply_filters(
-			'omgf_optimize_run_args',
-			[
-				'omgf_optimize' => 1,
-				'nocache'       => substr(
-					md5( microtime() ),
-					wp_rand( 0, 26 ),
-					5
-				),
-			]
-		);
-
-		return add_query_arg( $args, $url );
 	}
 
 	/**
@@ -204,7 +163,7 @@ class Run {
 			$break = true;
 		}
 
-		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) ) {
+		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ) {
 			if ( ! $break && $available_used_subsets ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Available Used Subsets)', $diff );
 
@@ -259,11 +218,7 @@ class Run {
 		add_settings_error(
 			'general',
 			'omgf_optimization_success',
-			__( 'Optimization completed successfully.', 'host-webfonts-local' ) .
-			' ' .
-			sprintf( '<a target="_blank" href="%s">', self::DOCS_TEST_URL ) .
-			__( 'How can I verify it\'s working?', 'host-webfonts-local' ) .
-			'</a>',
+			__( 'Optimization completed successfully.', 'host-webfonts-local' ) . '</a>',
 			'success'
 		);
 

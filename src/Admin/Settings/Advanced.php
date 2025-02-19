@@ -20,8 +20,6 @@ use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 use OMGF\Helper;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */
@@ -42,14 +40,16 @@ class Advanced extends Builder {
 		// Settings
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_cache_dir' ], 50 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_white_label_css' ], 60 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 70 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 80 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 90 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 100 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 110 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 120 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 130 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 140 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_dtap' ], 70 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 80 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 90 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 100 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_auto_config_subsets' ], 110 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 120 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 130 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 140 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 150 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 160 );
 
 		// Close
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_after' ], 200 );
@@ -109,6 +109,22 @@ class Advanced extends Builder {
 		);
 	}
 
+	public function do_promo_dtap() {
+		$this->do_checkbox(
+			__( 'Optimize for (D)TAP (Pro)', 'host-webfonts-local' ),
+			'dtap', ! empty( OMGF::get_option( 'dtap', 'on' ) ),
+			sprintf(
+				__(
+					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production street. %s',
+					'host-webfonts-local'
+				),
+				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+				$this->promo
+			), ! defined( 'OMGF_PRO_ACTIVE' ),
+			'task-manager-row'
+		);
+	}
+
 	/**
 	 *
 	 */
@@ -162,6 +178,22 @@ class Advanced extends Builder {
 		);
 	}
 
+	public function do_auto_config_subsets() {
+		$this->do_checkbox(
+			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
+			Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, 'on' ) ),
+			sprintf(
+				__(
+					'When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.',
+					'host-webfonts-local'
+				),
+				apply_filters( 'omgf_settings_page_title', 'OMGF' )
+			),
+			false,
+			'task-manager-row'
+		);
+	}
+
 	/**
 	 * Preload Subsets
 	 *
@@ -173,7 +205,7 @@ class Advanced extends Builder {
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_SUBSETS,
 			OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ),
-			( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . sprintf(
+			( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . sprintf(
 					__(
 						'Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. <a href="%s">Disable it</a> if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn\'t change this setting</u>!',
 						'host-webfonts-local'

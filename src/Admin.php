@@ -21,8 +21,6 @@ use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 use OMGF\Admin\Updates;
 
-defined( 'ABSPATH' ) || exit;
-
 class Admin {
 	const OMGF_ADMIN_JS_HANDLE  = 'omgf-admin-js';
 
@@ -144,7 +142,7 @@ class Admin {
 	 * @param $hook
 	 */
 	public function enqueue_admin_scripts( $hook ) {
-		if ( $hook == 'settings_page_optimize-webfonts' ) {
+		if ( $hook == 'settings_page_' . Settings::OMGF_ADMIN_PAGE ) {
 			wp_enqueue_script(
 				self::OMGF_ADMIN_JS_HANDLE,
 				plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-admin.js',
@@ -180,8 +178,7 @@ class Admin {
 	 * @return array
 	 */
 	public function force_optimized_fonts_from_db( $alloptions ) {
-		if ( isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) &&
-			! $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) {
+		if ( isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) && ! $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) {
 			unset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] );
 		}
 
@@ -287,7 +284,7 @@ class Admin {
 				'omgf_cache_stale',
 				sprintf(
 					__(
-						'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.',
+						'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Dashboard</a>.',
 						'host-webfonts-local'
 					),
 					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )

@@ -18,8 +18,6 @@ namespace OMGF;
 
 use OMGF\Admin\Notice;
 
-defined( 'ABSPATH' ) || exit;
-
 class Download {
 	/** @var string $url */
 	private $url;
@@ -63,7 +61,12 @@ class Download {
 		wp_mkdir_p( $this->path );
 
 		$file     = $this->path . '/' . $this->filename . '.' . $this->extension;
-		$file_url = OMGF_UPLOAD_URL . str_replace( OMGF_UPLOAD_DIR, '', $this->path ) . '/' . $this->filename . '.' . $this->extension;
+		$file_url = OMGF_UPLOAD_URL .
+			str_replace( OMGF_UPLOAD_DIR, '', $this->path ) .
+			'/' .
+			$this->filename .
+			'.' .
+			$this->extension;
 
 		if ( file_exists( $file ) ) {
 			return $file_url;
@@ -78,7 +81,9 @@ class Download {
 		if ( is_wp_error( $tmp ) ) {
 			/** @var WP_Error $tmp */
 			Notice::set_notice(
-				__( 'OMGF encountered an error while downloading fonts', 'host-webfonts-local' ) . ': ' . $tmp->get_error_message(),
+				__( 'OMGF encountered an error while downloading fonts', 'host-webfonts-local' ) .
+				': ' .
+				$tmp->get_error_message(),
 				'omgf-download-failed',
 				'error',
 				$tmp->get_error_code()

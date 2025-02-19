@@ -16,12 +16,7 @@
 
 namespace OMGF\Admin;
 
-use OMGF\Admin\Notice;
-use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
-use OMGF\TaskManager as TaskManager;
-
-defined( 'ABSPATH' ) || exit;
 
 class Ajax {
 	/**
@@ -37,8 +32,8 @@ class Ajax {
 	}
 
 	/**
-	 * @since v5.4.0 Remove notice from task manager and return new HTML.
-	 * @return string Valid HTML.
+	 * @since v5.4.0 Remove notice from dashboard and return new HTML.
+	 * @return void Valid HTML.
 	 */
 	public function hide_notice() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -54,15 +49,11 @@ class Ajax {
 			$hidden_notices[] = $warning_id;
 		}
 
-		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices );
+		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices, 'off' );
 
-		ob_start();
+		$result = Dashboard::get_dashboard_html();
 
-		TaskManager::render_warnings();
-
-		$result = ob_get_clean();
-
-		return wp_send_json_success( $result );
+		wp_send_json_success( $result );
 	}
 
 	/**
@@ -148,7 +139,7 @@ class Ajax {
 	}
 
 	/**
-	 * Empties the cache directory.
+	 * Empties all cache related entries in the database.
 	 *
 	 * @param string $initiator
 	 *
@@ -162,14 +153,15 @@ class Ajax {
 				'init'    => $initiator,
 				'exclude' => [],
 				'queue'   => [
+					Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS,
 					Settings::OMGF_AVAILABLE_USED_SUBSETS,
 					Settings::OMGF_CACHE_IS_STALE,
 					Settings::OMGF_CACHE_TIMESTAMP,
 					Settings::OMGF_FOUND_IFRAMES,
-					Settings::OMGF_HIDDEN_NOTICES,
 					Settings::OMGF_OPTIMIZE_HAS_RUN,
 					Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
 					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
+					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND,
 					Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
 					Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
 					Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS,
@@ -267,7 +259,12 @@ class Ajax {
 		if ( file_exists( $filename ) ) {
 			unlink( $filename );
 
-			add_settings_error( 'general', 'omgf-log-file-deleted', __( 'Log file successfully deleted', 'host-webfonts-local' ), 'success' );
+			add_settings_error(
+				'general',
+				'omgf-log-file-deleted',
+				__( 'Log file successfully deleted', 'host-webfonts-local' ),
+				'success'
+			);
 		}
 
 		wp_die();
