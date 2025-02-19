@@ -289,10 +289,11 @@
 
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table thead th {
 	width: 13%;
+	padding: 4px 0 9px;
 }
 
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody {
-	border: 1px solid #ccd0d4;
+	border-top: 4px solid #00adda;
 }
 
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody th {
@@ -384,9 +385,9 @@
 	color: #fff;
 	line-height: 1.5;
 	width: 250px;
-	padding: 10px;
+	padding: 20px;
 	margin-left: -125px;
-	border-radius: 3px;
+	border-radius: 10px;
 }
 
 .tooltip .tooltip-text a {
