@@ -16,7 +16,7 @@
 /**
  * Typography
  */
-@import url('https://fonts.googleapis.com/css?family=Public+Sans:400,400italic,600|Poppins:500,600');
+@import url('omgf-admin-google-fonts.min.css');
 
 #wpwrap {
 	background-color: #fff;
@@ -157,8 +157,8 @@
 }
 
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice.info {
-	border: 1px solid #7FDBFF;
-	border-left: 4px solid #7FDBFF;
+	border: 1px solid #00adda;
+	border-left: 4px solid #00adda;
 	background-color: #E0EDF3;
 }
 
