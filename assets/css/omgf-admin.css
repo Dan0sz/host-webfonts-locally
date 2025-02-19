@@ -297,7 +297,8 @@
 }
 
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody th {
-	padding: 5px 0 0 10px;
+	font-family: Poppins, sans-serif;
+	padding: 9px 0 6px 0;
 	width: 40%;
 }
 
@@ -315,7 +316,6 @@
 }
 
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .family {
-	padding: 0 10px 0;
 	font-weight: 600;
 }
 
