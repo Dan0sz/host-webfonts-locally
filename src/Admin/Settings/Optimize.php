@@ -26,8 +26,6 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
  * @codeCoverageIgnore
  */
 class Optimize extends Builder {
-	const FFW_PRESS_OMGF_AF_URL = 'https://daan.dev/wordpress/omgf-additional-fonts/';
-
 	/** @var array $optimized_fonts */
 	private $optimized_fonts = [];
 
@@ -38,9 +36,6 @@ class Optimize extends Builder {
 		parent::__construct();
 
 		$this->title = __( 'Optimize Local Google Fonts', 'host-webfonts-local' );
-
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_title' ], 10 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_description' ], 11 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'open_task_manager' ], 23 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 24 );
@@ -64,42 +59,14 @@ class Optimize extends Builder {
 	}
 
 	/**
-	 *
-	 */
-	public function do_description() { ?>
-		<p>
-			<?php echo __(
-				'These settings affect the downloaded files and generated stylesheet(s). If you\'re simply looking to replace your Google Fonts for locally hosted copies, the default settings should suffice.',
-				'host-webfonts-local'
-			); ?>
-		</p>
-		<p>
-			<?php echo sprintf(
-				__(
-					'To install additional Google Fonts, an add-on is required, which can be downloaded <a href="%s" target="blank">here</a>.',
-					'host-webfonts-local'
-				),
-				self::FFW_PRESS_OMGF_AF_URL
-			); ?>
-		</p>
-		<?php
-	}
-
-	/**
 	 * Opens the Force info screen container.
 	 *
 	 * @return void
 	 */
 	public function open_task_manager() {
 		?>
-		<div class="omgf-task-manager postbox" style="padding: 0 15px 5px;">
+		<div class="omgf-task-manager postbox">
 		<h3><?php echo __( 'Dashboard', 'host-webfonts-local' ); ?></h3>
-		<p class="description">
-			<?php echo __(
-				'A quick overview of all found Google Fonts stylesheets (and their status) currently saved on (and served from) your server.',
-				'host-webfonts-local'
-			); ?>
-		</p>
 		<?php
 	}
 

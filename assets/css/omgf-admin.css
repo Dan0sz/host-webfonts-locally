@@ -12,6 +12,35 @@
  * @copyright: © 2017 - 2024 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * Typography
+ */
+@import url('https://fonts.googleapis.com/css?family=Public+Sans:400,400italic,600|Poppins:500,600');
+
+#wpwrap {
+	background-color: #fff;
+}
+
+.omgf {
+	font-family: 'Public Sans', sans-serif;
+	max-width: 1350px;
+}
+
+.omgf h1 {
+	font-family: 'Poppins', sans-serif;
+	font-weight: 600;
+}
+
+.omgf h2,
+.omgf h3,
+.omgf h4,
+.omgf h5,
+.omgf h6 {
+	font-family: 'Poppins', sans-serif;
+	font-weight: 500;
+}
+
 /**
  * General
  */
@@ -50,12 +79,31 @@
 /**
  * Navigation
  */
-.omgf-nav {
-	padding: 1em 0 1.5em;
+.omgf h2.omgf-nav {
+	border-bottom: 0;
+	padding-bottom: 9px;
 }
 
-.omgf-nav a {
-	cursor: pointer;
+.omgf h2.omgf-nav a {
+	border: 0;
+	background-color: #fff;
+	font-weight: 500;
+}
+
+.omgf h2.omgf-nav .nav-tab {
+	color: #000;
+}
+
+.omgf h2.omgf-nav .nav-tab:last-child {
+	float: right;
+}
+
+.omgf h2.omgf-nav .nav-tab-active {
+	color: #00adda;
+}
+
+.omgf h2.omgf-nav .nav-tab:hover {
+	color: #00adda;
 }
 
 .omgf-nav .dashicons-before:before {
@@ -71,6 +119,14 @@
 	line-height: 15px;
 }
 
+.omgf form .omgf-task-manager {
+	padding: 5px 25px;
+	box-shadow: 0px 10px 20px 1px #ccc;
+	border: 0;
+	border-top: 4px solid #00adda;
+	border-radius: 10px;
+}
+
 .omgf form .omgf-task-manager .task-manager-row {
 	padding: 0;
 	line-height: 1.33;
@@ -82,10 +138,6 @@
 	border-left: 4px solid #ececec;
 	border-radius: 3px;
 	margin-bottom: 1em;
-}
-
-.omgf form .omgf-task-manager .task-manager-row .task-manager-notice:first-child {
-	margin-top: 1em;
 }
 
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice ol {
@@ -187,6 +239,9 @@
 	margin: 20px auto 0 220px;
 	overflow: visible;
 	position: relative;
+	border: 0;
+	border-radius: 10px;
+	box-shadow: 0px 10px 20px 1px #ccc;
 }
 
 .omgf-optimize-fonts-container .option-title {
@@ -324,7 +379,7 @@
 	left: 100%;
 	z-index: 10000;
 	background-color: rgba(0, 0, 0, 0.75);
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-family: 'Public Sans', sans-serif;
 	font-size: 0.8em;
 	color: #fff;
 	line-height: 1.5;
@@ -353,6 +408,10 @@
 
 #omgf-help-form .postbox {
 	padding: 0 15px 5px;
+	border: 0;
+	border-top: 4px solid #00adda;
+	border-radius: 10px;
+	box-shadow: 0 10px 20px 1px #ccc;
 }
 
 #omgf-help-form .postbox .column-container {
@@ -404,6 +463,18 @@
 }
 
 /**
+ * Save Button
+ */
+.omgf #submit {
+	background: #00adda;
+	border: 0;
+	border-radius: 10px;
+	padding: 7px 20px;
+	font-family: Poppins, sans-serif;
+	font-weight: 500;
+}
+
+/**
  * Loader
  */
 .omgf-loading {
@@ -426,6 +497,10 @@
 /**
  * Welcome Block
  */
+#wpfooter {
+	font-family: 'Public Sans', sans-serif;
+}
+
 #footer-thankyou a {
 	vertical-align: -0.65em;
 }

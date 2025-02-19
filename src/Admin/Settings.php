@@ -384,7 +384,7 @@ class Settings extends Admin {
 		$this->generate_tab(
 			self::OMGF_SETTINGS_FIELD_DETECTION,
 			'dashicons-search',
-			__( 'Detection Settings', 'host-webfonts-local' )
+			__( 'Detection (deprecated)', 'host-webfonts-local' )
 		);
 	}
 
@@ -395,7 +395,7 @@ class Settings extends Admin {
 		$this->generate_tab(
 			self::OMGF_SETTINGS_FIELD_ADVANCED,
 			'dashicons-admin-settings',
-			__( 'Advanced Settings', 'host-webfonts-local' )
+			__( 'Advanced', 'host-webfonts-local' )
 		);
 	}
 

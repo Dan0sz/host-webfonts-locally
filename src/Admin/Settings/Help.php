@@ -26,9 +26,6 @@ class Help extends Builder {
 	public function __construct() {
 		$this->title = __( 'Help & Documentation', 'host-webfonts-local' );
 
-		// Title
-		add_action( 'omgf_help_content', [ $this, 'do_title' ], 10 );
-
 		// Content
 		add_action( 'omgf_help_content', [ $this, 'do_content' ], 20 );
 	}
@@ -40,7 +37,7 @@ class Help extends Builder {
 			apply_filters( 'omgf_help_tab_plugin_url', 'https://wordpress.org/plugins/host-webfonts-local/' )
 		);
 		?>
-		<div class="postbox">
+		<div class="omgf-help-section postbox">
 			<div class="content">
 				<h2><?php echo sprintf(
 						__( 'Thank you for using %s!', 'host-webfonts-local' ),
@@ -139,8 +136,7 @@ class Help extends Builder {
 																			   ); ?>"
 																			   src="<?php echo plugin_dir_url(
 																					   OMGF_PLUGIN_FILE
-																				   ) .
-																				   'assets/images/logo.png'; ?>"/></a>
+																				   ) . 'assets/images/logo.png'; ?>"/></a>
 						</p>
 					</div>
 				</div>

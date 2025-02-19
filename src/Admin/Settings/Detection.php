@@ -28,8 +28,6 @@ class Detection extends Builder {
 		$this->title = __( 'Google Fonts Detection Settings (deprecated)', 'host-webfonts-local' );
 
 		// Open
-		add_action( 'omgf_detection_settings_content', [ $this, 'do_title' ], 10 );
-		add_action( 'omgf_detection_settings_content', [ $this, 'do_description' ], 15 );
 		add_action( 'omgf_detection_settings_content', [ $this, 'do_before' ], 20 );
 
 		// Settings
@@ -38,19 +36,6 @@ class Detection extends Builder {
 
 		// Close
 		add_action( 'omgf_detection_settings_content', [ $this, 'do_after' ], 100 );
-	}
-
-	/**
-	 * Description
-	 */
-	public function do_description() { ?>
-		<p>
-			<?php echo __(
-				'These settings used to affect the detection mechanism and in which areas it searches (i.e. how deep it digs) to find Google Fonts. This tab will be removed in upcoming updates.',
-				'host-webfonts-local'
-			); ?>
-		</p>
-		<?php
 	}
 
 	/**

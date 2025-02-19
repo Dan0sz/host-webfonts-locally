@@ -33,8 +33,6 @@ class Advanced extends Builder {
 		$this->title = __( 'Advanced Settings', 'host-webfonts-local' );
 
 		// Open
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_title' ], 10 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_description' ], 15 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_before' ], 20 );
 
 		// Settings
@@ -53,20 +51,6 @@ class Advanced extends Builder {
 
 		// Close
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_after' ], 200 );
-	}
-
-	/**
-	 * Description
-	 */
-	public function do_description() {
-		?>
-		<p>
-			<?php echo __(
-				'Use these settings to make OMGF work with your specific configuration.',
-				'host-webfonts-local'
-			); ?>
-		</p>
-		<?php
 	}
 
 	/**
