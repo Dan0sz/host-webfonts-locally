@@ -222,7 +222,8 @@ class Settings extends Admin {
 		add_action( 'omgf_settings_tab', [ $this, 'optimize_fonts_tab' ], 0 );
 		add_action( 'omgf_settings_tab', [ $this, 'detection_settings_tab' ], 1 );
 		add_action( 'omgf_settings_tab', [ $this, 'advanced_settings_tab' ], 2 );
-		add_action( 'omgf_settings_tab', [ $this, 'help_tab' ], 3 );
+		// The Manage License tab is inserted at position 3.
+		add_action( 'omgf_settings_tab', [ $this, 'help_tab' ], 4 );
 
 		// Content
 		add_action( 'omgf_settings_content', [ $this, 'optimize_fonts_content' ], 0 );
