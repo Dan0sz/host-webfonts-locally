@@ -19,7 +19,7 @@
 @import url('omgf-admin-google-fonts.min.css');
 
 #wpwrap {
-	background-color: #fff;
+	background-color: rgb(248 250 252 / var(--tw-bg-opacity));
 }
 
 .omgf {
@@ -86,7 +86,7 @@
 
 .omgf h2.omgf-nav a {
 	border: 0;
-	background-color: #fff;
+	background-color: transparent;
 	font-weight: 500;
 }
 
