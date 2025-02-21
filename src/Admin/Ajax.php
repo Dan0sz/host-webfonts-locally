@@ -32,8 +32,10 @@ class Ajax {
 	}
 
 	/**
-	 * @since v5.4.0 Remove notice from dashboard and return new HTML.
+	 * @since              v5.4.0 Remove notice from dashboard and return new HTML.
 	 * @return void Valid HTML.
+	 *
+	 * @codeCoverageIgnore because code execution is killed at the end.
 	 */
 	public function hide_notice() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -212,6 +214,8 @@ class Ajax {
 
 	/**
 	 * Returns the debug log file as a download prompt to the browser (if it exists)
+	 *
+	 * @codeCoverageIgnore because it kills code execution at the end.
 	 */
 	public function download_log() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -247,6 +251,17 @@ class Ajax {
 		wp_die();
 	}
 
+	/**
+	 * Deletes the OMGF log file if it exists.
+	 *
+	 * This method performs necessary permission checks and nonce verification.
+	 * If the log file is successfully deleted, a success message is added to settings errors.
+	 * The function is designed to terminate the request after execution.
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore because it kills code execution at the end.
+	 */
 	public function delete_log() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
