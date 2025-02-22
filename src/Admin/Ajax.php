@@ -41,7 +41,7 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'Hmmm, are you lost?', 'host-webfonts-local' ) );
+			wp_die( __( 'Hmmm, are you lost?', 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		$warning_id     = $_POST[ 'warning_id' ];
@@ -65,7 +65,7 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		$handle                   = $_POST[ 'handle' ];
@@ -121,7 +121,7 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		add_filter(
@@ -195,7 +195,7 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		try {
@@ -223,7 +223,7 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		$filename = OMGF::log_file();
@@ -268,7 +268,7 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		$filename = OMGF::log_file();
