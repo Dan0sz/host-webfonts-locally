@@ -297,7 +297,7 @@ class Admin {
 
 		foreach ( $array1 as $key => $value ) {
 			if ( is_array( $value ) ) {
-				$diff = $this->array_diff( $value, $array2[ $key ] );
+				$diff = empty( $array2[ $key ] ) ? [] : $this->array_diff( $value, $array2[ $key ] );
 
 				if ( $diff ) {
 					break;
