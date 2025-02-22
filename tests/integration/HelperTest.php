@@ -43,6 +43,8 @@ class HelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testPreloadedFonts() {
+		OMGF::delete_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
+
 		$preloads = OMGF::preloaded_fonts();
 
 		$this->assertEmpty( $preloads );
