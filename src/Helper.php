@@ -515,7 +515,7 @@ class Helper {
 		}
 
 		if ( wp_make_link_relative( $url ) === $url ) {
-			$url = home_url( $url );
+			$url = home_url( $url ); // @codeCoverageIgnore
 		}
 
 		$args = apply_filters(

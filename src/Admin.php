@@ -130,6 +130,8 @@ class Admin {
 	 * Enqueues the necessary JS and CSS and passes options as a JS object.
 	 *
 	 * @param $hook
+	 *
+	 * @codeCoverageIgnore because we don't want to test core functions.
 	 */
 	public function enqueue_admin_scripts( $hook ) {
 		if ( $hook == 'settings_page_' . Settings::OMGF_ADMIN_PAGE ) {

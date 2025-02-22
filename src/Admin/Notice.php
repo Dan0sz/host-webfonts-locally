@@ -17,7 +17,7 @@
 namespace OMGF\Admin;
 
 class Notice {
-	const OMGF_ADMIN_NOTICE_TRANSIENT = 'omgf_admin_notice';
+	const OMGF_ADMIN_NOTICE_TRANSIENT  = 'omgf_admin_notice';
 
 	const OMGF_ADMIN_NOTICE_EXPIRATION = 60;
 
@@ -79,7 +79,7 @@ class Notice {
 
 			foreach ( $admin_notices as $screen => $notice ) {
 				if ( ! defined( 'DAAN_DOING_TESTS' ) && $current_screen->id != $screen && $screen != 'all' ) {
-					continue;
+					continue; // @codeCoverageIgnore
 				}
 
 				foreach ( $notice as $type => $message ) {

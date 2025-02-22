@@ -42,7 +42,7 @@ class Run {
 		$front_html = $this->get_front_html( get_home_url() );
 
 		if ( is_wp_error( $front_html ) || wp_remote_retrieve_response_code( $front_html ) != 200 ) {
-			$this->frontend_fetch_failed( $front_html );
+			$this->frontend_fetch_failed( $front_html ); // @codeCoverageIgnore
 		} else {
 			$this->optimization_succeeded();
 		}
@@ -160,7 +160,7 @@ class Run {
 		$break = false;
 
 		if ( empty( $diff ) ) {
-			$break = true;
+			$break = true; // @codeCoverageIgnore
 		}
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ) {
