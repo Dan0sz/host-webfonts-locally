@@ -23,12 +23,20 @@
 }
 
 .omgf {
-	font-family: 'Public Sans', sans-serif;
+	font-family: 'Public Sans', Arial, sans-serif;
 	max-width: 1350px;
 }
 
+.omgf h1 .pro {
+	background-color: #00adda;
+	padding: 0 5px 0 6px;
+	border-radius: 5px;
+	text-transform: uppercase;
+	color: #fff;
+}
+
 .omgf h1 {
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Poppins', Verdana, sans-serif;
 	font-weight: 800;
 }
 
@@ -37,7 +45,7 @@
 .omgf h4,
 .omgf h5,
 .omgf h6 {
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Poppins', Verdana, sans-serif;
 	font-weight: 500;
 }
 
@@ -298,6 +306,7 @@
 
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody th {
 	font-family: Poppins, sans-serif;
+	font-weight: 600;
 	padding: 9px 0 6px 0;
 	width: 40%;
 }
@@ -380,7 +389,7 @@
 	left: 100%;
 	z-index: 10000;
 	background-color: rgba(0, 0, 0, 0.75);
-	font-family: 'Public Sans', sans-serif;
+	font-family: 'Public Sans', Arial, sans-serif;
 	font-size: 0.8em;
 	color: #fff;
 	line-height: 1.5;
@@ -483,7 +492,7 @@
 	border: 0;
 	border-radius: 10px;
 	padding: 7px 20px;
-	font-family: Poppins, sans-serif;
+	font-family: Poppins, Verdana, sans-serif;
 	font-weight: 500;
 }
 
@@ -511,7 +520,7 @@
  * Welcome Block
  */
 #wpfooter {
-	font-family: 'Public Sans', sans-serif;
+	font-family: 'Public Sans', Arial, sans-serif;
 }
 
 #footer-thankyou a {
