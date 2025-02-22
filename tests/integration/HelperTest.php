@@ -43,8 +43,6 @@ class HelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testPreloadedFonts() {
-		add_filter( 'omgf_setting_preload_fonts', [ $this, 'addPreloadFonts' ] );
-
 		global $wp_filter;
 
 		// For some reason this fails on Github.
