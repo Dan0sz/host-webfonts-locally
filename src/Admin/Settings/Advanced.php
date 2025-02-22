@@ -30,8 +30,6 @@ class Advanced extends Builder {
 	public function __construct() {
 		parent::__construct();
 
-		$this->title = __( 'Advanced Settings', 'host-webfonts-local' );
-
 		// Open
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_before' ], 20 );
 
