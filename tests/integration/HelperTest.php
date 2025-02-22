@@ -49,6 +49,8 @@ class HelperTest extends TestCase {
 
 		$preloads = OMGF::preloaded_fonts();
 
+		print_r( $preloads );
+
 		$this->assertEmpty( $preloads );
 		$this->assertIsArray( $preloads );
 	}
