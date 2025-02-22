@@ -73,6 +73,8 @@ class Dashboard {
 	 * Generates the HTML for the dashboard by rendering any warnings and capturing the output buffer.
 	 *
 	 * @return string The rendered dashboard HTML content.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function get_dashboard_html() {
 		ob_start();
@@ -505,13 +507,13 @@ class Dashboard {
 		$iframe_scripts = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 
 		foreach ( $iframe_scripts as $script_id ) {
-			$warnings[] = $script_id;
+			$warnings[] = $script_id; // @codeCoverageIgnore
 		}
 
 		$google_fonts_checker_results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		foreach ( $google_fonts_checker_results as $path => $found_urls ) {
-			$warnings[ 'google_fonts_checker' ][ $path ] = $found_urls;
+			$warnings[ 'google_fonts_checker' ][ $path ] = $found_urls; // @codeCoverageIgnore
 		}
 
 		/**

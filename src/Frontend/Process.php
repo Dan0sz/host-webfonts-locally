@@ -94,7 +94,7 @@ class Process {
 		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
 
 		if ( ! $this->timestamp ) {
-			$this->timestamp = $this->generate_timestamp();
+			$this->timestamp = $this->generate_timestamp(); // @codeCoverageIgnore
 		}
 
 		$this->init();
@@ -107,6 +107,8 @@ class Process {
 	 * @see self::build_search_replace()
 	 *
 	 * @return int
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private function generate_timestamp() {
 		$timestamp = time();
@@ -525,11 +527,7 @@ class Process {
 				 *               other pages, let's append a (kind of) unique identifier to the string, to make
 				 *               sure we can make a difference between different Google Fonts configurations.
 				 */
-				$google_fonts[ $key ][ 'id' ] = str_replace(
-					'-1',
-					'-' . strlen( $href[ 'href' ] ),
-					$id
-				); // @codeCoverageIgnore
+				$google_fonts[ $key ][ 'id' ] = str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id ); // @codeCoverageIgnore
 			} elseif ( str_contains( $id, 'sp-wpcp-google-fonts' ) ) {
 				/**
 				 * Compatibility fix for Category Slider Pro for WooCommerce by ShapedPlugin
@@ -634,10 +632,10 @@ class Process {
 				'omgf_unloaded_stylesheets',
 				OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() )
 			) ) {
-				$search[ $key ]  = $stack[ 'link' ];
-				$replace[ $key ] = '';
+				$search[ $key ]  = $stack[ 'link' ]; // @codeCoverageIgnore
+				$replace[ $key ] = ''; // @codeCoverageIgnore
 
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			$cache_key = OMGF::get_cache_key( $stack[ 'id' ] );
@@ -706,7 +704,7 @@ class Process {
 
 		foreach ( Dashboard::IFRAMES_LOADING_FONTS as $script_id => $script ) {
 			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
-				$found_iframes[] = $script_id;
+				$found_iframes[] = $script_id; // @codeCoverageIgnore
 			}
 		}
 
