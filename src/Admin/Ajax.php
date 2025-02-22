@@ -68,17 +68,19 @@ class Ajax {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
 		}
 
-		$handle               = $_POST[ 'handle' ];
-		$optimized_fonts      = OMGF::admin_optimized_fonts();
-		$unloaded_fonts       = OMGF::unloaded_fonts();
-		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
-		$preloaded_fonts      = OMGF::preloaded_fonts();
-		$cache_keys           = OMGF::cache_keys();
+		$handle                   = $_POST[ 'handle' ];
+		$optimized_fonts          = OMGF::admin_optimized_fonts();
+		$optimized_fonts_frontend = OMGF::optimized_fonts();
+		$unloaded_fonts           = OMGF::unloaded_fonts();
+		$unloaded_stylesheets     = OMGF::unloaded_stylesheets();
+		$preloaded_fonts          = OMGF::preloaded_fonts();
+		$cache_keys               = OMGF::cache_keys();
 
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, $cache_keys, $handle, true );
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts, $handle );
+		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND, $optimized_fonts_frontend, $handle );
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, $unloaded_fonts, $handle );
-		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $unloaded_stylesheets, $handle );
+		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $unloaded_stylesheets, $handle, true );
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, $preloaded_fonts, $handle );
 	}
 
