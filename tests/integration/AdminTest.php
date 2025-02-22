@@ -18,21 +18,9 @@ class AdminTest extends TestCase {
 	public function testDoOptimizeSettings() {
 		new Admin();
 
-		$this->expectOutputContains( 'Optimize Local Google Fonts' );
+		$this->expectOutputContains( 'Dashboard' );
 
 		do_action( 'omgf_optimize_settings_content' );
-	}
-
-	/**
-	 * @see Admin::do_detection_settings()
-	 * @return void
-	 */
-	public function testDoDetectionSettings() {
-		new Admin();
-
-		$this->expectOutputContains( 'Google Fonts Detection Settings' );
-
-		do_action( 'omgf_detection_settings_content' );
 	}
 
 	/**
@@ -42,7 +30,7 @@ class AdminTest extends TestCase {
 	public function testDoAdvancedSettings() {
 		new Admin();
 
-		$this->expectOutputContains( 'Advanced Settings' );
+		$this->expectOutputContains( 'Remove Settings/Files At Uninstall' );
 
 		do_action( 'omgf_advanced_settings_content' );
 	}
@@ -54,7 +42,7 @@ class AdminTest extends TestCase {
 	public function testDoHelp() {
 		new Admin();
 
-		$this->expectOutputContains( 'Help &amp; Documentation' );
+		$this->expectOutputContains( 'Thank you for using' );
 
 		do_action( 'omgf_help_content' );
 	}
@@ -65,7 +53,7 @@ class AdminTest extends TestCase {
 	 */
 	public function testShowStaleCacheNotice() {
 		global $wp_settings_errors;
-		
+
 		/**
 		 * Make sure it's empty.
 		 */

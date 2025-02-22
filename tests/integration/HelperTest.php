@@ -106,6 +106,8 @@ class HelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetDefaultSettings() {
+		OMGF::delete_option( Settings::OMGF_ADV_SETTING_SUBSETS );
+
 		$subsets = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 
 		$this->assertEquals( [ 'latin', 'latin-ext' ], $subsets );

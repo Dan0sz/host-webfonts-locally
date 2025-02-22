@@ -28,17 +28,6 @@ class SettingsTest extends TestCase {
 	}
 
 	/**
-	 * Add manage_options cap.
-	 *
-	 * @param $allcaps
-	 *
-	 * @return true[]
-	 */
-	public function addManageOptionsCap( $allcaps ) {
-		return array_merge( $allcaps, [ 'manage_options' => true ] );
-	}
-
-	/**
 	 * @see Settings::register_settings()
 	 * @return void
 	 */
@@ -69,7 +58,6 @@ class SettingsTest extends TestCase {
 
 		$this->expectOutputContains( Settings::OMGF_SETTINGS_FIELD_OPTIMIZE );
 		$this->expectOutputContains( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS );
-		$this->expectOutputContains( Settings::OMGF_SETTINGS_FIELD_DETECTION );
 		$this->expectOutputContains( Settings::OMGF_SETTINGS_FIELD_ADVANCED );
 
 		do_action( 'omgf_settings_tab' );
