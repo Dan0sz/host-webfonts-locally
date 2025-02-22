@@ -94,6 +94,8 @@ class Actions {
 	 * This script is only loaded for logged in administrators, unless Enable Google Fonts checker is enabled.
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore we don't want to test core functions.
 	 */
 	public function maybe_add_frontend_assets() {
 		if ( apply_filters( 'omgf_do_not_load_frontend_assets', ! current_user_can( 'manage_options' ) ) ) {
