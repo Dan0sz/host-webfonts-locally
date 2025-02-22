@@ -18,6 +18,7 @@ namespace OMGF;
 
 use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
+use OMGF\Helper as OMGF;
 
 class Ajax {
 	/**
@@ -58,7 +59,9 @@ class Ajax {
 
 		$status = apply_filters( 'omgf_ajax_admin_bar_status', $status );
 
-		wp_send_json_success( $status );
+		if ( ! DAAN_DOING_TESTS ) {
+			wp_send_json_success( $status );
+		}
 	}
 
 	/**
@@ -79,7 +82,7 @@ class Ajax {
 
 		// We won't show results for more than 5 URLs on the Dashboard, to limit the size of the database entry.
 		if ( count( $stored_results ) > 5 ) {
-			return $stored_results;
+			return $stored_results; // @codeCoverageIgnore
 		}
 
 		// Store Google Fonts Checker results.
@@ -93,7 +96,7 @@ class Ajax {
 			}
 		}
 
-		update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
+		OMGF::update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
 		return $stored_results;
 	}
