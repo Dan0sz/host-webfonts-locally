@@ -43,13 +43,14 @@ class HelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testPreloadedFonts() {
-		OMGF::delete_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
+		global $wp_filter;
 
-		remove_filter( 'omgf_setting_preload_fonts', [ $this, 'addPreloadFonts' ] );
+		// For some reason this fails on Github.
+		if ( isset( $wp_filter[ 'omgf_setting_preload_fonts' ] ) ) {
+			unset( $wp_filter[ 'omgf_setting_preload_fonts' ] );
+		}
 
 		$preloads = OMGF::preloaded_fonts();
-
-		print_r( $preloads );
 
 		$this->assertEmpty( $preloads );
 		$this->assertIsArray( $preloads );
