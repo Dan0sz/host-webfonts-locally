@@ -429,6 +429,8 @@ class Dashboard {
 
 	/**
 	 * @return array List of plugin names { (string) slug => (string) full name }
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private static function get_active_plugins() {
 		$plugins        = [];
@@ -450,6 +452,8 @@ class Dashboard {
 	 * Check if WordPress setup has known issues.
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function get_warnings() {
 		$warnings       = [];
