@@ -36,6 +36,8 @@ class Actions {
 	 * Needs to run before admin_menu and admin_init.
 	 *
 	 * @action _admin_menu
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function init_admin() {
 		new Settings();
@@ -45,6 +47,8 @@ class Actions {
 	 * Initialize the Save & Optimize routine.
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function do_optimize() {
 		new Optimize();
