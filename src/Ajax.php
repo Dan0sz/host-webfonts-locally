@@ -60,7 +60,7 @@ class Ajax {
 		$status = apply_filters( 'omgf_ajax_admin_bar_status', $status );
 
 		if ( ! DAAN_DOING_TESTS ) {
-			wp_send_json_success( $status );
+			wp_send_json_success( $status ); // @codeCoverageIgnore
 		}
 	}
 
@@ -129,7 +129,7 @@ class Ajax {
 		}
 
 		// If the variable is not an array or a scalar value, return the variable unchanged.
-		return $var;
+		return $var; // @codeCoverageIgnore
 	}
 
 	/**

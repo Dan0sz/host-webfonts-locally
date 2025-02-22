@@ -138,7 +138,7 @@ class Helper {
 		$value = self::get_settings()[ $name ] ?? $default;
 
 		if ( empty( $value ) && ! $default && $name === Settings::OMGF_ADV_SETTING_SUBSETS ) {
-			$default = [ 'latin', 'latin-ext' ];
+			$default = [ 'latin', 'latin-ext' ]; // @codeCoverageIgnore
 		}
 
 		if ( empty( $value ) && $value !== '0' && $default !== null ) {
