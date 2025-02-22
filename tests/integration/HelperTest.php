@@ -45,6 +45,8 @@ class HelperTest extends TestCase {
 	public function testPreloadedFonts() {
 		OMGF::delete_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
 
+		remove_filter( 'omgf_setting_preload_fonts', [ $this, 'addPreloadFonts' ] );
+
 		$preloads = OMGF::preloaded_fonts();
 
 		$this->assertEmpty( $preloads );
