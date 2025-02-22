@@ -67,5 +67,7 @@ class AdminTest extends TestCase {
 		$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin-ext' ] ], [ 'subsets' => [ 'latin' ] ] );
 
 		$this->assertTrue( OMGF::get_option( Settings::OMGF_CACHE_IS_STALE ) );
+
+		OMGF::delete_option( Settings::OMGF_CACHE_IS_STALE );
 	}
 }

@@ -47,6 +47,8 @@ class RunTest extends TestCase {
 		 */
 		$this->assertCount( 2, OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
 
+		OMGF::delete_option( Settings::OMGF_ADV_SETTING_SUBSETS );
+
 		add_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsetsOnly' ] );
 		add_filter( 'omgf_available_filtered_subsets', '__return_empty_array' );
 
@@ -60,6 +62,8 @@ class RunTest extends TestCase {
 		 * Should have detected that none of the subsets were available, so it fallback to Latin.
 		 */
 		$this->assertCount( 1, OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
+
+		OMGF::delete_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 	}
 
 	public function returnFilteredSubsets() {
