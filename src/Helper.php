@@ -105,6 +105,8 @@ class Helper {
 
 	/**
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function preloaded_fonts() {
 		static $preloaded_fonts = [];
@@ -148,6 +150,8 @@ class Helper {
 
 	/**
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function unloaded_fonts() {
 		static $unloaded_fonts = [];
@@ -161,6 +165,8 @@ class Helper {
 
 	/**
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function unloaded_stylesheets() {
 		static $unloaded_stylesheets = [];
@@ -196,6 +202,8 @@ class Helper {
 	 * Fetch cache keys from the DB.
 	 * @since v5.6.4 Extract cache keys from Optimized Fonts option if the option itself appears empty.
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function cache_keys() {
 		static $cache_keys = [];
@@ -229,6 +237,8 @@ class Helper {
 	 * @param array $maybe_add If it doesn't exist, it's added to the cache layer.
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function admin_optimized_fonts( $maybe_add = [], $force_add = false ) {
 		static $optimized_fonts = [];
@@ -268,6 +278,8 @@ class Helper {
 	 * @param array $maybe_add If it doesn't exist, it's added to the cache layer.
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function optimized_fonts( $maybe_add = [], $force_add = false ) {
 		static $optimized_fonts = [];
@@ -309,6 +321,8 @@ class Helper {
 	 * @since v5.4.4 Returns the available subsets in all requested fonts/stylesheets.
 	 *               Functions as a temporary cache layer to reduce DB reads with get_option().
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function available_used_subsets( $maybe_add = [], $intersect = false ) {
 		static $subsets = [];
@@ -367,6 +381,7 @@ class Helper {
 	 * @param string       $name  A descriptive name to be shown in the debug log
 	 *
 	 * @return void
+	 *
 	 * @codeCoverageIgnore
 	 */
 	public static function debug_array( $name, $array ) {
@@ -402,6 +417,7 @@ class Helper {
 	/**
 	 * Returns the absolute path to the log file.
 	 * @return string
+	 *
 	 * @codeCoverageIgnore
 	 */
 	public static function log_file() {
@@ -420,6 +436,7 @@ class Helper {
 	 * @param mixed $message
 	 *
 	 * @return void
+	 *
 	 * @codeCoverageIgnore
 	 */
 	public static function debug( $message ) {

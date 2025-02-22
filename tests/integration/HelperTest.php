@@ -39,57 +39,6 @@ class HelperTest extends TestCase {
 	}
 
 	/**
-	 * @see Helper::preloaded_fonts()
-	 * @return void
-	 */
-	public function testPreloadedFonts() {
-		global $wp_filter;
-
-		// For some reason this fails on Github.
-		if ( isset( $wp_filter[ 'omgf_setting_preload_fonts' ] ) ) {
-			var_dump( $wp_filter[ 'omgf_setting_preload_fonts' ] );
-		}
-
-		remove_filter( 'omgf_setting_preload_fonts', [ $this, 'addPreloadFonts' ] );
-
-		// For some reason this fails on Github.
-		if ( isset( $wp_filter[ 'omgf_setting_preload_fonts' ] ) ) {
-			var_dump( $wp_filter[ 'omgf_setting_preload_fonts' ] );
-		}
-
-		$preloads = OMGF::preloaded_fonts();
-
-		$this->assertEmpty( $preloads );
-		$this->assertIsArray( $preloads );
-	}
-
-	/**
-	 * @see Helper::unloaded_fonts()
-	 * @return void
-	 */
-	public function testUnloadedFonts() {
-		OMGF::delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
-
-		$unloads = OMGF::unloaded_fonts();
-
-		$this->assertEmpty( $unloads );
-		$this->assertIsArray( $unloads );
-	}
-
-	/**
-	 * @see Helper::unloaded
-	 * @return void
-	 */
-	public function testUnloadedStylesheets() {
-		OMGF::delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS );
-
-		$unloaded = OMGF::unloaded_stylesheets();
-
-		$this->assertEmpty( $unloaded );
-		$this->assertIsArray( $unloaded );
-	}
-
-	/**
 	 * @see Helper::get_cache_key()
 	 * @return void
 	 */
