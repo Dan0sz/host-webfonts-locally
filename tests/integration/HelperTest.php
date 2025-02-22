@@ -56,6 +56,8 @@ class HelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testUnloadedFonts() {
+		OMGF::delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
+
 		$unloads = OMGF::unloaded_fonts();
 
 		$this->assertEmpty( $unloads );
@@ -67,6 +69,8 @@ class HelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testUnloadedStylesheets() {
+		OMGF::delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS );
+
 		$unloaded = OMGF::unloaded_stylesheets();
 
 		$this->assertEmpty( $unloaded );
