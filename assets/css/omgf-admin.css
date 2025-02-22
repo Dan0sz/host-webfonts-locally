@@ -407,6 +407,14 @@
 	font-weight: 600;
 }
 
+#omgf-advanced-settings-form {
+	background-color: #fff;
+	border-radius: 10px;
+	padding: 0 20px 20px;
+	border-top: 4px solid #00adda;
+	box-shadow: 0px 10px 20px 1px #ccc;
+}
+
 #omgf-help-form .postbox {
 	padding: 0 15px 5px;
 	border: 0;
