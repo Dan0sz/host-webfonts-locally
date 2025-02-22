@@ -67,6 +67,15 @@ class Optimize extends Builder {
 		?>
 		<div class="omgf-task-manager postbox">
 		<h3><?php echo __( 'Dashboard', 'host-webfonts-local' ); ?></h3>
+		<p>
+			<?php echo apply_filters(
+				'omgf_dashboard_intro',
+				__(
+					'OMGF replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href="#omgf-manage-optimized-fonts">Optimize Local Fonts</a>.',
+					'host-webfonts-local'
+				),
+			); ?>
+		</p>
 		<?php
 	}
 

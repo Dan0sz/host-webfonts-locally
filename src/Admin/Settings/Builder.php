@@ -44,7 +44,6 @@ class Builder {
 		$this->allowed_html = $allowedposttags;
 
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_promo' ] );
-		add_filter( 'omgf_detection_settings_content', [ $this, 'do_promo' ] );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo' ] );
 	}
 
@@ -109,8 +108,7 @@ class Builder {
 				<?php foreach ( $inputs as $option => $option_label ) : ?>
 					<label>
 						<input type="radio" <?php echo esc_attr(
-							str_contains( $option_label, '(Pro)' ) ?
-								apply_filters( $name . '_' . $option . '_setting_disabled', 'disabled' ) : ''
+							str_contains( $option_label, '(Pro)' ) ? apply_filters( $name . '_' . $option . '_setting_disabled', 'disabled' ) : ''
 						); ?> class="<?php echo esc_attr( str_replace( '_', '-', $name . '_' . $option ) ); ?>"
 							   name="omgf_settings[<?php echo esc_attr( $name ); ?>]"
 							   value="<?php echo esc_attr( $option ); ?>" <?php echo esc_attr(
@@ -156,8 +154,7 @@ class Builder {
 				<select name="omgf_settings[<?php echo esc_attr( $name ); ?>]<?php echo esc_attr(
 					$is_multiselect ? '[]' : ''
 				); ?>"
-						class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>" <?php echo $is_multiselect ?
-					'size="6" multiple="multiple"' : ''; ?> <?php echo apply_filters(
+						class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>" <?php echo $is_multiselect ? 'size="6" multiple="multiple"' : ''; ?> <?php echo apply_filters(
 					$name . '_setting_disabled',
 					$disabled
 				) ? 'disabled' : ''; ?>>

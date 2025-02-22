@@ -47,7 +47,6 @@ class Admin {
 		add_action( 'admin_notices', [ $this, 'print_notices' ] );
 
 		$this->do_optimize_settings();
-		$this->do_detection_settings();
 		$this->do_advanced_settings();
 		$this->do_help();
 		$this->maybe_handle_failed_premium_plugin_updates();
@@ -63,15 +62,6 @@ class Admin {
 	 */
 	private function do_optimize_settings() {
 		new Admin\Settings\Optimize();
-	}
-
-	/**
-	 * Detection Settings tab
-	 *
-	 * @return void
-	 */
-	private function do_detection_settings() {
-		new Admin\Settings\Detection();
 	}
 
 	/**

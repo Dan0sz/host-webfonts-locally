@@ -48,13 +48,11 @@ class Settings extends Admin {
 	/**
 	 * Settings Fields
 	 */
-	const OMGF_SETTINGS_FIELD_OPTIMIZE  = 'omgf-optimize-settings';
+	const OMGF_SETTINGS_FIELD_OPTIMIZE = 'omgf-optimize-settings';
 
-	const OMGF_SETTINGS_FIELD_DETECTION = 'omgf-detection-settings';
+	const OMGF_SETTINGS_FIELD_ADVANCED = 'omgf-advanced-settings';
 
-	const OMGF_SETTINGS_FIELD_ADVANCED  = 'omgf-advanced-settings';
-
-	const OMGF_SETTINGS_FIELD_HELP      = 'omgf-help';
+	const OMGF_SETTINGS_FIELD_HELP     = 'omgf-help';
 
 	/**
 	 * Option values for (multi)selects.
@@ -220,14 +218,12 @@ class Settings extends Admin {
 
 		// Tabs
 		add_action( 'omgf_settings_tab', [ $this, 'optimize_fonts_tab' ], 0 );
-		add_action( 'omgf_settings_tab', [ $this, 'detection_settings_tab' ], 1 );
 		add_action( 'omgf_settings_tab', [ $this, 'advanced_settings_tab' ], 2 );
 		// The Manage License tab is inserted at position 3.
 		add_action( 'omgf_settings_tab', [ $this, 'help_tab' ], 4 );
 
 		// Content
 		add_action( 'omgf_settings_content', [ $this, 'optimize_fonts_content' ], 0 );
-		add_action( 'omgf_settings_content', [ $this, 'detection_settings_content' ], 1 );
 		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 2 );
 		add_action( 'omgf_settings_content', [ $this, 'help_content' ], 3 );
 	}
@@ -256,20 +252,13 @@ class Settings extends Admin {
 		}
 		?>
 		<div class="wrap omgf">
-			<h1><?php echo apply_filters(
-					'omgf_settings_page_title',
-					__( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' )
-				); ?></h1>
-
-			<p>
-				<?php echo get_plugin_data( OMGF_PLUGIN_FILE )[ 'Description' ]; ?>
-			</p>
-
+			<h1>
+				<?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?>
+			</h1>
 			<div class="settings-column">
 				<h2 class="omgf-nav nav-tab-wrapper">
 					<?php do_action( 'omgf_settings_tab' ); ?>
 				</h2>
-
 				<?php do_action( 'omgf_settings_content' ); ?>
 			</div>
 		</div>
@@ -282,10 +271,7 @@ class Settings extends Admin {
 	 * @throws ReflectionException
 	 */
 	public function register_settings() {
-		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE &&
-			$this->active_tab !== self::OMGF_SETTINGS_FIELD_DETECTION &&
-			$this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED &&
-			$this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) {
+		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED && $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) {
 			$this->active_tab = apply_filters( 'omgf_admin_settings_active_tab', self::OMGF_SETTINGS_FIELD_OPTIMIZE );
 		}
 
@@ -308,9 +294,6 @@ class Settings extends Admin {
 		$constants  = apply_filters( 'omgf_settings_constants', $reflection->getConstants() );
 
 		switch ( $this->active_tab ) {
-			case ( self::OMGF_SETTINGS_FIELD_DETECTION ):
-				$needle = 'OMGF_DETECTION_SETTING_';
-				break;
 			case ( self::OMGF_SETTINGS_FIELD_ADVANCED ):
 				$needle = 'OMGF_ADV_SETTING_';
 				break;
@@ -376,17 +359,6 @@ class Settings extends Admin {
 	 */
 	private function generate_tab_link( $tab ) {
 		return admin_url( self::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS . "&tab=$tab" );
-	}
-
-	/**
-	 * Add Basic Settings Tab to Settings Screen.
-	 */
-	public function detection_settings_tab() {
-		$this->generate_tab(
-			self::OMGF_SETTINGS_FIELD_DETECTION,
-			'dashicons-search',
-			__( 'Detection (deprecated)', 'host-webfonts-local' )
-		);
 	}
 
 	/**
@@ -466,13 +438,6 @@ class Settings extends Admin {
 			<?php endif; ?>
 		</form>
 		<?php
-	}
-
-	/**
-	 * Render Basic Settings content
-	 */
-	public function detection_settings_content() {
-		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_DETECTION );
 	}
 
 	/**
