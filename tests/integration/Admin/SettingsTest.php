@@ -37,7 +37,7 @@ class SettingsTest extends TestCase {
 		$class = new Settings();
 		$class->register_settings();
 
-		$this->assertNotEmpty( $wp_registered_settings[ 'omgf_settings[auto_subsets]' ] );
+		$this->assertNotEmpty( $wp_registered_settings[ 'omgf_settings[display_option]' ] );
 
 		$_GET[ 'tab' ] = Settings::OMGF_SETTINGS_FIELD_ADVANCED;
 
