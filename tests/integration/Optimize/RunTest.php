@@ -35,13 +35,16 @@ class RunTest extends TestCase {
 	public function testAutoConfigSubsets() {
 		add_filter( 'omgf_setting_auto_subsets', [ $this, 'returnOn' ] );
 		add_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsets' ] );
-		add_filter( 'omgf_available_filtered_subsets', [ $this, 'returnLatinExt' ] );
+		add_filter( 'omgf_available_filtered_subsets', [ $this, 'returnFilteredSubsets' ] );
 
 		new Run();
 
 		remove_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsets' ] );
-		remove_filter( 'omgf_available_filtered_subsets', [ $this, 'returnLatinExt' ] );
+		remove_filter( 'omgf_available_filtered_subsets', [ $this, 'returnFilteredSubsets' ] );
 
+		/**
+		 * Should have filtered the exotic subsets and only contain latin and latin-ext.
+		 */
 		$this->assertCount( 2, OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
 
 		add_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsetsOnly' ] );
@@ -53,11 +56,14 @@ class RunTest extends TestCase {
 		remove_filter( 'omgf_available_filtered_subsets', '__return_empty_array' );
 		remove_filter( 'omgf_setting_auto_subsets', [ $this, 'returnOn' ] );
 
+		/**
+		 * Should have detected that none of the subsets were available, so it fallback to Latin.
+		 */
 		$this->assertCount( 1, OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
 	}
 
-	public function returnLatinExt() {
-		return [ 'latin', 'latin-ext' ];
+	public function returnFilteredSubsets() {
+		return [ 'handle' => [ 'latin', 'latin-ext' ] ];
 	}
 
 	public function returnExoticSubsets() {
