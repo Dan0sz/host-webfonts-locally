@@ -243,11 +243,12 @@ class Dashboard {
 						<p>
 							<?php echo apply_filters(
 								'omgf_dashboard_success_message',
-								esc_html__(
+								wp_kses(
 									sprintf(
 										__( 'Cool! %s is successfully hosting all Google Fonts locally.', 'host-webfonts-local' ),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
-									)
+									),
+									'post'
 								)
 							); ?>
 						</p>
@@ -261,14 +262,15 @@ class Dashboard {
 								'host-webfonts-local'
 							); ?></h4>
 						<p>
-							<?php echo esc_html(
+							<?php echo wp_kses(
 								sprintf(
 									__(
 										'Great job! Your configuration allows %s to run smoothly.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
-								)
+								),
+								'post'
 							); ?>
 						</p>
 					</div>
