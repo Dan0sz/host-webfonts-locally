@@ -102,6 +102,11 @@ class Actions {
 			return;
 		}
 
+		// These scripts should never load in admin and/or preview environments (frontend URLs never contain .php)
+		if ( is_admin() || ! empty( $_SERVER[ 'REQUEST_URI' ] ) && str_contains( $_SERVER[ 'REQUEST_URI' ], '.php' ) ) {
+			return;
+		}
+
 		$file_ext = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$js_file  = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/js/omgf-frontend$file_ext.js";
 
