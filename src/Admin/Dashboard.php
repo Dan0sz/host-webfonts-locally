@@ -531,4 +531,81 @@ class Dashboard {
 
 		return $warnings;
 	}
+
+	public static function render_status() {
+		$stylesheets          = OMGF::admin_optimized_fonts();
+		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
+		?>
+		<tr valign="top">
+			<th scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
+			<td class="task-manager-row">
+				<?php if ( ! empty( $stylesheets ) ) : ?>
+					<ul>
+						<?php foreach ( $stylesheets as $handle => $contents ) : ?>
+							<?php
+							$cache_key = OMGF::get_cache_key( $handle );
+
+							if ( ! $cache_key ) {
+								$cache_key = $handle;
+							}
+
+							$downloaded = file_exists( OMGF_UPLOAD_DIR . "/$cache_key/$cache_key.css" );
+							$unloaded   = in_array( $handle, $unloaded_stylesheets );
+							?>
+							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ); ?>">
+								<strong><?php echo $handle; ?></strong> <em>(<?php echo sprintf(
+										__( 'stored in %s', 'host-webfonts-local' ),
+										str_replace( ABSPATH, '', OMGF_UPLOAD_DIR . "/$cache_key" )
+									); ?>)</em>
+								<?php
+								if ( ! $unloaded ) :
+									?>
+									<a href="<?php echo $downloaded ? "#$handle" : '#'; ?>"
+									   data-handle="<?php echo esc_attr( $handle ); ?>"
+									   class="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>"
+									   title="<?php echo sprintf(
+										   __( 'Manage %s', 'host-webfonts-local' ),
+										   $cache_key
+									   ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) : _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
+							</li>
+						<?php endforeach; ?>
+						<?php if ( OMGF_CACHE_IS_STALE ) : ?>
+							<li class="stale-cache-notice"><em><?php echo __(
+										'The stylesheets in the cache do not reflect the current settings. Either <a href="#" id="omgf-cache-refresh">refresh</a> the cache (and maintain settings) or <a href="#" id="omgf-cache-flush">flush</a> it and start over.',
+										'host-webfonts-local'
+									); ?></em></li>
+						<?php endif; ?>
+					</ul>
+				<?php else : ?>
+					<p>
+						<?php echo __( 'No stylesheets in cache.', 'host-webfonts-local' ); ?>
+					</p>
+				<?php endif; ?>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"><?php _e( 'Legend', 'host-webfonts-local' ); ?></th>
+			<td class="task-manager-row">
+				<ul>
+					<li class="found"> <?php _e(
+							'<strong>Found</strong>. Stylesheet exists on your file system.',
+							'host-webfonts-local'
+						); ?></li>
+					<li class="unloaded"> <?php _e(
+							'<strong>Unloaded</strong>. Stylesheet exists, but is not loaded in the frontend.',
+							'host-webfonts-local'
+						); ?></li>
+					<li class="stale"> <?php _e(
+							'<strong>Stale</strong>. Settings were changed and the stylesheet\'s content do not reflect those changes.',
+							'host-webfonts-local'
+						); ?></li>
+					<li class="not-found"> <?php _e(
+							'<strong>Not Found</strong>. Stylesheet was detected once, but is missing now. You can safely remove it.',
+							'host-webfonts-local'
+						); ?></li>
+				</ul>
+			</td>
+		</tr>
+		<?php
+	}
 }

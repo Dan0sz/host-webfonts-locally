@@ -37,14 +37,17 @@ class Optimize extends Builder {
 
 		$this->title = __( 'Optimize Local Google Fonts', 'host-webfonts-local' );
 
-		add_action( 'omgf_optimize_settings_content', [ $this, 'open_task_manager' ], 23 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 24 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'task_manager_status' ], 25 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 26 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 27 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'open_task_manager' ], 20 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 22 );
+		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_warnings' ], 24 );
+		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_status' ], 26 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_google_fonts_checker' ], 28 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_cache_management' ], 30 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 30 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 31 );
 
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 30 );
-		//		add_action( 'omgf_optimize_settings_content', [ $this, 'do_inline_option' ], 40 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 32 );
+		// add_action( 'omgf_optimize_settings_content', [ $this, 'do_inline_option' ], 40 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 50 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 60 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 100 );
@@ -79,84 +82,8 @@ class Optimize extends Builder {
 		<?php
 	}
 
-	/**
-	 * @return void
-	 */
-	public function task_manager_status() {
-		$stylesheets          = OMGF::admin_optimized_fonts();
-		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
+	public function do_google_fonts_checker() {
 		?>
-		<?php Dashboard::render_warnings(); ?>
-		<tr valign="top">
-			<th scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
-			<td class="task-manager-row">
-				<?php if ( ! empty( $stylesheets ) ) : ?>
-					<ul>
-						<?php foreach ( $stylesheets as $handle => $contents ) : ?>
-							<?php
-							$cache_key = OMGF::get_cache_key( $handle );
-
-							if ( ! $cache_key ) {
-								$cache_key = $handle;
-							}
-
-							$downloaded = file_exists( OMGF_UPLOAD_DIR . "/$cache_key/$cache_key.css" );
-							$unloaded   = in_array( $handle, $unloaded_stylesheets );
-							?>
-							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ); ?>">
-								<strong><?php echo $handle; ?></strong> <em>(<?php echo sprintf(
-										__( 'stored in %s', 'host-webfonts-local' ),
-										str_replace( ABSPATH, '', OMGF_UPLOAD_DIR . "/$cache_key" )
-									); ?>)</em>
-								<?php
-								if ( ! $unloaded ) :
-									?>
-									<a href="<?php echo $downloaded ? "#$handle" : '#'; ?>"
-									   data-handle="<?php echo esc_attr( $handle ); ?>"
-									   class="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>"
-									   title="<?php echo sprintf(
-										   __( 'Manage %s', 'host-webfonts-local' ),
-										   $cache_key
-									   ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) : _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
-							</li>
-						<?php endforeach; ?>
-						<?php if ( OMGF_CACHE_IS_STALE ) : ?>
-							<li class="stale-cache-notice"><em><?php echo __(
-										'The stylesheets in the cache do not reflect the current settings. Either <a href="#" id="omgf-cache-refresh">refresh</a> the cache (and maintain settings) or <a href="#" id="omgf-cache-flush">flush</a> it and start over.',
-										'host-webfonts-local'
-									); ?></em></li>
-						<?php endif; ?>
-					</ul>
-				<?php else : ?>
-					<p>
-						<?php echo __( 'No stylesheets in cache.', 'host-webfonts-local' ); ?>
-					</p>
-				<?php endif; ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row"><?php _e( 'Legend', 'host-webfonts-local' ); ?></th>
-			<td class="task-manager-row">
-				<ul>
-					<li class="found"> <?php _e(
-							'<strong>Found</strong>. Stylesheet exists on your file system.',
-							'host-webfonts-local'
-						); ?></li>
-					<li class="unloaded"> <?php _e(
-							'<strong>Unloaded</strong>. Stylesheet exists, but is not loaded in the frontend.',
-							'host-webfonts-local'
-						); ?></li>
-					<li class="stale"> <?php _e(
-							'<strong>Stale</strong>. Settings were changed and the stylesheet\'s content do not reflect those changes.',
-							'host-webfonts-local'
-						); ?></li>
-					<li class="not-found"> <?php _e(
-							'<strong>Not Found</strong>. Stylesheet was detected once, but is missing now. You can safely remove it.',
-							'host-webfonts-local'
-						); ?></li>
-				</ul>
-			</td>
-		</tr>
 		<tr>
 			<?php
 			$this->do_checkbox(
@@ -180,7 +107,7 @@ class Optimize extends Builder {
 					'30'     => __( '1 Month', 'host-webfonts-local' ),
 					'always' => __( 'Always', 'host-webfonts-local' ),
 				],
-				OMGF::get_option( 'google_fonts_checker' ),
+				OMGF::get_option( 'checker_timeout', 7 ),
 				sprintf(
 					__(
 						'When enabled, the Google Fonts Checker loads a tiny JS snippet (~2KB) in your frontend. While the impact is barely noticeable, it\'s advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s',
@@ -191,6 +118,14 @@ class Optimize extends Builder {
 				false, ! defined( 'OMGF_PRO_ACTIVE' ) || empty( OMGF::get_option( 'google_fonts_checker' ) )
 			); ?>
 		</tr>
+		<?php
+	}
+
+	/**
+	 * @return void
+	 */
+	public function do_cache_management() {
+		?>
 		<tr>
 			<th scope="row"><?php _e( 'Manage Cache', 'host-webfonts-local' ); ?></th>
 			<td class="task-manager-row">
