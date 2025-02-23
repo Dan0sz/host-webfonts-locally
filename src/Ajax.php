@@ -59,7 +59,7 @@ class Ajax {
 
 		$status = apply_filters( 'omgf_ajax_admin_bar_status', $status );
 
-		if ( ! DAAN_DOING_TESTS ) {
+		if ( ! defined( 'DAAN_DOING_TESTS' ) ) {
 			wp_send_json_success( $status ); // @codeCoverageIgnore
 		}
 	}
