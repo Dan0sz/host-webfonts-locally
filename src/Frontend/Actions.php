@@ -102,8 +102,7 @@ class Actions {
 			return;
 		}
 
-		// These scripts should never load in admin and/or preview environments (frontend URLs never contain .php)
-		if ( is_admin() || ! empty( $_SERVER[ 'REQUEST_URI' ] ) && str_contains( $_SERVER[ 'REQUEST_URI' ], '.php' ) ) {
+		if ( ! Process::should_start() ) {
 			return;
 		}
 

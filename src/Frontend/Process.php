@@ -44,9 +44,19 @@ class Process {
 	const RESOURCE_HINTS_ATTR  = [ 'dns-prefetch', 'preconnect', 'preload' ];
 
 	/**
+	 * Populates ?edit= parameter. To make sure OMGF doesn't run while editing posts.
+	 *
+	 * @var string[]
+	 */
+	public static $edit_actions = [
+		'edit',
+		'elementor',
+	];
+
+	/**
 	 * @var array $page_builders Array of keys set by page builders when they're displaying their previews.
 	 */
-	private $page_builders = [
+	public static $page_builders = [
 		'bt-beaverbuildertheme',
 		'ct_builder',
 		'elementor-preview',
@@ -58,16 +68,6 @@ class Process {
 		'tve',
 		'vc_action', // WP Bakery
 		'perfmatters', // Perfmatter's Frontend Script Manager.
-	];
-
-	/**
-	 * Populates ?edit= parameter. To make sure OMGF doesn't run while editing posts.
-	 *
-	 * @var string[]
-	 */
-	private $edit_actions = [
-		'edit',
-		'elementor',
 	];
 
 	/**
@@ -246,19 +246,32 @@ class Process {
 	 * @codeCoverageIgnore
 	 */
 	public function maybe_buffer_output() {
+		if ( ! self::should_start() ) {
+			return false;
+		}
+
+		do_action( 'omgf_frontend_process_before_ob_start' );
+
+		return ob_start( [ $this, 'return_buffer' ] );
+	}
+
+	/**
+	 * Should we start the buffer?
+	 *
+	 * @return bool
+	 */
+	public static function should_start() {
 		/**
 		 * Always run, if the omgf_optimize parameter (added by Save & Optimize) is set.
 		 */
 		if ( isset( $_GET[ 'omgf_optimize' ] ) ) {
-			do_action( 'omgf_frontend_process_before_ob_start' );
-
-			return ob_start( [ $this, 'return_buffer' ] );
+			return true;
 		}
 
 		/**
 		 * Make sure Page Builder previews don't get optimized content.
 		 */
-		foreach ( $this->page_builders as $page_builder ) {
+		foreach ( self::$page_builders as $page_builder ) {
 			if ( array_key_exists( $page_builder, $_GET ) ) {
 				return false;
 			}
@@ -268,7 +281,7 @@ class Process {
 		 * Post edit actions
 		 */
 		if ( array_key_exists( 'action', $_GET ) ) {
-			if ( in_array( $_GET[ 'action' ], $this->edit_actions, true ) ) {
+			if ( in_array( $_GET[ 'action' ], self::$edit_actions, true ) ) {
 				return false;
 			}
 		}
@@ -289,12 +302,7 @@ class Process {
 			return false;
 		}
 
-		do_action( 'omgf_frontend_process_before_ob_start' );
-
-		/**
-		 * Let's GO!
-		 */
-		ob_start( [ $this, 'return_buffer' ] );
+		return true;
 	}
 
 	/**
@@ -474,7 +482,7 @@ class Process {
 			preg_match( '/id=[\'"](?P<id>.*?)[\'"]/', $link, $id );
 
 			/**
-			 * @var string $id Fallback to empty string if no id attribute exists.
+			 * @var array $id Fallback to empty string if no id attribute exists.
 			 */
 			$id = $this->strip_css_tag( $id[ 'id' ] ?? '' );
 
@@ -500,6 +508,8 @@ class Process {
 			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
 			 *
 			 * @since v5.1.4
+			 *
+			 * @var string $id
 			 */
 			if ( ! $id ) {
 				$id = "$handle-" . strlen( $href[ 'href' ] );
