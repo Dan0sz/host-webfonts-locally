@@ -458,7 +458,7 @@
 }
 
 #omgf-help-form .postbox .column-container .column ul li:last-child {
-	margin-bottom: none;
+	margin-bottom: 0;
 }
 
 #omgf-help-form .postbox .column-container .column ul li a {
