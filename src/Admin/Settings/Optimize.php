@@ -131,13 +131,13 @@ class Optimize extends Builder {
 			<td class="task-manager-row">
 				<a id="omgf-empty" data-init="<?php echo Settings::OMGF_ADMIN_PAGE; ?>"
 				   data-nonce="<?php echo wp_create_nonce( Settings::OMGF_ADMIN_PAGE ); ?>"
-				   class="omgf-empty button-cancel"><?php _e(
+				   class="omgf-empty button button-cancel"><?php _e(
 						'Empty Cache',
 						'host-webfonts-local'
 					); ?></a>
 				<a id="omgf-refresh" data-init="<?php echo Settings::OMGF_ADMIN_PAGE; ?>"
 				   data-nonce="<?php echo wp_create_nonce( Settings::OMGF_ADMIN_PAGE ); ?>"
-				   class="omgf-refresh button-cancel"><?php _e(
+				   class="omgf-refresh button button-cancel"><?php _e(
 						'Refresh Cache (and maintain settings)',
 						'host-webfonts-local'
 					); ?></a>
