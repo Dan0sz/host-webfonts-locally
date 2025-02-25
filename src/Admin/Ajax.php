@@ -16,12 +16,7 @@
 
 namespace OMGF\Admin;
 
-use OMGF\Admin\Notice;
-use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
-use OMGF\TaskManager as TaskManager;
-
-defined( 'ABSPATH' ) || exit;
 
 class Ajax {
 	/**
@@ -37,14 +32,16 @@ class Ajax {
 	}
 
 	/**
-	 * @since v5.4.0 Remove notice from task manager and return new HTML.
-	 * @return string Valid HTML.
+	 * @since              v5.4.0 Remove notice from dashboard and return new HTML.
+	 * @return void Valid HTML.
+	 *
+	 * @codeCoverageIgnore because code execution is killed at the end.
 	 */
 	public function hide_notice() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'Hmmm, are you lost?', 'host-webfonts-local' ) );
+			wp_die( __( 'Hmmm, are you lost?', 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		$warning_id     = $_POST[ 'warning_id' ];
@@ -54,15 +51,11 @@ class Ajax {
 			$hidden_notices[] = $warning_id;
 		}
 
-		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices );
+		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices, 'off' );
 
-		ob_start();
+		$result = Dashboard::get_dashboard_html();
 
-		TaskManager::render_warnings();
-
-		$result = ob_get_clean();
-
-		return wp_send_json_success( $result );
+		wp_send_json_success( $result );
 	}
 
 	/**
@@ -72,20 +65,22 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
-		$handle               = $_POST[ 'handle' ];
-		$optimized_fonts      = OMGF::admin_optimized_fonts();
-		$unloaded_fonts       = OMGF::unloaded_fonts();
-		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
-		$preloaded_fonts      = OMGF::preloaded_fonts();
-		$cache_keys           = OMGF::cache_keys();
+		$handle                   = $_POST[ 'handle' ];
+		$optimized_fonts          = OMGF::admin_optimized_fonts();
+		$optimized_fonts_frontend = OMGF::optimized_fonts();
+		$unloaded_fonts           = OMGF::unloaded_fonts();
+		$unloaded_stylesheets     = OMGF::unloaded_stylesheets();
+		$preloaded_fonts          = OMGF::preloaded_fonts();
+		$cache_keys               = OMGF::cache_keys();
 
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, $cache_keys, $handle, true );
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $optimized_fonts, $handle );
+		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND, $optimized_fonts_frontend, $handle );
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, $unloaded_fonts, $handle );
-		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $unloaded_stylesheets, $handle );
+		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, $unloaded_stylesheets, $handle, true );
 		$this->maybe_unset( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, $preloaded_fonts, $handle );
 	}
 
@@ -126,7 +121,7 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		add_filter(
@@ -148,7 +143,7 @@ class Ajax {
 	}
 
 	/**
-	 * Empties the cache directory.
+	 * Empties all cache related entries in the database.
 	 *
 	 * @param string $initiator
 	 *
@@ -162,14 +157,15 @@ class Ajax {
 				'init'    => $initiator,
 				'exclude' => [],
 				'queue'   => [
+					Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS,
 					Settings::OMGF_AVAILABLE_USED_SUBSETS,
 					Settings::OMGF_CACHE_IS_STALE,
 					Settings::OMGF_CACHE_TIMESTAMP,
 					Settings::OMGF_FOUND_IFRAMES,
-					Settings::OMGF_HIDDEN_NOTICES,
 					Settings::OMGF_OPTIMIZE_HAS_RUN,
 					Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
 					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
+					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND,
 					Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
 					Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
 					Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS,
@@ -199,7 +195,7 @@ class Ajax {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		try {
@@ -220,12 +216,14 @@ class Ajax {
 
 	/**
 	 * Returns the debug log file as a download prompt to the browser (if it exists)
+	 *
+	 * @codeCoverageIgnore because it kills code execution at the end.
 	 */
 	public function download_log() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		$filename = OMGF::log_file();
@@ -255,11 +253,22 @@ class Ajax {
 		wp_die();
 	}
 
+	/**
+	 * Deletes the OMGF log file if it exists.
+	 *
+	 * This method performs necessary permission checks and nonce verification.
+	 * If the log file is successfully deleted, a success message is added to settings errors.
+	 * The function is designed to terminate the request after execution.
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore because it kills code execution at the end.
+	 */
 	public function delete_log() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
 		$filename = OMGF::log_file();
@@ -267,7 +276,12 @@ class Ajax {
 		if ( file_exists( $filename ) ) {
 			unlink( $filename );
 
-			add_settings_error( 'general', 'omgf-log-file-deleted', __( 'Log file successfully deleted', 'host-webfonts-local' ), 'success' );
+			add_settings_error(
+				'general',
+				'omgf-log-file-deleted',
+				__( 'Log file successfully deleted', 'host-webfonts-local' ),
+				'success'
+			);
 		}
 
 		wp_die();

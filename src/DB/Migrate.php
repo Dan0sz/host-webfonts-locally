@@ -19,8 +19,6 @@ namespace OMGF\DB;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */
