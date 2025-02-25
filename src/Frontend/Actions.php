@@ -102,7 +102,7 @@ class Actions {
 			return;
 		}
 
-		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) && str_contains( $_SERVER[ 'REQUEST_URI' ], '.php' ) || ! Process::should_start() ) {
+		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) && str_contains( esc_url_raw( $_SERVER[ 'REQUEST_URI' ] ), '.php' ) || ! Process::should_start() ) {
 			return;
 		}
 
