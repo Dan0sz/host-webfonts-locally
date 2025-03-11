@@ -97,7 +97,7 @@ class Advanced extends Builder {
 			'dtap', ! empty( OMGF::get_option( 'dtap', 'on' ) ),
 			sprintf(
 				__(
-					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production street. %s',
+					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production setup. %s',
 					'host-webfonts-local'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
@@ -207,7 +207,7 @@ class Advanced extends Builder {
 			Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ),
 			sprintf(
 				__(
-					'Disable the top menu links that give logged in administrators quick access to %s\'s settings and allow you to refresh its cache from the frontend. Re-running fonts optimizations for a page can still be done by appending <code>?omgf_optimize=1</code> to an URL.',
+					'This disables the admin bar menu item. When issues are found the menu item will still appear to notify you and will be disabled again once the issues are resolved.',
 					'host-webfonts-local'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' )

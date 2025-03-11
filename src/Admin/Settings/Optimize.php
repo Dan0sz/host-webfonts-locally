@@ -110,7 +110,7 @@ class Optimize extends Builder {
 				OMGF::get_option( 'checker_timeout', 7 ),
 				sprintf(
 					__(
-						'When enabled, the Google Fonts Checker loads a tiny JS snippet (~2KB) in your frontend. While the impact is barely noticeable, it\'s advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s',
+						'When enabled, the Google Fonts Checker loads a tiny snippet (<3KB) of JS code in your frontend. While the impact is barely noticeable, it\'s advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s',
 						'host-webfonts-local'
 					),
 					$this->promo
