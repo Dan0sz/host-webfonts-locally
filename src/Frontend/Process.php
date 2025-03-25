@@ -46,6 +46,15 @@ class Process {
 	const RESOURCE_HINTS_ATTR  = [ 'dns-prefetch', 'preconnect', 'preload' ];
 
 	/**
+	 * Post types that still trigger template_redirect.
+	 *
+	 * @var array
+	 */
+	public static $post_types = [
+		'tqb_quiz', // Thrive Quiz Builder
+	];
+
+	/**
 	 * @var array $page_builders Array of keys set by page builders when they're displaying their previews.
 	 */
 	private $page_builders = [
@@ -236,6 +245,15 @@ class Process {
 		 */
 		foreach ( $this->page_builders as $page_builder ) {
 			if ( array_key_exists( $page_builder, $_GET ) ) {
+				return false;
+			}
+		}
+
+		/**
+		 * Make sure editors in post types don't get optimized content.
+		 */
+		foreach ( self::$post_types as $post_type ) {
+			if ( array_key_exists( $post_type, $_GET ) ) {
 				return false;
 			}
 		}
