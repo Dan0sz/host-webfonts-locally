@@ -37,7 +37,7 @@ window.addEventListener('load', () => {
 		 */
 		filterGoogleFonts: () => {
 			let entries = window.performance.getEntries();
-			let google_fonts = entries.filter((entry) => entry.name.indexOf('/fonts.googleapis.com/css') > 0 || entry.name.indexOf('/fonts.gstatic.com/') > 0)
+			let google_fonts = entries.filter((entry) => entry.name.indexOf('/fonts.googleapis.com/css') > 0 || entry.name.indexOf('/fonts.googleapis.com/icon') > 0 || entry.name.indexOf('/fonts.gstatic.com/') > 0)
 
 			if (google_fonts.length === 0) {
 				return [];
