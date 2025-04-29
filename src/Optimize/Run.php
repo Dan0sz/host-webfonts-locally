@@ -227,15 +227,15 @@ class Run {
 				return;
 			}
 
+			/**
+			 * If detected fonts aren't available in any of the subsets that were selected, just set Used Subsets to Latin
+			 * to make sure nothing breaks.
+			 */
 			$diff = array_diff( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ), [ 'latin' ] );
 
-			if ( ! $break ) {
+			if ( ! $break && ! empty ( $diff ) ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Latin)', $diff );
 
-				/**
-				 * If detected fonts aren't available in any of the subsets that were selected, just set Used Subsets to Latin
-				 * to make sure nothing breaks.
-				 */
 				Notice::set_notice(
 					sprintf(
 						_n(
