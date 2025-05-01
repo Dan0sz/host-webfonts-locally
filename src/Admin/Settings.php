@@ -234,7 +234,7 @@ class Settings extends Admin {
 	public function create_menu() {
 		add_options_page(
 			'OMGF',
-			'Optimize Google Fonts',
+			'OMGF',
 			'manage_options',
 			self::OMGF_ADMIN_PAGE,
 			[ $this, 'create_settings_page' ]
