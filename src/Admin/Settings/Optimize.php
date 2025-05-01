@@ -74,7 +74,7 @@ class Optimize extends Builder {
 			<?php echo apply_filters(
 				'omgf_dashboard_intro',
 				__(
-					'OMGF replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href="#omgf-manage-optimized-fonts">Optimize Local Fonts</a>.',
+					'OMGF (Optimize My Google Fonts) automatically replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href="#omgf-manage-optimized-fonts">Optimize Local Fonts</a>.',
 					'host-webfonts-local'
 				),
 			); ?>
