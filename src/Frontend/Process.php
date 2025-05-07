@@ -44,6 +44,15 @@ class Process {
 	const RESOURCE_HINTS_ATTR  = [ 'dns-prefetch', 'preconnect', 'preload' ];
 
 	/**
+	 * Post types that still trigger template_redirect.
+	 *
+	 * @var array
+	 */
+	public static $post_types = [
+		'tqb_quiz', // Thrive Quiz Builder
+	];
+
+	/**
 	 * Populates ?edit= parameter. To make sure OMGF doesn't run while editing posts.
 	 *
 	 * @var string[]
@@ -262,7 +271,7 @@ class Process {
 	 */
 	public static function should_start() {
 		/**
-		 * Always run, if the omgf_optimize parameter (added by Save & Optimize) is set.
+		 * Always run if the omgf_optimize parameter (added by Save & Optimize) is set.
 		 */
 		if ( isset( $_GET[ 'omgf_optimize' ] ) ) {
 			return true;
@@ -273,6 +282,15 @@ class Process {
 		 */
 		foreach ( self::$page_builders as $page_builder ) {
 			if ( array_key_exists( $page_builder, $_GET ) ) {
+				return false;
+			}
+		}
+
+		/**
+		 * Make sure editors in post-types don't get optimized content.
+		 */
+		foreach ( self::$post_types as $post_type ) {
+			if ( array_key_exists( $post_type, $_GET ) ) {
 				return false;
 			}
 		}
