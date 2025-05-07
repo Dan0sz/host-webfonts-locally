@@ -16,8 +16,6 @@
 
 namespace OMGF\Admin;
 
-defined( 'ABSPATH' ) || exit;
-
 class Notice {
 	const OMGF_ADMIN_NOTICE_TRANSIENT  = 'omgf_admin_notice';
 
@@ -33,7 +31,13 @@ class Notice {
 	 * @param bool   $json
 	 * @param int    $code
 	 */
-	public static function set_notice( $message, $message_id = '', $type = 'success', $code = 200, $screen_id = 'all' ) {
+	public static function set_notice(
+		$message,
+		$message_id = '',
+		$type = 'success',
+		$code = 200,
+		$screen_id = 'all'
+	) {
 		self::$notices = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
 
 		if ( ! self::$notices ) {
@@ -75,7 +79,7 @@ class Notice {
 
 			foreach ( $admin_notices as $screen => $notice ) {
 				if ( ! defined( 'DAAN_DOING_TESTS' ) && $current_screen->id != $screen && $screen != 'all' ) {
-					continue;
+					continue; // @codeCoverageIgnore
 				}
 
 				foreach ( $notice as $type => $message ) {
