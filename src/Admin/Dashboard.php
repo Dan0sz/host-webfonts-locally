@@ -185,15 +185,17 @@ class Dashboard {
 							</p>
 						<?php endif; ?>
 						<ol>
-							<?php foreach ( $google_fonts_checker_results as $path => $urls ) : ?>
-								<?php
-								$href = OMGF::no_cache_optimize_url( $path );
-								$path = $path === '/' ? '/ (home)' : $path;
-								?>
-								<li><strong><a class="omgf-google-fonts-checker-result" href="<?php echo $href; ?>" data-nonce="<?php echo $nonce; ?>" target="_blank"><?php echo $path; ?></a></strong></li>
+							<?php foreach ( $google_fonts_checker_results as $url => $paths ) : ?>
+								<li><strong><?php echo $url; ?></strong> <?php _e( 'was found on:', 'host-webfonts-local' ); ?></li>
 								<ul>
-									<?php foreach ( $urls as $url ) : ?>
-										<li><?php echo $url; ?></li>
+									<?php foreach ( $paths as $path ) : ?>
+										<li>
+											<?php
+											$href = OMGF::no_cache_optimize_url( $path );
+											$path = $path === '/' ? '/ (home)' : $path;
+											?>
+											<a class="omgf-google-fonts-checker-result" href="<?php echo $href; ?>" data-nonce="<?php echo $nonce; ?>"><?php echo $path; ?></a>
+										</li>
 									<?php endforeach; ?>
 								</ul>
 							<?php endforeach; ?>
@@ -208,12 +210,12 @@ class Dashboard {
 					</div>
 				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && ! OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
 					<div class="task-manager-notice info">
-						<h4><?php echo esc_html__( 'Let\'s get started by running your first Google Fonts optimization.', 'host-webfonts-local' ); ?></h4>
+						<h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
 						<p>
 							<?php echo wp_kses(
 								sprintf(
 									__(
-										'Hit the <strong>Save & Optimize</strong> at the bottom of this page to run the Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can\'t detect and optimize automatically.',
+										'Hit the <strong>Save & Optimize</strong> at the bottom of this page to run a Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can\'t detect and optimize automatically.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
@@ -229,7 +231,7 @@ class Dashboard {
 							<?php echo wp_kses(
 								sprintf(
 									__(
-										'%s isn\'t detecting any Google Fonts on your homepage. This could be for several reasons. <a href="%s" target="_blank" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
+										'%s isn\'t detecting any Google Fonts on your homepage. This could be for several reasons. <a href="%s" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' ),

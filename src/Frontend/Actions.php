@@ -20,7 +20,7 @@ use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
 class Actions {
-	const FRONTEND_ASSET_HANDLE = 'omgf-frontend';
+	const FRONTEND_ASSET_HANDLE = "omgf-frontend";
 
 	/**
 	 * Execute all classes required in the frontend.
@@ -107,8 +107,8 @@ class Actions {
 		}
 
 		$file_ext = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		$js_file  = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/js/omgf-frontend$file_ext.js";
-		$js_path  = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/js/omgf-frontend$file_ext.js";
+		$js_file  = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
+		$js_path  = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
 
 		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [ 'wp-util' ], filemtime( $js_path ) );
 		wp_localize_script(
@@ -123,13 +123,13 @@ class Actions {
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
 
-		// Even if the above filter forces the JS to load, we'll never need the CSS.
+		// Even if the above filter forces the JS to load, we'll only need the CSS if the current user is an admin.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
-		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/css/omgf-frontend$file_ext.css";
-		$css_path = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/css/omgf-frontend$file_ext.css";
+		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
+		$css_path = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
 
 		wp_enqueue_style( self::FRONTEND_ASSET_HANDLE, $css_file, [], filemtime( $css_path ) );
 	}

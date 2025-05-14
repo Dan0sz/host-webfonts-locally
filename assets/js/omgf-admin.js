@@ -44,7 +44,6 @@ jQuery(document).ready(function ($) {
 			$('#omgf-save-optimize, #omgf-optimize-again').on('click', function () {
 				$('#omgf-optimize-settings-form #submit').click();
 			});
-			$(document).on('click', '.omgf-google-fonts-checker-result', this.refresh_results);
 			$(document).on('click', 'a[id^=omgf-hide-notice-]', this.hide_notice);
 			$('.omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
 			$('.omgf-refresh, #omgf-cache-refresh').on('click', this.refresh_cache);
@@ -59,48 +58,29 @@ jQuery(document).ready(function ($) {
 		},
 
 		/**
-		 * Refresh the Dashboard Notices when a Google Fonts Checker result is clicked.
-		 *
-		 * @param e
-		 */
-		refresh_results: function (e) {
-			e.preventDefault();
-
-			let href = $(this).attr('href');
-			window.open(href);
-
-			let monitorInterval = window.setInterval(() => {
-				if (document.hasFocus()) {
-					window.location.reload();
-					window.clearInterval(monitorInterval);
-				}
-			}, 500);
-		},
-
-		/**
-		 * Also select Latin, if Latin Extended is selected.
+		 * Also select Latin if Latin Extended is selected.
 		 *
 		 * @param {'change'} event
 		 */
 		maybe_select_latin: function (event) {
-			var value = this.value,
+			let value = this.value,
 				target = event.target,
 				className = target.className,
 				options = ['latin', 'latin-ext'];
 
 			if (value === 'latin-ext') {
 				options.forEach(function (element) {
-					var option = document.querySelector('.' + className + ' option[value=' + element + ']');
+					let option = document.querySelector('.' + className + ' option[value=' + element + ']');
 
 					option.selected = true;
 				});
 			}
 
-			var options = ['latin', 'vietnamese'];
+			options = ['latin', 'vietnamese'];
 
 			if (value === 'vietnamese') {
 				options.forEach(function (element) {
-					var option = document.querySelector('.' + className + ' option[value=' + element + ']');
+					let option = document.querySelector('.' + className + ' option[value=' + element + ']');
 
 					option.selected = true;
 				});

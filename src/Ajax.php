@@ -46,7 +46,7 @@ class Ajax {
 	public function get_admin_bar_status() {
 		check_ajax_referer( 'omgf_frontend_nonce', '_wpnonce' );
 
-		$stored_results = $this->store_results();
+		$stored_results = $this->update_results();
 		$status         = 'success';
 
 		if ( ! empty( $stored_results ) ) {
@@ -69,30 +69,43 @@ class Ajax {
 	 *
 	 * @return array
 	 */
-	private function store_results() {
+	private function update_results() {
 		$post           = $this->clean( $_POST );
 		$path           = $post[ 'path' ];
 		$urls           = apply_filters( 'omgf_ajax_results', $post[ 'urls' ] ?? [], $path );
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+		$result_keys    = array_keys( $stored_results );
+		$solved         = array_diff( $result_keys, $urls );
 
-		// This issue has been solved, so remove it from the results.
-		if ( empty( $urls ) && ! empty( $stored_results[ $path ] ) ) {
-			unset( $stored_results[ $path ] );
+		// Filter any previous results that are now resolved.
+		if ( ! empty( $solved ) && ! empty( $stored_results ) ) {
+			$stored_results = array_filter(
+				$stored_results,
+				function ( $url ) use ( $solved ) {
+					return ! in_array( $url, $solved );
+				},
+				ARRAY_FILTER_USE_KEY
+			);
+
+			update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 		}
 
 		// We won't show results for more than 5 URLs on the Dashboard to limit the size of the database entry.
-		if ( count( $stored_results ) > 5 ) {
+		if ( count( $stored_results ) >= 5 ) {
 			return $stored_results; // @codeCoverageIgnore
 		}
 
 		// Store Google Fonts Checker results.
 		foreach ( $urls as $url ) {
-			if ( ! isset( $stored_results[ $path ] ) ) {
-				$stored_results[ $path ] = [];
+			// Decode special chars (e.g. &#038; to &) for readability.
+			$url = htmlspecialchars_decode( $url );
+
+			if ( ! isset( $stored_results[ $url ] ) ) {
+				$stored_results[ $url ] = [];
 			}
 
-			if ( ! in_array( $url, $stored_results[ $path ], true ) ) {
-				$stored_results[ $path ][] = $url;
+			if ( ! in_array( $path, $stored_results[ $url ], true ) ) {
+				$stored_results[ $url ][] = $path;
 			}
 		}
 
