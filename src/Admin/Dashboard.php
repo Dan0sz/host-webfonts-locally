@@ -539,7 +539,7 @@ class Dashboard {
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
 		<tr valign="top">
-			<th scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
+			<th class="omgf-align-row-header" scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
 			<td class="task-manager-row">
 				<?php if ( ! empty( $stylesheets ) ) : ?>
 					<ul>

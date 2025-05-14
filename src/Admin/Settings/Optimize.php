@@ -127,7 +127,7 @@ class Optimize extends Builder {
 	public function do_cache_management() {
 		?>
 		<tr>
-			<th scope="row"><?php _e( 'Manage Cache', 'host-webfonts-local' ); ?></th>
+			<th class="omgf-align-row-header" scope="row"><?php _e( 'Manage Cache', 'host-webfonts-local' ); ?></th>
 			<td class="task-manager-row">
 				<a id="omgf-empty" data-init="<?php echo Settings::OMGF_ADMIN_PAGE; ?>"
 				   data-nonce="<?php echo wp_create_nonce( Settings::OMGF_ADMIN_PAGE ); ?>"

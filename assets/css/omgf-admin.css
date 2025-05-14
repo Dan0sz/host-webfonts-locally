@@ -150,6 +150,14 @@
 	border-radius: 10px;
 }
 
+.omgf form .omgf-task-manager .form-table {
+	margin-bottom: 1em;
+}
+
+.omgf form .omgf-task-manager th.omgf-align-row-header {
+	padding: .5em 0;
+}
+
 .omgf form .omgf-task-manager .task-manager-row {
 	padding: 0;
 	line-height: 1.33;
