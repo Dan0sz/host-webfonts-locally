@@ -186,7 +186,7 @@ class Dashboard {
 						<?php endif; ?>
 						<ol>
 							<?php foreach ( $google_fonts_checker_results as $url => $paths ) : ?>
-								<li><strong><?php echo $url; ?></strong> <?php _e( 'was found on:', 'host-webfonts-local' ); ?></li>
+								<li><strong><?php echo esc_html( $url ); ?></strong> <?php _e( 'was found on:', 'host-webfonts-local' ); ?></li>
 								<ul>
 									<?php foreach ( $paths as $path ) : ?>
 										<li>
@@ -194,7 +194,7 @@ class Dashboard {
 											$href = OMGF::no_cache_optimize_url( $path );
 											$path = $path === '/' ? '/ (home)' : $path;
 											?>
-											<a class="omgf-google-fonts-checker-result" href="<?php echo $href; ?>" data-nonce="<?php echo $nonce; ?>"><?php echo $path; ?></a>
+											<a class="omgf-google-fonts-checker-result" href="<?php echo $href; ?>" data-nonce="<?php echo $nonce; ?>"><?php echo esc_html( $path ); ?></a>
 										</li>
 									<?php endforeach; ?>
 								</ul>
