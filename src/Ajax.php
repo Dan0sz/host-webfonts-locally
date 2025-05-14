@@ -65,7 +65,7 @@ class Ajax {
 	}
 
 	/**
-	 * Store results of Google Fonts checker in database, for rendering in the Dashboard.
+	 * Store results of the Google Fonts checker in the database for rendering in the Dashboard.
 	 *
 	 * @return array
 	 */
@@ -80,7 +80,7 @@ class Ajax {
 			unset( $stored_results[ $path ] );
 		}
 
-		// We won't show results for more than 5 URLs on the Dashboard, to limit the size of the database entry.
+		// We won't show results for more than 5 URLs on the Dashboard to limit the size of the database entry.
 		if ( count( $stored_results ) > 5 ) {
 			return $stored_results; // @codeCoverageIgnore
 		}

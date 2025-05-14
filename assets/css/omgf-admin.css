@@ -155,7 +155,8 @@
 	line-height: 1.33;
 }
 
-.omgf form .omgf-task-manager .task-manager-row .task-manager-notice {
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice,
+.omgf form .omgf-task-manager .task-manager-row.omgf-cache-legend {
 	padding: 18px 12px;
 	border: 1px solid #ececec;
 	border-left: 4px solid #ececec;
@@ -163,11 +164,26 @@
 	margin-bottom: 1em;
 }
 
-.omgf form .omgf-task-manager .task-manager-row .task-manager-notice ol {
-	margin-left: 1em;
+.omgf form .omgf-task-manager .task-manager-row.omgf-cache-legend {
+	padding: 10px 18px 2px;
 }
 
-.omgf form .omgf-task-manager .task-manager-row .task-manager-notice.warning {
+.omgf form .omgf-task-manager .task-manager-row.omgf-cache-legend .omgf-cache-legend-item {
+	display: grid;
+	grid-template-columns: 1.5rem 5rem auto;
+}
+
+.omgf form .omgf-task-manager .task-manager-row.omgf-cache-legend .omgf-cache-legend-item .omgf-cache-legend-item-title {
+	font-weight: 700;
+}
+
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice ol {
+	margin-left: 1em;
+	margin-bottom: 0;
+}
+
+.omgf form .omgf-task-manager .task-manager-row .task-manager-notice.warning,
+.omgf form .omgf-task-manager .task-manager-row.omgf-cache-legend {
 	border: 1px solid #FFDC00;
 	border-left: 4px solid #FFDC00;
 	background-color: #FFFBDF;

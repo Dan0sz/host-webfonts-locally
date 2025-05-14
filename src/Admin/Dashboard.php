@@ -584,23 +584,24 @@ class Dashboard {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row"><?php _e( 'Legend', 'host-webfonts-local' ); ?></th>
-			<td class="task-manager-row">
+			<th scope="row"></th>
+			<td class="task-manager-row omgf-cache-legend">
+				<p><strong><?php _e( 'Status Legend', 'host-webfonts-local' ); ?></strong></p>
 				<ul>
-					<li class="found"> <?php _e(
-							'<strong>Found</strong>. Stylesheet exists on your file system.',
+					<li class="omgf-cache-legend-item found"> <?php _e(
+							'<span class="omgf-cache-legend-item-title">Found</span> Stylesheet exists on your file system.',
 							'host-webfonts-local'
 						); ?></li>
-					<li class="unloaded"> <?php _e(
-							'<strong>Unloaded</strong>. Stylesheet exists, but is not loaded in the frontend.',
+					<li class="omgf-cache-legend-item unloaded"> <?php _e(
+							'<span class="omgf-cache-legend-item-title">Unloaded</span> Stylesheet exists but is not loaded in the frontend.',
 							'host-webfonts-local'
 						); ?></li>
-					<li class="stale"> <?php _e(
-							'<strong>Stale</strong>. Settings were changed and the stylesheet\'s content do not reflect those changes.',
+					<li class="omgf-cache-legend-item stale"> <?php _e(
+							'<span class="omgf-cache-legend-item-title">Stale</span> Settings were changed and the stylesheet\'s content does not reflect those changes.',
 							'host-webfonts-local'
 						); ?></li>
-					<li class="not-found"> <?php _e(
-							'<strong>Not Found</strong>. Stylesheet was detected once, but is missing now. You can safely remove it.',
+					<li class="omgf-cache-legend-item not-found"> <?php _e(
+							'<span class="omgf-cache-legend-item-title">Not Found</span> Stylesheet was detected once but is missing now. You can safely remove it.',
 							'host-webfonts-local'
 						); ?></li>
 				</ul>
