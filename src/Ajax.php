@@ -91,13 +91,11 @@ class Ajax {
 				},
 				ARRAY_FILTER_USE_KEY
 			);
-
-			update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 		}
 
 		// We won't show results for more than 5 URLs on the Dashboard to limit the size of the database entry.
 		if ( count( $stored_results ) >= 5 ) {
-			return $stored_results; // @codeCoverageIgnore
+			$stored_results = array_slice( $stored_results, 0, 5, true );
 		}
 
 		// Store Google Fonts Checker results.
