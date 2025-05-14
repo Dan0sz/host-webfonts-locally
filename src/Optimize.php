@@ -380,7 +380,7 @@ class Optimize {
 
 		foreach ( $font_faces[ 0 ] as $font_face ) {
 			/**
-			 * @since v5.3.3 Exact match for font-family attribute, to prevent similar font names from falling thru, e.g. Roboto and Roboto Slab.
+			 * @since v5.3.3 Exact match for font-family attribute, to prevent similar font names from falling through, e.g., Roboto and Roboto Slab.
 			 */
 			if ( ! preg_match( '/font-family:[\s\'"]*?' . $font_family . '[\'"]?;/', $font_face ) ) {
 				continue; // @codeCoverageIgnore
@@ -388,6 +388,7 @@ class Optimize {
 
 			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
 			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
+			// @TODO [OMGF-128] Add automated testing for different src notations found in the wild.
 			preg_match( '/src:\surl\((.*?woff2)\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
@@ -430,7 +431,7 @@ class Optimize {
 			$id = strtolower( str_replace( ' ', '-', $font_family ) );
 
 			/**
-			 * @since v5.3.0 Is this a variable font i.e. one font file for multiple font weights/styles?
+			 * @since v5.3.0 Is this a variable font i.e., one font file for multiple font weights/styles?
 			 */
 			if ( substr_count( $stylesheet, $font_src[ 1 ] ) > 1 && ! in_array( $id, $this->variable_fonts ) ) {
 				$this->variable_fonts[ $id ] = $id;
