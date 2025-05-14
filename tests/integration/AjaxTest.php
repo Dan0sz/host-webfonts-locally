@@ -25,7 +25,7 @@ class AjaxTest extends TestCase {
 
 		$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 
-		$this->assertArrayHasKey( '/test', $results );
+		$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
 
 		$_POST[ 'urls' ] = [];
 
@@ -36,6 +36,6 @@ class AjaxTest extends TestCase {
 		unset( $_POST[ '_wpnonce' ] );
 		OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 
-		$this->assertArrayNotHasKey( '/test', $results );
+		$this->assertArrayNotHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
 	}
 }
