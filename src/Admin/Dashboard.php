@@ -194,7 +194,9 @@ class Dashboard {
 											$href = OMGF::no_cache_optimize_url( $path );
 											$path = $path === '/' ? '/ (home)' : $path;
 											?>
-											<a class="omgf-google-fonts-checker-result" href="<?php echo $href; ?>" data-nonce="<?php echo $nonce; ?>"><?php echo esc_html( $path ); ?></a>
+											<a class="omgf-google-fonts-checker-result" href="<?php echo esc_attr( $href ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php echo esc_html(
+													$path
+												); ?></a>
 										</li>
 									<?php endforeach; ?>
 								</ul>
