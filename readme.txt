@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 5.9.2
+Stable tag: 5.9.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -80,10 +80,17 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 5.9.3 | May 16th, 2025 - THE LAST PATCH RELEASE BEFORE **OMGF V6!** =
+* Tested with WP 6.8
+* Added: compatibility with OptimizePress 3 theme
+* Fixed: Variable font weights weren't processed properly during optimization.
+* Fixed: Update notices weren't displayed properly.
+* Various small bugfixes.
+
 = 5.9.2 | January 14th, 2025 =
 * Tested with WP 6.7
-* Added: a version parameter is now added to cached files, to make sure browser cache is busted when the OMGF cache is refreshed.
-* Fixed: minor HTML syntax typo in output of preloaded files.
+* Added: a version parameter is now added to cached files to make sure browser cache is busted when the OMGF cache is refreshed.
+* Fixed: minor HTML syntax typo in the output of preloaded files.
 
 = 5.9.1 | July 17th, 2024 =
 * Tested with WP 6.6

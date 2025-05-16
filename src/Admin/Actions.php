@@ -166,17 +166,12 @@ class Actions {
 				return;
 			}
 
-			$allowed_html = [
-				'strong' => [],
-				'a'      => [],
-			];
-
-			wp_kses(
+			echo wp_kses(
 				sprintf(
-					' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.' ) . '</strong>',
+					' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.', 'host-webfonts-local' ) . '</strong>',
 					$update_notices[ $new_version ]->url
 				),
-				$allowed_html
+				'post'
 			);
 		}
 	}
