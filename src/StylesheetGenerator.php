@@ -19,8 +19,6 @@ namespace OMGF;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 
-defined( 'ABSPATH' ) || exit;
-
 class StylesheetGenerator {
 	/** @var $fonts */
 	private $fonts;
@@ -71,7 +69,10 @@ class StylesheetGenerator {
 				 *
 				 * @since v4.5.1
 				 */
-				$font_family = apply_filters( 'omgf_generate_stylesheet_font_family', rawurldecode( $variant->fontFamily ) );
+				$font_family = apply_filters(
+					'omgf_generate_stylesheet_font_family',
+					rawurldecode( $variant->fontFamily )
+				);
 				$font_style  = $variant->fontStyle;
 				$font_weight = $variant->fontWeight;
 				$stylesheet  .= "@font-face{{$n}";

@@ -2,8 +2,6 @@
 
 namespace OMGF\Admin;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * A (kind of) portable file, which allows me to add some extra handling to updates for premium "daughters"
  * of freemium (mother) plugins.
@@ -78,12 +76,19 @@ class Updates {
 			}
 
 			$latest_version  = $this->get_latest_version( $id, $premium_plugin[ 'transient_label' ] );
-			$current_version = get_plugin_data( WP_PLUGIN_DIR . '/' . $premium_plugin[ 'basename' ] )[ 'Version' ] ?? '';
+			$current_version = get_plugin_data( WP_PLUGIN_DIR . '/' . $premium_plugin[ 'basename' ] )[ 'Version' ]
+				??
+				'';
 
 			if ( version_compare( $current_version, $latest_version, '<' ) ) {
 				$installed_plugins[ $premium_plugin[ 'basename' ] ][ 'update' ] = true;
 
-				add_action( 'after_plugin_row_' . $premium_plugin[ 'basename' ], [ $this, 'display_premium_update_notice' ], 10, 2 );
+				add_action(
+					'after_plugin_row_' . $premium_plugin[ 'basename' ],
+					[ $this, 'display_premium_update_notice' ],
+					10,
+					2
+				);
 			}
 		}
 
@@ -98,13 +103,16 @@ class Updates {
 	private function update_already_displayed( $basename ) {
 		$available_updates = $this->get_available_updates();
 
-		if ( ! is_object( $available_updates ) || ! isset( $available_updates->response ) || ! is_array( $available_updates->response ) ) {
+		if ( ! is_object( $available_updates ) ||
+			! isset( $available_updates->response ) ||
+			! is_array( $available_updates->response ) ) {
 			return false;
 		}
 
 		$plugin_slugs = array_keys( $available_updates->response );
 
-		return in_array( $basename, $plugin_slugs ) && ! empty( $available_updates->response[ $basename ]->new_version );
+		return in_array( $basename, $plugin_slugs ) &&
+			! empty( $available_updates->response[ $basename ]->new_version );
 	}
 
 	/**
@@ -291,7 +299,9 @@ class Updates {
 			$plugin_file = $plugin[ 'basename' ];
 
 			// If an update is already displayed, there's no need for us to recreate this object.
-			if ( is_object( $transient ) && isset( $transient->response ) && ! isset( $transient->response[ $plugin_file ] ) ) {
+			if ( is_object( $transient ) &&
+				isset( $transient->response ) &&
+				! isset( $transient->response[ $plugin_file ] ) ) {
 				$transient->response[ $plugin_file ] = (object) [
 					'slug'        => explode( '/', $plugin_file )[ 0 ],
 					'plugin'      => $plugin_file,
