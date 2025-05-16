@@ -127,8 +127,7 @@ class Optimize extends Builder {
 							$downloaded = file_exists( OMGF_UPLOAD_DIR . "/$cache_key/$cache_key.css" );
 							$unloaded   = in_array( $handle, $unloaded_stylesheets );
 							?>
-							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' :
-								( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ); ?>">
+							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ); ?>">
 								<strong><?php echo $handle; ?></strong> <em>(<?php echo sprintf(
 										__( 'stored in %s', 'host-webfonts-local' ),
 										str_replace( ABSPATH, '', OMGF_UPLOAD_DIR . "/$cache_key" )
@@ -142,8 +141,7 @@ class Optimize extends Builder {
 									   title="<?php echo sprintf(
 										   __( 'Manage %s', 'host-webfonts-local' ),
 										   $cache_key
-									   ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) :
-									_e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
+									   ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) : _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
 							</li>
 						<?php endforeach; ?>
 						<?php if ( OMGF_CACHE_IS_STALE ) : ?>
@@ -193,19 +191,6 @@ class Optimize extends Builder {
 			</td>
 		</tr>
 		<?php
-		$this->do_checkbox(
-			__('Add Fonts Inline (Pro)', 'host-webfonts-local'),
-			'inline_fonts', ! empty( OMGF::get_option( 'inline_fonts' ) ),
-			sprintf(
-				__(
-					'Enable this option to add all fonts related styles inline to the <code>head</code>. This reduces the amount of chained critical requests and increases performance and Pagespeed score in most cases. %s',
-					'host-webfonts-local'
-				),
-				$this->promo
-			),
-			!defined('OMGF_PRO_ACTIVE'),
-			'task-manager-row'
-		);
 		$this->do_checkbox(
 			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
 			Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS ) ),
@@ -435,8 +420,7 @@ class Optimize extends Builder {
 										),
 										'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold'
 									); ?></span><img width="230" class="illustration"
-													 src="<?php echo plugin_dir_url( OMGF_PLUGIN_FILE ) .
-														 'assets/images/above-the-fold.png'; ?>"/></span></span></th>
+													 src="<?php echo plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/images/above-the-fold.png'; ?>"/></span></span></th>
 					<th><?php echo __( 'Don\'t Load', 'host-webfonts-local' ); ?><span
 							class="dashicons dashicons-info tooltip"><span
 								class="tooltip-text"><span class="inline-text"><?php echo __(
@@ -541,10 +525,9 @@ class Optimize extends Builder {
 							</td>
 							<td class="replace">
 								<?php
-								$replace  =
-									defined( 'OMGF_PRO_ACTIVE' ) &&
-									isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
-									OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
+								$replace  = defined( 'OMGF_PRO_ACTIVE' ) &&
+								isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
+								OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
 								$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset(
 										OMGF::get_option(
 											'omgf_pro_fallback_font_stack'
@@ -617,8 +600,7 @@ class Optimize extends Builder {
 										   ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
 											   $variant->id
 										   ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' :
-										''; ?> <?php echo $unload ? 'disabled' : ''; ?> />
+										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload ? 'disabled' : ''; ?> />
 								</td>
 								<td class="unload-<?php echo esc_attr( $class ); ?>">
 									<input type="hidden"
@@ -640,8 +622,7 @@ class Optimize extends Builder {
 										   ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
 											   $variant->id
 										   ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' :
-										''; ?> <?php echo $preload ? 'disabled' : ''; ?> />
+										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload ? 'disabled' : ''; ?> />
 								</td>
 							</tr>
 						<?php endforeach; ?>
