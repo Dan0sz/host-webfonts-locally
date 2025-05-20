@@ -50,7 +50,6 @@ class Admin {
 		$this->do_advanced_settings();
 		$this->do_help();
 		$this->maybe_handle_failed_premium_plugin_updates();
-		$this->maybe_do_after_update_notice();
 
 		add_filter( 'alloptions', [ $this, 'force_optimized_fonts_from_db' ] );
 		add_action( 'update_option_omgf_cache_keys', [ $this, 'clean_up_cache' ], 10, 2 );
@@ -102,28 +101,6 @@ class Admin {
 				],
 			], 'host-webfonts-local', 'omgf'
 		);
-	}
-
-	/**
-	 * Checks if an update notice should be displayed after updating.
-	 *
-	 * @codeCoverageIgnore
-	 */
-	private function maybe_do_after_update_notice() {
-		if ( OMGF_CURRENT_DB_VERSION != false && version_compare( OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<' ) ) {
-			Notice::set_notice(
-				sprintf(
-					__(
-						'Thank you for updating OMGF to v%1$s! This version contains database changes. <a href="%2$s">Verify your settings</a> and make sure everything is as you left it or, <a href="%3$s">view the changelog</a> for details. ',
-						'host-webfonts-local'
-					),
-					OMGF_DB_VERSION,
-					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS ),
-					admin_url( Settings::OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION )
-				),
-				'omgf-post-update'
-			);
-		}
 	}
 
 	/**
