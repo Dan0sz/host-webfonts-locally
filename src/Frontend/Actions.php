@@ -16,6 +16,7 @@
 
 namespace OMGF\Frontend;
 
+use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
@@ -45,9 +46,9 @@ class Actions {
 	 */
 	public function add_admin_bar_item( \WP_Admin_Bar $admin_bar ) {
 		/**
-		 * Display only in frontend, for logged in admins.
+		 * Display only in frontend, for logged in admins, unless Disable Quick Access is enabled and no issues are found.
 		 */
-		if ( ! defined( 'DAAN_DOING_TESTS' ) && ( ! current_user_can( 'manage_options' ) || is_admin() || OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) ) {
+		if ( ! $this->should_display_menu() ) {
 			return; // @codeCoverageIgnore
 		}
 
@@ -88,6 +89,12 @@ class Actions {
 				'href'   => add_query_arg( 'omgf_optimize', '1', $site_url ),
 			]
 		);
+	}
+
+	private function should_display_menu() {
+		$warnings = Dashboard::get_warnings();
+
+		return ! defined( 'DAAN_DOING_TESTS' ) && ( ! current_user_can( 'manage_options' ) || is_admin() || ( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) && ! empty( $warnings ) ) );
 	}
 
 	/**
