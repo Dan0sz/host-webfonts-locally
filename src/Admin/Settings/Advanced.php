@@ -187,12 +187,9 @@ class Advanced extends Builder {
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_SUBSETS,
 			OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ),
-			( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . sprintf(
-					__(
-						'Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. <a href="%s">Disable it</a> if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn\'t change this setting</u>!',
-						'host-webfonts-local'
-					),
-					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )
+			( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . __(
+					'Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. Disable it if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn\'t change this setting</u>!',
+					'host-webfonts-local'
 				) . '</span>' : '' ) . __(
 				'A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are an add-ons for Latin and can\'t be used by itself. Use CTRL + click to select multiple values.</em>',
 				'host-webfonts-local'
