@@ -38,6 +38,7 @@ class Dashboard {
 		'essential-grid',
 		'perfmatters',
 		'thrive-visual-editor',
+		'wp-optimize',
 	];
 
 	/**
@@ -91,11 +92,11 @@ class Dashboard {
 	 */
 	public static function render_warnings() {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
-			<tr valign="top" id="task-manager-notice-test-mode-row">
-				<td colspan="2" class="task-manager-row">
-					<div class="task-manager-notice info">
-						<h4><?php echo esc_html__( 'Test Mode is Enabled', 'host-webfonts-local' ); ?></h4>
-						<p>
+            <tr valign="top" id="task-manager-notice-test-mode-row">
+                <td colspan="2" class="task-manager-row">
+                    <div class="task-manager-notice info">
+                        <h4><?php echo esc_html__( 'Test Mode is Enabled', 'host-webfonts-local' ); ?></h4>
+                        <p>
 							<?php echo wp_kses(
 								sprintf(
 									__(
@@ -106,14 +107,14 @@ class Dashboard {
 								),
 								'post'
 							); ?>
-						</p>
-					</div>
-				</td>
-			</tr>
+                        </p>
+                    </div>
+                </td>
+            </tr>
 		<?php endif; ?>
 		<?php $nonce = wp_create_nonce( Settings::OMGF_ADMIN_PAGE ); ?>
-		<tr valign="top" id="task-manager-notice-row">
-			<td colspan="2" class="task-manager-row">
+        <tr valign="top" id="task-manager-notice-row">
+            <td colspan="2" class="task-manager-row">
 				<?php
 				$plugins                      = self::get_active_plugins();
 				$warnings                     = self::get_warnings();
@@ -124,8 +125,8 @@ class Dashboard {
 				}
 				?>
 				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
-					<div class="task-manager-notice <?php echo apply_filters( 'omgf_task_manager_notice_class', 'alert' ); ?>">
-						<h4>
+                    <div class="task-manager-notice <?php echo apply_filters( 'omgf_task_manager_notice_class', 'alert' ); ?>">
+                        <h4>
 							<?php echo wp_kses(
 								apply_filters(
 									'omgf_google_fonts_checker_title',
@@ -140,8 +141,8 @@ class Dashboard {
 								),
 								'post'
 							); ?>
-						</h4>
-						<p>
+                        </h4>
+                        <p>
 							<?php echo wp_kses(
 								apply_filters(
 									'omgf_google_fonts_checker_general_text',
@@ -155,9 +156,9 @@ class Dashboard {
 								),
 								'post'
 							); ?>
-						</p>
+                        </p>
 						<?php if ( empty( $warnings ) ): ?>
-							<p>
+                            <p>
 								<?php echo apply_filters(
 									'omgf_google_fonts_checker_no_potential_issues',
 									sprintf(
@@ -169,9 +170,9 @@ class Dashboard {
 										Settings::DAAN_WORDPRESS_OMGF_PRO
 									)
 								); ?>
-							</p>
+                            </p>
 						<?php else: ?>
-							<p>
+                            <p>
 								<?php echo apply_filters(
 									'omgf_google_fonts_checker_potential_issues',
 									sprintf(
@@ -182,38 +183,38 @@ class Dashboard {
 										Settings::DAAN_WORDPRESS_OMGF_PRO
 									)
 								); ?>
-							</p>
+                            </p>
 						<?php endif; ?>
-						<ol>
+                        <ol>
 							<?php foreach ( $google_fonts_checker_results as $url => $paths ) : ?>
-								<li><strong><?php echo esc_html( $url ); ?></strong> <?php _e( 'was found on:', 'host-webfonts-local' ); ?></li>
-								<ul>
+                                <li><strong><?php echo esc_html( $url ); ?></strong> <?php _e( 'was found on:', 'host-webfonts-local' ); ?></li>
+                                <ul>
 									<?php foreach ( $paths as $path ) : ?>
-										<li>
+                                        <li>
 											<?php
 											$href = OMGF::no_cache_optimize_url( $path );
 											$path = $path === '/' ? '/ (home)' : $path;
 											?>
-											<a class="omgf-google-fonts-checker-result" href="<?php echo esc_attr( $href ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php echo esc_html(
+                                            <a class="omgf-google-fonts-checker-result" href="<?php echo esc_attr( $href ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php echo esc_html(
 													$path
 												); ?></a>
-										</li>
+                                        </li>
 									<?php endforeach; ?>
-								</ul>
+                                </ul>
 							<?php endforeach; ?>
-						</ol>
+                        </ol>
 						<?php if ( count( $google_fonts_checker_results ) === 5 ): ?>
-							<sub>* <em><?php echo wp_kses(
+                            <sub>* <em><?php echo wp_kses(
 										__( 'This list is limited to 5 pages, because most entries will most likely be duplicates.', 'host-webfonts-local' ),
 										'post'
 									); ?></em>
-							</sub>
+                            </sub>
 						<?php endif; ?>
-					</div>
+                    </div>
 				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && ! OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
-					<div class="task-manager-notice info">
-						<h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
-						<p>
+                    <div class="task-manager-notice info">
+                        <h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
+                        <p>
 							<?php echo wp_kses(
 								sprintf(
 									__(
@@ -224,12 +225,12 @@ class Dashboard {
 								),
 								'post'
 							); ?>
-						</p>
-					</div>
+                        </p>
+                    </div>
 				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
-					<div class="task-manager-notice warning">
-						<h4><?php echo esc_html__( 'Google Fonts optimization seems to be failing.', 'host-webfonts-local' ); ?></h4>
-						<p>
+                    <div class="task-manager-notice warning">
+                        <h4><?php echo esc_html__( 'Google Fonts optimization seems to be failing.', 'host-webfonts-local' ); ?></h4>
+                        <p>
 							<?php echo wp_kses(
 								sprintf(
 									__(
@@ -241,12 +242,12 @@ class Dashboard {
 								),
 								'post'
 							); ?>
-						</p>
-					</div>
+                        </p>
+                    </div>
 				<?php else: ?>
-					<div class="task-manager-notice success">
-						<h4><?php echo esc_html__( 'No external Google Fonts found on your site.', 'host-webfonts-local' ); ?></h4>
-						<p>
+                    <div class="task-manager-notice success">
+                        <h4><?php echo esc_html__( 'No external Google Fonts found on your site.', 'host-webfonts-local' ); ?></h4>
+                        <p>
 							<?php echo apply_filters(
 								'omgf_dashboard_success_message',
 								wp_kses(
@@ -257,17 +258,17 @@ class Dashboard {
 									'post'
 								)
 							); ?>
-						</p>
+                        </p>
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
-					</div>
+                    </div>
 				<?php endif; ?>
 				<?php if ( empty( $warnings ) ) : ?>
-					<div class="task-manager-notice success">
-						<h4><?php echo esc_html__(
+                    <div class="task-manager-notice success">
+                        <h4><?php echo esc_html__(
 								'No potential issues found in your configuration.',
 								'host-webfonts-local'
 							); ?></h4>
-						<p>
+                        <p>
 							<?php echo wp_kses(
 								sprintf(
 									__(
@@ -278,11 +279,11 @@ class Dashboard {
 								),
 								'post'
 							); ?>
-						</p>
-					</div>
+                        </p>
+                    </div>
 				<?php else : ?>
-					<div class="task-manager-notice warning">
-						<h4><?php echo sprintf(
+                    <div class="task-manager-notice warning">
+                        <h4><?php echo sprintf(
 								esc_html(
 									_n(
 										'%s potential issue found in your configuration.',
@@ -293,10 +294,10 @@ class Dashboard {
 								),
 								count( $warnings )
 							); ?>*</h4>
-						<ol <?php echo count( $warnings ) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
+                        <ol <?php echo count( $warnings ) === 1 ? "style='list-style: none; margin-left: 0;'" : ''; ?>>
 							<?php foreach ( $warnings as $warning_id ) : ?>
 								<?php $show_mark_as_fixed = true; ?>
-								<li id="omgf-notice-<?php echo esc_attr( $warning_id ); ?>">
+                                <li id="omgf-notice-<?php echo esc_attr( $warning_id ); ?>">
 									<?php if ( $warning_id === 'is_multisite' ) : ?>
 										<?php echo wp_kses(
 											sprintf(
@@ -402,32 +403,32 @@ class Dashboard {
 										); ?>
 									<?php endif; ?>
 									<?php if ( $show_mark_as_fixed ) : ?>
-										<small>[<a href="#" class="hide-notice"
-												   data-nonce="<?php echo esc_attr( $nonce ); ?>"
-												   data-warning-id="<?php echo esc_attr( $warning_id ); ?>"
-												   id="omgf-hide-notice-<?php echo esc_attr(
-													   $warning_id
-												   ); ?>"><?php echo esc_html__(
+                                        <small>[<a href="#" class="hide-notice"
+                                                   data-nonce="<?php echo esc_attr( $nonce ); ?>"
+                                                   data-warning-id="<?php echo esc_attr( $warning_id ); ?>"
+                                                   id="omgf-hide-notice-<?php echo esc_attr(
+											           $warning_id
+										           ); ?>"><?php echo esc_html__(
 													'Mark as fixed',
 													'host-webfonts-local'
 												); ?></a>]</small>
 									<?php endif; ?>
-								</li>
+                                </li>
 							<?php endforeach; ?>
-						</ol>
-						<p>
-							<sub>*<em><?php echo wp_kses(
+                        </ol>
+                        <p>
+                            <sub>*<em><?php echo wp_kses(
 										__(
 											'After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won\'t disappear by itself.',
 											'host-webfonts-local'
 										),
 										'post'
 									); ?></em></sub>
-						</p>
-					</div>
+                        </p>
+                    </div>
 				<?php endif; ?>
-			</td>
-		</tr>
+            </td>
+        </tr>
 		<?php
 	}
 
@@ -540,11 +541,11 @@ class Dashboard {
 		$stylesheets          = OMGF::admin_optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
-		<tr valign="top">
-			<th class="omgf-align-row-header" scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
-			<td class="task-manager-row">
+        <tr valign="top">
+            <th class="omgf-align-row-header" scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
+            <td class="task-manager-row">
 				<?php if ( ! empty( $stylesheets ) ) : ?>
-					<ul>
+                    <ul>
 						<?php foreach ( $stylesheets as $handle => $contents ) : ?>
 							<?php
 							$cache_key = OMGF::get_cache_key( $handle );
@@ -556,61 +557,61 @@ class Dashboard {
 							$downloaded = file_exists( OMGF_UPLOAD_DIR . "/$cache_key/$cache_key.css" );
 							$unloaded   = in_array( $handle, $unloaded_stylesheets );
 							?>
-							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ); ?>">
-								<strong><?php echo $handle; ?></strong> <em>(<?php echo sprintf(
+                            <li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ); ?>">
+                                <strong><?php echo $handle; ?></strong> <em>(<?php echo sprintf(
 										__( 'stored in %s', 'host-webfonts-local' ),
 										str_replace( ABSPATH, '', OMGF_UPLOAD_DIR . "/$cache_key" )
 									); ?>)</em>
 								<?php
 								if ( ! $unloaded ) :
 									?>
-									<a href="<?php echo $downloaded ? "#$handle" : '#'; ?>"
-									   data-handle="<?php echo esc_attr( $handle ); ?>"
-									   class="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>"
-									   title="<?php echo sprintf(
+                                    <a href="<?php echo $downloaded ? "#$handle" : '#'; ?>"
+                                       data-handle="<?php echo esc_attr( $handle ); ?>"
+                                       class="<?php echo $downloaded ? 'omgf-manage-stylesheet' : 'omgf-remove-stylesheet'; ?>"
+                                       title="<?php echo sprintf(
 										   __( 'Manage %s', 'host-webfonts-local' ),
 										   $cache_key
 									   ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) : _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
-							</li>
+                            </li>
 						<?php endforeach; ?>
 						<?php if ( OMGF_CACHE_IS_STALE ) : ?>
-							<li class="stale-cache-notice"><em><?php echo __(
+                            <li class="stale-cache-notice"><em><?php echo __(
 										'The stylesheets in the cache do not reflect the current settings. Either <a href="#" id="omgf-cache-refresh">refresh</a> the cache (and maintain settings) or <a href="#" id="omgf-cache-flush">flush</a> it and start over.',
 										'host-webfonts-local'
 									); ?></em></li>
 						<?php endif; ?>
-					</ul>
+                    </ul>
 				<?php else : ?>
-					<p>
+                    <p>
 						<?php echo __( 'No stylesheets in cache.', 'host-webfonts-local' ); ?>
-					</p>
+                    </p>
 				<?php endif; ?>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row"></th>
-			<td class="task-manager-row omgf-cache-legend">
-				<p><strong><?php _e( 'Status Legend', 'host-webfonts-local' ); ?></strong></p>
-				<ul>
-					<li class="omgf-cache-legend-item found"> <?php _e(
+            </td>
+        </tr>
+        <tr>
+            <th scope="row"></th>
+            <td class="task-manager-row omgf-cache-legend">
+                <p><strong><?php _e( 'Status Legend', 'host-webfonts-local' ); ?></strong></p>
+                <ul>
+                    <li class="omgf-cache-legend-item found"> <?php _e(
 							'<span class="omgf-cache-legend-item-title">Found</span> Stylesheet exists on your file system.',
 							'host-webfonts-local'
 						); ?></li>
-					<li class="omgf-cache-legend-item unloaded"> <?php _e(
+                    <li class="omgf-cache-legend-item unloaded"> <?php _e(
 							'<span class="omgf-cache-legend-item-title">Unloaded</span> Stylesheet exists but is not loaded in the frontend.',
 							'host-webfonts-local'
 						); ?></li>
-					<li class="omgf-cache-legend-item stale"> <?php _e(
+                    <li class="omgf-cache-legend-item stale"> <?php _e(
 							'<span class="omgf-cache-legend-item-title">Stale</span> Settings were changed and the stylesheet\'s content does not reflect those changes.',
 							'host-webfonts-local'
 						); ?></li>
-					<li class="omgf-cache-legend-item not-found"> <?php _e(
+                    <li class="omgf-cache-legend-item not-found"> <?php _e(
 							'<span class="omgf-cache-legend-item-title">Not Found</span> Stylesheet was detected once but is missing now. You can safely remove it.',
 							'host-webfonts-local'
 						); ?></li>
-				</ul>
-			</td>
-		</tr>
+                </ul>
+            </td>
+        </tr>
 		<?php
 	}
 }
