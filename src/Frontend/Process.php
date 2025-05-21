@@ -137,8 +137,8 @@ class Process {
 		 * Halt execution if:
 		 * * $break parameter is set.
 		 * * `nomgf` GET-parameter is set.
-		 * * Test Mode is enabled and current user is not an admin.
-		 * * Test Mode is enabled and `omgf` GET-parameter is not set.
+		 * * Test Mode is enabled and the current user is not an admin.
+		 * * Test Mode is enabled and the `omgf` GET-parameter is not set.
 		 */
 		$test_mode_enabled = ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) );
 
