@@ -532,4 +532,15 @@ class Helper {
 
 		return add_query_arg( $args, $url );
 	}
+
+	/**
+	 * @param array $post
+	 *
+	 * @return bool
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public static function is_running_optimize( $post = [] ) {
+		return apply_filters( 'omgf_is_running_optimize', ( array_key_exists( 'omgf_optimize', $_GET ) || array_key_exists( 'omgf_optimize', $post ) ) );
+	}
 }

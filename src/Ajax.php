@@ -72,6 +72,7 @@ class Ajax {
 	private function update_results() {
 		$post           = $this->clean( $_POST );
 		$path           = $post[ 'path' ];
+		$params         = $post[ 'params' ] ?? [];
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		if ( empty( $path ) || ! is_string( $path ) ) {
@@ -82,8 +83,10 @@ class Ajax {
 		$result_keys = array_keys( $stored_results );
 		$solved      = array_diff( $result_keys, $urls );
 
-		// Filter any previous results that are now resolved.
-		if ( ! empty( $solved ) && ! empty( $stored_results ) ) {
+		/**
+		 * We only filter $stored_results if we're running the optimization routine because that's the only point we can actually resolve things.
+		 */
+		if ( OMGF::is_running_optimize( $params ) && ! empty( $solved ) && ! empty( $stored_results ) ) {
 			$stored_results = array_filter(
 				$stored_results,
 				function ( $url ) use ( $solved ) {
@@ -93,13 +96,13 @@ class Ajax {
 			);
 		}
 
-		// We won't show results for more than 5 URLs on the Dashboard to limit the size of the database entry.
-		if ( count( $stored_results ) >= 5 ) {
-			$stored_results = array_slice( $stored_results, 0, 5, true );
-		}
-
 		// Store Google Fonts Checker results.
 		foreach ( $urls as $url ) {
+			// We don't take kindly to malicious actors!
+			if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+				continue;
+			}
+
 			// Decode special chars (e.g. &#038; to &) for readability.
 			$url = htmlspecialchars_decode( $url );
 
@@ -110,6 +113,14 @@ class Ajax {
 			if ( ! in_array( $path, $stored_results[ $url ], true ) ) {
 				$stored_results[ $url ][] = $path;
 			}
+		}
+
+		/**
+		 * We won't show results for more than 5 URLs on the Dashboard to limit the size of the database entry.
+		 * We allow adding everything first to update the found paths.
+		 */
+		if ( count( $stored_results ) >= 5 ) {
+			$stored_results = array_slice( $stored_results, 0, 5, true );
 		}
 
 		OMGF::update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
