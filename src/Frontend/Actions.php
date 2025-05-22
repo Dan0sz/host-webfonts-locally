@@ -103,12 +103,14 @@ class Actions {
 	 * @return bool
 	 */
 	private function should_display_menu() {
-		$warnings = Dashboard::get_warnings();
+		$warnings              = Dashboard::get_warnings();
+		$doing_tests           = defined( 'DAAN_DOING_TESTS' );
+		$is_admin_user         = current_user_can( 'manage_options' );
+		$is_admin_screen       = is_admin();
+		$quick_access_disabled = ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) );
+		$has_warnings          = ! empty( $warnings );
 
-		return ! defined( 'DAAN_DOING_TESTS' ) &&
-			current_user_can( 'manage_options' ) &&
-			! is_admin() &&
-			( empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) || ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) && ! empty( $warnings ) ) ) );
+		return $doing_tests || ( $is_admin_user && ! $is_admin_screen && ( ! $quick_access_disabled || $has_warnings ) );
 	}
 
 	/**
