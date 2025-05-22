@@ -38,7 +38,6 @@ class Process {
 		'fonts.gstatic.com',
 		'fonts.bunny.net',
 		'fonts-api.wp.com',
-		'fonts.mailerlite.com',
 	];
 
 	const RESOURCE_HINTS_ATTR  = [ 'dns-prefetch', 'preconnect', 'preload' ];
