@@ -91,10 +91,24 @@ class Actions {
 		);
 	}
 
+	/**
+	 * Top adminbar menu should be displayed when:
+	 *
+	 * - We're not running tests
+	 * - User is an administrator
+	 * - This is not an admin screen i.e., we're in the frontend
+	 * - Disable Quick Access is disabled, or
+	 * - Disable Quick Access is enabled, and there are warnings to display.
+	 *
+	 * @return bool
+	 */
 	private function should_display_menu() {
 		$warnings = Dashboard::get_warnings();
 
-		return ! defined( 'DAAN_DOING_TESTS' ) && ( ! current_user_can( 'manage_options' ) || is_admin() || ( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) && ! empty( $warnings ) ) );
+		return ! defined( 'DAAN_DOING_TESTS' ) &&
+			current_user_can( 'manage_options' ) &&
+			! is_admin() &&
+			( empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ) || ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) && ! empty( $warnings ) ) ) );
 	}
 
 	/**
