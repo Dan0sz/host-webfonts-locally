@@ -21,8 +21,6 @@ use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
 use OMGF\Admin\Updates;
 
-defined( 'ABSPATH' ) || exit;
-
 class Admin {
 	const OMGF_ADMIN_JS_HANDLE  = 'omgf-admin-js';
 
@@ -49,11 +47,9 @@ class Admin {
 		add_action( 'admin_notices', [ $this, 'print_notices' ] );
 
 		$this->do_optimize_settings();
-		$this->do_detection_settings();
 		$this->do_advanced_settings();
 		$this->do_help();
 		$this->maybe_handle_failed_premium_plugin_updates();
-		$this->maybe_do_after_update_notice();
 
 		add_filter( 'alloptions', [ $this, 'force_optimized_fonts_from_db' ] );
 		add_action( 'update_option_omgf_cache_keys', [ $this, 'clean_up_cache' ], 10, 2 );
@@ -65,15 +61,6 @@ class Admin {
 	 */
 	private function do_optimize_settings() {
 		new Admin\Settings\Optimize();
-	}
-
-	/**
-	 * Detection Settings tab
-	 *
-	 * @return void
-	 */
-	private function do_detection_settings() {
-		new Admin\Settings\Detection();
 	}
 
 	/**
@@ -117,34 +104,14 @@ class Admin {
 	}
 
 	/**
-	 * Checks if an update notice should be displayed after updating.
-	 *
-	 * @codeCoverageIgnore
-	 */
-	private function maybe_do_after_update_notice() {
-		if ( OMGF_CURRENT_DB_VERSION != false && version_compare( OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION, '<' ) ) {
-			Notice::set_notice(
-				sprintf(
-					__(
-						'Thank you for updating OMGF to v%1$s! This version contains database changes. <a href="%2$s">Verify your settings</a> and make sure everything is as you left it or, <a href="%3$s">view the changelog</a> for details. ',
-						'host-webfonts-local'
-					),
-					OMGF_DB_VERSION,
-					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS ),
-					admin_url( Settings::OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION )
-				),
-				'omgf-post-update'
-			);
-		}
-	}
-
-	/**
 	 * Enqueues the necessary JS and CSS and passes options as a JS object.
 	 *
 	 * @param $hook
+	 *
+	 * @codeCoverageIgnore because we don't want to test core functions.
 	 */
 	public function enqueue_admin_scripts( $hook ) {
-		if ( $hook == 'settings_page_optimize-webfonts' ) {
+		if ( $hook == 'settings_page_' . Settings::OMGF_ADMIN_PAGE ) {
 			wp_enqueue_script(
 				self::OMGF_ADMIN_JS_HANDLE,
 				plugin_dir_url( OMGF_PLUGIN_FILE ) . 'assets/js/omgf-admin.js',
@@ -180,8 +147,7 @@ class Admin {
 	 * @return array
 	 */
 	public function force_optimized_fonts_from_db( $alloptions ) {
-		if ( isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) &&
-			! $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) {
+		if ( isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) && ! $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) {
 			unset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] );
 		}
 
@@ -287,7 +253,7 @@ class Admin {
 				'omgf_cache_stale',
 				sprintf(
 					__(
-						'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Task Manager</a>.',
+						'OMGF\'s cached stylesheets don\'t reflect the current settings. Refresh the cache from the <a href="%s">Dashboard</a>.',
 						'host-webfonts-local'
 					),
 					admin_url( Settings::OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS )
@@ -310,7 +276,7 @@ class Admin {
 
 		foreach ( $array1 as $key => $value ) {
 			if ( is_array( $value ) ) {
-				$diff = $this->array_diff( $value, $array2[ $key ] );
+				$diff = empty( $array2[ $key ] ) ? [] : $this->array_diff( $value, $array2[ $key ] );
 
 				if ( $diff ) {
 					break;
