@@ -93,7 +93,7 @@ class Advanced extends Builder {
 
 	public function do_promo_dtap() {
 		$this->do_checkbox(
-			__( 'Enable Dev Mode (Pro)', 'host-webfonts-local' ),
+			__( 'Dev Mode (Pro)', 'host-webfonts-local' ),
 			'dtap', ! empty( OMGF::get_option( 'dtap', 'on' ) ),
 			sprintf(
 				__(
