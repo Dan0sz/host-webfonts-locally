@@ -23,7 +23,7 @@ OMGF is written with performance and user-friendliness in mind. It uses the Goog
 
 = How Does It Work? =
 
-After installing the plugin, OMGF will automatically start looking for Google Fonts whenever a page is requested on your website.
+After installing and configuring the plugin, OMGF will automatically start looking for Google Fonts whenever a page is requested on your website.
 
 All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's settings screen. There, you can choose to:
 
@@ -34,27 +34,39 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 
 = Other Features include =
 
+- The **integrated Google Fonts checker** sniffs through the network requests on your website on each pageload. If it
+  still finds externally hosted Google Fonts after optimization, it will notify you and provide solutions where
+  possible.
 - **Variable Fonts** support,
-- Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet with ~90%!
-- **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or `fonts.gstatic.com`,
-- **Ensure text remains visible during webfont load** by forcing the *font-display* attribute to your Google Fonts,
+- Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet up to 90%!
+- **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or
+  `fonts.gstatic.com`,
+- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to your Google Fonts,
+- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to all your other fonts! (
+  OMGF Pro required),
 
 = Additional Features in OMGF Pro =
 
-- **Multisite** support,
-- "Dig deeper" to find Google Fonts and optimize further. OMGF Pro supports:
-  - `@font-face` and `@import` statements inside **inline `<style>` blocks**,
-  - `@font-face` and `@import` statements inside **local stylesheets** loaded by your theme and/or plugins,
-  - `@font-face` and `@import` statements inside **externally hosted stylesheets** loaded by your theme and/or plugins,
-  - Web Font Loader (`webfont.js`),
-  - Early Access Google Fonts,
-  - Material Icons.
-- **Ensure text remains visible during webfont load** by adding the selected *font-display* attribute to *all* fonts on your website,
-- Modify the stylesheet's `src: url()` attribute to fully integrate with your configuration,
-  - Use this to serve fonts and the stylesheets from your CDN, or
-  - To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide, etc.), or
-  - Set a relative path to easily migrate from development/staging areas to production/live, or
-  - Anything you like!
+- Run the Google Fonts checker in the frontend (for all users) to organically check for present external Google Fonts
+  throughout your site.
+- Automatically configures itself to make sure all externally hosted Google Fonts on your site are hosted locally. OMGF
+  Pro supports:
+	- `@font-face` and `@import` statements inside **inline `<style>` blocks**,
+	- `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,
+	- `@font-face` and `@import` statements inside **externally hosted stylesheets** loaded by your theme and/or
+	  plugins,
+	- Web Font Loader (`webfont.js`),
+	- Async Google Fonts (loaded using JS)
+	- Material Icons.
+- **Multisite** and **WPML** support.
+- Whitelabel stylesheets, which removes branding and comments from the stylesheets to further reduce the size.
+- Modify your fonts' `src: url()` attribute to fully integrate with your configuration,
+	- Use this to serve fonts and the stylesheets from your CDN, or
+	- To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide,
+	  etc.), or
+	- Anything you like!
+- Dev Mode, which allows you to easily migrate between Development, Staging/Testing, Acceptance and Production
+  environments.
 
 *[Purchase OMGF Pro](https://daan.dev/wordpress/omgf-pro/) | [Documentation](https://daan.dev/docs/omgf-pro/) | [Tested Plugins & Themes](https://daan.dev/docs/omgf-pro/tested-themes-plugins/)*
 
