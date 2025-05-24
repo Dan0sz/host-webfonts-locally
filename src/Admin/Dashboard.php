@@ -149,7 +149,7 @@ class Dashboard {
 									'omgf_google_fonts_checker_general_text',
 									sprintf(
 										__(
-											'Due to the exotic way your theme, a plugin or script has implemented Google Fonts, %s isn\'t able to process all of them.',
+											'Because either your theme, a plugin or a script has implemented Google Fonts in a way only rocket scientists use, %s isn\'t able to process all of them.',
 											'host-webfonts-local'
 										),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
