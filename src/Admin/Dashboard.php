@@ -581,21 +581,29 @@ class Dashboard {
 			<td class="task-manager-row omgf-cache-legend">
 				<p><strong><?php _e( 'Status Legend', 'host-webfonts-local' ); ?></strong></p>
 				<ul>
-					<li class="omgf-cache-legend-item found"> <?php _e(
-							'<span class="omgf-cache-legend-item-title">Found</span> Stylesheet exists on your file system.',
-							'host-webfonts-local'
+					<li class="omgf-cache-legend-item found"> <?php echo wp_kses_post(
+							__(
+								'<span class="omgf-cache-legend-item-title">Found</span> Stylesheet exists on your file system.',
+								'host-webfonts-local'
+							)
 						); ?></li>
-					<li class="omgf-cache-legend-item unloaded"> <?php _e(
-							'<span class="omgf-cache-legend-item-title">Unloaded</span> Stylesheet exists but is not loaded in the frontend.',
-							'host-webfonts-local'
+					<li class="omgf-cache-legend-item unloaded"> <?php echo wp_kses_post(
+							__(
+								'<span class="omgf-cache-legend-item-title">Unloaded</span> Stylesheet exists but is not loaded in the frontend.',
+								'host-webfonts-local'
+							)
 						); ?></li>
-					<li class="omgf-cache-legend-item stale"> <?php _e(
-							'<span class="omgf-cache-legend-item-title">Stale</span> Settings were changed and the stylesheet\'s content does not reflect those changes.',
-							'host-webfonts-local'
+					<li class="omgf-cache-legend-item stale"> <?php echo wp_kses_post(
+							__(
+								'<span class="omgf-cache-legend-item-title">Stale</span> Settings were changed and the stylesheet\'s content does not reflect those changes.',
+								'host-webfonts-local'
+							)
 						); ?></li>
-					<li class="omgf-cache-legend-item not-found"> <?php _e(
-							'<span class="omgf-cache-legend-item-title">Not Found</span> Stylesheet was detected once but is missing now. You can safely remove it.',
-							'host-webfonts-local'
+					<li class="omgf-cache-legend-item not-found"> <?php echo wp_kses_post(
+							__(
+								'<span class="omgf-cache-legend-item-title">Not Found</span> Stylesheet was detected once but is missing now. You can safely remove it.',
+								'host-webfonts-local'
+							)
 						); ?></li>
 				</ul>
 			</td>
