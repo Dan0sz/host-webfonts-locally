@@ -98,15 +98,14 @@ class Dashboard {
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Test Mode is Enabled', 'host-webfonts-local' ); ?></h4>
 						<p>
-							<?php echo wp_kses(
+							<?php echo wp_kses_post(
 								sprintf(
 									__(
 										'All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
-								),
-								'post'
+								)
 							); ?>
 						</p>
 					</div>
@@ -128,7 +127,7 @@ class Dashboard {
 				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
 					<div class="task-manager-notice <?php echo apply_filters( 'omgf_task_manager_notice_class', 'alert' ); ?>">
 						<h4>
-							<?php echo wp_kses(
+							<?php echo wp_kses_post(
 								apply_filters(
 									'omgf_google_fonts_checker_title',
 									sprintf(
@@ -139,12 +138,11 @@ class Dashboard {
 										apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 										count( $google_fonts_checker_results ) === 5 ? '*' : '',
 									),
-								),
-								'post'
+								)
 							); ?>
 						</h4>
 						<p>
-							<?php echo wp_kses(
+							<?php echo wp_kses_post(
 								apply_filters(
 									'omgf_google_fonts_checker_general_text',
 									sprintf(
@@ -154,8 +152,7 @@ class Dashboard {
 										),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
 									)
-								),
-								'post'
+								)
 							); ?>
 						</p>
 						<?php if ( empty( $warnings ) ): ?>
@@ -205,9 +202,8 @@ class Dashboard {
 							<?php endforeach; ?>
 						</ol>
 						<?php if ( count( $google_fonts_checker_results ) === 5 ): ?>
-							<sub>* <em><?php echo wp_kses(
+							<sub>* <em><?php echo wp_kses_post(
 										__( 'This list is limited to 5 pages, because most entries will most likely be duplicates.', 'host-webfonts-local' ),
-										'post'
 									); ?></em>
 							</sub>
 						<?php endif; ?>
@@ -216,15 +212,14 @@ class Dashboard {
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
 						<p>
-							<?php echo wp_kses(
+							<?php echo wp_kses_post(
 								sprintf(
 									__(
 										'Hit the <strong>Save & Optimize</strong> at the bottom of this page to run a Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can\'t detect and optimize automatically.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
-								),
-								'post'
+								)
 							); ?>
 						</p>
 					</div>
@@ -232,7 +227,7 @@ class Dashboard {
 					<div class="task-manager-notice warning">
 						<h4><?php echo esc_html__( 'Google Fonts optimization seems to be failing.', 'host-webfonts-local' ); ?></h4>
 						<p>
-							<?php echo wp_kses(
+							<?php echo wp_kses_post(
 								sprintf(
 									__(
 										'%s isn\'t detecting any Google Fonts on your homepage. This could be for several reasons. <a href="%s" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
@@ -240,8 +235,7 @@ class Dashboard {
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 									OMGF::no_cache_optimize_url()
-								),
-								'post'
+								)
 							); ?>
 						</p>
 					</div>
@@ -251,12 +245,11 @@ class Dashboard {
 						<p>
 							<?php echo apply_filters(
 								'omgf_dashboard_success_message',
-								wp_kses(
+								wp_kses_post(
 									sprintf(
 										__( 'Cool! %s is successfully hosting all Google Fonts locally.', 'host-webfonts-local' ),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
-									),
-									'post'
+									)
 								)
 							); ?>
 						</p>
@@ -270,15 +263,14 @@ class Dashboard {
 								'host-webfonts-local'
 							); ?></h4>
 						<p>
-							<?php echo wp_kses(
+							<?php echo wp_kses_post(
 								sprintf(
 									__(
 										'Great job! Your configuration allows %s to run smoothly.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' )
-								),
-								'post'
+								)
 							); ?>
 						</p>
 					</div>
@@ -300,24 +292,22 @@ class Dashboard {
 								<?php $show_mark_as_fixed = true; ?>
 								<li id="omgf-notice-<?php echo esc_attr( $warning_id ); ?>">
 									<?php if ( $warning_id === 'is_multisite' ) : ?>
-										<?php echo wp_kses(
+										<?php echo wp_kses_post(
 											sprintf(
 												__(
 													'It seems like Multisite is enabled. OMGF doesn\'t natively support Multisite. If you\'re getting CORS related errors on any of your network\'s sites, consider <a href="%s" target="_blank">upgrading to OMGF Pro</a>.',
 													'host-webfonts-local'
 												),
 												Settings::DAAN_WORDPRESS_OMGF_PRO
-											),
-											'post'
+											)
 										); ?>
 									<?php endif; ?>
 									<?php if ( $warning_id === 'no_ssl' ) : ?>
-										<?php echo wp_kses(
+										<?php echo wp_kses_post(
 											__(
 												'Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.',
 												'host-webfonts-local'
-											),
-											'post'
+											)
 										); ?>
 									<?php endif; ?>
 									<?php if ( in_array(
@@ -329,7 +319,7 @@ class Dashboard {
 											'',
 											strtolower( $warning_id )
 										); ?>
-										<?php echo wp_kses(
+										<?php echo wp_kses_post(
 											sprintf(
 												__(
 													'Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href="%3$s" target="_blank">known issues</a> to fix it.',
@@ -338,8 +328,7 @@ class Dashboard {
 												ucfirst( $template_id ),
 												apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 												Settings::DAAN_DOCS_OMGF_PRO_KNOWN_ISSUES
-											),
-											'post'
+											)
 										); ?>
 									<?php endif; ?>
 									<?php if ( in_array(
@@ -351,7 +340,7 @@ class Dashboard {
 											'',
 											$warning_id
 										) ]; ?>
-										<?php echo wp_kses(
+										<?php echo wp_kses_post(
 											sprintf(
 												__(
 													'The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href="%3$s" target="_blank">known issues</a> for more information.',
@@ -360,8 +349,7 @@ class Dashboard {
 												$plugin_name,
 												apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 												Settings::DAAN_DOCS_OMGF_PRO_KNOWN_ISSUES
-											),
-											'post'
+											)
 										); ?>
 									<?php endif; ?>
 									<?php if ( in_array(
@@ -374,7 +362,7 @@ class Dashboard {
 											$warning_id
 										) ]; ?>
 										<?php
-										echo wp_kses(
+										echo wp_kses_post(
 											sprintf(
 												__(
 													'The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href="%3$s" target="_blank">list of known issues</a> to fix it.',
@@ -383,14 +371,13 @@ class Dashboard {
 												$plugin_name,
 												apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 												Settings::DAAN_DOCS_OMGF_PRO_KNOWN_ISSUES
-											),
-											'post'
+											)
 										);
 										?>
 									<?php endif; ?>
 									<?php if ( in_array( $warning_id, array_keys( self::IFRAMES_LOADING_FONTS ) ) ) : ?>
 										<?php $iframe_name = ucwords( str_replace( '-', ' ', $warning_id ) ); ?>
-										<?php echo wp_kses(
+										<?php echo wp_kses_post(
 											sprintf(
 												__(
 													'%1$s is loading an embedded iframe on your site. %2$s can\'t process Google Fonts inside iframes. <a href="%3$s" target="_blank">Click here</a> to find out why and what you can do about it.',
@@ -399,8 +386,7 @@ class Dashboard {
 												$iframe_name,
 												apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 												'https://daan.dev/docs/omgf-pro-faq/iframes/'
-											),
-											'post'
+											)
 										); ?>
 									<?php endif; ?>
 									<?php if ( $show_mark_as_fixed ) : ?>
@@ -418,12 +404,11 @@ class Dashboard {
 							<?php endforeach; ?>
 						</ol>
 						<p>
-							<sub>*<em><?php echo wp_kses(
+							<sub>*<em><?php echo wp_kses_post(
 										__(
 											'After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won\'t disappear by itself.',
 											'host-webfonts-local'
-										),
-										'post'
+										)
 									); ?></em></sub>
 						</p>
 					</div>
@@ -576,9 +561,11 @@ class Dashboard {
 							</li>
 						<?php endforeach; ?>
 						<?php if ( OMGF_CACHE_IS_STALE ) : ?>
-							<li class="stale-cache-notice"><em><?php echo __(
-										'The stylesheets in the cache do not reflect the current settings. Either <a href="#" id="omgf-cache-refresh">refresh</a> the cache (and maintain settings) or <a href="#" id="omgf-cache-flush">flush</a> it and start over.',
-										'host-webfonts-local'
+							<li class="stale-cache-notice"><em><?php echo wp_kses_post(
+										__(
+											'The stylesheets in the cache do not reflect the current settings. Either <a href="#" id="omgf-cache-refresh">refresh</a> the cache (and maintain settings) or <a href="#" id="omgf-cache-flush">flush</a> it and start over.',
+											'host-webfonts-local'
+										)
 									); ?></em></li>
 						<?php endif; ?>
 					</ul>

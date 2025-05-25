@@ -93,7 +93,7 @@ class Advanced extends Builder {
 
 	public function do_promo_dtap() {
 		$this->do_checkbox(
-			__( 'Dev Mode (Pro)', 'host-webfonts-local' ),
+			__( 'Developer Mode (Pro)', 'host-webfonts-local' ),
 			'dtap', ! empty( OMGF::get_option( 'dtap', 'on' ) ),
 			sprintf(
 				__(
@@ -112,7 +112,7 @@ class Advanced extends Builder {
 	 */
 	public function do_promo_fonts_source_url() {
 		$description = OMGF::get_option( 'dtap' ) === 'on' ? __(
-			'This option is disabled, because <strong>Optimize for DTAP (Pro)</strong> is enabled.',
+			'This option is disabled, because <strong>Developer Mode (Pro)</strong> is enabled.',
 			'host-webfonts-local'
 		) : sprintf(
 			__(

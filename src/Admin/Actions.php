@@ -166,12 +166,11 @@ class Actions {
 				return;
 			}
 
-			echo wp_kses(
+			echo wp_kses_post(
 				sprintf(
 					' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.', 'host-webfonts-local' ) . '</strong>',
 					$update_notices[ $new_version ]->url
-				),
-				'post'
+				)
 			);
 		}
 	}

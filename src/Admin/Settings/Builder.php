@@ -31,18 +31,11 @@ class Builder {
 	/** @var $promo string */
 	protected $promo;
 
-	/** @var array Stores all allow HTML elements for escaping. */
-	protected $allowed_html;
-
 	/**
 	 * Only sets the promo string on settings load.
 	 * Settings_Builder constructor.
 	 */
 	public function __construct() {
-		global $allowedposttags;
-
-		$this->allowed_html = $allowedposttags;
-
 		add_filter( 'omgf_optimize_settings_content', [ $this, 'do_promo' ] );
 		add_filter( 'omgf_advanced_settings_content', [ $this, 'do_promo' ] );
 	}
@@ -119,7 +112,7 @@ class Builder {
 					<br/>
 				<?php endforeach; ?>
 				<p class="description">
-					<?php echo wp_kses( $description . ' ' . $this->promo, $this->allowed_html ); ?>
+					<?php echo wp_kses_post( $description . ' ' . $this->promo ); ?>
 				</p>
 			</td>
 		</tr>
@@ -171,13 +164,12 @@ class Builder {
 						?>
 						<option value="<?php echo esc_attr( $option ); ?>" <?php echo esc_attr(
 							$is_selected ? 'selected="selected"' : ''
-						); ?>><?php echo wp_kses( $option_label, $this->allowed_html ); ?></option>
+						); ?>><?php echo wp_kses_post( $option_label ); ?></option>
 					<?php endforeach; ?>
 				</select>
 				<p class="description">
-					<?php echo wp_kses(
-						apply_filters( $name . '_setting_description', $description ),
-						$this->allowed_html
+					<?php echo wp_kses_post(
+						apply_filters( $name . '_setting_description', $description )
 					); ?>
 				</p>
 			</td>
@@ -202,9 +194,8 @@ class Builder {
 					   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" min="<?php echo esc_attr( $min ); ?>"
 					   value="<?php echo esc_attr( $value ); ?>"/>
 				<p class="description">
-					<?php echo wp_kses(
-						apply_filters( $name . '_setting_description', $description ),
-						$this->allowed_html
+					<?php echo wp_kses_post(
+						apply_filters( $name . '_setting_description', $description )
 					); ?>
 				</p>
 			</td>
@@ -233,9 +224,8 @@ class Builder {
 					placeholder="<?php echo esc_attr( $placeholder ); ?>"
 					value="<?php echo esc_attr( $value ); ?>"/>
 				<p class="description">
-					<?php echo wp_kses(
-						apply_filters( $name . 'setting_description', $description ),
-						$this->allowed_html
+					<?php echo wp_kses_post(
+						apply_filters( $name . 'setting_description', $description )
 					); ?>
 				</p>
 			</td>
@@ -268,9 +258,8 @@ class Builder {
 						$checked ? 'checked = "checked"' : ''
 					); ?>
 						   value="on"/>
-					<?php echo wp_kses(
-						apply_filters( $name . '_setting_description', $description ),
-						$this->allowed_html
+					<?php echo wp_kses_post(
+						apply_filters( $name . '_setting_description', $description )
 					); ?>
 				</label>
 			</td>
