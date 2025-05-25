@@ -234,6 +234,9 @@ class Process {
 					$timestamp   = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP );
 					$url         = "$url?ver=$timestamp";
 
+					/**
+					 * We can't use @see wp_kses_post() here, because it removes link elements.
+					 */
 					echo wp_kses(
 						"<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n",
 						self::PRELOAD_ALLOWED_HTML
