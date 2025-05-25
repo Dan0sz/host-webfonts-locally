@@ -83,7 +83,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 == Screenshots ==
 
 1. OMGF's Local Fonts screen. These settings affect the downloaded files and generated stylesheet(s).
-2. The dashboard offers a quick overview of possible configurational issues (and solutions), status of cached fonts/stylesheets along with quick links to simple management tasks e.g., Empty Cache and Configure/Remove.
+2. The dashboard offers a quick overview of possible configurational issues (and solutions), the status of cached fonts/stylesheets along with quick links to simple management tasks e.g., Empty Cache and Configure/Remove.
 3. After you've completed configuring OMGF, the Optimize Local Fonts section will allow you to tweak all of your Google Fonts stylesheets by e.g., unloading unused fonts and/or preloading fonts above the fold.
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
@@ -91,17 +91,17 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 = 6.0.0 - **2000 IQ edition** | May 26th, 2025 =
 * Added: Google Fonts checker, which will notify you when a plugin or theme has added Google Fonts OMGF can't process (and provide a solution!)
-* Improved: the menu in the Top Adminbar now has a stoplight, which notifies you if there are any Google Fonts and/or configurational issues. It'll show green if all is well.
+* Improved: the menu in the Top Admin Bar now has a stoplight, which notifies you if there are any Google Fonts and/or configurational issues. It'll show green if all is well.
 * Improved: the Task Manager is superseded by a brand-new Dashboard, which will give you a quick overview of:
-  - If OMGF was able to process all Google Fonts on your site, and if not; show you were they were found with possible solutions.
-  - If there were any configurational issues (e.g. known conflicts with other plugins, etc.).
+  - If OMGF was able to process all Google Fonts on your site, and if not; show you where they were found with possible solutions.
+  - If there were any configurational issues (e.g., known conflicts with other plugins, etc.).
   - Cache status,
   - Simple cache management tasks: Empty and Refresh.
 * Improved: The settings screen got a fresh new coat of paint, fully aligned with [Daan.dev's new look](https://daan.dev/blog/rants/daan-dev-2-0/).
 * Improved: Settings were moved around to move logical places:
   - The Detection Settings tab has been removed,
   - The Local Fonts tab is now fully dedicated to informing you about your Local Google Fonts configuration.
-  - All options that're not directly related to Locally Hosting Google Fonts, but directed more at optimization are now moved to the Advanced Settings tab.
+  - All options, that're not directly related to Locally Hosting Google Fonts but are directed more at optimization, are now moved to the Advanced Settings tab.
 * Improved: Optimize for (D)TAP is now renamed to the more appropriate Developer Mode.
 * Improved: Mailerlite users are now made aware of the fact that it loads iframes loading Google Fonts.
 * Improved: if Disable Admin Bar Menu (prev. Disable Quick Access Menu) is enabled, the Admin Bar Menu will still show if there are issues to notify the administrators.
