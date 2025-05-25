@@ -50,6 +50,28 @@ class Updates {
 		add_filter( 'all_plugins', [ $this, 'maybe_display_premium_update_notice' ] );
 		add_filter( 'wp_get_update_data', [ $this, 'maybe_add_update_count' ], 10, 1 );
 		add_filter( 'site_transient_update_plugins', [ $this, 'maybe_add_to_update_list' ] );
+		add_filter( 'site_transient_update_plugins', [ $this, 'force_update' ], PHP_INT_MAX );
+	}
+
+	/**
+	 * Addresses a possible bug introduced after @see https://core.trac.wordpress.org/ticket/61055 was introduced.
+	 *
+	 * Goes through the list of entered premium plugins this plugin is the parent of and removes them from the "checked" array, to force a check for updates.
+	 *
+	 * @param $transient
+	 *
+	 * @return mixed
+	 */
+	public function force_update( $transient ) {
+		foreach ( $this->premium_plugins as $plugin ) {
+			$basename = $plugin[ 'basename' ];
+
+			if ( is_object( $transient ) && isset( $transient->checked[ $basename ] ) ) {
+				unset( $transient->checked[ $basename ] );
+			}
+		}
+
+		return $transient;
 	}
 
 	/**
@@ -75,10 +97,8 @@ class Updates {
 				continue;
 			}
 
-			$latest_version  = $this->get_latest_version( $id, $premium_plugin[ 'transient_label' ] );
-			$current_version = get_plugin_data( WP_PLUGIN_DIR . '/' . $premium_plugin[ 'basename' ] )[ 'Version' ]
-				??
-				'';
+			$latest_version  = $this->get_latest_version( $id );
+			$current_version = get_plugin_data( WP_PLUGIN_DIR . '/' . $premium_plugin[ 'basename' ] )[ 'Version' ] ?? '';
 
 			if ( version_compare( $current_version, $latest_version, '<' ) ) {
 				$installed_plugins[ $premium_plugin[ 'basename' ] ][ 'update' ] = true;
@@ -103,16 +123,13 @@ class Updates {
 	private function update_already_displayed( $basename ) {
 		$available_updates = $this->get_available_updates();
 
-		if ( ! is_object( $available_updates ) ||
-			! isset( $available_updates->response ) ||
-			! is_array( $available_updates->response ) ) {
+		if ( ! is_object( $available_updates ) || ! isset( $available_updates->response ) || ! is_array( $available_updates->response ) ) {
 			return false;
 		}
 
 		$plugin_slugs = array_keys( $available_updates->response );
 
-		return in_array( $basename, $plugin_slugs ) &&
-			! empty( $available_updates->response[ $basename ]->new_version );
+		return in_array( $basename, $plugin_slugs ) && ! empty( $available_updates->response[ $basename ]->new_version );
 	}
 
 	/**
@@ -191,7 +208,7 @@ class Updates {
 		$label  = $plugin_data[ 'Name' ] ?? $plugin_data[ 'name' ] ?? 'this plugin';
 		$notice = sprintf(
 			__(
-				'An update for %1$s is available, but we\'re having trouble retrieving it. Download it from <a href=\'%2$s\' target=\'_blank\'>your account area</a> and install it manually. <a href=\'%3$s\' target=\'_blank\'>Need help</a>?',
+				'An update for %1$s is available, but we\'re having trouble retrieving it. Download it from <a href="%2$s" target="_blank">your account area</a> and install it manually. <a href="%3$s" target="_blank">Need help</a>?',
 				$this->plugin_text_domain
 			),
 			$label,
@@ -200,7 +217,7 @@ class Updates {
 		);
 
 		/**
-		 * This snippet of JS either overwrites the contents of the update message.
+		 * This snippet of JS overwrites the contents of the update message.
 		 */ ?>
 		<script>
 			window.addEventListener('DOMContentLoaded', function () {
@@ -299,9 +316,7 @@ class Updates {
 			$plugin_file = $plugin[ 'basename' ];
 
 			// If an update is already displayed, there's no need for us to recreate this object.
-			if ( is_object( $transient ) &&
-				isset( $transient->response ) &&
-				! isset( $transient->response[ $plugin_file ] ) ) {
+			if ( is_object( $transient ) && isset( $transient->response ) && ! isset( $transient->response[ $plugin_file ] ) ) {
 				$transient->response[ $plugin_file ] = (object) [
 					'slug'        => explode( '/', $plugin_file )[ 0 ],
 					'plugin'      => $plugin_file,
