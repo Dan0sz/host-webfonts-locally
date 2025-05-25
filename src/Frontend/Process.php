@@ -249,7 +249,7 @@ class Process {
 	}
 
 	/**
-	 * Start output buffer.
+	 * Start the output buffer.
 	 *
 	 * @action template_redirect
 	 * @return bool|string valid HTML.
@@ -519,7 +519,7 @@ class Process {
 			 * Mesmerize Theme compatibility
 			 */
 			if ( $href[ 'href' ] === '#' ) {
-				preg_match( '/data-href=[\'"](?P<href>.*?)[\'"]/', $link, $href );
+				preg_match( '/data-href=[\'"](?P<href>.*?)[\'"]/', $link, $href ); // @codeCoverageIgnore
 			}
 
 			/**
@@ -532,7 +532,7 @@ class Process {
 			 * @var string $id
 			 */
 			if ( ! $id ) {
-				$id = "$handle-" . strlen( $href[ 'href' ] );
+				$id = "$handle-" . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
 			}
 
 			/**
@@ -655,7 +655,7 @@ class Process {
 			$original_handle = $handle;
 
 			/**
-			 * If stylesheet with $handle is completely marked for unload, just remove the element
+			 * If the stylesheet with $handle is completely marked for unloading, just remove the element
 			 * to prevent it from loading.
 			 */
 			if ( apply_filters(
