@@ -9,31 +9,39 @@ window.addEventListener('load', () => {
 
 		/**
 		 * Run it all.
+		 *
+		 * @return void
 		 */
 		init: async function () {
-			let google_fonts = this.filterGoogleFonts();
-			let status = await this.getStatus(google_fonts);
+			try {
+				let google_fonts = this.filterGoogleFonts();
+				let status = await this.getStatus(google_fonts);
 
-			// menu_item only exists if the logged-in user has manage_options cap.
-			if (this.menu_item === null) {
-				return;
+				// menu_item only exists if the logged-in user has the manage_options cap.
+				if (this.menu_item === null) {
+					return;
+				}
+
+				this.menu_item.classList.add('dot');
+
+				if (status && this.menu_item !== null) {
+					this.menu_item.classList.add(status);
+				}
+
+				if ((status !== 'success' && status !== 'warning') && this.sub_menu !== null) {
+					this.addInfoBox(status);
+				}
+			} catch (error) {
+				console.error('OMGF - Error running Google Fonts Checker:', error);
+			} finally {
+				document.dispatchEvent(new Event('omgf_frontend_loaded'));
 			}
-
-			this.menu_item.classList.add('dot');
-
-			if (status && this.menu_item !== null) {
-				this.menu_item.classList.add(status);
-			}
-
-			if ((status !== 'success' || status !== 'warning') && this.sub_menu !== null) {
-				this.addInfoBox(status);
-			}
-
-			document.dispatchEvent(new Event('omgf_frontend_loaded'));
 		},
 
 		/**
 		 * Filter the list of entries for calls to the Google Fonts API for further processing.
+		 *
+		 * @return array
 		 */
 		filterGoogleFonts: () => {
 			let entries = window.performance.getEntries();
@@ -96,12 +104,16 @@ window.addEventListener('load', () => {
 
 	// Make sure we've collected all resources before continuing.
 	let entries = window.performance.getEntries();
+	let attempts = 0;
+	const MAX_ATTEMPTS = 20;
 	let interval = setInterval(() => {
+		attempts++;
+
 		if (entries.length < window.performance.getEntries().length) {
 			entries = window.performance.getEntries();
 		}
 
-		if (entries.length === window.performance.getEntries().length) {
+		if (entries.length === window.performance.getEntries().length || attempts >= MAX_ATTEMPTS) {
 			clearInterval(interval);
 
 			omgf_frontend.init();
