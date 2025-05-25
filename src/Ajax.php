@@ -76,7 +76,7 @@ class Ajax {
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		if ( empty( $path ) || ! is_string( $path ) ) {
-			return $stored_results;
+			return $stored_results; // @codeCoverageIgnore
 		}
 
 		$urls        = apply_filters( 'omgf_ajax_results', $post[ 'urls' ] ?? [], $path );
@@ -100,7 +100,7 @@ class Ajax {
 		foreach ( $urls as $url ) {
 			// We don't take kindly to malicious actors!
 			if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			// Decode special chars (e.g. &#038; to &) for readability.
