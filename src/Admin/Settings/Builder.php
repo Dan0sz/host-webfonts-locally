@@ -159,7 +159,7 @@ class Builder {
 						if ( is_array( $selected ) ) {
 							$is_selected = in_array( $option, $selected );
 						} else {
-							$is_selected = $selected == $option;
+							$is_selected = $selected === $option;
 						}
 						?>
 						<option value="<?php echo esc_attr( $option ); ?>" <?php echo esc_attr(
