@@ -319,7 +319,7 @@ class Process {
 		 * Customizer previews shouldn't get optimized content.
 		 */
 		if ( function_exists( 'is_customize_preview' ) && is_customize_preview() ) {
-			return false;
+			return false; // @codeCoverageIgnore
 		}
 
 		return true;
