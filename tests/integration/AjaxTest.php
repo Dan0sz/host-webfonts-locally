@@ -16,33 +16,39 @@ class AjaxTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetAdminBarStatus() {
-		$_REQUEST[ '_wpnonce' ] = wp_create_nonce( 'omgf_frontend_nonce' );
-		$_POST[ 'path' ]        = '/test';
-		$_POST[ 'urls' ]        = [ 'https://fonts.googleapis.com/css?family=Roboto:400,700' ];
-		$ajax                   = new Ajax();
-		$ajax->get_admin_bar_status();
+		try {
+			$_REQUEST[ '_wpnonce' ] = wp_create_nonce( 'omgf_frontend_nonce' );
+			$_POST[ 'path' ]        = '/test';
+			$_POST[ 'urls' ]        = [ 'https://fonts.googleapis.com/css?family=Roboto:400,700' ];
+			$ajax                   = new Ajax();
 
-		$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$ajax->get_admin_bar_status();
 
-		$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
+			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 
-		$_REQUEST[ '_wpnonce' ] = wp_create_nonce( 'omgf_frontend_nonce' );
-		$_POST[ 'path' ]        = '/test';
-		$_POST[ 'urls' ]        = [];
+			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
+		} finally {
+			$_POST[ 'urls' ] = [];
+		}
 
-		var_dump( $_POST );
+		try {
+			add_filter( 'omgf_is_running_optimize', '__return_true' );
 
-		$ajax = new Ajax();
-		$ajax->get_admin_bar_status();
+			$ajax = new Ajax();
 
-		$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$ajax->get_admin_bar_status();
 
-		$this->assertArrayNotHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
+			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 
-		unset( $_POST[ '_wpnonce' ] );
-		unset( $_POST[ 'path' ] );
-		unset( $_POST[ 'urls' ] );
+			$this->assertArrayNotHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
+		} finally {
+			remove_filter( 'omgf_is_running_optimize', '__return_true' );
 
-		OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			unset( $_POST[ '_wpnonce' ] );
+			unset( $_POST[ 'path' ] );
+			unset( $_POST[ 'urls' ] );
+
+			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
 	}
 }
