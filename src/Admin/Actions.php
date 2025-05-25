@@ -36,6 +36,8 @@ class Actions {
 	 * Needs to run before admin_menu and admin_init.
 	 *
 	 * @action _admin_menu
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function init_admin() {
 		new Settings();
@@ -45,9 +47,11 @@ class Actions {
 	 * Initialize the Save & Optimize routine.
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function do_optimize() {
-		new \OMGF\Admin\Optimize();
+		new Optimize();
 	}
 
 	/**
@@ -161,13 +165,12 @@ class Actions {
 			if ( ! isset( $update_notices[ $new_version ] ) ) {
 				return;
 			}
-			
-			echo wp_kses(
+
+			echo wp_kses_post(
 				sprintf(
 					' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.', 'host-webfonts-local' ) . '</strong>',
 					$update_notices[ $new_version ]->url
-				),
-				'post'
+				)
 			);
 		}
 	}

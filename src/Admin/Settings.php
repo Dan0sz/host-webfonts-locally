@@ -18,8 +18,6 @@ namespace OMGF\Admin;
 
 use OMGF\Admin;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * @codeCoverageIgnore
  */
@@ -29,32 +27,32 @@ class Settings extends Admin {
 	/**
 	 * Transients
 	 */
-	const OMGF_AVAILABLE_USED_SUBSETS = 'omgf_available_used_subsets';
+	const OMGF_AVAILABLE_USED_SUBSETS       = 'omgf_available_used_subsets';
 
-	const OMGF_NEWS_REEL              = 'omgf_news_reel';
+	const OMGF_NEWS_REEL                    = 'omgf_news_reel';
 
-	const OMGF_OPTIMIZE_HAS_RUN       = 'omgf_optimize_has_run';
+	const OMGF_OPTIMIZE_HAS_RUN             = 'omgf_optimize_has_run';
 
-	const OMGF_CACHE_IS_STALE         = 'omgf_cache_is_stale';
+	const OMGF_CACHE_IS_STALE               = 'omgf_cache_is_stale';
 
-	const OMGF_CURRENT_DB_VERSION     = 'omgf_current_db_version';
+	const OMGF_CURRENT_DB_VERSION           = 'omgf_current_db_version';
 
-	const OMGF_CACHE_TIMESTAMP        = 'omgf_cache_timestamp';
+	const OMGF_CACHE_TIMESTAMP              = 'omgf_cache_timestamp';
 
-	const OMGF_FOUND_IFRAMES          = 'omgf_found_iframes';
+	const OMGF_FOUND_IFRAMES                = 'omgf_found_iframes';
 
-	const OMGF_HIDDEN_NOTICES         = 'omgf_hidden_notices';
+	const OMGF_GOOGLE_FONTS_CHECKER_RESULTS = 'omgf_google_fonts_checker_results';
+
+	const OMGF_HIDDEN_NOTICES               = 'omgf_hidden_notices';
 
 	/**
 	 * Settings Fields
 	 */
-	const OMGF_SETTINGS_FIELD_OPTIMIZE  = 'omgf-optimize-settings';
+	const OMGF_SETTINGS_FIELD_OPTIMIZE = 'omgf-optimize-settings';
 
-	const OMGF_SETTINGS_FIELD_DETECTION = 'omgf-detection-settings';
+	const OMGF_SETTINGS_FIELD_ADVANCED = 'omgf-advanced-settings';
 
-	const OMGF_SETTINGS_FIELD_ADVANCED  = 'omgf-advanced-settings';
-
-	const OMGF_SETTINGS_FIELD_HELP      = 'omgf-help';
+	const OMGF_SETTINGS_FIELD_HELP     = 'omgf-help';
 
 	/**
 	 * Option values for (multi)selects.
@@ -137,7 +135,6 @@ class Settings extends Admin {
 	/**
 	 * Optimize Fonts
 	 */
-	const OMGF_OPTIMIZE_SETTING_AUTO_SUBSETS       = 'auto_subsets';
 
 	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     = 'display_option';
 
@@ -161,17 +158,19 @@ class Settings extends Admin {
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_LEGACY_MODE          = 'legacy';
+	const OMGF_ADV_SETTING_LEGACY_MODE            = 'legacy';
 
-	const OMGF_ADV_SETTING_COMPATIBILITY        = 'compatibility';
+	const OMGF_ADV_SETTING_COMPATIBILITY          = 'compatibility';
 
-	const OMGF_ADV_SETTING_SUBSETS              = 'subsets';
+	const OMGF_ADV_SETTING_AUTO_SUBSETS           = 'auto_subsets';
 
-	const OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS = 'disable_quick_access';
+	const OMGF_ADV_SETTING_SUBSETS                = 'subsets';
 
-	const OMGF_ADV_SETTING_DEBUG_MODE           = 'debug';
+	const OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU = 'disable_quick_access';
 
-	const OMGF_ADV_SETTING_UNINSTALL            = 'uninstall';
+	const OMGF_ADV_SETTING_DEBUG_MODE             = 'debug';
+
+	const OMGF_ADV_SETTING_UNINSTALL              = 'uninstall';
 
 	/**
 	 * Miscellaneous
@@ -219,13 +218,12 @@ class Settings extends Admin {
 
 		// Tabs
 		add_action( 'omgf_settings_tab', [ $this, 'optimize_fonts_tab' ], 0 );
-		add_action( 'omgf_settings_tab', [ $this, 'detection_settings_tab' ], 1 );
 		add_action( 'omgf_settings_tab', [ $this, 'advanced_settings_tab' ], 2 );
-		add_action( 'omgf_settings_tab', [ $this, 'help_tab' ], 3 );
+		// The Manage License tab is inserted at position 3.
+		add_action( 'omgf_settings_tab', [ $this, 'help_tab' ], 4 );
 
 		// Content
 		add_action( 'omgf_settings_content', [ $this, 'optimize_fonts_content' ], 0 );
-		add_action( 'omgf_settings_content', [ $this, 'detection_settings_content' ], 1 );
 		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 2 );
 		add_action( 'omgf_settings_content', [ $this, 'help_content' ], 3 );
 	}
@@ -236,7 +234,7 @@ class Settings extends Admin {
 	public function create_menu() {
 		add_options_page(
 			'OMGF',
-			'Optimize Google Fonts',
+			'OMGF',
 			'manage_options',
 			self::OMGF_ADMIN_PAGE,
 			[ $this, 'create_settings_page' ]
@@ -254,17 +252,13 @@ class Settings extends Admin {
 		}
 		?>
 		<div class="wrap omgf">
-			<h1><?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?></h1>
-
-			<p>
-				<?php echo get_plugin_data( OMGF_PLUGIN_FILE )[ 'Description' ]; ?>
-			</p>
-
+			<h1>
+				<?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?>
+			</h1>
 			<div class="settings-column">
 				<h2 class="omgf-nav nav-tab-wrapper">
 					<?php do_action( 'omgf_settings_tab' ); ?>
 				</h2>
-
 				<?php do_action( 'omgf_settings_content' ); ?>
 			</div>
 		</div>
@@ -277,10 +271,7 @@ class Settings extends Admin {
 	 * @throws ReflectionException
 	 */
 	public function register_settings() {
-		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE &&
-			$this->active_tab !== self::OMGF_SETTINGS_FIELD_DETECTION &&
-			$this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED &&
-			$this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) {
+		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED && $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) {
 			$this->active_tab = apply_filters( 'omgf_admin_settings_active_tab', self::OMGF_SETTINGS_FIELD_OPTIMIZE );
 		}
 
@@ -303,9 +294,6 @@ class Settings extends Admin {
 		$constants  = apply_filters( 'omgf_settings_constants', $reflection->getConstants() );
 
 		switch ( $this->active_tab ) {
-			case ( self::OMGF_SETTINGS_FIELD_DETECTION ):
-				$needle = 'OMGF_DETECTION_SETTING_';
-				break;
 			case ( self::OMGF_SETTINGS_FIELD_ADVANCED ):
 				$needle = 'OMGF_ADV_SETTING_';
 				break;
@@ -325,7 +313,13 @@ class Settings extends Admin {
 		);
 
 		foreach ( $settings as &$setting ) {
-			$setting = apply_filters( 'omgf_settings_option_name', "omgf_settings[$setting]", $setting, $settings, $needle );
+			$setting = apply_filters(
+				'omgf_settings_option_name',
+				"omgf_settings[$setting]",
+				$setting,
+				$settings,
+				$needle
+			);
 		}
 
 		return $settings;
@@ -337,7 +331,11 @@ class Settings extends Admin {
 	 * @return void
 	 */
 	public function optimize_fonts_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_OPTIMIZE, 'dashicons-performance', __( 'Local Fonts', 'host-webfonts-local' ) );
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_OPTIMIZE,
+			'dashicons-performance',
+			__( 'Local Fonts', 'host-webfonts-local' )
+		);
 	}
 
 	/**
@@ -364,17 +362,14 @@ class Settings extends Admin {
 	}
 
 	/**
-	 * Add Basic Settings Tab to Settings Screen.
-	 */
-	public function detection_settings_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_DETECTION, 'dashicons-search', __( 'Detection Settings', 'host-webfonts-local' ) );
-	}
-
-	/**
 	 * Add Advanced Settings Tab to Settings Screen.
 	 */
 	public function advanced_settings_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_ADVANCED, 'dashicons-admin-settings', __( 'Advanced Settings', 'host-webfonts-local' ) );
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_ADVANCED,
+			'dashicons-admin-settings',
+			__( 'Advanced', 'host-webfonts-local' )
+		);
 	}
 
 	/**
@@ -383,7 +378,11 @@ class Settings extends Admin {
 	 * @return void
 	 */
 	public function help_tab() {
-		$this->generate_tab( self::OMGF_SETTINGS_FIELD_HELP, 'dashicons-editor-help', __( 'Help', 'host-webfonts-local' ) );
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_HELP,
+			'dashicons-editor-help',
+			__( 'Help', 'host-webfonts-local' )
+		);
 	}
 
 	/**
@@ -401,12 +400,13 @@ class Settings extends Admin {
 			return;
 		}
 		?>
-		<form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post" action="<?php echo apply_filters(
-			'omgf_form_action',
-			admin_url( 'options.php?tab=' . $this->active_tab ),
-			$this->page,
-			$this->active_tab
-		); ?>" autocomplete="off">
+		<form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post"
+			  action="<?php echo apply_filters(
+				  'omgf_form_action',
+				  admin_url( 'options.php?tab=' . $this->active_tab ),
+				  $this->page,
+				  $this->active_tab
+			  ); ?>" autocomplete="off">
 			<?php
 			ob_start();
 			settings_fields( $field );
@@ -428,17 +428,16 @@ class Settings extends Admin {
 
 			?>
 			<?php if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) : ?>
-				<?php submit_button( $this->submit_button_text, 'primary', 'submit', false, empty( $this->get_settings() ) ? 'disabled' : null ); ?>
+				<?php submit_button(
+					$this->submit_button_text,
+					'primary',
+					'submit',
+					false,
+					empty( $this->get_settings() ) ? 'disabled' : null
+				); ?>
 			<?php endif; ?>
 		</form>
 		<?php
-	}
-
-	/**
-	 * Render Basic Settings content
-	 */
-	public function detection_settings_content() {
-		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_DETECTION );
 	}
 
 	/**
@@ -476,7 +475,10 @@ class Settings extends Admin {
 	 * @return string
 	 */
 	public function footer_text_left() {
-		$text = sprintf( __( 'Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', 'host-webfonts-local' ), '❤️' );
+		$text = sprintf(
+			__( 'Coded with %s in The Netherlands @ <strong>Daan.dev</strong>.', 'host-webfonts-local' ),
+			'❤️'
+		);
 
 		return '<span id="footer-thankyou">' . $text . '</span>';
 	}
@@ -537,7 +539,10 @@ class Settings extends Admin {
 		}
 
 		$text = sprintf(
-				__( 'Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:', 'host-webfonts-local' ),
+				__(
+					'Recently tagged <a target="_blank" href="%s"><strong>#OMGF</strong></a> on my blog:',
+					'host-webfonts-local'
+				),
 				'https://daan.dev/blog/tag/omgf'
 			) . ' ';
 		$text .= '<span id="omgf-ticker-wrap">';
@@ -545,9 +550,7 @@ class Settings extends Admin {
 
 		foreach ( $items as $item ) {
 			$hide = $i > 0 ? 'style="display: none;"' : '';
-			$text .= "<span class='ticker-item' $hide>" .
-				sprintf( '<a target="_blank" href="%s"><em>%s</em></a>', $item->link, $item->title ) .
-				'</span>';
+			$text .= "<span class='ticker-item' $hide>" . sprintf( '<a target="_blank" href="%s"><em>%s</em></a>', esc_url( $item->link ), esc_html( $item->title ) ) . '</span>';
 			++ $i;
 		}
 

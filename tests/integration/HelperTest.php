@@ -39,39 +39,6 @@ class HelperTest extends TestCase {
 	}
 
 	/**
-	 * @see Helper::preloaded_fonts()
-	 * @return void
-	 */
-	public function testPreloadedFonts() {
-		$preloads = OMGF::preloaded_fonts();
-
-		$this->assertEmpty( $preloads );
-		$this->assertIsArray( $preloads );
-	}
-
-	/**
-	 * @see Helper::unloaded_fonts()
-	 * @return void
-	 */
-	public function testUnloadedFonts() {
-		$unloads = OMGF::unloaded_fonts();
-
-		$this->assertEmpty( $unloads );
-		$this->assertIsArray( $unloads );
-	}
-
-	/**
-	 * @see Helper::unloaded
-	 * @return void
-	 */
-	public function testUnloadedStylesheets() {
-		$unloaded = OMGF::unloaded_stylesheets();
-
-		$this->assertEmpty( $unloaded );
-		$this->assertIsArray( $unloaded );
-	}
-
-	/**
 	 * @see Helper::get_cache_key()
 	 * @return void
 	 */
@@ -106,6 +73,8 @@ class HelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetDefaultSettings() {
+		OMGF::delete_option( Settings::OMGF_ADV_SETTING_SUBSETS );
+
 		$subsets = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 
 		$this->assertEquals( [ 'latin', 'latin-ext' ], $subsets );

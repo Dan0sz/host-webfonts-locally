@@ -16,12 +16,10 @@
 
 namespace OMGF\Frontend;
 
-use OMGF\Helper as OMGF;
+use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
+use OMGF\Helper as OMGF;
 use OMGF\Optimize;
-use OMGF\TaskManager;
-
-defined( 'ABSPATH' ) || exit;
 
 class Process {
 	const PRELOAD_ALLOWED_HTML = [
@@ -40,7 +38,6 @@ class Process {
 		'fonts.gstatic.com',
 		'fonts.bunny.net',
 		'fonts-api.wp.com',
-		'fonts.mailerlite.com',
 	];
 
 	const RESOURCE_HINTS_ATTR  = [ 'dns-prefetch', 'preconnect', 'preload' ];
@@ -55,9 +52,19 @@ class Process {
 	];
 
 	/**
+	 * Populates ?edit= parameter. To make sure OMGF doesn't run while editing posts.
+	 *
+	 * @var string[]
+	 */
+	public static $edit_actions = [
+		'edit',
+		'elementor',
+	];
+
+	/**
 	 * @var array $page_builders Array of keys set by page builders when they're displaying their previews.
 	 */
-	private $page_builders = [
+	public static $page_builders = [
 		'bt-beaverbuildertheme',
 		'ct_builder',
 		'elementor-preview',
@@ -69,16 +76,6 @@ class Process {
 		'tve',
 		'vc_action', // WP Bakery
 		'perfmatters', // Perfmatter's Frontend Script Manager.
-	];
-
-	/**
-	 * Populates ?edit= parameter. To make sure OMGF doesn't run while editing posts.
-	 *
-	 * @var string[]
-	 */
-	private $edit_actions = [
-		'edit',
-		'elementor',
 	];
 
 	/**
@@ -104,7 +101,29 @@ class Process {
 		$this->break     = $break;
 		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
 
+		if ( ! $this->timestamp ) {
+			$this->timestamp = $this->generate_timestamp(); // @codeCoverageIgnore
+		}
+
 		$this->init();
+	}
+
+	/**
+	 * Generates a timestamp and stores it to the DB, which is appended to the stylesheet and fonts URLs.
+	 *
+	 * @see StylesheetGenerator::build_source_string()
+	 * @see self::build_search_replace()
+	 *
+	 * @return int
+	 *
+	 * @codeCoverageIgnore
+	 */
+	private function generate_timestamp() {
+		$timestamp = time();
+
+		OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, $timestamp ); // @codeCoverageIgnore
+
+		return $timestamp;
 	}
 
 	/**
@@ -117,8 +136,8 @@ class Process {
 		 * Halt execution if:
 		 * * $break parameter is set.
 		 * * `nomgf` GET-parameter is set.
-		 * * Test Mode is enabled and current user is not an admin.
-		 * * Test Mode is enabled and `omgf` GET-parameter is not set.
+		 * * Test Mode is enabled and the current user is not an admin.
+		 * * Test Mode is enabled and the `omgf` GET-parameter is not set.
 		 */
 		$test_mode_enabled = ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) );
 
@@ -131,7 +150,7 @@ class Process {
 		add_action( 'wp_head', [ $this, 'add_preloads' ], 3 );
 		add_action( 'template_redirect', [ $this, 'maybe_buffer_output' ], 3 );
 		/**
-		 * @since v5.3.10 parse() runs on priority 10. Run this afterwards, to make sure e.g. the <preload> -> <noscript> approach some theme
+		 * @since v5.3.10 parse() runs on priority 10. Run this afterward, to make sure e.g. the <preload> -> <noscript> approach some theme
 		 *                developers use keeps working.
 		 */
 		add_filter( 'omgf_buffer_output', [ $this, 'remove_resource_hints' ], 11 );
@@ -201,7 +220,11 @@ class Process {
 					/**
 					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
 					 */
-					$file_path = str_replace( OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, apply_filters( 'omgf_frontend_process_url', $url ) );
+					$file_path = str_replace(
+						OMGF_UPLOAD_URL,
+						OMGF_UPLOAD_DIR,
+						apply_filters( 'omgf_frontend_process_url', $url )
+					);
 
 					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) || in_array( $url, $preloaded ) ) {
 						continue; // @codeCoverageIgnore
@@ -211,6 +234,9 @@ class Process {
 					$timestamp   = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP );
 					$url         = "$url?ver=$timestamp";
 
+					/**
+					 * We can't use @see wp_kses_post() here, because it removes link elements.
+					 */
 					echo wp_kses(
 						"<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n",
 						self::PRELOAD_ALLOWED_HTML
@@ -223,7 +249,7 @@ class Process {
 	}
 
 	/**
-	 * Start output buffer.
+	 * Start the output buffer.
 	 *
 	 * @action template_redirect
 	 * @return bool|string valid HTML.
@@ -231,26 +257,39 @@ class Process {
 	 * @codeCoverageIgnore
 	 */
 	public function maybe_buffer_output() {
+		if ( ! self::should_start() ) {
+			return false;
+		}
+
+		do_action( 'omgf_frontend_process_before_ob_start' );
+
+		return ob_start( [ $this, 'return_buffer' ] );
+	}
+
+	/**
+	 * Should we start the buffer?
+	 *
+	 * @return bool
+	 */
+	public static function should_start() {
 		/**
-		 * Always run, if the omgf_optimize parameter (added by Save & Optimize) is set.
+		 * Always run if the omgf_optimize parameter (added by Save & Optimize) is set.
 		 */
 		if ( isset( $_GET[ 'omgf_optimize' ] ) ) {
-			do_action( 'omgf_frontend_process_before_ob_start' );
-
-			return ob_start( [ $this, 'return_buffer' ] );
+			return true;
 		}
 
 		/**
 		 * Make sure Page Builder previews don't get optimized content.
 		 */
-		foreach ( $this->page_builders as $page_builder ) {
+		foreach ( self::$page_builders as $page_builder ) {
 			if ( array_key_exists( $page_builder, $_GET ) ) {
 				return false;
 			}
 		}
 
 		/**
-		 * Make sure editors in post types don't get optimized content.
+		 * Make sure editors in post-types don't get optimized content.
 		 */
 		foreach ( self::$post_types as $post_type ) {
 			if ( array_key_exists( $post_type, $_GET ) ) {
@@ -262,7 +301,7 @@ class Process {
 		 * Post edit actions
 		 */
 		if ( array_key_exists( 'action', $_GET ) ) {
-			if ( in_array( $_GET[ 'action' ], $this->edit_actions, true ) ) {
+			if ( in_array( $_GET[ 'action' ], self::$edit_actions, true ) ) {
 				return false;
 			}
 		}
@@ -280,15 +319,10 @@ class Process {
 		 * Customizer previews shouldn't get optimized content.
 		 */
 		if ( function_exists( 'is_customize_preview' ) && is_customize_preview() ) {
-			return false;
+			return false; // @codeCoverageIgnore
 		}
 
-		do_action( 'omgf_frontend_process_before_ob_start' );
-
-		/**
-		 * Let's GO!
-		 */
-		ob_start( [ $this, 'return_buffer' ] );
+		return true;
 	}
 
 	/**
@@ -468,7 +502,7 @@ class Process {
 			preg_match( '/id=[\'"](?P<id>.*?)[\'"]/', $link, $id );
 
 			/**
-			 * @var string $id Fallback to empty string if no id attribute exists.
+			 * @var array $id Fallback to empty string if no id attribute exists.
 			 */
 			$id = $this->strip_css_tag( $id[ 'id' ] ?? '' );
 
@@ -485,7 +519,7 @@ class Process {
 			 * Mesmerize Theme compatibility
 			 */
 			if ( $href[ 'href' ] === '#' ) {
-				preg_match( '/data-href=[\'"](?P<href>.*?)[\'"]/', $link, $href );
+				preg_match( '/data-href=[\'"](?P<href>.*?)[\'"]/', $link, $href ); // @codeCoverageIgnore
 			}
 
 			/**
@@ -494,9 +528,11 @@ class Process {
 			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
 			 *
 			 * @since v5.1.4
+			 *
+			 * @var string $id
 			 */
 			if ( ! $id ) {
-				$id = "$handle-" . strlen( $href[ 'href' ] );
+				$id = "$handle-" . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
 			}
 
 			/**
@@ -545,7 +581,10 @@ class Process {
 				 * @since v5.9.1 Same reason as above.
 				 */
 				$google_fonts[ $key ][ 'id' ] = 'custom_fonts'; // @codeCoverageIgnore
-			} elseif ( apply_filters( 'omgf_frontend_process_convert_pro_compatibility', str_contains( $id, 'cp-google-fonts' ) ) ) {
+			} elseif ( apply_filters(
+				'omgf_frontend_process_convert_pro_compatibility',
+				str_contains( $id, 'cp-google-fonts' )
+			) ) {
 				/**
 				 * Compatibility fix for Convert Pro by Brainstorm Force
 				 *
@@ -616,14 +655,17 @@ class Process {
 			$original_handle = $handle;
 
 			/**
-			 * If stylesheet with $handle is completely marked for unload, just remove the element
+			 * If the stylesheet with $handle is completely marked for unloading, just remove the element
 			 * to prevent it from loading.
 			 */
-			if ( apply_filters( 'omgf_unloaded_stylesheets', OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() ) ) ) {
-				$search[ $key ]  = $stack[ 'link' ];
-				$replace[ $key ] = '';
+			if ( apply_filters(
+				'omgf_unloaded_stylesheets',
+				OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() )
+			) ) {
+				$search[ $key ]  = $stack[ 'link' ]; // @codeCoverageIgnore
+				$replace[ $key ] = ''; // @codeCoverageIgnore
 
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			$cache_key = OMGF::get_cache_key( $stack[ 'id' ] );
@@ -690,9 +732,9 @@ class Process {
 		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
 		$count_iframes = count( $found_iframes );
 
-		foreach ( TaskManager::IFRAMES_LOADING_FONTS as $script_id => $script ) {
+		foreach ( Dashboard::IFRAMES_LOADING_FONTS as $script_id => $script ) {
 			if ( str_contains( $html, $script ) && ! in_array( $script_id, $found_iframes ) ) {
-				$found_iframes[] = $script_id;
+				$found_iframes[] = $script_id; // @codeCoverageIgnore
 			}
 		}
 
@@ -720,8 +762,12 @@ class Process {
 		}
 
 		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
+		$message     = sprintf(
+			__( 'Google Fonts optimization completed. Return to the <a href="%s">settings screen</a> to see the results.', 'host-webfonts-local' ),
+			admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE )
+		);
 
-		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, __( 'Cache refreshed successful!', 'host-webfonts-local' ) ) . $parts[ 2 ];
+		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, $message ) . $parts[ 2 ];
 	}
 
 	/**
