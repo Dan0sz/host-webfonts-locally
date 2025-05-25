@@ -16,26 +16,31 @@ class AjaxTest extends TestCase {
 	 * @return void
 	 */
 	public function testGetAdminBarStatus() {
-		$_REQUEST[ '_wpnonce' ] = wp_create_nonce( 'omgf_frontend_nonce' );
-		$_POST[ 'path' ]        = '/test';
-		$_POST[ 'urls' ]        = [ 'https://fonts.googleapis.com/css?family=Roboto:400,700' ];
+		try {
+			$_REQUEST[ '_wpnonce' ] = wp_create_nonce( 'omgf_frontend_nonce' );
+			$_POST[ 'path' ]        = '/test';
+			$_POST[ 'urls' ]        = [ 'https://fonts.googleapis.com/css?family=Roboto:400,700' ];
+			$ajax                   = new Ajax();
+			$ajax->get_admin_bar_status();
 
-		$ajax = new Ajax();
-		$ajax->get_admin_bar_status();
+			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 
-		$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
+		} finally {
+			$_POST[ 'urls' ] = [];
+		}
 
-		$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
+		try {
+			$ajax = new Ajax();
+			$ajax->get_admin_bar_status();
 
-		$_POST[ 'urls' ] = [];
+			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			
+			$this->assertArrayNotHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
+		} finally {
+			unset( $_POST[ '_wpnonce' ] );
+			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
 
-		$ajax->get_admin_bar_status();
-
-		$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
-
-		unset( $_POST[ '_wpnonce' ] );
-		OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
-
-		$this->assertArrayNotHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
 	}
 }
