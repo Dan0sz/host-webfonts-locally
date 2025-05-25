@@ -33,14 +33,16 @@ class RunTest extends TestCase {
 	 * @return void
 	 */
 	public function testAutoConfigSubsets() {
-		add_filter( 'omgf_setting_auto_subsets', [ $this, 'returnOn' ] );
-		add_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsets' ] );
-		add_filter( 'omgf_available_filtered_subsets', [ $this, 'returnFilteredSubsets' ] );
+		try {
+			add_filter( 'omgf_setting_auto_subsets', [ $this, 'returnOn' ] );
+			add_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsets' ] );
+			add_filter( 'omgf_available_filtered_subsets', [ $this, 'returnFilteredSubsets' ] );
 
-		new Run();
-
-		remove_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsets' ] );
-		remove_filter( 'omgf_available_filtered_subsets', [ $this, 'returnFilteredSubsets' ] );
+			new Run();
+		} finally {
+			remove_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsets' ] );
+			remove_filter( 'omgf_available_filtered_subsets', [ $this, 'returnFilteredSubsets' ] );
+		}
 
 		/**
 		 * Should have filtered the exotic subsets and only contain latin and latin-ext.
@@ -49,14 +51,16 @@ class RunTest extends TestCase {
 
 		OMGF::delete_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 
-		add_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsetsOnly' ] );
-		add_filter( 'omgf_available_filtered_subsets', '__return_empty_array' );
+		try {
+			add_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsetsOnly' ] );
+			add_filter( 'omgf_available_filtered_subsets', '__return_empty_array' );
 
-		new Run();
-
-		remove_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsetsOnly' ] );
-		remove_filter( 'omgf_available_filtered_subsets', '__return_empty_array' );
-		remove_filter( 'omgf_setting_auto_subsets', [ $this, 'returnOn' ] );
+			new Run();
+		} finally {
+			remove_filter( 'omgf_setting_subsets', [ $this, 'returnExoticSubsetsOnly' ] );
+			remove_filter( 'omgf_available_filtered_subsets', '__return_empty_array' );
+			remove_filter( 'omgf_setting_auto_subsets', [ $this, 'returnOn' ] );
+		}
 
 		/**
 		 * Should have detected that none of the subsets were available, so it fallback to Latin.
