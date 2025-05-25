@@ -123,6 +123,10 @@ class Ajax {
 			$stored_results = array_slice( $stored_results, 0, 5, true );
 		}
 
+		echo 'komt ie hier?';
+
+		var_dump( $stored_results );
+
 		OMGF::update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
 		return $stored_results;
