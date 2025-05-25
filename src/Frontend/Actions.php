@@ -107,7 +107,7 @@ class Actions {
 		$doing_tests           = defined( 'DAAN_DOING_TESTS' );
 		$is_admin_user         = current_user_can( 'manage_options' );
 		$is_admin_screen       = is_admin();
-		$quick_access_disabled = ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) );
+		$quick_access_disabled = ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) );
 		$has_warnings          = ! empty( $warnings );
 
 		return $doing_tests || ( $is_admin_user && ! $is_admin_screen && ( ! $quick_access_disabled || $has_warnings ) );

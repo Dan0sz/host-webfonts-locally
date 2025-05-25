@@ -60,15 +60,15 @@ class Helper {
 		$defaults = apply_filters(
 			'omgf_settings_defaults',
 			[
-				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION  => 'swap',
-				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE       => '',
-				Settings::OMGF_ADV_SETTING_LEGACY_MODE          => '',
-				Settings::OMGF_ADV_SETTING_COMPATIBILITY        => '',
-				Settings::OMGF_ADV_SETTING_AUTO_SUBSETS         => 'on',
-				Settings::OMGF_ADV_SETTING_SUBSETS              => [ 'latin', 'latin-ext' ],
-				Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS => '',
-				Settings::OMGF_ADV_SETTING_DEBUG_MODE           => '',
-				Settings::OMGF_ADV_SETTING_UNINSTALL            => '',
+				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION    => 'swap',
+				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE         => '',
+				Settings::OMGF_ADV_SETTING_LEGACY_MODE            => '',
+				Settings::OMGF_ADV_SETTING_COMPATIBILITY          => '',
+				Settings::OMGF_ADV_SETTING_AUTO_SUBSETS           => 'on',
+				Settings::OMGF_ADV_SETTING_SUBSETS                => [ 'latin', 'latin-ext' ],
+				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU => '',
+				Settings::OMGF_ADV_SETTING_DEBUG_MODE             => '',
+				Settings::OMGF_ADV_SETTING_UNINSTALL              => '',
 			]
 		);
 

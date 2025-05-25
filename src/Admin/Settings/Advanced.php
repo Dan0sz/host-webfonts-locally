@@ -42,7 +42,7 @@ class Advanced extends Builder {
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 100 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_auto_config_subsets' ], 110 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 120 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_quick_access_menu' ], 130 );
+		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_admin_bar_menu' ], 130 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 140 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_download_log' ], 150 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_uninstall' ], 160 );
@@ -198,10 +198,10 @@ class Advanced extends Builder {
 		);
 	}
 
-	public function do_disable_quick_access_menu() {
+	public function do_disable_admin_bar_menu() {
 		$this->do_checkbox(
-			__( 'Disable Quick Access Menu', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS ) ),
+			__( 'Disable Admin Bar Menu', 'host-webfonts-local' ),
+			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) ),
 			sprintf(
 				__(
 					'This disables the admin bar menu item. When issues are found the menu item will still appear to notify you and will be disabled again once the issues are resolved.',

@@ -158,19 +158,19 @@ class Settings extends Admin {
 	/**
 	 * Advanced Settings
 	 */
-	const OMGF_ADV_SETTING_LEGACY_MODE          = 'legacy';
+	const OMGF_ADV_SETTING_LEGACY_MODE            = 'legacy';
 
-	const OMGF_ADV_SETTING_COMPATIBILITY        = 'compatibility';
+	const OMGF_ADV_SETTING_COMPATIBILITY          = 'compatibility';
 
-	const OMGF_ADV_SETTING_AUTO_SUBSETS         = 'auto_subsets';
+	const OMGF_ADV_SETTING_AUTO_SUBSETS           = 'auto_subsets';
 
-	const OMGF_ADV_SETTING_SUBSETS              = 'subsets';
+	const OMGF_ADV_SETTING_SUBSETS                = 'subsets';
 
-	const OMGF_ADV_SETTING_DISABLE_QUICK_ACCESS = 'disable_quick_access';
+	const OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU = 'disable_quick_access';
 
-	const OMGF_ADV_SETTING_DEBUG_MODE           = 'debug';
+	const OMGF_ADV_SETTING_DEBUG_MODE             = 'debug';
 
-	const OMGF_ADV_SETTING_UNINSTALL            = 'uninstall';
+	const OMGF_ADV_SETTING_UNINSTALL              = 'uninstall';
 
 	/**
 	 * Miscellaneous
