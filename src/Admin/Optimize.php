@@ -33,8 +33,8 @@ class Optimize {
 	 * OMGF\Admin\Optimize constructor.
 	 */
 	public function __construct() {
-		$this->settings_page = $_GET[ 'page' ] ?? '';
-		$this->settings_tab = $_GET[ 'tab' ] ?? Settings::OMGF_SETTINGS_FIELD_OPTIMIZE;
+		$this->settings_page    = isset( $_GET[ 'page' ] ) ? sanitize_text_field( $_GET[ 'page' ] ) : '';
+		$this->settings_tab     = isset( $_GET[ 'tab' ] ) ? sanitize_text_field( $_GET[ 'tab' ] ) : Settings::OMGF_SETTINGS_FIELD_OPTIMIZE;
 		$this->settings_updated = isset( $_GET[ 'settings-updated' ] );
 
 		$this->init();
