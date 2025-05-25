@@ -60,6 +60,8 @@ class Ajax {
 
 	/**
 	 * Remove stylesheet with $handle from database.
+	 *
+	 * @codeCoverageIgnore Because it just deletes entries from the database.
 	 */
 	public function remove_stylesheet_from_db() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -85,12 +87,12 @@ class Ajax {
 	}
 
 	/**
-	 * Unset a $key from $array and update $option_name. Optionally store array as comma separated string.
+	 * Unset a $key from $array and update $option_name. Optionally, store the array as a comma-separated string.
 	 *
 	 * @param string $option_name     The option name to update.
 	 * @param array  $array           The array to saarch.
 	 * @param string $key             The key to unset when found.
-	 * @param bool   $comma_separated When true, $array is converted to a comma separated string before saving it
+	 * @param bool   $comma_separated When true, $array is converted to a comma-separated string before saving it
 	 *                                to the database.
 	 *
 	 * @return void
@@ -116,6 +118,8 @@ class Ajax {
 
 	/**
 	 * Removes the stale cache mark. Should be triggered along with a form submit.
+	 *
+	 * @codeCoverageIgnore Because all it does, basically, is delete an option from the DB.
 	 */
 	public function refresh_cache() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -148,6 +152,8 @@ class Ajax {
 	 * @param string $initiator
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore because this works the file system.
 	 */
 	private function empty_cache( $initiator = 'optimize-webfonts' ) {
 		$entries      = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*' ) );
@@ -188,8 +194,10 @@ class Ajax {
 
 	/**
 	 * Empty cache directory.
-	 * @since v4.5.3: Hardened security.
-	 * @since v4.5.5: Added authentication.
+	 * @since              v4.5.3: Hardened security.
+	 * @since              v4.5.5: Added authentication.
+	 *
+	 * @codeCoverageIgnore Because basically all it does is throw notices.
 	 */
 	public function empty_directory() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
