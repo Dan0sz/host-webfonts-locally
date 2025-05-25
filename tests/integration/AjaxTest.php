@@ -31,14 +31,23 @@ class AjaxTest extends TestCase {
 		}
 
 		try {
+			$_REQUEST[ '_wpnonce' ] = wp_create_nonce( 'omgf_frontend_nonce' );
+			$_POST[ 'path' ]        = '/test';
+			$_POST[ 'urls' ]        = [];
+
+			var_dump( $_POST );
+
 			$ajax = new Ajax();
 			$ajax->get_admin_bar_status();
 
 			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
-			
+
 			$this->assertArrayNotHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
 		} finally {
 			unset( $_POST[ '_wpnonce' ] );
+			unset( $_POST[ 'path' ] );
+			unset( $_POST[ 'urls' ] );
+
 			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
 
