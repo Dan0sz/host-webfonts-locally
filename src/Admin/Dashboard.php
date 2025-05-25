@@ -523,6 +523,16 @@ class Dashboard {
 		return $warnings;
 	}
 
+	/**
+	 * Render the status of cached stylesheets within the admin interface.
+	 *
+	 * This method displays the current cache status of optimized fonts and provides options to manage, configure, or remove stylesheets.
+	 * It distinguishes between various statuses such as found, unloaded, stale, and not-found, and offers a legend for easy interpretation.
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore because it's all frontend output.
+	 */
 	public static function render_status() {
 		$stylesheets          = OMGF::admin_optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
