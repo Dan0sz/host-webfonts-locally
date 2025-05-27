@@ -76,9 +76,10 @@ window.addEventListener('load', () => {
 
             let data = new FormData();
             data.append('action', 'omgf_admin_bar_status');
-            data.append('urls', google_fonts);
+            data.append('path', document.location.pathname);
+            data.append('urls', JSON.stringify(google_fonts));
             data.append('_wpnonce', omgf_frontend_i18n.nonce);
-            data.append('params', params);
+            data.append('params', JSON.stringify(params));
 
             return await omgf_frontend.ajax(data);
         },

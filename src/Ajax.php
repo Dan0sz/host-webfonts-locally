@@ -72,14 +72,15 @@ class Ajax {
 	private function update_results() {
 		$post           = $this->clean( $_POST );
 		$path           = $post[ 'path' ];
-		$params         = $post[ 'params' ] ?? [];
+		$params         = isset( $post[ 'params' ] ) ? json_decode( $post[ 'params' ], true ) : [];
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		if ( empty( $path ) || ! is_string( $path ) ) {
 			return $stored_results; // @codeCoverageIgnore
 		}
 
-		$urls        = apply_filters( 'omgf_ajax_results', $post[ 'urls' ] ?? [], $path );
+		$urls        = empty( $post[ 'urls' ] ) ? [] : json_decode( $post[ 'urls' ] );
+		$urls        = apply_filters( 'omgf_ajax_results', $urls, $path );
 		$result_keys = array_keys( $stored_results );
 		$solved      = array_diff( $result_keys, $urls );
 

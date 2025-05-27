@@ -541,6 +541,12 @@ class Helper {
 	 * @codeCoverageIgnore
 	 */
 	public static function is_running_optimize( $post = [] ) {
-		return apply_filters( 'omgf_is_running_optimize', ( array_key_exists( 'omgf_optimize', $_GET ) || array_key_exists( 'omgf_optimize', $post ) ) );
+		$is_running = false;
+
+		if ( isset( $_GET ) ) {
+			$is_running = array_key_exists( 'omgf_optimize', $_GET );
+		}
+
+		return apply_filters( 'omgf_is_running_optimize', ( array_key_exists( 'omgf_optimize', $post ) || $is_running ) );
 	}
 }
