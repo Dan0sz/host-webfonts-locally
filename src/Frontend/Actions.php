@@ -133,7 +133,7 @@ class Actions {
 		$js_file  = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
 		$js_path  = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
 
-		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [ 'wp-util' ], filemtime( $js_path ) );
+		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_path ), [ 'in_footer' => true ] );
 		wp_localize_script(
 			self::FRONTEND_ASSET_HANDLE,
 			'omgf_frontend_i18n',
@@ -141,6 +141,7 @@ class Actions {
 				'info_box_alert_text'  => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
 				'info_box_notice_text' => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
 				'info_box_admin_url'   => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
+				'ajax_url'             => admin_url( 'admin-ajax.php' ),
 				'nonce'                => wp_create_nonce( 'omgf_frontend_nonce' ),
 			]
 		);
