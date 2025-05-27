@@ -133,7 +133,7 @@ class Actions {
 		$js_file  = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
 		$js_path  = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
 
-		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_path ), [ 'strategy' => 'defer' ] );
+		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_path ), [ 'stategy' => 'defer' ] );
 		wp_localize_script(
 			self::FRONTEND_ASSET_HANDLE,
 			'omgf_frontend_i18n',
