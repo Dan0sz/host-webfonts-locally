@@ -28,6 +28,7 @@ class Filters {
 		add_filter( 'home_url', [ $this, 'force_ssl' ], 1000, 2 );
 		add_filter( 'omgf_optimize_user_agent', [ $this, 'maybe_do_legacy_mode' ] );
 		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'base64_decode_optimized_fonts' ] );
+		add_filter( 'omgf_do_not_load_frontend_assets', [ $this, 'maybe_load_frontend_assets' ] );
 		add_filter( 'vc_get_vc_grid_data_response', [ $this, 'parse_vc_grid_data' ], 10 );
 	}
 
@@ -88,6 +89,18 @@ class Filters {
 		}
 
 		return $user_agent;
+	}
+
+	/**
+	 * Don't load frontend assets if the admin bar menu is disabled.
+	 *
+	 * @since  v6.0.1
+	 * @filter omgf_do_not_load_frontend_assets
+	 *
+	 * @return bool
+	 */
+	public function maybe_load_frontend_assets() {
+		return ! empty( Helper::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) );
 	}
 
 	/**
