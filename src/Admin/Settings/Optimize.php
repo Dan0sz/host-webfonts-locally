@@ -346,22 +346,16 @@ class Optimize extends Builder {
 							<td colspan="5">
                                 <span class="family"><em><?php echo esc_html(
 											rawurldecode( $font->family )
-										); ?></em></span> <span
-									class="unload-mass-action">(<a class="unload-italics"><?php echo esc_html__(
+										); ?></em></span> <span class="unload-mass-action">(<a class="unload-italics"><?php echo esc_html__(
 											'Unload italics',
 											'host-webfonts-local'
-										); ?></a> <span class="dashicons dashicons-info tooltip"><span
-											class="tooltip-text"><?php echo __(
+										); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?php echo __(
 												'In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.',
 												'host-webfonts-local'
-											); ?></span></span> | <a class="unload-all"><?php echo esc_html__(
-											'Unload all',
-											'host-webfonts-local'
-										); ?></a> | <a class="load-all"><?php echo esc_html__(
+											); ?></span></span> | <a class="unload-all"><?php echo esc_html__( 'Unload all', 'host-webfonts-local' ); ?></a> | <a class="load-all"><?php echo esc_html__(
 											'Load all',
 											'host-webfonts-local'
-										); ?></a>)</span>
-							</td>
+										); ?></a>)</span></td>
 							<td class="fallback-font-stack">
 								<select data-handle="<?php echo esc_attr( $handle ); ?>" data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>" <?php echo esc_attr(
 									! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled="disabled"' : ''
@@ -377,14 +371,11 @@ class Optimize extends Builder {
 								</select>
 							</td>
 							<td class="replace">
-								<?php
-								$replace  = defined( 'OMGF_PRO_ACTIVE' ) &&
+								<?php $replace = defined( 'OMGF_PRO_ACTIVE' ) &&
 								isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
 								OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
-								$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset(
-										OMGF::get_option(
-											'omgf_pro_fallback_font_stack'
-										)[ $handle ][ $font->id ]
+								$fallback      = defined( 'OMGF_PRO_ACTIVE' ) && isset(
+										OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ]
 									) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';
 								?>
 								<?php do_action( 'omgf_optimize_local_fonts_replace', $handle, $font->id ); ?>
