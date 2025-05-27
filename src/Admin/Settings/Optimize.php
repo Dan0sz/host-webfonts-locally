@@ -363,14 +363,9 @@ class Optimize extends Builder {
 										); ?></a>)</span>
 							</td>
 							<td class="fallback-font-stack">
-								<select data-handle="<?php echo esc_attr( $handle ); ?>"
-										data-font-id="<?php echo esc_attr(
-											$handle . '-' . $font->id
-										); ?>" <?php echo esc_attr(
-									! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled' : ''
-								); ?>name="omgf_pro_fallback_font_stack[<?php echo esc_attr(
-									$handle
-								); ?>][<?php echo esc_attr( $font->id ); ?>]">
+								<select data-handle="<?php echo esc_attr( $handle ); ?>" data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>" <?php echo esc_attr(
+									! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled="disabled"' : ''
+								); ?> name="omgf_pro_fallback_font_stack[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]">
 									<option value=''><?php echo esc_attr__(
 											'None (default)',
 											'host-webfonts-local'
