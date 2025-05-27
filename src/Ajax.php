@@ -82,7 +82,7 @@ class Ajax {
 		$urls = $post[ 'urls' ] ?? [];
 
 		// Decode if $urls is valid JSON.
-		if ( is_string( $urls ) && json_decode( $urls ) && json_last_error() === JSON_ERROR_NONE ) {
+		if ( is_string( $urls ) && is_array( json_decode( $urls ) ) && json_last_error() === JSON_ERROR_NONE ) {
 			$urls = json_decode( $urls );
 		}
 
