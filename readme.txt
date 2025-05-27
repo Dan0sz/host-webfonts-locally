@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 6.0.0
+Stable tag: 6.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -88,6 +88,12 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.0.1 | May 27th, 2025 =
+* Fixed: Frontend Assets would still load, even when Disable Top Admin Bar Menu option was enabled.
+* Fixed: some themes (like Enfold) are incompatible with wp-util. Refactored wp-util dependencies to vanilla JS in Google Fonts checker to no longer rely on it.
+* Improved: really long URLs in the Dashboard are now wrapped.
+* Fixed: when OMGF Pro isn't installed, Fallback Font Stack shouldn't be enabled.
 
 = 6.0.0 - **2000 IQ edition** | May 26th, 2025 =
 * Added: Google Fonts checker, which will notify you when a plugin or theme has added Google Fonts OMGF can't process (and provide a solution!)
