@@ -81,10 +81,11 @@ class Ajax {
 
 		$urls = $post[ 'urls' ] ?? [];
 
+		// Decode if $urls is valid JSON.
 		if ( is_string( $urls ) && json_decode( $urls ) && json_last_error() === JSON_ERROR_NONE ) {
 			$urls = json_decode( $urls );
 		}
-		
+
 		$urls        = apply_filters( 'omgf_ajax_results', $urls, $path );
 		$result_keys = array_keys( $stored_results );
 		$solved      = array_diff( $result_keys, $urls );
