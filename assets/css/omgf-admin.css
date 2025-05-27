@@ -188,6 +188,7 @@
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice ol {
 	margin-left: 1em;
 	margin-bottom: 0;
+	overflow-wrap: anywhere;
 }
 
 .omgf form .omgf-task-manager .task-manager-row .task-manager-notice.warning,
