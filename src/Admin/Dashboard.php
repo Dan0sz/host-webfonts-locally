@@ -38,6 +38,7 @@ class Dashboard {
 		'essential-grid',
 		'perfmatters',
 		'thrive-visual-editor',
+		'trustmary',
 		'wp-optimize',
 	];
 
