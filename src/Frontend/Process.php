@@ -275,7 +275,7 @@ class Process {
 		/**
 		 * Always run if the omgf_optimize parameter (added by Save & Optimize) is set.
 		 */
-		if ( isset( $_GET[ 'omgf_optimize' ] ) ) {
+		if ( self::query_param_exists( 'omgf_optimize' ) ) {
 			return true;
 		}
 
@@ -283,7 +283,7 @@ class Process {
 		 * Make sure Page Builder previews don't get optimized content.
 		 */
 		foreach ( self::$page_builders as $page_builder ) {
-			if ( array_key_exists( $page_builder, $_GET ) ) {
+			if ( self::query_param_exists( $page_builder ) ) {
 				return false;
 			}
 		}
@@ -292,7 +292,7 @@ class Process {
 		 * Make sure editors in post-types don't get optimized content.
 		 */
 		foreach ( self::$post_types as $post_type ) {
-			if ( array_key_exists( $post_type, $_GET ) ) {
+			if ( self::query_param_exists( $post_type ) ) {
 				return false;
 			}
 		}
@@ -300,7 +300,7 @@ class Process {
 		/**
 		 * Post edit actions
 		 */
-		if ( array_key_exists( 'action', $_GET ) ) {
+		if ( self::query_param_exists( 'action' ) ) {
 			if ( in_array( $_GET[ 'action' ], self::$edit_actions, true ) ) {
 				return false;
 			}
@@ -311,7 +311,7 @@ class Process {
 		 *
 		 * @see https://www.modpagespeed.com/doc/experiment#ModPagespeed
 		 */
-		if ( array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET[ 'PageSpeed' ] ) {
+		if ( self::query_param_exists( 'PageSpeed' ) && 'off' === $_GET[ 'PageSpeed' ] ) {
 			return false;
 		}
 
@@ -323,6 +323,19 @@ class Process {
 		}
 
 		return true;
+	}
+
+	/**
+	 * A simple wrapper that makes sure the $_GET array is set, because in faulty setups, this might be the case.
+	 *
+	 * @see https://wordpress.org/support/topic/uncaught-typeerror-in-process-php/
+	 *
+	 * @param $array
+	 *
+	 * @return bool
+	 */
+	private static function query_param_exists( $key ) {
+		return ! empty( $_GET ) && array_key_exists( $key, $_GET );
 	}
 
 	/**
