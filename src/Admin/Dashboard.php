@@ -35,8 +35,10 @@ class Dashboard {
 	 */
 	const PLUGINS_ADDTNL_CONF = [
 		'autoptimize',
+		'borlabs-cookie',
 		'essential-grid',
 		'perfmatters',
+		'real-cookie-banner',
 		'thrive-visual-editor',
 		'trustmary',
 		'wp-optimize',
