@@ -3,7 +3,7 @@
  * @package OMGF integration tests - Admin
  */
 
-namespace integration\API;
+namespace OMGF\Tests\Integration\API;
 
 use OMGF\Admin\Settings;
 use OMGF\API\AdminbarMenu;
