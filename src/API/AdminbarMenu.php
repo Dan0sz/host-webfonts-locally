@@ -83,12 +83,15 @@ class AdminbarMenu {
 	/**
 	 * Generate and return the status of the Google Fonts Checker.
 	 *
+	 * @param \WP_REST_Request $request The request object.
+	 *
 	 * @filter omgf_ajax_admin_bar_status
 	 *
 	 * @return void
 	 */
-	public function get_admin_bar_status() {
-		$stored_results = $this->update_results();
+	public function get_admin_bar_status( $request ) {
+		$params         = $this->clean( $request->get_params() );
+		$stored_results = $this->update_results( $params );
 		$status         = 'success';
 
 		if ( ! empty( $stored_results ) ) {
@@ -103,12 +106,42 @@ class AdminbarMenu {
 	}
 
 	/**
+	 * Cleans a given variable by sanitizing its value.
+	 *
+	 * @param mixed $var The variable to be cleaned. Can be a scalar value or an array of values.
+	 *
+	 * @return mixed Returns the cleaned variable. If the input is scalar, it will be sanitized accordingly.
+	 *               If an array is passed, the method is applied recursively to each element.
+	 */
+	private function clean( $var ) {
+		// If the variable is an array, recursively apply the function to each element of the array.
+		if ( is_array( $var ) ) {
+			return array_map( [ $this, 'clean' ], $var );
+		}
+
+		// If the variable is a scalar value (string, integer, float, boolean).
+		if ( is_scalar( $var ) ) {
+			// Parse the variable using the wp_parse_url function.
+			$parsed = wp_parse_url( $var );
+			// If the variable has a scheme (e.g. http:// or https://), sanitize the variable using the esc_url_raw function.
+			if ( isset( $parsed[ 'scheme' ] ) ) {
+				return esc_url_raw( wp_unslash( $var ), [ $parsed[ 'scheme' ] ] );
+			}
+
+			// If the variable does not have a scheme, sanitize the variable using the sanitize_text_field function.
+			return sanitize_text_field( wp_unslash( $var ) );
+		}
+
+		// If the variable is not an array or a scalar value, return the variable unchanged.
+		return $var; // @codeCoverageIgnore
+	}
+
+	/**
 	 * Store results of the Google Fonts checker in the database for rendering in the Dashboard.
 	 *
 	 * @return array
 	 */
-	private function update_results() {
-		$post           = $this->clean( $_POST );
+	private function update_results( $post ) {
 		$path           = $post[ 'path' ];
 		$params         = isset( $post[ 'params' ] ) ? json_decode( $post[ 'params' ], true ) : [];
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
@@ -171,37 +204,6 @@ class AdminbarMenu {
 		OMGF::update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
 		return $stored_results;
-	}
-
-	/**
-	 * Cleans a given variable by sanitizing its value.
-	 *
-	 * @param mixed $var The variable to be cleaned. Can be a scalar value or an array of values.
-	 *
-	 * @return mixed Returns the cleaned variable. If the input is scalar, it will be sanitized accordingly.
-	 *               If an array is passed, the method is applied recursively to each element.
-	 */
-	private function clean( $var ) {
-		// If the variable is an array, recursively apply the function to each element of the array.
-		if ( is_array( $var ) ) {
-			return array_map( [ $this, 'clean' ], $var );
-		}
-
-		// If the variable is a scalar value (string, integer, float, boolean).
-		if ( is_scalar( $var ) ) {
-			// Parse the variable using the wp_parse_url function.
-			$parsed = wp_parse_url( $var );
-			// If the variable has a scheme (e.g. http:// or https://), sanitize the variable using the esc_url_raw function.
-			if ( isset( $parsed[ 'scheme' ] ) ) {
-				return esc_url_raw( wp_unslash( $var ), [ $parsed[ 'scheme' ] ] );
-			}
-
-			// If the variable does not have a scheme, sanitize the variable using the sanitize_text_field function.
-			return sanitize_text_field( wp_unslash( $var ) );
-		}
-
-		// If the variable is not an array or a scalar value, return the variable unchanged.
-		return $var; // @codeCoverageIgnore
 	}
 
 	/**
