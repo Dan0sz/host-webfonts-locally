@@ -101,7 +101,7 @@ class Filters {
 	 */
 	public function maybe_load_frontend_assets( $value ) {
 		if ( Helper::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) ) {
-			return true;
+			return true; // Don't load.
 		}
 
 		return $value;
