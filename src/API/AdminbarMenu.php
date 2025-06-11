@@ -25,7 +25,7 @@ class AdminbarMenu {
 
 	private $base = 'adminbar-menu';
 
-	private $enpoint = 'status';
+	private $endpoint = 'status';
 
 	/**
 	 * Build class.
@@ -53,7 +53,7 @@ class AdminbarMenu {
 	public function register_routes() {
 		register_rest_route(
 			$this->namespace,
-			'/' . $this->base . '/' . $this->enpoint,
+			'/' . $this->base . '/' . $this->endpoint,
 			[
 				[
 					'methods'             => 'POST',
