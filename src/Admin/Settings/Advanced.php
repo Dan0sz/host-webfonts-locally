@@ -215,7 +215,7 @@ class Advanced extends Builder {
 		$this->do_checkbox(
 			__( 'Disable Admin Bar Menu', 'host-webfonts-local' ),
 			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU,
-			$$checked,
+			$checked,
 			$description
 		);
 	}
