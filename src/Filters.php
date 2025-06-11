@@ -92,15 +92,19 @@ class Filters {
 	}
 
 	/**
-	 * Don't load frontend assets if the admin bar menu is disabled.
+	 * Don't load frontend assets if the Disable Admin Bar Menu option is enabled.
 	 *
 	 * @since  v6.0.1
 	 * @filter omgf_do_not_load_frontend_assets
 	 *
 	 * @return bool
 	 */
-	public function maybe_load_frontend_assets() {
-		return ! empty( Helper::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) );
+	public function maybe_load_frontend_assets( $value ) {
+		if ( Helper::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) ) {
+			return true;
+		}
+
+		return $value;
 	}
 
 	/**
