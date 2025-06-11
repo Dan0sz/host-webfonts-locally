@@ -198,8 +198,8 @@ class Settings extends Admin {
 	public function __construct() {
 		parent::__construct();
 
-		$this->active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : self::OMGF_SETTINGS_FIELD_OPTIMIZE;
-		$this->page       = isset( $_GET[ 'page' ] ) ? $_GET[ 'page' ] : '';
+		$this->active_tab = $_GET[ 'tab' ] ?? self::OMGF_SETTINGS_FIELD_OPTIMIZE;
+		$this->page       = $_GET[ 'page' ] ?? '';
 
 		add_action( 'admin_menu', [ $this, 'create_menu' ] );
 		add_filter( 'plugin_action_links_' . plugin_basename( OMGF_PLUGIN_FILE ), [ $this, 'create_settings_link' ] );
