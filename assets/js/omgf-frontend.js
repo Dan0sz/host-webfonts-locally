@@ -100,19 +100,7 @@ window.addEventListener('load', () => {
 					},
 					body: data,
 				}
-			).then(response => {
-				if (response.status === 200) {
-					return response.json();
-				}
-
-				return false;
-			}).then(response => {
-				if (response.data !== undefined) {
-					return response.data;
-				} else {
-					return response;
-				}
-			});
+			).then(response => response.ok ? response.json() : false);
 		},
 
 		/**
