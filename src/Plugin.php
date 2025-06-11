@@ -37,14 +37,14 @@ class Plugin {
 			new Admin\Ajax();
 		}
 
-		// Only load in frontend.
+		// Only load in the frontend.
 		if ( ! is_admin() ) {
 			new Frontend\Actions();
 			new Frontend\Filters();
 		}
 
 		// Load globally.
-		new Ajax();
+		new API\AdminbarMenu();
 		new Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
