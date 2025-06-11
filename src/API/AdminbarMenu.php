@@ -47,6 +47,8 @@ class AdminbarMenu {
 	 * Register the API route.
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -64,9 +66,13 @@ class AdminbarMenu {
 	}
 
 	/**
+	 * Only logged-in administrators should be allowed to use the API.
 	 *
+	 * @filter omgf_api_adminbar_menu_permission
 	 *
 	 * @return mixed|null
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function get_permission() {
 		$is_allowed = current_user_can( 'manage_options' );
