@@ -1,26 +1,32 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * *
-*
-*  ██████╗ ███╗   ███╗ ██████╗ ███████╗
-* ██╔═══██╗████╗ ████║██╔════╝ ██╔════╝
-* ██║   ██║██╔████╔██║██║  ███╗█████╗
-* ██║   ██║██║╚██╔╝██║██║   ██║██╔══╝
-* ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║
-*  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝
-*
-* @package  : OMGF
-* @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
-* @url      : https://daan.dev
-* * * * * * * * * * * * * * * * * * * */
+ *
+ *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
+ * ██╔═══██╗████╗ ████║██╔════╝ ██╔════╝
+ * ██║   ██║██╔████╔██║██║  ███╗█████╗
+ * ██║   ██║██║╚██╔╝██║██║   ██║██╔══╝
+ * ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║
+ *  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝
+ *
+ * @package  : OMGF
+ * @author   : Daan van den Bergh
+ * @copyright: © 2017 - 2025 Daan van den Bergh
+ * @url      : https://daan.dev
+ * * * * * * * * * * * * * * * * * * * */
 
-namespace OMGF;
+namespace OMGF\API;
 
 use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
-class Ajax {
+class AdminbarMenu {
+	private $namespace = 'omgf/v1';
+
+	private $base = 'adminbar-menu';
+
+	private $enpoint = 'status';
+
 	/**
 	 * Build class.
 	 */
@@ -29,23 +35,53 @@ class Ajax {
 	}
 
 	/**
-	 * Actions hooks.
+	 * Action/filter hooks.
 	 *
 	 * @return void
 	 */
 	private function init() {
-		add_action( 'wp_ajax_omgf_admin_bar_status', [ $this, 'get_admin_bar_status' ] );
-		add_action( 'wp_ajax_nopriv_omgf_admin_bar_status', [ $this, 'get_admin_bar_status' ] );
+		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 
 	/**
-	 * Determines the status of our admin bar menu based on stored results and warnings.
+	 * Register the API route.
 	 *
-	 * @return void Sends a JSON response with one of the statuses: 'alert', 'notice', or 'success'.
+	 * @return void
+	 */
+	public function register_routes() {
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->base . '/' . $this->enpoint,
+			[
+				[
+					'methods'             => 'POST',
+					'callback'            => [ $this, 'get_admin_bar_status' ],
+					'permission_callback' => [ $this, 'get_permission' ],
+				],
+				'schema' => null,
+			]
+		);
+	}
+
+	/**
+	 *
+	 *
+	 * @return mixed|null
+	 */
+	public function get_permission() {
+		$is_allowed = current_user_can( 'manage_options' );
+
+		return apply_filters( 'omgf_api_adminbar_menu_permission', $is_allowed );
+	}
+
+	/**
+	 * Generate and return the status of the Google Fonts Checker.
+	 *
+	 * @filter omgf_ajax_admin_bar_status
+	 *
+	 * @return void
 	 */
 	public function get_admin_bar_status() {
-		check_ajax_referer( 'omgf_frontend_nonce', '_wpnonce' );
-
 		$stored_results = $this->update_results();
 		$status         = 'success';
 
@@ -57,11 +93,7 @@ class Ajax {
 			$status = 'notice';
 		}
 
-		$status = apply_filters( 'omgf_ajax_admin_bar_status', $status );
-
-		if ( ! defined( 'DAAN_DOING_TESTS' ) ) {
-			wp_send_json_success( $status ); // @codeCoverageIgnore
-		}
+		return apply_filters( 'omgf_ajax_admin_bar_status', $status );
 	}
 
 	/**
