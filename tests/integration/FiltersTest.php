@@ -74,6 +74,36 @@ class FiltersTest extends TestCase {
 	}
 
 	/**
+	 * @see Filters::maybe_load_frontend_assets()
+	 *
+	 * @return void
+	 */
+	public function testDoLoadFrontendAssets() {
+		add_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+
+		$filters = new Filters();
+		$load    = $filters->maybe_load_frontend_assets( false );
+
+		remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+
+		$this->assertTrue( $load );
+	}
+
+	/**
+	 * @see Filters::maybe_load_frontend_assets()
+	 *
+	 * @return void
+	 */
+	public function testDoNotLoadFrontendAssets() {
+		remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+
+		$filters = new Filters();
+		$load    = $filters->maybe_load_frontend_assets( false );
+
+		$this->assertFalse( $load );
+	}
+
+	/**
 	 * @see Filters::parse_vc_grid_data()
 	 * @return void
 	 */

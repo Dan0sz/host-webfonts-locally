@@ -199,16 +199,24 @@ class Advanced extends Builder {
 	}
 
 	public function do_disable_admin_bar_menu() {
+		$checked     = ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) );
+		$description = sprintf(
+			__(
+				'This disables the %s admin bar menu item and stops the Google Fonts checker from running in the frontend.',
+				'host-webfonts-local'
+			),
+			apply_filters( 'omgf_settings_page_title', 'OMGF' )
+		);
+
+		if ( $checked && OMGF::get_option( 'google_fonts_checker' ) && get_transient( 'omgf_pro_run_google_fonts_checker' ) ) {
+			$description .= ' ' . __( 'This setting will resume functioning once the Google Fonts checker has finished running.', 'host-webfonts-local' );
+		}
+
 		$this->do_checkbox(
 			__( 'Disable Admin Bar Menu', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) ),
-			sprintf(
-				__(
-					'This disables the admin bar menu item. When issues are found the menu item will still appear to notify you and will be disabled again once the issues are resolved.',
-					'host-webfonts-local'
-				),
-				apply_filters( 'omgf_settings_page_title', 'OMGF' )
-			)
+			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU,
+			$checked,
+			$description
 		);
 	}
 
