@@ -94,6 +94,7 @@ window.addEventListener('load', () => {
 				omgf_frontend_i18n.api_url,
 				{
 					method: 'POST',
+					credentials: 'same-origin',
 					headers: {
 						'X-WP-Nonce': omgf_frontend_i18n.nonce,
 					},
