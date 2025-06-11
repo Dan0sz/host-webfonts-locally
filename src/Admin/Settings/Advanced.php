@@ -92,9 +92,8 @@ class Advanced extends Builder {
 	}
 
 	public function do_promo_dtap() {
-		$this->do_checkbox(
-			__( 'Developer Mode (Pro)', 'host-webfonts-local' ),
-			'dtap', ! empty( OMGF::get_option( 'dtap', 'on' ) ),
+		$description = apply_filters(
+			'omgf_developer_mode_description',
 			sprintf(
 				__(
 					'Enable this option (on all instances) if you\'re planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production workflow. %s',
@@ -102,7 +101,13 @@ class Advanced extends Builder {
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 				$this->promo
-			), ! defined( 'OMGF_PRO_ACTIVE' ),
+			)
+		);
+
+		$this->do_checkbox(
+			__( 'Developer Mode (Pro)', 'host-webfonts-local' ),
+			'dtap', ! empty( OMGF::get_option( 'dtap', 'on' ) ),
+			$description, ! defined( 'OMGF_PRO_ACTIVE' ),
 			'task-manager-row'
 		);
 	}
