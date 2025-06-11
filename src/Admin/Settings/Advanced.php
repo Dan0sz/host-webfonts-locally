@@ -204,7 +204,7 @@ class Advanced extends Builder {
 			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) ),
 			sprintf(
 				__(
-					'This disables the admin bar menu item. When issues are found the menu item will still appear to notify you and will be disabled again once the issues are resolved.',
+					'This disables the admin bar menu item and stops the Google Fonts checker from running in the frontend.',
 					'host-webfonts-local'
 				),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' )
