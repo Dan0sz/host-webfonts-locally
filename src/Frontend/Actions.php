@@ -10,7 +10,7 @@
  *
  * @package  : OMGF
  * @author   : Daan van den Bergh
- * @copyright: © 2017 - 2024 Daan van den Bergh
+ * @copyright: © 2017 - 2025 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
@@ -141,8 +141,8 @@ class Actions {
 				'info_box_alert_text'  => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
 				'info_box_notice_text' => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
 				'info_box_admin_url'   => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
-				'ajax_url'             => admin_url( 'admin-ajax.php' ),
-				'nonce'                => wp_create_nonce( 'omgf_frontend_nonce' ),
+				'api_url'              => get_rest_url( null, 'omgf/v1/adminbar-menu/status' ),
+				'nonce'                => wp_create_nonce( 'wp_rest' ),
 			]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );

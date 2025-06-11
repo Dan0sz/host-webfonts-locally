@@ -10,7 +10,7 @@
  *
  * @package  : OMGF
  * @author   : Daan van den Bergh
- * @copyright: © 2017 - 2024 Daan van den Bergh
+ * @copyright: © 2017 - 2025 Daan van den Bergh
  * @url      : https://daan.dev
  * * * * * * * * * * * * * * * * * * * */
 
@@ -37,14 +37,14 @@ class Plugin {
 			new Admin\Ajax();
 		}
 
-		// Only load in frontend.
+		// Only load in the frontend.
 		if ( ! is_admin() ) {
 			new Frontend\Actions();
 			new Frontend\Filters();
 		}
 
 		// Load globally.
-		new Ajax();
+		new API\AdminbarMenu();
 		new Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
