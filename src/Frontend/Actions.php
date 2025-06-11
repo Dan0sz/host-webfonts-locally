@@ -111,11 +111,13 @@ class Actions {
 	}
 
 	/**
-	 * This script is only loaded for logged in administrators, unless Enable Google Fonts checker is enabled.
+	 * These scripts are only loaded for logged-in administrators unless:
+	 * - The Disable Admin Bar Menu option is enabled.
+	 * - The Enable Google Fonts checker option is enabled.
+	 * - OMGF shouldn't run.
+	 * - The current request directly points to a PHP file (some plugin's preview pages do that)
 	 *
 	 * @return void
-	 *
-	 * @codeCoverageIgnore we don't want to test core functions.
 	 */
 	public function maybe_add_frontend_assets() {
 		if ( apply_filters( 'omgf_do_not_load_frontend_assets', ! current_user_can( 'manage_options' ) ) ) {

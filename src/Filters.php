@@ -94,8 +94,10 @@ class Filters {
 	/**
 	 * Don't load frontend assets if the Disable Admin Bar Menu option is enabled.
 	 *
-	 * @since  v6.0.1
 	 * @filter omgf_do_not_load_frontend_assets
+	 * @see    Frontend\Actions::maybe_add_frontend_assets()
+	 *
+	 * @since  v6.0.1
 	 *
 	 * @return bool
 	 */
