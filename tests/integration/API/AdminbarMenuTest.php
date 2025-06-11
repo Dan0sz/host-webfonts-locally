@@ -3,27 +3,26 @@
  * @package OMGF integration tests - Admin
  */
 
-namespace OMGF\Tests\Integration;
+namespace integration\API;
 
 use OMGF\Admin\Settings;
-use OMGF\Ajax;
+use OMGF\API\AdminbarMenu;
 use OMGF\Helper as OMGF;
 use OMGF\Tests\TestCase;
 
-class AjaxTest extends TestCase {
+class AdminbarMenuTest extends TestCase {
 	/**
-	 * @see Ajax::get_admin_bar_status()
+	 * @see AdminbarMenu::get_admin_bar_status()
 	 * @return void
 	 */
 	public function testGetAdminBarStatus() {
 		// We send over 1 URL, and it should be saved.
 		try {
-			$_REQUEST[ '_wpnonce' ] = wp_create_nonce( 'omgf_frontend_nonce' );
-			$_POST[ 'path' ]        = '/test';
-			$_POST[ 'urls' ]        = [ 'https://fonts.googleapis.com/css?family=Roboto:400,700' ];
-			$ajax                   = new Ajax();
+			$_POST[ 'path' ] = '/test';
+			$_POST[ 'urls' ] = [ 'https://fonts.googleapis.com/css?family=Roboto:400,700' ];
+			$api             = new AdminbarMenu();
 
-			$ajax->get_admin_bar_status();
+			$api->get_admin_bar_status();
 
 			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 
@@ -36,9 +35,9 @@ class AjaxTest extends TestCase {
 		try {
 			add_filter( 'omgf_is_running_optimize', '__return_true' );
 
-			$ajax = new Ajax();
+			$api = new AdminbarMenu();
 
-			$ajax->get_admin_bar_status();
+			$api->get_admin_bar_status();
 
 			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 
@@ -62,9 +61,9 @@ class AjaxTest extends TestCase {
 				'https://fonts.googleapis.com/css?family=Test6',
 			];
 
-			$ajax = new Ajax();
+			$api = new AdminbarMenu();
 
-			$ajax->get_admin_bar_status();
+			$api->get_admin_bar_status();
 
 			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 
