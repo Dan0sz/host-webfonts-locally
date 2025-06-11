@@ -22,7 +22,9 @@ use OMGF\Helper as OMGF;
 
 class Plugin {
 	/**
-	 * OMGF constructor.
+	 * Initializes the OMGF plugin by setting up constants, loading context-specific classes, and registering hooks.
+	 *
+	 * Loads admin or frontend classes based on the current context, ensures database migrations are scheduled if needed, and registers the uninstall hook if enabled in settings.
 	 */
 	public function __construct() {
 		$this->define_constants();

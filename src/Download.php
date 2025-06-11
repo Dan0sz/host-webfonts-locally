@@ -47,9 +47,11 @@ class Download {
 	}
 
 	/**
-	 * Download $url to $path and return OMGF_UPLOAD_URL to $filename.
+	 * Downloads a file from the specified URL and saves it locally, returning the public URL to the saved file.
 	 *
-	 * @return string
+	 * If the file already exists at the target location, returns its public URL without downloading. Handles protocol-relative URLs and sets an admin notice if the download fails.
+	 *
+	 * @return string Public URL to the downloaded file, or an empty string if the download fails.
 	 * @throws SodiumException
 	 * @throws TypeError
 	 */

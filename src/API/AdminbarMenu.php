@@ -27,15 +27,17 @@ class AdminbarMenu {
 
 	private $enpoint = 'status';
 
-	/**
-	 * Build class.
+	/****
+	 * Initializes the AdminbarMenu class and sets up REST API hooks.
 	 */
 	public function __construct() {
 		$this->init();
 	}
 
 	/**
-	 * Action/filter hooks.
+	 * Initializes the class by registering REST API route hooks.
+	 *
+	 * Sets up the REST API initialization action to register custom routes for the admin bar menu status.
 	 *
 	 * @return void
 	 */
@@ -44,7 +46,9 @@ class AdminbarMenu {
 	}
 
 	/**
-	 * Register the API route.
+	 * Registers the REST API route for retrieving the admin bar status.
+	 *
+	 * Sets up a POST endpoint at `omgf/v1/adminbar-menu/status` with appropriate callback and permission checks.
 	 *
 	 * @return void
 	 */
@@ -63,10 +67,12 @@ class AdminbarMenu {
 		);
 	}
 
-	/**
+	/****
+	 * Determines whether the current user has permission to access the admin bar menu REST API endpoint.
 	 *
+	 * Applies the 'omgf_api_adminbar_menu_permission' filter to allow customization of the permission check.
 	 *
-	 * @return mixed|null
+	 * @return bool True if the user is allowed access; false otherwise.
 	 */
 	public function get_permission() {
 		$is_allowed = current_user_can( 'manage_options' );
@@ -75,11 +81,11 @@ class AdminbarMenu {
 	}
 
 	/**
-	 * Generate and return the status of the Google Fonts Checker.
+	 * Determines and returns the current status of the Google Fonts Checker for the admin bar.
 	 *
-	 * @filter omgf_ajax_admin_bar_status
+	 * The status is set to 'alert' if unresolved Google Fonts issues exist, 'notice' if there are warnings but no unresolved issues, and 'success' otherwise. The returned status can be modified via the 'omgf_ajax_admin_bar_status' filter.
 	 *
-	 * @return void
+	 * @return string The status string: 'alert', 'notice', or 'success'.
 	 */
 	public function get_admin_bar_status() {
 		$stored_results = $this->update_results();
