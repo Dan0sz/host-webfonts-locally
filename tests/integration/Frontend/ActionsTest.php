@@ -29,6 +29,11 @@ class ActionsTest extends TestCase {
 	 * @return void
 	 */
 	public function testAddAdminBarItem() {
+		global $current_user;
+
+		$current_user = new \WP_User( 1 );
+		$current_user->set_role( 'administrator' );
+
 		require_once( ABSPATH . 'wp-includes/class-wp-admin-bar.php' );
 
 		$admin_bar = new \WP_Admin_Bar();
@@ -39,6 +44,60 @@ class ActionsTest extends TestCase {
 		$nodes = $admin_bar->get_nodes();
 
 		$this->assertCount( 3, $nodes );
+
+		$current_user = null;
+	}
+
+	/**
+	 * This is not an admin user. No menu item should be added.
+	 *
+	 * @return void
+	 */
+	public function testAddAdminBarItemWithNoUser() {
+		$class     = new Actions();
+		$admin_bar = new \WP_Admin_Bar();
+
+		$class->add_admin_bar_item( $admin_bar );
+
+		$nodes = $admin_bar->get_nodes();
+
+		if ( empty( $nodes ) ) {
+			$nodes = [];
+		}
+
+		$this->assertCount( 0, $nodes );
+	}
+
+	/**
+	 * This is an admin user, but the Disable Quick Access setting is enabled. No menu item should be added.
+	 *
+	 *
+	 * @return void
+	 */
+	public function testAddAdminBarItemWhenDisableQuickAccessEnabled() {
+		global $current_user;
+
+		$current_user = new \WP_User( 1 );
+		$current_user->set_role( 'administrator' );
+
+		$class     = new Actions();
+		$admin_bar = new \WP_Admin_Bar();
+
+		add_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+
+		$class->add_admin_bar_item( $admin_bar );
+
+		$nodes = $admin_bar->get_nodes();
+
+		if ( empty( $nodes ) ) {
+			$nodes = [];
+		}
+
+		remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+
+		$this->assertCount( 0, $nodes );
+
+		$current_user = null;
 	}
 
 	/**

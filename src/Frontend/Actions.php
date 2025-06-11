@@ -45,11 +45,8 @@ class Actions {
 	 * @return void
 	 */
 	public function add_admin_bar_item( \WP_Admin_Bar $admin_bar ) {
-		/**
-		 * Display only in frontend, for logged in admins, unless Disable Quick Access is enabled and no issues are found.
-		 */
 		if ( ! $this->should_display_menu() ) {
-			return; // @codeCoverageIgnore
+			return;
 		}
 
 		$admin_bar->add_menu(
@@ -94,7 +91,6 @@ class Actions {
 	/**
 	 * Top adminbar menu should be displayed when:
 	 *
-	 * - We're not running tests
 	 * - User is an administrator
 	 * - This is not an admin screen i.e., we're in the frontend
 	 * - Disable Quick Access is disabled.
@@ -102,12 +98,11 @@ class Actions {
 	 * @return bool
 	 */
 	private function should_display_menu() {
-		$doing_tests           = defined( 'DAAN_DOING_TESTS' );
 		$is_admin_user         = current_user_can( 'manage_options' );
 		$is_admin_screen       = is_admin();
 		$quick_access_disabled = ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) );
 
-		return $doing_tests || ( $is_admin_user && ! $is_admin_screen && ! $quick_access_disabled );
+		return $is_admin_user && ! $is_admin_screen && ! $quick_access_disabled;
 	}
 
 	/**
