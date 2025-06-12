@@ -3,7 +3,7 @@
  * Plugin Name: OMGF
  * Plugin URI: https://daan.dev/wordpress/omgf/
  * Description: Increase GDPR/DSGVO compliance and leverage browser cache by automatically self-hosting Google Fonts.
- * Version: 6.0.1
+ * Version: 6.0.2
  * Author: Daan from Daan.dev
  * Author URI: https://daan.dev
  * Text Domain: host-webfonts-local

@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 6.0.1
+Stable tag: 6.0.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -88,6 +88,12 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.0.2 | June 12th, 2025 =
+* Improved: the Google Fonts checker now runs through its own API endpoint, instead of WP's AJAX actions.
+* Improved: the Disable Admin Bar Menu option now also disables the Google Fonts checker.
+* Added: Real Cookie Banner, Borlabs Cookie Banner and Trustmary to the list of plugins which require additional configuration.
+* Minor refactors for cleaner code and to fix minor security flaws.
 
 = 6.0.1 | May 27th, 2025 =
 * Fixed: Frontend Assets would still load, even when Disable Top Admin Bar Menu option was enabled.
