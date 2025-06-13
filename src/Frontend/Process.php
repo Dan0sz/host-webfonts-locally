@@ -202,6 +202,7 @@ class Process {
 						return in_array( $variant->id, $preloads_stylesheet[ $font_id ] );
 					}
 				);
+				$preload_variants = apply_filters( 'omgf_process_preload_variants', $preload_variants );
 
 				/**
 				 * @since v5.3.0 Store all preloaded URLs temporarily, to make sure no duplicate files (Variable Fonts) are preloaded.
