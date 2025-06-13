@@ -204,7 +204,7 @@ class Process {
 				);
 
 				/**
-				 * @since v5.3.0 Store all preloaded URLs temporarily, to make sure no duplicate files (Variable Fonts) are preloaded.
+				 * @since v5.3.0 Store all preloaded URLs temporarily to make sure no duplicate files (Variable Fonts) are preloaded.
 				 */
 				$preloaded = [];
 
@@ -215,7 +215,13 @@ class Process {
 					 * @since v5.5.4 Since we're forcing relative URLs since v5.5.0, let's make sure $url is a relative URL to ensure
 					 *               backwards compatibility.
 					 */
-					$url = str_replace( [ 'http:', 'https:' ], '', $url );
+					$url_parts = parse_url( $url );
+
+					if ( ! empty( $url_parts[ 'host' ] ) && ! empty( $url_parts[ 'path' ] ) ) {
+						$url = '//' . $url_parts[ 'host' ] . $url_parts[ 'path' ];
+					} else {
+						$url = str_replace( [ 'http:', 'https:' ], '', $url );
+					}
 
 					/**
 					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
