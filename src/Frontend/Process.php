@@ -542,7 +542,7 @@ class Process {
 			}
 
 			/**
-			 * If no valid id attribute was found then this means that this stylesheet wasn't enqueued
+			 * If no valid id attribute was found, then this means that this stylesheet wasn't enqueued
 			 * using proper WordPress conventions. We generate our own using the length of the href attribute
 			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
 			 *
@@ -552,10 +552,6 @@ class Process {
 			 */
 			if ( ! $id ) {
 				$id = "$handle-" . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
-			}
-
-			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && str_contains( $id, 'et-builder-googlefonts' ) ) {
-				$google_fonts[ $key ][ 'id' ] = $id . '-' . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
 			}
 
 			$google_fonts[ $key ][ 'id' ]   = apply_filters( 'omgf_frontend_process_fonts_set', $id, $href );
