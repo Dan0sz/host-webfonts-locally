@@ -45,5 +45,9 @@ class Compatibility {
 		new Compatibility\LogoCarouselPro();
 
 		new Compatibility\Mesmerize();
+
+		if ( function_exists( 'smart_slider_3_plugins_loaded' ) ) {
+			new Compatibility\SmartSlider3();
+		}
 	}
 }
