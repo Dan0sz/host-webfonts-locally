@@ -16,6 +16,9 @@
 
 namespace OMGF\Frontend\Compatibility;
 
+use OMGF\Admin\Settings;
+use OMGF\Helper as OMGF;
+
 class Elementor {
 	/**
 	 * Build class.
@@ -30,8 +33,27 @@ class Elementor {
 	 * @return void
 	 */
 	public function init() {
+		add_filter( 'omgf_frontend_process_fonts_set', [ $this, 'maybe_modify_id' ], 10, 2 );
 		add_filter( 'omgf_frontend_process_parse_links', [ $this, 'validate_link_element' ], 10, 2 );
 		add_filter( 'omgf_frontend_process_invalid_request', [ $this, 'validate_request' ], 10, 2 );
+	}
+
+	/**
+	 * Compatibility fix for Elementor
+	 *
+	 * @since v5.1.4 Because Elementor uses the same (annoyingly generic) handle for Google Fonts
+	 *               stylesheets on each page, even when these contain different Google Fonts than
+	 *               other pages, let's append a (kind of) unique identifier to the string, to make
+	 *               sure we can make a difference between different Google Fonts configurations.
+	 *
+	 * TODO: check if this is still needed in Elementor 3.30.
+	 */
+	public function maybe_modify_id( $id, $href ) {
+		if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
+			return str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id ); // @codeCoverageIgnore
+		}
+
+		return $id;
 	}
 
 	/**

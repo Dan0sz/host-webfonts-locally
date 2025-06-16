@@ -28,10 +28,20 @@ class Compatibility {
 	 * Action/filter hooks.
 	 *
 	 * @return void
+	 *
+	 * TODO: Load classes conditionally i.e., when plugin/theme is active.
 	 */
 	private function init() {
-		if ( defined( 'ELEMENTOR_VERSION' ) ) {
-			new Compatibility\Elementor();
-		}
+		new Compatibility\CategorySliderPro();
+
+		new Compatibility\ConvertPro();
+
+		new Compatibility\Divi();
+
+		new Compatibility\Elementor();
+
+		new Compatibility\Fruitful();
+
+		new Compatibility\LogoCarouselPro();
 	}
 }

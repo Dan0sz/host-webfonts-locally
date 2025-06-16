@@ -554,69 +554,11 @@ class Process {
 				$id = "$handle-" . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
 			}
 
-			/**
-			 * Compatibility fix for Divi Builder
-			 *
-			 * @since v5.1.3 Because Divi Builder uses the same handle for Google Fonts on each page,
-			 *               even when these contain Google Fonts, let's append a (kind of) unique
-			 *               identifier to the string, to make sure we can make a difference between
-			 *               different Google Fonts configurations.
-			 * @since v5.2.0 Allow Divi/Elementor compatibility fixes to be disabled, for those who have too
-			 *               many different Google Fonts stylesheets configured throughout their pages and
-			 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
-			 */
 			if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && str_contains( $id, 'et-builder-googlefonts' ) ) {
 				$google_fonts[ $key ][ 'id' ] = $id . '-' . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
-			} elseif ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
-				/**
-				 * Compatibility fix for Elementor
-				 *
-				 * @since v5.1.4 Because Elementor uses the same (annoyingly generic) handle for Google Fonts
-				 *               stylesheets on each page, even when these contain different Google Fonts than
-				 *               other pages, let's append a (kind of) unique identifier to the string, to make
-				 *               sure we can make a difference between different Google Fonts configurations.
-				 */
-				$google_fonts[ $key ][ 'id' ] = str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id ); // @codeCoverageIgnore
-			} elseif ( str_contains( $id, 'sp-wpcp-google-fonts' ) ) {
-				/**
-				 * Compatibility fix for Category Slider Pro for WooCommerce by ShapedPlugin
-				 *
-				 * @since v5.3.7 This plugin finds it necessary to provide each Google Fonts stylesheet with a
-				 *               unique identifier on each pageload, to make sure its never cached. The worst idea ever.
-				 *               On top of that, it throws OMGF off the rails entirely, eventually crashing the site.
-				 */
-				$google_fonts[ $key ][ 'id' ] = 'sp-wpcp-google-fonts'; // @codeCoverageIgnore
-			} elseif ( str_contains( $id, 'sp-lc-google-fonts' ) ) {
-				/**
-				 * Compatibility fix for Logo Carousel Pro by ShapedPlugin
-				 *
-				 * @since v5.3.8 Same reason as above.
-				 */
-				$google_fonts[ $key ][ 'id' ] = 'sp-lc-google-fonts'; // @codeCoverageIgnore
-			} elseif ( str_contains( $id, 'custom_fonts_' ) ) {
-				/**
-				 * Compatibility fix for Fruitful theme by Fruitful Code.
-				 *
-				 * @since v5.9.1 Same reason as above.
-				 */
-				$google_fonts[ $key ][ 'id' ] = 'custom_fonts'; // @codeCoverageIgnore
-			} elseif ( apply_filters(
-				'omgf_frontend_process_convert_pro_compatibility',
-				str_contains( $id, 'cp-google-fonts' )
-			) ) {
-				/**
-				 * Compatibility fix for Convert Pro by Brainstorm Force
-				 *
-				 * @since  v5.5.4 Same reason as above, although it kind of makes sense in this case (since Convert Pro allows
-				 *               to create pop-ups and people tend to get creative. I just hope the ID isn't random.)
-				 * @filter omgf_frontend_process_convert_pro_compatibility Allows people to disable this feature, in case the different
-				 *         stylesheets are actually needed.
-				 */
-				$google_fonts[ $key ][ 'id' ] = 'cp-google-fonts'; // @codeCoverageIgnore
-			} else {
-				$google_fonts[ $key ][ 'id' ] = $id;
 			}
 
+			$google_fonts[ $key ][ 'id' ]   = apply_filters( 'omgf_frontend_process_fonts_set', $id, $href );
 			$google_fonts[ $key ][ 'link' ] = $link;
 			/**
 			 * This is used for search/replace later on. This shouldn't be tampered with.
