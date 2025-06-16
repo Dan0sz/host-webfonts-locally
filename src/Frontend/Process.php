@@ -167,9 +167,6 @@ class Process {
 
 		/** Smart Slider 3 compatibility */
 		add_filter( 'wordpress_prepare_output', [ $this, 'parse' ], 11 );
-
-		/** Mesmerize Pro theme compatibility */
-		add_filter( 'style_loader_tag', [ $this, 'remove_mesmerize_filter' ], 12, 1 );
 	}
 
 	/**
@@ -535,13 +532,6 @@ class Process {
 			}
 
 			/**
-			 * Mesmerize Theme compatibility
-			 */
-			if ( $href[ 'href' ] === '#' ) {
-				preg_match( '/data-href=[\'"](?P<href>.*?)[\'"]/', $link, $href ); // @codeCoverageIgnore
-			}
-
-			/**
 			 * If no valid id attribute was found, then this means that this stylesheet wasn't enqueued
 			 * using proper WordPress conventions. We generate our own using the length of the href attribute
 			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
@@ -559,7 +549,7 @@ class Process {
 			/**
 			 * This is used for search/replace later on. This shouldn't be tampered with.
 			 */
-			$google_fonts[ $key ][ 'href' ] = $href[ 'href' ];
+			$google_fonts[ $key ][ 'href' ] = apply_filters( 'omgf_frontend_process_fonts_set_href', $href[ 'href' ], $link );
 		}
 
 		return $google_fonts;
@@ -725,23 +715,5 @@ class Process {
 		);
 
 		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, $message ) . $parts[ 2 ];
-	}
-
-	/**
-	 * Because all great themes come packed with extra Cumulative Layout Shifting.
-	 *
-	 * @since v5.4.3 Added compatibility for Highlight Pro; a Mesmerize based theme and Mesmerize,
-	 *               the non-premium theme.
-	 *
-	 * @param string $tag
-	 *
-	 * @return string
-	 */
-	public function remove_mesmerize_filter( $tag ) {
-		if ( ( wp_get_theme()->template === 'mesmerize-pro' || wp_get_theme()->template === 'highlight-pro' || wp_get_theme()->template === 'mesmerize' ) && str_contains( $tag, 'fonts.googleapis.com' ) ) {
-			return str_replace( 'href="" data-href', 'href', $tag );
-		}
-
-		return $tag;
 	}
 }

@@ -43,5 +43,7 @@ class Compatibility {
 		new Compatibility\Fruitful();
 
 		new Compatibility\LogoCarouselPro();
+
+		new Compatibility\Mesmerize();
 	}
 }
