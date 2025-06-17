@@ -764,7 +764,7 @@ class Process {
 	 * @return string
 	 */
 	public function add_success_message( $html ) {
-		if ( ! isset( $_GET[ 'omgf_optimize' ] ) || wp_doing_ajax() ) {
+		if ( ! isset( $_GET[ 'omgf_optimize' ] ) || wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) {
 			return $html;
 		}
 
