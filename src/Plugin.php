@@ -41,6 +41,7 @@ class Plugin {
 		if ( ! is_admin() ) {
 			new Frontend\Actions();
 			new Frontend\Filters();
+			new Frontend\Compatibility();
 		}
 
 		// Load globally.
