@@ -42,6 +42,8 @@ class Compatibility {
 
 		new Compatibility\Fruitful();
 
+		new Compatibility\GroovyMenu();
+
 		new Compatibility\LogoCarouselPro();
 
 		new Compatibility\Mesmerize();
