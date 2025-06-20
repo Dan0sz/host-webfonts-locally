@@ -3,7 +3,8 @@
  * OMGF - Compatibility - Visual Composer
  */
 
-namespace OMGF\Tests\Integration\Compatibitily;
+-namespace OMGF\Tests\Integration\Compatibitily;
++namespace OMGF\Tests\Integration\Compatibility;
 
 use OMGF\Compatibility\VisualComposer;
 use OMGF\Tests\TestCase;
