@@ -36,6 +36,9 @@ class Mesmerize {
 
 	/**
 	 * Mesmerize Theme compatibility
+	 *
+	 * @filter omgf_frontend_process_fonts_set_href
+	 * @see    \OMGF\Frontend\Process::build_fonts_set()
 	 */
 	public function maybe_replace_href( $href, $link ) {
 		if ( $href === '#' ) {
@@ -52,7 +55,9 @@ class Mesmerize {
 	/**
 	 * Because all great themes come packed with extra Cumulative Layout Shifting.
 	 *
-	 * @since v5.4.3 Added compatibility for Highlight Pro; a Mesmerize based theme and Mesmerize,
+	 * @filter style_loader_tag
+	 *
+	 * @since  v5.4.3 Added compatibility for Highlight Pro; a Mesmerize-based theme and Mesmerize,
 	 *               the non-premium theme.
 	 *
 	 * @param string $tag
