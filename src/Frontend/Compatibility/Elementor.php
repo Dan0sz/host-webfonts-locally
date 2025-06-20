@@ -50,7 +50,9 @@ class Elementor {
 	 */
 	public function maybe_modify_id( $id, $href ) {
 		if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
-			return str_replace( '-1', '-' . strlen( $href[ 'href' ] ), $id ); // @codeCoverageIgnore
+			$href_attr = is_array( $href ) && isset( $href[ 'href' ] ) ? $href[ 'href' ] : '';
+
+			return str_replace( '-1', '-' . strlen( $href_attr ), $id ); // @codeCoverageIgnore
 		}
 
 		return $id;

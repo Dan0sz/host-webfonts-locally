@@ -49,7 +49,9 @@ class Divi {
 	 */
 	public function maybe_modify_id( $id, $href ) {
 		if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && str_contains( $id, 'et-builder-googlefonts' ) ) {
-			return $id . '-' . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
+			$href_attr = is_array( $href ) && isset( $href[ 'href' ] ) ? $href[ 'href' ] : '';
+
+			return $id . '-' . strlen( $href_attr ); // @codeCoverageIgnore
 		}
 
 		return $id;
