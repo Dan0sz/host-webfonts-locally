@@ -17,22 +17,18 @@ class MesmerizeTest extends TestCase {
 		$class     = new Mesmerize();
 		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/mesmerize.html' );
 
-		add_filter( 'stylesheet', [ $this, 'setMesmerizeTheme' ] );
+		switch_theme( 'mesmerize' );
 
 		// When Mesmerize is the active theme.
 		$html = $class->remove_mesmerize_filter( $test_html );
 
 		$this->assertStringNotContainsString( 'data-href', $html );
 
-		remove_filter( 'stylesheet', [ $this, 'setMesmerizeTheme' ] );
+		switch_theme( 'twentytwenty' );
 
+		// When any other theme is the active theme.
 		$html = $class->remove_mesmerize_filter( $test_html );
 
-		// When any other theme is active theme.
 		$this->assertStringContainsString( 'data-href', $html );
-	}
-
-	public function setMesmerizeTheme() {
-		return 'mesmerize';
 	}
 }
