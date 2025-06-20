@@ -41,6 +41,7 @@ class Plugin {
 		if ( ! is_admin() ) {
 			new Frontend\Actions();
 			new Frontend\Filters();
+			new Frontend\Compatibility();
 		}
 
 		// Load globally.
@@ -62,7 +63,7 @@ class Plugin {
 			return;
 		}
 
-		/** Prevents undefined constant in OMGF Pro, if its not at version v3.3.0 (yet) */
+		/** Prevents undefined constant errors in OMGF Pro if it's not at version v3.3.0 (yet) */
 		define( 'OMGF_OPTIMIZATION_MODE', false );
 		define( 'OMGF_SITE_URL', 'https://daan.dev' );
 		define( 'OMGF_CACHE_IS_STALE', esc_attr( OMGF::get_option( Settings::OMGF_CACHE_IS_STALE ) ) );

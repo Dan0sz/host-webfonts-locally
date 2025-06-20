@@ -13,34 +13,8 @@ use OMGF\Tests\TestCase;
 
 class ProcessTest extends TestCase {
 	/**
-	 * @see Process::remove_mesmerize_filter()
-	 * @return void
-	 */
-	public function testRemoveMesmerizeFilter() {
-		$class     = new Process ( true );
-		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/mesmerize.html' );
-
-		add_filter( 'stylesheet', [ $this, 'setMesmerizeTheme' ] );
-
-		// When Mesmerize is active theme.
-		$html = $class->remove_mesmerize_filter( $test_html );
-
-		$this->assertStringNotContainsString( 'data-href', $html );
-
-		remove_filter( 'stylesheet', [ $this, 'setMesmerizeTheme' ] );
-
-		$html = $class->remove_mesmerize_filter( $test_html );
-
-		// When any other theme is active theme.
-		$this->assertStringContainsString( 'data-href', $html );
-	}
-
-	public function setMesmerizeTheme() {
-		return 'mesmerize';
-	}
-
-	/**
-	 * Is Success message added properly?
+	 * Is the Success-message added properly?
+	 *
 	 * @see Process::add_success_message()
 	 * @return void
 	 */
@@ -63,6 +37,7 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are Google Fonts properly downloaded/replaced?
+	 *
 	 * @see Process::parse()
 	 * @return void
 	 */
