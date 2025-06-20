@@ -41,7 +41,9 @@ class Mesmerize {
 		if ( $href === '#' ) {
 			preg_match( '/data-href=[\'"](?P<href>.*?)[\'"]/', $link, $matches ); // @codeCoverageIgnore
 
-			$href = $matches[ 'href' ];
+			if ( isset( $matches[ 'href' ] ) ) {
+				$href = $matches[ 'href' ];
+			}
 		}
 
 		return $href;
