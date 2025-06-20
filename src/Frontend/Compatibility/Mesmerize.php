@@ -65,7 +65,9 @@ class Mesmerize {
 	 * @return string
 	 */
 	public function remove_mesmerize_filter( $tag ) {
-		if ( ( wp_get_theme()->template === 'mesmerize-pro' || wp_get_theme()->template === 'highlight-pro' || wp_get_theme()->template === 'mesmerize' ) && str_contains( $tag, 'fonts.googleapis.com' ) ) {
+		$template = wp_get_theme()->template;
+		
+		if ( ( $template === 'mesmerize-pro' || $template === 'highlight-pro' || $template === 'mesmerize' ) && str_contains( $tag, 'fonts.googleapis.com' ) ) {
 			return str_replace( 'href="" data-href', 'href', $tag );
 		}
 

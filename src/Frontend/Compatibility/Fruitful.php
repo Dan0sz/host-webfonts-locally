@@ -30,7 +30,7 @@ class Fruitful {
 	 * @return void
 	 */
 	private function init() {
-		add_filter( 'omgf_frontend_process_fonts_set', [ $this, 'maybe_modify_id' ] );
+		add_filter( 'omgf_frontend_process_fonts_set', [ $this, 'maybe_modify_id' ], 10, 1 );
 	}
 
 	/**
