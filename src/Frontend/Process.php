@@ -229,7 +229,7 @@ class Process {
 
 					$preloaded[] = $url;
 					$timestamp   = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP );
-					$url         = add_query_arg( $url, [ 'ver' => $timestamp ] );
+					$url         .= str_contains( $url, '?' ) ? "&ver=$timestamp" : "?ver=$timestamp";
 
 					/**
 					 * We can't use @see wp_kses_post() here, because it removes link elements.
