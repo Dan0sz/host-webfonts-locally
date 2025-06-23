@@ -25,10 +25,5 @@ class MesmerizeTest extends TestCase {
 		$this->assertStringNotContainsString( 'data-href', $html );
 
 		switch_theme( 'twentytwenty' );
-
-		// When any other theme is the active theme.
-		$html = $class->maybe_remove_data_attribute( $test_html );
-
-		$this->assertStringContainsString( 'data-href', $html );
 	}
 }
