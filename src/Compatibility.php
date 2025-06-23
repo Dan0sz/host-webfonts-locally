@@ -16,6 +16,9 @@
 
 namespace OMGF;
 
+/**
+ * @codeCoverageIgnore Because it depends on 3rd party plugins.
+ */
 class Compatibility {
 	/**
 	 * Build class.

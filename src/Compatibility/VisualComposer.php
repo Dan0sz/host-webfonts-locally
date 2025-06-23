@@ -18,6 +18,9 @@ namespace OMGF\Compatibility;
 
 use OMGF\Frontend\Process;
 
+/**
+ * @codeCoverageIgnore because it depends on a 3rd party plugin.
+ */
 class VisualComposer {
 	/**
 	 * Build class.
