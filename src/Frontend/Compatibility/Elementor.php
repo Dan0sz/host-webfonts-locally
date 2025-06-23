@@ -19,6 +19,9 @@ namespace OMGF\Frontend\Compatibility;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
+/**
+ * @codeCoverageIgnore Because it depends on a 3rd party plugin.
+ */
 class Elementor {
 	/**
 	 * Build class.

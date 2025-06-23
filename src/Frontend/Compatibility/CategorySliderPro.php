@@ -16,6 +16,9 @@
 
 namespace OMGF\Frontend\Compatibility;
 
+/**
+ * @codeCoverageIgnore Because it depends on a 3rd party.
+ */
 class CategorySliderPro {
 	/**
 	 * Build class.

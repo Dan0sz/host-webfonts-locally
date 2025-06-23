@@ -18,6 +18,9 @@ namespace OMGF\Frontend\Compatibility;
 
 use OMGF\Frontend\Process;
 
+/**
+ * @codeCoverageIgnore Because it depends on a 3rd party plugin.
+ */
 class SmartSlider3 {
 	/**
 	 * @var Process $process

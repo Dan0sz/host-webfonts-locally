@@ -16,6 +16,9 @@
 
 namespace OMGF\Frontend;
 
+/**
+ * @codeCoverageIgnore Because these can't be tested on their own.
+ */
 class Compatibility {
 	/**
 	 * Build class.
