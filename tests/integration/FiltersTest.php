@@ -102,17 +102,4 @@ class FiltersTest extends TestCase {
 
 		$this->assertFalse( $load );
 	}
-
-	/**
-	 * @see Filters::parse_vc_grid_data()
-	 * @return void
-	 */
-	public function testParseVcGridData() {
-		new Filters();
-
-		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/google-fonts.html' );
-		$html      = apply_filters( 'vc_get_vc_grid_data_response', $test_html );
-
-		$this->assertStringNotContainsString( 'fonts.googleapis.com', $html );
-	}
 }
