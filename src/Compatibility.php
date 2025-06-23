@@ -25,13 +25,13 @@ class Compatibility {
 	}
 
 	/**
-	 * Action/filter hooks.
+	 * Action/filter hooks for global compatibility fixes, required in front-/back-end.
 	 *
 	 * @return void
-	 *
-	 * TODO: Load classes conditionally i.e., when plugin/theme is active.
 	 */
 	private function init() {
-		new Compatibility\VisualComposer();
+		if ( defined( 'WPB_VC_VERSION' ) ) {
+			new Compatibility\VisualComposer();
+		}
 	}
 }

@@ -10,7 +10,7 @@ use OMGF\Tests\TestCase;
 
 class MesmerizeTest extends TestCase {
 	/**
-	 * @see Mesmerize::remove_mesmerize_filter()
+	 * @see Mesmerize::maybe_remove_data_attribute()
 	 * @return void
 	 */
 	public function testRemoveMesmerizeFilter() {
@@ -20,14 +20,14 @@ class MesmerizeTest extends TestCase {
 		switch_theme( 'mesmerize' );
 
 		// When Mesmerize is the active theme.
-		$html = $class->remove_mesmerize_filter( $test_html );
+		$html = $class->maybe_remove_data_attribute( $test_html );
 
 		$this->assertStringNotContainsString( 'data-href', $html );
 
 		switch_theme( 'twentytwenty' );
 
 		// When any other theme is the active theme.
-		$html = $class->remove_mesmerize_filter( $test_html );
+		$html = $class->maybe_remove_data_attribute( $test_html );
 
 		$this->assertStringContainsString( 'data-href', $html );
 	}

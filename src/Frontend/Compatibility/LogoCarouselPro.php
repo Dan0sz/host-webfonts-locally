@@ -35,8 +35,6 @@ class LogoCarouselPro {
 
 	/**
 	 * Compatibility fix for Logo Carousel Pro by ShapedPlugin
-	 *
-	 * @since v5.3.8 Same reason as above.
 	 */
 	public function maybe_modify_id( $id ) {
 		if ( str_contains( $id, 'sp-lc-google-fonts' ) ) {

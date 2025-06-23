@@ -28,28 +28,73 @@ class Compatibility {
 	 * Action/filter hooks.
 	 *
 	 * @return void
-	 *
-	 * TODO: Load classes conditionally i.e., when plugin/theme is active.
 	 */
 	private function init() {
-		new Compatibility\CategorySliderPro();
+		add_action( 'plugins_loaded', [ $this, 'load_plugin_compatibility_fixes' ] );
+		add_action( 'plugins_loaded', [ $this, 'load_theme_compatibility_fixes' ] );
+	}
 
-		new Compatibility\ConvertPro();
+	/**
+	 * Load plugin compatibility fixes.
+	 *
+	 * @return void
+	 */
+	public function load_plugin_compatibility_fixes() {
+		if ( class_exists( 'Woo_Category_Slider' ) ) {
+			new Compatibility\CategorySliderPro();
+		}
 
-		new Compatibility\Divi();
+		if ( function_exists( 'cp_load_convertpro' ) ) {
+			new Compatibility\ConvertPro();
+		}
 
-		new Compatibility\Elementor();
+		if ( defined( 'ELEMENTOR_VERSION' ) ) {
+			new Compatibility\Elementor();
+		}
 
-		new Compatibility\Fruitful();
+		if ( defined( 'GROOVY_MENU_VERSION' ) ) {
+			new Compatibility\GroovyMenu();
+		}
 
-		new Compatibility\GroovyMenu();
-
-		new Compatibility\LogoCarouselPro();
-
-		new Compatibility\Mesmerize();
+		if ( class_exists( 'SP_Logo_Carousel' ) ) {
+			new Compatibility\LogoCarouselPro();
+		}
 
 		if ( function_exists( 'smart_slider_3_plugins_loaded' ) ) {
 			new Compatibility\SmartSlider3();
 		}
+	}
+
+	/**
+	 * Load theme compatibility fixes.
+	 *
+	 * @return void
+	 */
+	public function load_theme_compatibility_fixes() {
+		if ( $this->current_theme_is( 'Divi' ) ) {
+			new Compatibility\Divi();
+		}
+
+		if ( $this->current_theme_is( 'fruitful' ) ) {
+			new Compatibility\Fruitful();
+		}
+
+		if ( $this->current_theme_is( 'mesmerize' ) || $this->current_theme_is( 'highlight-pro' ) || $this->current_theme_is( 'mesmerize-pro' ) ) {
+			new Compatibility\Mesmerize();
+		}
+	}
+
+	/**
+	 * Checks if $name is the current (parent) theme.
+	 *
+	 * @param $name
+	 *
+	 * @return bool
+	 */
+	private function current_theme_is( $name ) {
+		$theme  = wp_get_theme();
+		$parent = $theme->parent();
+
+		return ( $theme instanceof \WP_Theme && $theme->get_template() === $name ) || ( $parent instanceof \WP_Theme && $parent->get( 'Name' ) === $name );
 	}
 }
