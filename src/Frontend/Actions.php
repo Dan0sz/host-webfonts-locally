@@ -62,7 +62,7 @@ class Actions {
 			[
 				'id'     => 'omgf-optimize',
 				'parent' => 'omgf',
-				'title'  => __( 'Re-run fonts optimization', 'host-webfonts-local' ),
+				'title'  => __( 'Run fonts optimization', 'host-webfonts-local' ),
 				'href'   => add_query_arg( 'omgf_optimize', '1', home_url() ),
 			]
 		);
@@ -82,7 +82,7 @@ class Actions {
 			[
 				'id'     => 'omgf-optimize-this',
 				'parent' => 'omgf',
-				'title'  => __( 'Re-run fonts optimization for current page', 'host-webfonts-local' ),
+				'title'  => __( 'Run fonts optimization for current page', 'host-webfonts-local' ),
 				'href'   => add_query_arg( 'omgf_optimize', '1', $site_url ),
 			]
 		);
