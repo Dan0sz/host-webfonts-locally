@@ -232,9 +232,10 @@ class Settings extends Admin {
 	 * Creates the menu item.
 	 */
 	public function create_menu() {
+		$title = apply_filters( 'omgf_settings_page_title', 'OMGF' );
 		add_options_page(
-			'OMGF',
-			'OMGF',
+			$title,
+			$title,
 			'manage_options',
 			self::OMGF_ADMIN_PAGE,
 			[ $this, 'create_settings_page' ]
