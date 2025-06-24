@@ -51,11 +51,17 @@ class Compatibility {
 			new Compatibility\ConvertPro();
 		}
 
+		/**
+		 * @TODO Will this still be needed after Elementor v3.30?
+		 */
 		if ( defined( 'ELEMENTOR_VERSION' ) ) {
 			new Compatibility\Elementor();
 		}
 
-		if ( defined( 'GROOVY_MENU_VERSION' ) ) {
+		/**
+		 * The rest of this compatibility fix is located @see \OMGF\Frontend\Compatibility::init().
+		 */
+		if ( function_exists( 'groovy_menu_init_classes' ) ) {
 			new Compatibility\GroovyMenu();
 		}
 
@@ -63,6 +69,9 @@ class Compatibility {
 			new Compatibility\LogoCarouselPro();
 		}
 
+		/**
+		 * The rest of this compatibility fix is located @see \OMGF\Frontend\Compatibility::init().
+		 */
 		if ( function_exists( 'smart_slider_3_plugins_loaded' ) ) {
 			new Compatibility\SmartSlider3();
 		}
