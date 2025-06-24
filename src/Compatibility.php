@@ -33,6 +33,10 @@ class Compatibility {
 	 * @return void
 	 */
 	private function init() {
+		add_action( 'plugins_loaded', [ $this, 'load_global_plugin_compatibility_fixes' ] );
+	}
+
+	public function load_global_plugin_compatibility_fixes() {
 		if ( defined( 'WPB_VC_VERSION' ) ) {
 			new Compatibility\VisualComposer();
 		}

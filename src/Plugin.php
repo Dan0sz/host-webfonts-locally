@@ -46,6 +46,7 @@ class Plugin {
 
 		// Load globally.
 		new API\AdminbarMenu();
+		new Compatibility();
 		new Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
