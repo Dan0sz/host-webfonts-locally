@@ -49,6 +49,7 @@ class Optimize extends Builder {
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 32 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 50 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 60 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_auto_preload' ], 70 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 100 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 200 );
@@ -190,6 +191,19 @@ class Optimize extends Builder {
 	}
 
 	/**
+	 * Auto Preload Fonts (Pro) option.
+	 *
+	 * @return void
+	 */
+	public function do_promo_auto_preload() {
+		$this->do_checkbox(
+			__( 'Smart Preload (Pro)', 'host-webfonts-local' ),
+			'auto_preload', ! empty( OMGF::get_option( 'auto_preload' ) ),
+			__( 'When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them.', 'host-webfonts-local' ) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
+		);
+	}
+
+	/**
 	 *
 	 */
 	public function do_optimize_fonts_container() {
@@ -217,12 +231,10 @@ class Optimize extends Builder {
 							'https://daan.dev/blog/how-to/wordpress-google-fonts/'
 						); ?></span></span></span></span>
 		<?php if ( ! empty( $this->optimized_fonts ) ) : ?>
-			<?php echo $this->do_optimized_fonts_manager(); ?>
+			<?php $this->do_optimized_fonts_manager(); ?>
 		<?php else : ?>
 			<div class="omgf-optimize-fonts-description">
-				<?php
-				$this->do_optimize_fonts_section();
-				?>
+				<?php $this->do_optimize_fonts_section(); ?>
 			</div>
 		<?php
 		endif;
@@ -321,7 +333,8 @@ class Optimize extends Builder {
 				</tr>
 				</thead>
 				<?php
-				$cache_handles = OMGF::cache_keys();
+				$cache_handles   = OMGF::cache_keys();
+				$disable_preload = apply_filters( 'omgf_local_fonts_disable_preload', false );
 				?>
 				<?php foreach ( $this->optimized_fonts as $handle => $fonts ) : ?>
 					<?php
@@ -371,10 +384,11 @@ class Optimize extends Builder {
 								</select>
 							</td>
 							<td class="replace">
-								<?php $replace = defined( 'OMGF_PRO_ACTIVE' ) &&
+								<?php
+								$replace  = defined( 'OMGF_PRO_ACTIVE' ) &&
 								isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
 								OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
-								$fallback      = defined( 'OMGF_PRO_ACTIVE' ) && isset(
+								$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset(
 										OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ]
 									) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';
 								?>
@@ -425,14 +439,9 @@ class Optimize extends Builder {
 								<td><?php echo esc_attr( $variant->fontStyle ); ?></td>
 								<td><?php echo esc_attr( $variant->fontWeight ); ?></td>
 								<td class="preload-<?php echo esc_attr( $class ); ?>">
-									<input type="hidden"
-										   name="<?php echo esc_attr(
-											   Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS
-										   ); ?>[<?php echo esc_attr(
-											   $handle
-										   ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
-											   $variant->id
-										   ); ?>]" value="0"/>
+									<input type="hidden" name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr(
+										$font->id
+									); ?>][<?php echo esc_attr( $variant->id ); ?>]" value="0"/>
 									<input data-handle="<?php echo esc_attr( $handle ); ?>"
 										   data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>"
 										   autocomplete="off" type="checkbox"
@@ -444,7 +453,7 @@ class Optimize extends Builder {
 										   ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
 											   $variant->id
 										   ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload ? 'disabled' : ''; ?> />
+										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload || $disable_preload ? 'disabled' : ''; ?> />
 								</td>
 								<td class="unload-<?php echo esc_attr( $class ); ?>">
 									<input type="hidden"

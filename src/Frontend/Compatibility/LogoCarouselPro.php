@@ -1,0 +1,49 @@
+<?php
+/* * * * * * * * * * * * * * * * * * * * *
+ *
+ *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
+ * ██╔═══██╗████╗ ████║██╔════╝ ██╔════╝
+ * ██║   ██║██╔████╔██║██║  ███╗█████╗
+ * ██║   ██║██║╚██╔╝██║██║   ██║██╔══╝
+ * ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║
+ *  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝
+ *
+ * @package  : OMGF
+ * @author   : Daan van den Bergh
+ * @copyright: © 2017 - 2025 Daan van den Bergh
+ * @url      : https://daan.dev
+ * * * * * * * * * * * * * * * * * * * */
+
+namespace OMGF\Frontend\Compatibility;
+
+/**
+ * @codeCoverageIgnore Because it depends on a 3rd party plugin.
+ */
+class LogoCarouselPro {
+	/**
+	 * Build class.
+	 */
+	public function __construct() {
+		$this->init();
+	}
+
+	/**
+	 * Action/filter hooks.
+	 *
+	 * @return void
+	 */
+	private function init() {
+		add_filter( 'omgf_frontend_process_fonts_set', [ $this, 'maybe_modify_id' ] );
+	}
+
+	/**
+	 * Compatibility fix for Logo Carousel Pro by ShapedPlugin
+	 */
+	public function maybe_modify_id( $id ) {
+		if ( str_contains( $id, 'sp-lc-google-fonts' ) ) {
+			return 'sp-lc-google-fonts';
+		}
+
+		return $id;
+	}
+}
