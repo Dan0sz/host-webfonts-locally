@@ -199,7 +199,10 @@ class Optimize extends Builder {
 		$this->do_checkbox(
 			__( 'Smart Preload (Pro)', 'host-webfonts-local' ),
 			'auto_preload', ! empty( OMGF::get_option( 'auto_preload' ) ),
-			__( 'When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them.', 'host-webfonts-local' ) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
+			__(
+				'When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them. Preload settings can be overwritten on a per-page level by clicking <strong>Auto-configure preload settings for this page</strong> in the top Admin Bar menu.',
+				'host-webfonts-local'
+			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
 		);
 	}
 
