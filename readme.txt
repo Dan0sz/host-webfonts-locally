@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 6.0.2
+Stable tag: 6.0.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -88,6 +88,12 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.0.3 | June 24th, 2025 =
+* Added: Smart Preload (Pro) promotional option.
+* Added: Compatibility for the upcoming Elementor v3.30 release.
+* Improved: Compatibility fixes are now moved into one place, and are only loaded on the condition of the respective plugin actually being activated.
+* Several code improvements.
 
 = 6.0.2 | June 12th, 2025 =
 * Improved: the Google Fonts checker now runs through its own API endpoint, instead of WP's AJAX actions.
