@@ -46,14 +46,13 @@ class Optimize extends Builder {
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 30 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 31 );
 
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 32 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 50 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 60 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_auto_preload' ], 70 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 100 );
-
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 200 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_contents' ], 250 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 40 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 50 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 60 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 70 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_auto_preload' ], 80 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 90 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_contents' ], 100 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'close_optimize_fonts_container' ], 300 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 350 );
@@ -212,6 +211,19 @@ class Optimize extends Builder {
 	public function do_optimize_fonts_container() {
 		?>
 		<div id="omgf-manage-optimized-fonts" class="omgf-optimize-fonts-container postbox">
+		<h3>
+			<?php echo __( 'Optimize Local Fonts', 'host-webfonts-local' ); ?>
+		</h3>
+		<p>
+			<?php echo sprintf(
+				__(
+					'The options below allow you to tweak the performance of all fonts detected by %s. Don\'t know where or how to start optimizing your Google Fonts? That\'s okay. <a href="%s">This guide</a> will get you sorted.',
+					'host-webfonts-local'
+				),
+				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+				'https://daan.dev/blog/how-to/wordpress-google-fonts/'
+			); ?>
+		</p>
 		<?php
 	}
 
@@ -224,23 +236,20 @@ class Optimize extends Builder {
 		 */
 		$this->optimized_fonts = OMGF::admin_optimized_fonts();
 		?>
-		<span class="option-title"><?php echo __( 'Optimize Local Fonts', 'host-webfonts-local' ); ?><span
-				class="dashicons dashicons-info tooltip"><span class="tooltip-text"><span
-						class="inline-text"><?php echo sprintf(
-							__(
-								'All fonts listed here are loaded locally. Don\'t know where or how to start optimizing your Google Fonts? That\'s okay. <a href="%s">This guide</a> will get you sorted.',
-								'host-webfonts-local'
-							),
-							'https://daan.dev/blog/how-to/wordpress-google-fonts/'
-						); ?></span></span></span></span>
-		<?php if ( ! empty( $this->optimized_fonts ) ) : ?>
-			<?php $this->do_optimized_fonts_manager(); ?>
-		<?php else : ?>
-			<div class="omgf-optimize-fonts-description">
-				<?php $this->do_optimize_fonts_section(); ?>
-			</div>
+		<div class="omgf-optimize-fonts-contents">
+		<span class="option-title">
+			<?php echo __( 'Local Fonts', 'host-webfonts-local' ); ?>
+		</span>
+			<?php if ( ! empty( $this->optimized_fonts ) ) : ?>
+				<?php $this->do_optimized_fonts_manager(); ?>
+			<?php else : ?>
+				<div class="omgf-optimize-fonts-description">
+					<?php $this->do_optimize_fonts_section(); ?>
+				</div>
+			<?php
+			endif; ?>
+		</div>
 		<?php
-		endif;
 	}
 
 	/**
