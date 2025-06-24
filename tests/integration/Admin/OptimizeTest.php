@@ -3,7 +3,7 @@
  * @package OMGF Integration Test - Optimize
  */
 
-namespace OMGF\Tests\Integration;
+namespace OMGF\Tests\Integration\Admin;
 
 use OMGF\Admin\Optimize;
 use OMGF\Admin\Settings;

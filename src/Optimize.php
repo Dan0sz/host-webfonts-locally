@@ -129,7 +129,7 @@ class Optimize {
 		$local_file = $this->path . '/' . $this->handle . '.css';
 
 		/**
-		 * @since v3.6.0 Allows us to bail early, if a fresh copy of files/stylesheets isn't necessary.
+		 * @since v3.6.0 Allows us to bail early if a fresh copy of files/stylesheets isn't necessary.
 		 */
 		if ( file_exists( $local_file ) && $this->return_early ) {
 			// @codeCoverageIgnoreStart
@@ -166,7 +166,7 @@ class Optimize {
 
 		foreach ( $fonts as $id => &$font ) {
 			/**
-			 * Sanitize font family, because it may contain spaces.
+			 * Sanitize font family because it may contain spaces.
 			 *
 			 * @since v4.5.6
 			 */
@@ -238,7 +238,7 @@ class Optimize {
 		$current_stylesheet     = [ $this->original_handle => $fonts ];
 
 		/**
-		 * $current_stylesheet is added to temporary cache layer, if it isn't present in database.
+		 * $current_stylesheet is added to a temporary cache layer if it isn't present in the database.
 		 *
 		 * @since v4.5.7
 		 */
