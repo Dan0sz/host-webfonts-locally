@@ -51,6 +51,9 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 
 - Run the Google Fonts checker in the frontend (for all users) to organically check for present external Google Fonts
   throughout your site.
+- Smart Preload automatically configures which fonts should be preloaded i.e., loaded early to reduce Cumulative Layout
+  Shift, Largest Contentful Paint
+  and [Ensure Text Remains Visible During Webfont Load](https://daan.dev/blog/how-to/ensure-text-remains-visible-during-webfont-load/).
 - Automatically configures itself to make sure all externally hosted Google Fonts on your site are hosted locally. OMGF
   Pro supports:
 	- `@font-face` and `@import` statements inside **inline `<style>` blocks**,
