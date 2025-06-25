@@ -94,6 +94,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 * Added: Smart Preload (Pro) promotional option.
 * Added: Compatibility for the upcoming Elementor v3.30 release.
 * Improved: Compatibility fixes are now moved into one place, and are only loaded on the condition of the respective plugin actually being activated.
+* Improved: All settings related to fonts optimization are now grouped in the Optimize Local Fonts section under the Local Fonts tab.
 * Several code improvements.
 
 = 6.0.2 | June 12th, 2025 =
