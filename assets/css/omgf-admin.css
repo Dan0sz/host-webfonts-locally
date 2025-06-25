@@ -415,9 +415,12 @@
 	line-height: 1.5em;
 }
 
+.omgf-task-manager p,
 .omgf-optimize-fonts-container p,
-.omgf-optimize-fonts-container ul {
+.omgf-optimize-fonts-container ul,
+.omgf-help-section .about {
 	text-align: justify;
+	font-size: 14px;
 }
 
 .tooltip {
