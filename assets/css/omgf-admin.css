@@ -299,7 +299,7 @@
 .omgf-optimize-fonts-container .form-table tr th {
 	position: absolute;
 	left: -222px;
-	top: 1px;
+	top: 2px;
 }
 
 .omgf-optimize-fonts-container .form-table tr td {
@@ -313,6 +313,7 @@
 .omgf-optimize-fonts-container .omgf-optimize-fonts-contents .option-title {
 	position: absolute;
 	left: -222px;
+	top: 4px;
 	font-weight: 600;
 	font-size: 14px;
 	color: #1d2327;
