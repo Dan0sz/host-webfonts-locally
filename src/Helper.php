@@ -132,8 +132,9 @@ class Helper {
 		// If $name starts with 'omgf_' it means it is saved in a separate row.
 		if ( str_starts_with( $name, 'omgf_' ) ) {
 			$value = get_option( $name, $default );
+			$name  = str_replace( 'omgf_', '', $name );
 
-			return apply_filters( 'omgf_setting_' . str_replace( 'omgf_', '', $name ), $value );
+			return apply_filters( "omgf_setting_$name", $value );
 		}
 
 		$value = self::get_settings()[ $name ] ?? $default;
