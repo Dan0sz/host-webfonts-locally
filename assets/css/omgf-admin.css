@@ -283,8 +283,7 @@
 
 .omgf-optimize-fonts-container {
 	padding: 5px 25px 50px;
-	max-width: 1078px;
-	margin: 0 auto 30px 222px;
+	margin: 2.5em auto 2em;
 	overflow: visible;
 	border: 0;
 	border-top: 4px solid #00adda;
@@ -296,30 +295,12 @@
 	position: relative;
 }
 
-.omgf-optimize-fonts-container .form-table tr th {
-	position: absolute;
-	left: -222px;
-	top: 2px;
-}
-
 .omgf-optimize-fonts-container .form-table tr td {
 	padding: 20px 0;
 }
 
-.omgf-optimize-fonts-container .omgf-optimize-fonts-contents {
-	position: relative;
-}
-
-.omgf-optimize-fonts-container .omgf-optimize-fonts-contents .option-title {
-	position: absolute;
-	left: -222px;
-	top: 4px;
-	font-weight: 600;
-	font-size: 14px;
-	color: #1d2327;
-}
-
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage {
+	margin-top: 1.5em;
 	text-align: left;
 }
 
