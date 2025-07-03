@@ -237,20 +237,6 @@ class Optimize extends Builder {
 		$this->optimized_fonts = OMGF::admin_optimized_fonts();
 		?>
 		<div class="omgf-optimize-fonts-contents">
-		<span class="option-title">
-			<?php echo __( 'Local Fonts', 'host-webfonts-local' ); ?>
-			<span class="dashicons dashicons-info tooltip">
-				<span class="tooltip-text">
-					<span class="inline-text"><?php echo sprintf(
-							__(
-								'This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically when other Google Fonts stylesheets are discovered.',
-								'host-webfonts-local'
-							),
-							'https://daan.dev/blog/how-to/wordpress-google-fonts/'
-						); ?></span>
-				</span>
-			</span>
-		</span>
 			<?php if ( ! empty( $this->optimized_fonts ) ) : ?>
 				<?php $this->do_optimized_fonts_manager(); ?>
 			<?php else : ?>
@@ -302,7 +288,21 @@ class Optimize extends Builder {
 			<table>
 				<thead>
 				<tr>
-					<td>&nbsp;</td>
+					<th>
+						<?php echo __( 'Local Fonts', 'host-webfonts-local' ); ?>
+						<span class="dashicons dashicons-info tooltip">
+							<span class="tooltip-text">
+								<span class="inline-text"><?php echo sprintf(
+										__(
+											'This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically when other Google Fonts stylesheets are discovered.',
+											'host-webfonts-local'
+										),
+										'https://daan.dev/blog/how-to/wordpress-google-fonts/'
+									); ?>
+								</span>
+							</span>
+						</span>
+					</th>
 					<th><?php echo __( 'Style', 'host-webfonts-local' ); ?></th>
 					<th><?php echo __( 'Weight', 'host-webfonts-local' ); ?></th>
 					<th><?php echo __( 'Load Early', 'host-webfonts-local' ); ?><span
