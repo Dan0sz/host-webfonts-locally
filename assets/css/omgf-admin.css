@@ -299,11 +299,8 @@
 	padding: 20px 0;
 }
 
-.omgf-optimize-fonts-container .omgf-optimize-fonts-contents {
-	position: relative;
-}
-
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage {
+	margin-top: 1.5em;
 	text-align: left;
 }
 

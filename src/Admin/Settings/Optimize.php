@@ -236,16 +236,14 @@ class Optimize extends Builder {
 		 */
 		$this->optimized_fonts = OMGF::admin_optimized_fonts();
 		?>
-		<div class="omgf-optimize-fonts-contents">
-			<?php if ( ! empty( $this->optimized_fonts ) ) : ?>
-				<?php $this->do_optimized_fonts_manager(); ?>
-			<?php else : ?>
-				<div class="omgf-optimize-fonts-description">
-					<?php $this->do_optimize_fonts_section(); ?>
-				</div>
-			<?php
-			endif; ?>
-		</div>
+		<?php if ( ! empty( $this->optimized_fonts ) ) : ?>
+			<?php $this->do_optimized_fonts_manager(); ?>
+		<?php else : ?>
+			<div class="omgf-optimize-fonts-description">
+				<?php $this->do_optimize_fonts_section(); ?>
+			</div>
+		<?php
+		endif; ?>
 		<?php
 	}
 
