@@ -389,11 +389,13 @@ class Optimize {
 			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
 			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
 			// @TODO [OMGF-128] Add automated testing for different src notations found in the wild.
-			preg_match( '/src:\surl\((.*?woff2)\)/', $font_face, $font_src );
+			preg_match( '/src:\surl\((.*?woff2?)\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
 
-			$subset = ! empty( $subset[ 1 ] ) ? trim( $subset[ 1 ], '[]' ) : '';
+			$subset      = ! empty( $subset[ 1 ] ) ? trim( $subset[ 1 ], '[]' ) : '';
+			$font_style  = ! empty( $font_style[ 1 ] ) ? $font_style[ 1 ] : 'normal';
+			$font_weight = ! empty( $font_weight[ 1 ] ) ? $font_weight [ 1 ] : '400';
 
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
@@ -410,15 +412,14 @@ class Optimize {
 				$subset = 'logogram-' . $subset;
 			}
 
-			$font_weight_id = str_replace( ' ', '-', $font_weight[ 1 ] );
-
-			$key                             = $subset . '-' . $font_weight_id . ( $font_style[ 1 ] === 'normal' ? '' : '-' . $font_style[ 1 ] );
+			$font_weight_id                  = str_replace( ' ', '-', $font_weight );
+			$key                             = $subset . '-' . $font_weight_id . ( $font_style === 'normal' ? '' : '-' . $font_style );
 			$font_object[ $key ]             = new \stdClass();
-			$font_object[ $key ]->id         = $font_weight_id . ( $font_style[ 1 ] === 'normal' ? '' : $font_style[ 1 ] );
+			$font_object[ $key ]->id         = $font_weight_id . ( $font_style === 'normal' ? '' : $font_style );
 			$font_object[ $key ]->fontFamily = $font_family;
-			$font_object[ $key ]->fontStyle  = $font_style[ 1 ];
-			$font_object[ $key ]->fontWeight = $font_weight[ 1 ];
-			$font_object[ $key ]->woff2      = $font_src[ 1 ];
+			$font_object[ $key ]->fontStyle  = $font_style;
+			$font_object[ $key ]->fontWeight = $font_weight;
+			$font_object[ $key ]->woff2      = $font_src[ 1 ] ?? '';
 
 			if ( ! empty( $subset ) ) {
 				$font_object[ $key ]->subset = $subset;

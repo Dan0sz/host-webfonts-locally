@@ -75,6 +75,13 @@ class Compatibility {
 		if ( function_exists( 'smart_slider_3_plugins_loaded' ) ) {
 			new Compatibility\SmartSlider3();
 		}
+
+		/**
+		 * Some themes/plugins use the WPTT framework to load their webfonts locally, this adds global compatibility with those themes/plugins.
+		 */
+		if ( function_exists( 'wptt_get_webfont_url' ) ) {
+			new WPTT();
+		}
 	}
 
 	/**
