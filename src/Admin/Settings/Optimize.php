@@ -38,13 +38,14 @@ class Optimize extends Builder {
 		$this->title = __( 'Optimize Local Google Fonts', 'host-webfonts-local' );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'open_task_manager' ], 20 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 22 );
-		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_warnings' ], 24 );
-		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_status' ], 26 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_google_fonts_checker' ], 28 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_cache_management' ], 30 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 30 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 31 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 21 );
+		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_warnings' ], 23 );
+		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_status' ], 25 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_google_fonts_checker' ], 27 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_test_mode' ], 29 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_cache_management' ], 31 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 33 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 34 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 40 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 50 );
@@ -55,9 +56,6 @@ class Optimize extends Builder {
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_contents' ], 100 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'close_optimize_fonts_container' ], 300 );
 
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 350 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_test_mode' ], 375 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 400 );
 	}
 
 	/**
