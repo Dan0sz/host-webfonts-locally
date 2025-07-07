@@ -80,7 +80,7 @@ class Compatibility {
 		 * Some themes/plugins use the WPTT framework to load their webfonts locally, this adds global compatibility with those themes/plugins.
 		 */
 		if ( function_exists( 'wptt_get_webfont_url' ) ) {
-			new WPTT();
+			new Compatibility\WPTT();
 		}
 	}
 
