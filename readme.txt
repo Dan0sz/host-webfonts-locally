@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 6.0.4
+Stable tag: 6.0.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.0.5 | July 7th, 2025 =
+* Fixed: class WPTT not found error. Oops!
 
 = 6.0.4 | July 4th, 2025 =
 * Added: compatibility for themes/plugins using the WPTT webfont loader.
