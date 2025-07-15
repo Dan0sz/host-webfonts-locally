@@ -164,8 +164,8 @@ class Run {
 			$break = true; // @codeCoverageIgnore
 		}
 
-		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ) {
-			if ( ! $break && $available_used_subsets ) {
+		if ( ! $break && ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ) {
+			if ( $available_used_subsets ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Available Used Subsets)', $diff );
 
 				Notice::set_notice(
@@ -193,7 +193,7 @@ class Run {
 			 */
 			$diff = array_diff( $used_subsets, [ 'latin' ] );
 
-			if ( ! $break && ! empty ( $diff ) ) {
+			if ( ! empty ( $diff ) ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Latin)', $diff );
 
 				Notice::set_notice(
