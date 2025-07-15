@@ -389,13 +389,19 @@ class Optimize {
 			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
 			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
 			// @TODO [OMGF-128] Add automated testing for different src notations found in the wild.
-			preg_match( '/src:\surl\((.*?woff2?)\)/', $font_face, $font_src );
+			preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff2)[\'"]?\s*\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
 
-			$subset      = ! empty( $subset[ 1 ] ) ? trim( $subset[ 1 ], '[]' ) : '';
+			// If no woff2 file is found in the src attribute, check if it defines a woff file.
+			if ( empty( $font_src[ 1 ] ) ) {
+				preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff)[\'"]?\s*\)/', $font_face, $font_src );
+			}
+
 			$font_style  = ! empty( $font_style[ 1 ] ) ? $font_style[ 1 ] : 'normal';
 			$font_weight = ! empty( $font_weight[ 1 ] ) ? $font_weight [ 1 ] : '400';
+			$font_src    = ! empty( $font_src[ 1 ] ) ? $font_src[ 1 ] : '';
+			$subset      = ! empty( $subset[ 1 ] ) ? trim( $subset[ 1 ], '[]' ) : '';
 
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
@@ -419,7 +425,7 @@ class Optimize {
 			$font_object[ $key ]->fontFamily = $font_family;
 			$font_object[ $key ]->fontStyle  = $font_style;
 			$font_object[ $key ]->fontWeight = $font_weight;
-			$font_object[ $key ]->woff2      = $font_src[ 1 ] ?? '';
+			$font_object[ $key ]->woff2      = $font_src;
 
 			if ( ! empty( $subset ) ) {
 				$font_object[ $key ]->subset = $subset;
@@ -434,7 +440,7 @@ class Optimize {
 			/**
 			 * @since v5.3.0 Is this a variable font i.e., one font file for multiple font weights/styles?
 			 */
-			if ( substr_count( $stylesheet, $font_src[ 1 ] ) > 1 && ! in_array( $id, $this->variable_fonts ) ) {
+			if ( $font_src && substr_count( $stylesheet, $font_src ) > 1 && ! in_array( $id, $this->variable_fonts ) ) {
 				$this->variable_fonts[ $id ] = $id;
 
 				OMGF::debug(
