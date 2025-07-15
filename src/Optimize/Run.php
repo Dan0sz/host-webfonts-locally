@@ -249,12 +249,41 @@ class Run {
 	 */
 	private function fluent_implode( $array ) {
 		if ( count( $array ) == 1 ) {
-			return ucfirst( reset( $array ) );
+			$string = reset( $array );
+
+			return $this->find_first_string( $string );
 		}
 
 		$last  = array_pop( $array );
 		$first = implode( ', ', array_map( 'ucfirst', $array ) );
 
 		return $first . ' and ' . ucfirst( $last );
+	}
+
+	/**
+	 * Keep resetting $value until it's not an array anymore.
+	 *
+	 * @since v6.0.6 This function was introduced to fix a bug where sometimes the string value would be 2 levels deep. I added recursion, just in case.
+	 *
+	 * @param $value
+	 *
+	 * @return string
+	 */
+	public function find_first_string( $value ) {
+		if ( is_array( $value ) ) {
+			if ( empty( $value ) ) {
+				return ''; // Return an empty string if the array is empty.
+			}
+
+			$value = reset( $value );
+
+			return $this->find_first_string( $value );
+		}
+
+		if ( is_string( $value ) ) {
+			return ucfirst( $value );
+		}
+
+		return $value;
 	}
 }
