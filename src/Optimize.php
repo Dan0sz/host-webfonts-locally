@@ -587,7 +587,11 @@ class Optimize {
 			parse_str( $query, $font_families );
 		}
 
-		foreach ( $font_families = explode( '|', $font_families[ 'family' ] ) as $key => $font_family ) {
+		if ( ! empty( $font_families[ 'family' ] ) ) {
+			$font_families = explode( '|', $font_families[ 'family' ] );
+		}
+
+		foreach ( $font_families as $key => $font_family ) {
 			[ $name, $tuples ] = array_pad( explode( ':', $font_family ), 2, [] );
 
 			$id = str_replace( ' ', '-', strtolower( $name ) );
