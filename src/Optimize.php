@@ -580,11 +580,18 @@ class Optimize {
 	 * @return string     Full request (excluding unloaded variants)
 	 */
 	private function unload_css( $url ) {
-		$query = wp_parse_url( $url, PHP_URL_QUERY );
+		$query         = wp_parse_url( $url, PHP_URL_QUERY );
+		$font_families = [];
 
-		parse_str( $query, $font_families );
+		if ( $query ) {
+			parse_str( $query, $font_families );
+		}
 
-		foreach ( $font_families = explode( '|', $font_families[ 'family' ] ) as $key => $font_family ) {
+		if ( ! empty( $font_families[ 'family' ] ) ) {
+			$font_families = explode( '|', $font_families[ 'family' ] );
+		}
+
+		foreach ( $font_families as $key => $font_family ) {
 			[ $name, $tuples ] = array_pad( explode( ':', $font_family ), 2, [] );
 
 			$id = str_replace( ' ', '-', strtolower( $name ) );
