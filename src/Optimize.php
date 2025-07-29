@@ -156,9 +156,16 @@ class Optimize {
 
 		$stylesheet_bak = $this->fetch_stylesheet( $this->url );
 		$fonts_bak      = $this->convert_to_fonts_object( $stylesheet_bak );
-		$url            = $this->remove_unloaded_variants( $this->url );
-		$stylesheet     = $this->fetch_stylesheet( $url );
-		$fonts          = $this->convert_to_fonts_object( $stylesheet );
+		$stylesheet     = $this->remove_unloaded_variants( $this->url, $stylesheet_bak );
+
+		/**
+		 * @since v6.0.6 If $stylesheet is a valid URL, retrieve the contents.
+		 */
+		if ( filter_var( $stylesheet, FILTER_VALIDATE_URL ) ) {
+			$stylesheet = $this->fetch_stylesheet( $stylesheet );
+		}
+
+		$fonts = $this->convert_to_fonts_object( $stylesheet );
 
 		if ( empty( $fonts ) ) {
 			return ''; // @codeCoverageIgnore
@@ -166,7 +173,7 @@ class Optimize {
 
 		foreach ( $fonts as $id => &$font ) {
 			/**
-			 * Sanitize font family because it may contain spaces.
+			 * Sanitize the font-family because it may contain spaces.
 			 *
 			 * @since v4.5.6
 			 */
@@ -279,6 +286,17 @@ class Optimize {
 	 */
 	private function fetch_stylesheet( $url ) {
 		OMGF::debug( __( 'Fetching stylesheet from: ', 'host-webfonts-local' ) . $url );
+
+		/**
+		 * @since v6.0.6 Fallback for already locally hosted stylesheets e.g., used by Elementor, etc.
+		 */
+		if ( str_contains( $url, get_home_url() ) ) {
+			$path = str_replace( get_home_url(), ABSPATH, $url );
+
+			if ( file_exists( $path ) ) {
+				return file_get_contents( $path );
+			}
+		}
 
 		$response = wp_remote_get(
 			$url,
@@ -462,9 +480,7 @@ class Optimize {
 	/**
 	 * Parse stylesheets for subsets, which in Google Fonts stylesheets are always
 	 * included, commented above each @font-face statements, e.g. /* latin-ext
-	 */ /*
 	 */
-
 	private function parse_subsets( $stylesheet, $font_family ) {
 		OMGF::debug( __( 'Parsing subsets.', 'host-webfonts-local' ) );
 
@@ -496,7 +512,7 @@ class Optimize {
 	 *
 	 * @return string
 	 */
-	private function remove_unloaded_variants( $url ) {
+	private function remove_unloaded_variants( $url, $stylesheet ) {
 		if ( ! isset( OMGF::unloaded_fonts()[ $this->original_handle ] ) ) {
 			return $url;
 		}
@@ -505,10 +521,15 @@ class Optimize {
 
 		OMGF::debug( __( 'Looking for unloads for: ', 'host-webfonts-local' ) . $url );
 
-		if ( str_contains( $url, '/css2' ) ) {
+		if ( str_contains( $url, '/css2?' ) ) {
+			// Variable Fonts API.
 			$url = $this->strip_css2_query( $url );
-		} else {
+		} elseif ( str_contains( $url, '/css?' ) ) {
+			// Legacy API.
 			$url = $this->strip_css_query( $url );
+		} else {
+			// Elementor e.a. compatibility.
+			return $this->strip_stylesheet_contents( $stylesheet );
 		}
 
 		return apply_filters( 'omgf_optimize_unload_variants_url', $url );
@@ -646,6 +667,67 @@ class Optimize {
 		}
 
 		return 'https://fonts.googleapis.com/css?family=' . implode( '|', $font_families );
+	}
+
+	private function strip_stylesheet_contents( $contents ) {
+		if ( ! isset( OMGF::unloaded_fonts()[ $this->original_handle ] ) ) {
+			return $contents;
+		}
+
+		// Extract all @font-face blocks with their comments
+		preg_match_all( '#/\*[^*]*\*+(?:[^/*][^*]*\*+)*/\s*@font-face\s*\{[^}]*}#', $contents, $font_face_matches );
+
+		if ( empty( $font_face_matches[ 0 ] ) ) {
+			return $contents;
+		}
+
+		$font_faces_to_keep = [];
+		$unloaded_fonts     = OMGF::unloaded_fonts()[ $this->original_handle ];
+
+		foreach ( $font_face_matches[ 0 ] as $font_face_block ) {
+			// Extract font-family from the @font-face block
+			if ( preg_match( '/font-family:\s*[\'"]?([^\'";]+)[\'"]?\s*;/', $font_face_block, $font_family ) ) {
+				if ( empty( $font_family[ 1 ] ) ) {
+					continue;
+				}
+
+				$font_family = trim( $font_family[ 1 ] );
+				$font_id     = strtolower( str_replace( ' ', '-', $font_family ) );
+
+				// Are any unloaded variants set for this $font_id?
+				if ( ! isset( $unloaded_fonts[ $font_id ] ) || empty( array_filter( $unloaded_fonts[ $font_id ] ) ) ) {
+					$font_faces_to_keep[] = $font_face_block;
+
+					continue;
+				}
+
+				// Extract font-weight and font-style from the @font-face block
+				preg_match( '/font-weight:\s*([^;]+);/', $font_face_block, $font_weight );
+				preg_match( '/font-style:\s*([^;]+);/', $font_face_block, $font_style );
+
+				if ( empty( $font_weight[ 1 ] ) ) {
+					continue;
+				}
+
+				$font_weight   = trim( $font_weight[ 1 ] );
+				$font_style    = isset( $font_style[ 1 ] ) ? trim( $font_style[ 1 ] ) : '';
+				$variant_key   = $font_weight . $font_style;
+				$should_remove = in_array( $variant_key, $unloaded_fonts[ $font_id ] );
+
+				if ( ! $should_remove ) {
+					$font_faces_to_keep[] = $font_face_block;
+				}
+			}
+		}
+
+		// Reconstruct the stylesheet
+		$result = '';
+
+		if ( ! empty( $font_faces_to_keep ) ) {
+			$result .= implode( "\n", $font_faces_to_keep );
+		}
+
+		return trim( $result );
 	}
 
 	/**
