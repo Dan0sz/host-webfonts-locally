@@ -508,6 +508,8 @@ class Optimize {
 	/**
 	 * Modifies the URL to not include unloaded variants.
 	 *
+	 * @TODO Should we use strip_stylesheet_contents() for all approaches? It seems like a universal approach.
+	 *
 	 * @param string $url
 	 *
 	 * @return string
