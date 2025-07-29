@@ -506,9 +506,9 @@ class Optimize {
 		OMGF::debug( __( 'Looking for unloads for: ', 'host-webfonts-local' ) . $url );
 
 		if ( str_contains( $url, '/css2' ) ) {
-			$url = $this->unload_css2( $url );
+			$url = $this->strip_css2_query( $url );
 		} else {
-			$url = $this->unload_css( $url );
+			$url = $this->strip_css_query( $url );
 		}
 
 		return apply_filters( 'omgf_optimize_unload_variants_url', $url );
@@ -521,7 +521,7 @@ class Optimize {
 	 *
 	 * @return string full requests (excluding unloaded variants)
 	 */
-	private function unload_css2( $url ) {
+	private function strip_css2_query( $url ) {
 		$query = wp_parse_url( $url, PHP_URL_QUERY );
 
 		foreach ( $font_families = explode( '&', $query ) as $key => $family ) {
@@ -585,7 +585,7 @@ class Optimize {
 	 *
 	 * @return string     Full request (excluding unloaded variants)
 	 */
-	private function unload_css( $url ) {
+	private function strip_css_query( $url ) {
 		$query         = wp_parse_url( $url, PHP_URL_QUERY );
 		$font_families = [];
 

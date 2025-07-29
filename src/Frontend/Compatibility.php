@@ -51,9 +51,6 @@ class Compatibility {
 			new Compatibility\ConvertPro();
 		}
 
-		/**
-		 * @TODO Will this still be needed after Elementor v3.30?
-		 */
 		if ( defined( 'ELEMENTOR_VERSION' ) ) {
 			new Compatibility\Elementor();
 		}
