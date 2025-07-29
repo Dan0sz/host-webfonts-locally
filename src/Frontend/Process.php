@@ -637,9 +637,13 @@ class Process {
 			/**
 			 * @since v5.3.7 decode URL and special HTML chars, to make sure all params are properly processed later on.
 			 */
-			$href  = urldecode( htmlspecialchars_decode( $stack[ 'href' ] ) );
-			$query = wp_parse_url( $href, PHP_URL_QUERY );
-			parse_str( $query, $query );
+			$href         = urldecode( htmlspecialchars_decode( $stack[ 'href' ] ) );
+			$parsed_query = wp_parse_url( $href, PHP_URL_QUERY );
+			$query        = [];
+
+			if ( $parsed_query ) {
+				parse_str( $parsed_query, $query );
+			}
 
 			/**
 			 * If required parameters aren't set, this request is most likely invalid. Let's just remove it.
