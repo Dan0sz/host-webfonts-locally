@@ -268,8 +268,10 @@ class Run {
 	 * @param $value
 	 *
 	 * @return string
+	 *
+	 * @codeCoverageIgnore
 	 */
-	public function find_first_string( $value ) {
+	private function find_first_string( $value ) {
 		if ( is_array( $value ) ) {
 			if ( empty( $value ) ) {
 				return ''; // Return an empty string if the array is empty.
