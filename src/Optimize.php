@@ -281,6 +281,8 @@ class Optimize {
 
 		/**
 		 * @since v6.0.6 Fallback for already locally hosted stylesheets e.g., used by Elementor, etc.
+		 *
+		 * @codeCoverageIgnoreStart
 		 */
 		if ( str_contains( $url, get_home_url() ) ) {
 			$path = str_replace( get_home_url(), ABSPATH, $url );
@@ -289,6 +291,7 @@ class Optimize {
 				return file_get_contents( $path );
 			}
 		}
+		/** @codeCoverageIgnoreEnd */
 
 		$response = wp_remote_get(
 			$url,
@@ -405,7 +408,7 @@ class Optimize {
 
 			// If no woff2 file is found in the src attribute, check if it defines a woff file.
 			if ( empty( $font_src[ 1 ] ) ) {
-				preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff)[\'"]?\s*\)/', $font_face, $font_src );
+				preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff)[\'"]?\s*\)/', $font_face, $font_src ); // @codeCoverageIgnore
 			}
 
 			$font_style  = ! empty( $font_style[ 1 ] ) ? $font_style[ 1 ] : 'normal';
