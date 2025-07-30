@@ -58,7 +58,7 @@ class StylesheetGenerator {
 
 			foreach ( $font->variants as $variant ) {
 				/**
-				 * Filter $variant to allow custom modifications of e.g. unicode range, etc.
+				 * Filter $variant to allow custom modifications of e.g., unicode-range, etc.
 				 *
 				 * @filter omgf_generate_stylesheet_font_variant
 				 * @since  v5.6.0

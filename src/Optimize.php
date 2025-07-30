@@ -156,8 +156,7 @@ class Optimize {
 
 		$stylesheet_bak = $this->fetch_stylesheet( $this->url );
 		$fonts_bak      = $this->convert_to_fonts_object( $stylesheet_bak );
-		$url            = $this->remove_unloaded_variants( $this->url );
-		$stylesheet     = $this->fetch_stylesheet( $url );
+		$stylesheet     = $this->remove_unloaded_variants( $stylesheet_bak );
 		$fonts          = $this->convert_to_fonts_object( $stylesheet );
 
 		if ( empty( $fonts ) ) {
@@ -166,7 +165,7 @@ class Optimize {
 
 		foreach ( $fonts as $id => &$font ) {
 			/**
-			 * Sanitize font family because it may contain spaces.
+			 * Sanitize the font-family because it may contain spaces.
 			 *
 			 * @since v4.5.6
 			 */
@@ -280,6 +279,20 @@ class Optimize {
 	private function fetch_stylesheet( $url ) {
 		OMGF::debug( __( 'Fetching stylesheet from: ', 'host-webfonts-local' ) . $url );
 
+		/**
+		 * @since v6.0.6 Fallback for already locally hosted stylesheets e.g., used by Elementor, etc.
+		 *
+		 * @codeCoverageIgnoreStart
+		 */
+		if ( str_contains( $url, get_home_url() ) ) {
+			$path = str_replace( get_home_url(), ABSPATH, $url );
+
+			if ( file_exists( $path ) ) {
+				return file_get_contents( $path );
+			}
+		}
+		/** @codeCoverageIgnoreEnd */
+
 		$response = wp_remote_get(
 			$url,
 			[
@@ -389,13 +402,19 @@ class Optimize {
 			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
 			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
 			// @TODO [OMGF-128] Add automated testing for different src notations found in the wild.
-			preg_match( '/src:\surl\((.*?woff2?)\)/', $font_face, $font_src );
+			preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff2)[\'"]?\s*\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
 
-			$subset      = ! empty( $subset[ 1 ] ) ? trim( $subset[ 1 ], '[]' ) : '';
+			// If no woff2 file is found in the src attribute, check if it defines a woff file.
+			if ( empty( $font_src[ 1 ] ) ) {
+				preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff)[\'"]?\s*\)/', $font_face, $font_src ); // @codeCoverageIgnore
+			}
+
 			$font_style  = ! empty( $font_style[ 1 ] ) ? $font_style[ 1 ] : 'normal';
 			$font_weight = ! empty( $font_weight[ 1 ] ) ? $font_weight [ 1 ] : '400';
+			$font_src    = ! empty( $font_src[ 1 ] ) ? $font_src[ 1 ] : '';
+			$subset      = ! empty( $subset[ 1 ] ) ? trim( $subset[ 1 ], '[]' ) : '';
 
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
@@ -419,7 +438,7 @@ class Optimize {
 			$font_object[ $key ]->fontFamily = $font_family;
 			$font_object[ $key ]->fontStyle  = $font_style;
 			$font_object[ $key ]->fontWeight = $font_weight;
-			$font_object[ $key ]->woff2      = $font_src[ 1 ] ?? '';
+			$font_object[ $key ]->woff2      = $font_src;
 
 			if ( ! empty( $subset ) ) {
 				$font_object[ $key ]->subset = $subset;
@@ -434,7 +453,7 @@ class Optimize {
 			/**
 			 * @since v5.3.0 Is this a variable font i.e., one font file for multiple font weights/styles?
 			 */
-			if ( substr_count( $stylesheet, $font_src[ 1 ] ) > 1 && ! in_array( $id, $this->variable_fonts ) ) {
+			if ( $font_src && substr_count( $stylesheet, $font_src ) > 1 && ! in_array( $id, $this->variable_fonts ) ) {
 				$this->variable_fonts[ $id ] = $id;
 
 				OMGF::debug(
@@ -456,9 +475,7 @@ class Optimize {
 	/**
 	 * Parse stylesheets for subsets, which in Google Fonts stylesheets are always
 	 * included, commented above each @font-face statements, e.g. /* latin-ext
-	 */ /*
 	 */
-
 	private function parse_subsets( $stylesheet, $font_family ) {
 		OMGF::debug( __( 'Parsing subsets.', 'host-webfonts-local' ) );
 
@@ -484,155 +501,76 @@ class Optimize {
 	}
 
 	/**
-	 * Modifies the URL to not include unloaded variants.
+	 * Removes @font-face statements from $stylesheet if they are set to be unloaded.
 	 *
-	 * @param string $url
+	 * @param string $stylesheet
 	 *
 	 * @return string
 	 */
-	private function remove_unloaded_variants( $url ) {
+	private function remove_unloaded_variants( $stylesheet ) {
 		if ( ! isset( OMGF::unloaded_fonts()[ $this->original_handle ] ) ) {
-			return $url;
+			return $stylesheet;
 		}
 
-		$url = urldecode( $url );
+		// Extract all @font-face blocks with their comments
+		preg_match_all( '#/\*[^*]*\*+(?:[^/*][^*]*\*+)*/\s*@font-face\s*\{[^}]*}#', $stylesheet, $font_face_matches );
 
-		OMGF::debug( __( 'Looking for unloads for: ', 'host-webfonts-local' ) . $url );
-
-		if ( str_contains( $url, '/css2' ) ) {
-			$url = $this->unload_css2( $url );
-		} else {
-			$url = $this->unload_css( $url );
+		if ( empty( $font_face_matches[ 0 ] ) ) {
+			return $stylesheet;
 		}
 
-		return apply_filters( 'omgf_optimize_unload_variants_url', $url );
-	}
+		$font_faces_to_keep = [];
+		$unloaded_fonts     = OMGF::unloaded_fonts()[ $this->original_handle ];
 
-	/**
-	 * Process unload for Variable Fonts API requests.
-	 *
-	 * @param string $url full request to Variable Fonts API.
-	 *
-	 * @return string full requests (excluding unloaded variants)
-	 */
-	private function unload_css2( $url ) {
-		$query = wp_parse_url( $url, PHP_URL_QUERY );
-
-		foreach ( $font_families = explode( '&', $query ) as $key => $family ) {
-			preg_match( '/family=(?<name>[A-Za-z\s]+)[:]?/', $family, $name );
-			preg_match( '/:(?P<axes>[a-z,]+)@/', $family, $axes );
-			preg_match( '/@(?P<tuples>[0-9,;]+)[&]?/', $family, $tuples );
-
-			if ( empty( $name[ 'name' ] ) ) {
-				continue;
-			}
-
-			$name = $name[ 'name' ];
-			$id   = str_replace( ' ', '-', strtolower( $name ) );
-
-			if ( ! isset( OMGF::unloaded_fonts()[ $this->original_handle ][ $id ] ) ) {
-				continue;
-			}
-
-			if ( empty( $axes[ 'axes' ] ) ) {
-				$axes = 'wght';
-			} else {
-				$axes = $axes[ 'axes' ];
-			}
-
-			if ( empty( $tuples[ 'tuples' ] ) ) {
-				/**
-				 * Variable Fonts API returns only regular (normal, 400) if no variations are defined.
-				 */
-				$tuples = [ '400' ];
-			} else {
-				$tuples = explode( ';', $tuples[ 'tuples' ] );
-			}
-
-			$unloaded_fonts = OMGF::unloaded_fonts()[ $this->original_handle ][ $id ];
-			$tuples         = array_filter(
-				$tuples,
-				function ( $tuple ) use ( $unloaded_fonts ) {
-					return ! in_array( preg_replace( '/[0-9]+,/', '', $tuple ), $unloaded_fonts );
+		foreach ( $font_face_matches[ 0 ] as $font_face_block ) {
+			// Extract font-family from the @font-face block
+			if ( preg_match( '/font-family:\s*[\'"]?([^\'";]+)[\'"]?\s*;/', $font_face_block, $font_family ) ) {
+				if ( empty( $font_family[ 1 ] ) ) {
+					continue;
 				}
-			);
 
-			/**
-			 * The entire font-family appears to be unloaded, let's remove it.
-			 */
-			if ( empty( $tuples ) ) {
-				unset( $font_families[ $key ] );
+				$font_family = trim( $font_family[ 1 ] );
+				$font_id     = strtolower( str_replace( ' ', '-', $font_family ) );
 
-				continue;
-			}
+				// Are any unloaded variants set for this $font_id?
+				if ( ! isset( $unloaded_fonts[ $font_id ] ) || empty( array_filter( $unloaded_fonts[ $font_id ] ) ) ) {
+					$font_faces_to_keep[] = $font_face_block;
 
-			$font_families[ $key ] = 'family=' . $name . ':' . $axes . '@' . implode( ';', $tuples );
-		}
+					continue;
+				}
 
-		return 'https://fonts.googleapis.com/css2?' . implode( '&', $font_families );
-	}
+				// Extract font-weight and font-style from the @font-face block
+				preg_match( '/font-weight:\s*([^;]+);/', $font_face_block, $font_weight );
+				preg_match( '/font-style:\s*([^;]+);/', $font_face_block, $font_style );
 
-	/**
-	 * Process unload for Google Fonts API.
-	 *
-	 * @param string $url Full request to Google Fonts API.
-	 *
-	 * @return string     Full request (excluding unloaded variants)
-	 */
-	private function unload_css( $url ) {
-		$query = wp_parse_url( $url, PHP_URL_QUERY );
+				if ( empty( $font_weight[ 1 ] ) ) {
+					continue;
+				}
 
-		parse_str( $query, $font_families );
+				$font_weight = trim( $font_weight[ 1 ] );
+				$font_style  = isset( $font_style[ 1 ] ) ? trim( $font_style[ 1 ] ) : '';
 
-		foreach ( $font_families = explode( '|', $font_families[ 'family' ] ) as $key => $font_family ) {
-			[ $name, $tuples ] = array_pad( explode( ':', $font_family ), 2, [] );
+				if ( $font_style === 'normal' ) {
+					$font_style = '';
+				}
 
-			$id = str_replace( ' ', '-', strtolower( $name ) );
+				$variant_key   = $font_weight . $font_style;
+				$should_remove = in_array( $variant_key, $unloaded_fonts[ $font_id ] );
 
-			if ( ! isset( OMGF::unloaded_fonts()[ $this->original_handle ][ $id ] ) ) {
-				continue;
-			}
-
-			/**
-			 * Google Fonts API returns 400 if no tuples are defined.
-			 */
-			if ( empty( $tuples ) ) {
-				$tuples = [ '400' ];
-			} else {
-				$tuples = explode( ',', $tuples );
-			}
-
-			/**
-			 * Let's normalize the request, before we move on.
-			 */
-			foreach ( $tuples as &$tuple ) {
-				// Convert shorthand syntax to regular syntax.
-				if ( str_contains( $tuple, 'i' ) && ! str_contains( $tuple, 'italic' ) ) {
-					$tuple = str_replace( 'i', 'italic', $tuple );
+				if ( ! $should_remove ) {
+					$font_faces_to_keep[] = $font_face_block;
 				}
 			}
-
-			$unloaded_fonts = OMGF::unloaded_fonts()[ $this->original_handle ][ $id ];
-			$tuples         = array_filter(
-				$tuples,
-				function ( $tuple ) use ( $unloaded_fonts ) {
-					return ! in_array( $tuple, $unloaded_fonts );
-				}
-			);
-
-			/**
-			 * The entire font-family appears to be unloaded, let's remove it.
-			 */
-			if ( empty( $tuples ) ) {
-				unset( $font_families[ $key ] );
-
-				continue;
-			}
-
-			$font_families[ $key ] = urlencode( $name ) . ':' . implode( ',', $tuples );
 		}
 
-		return 'https://fonts.googleapis.com/css?family=' . implode( '|', $font_families );
+		// Reconstruct the stylesheet
+		$result = '';
+
+		if ( ! empty( $font_faces_to_keep ) ) {
+			$result .= implode( "\n", $font_faces_to_keep );
+		}
+
+		return trim( $result );
 	}
 
 	/**

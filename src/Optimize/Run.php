@@ -94,7 +94,7 @@ class Run {
 						'It looks like OMGF isn\'t allowed to fetch your frontend. Try <a class="omgf-optimize-forbidden" href="%s" target="_blank">running the optimization manually</a> (you might have to allow pop-ups) and return here after the page has finished loading.',
 						'host-webfonts-local'
 					),
-					$this->no_cache_optimize_url( get_home_url() )
+					OMGF::no_cache_optimize_url( get_home_url() )
 				),
 				'omgf-forbidden',
 				'info'
@@ -151,20 +151,21 @@ class Run {
 		 *               and update the Used Subset(s) option if not.
 		 */
 		$available_used_subsets = OMGF::available_used_subsets( null, true );
+		$used_subsets           = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 
 		/**
 		 * If $diff is empty, this means that the detected fonts are available in all selected subsets in the
 		 * Used Subset(s) option and no further action is required.
 		 */
-		$diff  = array_diff( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ), $available_used_subsets );
+		$diff  = array_diff( $used_subsets, $available_used_subsets );
 		$break = false;
 
 		if ( empty( $diff ) ) {
 			$break = true; // @codeCoverageIgnore
 		}
 
-		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ) {
-			if ( ! $break && $available_used_subsets ) {
+		if ( ! $break && ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ) {
+			if ( $available_used_subsets ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Available Used Subsets)', $diff );
 
 				Notice::set_notice(
@@ -190,16 +191,16 @@ class Run {
 			 * If detected fonts aren't available in any of the subsets that were selected, just set Used Subsets to Latin
 			 * to make sure nothing breaks.
 			 */
-			$diff = array_diff( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ), [ 'latin' ] );
+			$diff = array_diff( $used_subsets, [ 'latin' ] );
 
-			if ( ! $break && ! empty ( $diff ) ) {
+			if ( ! empty ( $diff ) ) {
 				OMGF::debug_array( 'Remaining Subsets (compared to Latin)', $diff );
 
 				Notice::set_notice(
 					sprintf(
 						_n(
-							'Used Subset(s) is set to Latin, since %s isn\'t available in all detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
-							'Used Subset(s) is set to Latin, since %s aren\'t available in all detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
+							'Used Subset(s) is set to Latin, since %s isn\'t available in any of the detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
+							'Used Subset(s) is set to Latin, since %s aren\'t available in any of the detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
 							count( $diff ),
 							'host-webfonts-local'
 						),
@@ -236,7 +237,7 @@ class Run {
 	}
 
 	/**
-	 * Generate a fluent sentence from array, e.g. "1, 2, 3 and 4" if element is count is > 1.
+	 * Generate a fluent sentence from $array, e.g. "1, 2, 3 and 4" if the count is > 1.
 	 *
 	 * @since v5.4.4
 	 *
@@ -248,12 +249,43 @@ class Run {
 	 */
 	private function fluent_implode( $array ) {
 		if ( count( $array ) == 1 ) {
-			return ucfirst( reset( $array ) );
+			$string = reset( $array );
+
+			return $this->find_first_string( $string );
 		}
 
 		$last  = array_pop( $array );
 		$first = implode( ', ', array_map( 'ucfirst', $array ) );
 
 		return $first . ' and ' . ucfirst( $last );
+	}
+
+	/**
+	 * Keep resetting $value until it's not an array anymore.
+	 *
+	 * @since v6.0.6 This function was introduced to fix a bug where sometimes the string value would be 2 levels deep. I added recursion, just in case.
+	 *
+	 * @param $value
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore
+	 */
+	private function find_first_string( $value ) {
+		if ( is_array( $value ) ) {
+			if ( empty( $value ) ) {
+				return ''; // Return an empty string if the array is empty.
+			}
+
+			$value = reset( $value );
+
+			return $this->find_first_string( $value );
+		}
+
+		if ( is_string( $value ) ) {
+			return ucfirst( $value );
+		}
+
+		return $value;
 	}
 }

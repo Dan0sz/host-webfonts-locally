@@ -179,7 +179,7 @@
 
 .omgf form .omgf-task-manager .task-manager-row.omgf-cache-legend .omgf-cache-legend-item {
 	display: grid;
-	grid-template-columns: 1.5rem 5rem auto;
+	grid-template-columns: 1.5rem 9rem auto;
 }
 
 .omgf form .omgf-task-manager .task-manager-row.omgf-cache-legend .omgf-cache-legend-item .omgf-cache-legend-item-title {
@@ -229,8 +229,8 @@
 }
 
 .omgf form .omgf-task-manager ul li {
-	padding-left: 1.5em;
-	text-indent: -2em;
+	padding-left: 0;
+	text-indent: -.5em;
 	line-height: 1.5em;
 }
 
@@ -251,13 +251,13 @@
 }
 
 .omgf form .omgf-task-manager ul li.not-found:before {
-	content: "\f158";
-	color: #FF4136;
+	content: "\f223";
+	color: #00adda;
 }
 
 .omgf form .omgf-task-manager ul li.stale-cache-notice:before {
 	content: "\f348";
-	color: #0074D9;
+	color: #00adda;
 }
 
 .omgf form .omgf-task-manager ul li.unloaded:before {

@@ -96,7 +96,7 @@ class Dashboard {
 	 */
 	public static function render_warnings() {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
-			<tr valign="top" id="task-manager-notice-test-mode-row">
+			<tr id="task-manager-notice-test-mode-row">
 				<td colspan="2" class="task-manager-row">
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Test Mode is Enabled', 'host-webfonts-local' ); ?></h4>
@@ -116,7 +116,7 @@ class Dashboard {
 			</tr>
 		<?php endif; ?>
 		<?php $nonce = wp_create_nonce( Settings::OMGF_ADMIN_PAGE ); ?>
-		<tr valign="top" id="task-manager-notice-row">
+		<tr id="task-manager-notice-row">
 			<td colspan="2" class="task-manager-row">
 				<?php
 				$plugins                      = self::get_active_plugins();
@@ -540,7 +540,7 @@ class Dashboard {
 		$stylesheets          = OMGF::admin_optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
 		?>
-		<tr valign="top">
+		<tr>
 			<th class="omgf-align-row-header" scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
 			<td class="task-manager-row">
 				<?php if ( ! empty( $stylesheets ) ) : ?>
@@ -614,7 +614,7 @@ class Dashboard {
 						); ?></li>
 					<li class="omgf-cache-legend-item not-found"> <?php echo wp_kses_post(
 							__(
-								'<span class="omgf-cache-legend-item-title">Not Found</span> Stylesheet was detected once but is missing now. You can safely remove it.',
+								"<span class='omgf-cache-legend-item-title'>Pending / Not Found</span> Any changes you made to this stylesheet will be processed the next time the page it was found on is requested. If you didn't make any changes, it's probably orphaned and it's safe to remove it.",
 								'host-webfonts-local'
 							)
 						); ?></li>
