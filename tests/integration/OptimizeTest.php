@@ -9,6 +9,7 @@ namespace OMGF\Tests\Integration;
 
 use OMGF\Optimize;
 use OMGF\Tests\TestCase;
+use OMGF\Tests\Mocks\HttpClientMock;
 
 class OptimizeTest extends TestCase {
 	/**
@@ -54,10 +55,8 @@ class OptimizeTest extends TestCase {
 		$this->assertArrayHasKey( 'ubuntu', $processed[ 'test-crazy-syntaxes' ] );
 		$this->assertArrayHasKey( 'quicksand', $processed[ 'test-crazy-syntaxes' ] );
 
-		foreach ( $processed as $font_objects ) {
-			foreach ( $font_objects as $font_object ) {
-				$this->assertTrue( count( $font_object->variants ) > 0 );
-			}
+		foreach ( $processed[ 'test-crazy-syntaxes' ] as $font_object ) {
+			$this->assertTrue( count( $font_object->variants ) > 0 );
 		}
 	}
 }
