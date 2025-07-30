@@ -614,7 +614,7 @@ class Dashboard {
 						); ?></li>
 					<li class="omgf-cache-legend-item not-found"> <?php echo wp_kses_post(
 							__(
-								'<span class="omgf-cache-legend-item-title">Not Found</span> Stylesheet was detected once but is missing now. You can safely remove it.',
+								"<span class='omgf-cache-legend-item-title'>Pending / Not Found</span> Any changes you made to this stylesheet will be processed the next time the page it was found on is requested. If you didn't make any changes, it's probably orphaned and it's safe to remove it.",
 								'host-webfonts-local'
 							)
 						); ?></li>
