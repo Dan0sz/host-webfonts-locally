@@ -9,6 +9,7 @@ namespace OMGF\Tests\Integration;
 
 use OMGF\Optimize;
 use OMGF\Tests\TestCase;
+use OMGF\Tests\Mocks\HttpClientMock;
 
 class OptimizeTest extends TestCase {
 	/**
@@ -28,5 +29,37 @@ class OptimizeTest extends TestCase {
 		$this->assertArrayHasKey( 'nunito-sans', $processed[ 'test-css2' ] );
 		$this->assertArrayHasKey( 'open-sans', $processed[ 'test-css2' ] );
 		$this->assertArrayHasKey( 'readex-pro', $processed[ 'test-css2' ] );
+	}
+
+	/**
+	 * Test @see \OMGF\Optimize::process() with a CSS stylesheet containing several different src notations.
+	 * @return void
+	 */
+	public function testProcessWithCrazySyntaxes() {
+		$css = file_get_contents( OMGF_TESTS_ROOT . 'assets/crazy-syntaxes.css' );
+
+		HttpClientMock::activate();
+		HttpClientMock::mockCssContent( $css );
+
+		$url       = 'https://daan.dev/tests/crazy-syntaxes.css';
+		$handle    = 'test-crazy-syntaxes';
+		$class     = new Optimize( $url, $handle, $handle, 'object' );
+		$processed = $class->process();
+
+		$this->assertArrayHasKey( 'test-crazy-syntaxes', $processed );
+		$this->assertArrayHasKey( 'roboto', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'open-sans', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'lato', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'montserrat', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'source-sans-pro', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'poppins', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'merriweather', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'nunito', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'ubuntu', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'quicksand', $processed[ 'test-crazy-syntaxes' ] );
+
+		foreach ( $processed[ 'test-crazy-syntaxes' ] as $font_object ) {
+			$this->assertTrue( count( $font_object->variants ) > 0 );
+		}
 	}
 }

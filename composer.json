@@ -4,6 +4,7 @@
     "psr-4": {
       "OMGF\\": "src/",
       "OMGF\\Tests\\Integration\\": "tests/integration/",
+      "OMGF\\Tests\\Mocks\\": "tests/mocks/",
       "OMGF\\Tests\\Unit\\": "tests/unit/",
       "OMGF\\Tests\\": "tests/"
     }

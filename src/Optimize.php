@@ -401,7 +401,6 @@ class Optimize {
 
 			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
 			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
-			// @TODO [OMGF-128] Add automated testing for different src notations found in the wild.
 			preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff2)[\'"]?\s*\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
@@ -425,7 +424,6 @@ class Optimize {
 
 			/**
 			 * If $subset is empty, assume it's a logographic (Chinese, Japanese, etc.) character set.
-			 * TODO: [OMGF-87] the Used Subsets option doesn't work here. Can we make it work?
 			 */
 			if ( is_numeric( $subset ) ) {
 				$subset = 'logogram-' . $subset;
