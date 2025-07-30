@@ -1,0 +1,90 @@
+/* latin */
+@font-face {
+	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 400;
+	src: url('https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxP.woff2') format('woff2');
+}
+
+/* latin */
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url('https://fonts.gstatic.com/s/opensans/v29/mem8YaGs126MiZpBA-U1UpcaXcl0Aw.woff') format('woff');
+}
+
+/* latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 400;
+	src: url('https://fonts.gstatic.com/s/lato/v24/S6uyw4BMUTPHjx4wXg.woff2') format('woff2');
+}
+
+/* latin */
+@font-face {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 400;
+	src: url('https://fonts.gstatic.com/s/montserrat/v26/JTUSjIg1_i6t8kCHKm459Wlhzg.woff2') format('woff2'),
+	url('https://fonts.gstatic.com/s/montserrat/v26/JTUSjIg1_i6t8kCHKm459Wlhzg.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Montserrat';
+	font-style: normal;
+	font-weight: 400;
+	src: url('https://fonts.gstatic.com/s/montserrat/v26/JTUSjIg1_i6t8kCHKm459Wlhzg.woff') format('woff'),
+	url('https://fonts.gstatic.com/s/montserrat/v26/JTUSjIg1_i6t8kCHKm459Wlhzg.woff2') format('woff2');
+}
+
+/* latin */
+@font-face {
+	font-family: 'Source Sans Pro';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Source Sans Pro'),
+	url('https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcSV-LCoeQqfX1RYOo3qNa7luj4.woff2') format('woff2');
+}
+
+/* latin */
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 400;
+	src: url('https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJbecnFHGPc.woff2') format('woff2');
+}
+
+/* latin */
+@font-face {
+	font-family: 'Merriweather';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Merriweather'),
+	url('https://fonts.gstatic.com/s/merriweather/v30/u-4k0qyriQwlOrhSvowK_l52xwNZWMf_.woff2') format('woff2');
+}
+
+/* latin */
+@font-face {
+	font-family: 'Nunito';
+	font-style: normal;
+	font-weight: 400;
+	src: url(https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofA-sekZuHJeOz6.woff2) format('woff2');
+}
+
+/* latin */
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: normal;
+	font-weight: 400;
+	src: url("https://fonts.gstatic.com/s/ubuntu/v20/4iCv6KVjbNBYlgoKcg72j00.woff2") format("woff2");
+}
+
+/* latin */
+@font-face {
+	font-family: 'Quicksand';
+	font-style: normal;
+	font-weight: 400;
+	src: url('https://fonts.gstatic.com/s/quicksand/v31/6xK3dSBYKcSV-LCoeQqfX1RYOo3qNa7luj4.woff2') format('woff2');
+}

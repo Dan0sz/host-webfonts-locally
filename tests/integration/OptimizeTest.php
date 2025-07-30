@@ -36,6 +36,11 @@ class OptimizeTest extends TestCase {
 	 * @return void
 	 */
 	public function testProcessWithCrazySyntaxes() {
+		$css = file_get_contents( OMGF_TESTS_ROOT . 'assets/crazy-syntaxes.css' );
+
+		HttpClientMock::activate();
+		HttpClientMock::mockCssContent( $css );
+
 		$url       = 'https://daan.dev/tests/crazy-syntaxes.css';
 		$handle    = 'test-crazy-syntaxes';
 		$class     = new Optimize( $url, $handle, $handle, 'object' );
