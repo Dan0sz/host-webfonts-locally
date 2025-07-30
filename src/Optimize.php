@@ -425,7 +425,6 @@ class Optimize {
 
 			/**
 			 * If $subset is empty, assume it's a logographic (Chinese, Japanese, etc.) character set.
-			 * TODO: [OMGF-87] the Used Subsets option doesn't work here. Can we make it work?
 			 */
 			if ( is_numeric( $subset ) ) {
 				$subset = 'logogram-' . $subset;
