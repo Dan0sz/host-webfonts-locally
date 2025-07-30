@@ -29,4 +29,35 @@ class OptimizeTest extends TestCase {
 		$this->assertArrayHasKey( 'open-sans', $processed[ 'test-css2' ] );
 		$this->assertArrayHasKey( 'readex-pro', $processed[ 'test-css2' ] );
 	}
+
+	/**
+	 * Test @see \OMGF\Optimize::process() with a CSS stylesheet containing several different src notations.
+	 * @return void
+	 */
+	public function testProcessWithCrazySyntaxes() {
+		$url    = 'https://daan.dev/tests/crazy-syntaxes.css';
+		$handle = 'test-crazy-syntaxes';
+		$return = 'object';
+
+		$class     = new Optimize( $url, $handle, $handle, $return );
+		$processed = $class->process();
+
+		$this->assertArrayHasKey( 'test-crazy-syntaxes', $processed );
+		$this->assertArrayHasKey( 'roboto', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'open-sans', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'lato', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'montserrat', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'source-sans-pro', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'poppins', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'merriweather', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'nunito', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'ubuntu', $processed[ 'test-crazy-syntaxes' ] );
+		$this->assertArrayHasKey( 'quicksand', $processed[ 'test-crazy-syntaxes' ] );
+
+		foreach ( $processed as $font_objects ) {
+			foreach ( $font_objects as $font_object ) {
+				$this->assertTrue( count( $font_object->variants ) > 0 );
+			}
+		}
+	}
 }
