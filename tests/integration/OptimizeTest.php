@@ -36,11 +36,9 @@ class OptimizeTest extends TestCase {
 	 * @return void
 	 */
 	public function testProcessWithCrazySyntaxes() {
-		$url    = 'https://daan.dev/tests/crazy-syntaxes.css';
-		$handle = 'test-crazy-syntaxes';
-		$return = 'object';
-
-		$class     = new Optimize( $url, $handle, $handle, $return );
+		$url       = 'https://daan.dev/tests/crazy-syntaxes.css';
+		$handle    = 'test-crazy-syntaxes';
+		$class     = new Optimize( $url, $handle, $handle, 'object' );
 		$processed = $class->process();
 
 		$this->assertArrayHasKey( 'test-crazy-syntaxes', $processed );
