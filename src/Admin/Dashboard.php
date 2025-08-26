@@ -139,8 +139,8 @@ class Dashboard {
 											'host-webfonts-local'
 										),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' ),
-										count( $google_fonts_checker_results ) === 5 ? '*' : '',
-									),
+										count( $google_fonts_checker_results ) === 5 ? '*' : ''
+									)
 								)
 							); ?>
 						</h4>
@@ -206,7 +206,7 @@ class Dashboard {
 						</ol>
 						<?php if ( count( $google_fonts_checker_results ) === 5 ): ?>
 							<sub>* <em><?php echo wp_kses_post(
-										__( 'This list is limited to 5 pages, because most entries will most likely be duplicates.', 'host-webfonts-local' ),
+										__( 'This list is limited to 5 pages, because most entries will most likely be duplicates.', 'host-webfonts-local' )
 									); ?></em>
 							</sub>
 						<?php endif; ?>
