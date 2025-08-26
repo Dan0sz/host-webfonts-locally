@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 6.0.6
+Stable tag: 6.0.7
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.0.7 | August 26th, 2025 =
+* Fixed: removed trailing commas on some function calls to prevent errors in PHP 7.2 and lower.
+* Minimum required PHP version is now 7.3, because it'll make my life easier and PHP 7.2 has been EOL for ages.
 
 = 6.0.6 | July 30th, 2025 =
 * Improved: PHP 8.3 compatibility.
