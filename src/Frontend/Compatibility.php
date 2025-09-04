@@ -69,7 +69,7 @@ class Compatibility {
 		/**
 		 * The rest of this compatibility fix is located @see \OMGF\Frontend\Compatibility::init().
 		 */
-		if ( function_exists( 'smart_slider_3_plugins_loaded' ) ) {
+		if ( function_exists( 'smart_slider_3_plugins_loaded' ) || function_exists( 'smart_slider_3_pro_plugins_loaded' ) ) {
 			new Compatibility\SmartSlider3();
 		}
 
