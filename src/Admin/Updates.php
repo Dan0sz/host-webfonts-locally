@@ -208,7 +208,7 @@ class Updates {
 		$label  = $plugin_data[ 'Name' ] ?? $plugin_data[ 'name' ] ?? 'this plugin';
 		$notice = sprintf(
 			__(
-				'An update for %1$s is available, but we\'re having trouble retrieving it. Download it from <a href="%2$s" target="_blank">your account area</a> and install it manually. <a href="%3$s" target="_blank">Need help</a>?',
+				'An update for %1$s is available, but we\'re having trouble retrieving it. Download it from <a href=\'%2$s\' target=\'_blank\'>your account area</a> and install it manually. <a href=\'%3$s\' target=\'_blank\'>Need help</a>?',
 				$this->plugin_text_domain
 			),
 			$label,
