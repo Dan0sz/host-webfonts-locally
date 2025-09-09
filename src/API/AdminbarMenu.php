@@ -128,6 +128,9 @@ class AdminbarMenu {
 				return esc_url_raw( wp_unslash( $var ), [ $parsed[ 'scheme' ] ] );
 			}
 
+			// Decode percent encoded characters before sanitization.
+			$var = urldecode( $var );
+
 			// If the variable does not have a scheme, sanitize the variable using the sanitize_text_field function.
 			return sanitize_text_field( wp_unslash( $var ) );
 		}
@@ -157,7 +160,7 @@ class AdminbarMenu {
 			$urls = json_decode( $urls );
 		}
 
-		$urls        = apply_filters( 'omgf_ajax_results', $urls, $path );
+		$urls        = apply_filters( 'omgf_ajax_results', $urls, $params, $path );
 		$result_keys = array_keys( $stored_results );
 		$solved      = array_diff( $result_keys, $urls );
 
