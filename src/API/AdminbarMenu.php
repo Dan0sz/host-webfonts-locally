@@ -191,7 +191,8 @@ class AdminbarMenu {
 				$stored_results[ $url ] = [];
 			}
 
-			if ( ! in_array( $path, $stored_results[ $url ], true ) ) {
+			// Only store the path if it's not already in the array, and we haven't reached the limit of 5.
+			if ( ! in_array( $path, $stored_results[ $url ], true ) && count( $stored_results[ $url ] ) < 5 ) {
 				$stored_results[ $url ][] = $path;
 			}
 		}
