@@ -56,6 +56,9 @@ class Optimize {
 	/** @var bool $return_early */
 	private $return_early = false;
 
+	/** @var string $stylesheet */
+	private $stylesheet = '';
+
 	/** @var string */
 	private $path = '';
 
@@ -85,7 +88,8 @@ class Optimize {
 		string $handle,
 		string $original_handle,
 		string $return = 'url',
-		bool $return_early = false
+		bool $return_early = false,
+		string $stylesheet = ''
 	) {
 		$this->url             = apply_filters( 'omgf_optimize_url', $url );
 		$this->handle          = sanitize_title_with_dashes( $handle );
@@ -93,6 +97,7 @@ class Optimize {
 		$this->path            = OMGF_UPLOAD_DIR . '/' . $this->handle;
 		$this->return          = $return;
 		$this->return_early    = $return_early;
+		$this->stylesheet      = $stylesheet;
 	}
 
 	/**
