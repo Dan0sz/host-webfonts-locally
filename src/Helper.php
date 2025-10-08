@@ -459,7 +459,6 @@ class Helper {
 	 *
 	 * @param mixed $url
 	 * @param mixed $filename
-	 * @param mixed $extension
 	 * @param mixed $path
 	 *
 	 * @return string

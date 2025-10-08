@@ -81,6 +81,10 @@ class Download {
 		);
 
 		if ( is_wp_error( $response ) ) {
+			if ( file_exists( $temp_filename ) ) {
+				unlink( $temp_filename );
+			}
+
 			Notice::set_notice(
 				__( 'OMGF encountered an error while downloading font files', 'host-webfonts-local' ) . ': ' . $response->get_error_message(),
 				'omgf-download-failed',
@@ -118,7 +122,23 @@ class Download {
 		}
 
 		if ( file_exists( $temp_filename ) ) {
-			rename( $temp_filename, $this->path . '/' . $this->filename . '.' . $extension );
+			$final_path = $this->path . '/' . $this->filename . '.' . $extension;
+
+			if ( ! rename( $temp_filename, $final_path ) ) {
+				Notice::set_notice(
+					__( 'OMGF failed to move downloaded file to final location', 'host-webfonts-local' ) . ': ' . $this->filename,
+					'omgf-rename-failed',
+					'error',
+					500
+				);
+
+				// Clean up temp file
+				if ( file_exists( $temp_filename ) ) {
+					unlink( $temp_filename );
+				}
+
+				return '';
+			}
 		}
 
 		return OMGF_UPLOAD_URL . str_replace( OMGF_UPLOAD_DIR, '', $this->path ) . '/' . $this->filename . '.' . $extension;
