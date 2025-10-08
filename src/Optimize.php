@@ -159,10 +159,15 @@ class Optimize {
 		 */
 		delete_option( Settings::OMGF_CACHE_IS_STALE );
 
-		$stylesheet_bak = $this->fetch_stylesheet( $this->url );
-		$fonts_bak      = $this->convert_to_fonts_object( $stylesheet_bak );
-		$stylesheet     = $this->remove_unloaded_variants( $stylesheet_bak );
-		$fonts          = $this->convert_to_fonts_object( $stylesheet );
+		$stylesheet_bak = $this->stylesheet;
+
+		if ( ! $stylesheet_bak ) {
+			$stylesheet_bak = $this->fetch_stylesheet( $this->url );
+		}
+
+		$fonts_bak  = $this->convert_to_fonts_object( $stylesheet_bak );
+		$stylesheet = $this->remove_unloaded_variants( $stylesheet_bak );
+		$fonts      = $this->convert_to_fonts_object( $stylesheet );
 
 		if ( empty( $fonts ) ) {
 			return ''; // @codeCoverageIgnore
