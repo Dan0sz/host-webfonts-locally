@@ -383,10 +383,10 @@ class Optimize {
 		OMGF::debug( __( 'Parsing variants.', 'host-webfonts-local' ) );
 
 		/**
-		 * This also captures the commented Subset name.
+		 * This also captures the commented Subset name, but allows only one comment to be captured to be more restrictive.
 		 */
 		preg_match_all(
-			apply_filters( 'omgf_optimize_parse_variants_regex', '/\/\*\s.*?}/s', $this->url ),
+			apply_filters( 'omgf_optimize_parse_variants_regex', '/(?:\/\*[^*]*\*+(?:[^\/*][^*]*\*+)*\/\s*)?@font-face\s*\{[\s\S]*?\}/s', $this->url ),
 			$stylesheet,
 			$font_faces
 		);
