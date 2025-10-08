@@ -92,7 +92,30 @@ class Download {
 		}
 
 		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
-		$extension    = $this->mime_map[ $content_type ] ?? 'woff2';
+
+		if ( ! $content_type ) {
+			Notice::set_notice(
+				__( 'OMGF couldn\'t determine the mime-type for the downloaded font file', 'host-webfonts-local' ) . ': ' . $this->filename,
+				'omgf-download-mime-type-failed',
+				'error',
+				500
+			);
+
+			return '';
+		}
+
+		$extension = $this->mime_map[ $content_type ] ?? '';
+
+		if ( ! $extension ) {
+			Notice::set_notice(
+				__( 'OMGF couldn\'t determine the file extension for the downloaded font file', 'host-webfonts-local' ) . ': ' . $this->filename,
+				'omgf-download-extension-failed',
+				'error',
+				500
+			);
+
+			return '';
+		}
 
 		if ( file_exists( $temp_filename ) ) {
 			rename( $temp_filename, $this->path . '/' . $this->filename . '.' . $extension );
