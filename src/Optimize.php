@@ -223,7 +223,7 @@ class Optimize {
 					/**
 					 * If file already exists the OMGF_Download class bails early.
 					 */
-					$variant->woff2 = OMGF::download( $variant->woff2, $filename, 'woff2', $this->path );
+					$variant->woff2 = OMGF::download( $variant->woff2, $filename, $this->path );
 				}
 			}
 

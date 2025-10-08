@@ -464,8 +464,8 @@ class Helper {
 	 *
 	 * @return string
 	 */
-	public static function download( $url, $filename, $extension, $path ) {
-		$download = new Download( $url, $filename, $extension, $path );
+	public static function download( $url, $filename, $path ) {
+		$download = new Download( $url, $filename, $path );
 
 		return $download->download();
 	}
