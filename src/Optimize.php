@@ -330,7 +330,7 @@ class Optimize {
 	 *
 	 * @return array
 	 */
-	public function convert_to_fonts_object( $stylesheet ) {
+	private function convert_to_fonts_object( $stylesheet ) {
 		OMGF::debug( __( 'Stylesheet fetched. Parsing for font-families...', 'host-webfonts-local' ) );
 
 		preg_match_all( '/font-family:\s\'(.*?)\';/', $stylesheet, $font_families );
