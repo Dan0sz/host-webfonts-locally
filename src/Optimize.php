@@ -411,14 +411,9 @@ class Optimize {
 
 			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
 			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
-			preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff2)[\'"]?\s*\)/', $font_face, $font_src );
+			preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+)[\'"]?\s*\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
-
-			// If no woff2 file is found in the src attribute, check if it defines a woff file.
-			if ( empty( $font_src[ 1 ] ) ) {
-				preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+\.woff)[\'"]?\s*\)/', $font_face, $font_src ); // @codeCoverageIgnore
-			}
 
 			$font_style  = ! empty( $font_style[ 1 ] ) ? $font_style[ 1 ] : 'normal';
 			$font_weight = ! empty( $font_weight[ 1 ] ) ? $font_weight [ 1 ] : '400';
