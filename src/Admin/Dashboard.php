@@ -150,7 +150,7 @@ class Dashboard {
 									'omgf_google_fonts_checker_general_text',
 									sprintf(
 										__(
-											'OMGF\'s integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) only rocket scientists use.',
+											'OMGF\'s integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) that cannot be automatically processed.',
 											'host-webfonts-local'
 										),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
