@@ -431,7 +431,7 @@ class Optimize {
 			}
 
 			/**
-			 * If $subset is empty, assume it's a logographic (Chinese, Japanese, etc.) character set.
+			 * If $subset is numeric, assume it's a logographic (Chinese, Japanese, etc.) character set.
 			 */
 			if ( is_numeric( $subset ) ) {
 				$subset = 'logogram-' . $subset;
