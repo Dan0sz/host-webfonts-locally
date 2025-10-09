@@ -97,6 +97,7 @@ class Download {
 
 		$code = wp_remote_retrieve_response_code( $response );
 
+		// Handle non-success HTTP status codes.
 		if ( $code < 200 || $code >= 300 ) {
 			if ( file_exists( $temp_filename ) ) {
 				unlink( $temp_filename );
