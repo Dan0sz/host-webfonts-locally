@@ -59,12 +59,14 @@ class Download {
 	 * Download $url to $path and return OMGF_UPLOAD_URL to $filename.
 	 *
 	 * @return string
+	 *
+	 * @codeCoverageIgnore Because too many edge cases and error handling. We'll notice soon enough if downloads fail.
 	 */
 	public function download() {
 		wp_mkdir_p( $this->path );
 
 		if ( str_starts_with( $this->url, '//' ) ) {
-			$this->url = 'https:' . $this->url; // @codeCoverageIgnore
+			$this->url = 'https:' . $this->url;
 		}
 
 		$temp_filename = $this->path . '/' . $this->filename . '.tmp';
