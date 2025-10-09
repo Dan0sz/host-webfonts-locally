@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.8
-Stable tag: 6.0.7
+Stable tag: 6.0.8
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.0.8 | October 1st, 2025 =
+* Fixed: compatibility fix for Smart Slider 3, didn't run on Smart Slider 3 Pro.
+* Fixed: syntax error in "Update available" message, would break JS execution on Plugins page.
+* Improved: use new $params variable in filter, to prevent double POST cleanup.
 
 = 6.0.7 | August 26th, 2025 =
 * Fixed: removed trailing commas on some function calls to prevent errors in PHP 7.2 and lower.
