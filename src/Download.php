@@ -95,6 +95,23 @@ class Download {
 			return '';
 		}
 
+		$code = wp_remote_retrieve_response_code( $response );
+
+		if ( $code < 200 || $code >= 300 ) {
+			if ( file_exists( $temp_filename ) ) {
+				unlink( $temp_filename );
+			}
+
+			Notice::set_notice(
+				__( 'OMGF received a non-success HTTP status while downloading', 'host-webfonts-local' ) . ': ' . $code . ' ' . $this->url,
+				'omgf-file-download-failed',
+				'error',
+				$code ?: 500
+			);
+
+			return '';
+		}
+
 		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
 
 		if ( ! $content_type ) {
@@ -108,9 +125,20 @@ class Download {
 			return '';
 		}
 
-		$extension = $this->mime_map[ $content_type ] ?? '';
+		// Normalize Content-Type before lookup (strip parameters, lowercase)
+		$content_type = strtolower( trim( explode( ';', $content_type )[ 0 ] ) );
+		$extension    = $this->mime_map[ $content_type ] ?? '';
 
 		if ( ! $extension ) {
+			OMGF::debug(
+				sprintf(
+					'Unexpected Content-Type "%s" for font file "%s" from URL "%s"',
+					$content_type,
+					$this->filename,
+					$this->url
+				)
+			);
+
 			Notice::set_notice(
 				__( 'OMGF couldn\'t determine the file extension for the downloaded font file', 'host-webfonts-local' ) . ': ' . $this->filename,
 				'omgf-download-extension-failed',
@@ -132,7 +160,7 @@ class Download {
 					500
 				);
 
-				// Clean up temp file
+				// Clean up the temp file
 				if ( file_exists( $temp_filename ) ) {
 					unlink( $temp_filename );
 				}
