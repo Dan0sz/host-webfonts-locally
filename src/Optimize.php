@@ -438,7 +438,7 @@ class Optimize {
 			}
 
 			$font_weight_id                  = str_replace( ' ', '-', $font_weight );
-			$key                             = $subset . '-' . $font_weight_id . ( $font_style === 'normal' ? '' : '-' . $font_style );
+			$key                             = ( $subset ? $subset . '-' : '' ) . $font_weight_id . ( $font_style === 'normal' ? '' : '-' . $font_style );
 			$font_object[ $key ]             = new \stdClass();
 			$font_object[ $key ]->id         = $font_weight_id . ( $font_style === 'normal' ? '' : $font_style );
 			$font_object[ $key ]->fontFamily = $font_family;
