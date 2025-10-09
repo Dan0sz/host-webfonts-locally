@@ -412,7 +412,7 @@ class Optimize {
 			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
 			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
 			/**
-			 * @since v6.0.8 Removed .woff fallback, accepting any src url.
+			 * @since v6.0.9 Removed .woff fallback, accepting any src url.
 			 */
 			preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+)[\'"]?\s*\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
