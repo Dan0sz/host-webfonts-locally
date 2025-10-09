@@ -150,7 +150,7 @@ class Dashboard {
 									'omgf_google_fonts_checker_general_text',
 									sprintf(
 										__(
-											'Because either your theme, a plugin or a script has implemented Google Fonts in a way only rocket scientists use, %s isn\'t able to process all of them.',
+											'OMGF\'s integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) that cannot be automatically processed.',
 											'host-webfonts-local'
 										),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
