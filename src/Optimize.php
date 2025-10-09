@@ -333,7 +333,7 @@ class Optimize {
 	private function convert_to_fonts_object( $stylesheet ) {
 		OMGF::debug( __( 'Stylesheet fetched. Parsing for font-families...', 'host-webfonts-local' ) );
 
-		preg_match_all( '/font-family:\s\'(.*?)\';/', $stylesheet, $font_families );
+		preg_match_all( '/font-family:[\s\n]*[\'\"]?(.*?)[\'\"]?;/', $stylesheet, $font_families );
 
 		if ( empty( $font_families[ 1 ] ) ) {
 			return []; // @codeCoverageIgnore
