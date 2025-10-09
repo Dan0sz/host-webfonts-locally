@@ -485,7 +485,7 @@ class Optimize {
 	private function parse_subsets( $stylesheet, $font_family ) {
 		OMGF::debug( __( 'Parsing subsets.', 'host-webfonts-local' ) );
 
-		preg_match_all( '/\/\*\s([a-z\-]+?)\s\*\//', $stylesheet, $subsets );
+		preg_match_all( '/(?<=\/\*)\s*([\s\S]*?)\s*(?=\*\/\n{0,1}[ \t]*@font-face)/', $stylesheet, $subsets );
 
 		if ( empty( $subsets[ 1 ] ) ) {
 			return []; // @codeCoverageIgnore
