@@ -59,8 +59,6 @@ class Download {
 	 * Download $url to $path and return OMGF_UPLOAD_URL to $filename.
 	 *
 	 * @return string
-	 * @throws SodiumException
-	 * @throws TypeError
 	 */
 	public function download() {
 		wp_mkdir_p( $this->path );
