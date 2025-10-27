@@ -162,7 +162,7 @@ class Optimize {
 		$stylesheet_bak = $this->stylesheet;
 
 		if ( ! $stylesheet_bak ) {
-			$stylesheet_bak = $this->fetch_stylesheet( $this->url );
+			$stylesheet_bak = $this->fetch_stylesheet( htmlentities( $this->url ) );
 		}
 
 		$fonts_bak  = $this->convert_to_fonts_object( $stylesheet_bak );
