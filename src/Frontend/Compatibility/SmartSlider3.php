@@ -43,6 +43,6 @@ class SmartSlider3 {
 	 */
 	private function init() {
 		/** Smart Slider 3 compatibility */
-		add_filter( 'wordpress_prepare_output', [ $this->process, 'parse' ], 11 );
+		add_filter( 'wordpress_prepare_output', [ $this->process, 'find_and_replace' ], 11 );
 	}
 }
