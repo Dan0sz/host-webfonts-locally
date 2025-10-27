@@ -162,7 +162,7 @@ class Optimize {
 		$stylesheet_bak = $this->stylesheet;
 
 		if ( ! $stylesheet_bak ) {
-			$stylesheet_bak = $this->fetch_stylesheet( htmlentities( $this->url ) );
+			$stylesheet_bak = $this->fetch_stylesheet( $this->url );
 		}
 
 		$fonts_bak  = $this->convert_to_fonts_object( $stylesheet_bak );
@@ -291,8 +291,6 @@ class Optimize {
 
 		/**
 		 * @since v6.0.6 Fallback for already locally hosted stylesheets e.g., used by Elementor, etc.
-		 *
-		 * @codeCoverageIgnoreStart
 		 */
 		if ( str_contains( $url, get_home_url() ) ) {
 			$path = str_replace( get_home_url(), ABSPATH, $url );
@@ -301,7 +299,12 @@ class Optimize {
 				return file_get_contents( $path );
 			}
 		}
-		/** @codeCoverageIgnoreEnd */
+
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			Notice::set_notice( __( 'Could not fetch this stylesheet, because the URL is invalid', 'host-webfonts-local' ) . ": $url.", 'omgf-optimize-invalid-url', 'error', 406 );
+
+			return '';
+		}
 
 		$response = wp_remote_get(
 			$url,
