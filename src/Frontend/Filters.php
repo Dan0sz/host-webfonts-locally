@@ -44,10 +44,13 @@ class Filters {
 		 * Decode for proper processing.
 		 */
 		$url = html_entity_decode( $url );
+
 		/**
-		 * Fix invalid query parameters.
+		 * Fix invalid query parameters. Mistakes made often by other theme/plugin devs when concatenating.
 		 */
 		$url = str_replace( [ ',&', '&,' ], '&', $url );
+		$url = str_replace( [ ',=', '=,' ], '=', $url );
+
 		/**
 		 * Remove trailing commas
 		 */
