@@ -244,7 +244,7 @@ class Dashboard {
 					</div>
 				<?php else: ?>
 					<div class="task-manager-notice success">
-						<h4><?php echo esc_html__( 'No external Google Fonts found on your site.', 'host-webfonts-local' ); ?></h4>
+						<h4><?php echo esc_html__( 'All Google Fonts are optimized and hosted locally.', 'host-webfonts-local' ); ?></h4>
 						<p>
 							<?php echo apply_filters(
 								'omgf_dashboard_success_message',
