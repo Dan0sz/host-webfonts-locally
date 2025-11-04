@@ -1,0 +1,770 @@
+# Copyright (C) 2025 Daan from Daan.dev
+# This file is distributed under the GPL2v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: OMGF 6.0.10\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/host-webfonts-local\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-10-16T11:57:19+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: host-webfonts-local\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#: src/Frontend/Actions.php:56
+msgid "OMGF"
+msgstr "OMGF"
+
+#. Plugin URI of the plugin
+msgid "https://daan.dev/wordpress/omgf/"
+msgstr "https://daan.dev/wordpress/omgf/"
+
+#. Description of the plugin
+msgid "Increase GDPR/DSGVO compliance and leverage browser cache by automatically self-hosting Google Fonts."
+msgstr "Aumente el cumplimiento de GDPR/DSGVO y aproveche la caché del navegador alojando automáticamente las fuentes de Google."
+
+#. Author of the plugin
+msgid "Daan from Daan.dev"
+msgstr "Daan de daan.dev"
+
+#. Author URI of the plugin
+msgid "https://daan.dev"
+msgstr "https://daan.dev"
+
+#: src/Admin.php:255
+msgid "OMGF's cached stylesheets don't reflect the current settings. Refresh the cache from the <a href=\"%s\">Dashboard</a>."
+msgstr "Las hojas de estilo en caché de OMGF no reflejan la configuración actual. Actualice la caché desde el <a href=\"%s\">Panel de control</a>."
+
+#: src/Admin/Actions.php:171
+msgid "This update includes major changes, please <a href=\"%s\" target=\"_blank\">read this</a> before continuing."
+msgstr "Esta actualización incluye cambios importantes, por favor, <a href=\"%s\" target=\"_blank\">lea esto</a> antes de continuar."
+
+#: src/Admin/Ajax.php:44
+msgid "Hmmm, are you lost?"
+msgstr "Mmm, ¿está perdido?"
+
+#: src/Admin/Ajax.php:70
+#: src/Admin/Ajax.php:128
+#: src/Admin/Ajax.php:206
+#: src/Admin/Ajax.php:234
+#: src/Admin/Ajax.php:279
+msgid "Hmmm, you're not supposed to be here."
+msgstr "Mmm, no debería estar aquí."
+
+#: src/Admin/Ajax.php:214
+msgid "Cache directory successfully emptied."
+msgstr "Directorio de caché vaciado correctamente."
+
+#: src/Admin/Ajax.php:217
+msgid "OMGF encountered an error while emptying the cache directory: "
+msgstr "OMGF encontró un error al vaciar el directorio de caché: "
+
+#: src/Admin/Ajax.php:290
+msgid "Log file successfully deleted"
+msgstr "Archivo de registro eliminado correctamente"
+
+#: src/Admin/Dashboard.php:102
+msgid "Test Mode is Enabled"
+msgstr "El modo de prueba está activado"
+
+#: src/Admin/Dashboard.php:106
+msgid "All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone."
+msgstr "Todas las optimizaciones realizadas por %s <strong>solo son visibles para usted</strong> y para los usuarios que añaden <code>?omgf=1</code> a la URL. Desactive el modo de prueba (en la parte inferior de esta página) para que las optimizaciones sean visibles para todos."
+
+#: src/Admin/Dashboard.php:137
+msgid "%1$s wasn't able to process all Google Fonts on your site. %2$s"
+msgstr "%1$s no pudo procesar todas las fuentes de Google en su sitio. %2$s"
+
+#: src/Admin/Dashboard.php:152
+msgid "OMGF's integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) that cannot be automatically processed."
+msgstr "El comprobador de fuentes de Google integrado de OMGF (introducido en la v6) encontró implementaciones de fuentes de Google (añadidas por su tema o un plugin) que no se pueden procesar automáticamente."
+
+#: src/Admin/Dashboard.php:166
+msgid "You can read <a href=\"%s\" target=\"_blank\">this guide</a> and attempt to fix it manually or, <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> to fix it automatically."
+msgstr "Puede leer <a href=\"%s\" target=\"_blank\">esta guía</a> e intentar solucionarlo manualmente o, <a href=\"%s\" target=\"_blank\">actualizar a OMGF Pro</a> para solucionarlo automáticamente."
+
+#: src/Admin/Dashboard.php:180
+msgid "Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> might be required."
+msgstr "Algunas (o todas) las entradas que aparecen aquí pueden coincidir con la lista de posibles problemas que se enumeran a continuación en el cuadro amarillo. Soluciónelos primero y visite los enlaces siguientes para actualizar estos resultados. En algunos casos, puede ser necesaria una <a href=\"%s\" target=\"_blank\">actualización a OMGF Pro</a>."
+
+#: src/Admin/Dashboard.php:191
+msgid "was found on:"
+msgstr "se encontró en:"
+
+#: src/Admin/Dashboard.php:209
+msgid "This list is limited to 5 pages, because most entries will most likely be duplicates."
+msgstr "Esta lista está limitada a 5 páginas, porque la mayoría de las entradas probablemente serán duplicados."
+
+#: src/Admin/Dashboard.php:216
+msgid "Let's get started!"
+msgstr "¡Empecemos!"
+
+#: src/Admin/Dashboard.php:220
+msgid "Hit the <strong>Save & Optimize</strong> at the bottom of this page to run a Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can't detect and optimize automatically."
+msgstr "Haga clic en <strong>Guardar y optimizar</strong> en la parte inferior de esta página para ejecutar una optimización de fuentes de Google en su página de inicio. Después de hacerlo, %s se ejecutará silenciosamente en segundo plano y le informará en este panel si encuentra fuentes de Google que no puede detectar y optimizar automáticamente."
+
+#: src/Admin/Dashboard.php:231
+msgid "Google Fonts optimization seems to be failing."
+msgstr "La optimización de fuentes de Google parece estar fallando."
+
+#: src/Admin/Dashboard.php:235
+msgid "%s isn't detecting any Google Fonts on your homepage. This could be for several reasons. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Click here</a> to run a deeper investigation."
+msgstr "%s no detecta ninguna fuente de Google en su página de inicio. Esto podría deberse a varias razones. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Haga clic aquí</a> para realizar una investigación más profunda."
+
+#: src/Admin/Dashboard.php:247
+msgid "No external Google Fonts found on your site."
+msgstr "No se encontraron fuentes de Google externas en su sitio."
+
+#: src/Admin/Dashboard.php:253
+msgid "Cool! %s is successfully hosting all Google Fonts locally."
+msgstr "¡Genial! %s está alojando correctamente todas las fuentes de Google localmente."
+
+#: src/Admin/Dashboard.php:264
+msgid "No potential issues found in your configuration."
+msgstr "No se encontraron problemas potenciales en su configuración."
+
+#: src/Admin/Dashboard.php:271
+msgid "Great job! Your configuration allows %s to run smoothly."
+msgstr "¡Buen trabajo! Su configuración permite que %s se ejecute sin problemas."
+
+#: src/Admin/Dashboard.php:284
+msgid "%s potential issue found in your configuration."
+msgid_plural "%s potential issues found in your configuration."
+msgstr[0] "Se encontró %s problema potencial en su configuración."
+msgstr[1] "Se encontraron %s problemas potenciales en su configuración."
+
+#: src/Admin/Dashboard.php:300
+msgid "It seems like Multisite is enabled. OMGF doesn't natively support Multisite. If you're getting CORS related errors on any of your network's sites, consider <a href=\"%s\" target=\"_blank\">upgrading to OMGF Pro</a>."
+msgstr "Parece que Multisite está habilitado. OMGF no es compatible de forma nativa con Multisite. Si está recibiendo errores relacionados con CORS en cualquiera de los sitios de su red, considere <a href=\"%s\" target=\"_blank\">actualizar a OMGF Pro</a>."
+
+#: src/Admin/Dashboard.php:310
+msgid "Your WordPress configuration isn't setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">these steps</a> to fix it."
+msgstr "Su configuración de WordPress no está configurada para usar SSL (https://). Si su frontend muestra fuentes del sistema después de la optimización, esto podría deberse a advertencias de contenido mixto y/o CORS. Siga <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">estos pasos</a> para solucionarlo."
+
+#: src/Admin/Dashboard.php:327
+msgid "Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> to fix it."
+msgstr "Su tema (%1$s) requiere configuración adicional para ser compatible con %2$s; consulte la lista de <a href=\"%3$s\" target=\"_blank\">problemas conocidos</a> para solucionarlo."
+
+#: src/Admin/Dashboard.php:348
+msgid "The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> for more information."
+msgstr "El plugin, <strong>%1$s</strong>, es incompatible con %2$s y debe deshabilitarse para que %2$s funcione correctamente. Consulte la lista de <a href=\"%3$s\" target=\"_blank\">problemas conocidos</a> para obtener más información."
+
+#: src/Admin/Dashboard.php:370
+msgid "The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href=\"%3$s\" target=\"_blank\">list of known issues</a> to fix it."
+msgstr "El plugin, <strong>%1$s</strong>, requiere configuración adicional para ser compatible con %2$s. Consulte la <a href=\"%3$s\" target=\"_blank\">lista de problemas conocidos</a> para solucionarlo."
+
+#: src/Admin/Dashboard.php:385
+msgid "%1$s is loading an embedded iframe on your site. %2$s can't process Google Fonts inside iframes. <a href=\"%3$s\" target=\"_blank\">Click here</a> to find out why and what you can do about it."
+msgstr "%1$s está cargando un iframe incrustado en su sitio. %2$s no puede procesar fuentes de Google dentro de iframes. <a href=\"%3$s\" target=\"_blank\">Haga clic aquí</a> para saber por qué y qué puede hacer al respecto."
+
+#: src/Admin/Dashboard.php:401
+msgid "Mark as fixed"
+msgstr "Marcar como solucionado"
+
+#: src/Admin/Dashboard.php:411
+msgid "After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won't disappear by itself."
+msgstr "Después de realizar los cambios propuestos donde sea necesario, haga clic en <strong>Marcar como solucionado</strong> para eliminar el aviso. No desaparecerá por sí solo."
+
+#: src/Admin/Dashboard.php:544
+msgid "Cache Status"
+msgstr "Estado de la caché"
+
+#: src/Admin/Dashboard.php:561
+msgid "stored in %s"
+msgstr "almacenado en %s"
+
+#: src/Admin/Dashboard.php:571
+msgid "Manage %s"
+msgstr "Gestionar %s"
+
+#: src/Admin/Dashboard.php:573
+msgid "Configure"
+msgstr "Configurar"
+
+#: src/Admin/Dashboard.php:573
+msgid "Remove"
+msgstr "Eliminar"
+
+#: src/Admin/Dashboard.php:578
+msgid "The stylesheets in the cache do not reflect the current settings. Either <a href=\"#\" id=\"omgf-cache-refresh\">refresh</a> the cache (and maintain settings) or <a href=\"#\" id=\"omgf-cache-flush\">flush</a> it and start over."
+msgstr "Las hojas de estilo en la caché no reflejan la configuración actual. Puede <a href=\"#\" id=\"omgf-cache-refresh\">actualizar</a> la caché (y mantener la configuración) o <a href=\"#\" id=\"omgf-cache-flush\">vaciarla</a> y empezar de nuevo."
+
+#: src/Admin/Dashboard.php:587
+msgid "No stylesheets in cache."
+msgstr "No hay hojas de estilo en la caché."
+
+#: src/Admin/Dashboard.php:595
+msgid "Status Legend"
+msgstr "Leyenda de estado"
+
+#: src/Admin/Dashboard.php:598
+msgid "<span class=\"omgf-cache-legend-item-title\">Found</span> Stylesheet exists on your file system."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Encontrado</span> La hoja de estilo existe en su sistema de archivos."
+
+#: src/Admin/Dashboard.php:604
+msgid "<span class=\"omgf-cache-legend-item-title\">Unloaded</span> Stylesheet exists but is not loaded in the frontend."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Descargado</span> La hoja de estilo existe, pero no se carga en el frontend."
+
+#: src/Admin/Dashboard.php:610
+msgid "<span class=\"omgf-cache-legend-item-title\">Stale</span> Settings were changed and the stylesheet's content does not reflect those changes."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Obsoleto</span> La configuración se cambió y el contenido de la hoja de estilo no refleja esos cambios."
+
+#: src/Admin/Dashboard.php:616
+msgid "<span class='omgf-cache-legend-item-title'>Pending / Not Found</span> Any changes you made to this stylesheet will be processed the next time the page it was found on is requested. If you didn't make any changes, it's probably orphaned and it's safe to remove it."
+msgstr "<span class='omgf-cache-legend-item-title'>Pendiente / No encontrado</span> Cualquier cambio que haya realizado en esta hoja de estilo se procesará la próxima vez que se solicite la página donde se encontró. Si no realizó ningún cambio, probablemente esté huérfana y sea seguro eliminarla."
+
+#: src/Admin/Settings.php:212
+msgid "Save & Optimize"
+msgstr "Guardar y optimizar"
+
+#: src/Admin/Settings.php:252
+msgid "You're not cool enough to access this page."
+msgstr "No es lo suficientemente genial para acceder a esta página."
+
+#: src/Admin/Settings.php:257
+msgid "OMGF | Optimize My Google Fonts"
+msgstr "OMGF | Optimizar mis fuentes de Google"
+
+#: src/Admin/Settings.php:338
+#: src/Admin/Settings/Optimize.php:288
+msgid "Local Fonts"
+msgstr "Fuentes locales"
+
+#: src/Admin/Settings.php:372
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: src/Admin/Settings.php:385
+msgid "Help"
+msgstr "Ayuda"
+
+#: src/Admin/Settings.php:480
+msgid "Coded with %s in The Netherlands @ <strong>Daan.dev</strong>."
+msgstr "Codificado con %s en los Países Bajos @ <strong>Daan.dev</strong>."
+
+#: src/Admin/Settings.php:543
+msgid "Recently tagged <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> on my blog:"
+msgstr "Recientemente etiquetado <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> en mi blog:"
+
+#: src/Admin/Settings/Advanced.php:60
+msgid "Fonts Cache Directory"
+msgstr "Directorio de caché de fuentes"
+
+#: src/Admin/Settings/Advanced.php:64
+msgid "Downloaded stylesheets and font files %1$s are stored in: <code>%2$s</code>."
+msgstr "Las hojas de estilo y los archivos de fuentes descargados %1$s se almacenan en: <code>%2$s</code>."
+
+#: src/Admin/Settings/Advanced.php:68
+msgid "(for this site)"
+msgstr "(para este sitio)"
+
+#: src/Admin/Settings/Advanced.php:82
+msgid "White-label Stylesheets (Pro)"
+msgstr "Hojas de estilo de marca blanca (pro)"
+
+#: src/Admin/Settings/Advanced.php:85
+msgid "Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size. %s"
+msgstr "Habilite esta opción para eliminar toda la marca y los comentarios de las hojas de estilo generadas, reduciendo aún más su tamaño. %s"
+
+#: src/Admin/Settings/Advanced.php:98
+msgid "Enable this option (on all instances) if you're planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production workflow. %s"
+msgstr "Habilite esta opción (en todas las instancias) si planea usar %s en una (variación de una) secuencia de trabajo de Desarrollo > Pruebas > Aceptación/Staging > Producción. %s"
+
+#: src/Admin/Settings/Advanced.php:108
+msgid "Developer Mode (Pro)"
+msgstr "Modo desarrollador (pro)"
+
+#: src/Admin/Settings/Advanced.php:119
+msgid "This option is disabled, because <strong>Developer Mode (Pro)</strong> is enabled."
+msgstr "Esta opción está deshabilitada porque el <strong>Modo desarrollador (Pro)</strong> está habilitado."
+
+#: src/Admin/Settings/Advanced.php:123
+msgid "Modify the <code>src</code> attribute for font files and stylesheets generated by OMGF Pro. This can be anything; from an absolute URL pointing to your CDN (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>) to work with <em>security thru obscurity</em> plugins. Enter the full path to OMGF's files. Default: (empty) %s"
+msgstr "Modifique el atributo <code>src</code> para los archivos de fuentes y las hojas de estilo generadas por OMGF Pro. Esto puede ser cualquier cosa; desde una URL absoluta que apunte a su CDN (por ejemplo, <code>%s</code>) hasta una URL relativa alternativa (por ejemplo, <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>) para trabajar con plugins de <em>seguridad por oscuridad</em>. Introduzca la ruta completa a los archivos de OMGF. Predeterminado: (vacío) %s"
+
+#: src/Admin/Settings/Advanced.php:132
+msgid "Modify Source URL (Pro)"
+msgstr "Modificar URL de origen (pro)"
+
+#: src/Admin/Settings/Advanced.php:134
+msgid "e.g. https://cdn.mydomain.com/alternate/relative-path"
+msgstr "p. ej. https://cdn.mydomain.com/alternate/relative-path"
+
+#: src/Admin/Settings/Advanced.php:145
+msgid "Legacy Browser Compatibility"
+msgstr "Compatibilidad con navegadores antiguos"
+
+#: src/Admin/Settings/Advanced.php:147
+msgid "Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Enabling this option negatively impacts file compression and disables Variable Fonts support. Default: off."
+msgstr "Habilite esta opción para usar un User-Agent antiguo (Windows 7) y añadir compatibilidad con navegadores antiguos. Habilitar esta opción afecta negativamente a la compresión de archivos y deshabilita la compatibilidad con fuentes variables. Predeterminado: desactivado."
+
+#: src/Admin/Settings/Advanced.php:159
+msgid "Divi Compatibility"
+msgstr "Compatibilidad con Divi"
+
+#: src/Admin/Settings/Advanced.php:161
+msgid "Divi uses the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off"
+msgstr "Divi utiliza el mismo identificador para las hojas de estilo de Google Fonts con diferentes configuraciones. OMGF incluye correcciones de compatibilidad para asegurarse de que estas diferentes hojas de estilo se procesen correctamente. Habilite esto si ve que algunas fuentes no aparecen correctamente. Predeterminado: desactivado"
+
+#: src/Admin/Settings/Advanced.php:170
+msgid "Auto-Configure Subsets"
+msgstr "Configurar subconjuntos automáticamente"
+
+#: src/Admin/Settings/Advanced.php:173
+msgid "When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that're available for <u>all</u> detected font families. Novice users are advised to leave this enabled."
+msgstr "Cuando esta opción está marcada, %s establecerá la opción <strong>Subconjunto(s) utilizado(s)</strong> para usar solo los subconjuntos que estén disponibles para <u>todas</u> las familias de fuentes detectadas. Se recomienda a los usuarios novatos que dejen esta opción habilitada."
+
+#: src/Admin/Settings/Advanced.php:191
+msgid "Used Subset(s)"
+msgstr "Subconjunto(s) utilizado(s)"
+
+#: src/Admin/Settings/Advanced.php:195
+msgid "Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. Disable it if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn't change this setting</u>!"
+msgstr "Cualquier cambio realizado en esta configuración se sobrescribirá, porque <strong>Configurar subconjuntos automáticamente</strong> está habilitado. Desactívelo si desea gestionar <strong>Subconjunto(s) utilizado(s)</strong> usted mismo. <u>¡Los usuarios novatos no deben cambiar esta configuración</u>!"
+
+#: src/Admin/Settings/Advanced.php:198
+msgid "A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are an add-ons for Latin and can't be used by itself. Use CTRL + click to select multiple values.</em>"
+msgstr "Un subconjunto es un conjunto (limitado) de caracteres que pertenecen a un alfabeto. Predeterminado: <code>latin</code>, <code>latin-ext</code>. Limite la selección a los subconjuntos que su sitio realmente utiliza. ¡Seleccionar <u>demasiados</u> subconjuntos puede afectar negativamente al rendimiento! <em>Latin Extended y Vietnamese son complementos de Latin y no se pueden usar por sí solos. Use CTRL + clic para seleccionar varios valores.</em>"
+
+#: src/Admin/Settings/Advanced.php:209
+msgid "This disables the %s admin bar menu item and stops the Google Fonts checker from running in the frontend."
+msgstr "Esto deshabilita el elemento del menú de la barra de administración de %s y evita que el comprobador de fuentes de Google se ejecute en el frontend."
+
+#: src/Admin/Settings/Advanced.php:217
+msgid "This setting will resume functioning once the Google Fonts checker has finished running."
+msgstr "Esta configuración reanudará su funcionamiento una vez que el comprobador de fuentes de Google haya terminado de ejecutarse."
+
+#: src/Admin/Settings/Advanced.php:221
+msgid "Disable Admin Bar Menu"
+msgstr "Deshabilitar menú de la barra de administración"
+
+#: src/Admin/Settings/Advanced.php:230
+msgid "Debug Mode"
+msgstr "Modo de depuración"
+
+#: src/Admin/Settings/Advanced.php:232
+msgid "Don't enable this option, unless when asked by me (Daan) or, if you know what you're doing."
+msgstr "No habilite esta opción, a menos que se lo pida yo (Daan) o si sabe lo que está haciendo."
+
+#: src/Admin/Settings/Advanced.php:256
+msgid "Download Log"
+msgstr "Descargar registro"
+
+#: src/Admin/Settings/Advanced.php:261
+msgid "Delete log"
+msgstr "Eliminar registro"
+
+#: src/Admin/Settings/Advanced.php:266
+msgid "Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again."
+msgstr "Su archivo de registro es actualmente mayor de 1 MB. Para proteger su sistema de archivos, el registro de depuración se ha detenido. Elimine el archivo de registro para volver a habilitar el registro de depuración."
+
+#: src/Admin/Settings/Advanced.php:272
+msgid "No log file available for download."
+msgstr "No hay archivo de registro disponible para descargar."
+
+#: src/Admin/Settings/Advanced.php:288
+msgid "Remove Settings/Files At Uninstall"
+msgstr "Eliminar ajustes/archivos al desinstalar"
+
+#: src/Admin/Settings/Advanced.php:290
+msgid "Warning! This will remove all settings and cached fonts upon plugin deletion."
+msgstr "¡Advertencia! Esto eliminará todos los ajustes y las fuentes en caché al eliminar el plugin."
+
+#: src/Admin/Settings/Builder.php:51
+msgid "<a href=\"%s\" target=\"_blank\">Upgrade to Pro</a> to unlock this option."
+msgstr "<a href=\"%s\" target=\"_blank\">Actualice a Pro</a> para desbloquear esta opción."
+
+#: src/Admin/Settings/Help.php:27
+msgid "Help & Documentation"
+msgstr "Ayuda y documentación"
+
+#: src/Admin/Settings/Help.php:43
+msgid "Thank you for using %s!"
+msgstr "¡Gracias por usar %s!"
+
+#: src/Admin/Settings/Help.php:48
+msgid "Need help configuring %s? Please refer to the links below to get you started."
+msgstr "¿Necesita ayuda para configurar %s? Consulte los enlaces siguientes para empezar."
+
+#: src/Admin/Settings/Help.php:58
+msgid "Need Help?"
+msgstr "¿Necesita ayuda?"
+
+#: src/Admin/Settings/Help.php:64
+msgid "Quick Start Guide"
+msgstr "Guía de inicio rápido"
+
+#: src/Admin/Settings/Help.php:68
+msgid "User Manual"
+msgstr "Manual de usuario"
+
+#: src/Admin/Settings/Help.php:72
+msgid "FAQ"
+msgstr "Preguntas frecuentes"
+
+#: src/Admin/Settings/Help.php:76
+msgid "Troubleshooting Guide"
+msgstr "Guía de solución de problemas"
+
+#: src/Admin/Settings/Help.php:80
+msgid "Get Support"
+msgstr "Obtener soporte"
+
+#: src/Admin/Settings/Help.php:85
+msgid "Support %s & Spread the Word!"
+msgstr "¡Apoye a %s y corra la voz!"
+
+#: src/Admin/Settings/Help.php:92
+msgid "Write a 5-star Review or,"
+msgstr "Escriba una reseña de 5 estrellas o,"
+
+#: src/Admin/Settings/Help.php:94
+msgid "Tweet about it!"
+msgstr "¡Tuitee al respecto!"
+
+#: src/Admin/Settings/Help.php:98
+msgid "Coded with %s by"
+msgstr "Codificado con %s por"
+
+#: src/Admin/Settings/Help.php:100
+#: src/Admin/Settings/Help.php:101
+msgid "Visit Daan.dev"
+msgstr "Visitar daan.dev"
+
+#: src/Admin/Settings/Optimize.php:38
+msgid "Optimize Local Google Fonts"
+msgstr "Optimizar fuentes de Google locales"
+
+#: src/Admin/Settings/Optimize.php:69
+msgid "Dashboard"
+msgstr "Panel de control"
+
+#: src/Admin/Settings/Optimize.php:73
+msgid "OMGF (Optimize My Google Fonts) automatically replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href=\"#omgf-manage-optimized-fonts\">Optimize Local Fonts</a>."
+msgstr "OMGF (Optimize My Google Fonts) reemplaza automáticamente las hojas de estilo de Google Fonts (p. ej., https://fonts.googleapis.com/css?family=Open+Sans) con copias alojadas localmente. Para eliminar/descargar Google Fonts por completo o por estilo/peso, vaya a <a href=\"#omgf-manage-optimized-fonts\">Optimizar fuentes locales</a>."
+
+#: src/Admin/Settings/Optimize.php:87
+msgid "Run Google Fonts Checker in the background (Pro)"
+msgstr "Ejecutar el comprobador de fuentes de Google en segundo plano (Pro)"
+
+#: src/Admin/Settings/Optimize.php:90
+msgid "Normally, the Google Fonts Checker only runs for logged-in administrators. If you want to organically scan all your pages for Google Fonts, enable this option. %s"
+msgstr "Normalmente, el comprobador de fuentes de Google solo se ejecuta para los administradores que han iniciado sesión. Si desea escanear orgánicamente todas sus páginas en busca de fuentes de Google, habilite esta opción. %s"
+
+#: src/Admin/Settings/Optimize.php:99
+msgid "Disable Google Fonts Checker after... (Pro)"
+msgstr "Deshabilitar el comprobador de fuentes de Google después de... (Pro)"
+
+#: src/Admin/Settings/Optimize.php:102
+msgid "7 Days (default)"
+msgstr "7 días (predeterminado)"
+
+#: src/Admin/Settings/Optimize.php:103
+msgid "14 Days"
+msgstr "14 días"
+
+#: src/Admin/Settings/Optimize.php:104
+msgid "1 Month"
+msgstr "1 mes"
+
+#: src/Admin/Settings/Optimize.php:105
+msgid "Always"
+msgstr "Siempre"
+
+#: src/Admin/Settings/Optimize.php:109
+msgid "When enabled, the Google Fonts Checker loads a tiny snippet (<3KB) of JS code in your frontend. While the impact is barely noticeable, it's advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s"
+msgstr "Cuando está habilitado, el comprobador de fuentes de Google carga un pequeño fragmento (<3 KB) de código JS en su frontend. Aunque el impacto apenas se nota, se recomienda ejecutarlo solo durante un período de tiempo determinado, por ejemplo, después de instalar OMGF Pro por primera vez, cambiar de tema o instalar plugins. %s"
+
+#: src/Admin/Settings/Optimize.php:127
+msgid "Manage Cache"
+msgstr "Gestionar caché"
+
+#: src/Admin/Settings/Optimize.php:131
+msgid "Empty Cache"
+msgstr "Vaciar caché"
+
+#: src/Admin/Settings/Optimize.php:137
+msgid "Refresh Cache (and maintain settings)"
+msgstr "Actualizar caché (y mantener la configuración)"
+
+#: src/Admin/Settings/Optimize.php:162
+msgid "recommended"
+msgstr "recomendado"
+
+#: src/Admin/Settings/Optimize.php:165
+msgid "Font-Display Option"
+msgstr "Opción Font-Display"
+
+#: src/Admin/Settings/Optimize.php:169
+msgid "Select which value to set the font-display attribute to. Defaults to Swap (recommended)."
+msgstr "Seleccione el valor que se asignará al atributo font-display. El valor predeterminado es Swap (recomendado)."
+
+#: src/Admin/Settings/Optimize.php:181
+msgid "Apply Font-Display Option Globally (Pro)"
+msgstr "Aplicar opción Font-Display globalmente (Pro)"
+
+#: src/Admin/Settings/Optimize.php:183
+msgid "Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>."
+msgstr "Aplique el valor del atributo <code>font-display</code> anterior a todas las declaraciones <code>@font-face</code> encontradas en su sitio para <strong>asegurar que el texto permanezca visible durante la carga de la fuente web</strong>."
+
+#: src/Admin/Settings/Optimize.php:197
+msgid "Smart Preload (Pro)"
+msgstr "Smart Preload (Pro)"
+
+#: src/Admin/Settings/Optimize.php:199
+msgid "When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them. Preload settings can be overwritten on a per-page level by clicking <strong>Auto-configure preload settings for this page</strong> in the top Admin Bar menu."
+msgstr "Cuando está habilitado, OMGF Pro detectará automáticamente qué fuentes de Google se cargan en la parte superior de la página y las precargará. La configuración de precarga se puede sobrescribir a nivel de página haciendo clic en <strong>Configurar automáticamente los ajustes de precarga para esta página</strong> en el menú superior de la barra de administración."
+
+#: src/Admin/Settings/Optimize.php:213
+msgid "Optimize Local Fonts"
+msgstr "Optimizar fuentes locales"
+
+#: src/Admin/Settings/Optimize.php:217
+msgid "The options below allow you to tweak the performance of all fonts detected by %s. Don't know where or how to start optimizing your Google Fonts? That's okay. <a href=\"%s\">This guide</a> will get you sorted."
+msgstr "Las opciones siguientes le permiten ajustar el rendimiento de todas las fuentes detectadas por %s. ¿No sabe dónde ni cómo empezar a optimizar sus fuentes de Google? No se preocupe. <a href=\"%s\">Esta guía</a> le ayudará."
+
+#: src/Admin/Settings/Optimize.php:256
+msgid "Wow! That's a lot of Preloads! 😲"
+msgstr "¡Guau! ¡Eso es un montón de precargas! 😲"
+
+#: src/Admin/Settings/Optimize.php:258
+msgid "You've selected 5 (!) font styles to load early. Selecting more font styles to preload will affect your site's performance. The <code>preload</code> attribute should only be used for font styles loaded above the fold i.e. <strong>The top portion of a web page that's visible without scrolling</strong>."
+msgstr "Ha seleccionado 5 (!) estilos de fuente para cargar temprano. Seleccionar más estilos de fuente para precargar afectará el rendimiento de su sitio. El atributo <code>preload</code> solo debe usarse para estilos de fuente cargados en la parte superior de la página, es decir, <strong>la parte superior de una página web que es visible sin desplazarse</strong>."
+
+#: src/Admin/Settings/Optimize.php:265
+msgid "Refer to the <a href=\"%s\" target=\"_blank\">Plugin documentation</a> for more information."
+msgstr "Consulte la <a href=\"%s\" target=\"_blank\">documentación del plugin</a> para obtener más información."
+
+#: src/Admin/Settings/Optimize.php:292
+msgid "This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically when other Google Fonts stylesheets are discovered."
+msgstr "Esta lista se rellena con todas las hojas de estilo de Google Fonts capturadas y descargadas en todo su sitio. Crecerá orgánicamente a medida que se descubran otras hojas de estilo de Google Fonts."
+
+#: src/Admin/Settings/Optimize.php:302
+msgid "Style"
+msgstr "Estilo"
+
+#: src/Admin/Settings/Optimize.php:303
+msgid "Weight"
+msgstr "Peso"
+
+#: src/Admin/Settings/Optimize.php:304
+msgid "Load Early"
+msgstr "Cargar temprano"
+
+#: src/Admin/Settings/Optimize.php:307
+msgid "<a href=\"%s\">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold."
+msgstr "<a href=\"%s\">Precargue los archivos de fuentes</a> antes de la renderización de la página para mejorar los tiempos de carga percibidos. Utilice la precarga solo para los archivos de fuentes que se utilizan en la parte superior de la página."
+
+#: src/Admin/Settings/Optimize.php:314
+msgid "Don't Load"
+msgstr "No cargar"
+
+#: src/Admin/Settings/Optimize.php:316
+msgid "Many themes/plugins load Google Fonts you're not using. Checking <strong>Don't Load</strong> will make sure they're not loaded in the frontend to save bandwidth."
+msgstr "Muchos temas/plugins cargan fuentes de Google que no está utilizando. Marcar <strong>No cargar</strong> asegurará que no se carguen en el frontend para ahorrar ancho de banda."
+
+#: src/Admin/Settings/Optimize.php:320
+msgid "Fallback (Pro)"
+msgstr "Fallback (Pro)"
+
+#: src/Admin/Settings/Optimize.php:323
+msgid "Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded. %s"
+msgstr "Reduzca el cambio de diseño acumulativo (CLS) asegurándose de que todo el texto que utiliza fuentes de Google tenga una fuente del sistema similar para mostrar mientras se descargan las fuentes de Google. %s"
+
+#: src/Admin/Settings/Optimize.php:329
+msgid "Replace (Pro)"
+msgstr "Reemplazar (pro)"
+
+#: src/Admin/Settings/Optimize.php:332
+msgid "When the <a href=\"%s\">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback. %s"
+msgstr "Cuando la <a href=\"%s\">opción Reemplazar</a> está marcada, la pila de fuentes de reserva seleccionada reemplazará la familia de fuentes de Google correspondiente, en lugar de funcionar como una reserva. %s"
+
+#: src/Admin/Settings/Optimize.php:354
+msgid "Stylesheet handle: %s"
+msgstr "Identificador de hoja de estilo: %s"
+
+#: src/Admin/Settings/Optimize.php:368
+msgid "Unload italics"
+msgstr "Descargar cursivas"
+
+#: src/Admin/Settings/Optimize.php:371
+msgid "In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles."
+msgstr "En la mayoría de las situaciones, puede descargar de forma segura todos los estilos de fuente cursiva. Los navegadores modernos son capaces de imitar los estilos de fuente cursiva."
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Unload all"
+msgstr "Descargar todo"
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Load all"
+msgstr "Cargar todo"
+
+#: src/Admin/Settings/Optimize.php:382
+msgid "None (default)"
+msgstr "Ninguno (predeterminado)"
+
+#: src/Admin/Settings/Optimize.php:514
+msgid "After clicking <strong>Save & Optimize</strong>, this section will be populated with any Google Fonts (along with requested styles and available options) requested on <code>%s</code>. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site."
+msgstr "Después de hacer clic en <strong>Guardar y optimizar</strong>, esta sección se rellenará con todas las fuentes de Google (junto con los estilos solicitados y las opciones disponibles) solicitadas en <code>%s</code>. La lista crecerá orgánicamente si se descubren otras hojas de estilo de Google Fonts en su sitio."
+
+#: src/Admin/Settings/Optimize.php:520
+msgid "Why aren't my Google Fonts showing up on this list?"
+msgstr "¿Por qué mis fuentes de Google no aparecen en esta lista?"
+
+#: src/Admin/Settings/Optimize.php:544
+msgid "Test Mode"
+msgstr "Modo de prueba"
+
+#: src/Admin/Settings/Optimize.php:546
+msgid "With this setting enabled, OMGF's optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend."
+msgstr "Con esta configuración habilitada, las optimizaciones de OMGF solo serán visibles para los administradores que hayan iniciado sesión o cuando se añada <code>?omgf=1</code> a una URL en el frontend."
+
+#: src/DB/Migrate/V600.php:60
+msgid "Thanks for upgrading to OMGF v6! 🎉 <a href=\"%s\" target=\"_blank\">Click here to learn about all the exciting, new features in this release!</a>"
+msgstr "¡Gracias por actualizar a OMGF v6! 🎉 <a href=\"%s\" target=\"_blank\">¡Haga clic aquí para conocer todas las nuevas y emocionantes características de esta versión!</a>"
+
+#: src/Download.php:89
+msgid "OMGF encountered an error while downloading font files"
+msgstr "OMGF encontró un error al descargar archivos de fuentes"
+
+#: src/Download.php:107
+msgid "OMGF received a non-success HTTP status while downloading"
+msgstr "OMGF recibió un estado HTTP no exitoso al descargar"
+
+#: src/Download.php:120
+msgid "OMGF couldn't determine the mime-type for the downloaded font file"
+msgstr "OMGF no pudo determinar el tipo MIME para el archivo de fuente descargado"
+
+#: src/Download.php:144
+msgid "OMGF couldn't determine the file extension for the downloaded font file"
+msgstr "OMGF no pudo determinar la extensión de archivo para el archivo de fuente descargado"
+
+#: src/Download.php:158
+msgid "OMGF failed to move downloaded file to final location"
+msgstr "OMGF no pudo mover el archivo descargado a la ubicación final"
+
+#: src/Frontend/Actions.php:65
+msgid "Run fonts optimization"
+msgstr "Ejecutar optimización de fuentes"
+
+#: src/Frontend/Actions.php:85
+msgid "Run fonts optimization for current page"
+msgstr "Ejecutar optimización de fuentes para la página actual"
+
+#: src/Frontend/Actions.php:135
+msgid "Google Fonts were found on this page. Click here for more information."
+msgstr "Se encontraron fuentes de Google en esta página. Haga clic aquí para obtener más información."
+
+#: src/Frontend/Actions.php:136
+msgid "There are potential issues in your configuration that require your attention."
+msgstr "Hay problemas potenciales en su configuración que requieren su atención."
+
+#: src/Frontend/Process.php:717
+msgid "Google Fonts optimization completed. Return to the <a href=\"%s\">settings screen</a> to see the results."
+msgstr "Optimización de fuentes de Google completada. Vuelva a la <a href=\"%s\">pantalla de configuración</a> para ver los resultados."
+
+#: src/Helper.php:361
+msgid "Filtered Subsets"
+msgstr "Subconjuntos filtrados"
+
+#: src/Helper.php:399
+msgid "Showing debug information for"
+msgstr "Mostrando información de depuración para"
+
+#: src/Helper.php:404
+msgid "Subelement %s is array/object"
+msgstr "El subelemento %s es una matriz/objeto"
+
+#: src/Optimize.php:111
+msgid "OMGF couldn't find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%1$s</code> and <code>%2$s</code>."
+msgstr "OMGF no pudo encontrar el parámetro de identificador de hoja de estilo requerido al intentar comunicarse con la API. Los valores enviados fueron <code>%1$s</code> y <code>%2$s</code>."
+
+#: src/Optimize.php:184
+msgid "Processing downloads for"
+msgstr "Procesando descargas para"
+
+#: src/Optimize.php:230
+msgid "Finished downloading for"
+msgstr "Descarga finalizada para"
+
+#: src/Optimize.php:290
+msgid "Fetching stylesheet from: "
+msgstr "Obteniendo hoja de estilo de: "
+
+#: src/Optimize.php:334
+msgid "Stylesheet fetched. Parsing for font-families..."
+msgstr "Hoja de estilo obtenida. Analizando familias de fuentes..."
+
+#: src/Optimize.php:345
+msgid "Font-families found"
+msgstr "Familias de fuentes encontradas"
+
+#: src/Optimize.php:369
+msgid "Stylesheet successfully converted to object."
+msgstr "Hoja de estilo convertida a objeto correctamente."
+
+#: src/Optimize.php:383
+msgid "Parsing variants."
+msgstr "Analizando variantes."
+
+#: src/Optimize.php:399
+msgid "Found %s @font-face statements."
+msgstr "Se encontraron %s declaraciones @font-face."
+
+#: src/Optimize.php:466
+msgid "Same file used for multiple @font-face statements. This is a variable font: "
+msgstr "Mismo archivo utilizado para múltiples declaraciones @font-face. Esta es una fuente variable: "
+
+#: src/Optimize.php:474
+msgid "Generated @font-face objects"
+msgstr "Objetos @font-face generados"
+
+#: src/Optimize.php:476
+msgid "All @font-face statements processed."
+msgstr "Todas las declaraciones @font-face procesadas."
+
+#: src/Optimize.php:486
+msgid "Parsing subsets."
+msgstr "Analizando subconjuntos."
+
+#: src/Optimize.php:504
+msgid "Subset @font-face statements"
+msgstr "Declaraciones @font-face de subconjuntos"
+
+#: src/Optimize.php:602
+msgid "Rewriting URLs for each font variant..."
+msgstr "Reescribiendo URLs para cada variante de fuente..."
+
+#: src/Optimize/Run.php:84
+msgid "%s encountered an error while fetching this site's frontend HTML"
+msgstr "%s encontró un error al obtener el HTML del frontend de este sitio"
+
+#: src/Optimize/Run.php:93
+msgid "It looks like OMGF isn't allowed to fetch your frontend. Try <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">running the optimization manually</a> (you might have to allow pop-ups) and return here after the page has finished loading."
+msgstr "Parece que OMGF no tiene permiso para obtener su frontend. Intente <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">ejecutar la optimización manualmente</a> (es posible que tenga que permitir las ventanas emergentes) y vuelva aquí después de que la página haya terminado de cargarse."
+
+#: src/Optimize/Run.php:173
+msgid "%s is removed as a Used Subset, as not all detected font families are available in this subset. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "%s se elimina como subconjunto utilizado, ya que no todas las familias de fuentes detectadas están disponibles en este subconjunto. <a href=\"#\" id=\"omgf-optimize-again\">Ejecute la optimización de nuevo</a> para procesar estos cambios."
+msgstr[1] "%s se eliminan como subconjunto(s) utilizado(s), ya que no todas las familias de fuentes detectadas están disponibles en estos subconjuntos. <a href=\"#\" id=\"omgf-optimize-again\">Ejecute la optimización de nuevo</a> para procesar estos cambios."
+
+#: src/Optimize/Run.php:201
+msgid "Used Subset(s) is set to Latin, since %s isn't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "Used Subset(s) is set to Latin, since %s aren't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "El subconjunto utilizado se establece en Latín, ya que %s no está disponible en ninguna de las familias de fuentes detectadas. <a href=\"#\" id=\"omgf-optimize-again\">Ejecute la optimización de nuevo</a> para procesar estos cambios."
+msgstr[1] "El subconjunto utilizado se establece en Latín, ya que %s no están disponibles en ninguna de las familias de fuentes detectadas. <a href=\"#\" id=\"omgf-optimize-again\">Ejecute la optimización de nuevo</a> para procesar estos cambios."
+
+#: src/Optimize/Run.php:222
+msgid "Optimization completed successfully."
+msgstr "Optimización completada correctamente."
+
+#: src/Optimize/Run.php:228
+msgid "Make sure you flush any caches of 3rd party plugins you're using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s's optimizations to take effect. "
+msgstr "Asegúrese de vaciar cualquier caché de plugins de terceros que esté utilizando (p. ej., Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) para permitir que las optimizaciones de %s surtan efecto. "
