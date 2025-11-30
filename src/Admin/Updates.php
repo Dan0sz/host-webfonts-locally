@@ -86,6 +86,10 @@ class Updates {
 	 * @return mixed
 	 */
 	public function maybe_display_premium_update_notice( $installed_plugins ) {
+		if ( ! is_array( $installed_plugins ) ) {
+			return $installed_plugins;
+		}
+
 		$plugin_slugs = array_keys( $installed_plugins );
 
 		foreach ( $this->premium_plugins as $id => $premium_plugin ) {
