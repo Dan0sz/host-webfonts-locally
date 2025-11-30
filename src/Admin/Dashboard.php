@@ -49,6 +49,7 @@ class Dashboard {
 	 */
 	const THEMES_ADDTNL_CONF = [
 		'Avada',
+		'colibri-wp',
 		'Divi',
 		'Extra',
 		'thrive-theme',
