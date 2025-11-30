@@ -1,0 +1,773 @@
+# Copyright (C) 2025 Daan from Daan.dev
+# This file is distributed under the GPL2v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: OMGF 6.0.10\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/host-webfonts-local\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-10-16T11:57:19+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: host-webfonts-local\n"
+"Language: ro_RO\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
+
+#. Plugin Name of the plugin
+#: src/Frontend/Actions.php:56
+msgid "OMGF"
+msgstr "OMGF"
+
+#. Plugin URI of the plugin
+msgid "https://daan.dev/wordpress/omgf/"
+msgstr "https://daan.dev/wordpress/omgf/"
+
+#. Description of the plugin
+msgid "Increase GDPR/DSGVO compliance and leverage browser cache by automatically self-hosting Google Fonts."
+msgstr "Crește conformitatea cu GDPR/DSGVO și utilizează memoria cache a browserului prin auto-găzduirea automată a Google Fonts."
+
+#. Author of the plugin
+msgid "Daan from Daan.dev"
+msgstr "Daan de la daan.dev"
+
+#. Author URI of the plugin
+msgid "https://daan.dev"
+msgstr "https://daan.dev"
+
+#: src/Admin.php:255
+msgid "OMGF's cached stylesheets don't reflect the current settings. Refresh the cache from the <a href=\"%s\">Dashboard</a>."
+msgstr "Fișierele de stil stocate în memoria cache a OMGF nu reflectă setările curente. Reîmprospătați memoria cache din <a href=\"%s\">Dashboard</a>."
+
+#: src/Admin/Actions.php:171
+msgid "This update includes major changes, please <a href=\"%s\" target=\"_blank\">read this</a> before continuing."
+msgstr "Această actualizare include modificări majore, vă rugăm să <a href=\"%s\" target=\"_blank\">citiți acest lucru</a> înainte de a continua."
+
+#: src/Admin/Ajax.php:44
+msgid "Hmmm, are you lost?"
+msgstr "Hmmm, te-ai rătăcit?"
+
+#: src/Admin/Ajax.php:70
+#: src/Admin/Ajax.php:128
+#: src/Admin/Ajax.php:206
+#: src/Admin/Ajax.php:234
+#: src/Admin/Ajax.php:279
+msgid "Hmmm, you're not supposed to be here."
+msgstr "Hmmm, nu ar trebui să fii aici."
+
+#: src/Admin/Ajax.php:214
+msgid "Cache directory successfully emptied."
+msgstr "Directorul cache a fost golit cu succes."
+
+#: src/Admin/Ajax.php:217
+msgid "OMGF encountered an error while emptying the cache directory: "
+msgstr "OMGF a întâmpinat o eroare la golirea directorului cache: "
+
+#: src/Admin/Ajax.php:290
+msgid "Log file successfully deleted"
+msgstr "Fișierul jurnal a fost șters cu succes"
+
+#: src/Admin/Dashboard.php:102
+msgid "Test Mode is Enabled"
+msgstr "Modul de testare este activat"
+
+#: src/Admin/Dashboard.php:106
+msgid "All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone."
+msgstr "Toate optimizările făcute de %s sunt <strong>vizibile doar pentru dvs.</strong> și pentru utilizatorii care adaugă <code>?omgf=1</code> la URL. Dezactivați modul de testare (în partea de jos a acestei pagini) pentru a face optimizările vizibile pentru toată lumea."
+
+#: src/Admin/Dashboard.php:137
+msgid "%1$s wasn't able to process all Google Fonts on your site. %2$s"
+msgstr "%1$s nu a putut procesa toate Google Fonts de pe site-ul dvs. %2$s"
+
+#: src/Admin/Dashboard.php:152
+msgid "OMGF's integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) that cannot be automatically processed."
+msgstr "Verificatorul integrat de Google Fonts al OMGF (introdus în v6) a găsit implementări Google Fonts (adăugate de tema dvs. sau de un plugin) care nu pot fi procesate automat."
+
+#: src/Admin/Dashboard.php:166
+msgid "You can read <a href=\"%s\" target=\"_blank\">this guide</a> and attempt to fix it manually or, <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> to fix it automatically."
+msgstr "Puteți citi <a href=\"%s\" target=\"_blank\">acest ghid</a> și încerca să remediați manual sau, <a href=\"%s\" target=\"_blank\">să faceți upgrade la OMGF Pro</a> pentru a remedia automat."
+
+#: src/Admin/Dashboard.php:180
+msgid "Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> might be required."
+msgstr "Unele (sau toate) intrările enumerate aici ar putea coincide cu lista de probleme potențiale enumerate mai jos, în caseta galbenă. Remediați-le mai întâi și vizitați linkurile de mai jos pentru a reîmprospăta aceste rezultate. În unele cazuri, ar putea fi necesar un <a href=\"%s\" target=\"_blank\">upgrade la OMGF Pro</a>."
+
+#: src/Admin/Dashboard.php:191
+msgid "was found on:"
+msgstr "a fost găsit pe:"
+
+#: src/Admin/Dashboard.php:209
+msgid "This list is limited to 5 pages, because most entries will most likely be duplicates."
+msgstr "Această listă este limitată la 5 pagini, deoarece majoritatea intrărilor vor fi cel mai probabil duplicate."
+
+#: src/Admin/Dashboard.php:216
+msgid "Let's get started!"
+msgstr "Să începem!"
+
+#: src/Admin/Dashboard.php:220
+msgid "Hit the <strong>Save & Optimize</strong> at the bottom of this page to run a Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can't detect and optimize automatically."
+msgstr "Apăsați pe <strong>Salvați și optimizați</strong> în partea de jos a acestei pagini pentru a rula o optimizare Google Fonts pe pagina dvs. de pornire. După aceasta, %s va rula silențios în fundal și vă va raporta pe acest Dashboard dacă întâlnește Google Fonts pe care nu le poate detecta și optimiza automat."
+
+#: src/Admin/Dashboard.php:231
+msgid "Google Fonts optimization seems to be failing."
+msgstr "Optimizarea Google Fonts pare să eșueze."
+
+#: src/Admin/Dashboard.php:235
+msgid "%s isn't detecting any Google Fonts on your homepage. This could be for several reasons. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Click here</a> to run a deeper investigation."
+msgstr "%s nu detectează niciun Google Fonts pe pagina dvs. de pornire. Acest lucru s-ar putea datora mai multor motive. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Faceți clic aici</a> pentru a rula o investigație mai profundă."
+
+#: src/Admin/Dashboard.php:247
+msgid "No external Google Fonts found on your site."
+msgstr "Nu s-au găsit Google Fonts externe pe site-ul dvs."
+
+#: src/Admin/Dashboard.php:253
+msgid "Cool! %s is successfully hosting all Google Fonts locally."
+msgstr "Super! %s găzduiește cu succes toate Google Fonts local."
+
+#: src/Admin/Dashboard.php:264
+msgid "No potential issues found in your configuration."
+msgstr "Nu s-au găsit probleme potențiale în configurația dvs."
+
+#: src/Admin/Dashboard.php:271
+msgid "Great job! Your configuration allows %s to run smoothly."
+msgstr "Bravo! Configurația dvs. permite %s să ruleze fără probleme."
+
+#: src/Admin/Dashboard.php:284
+msgid "%s potential issue found in your configuration."
+msgid_plural "%s potential issues found in your configuration."
+msgstr[0] "%s problemă potențială găsită în configurația dvs."
+msgstr[1] "%s probleme potențiale găsite în configurația dvs."
+msgstr[2] "%s probleme potențiale găsite în configurația dvs."
+
+#: src/Admin/Dashboard.php:300
+msgid "It seems like Multisite is enabled. OMGF doesn't natively support Multisite. If you're getting CORS related errors on any of your network's sites, consider <a href=\"%s\" target=\"_blank\">upgrading to OMGF Pro</a>."
+msgstr "Se pare că Multisite este activat. OMGF nu suportă nativ Multisite. Dacă primiți erori legate de CORS pe oricare dintre site-urile rețelei dvs., luați în considerare <a href=\"%s\" target=\"_blank\">upgrade-ul la OMGF Pro</a>."
+
+#: src/Admin/Dashboard.php:310
+msgid "Your WordPress configuration isn't setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">these steps</a> to fix it."
+msgstr "Configurația dvs. WordPress nu este setată să utilizeze SSL (https://). Dacă interfața dvs. afișează Fonturi de sistem după optimizare, acest lucru s-ar putea datora avertismentelor de conținut mixt și/sau CORS. Urmați <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">acești pași</a> pentru a remedia problema."
+
+#: src/Admin/Dashboard.php:327
+msgid "Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> to fix it."
+msgstr "Tema dvs. (%1$s) necesită o configurare suplimentară pentru a fi compatibilă cu %2$s, verificați lista de <a href=\"%3$s\" target=\"_blank\">probleme cunoscute</a> pentru a o remedia."
+
+#: src/Admin/Dashboard.php:348
+msgid "The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> for more information."
+msgstr "Pluginul, <strong>%1$s</strong>, este incompatibil cu %2$s și trebuie dezactivat pentru ca %2$s să funcționeze corect. Vizualizați lista de <a href=\"%3$s\" target=\"_blank\">probleme cunoscute</a> pentru mai multe informații."
+
+#: src/Admin/Dashboard.php:370
+msgid "The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href=\"%3$s\" target=\"_blank\">list of known issues</a> to fix it."
+msgstr "Pluginul, <strong>%1$s</strong>, necesită o configurare suplimentară pentru a fi compatibil cu %2$s. Verificați <a href=\"%3$s\" target=\"_blank\">lista de probleme cunoscute</a> pentru a o remedia."
+
+#: src/Admin/Dashboard.php:385
+msgid "%1$s is loading an embedded iframe on your site. %2$s can't process Google Fonts inside iframes. <a href=\"%3$s\" target=\"_blank\">Click here</a> to find out why and what you can do about it."
+msgstr "%1$s încarcă un iframe încorporat pe site-ul dvs. %2$s nu poate procesa Google Fonts în interiorul iframe-urilor. <a href=\"%3$s\" target=\"_blank\">Faceți clic aici</a> pentru a afla de ce și ce puteți face în privința asta."
+
+#: src/Admin/Dashboard.php:401
+msgid "Mark as fixed"
+msgstr "Marcați ca remediat"
+
+#: src/Admin/Dashboard.php:411
+msgid "After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won't disappear by itself."
+msgstr "După ce ați făcut modificările propuse acolo unde este necesar, faceți clic pe <strong>Marcați ca remediat</strong> pentru a elimina notificarea. Nu va dispărea de la sine."
+
+#: src/Admin/Dashboard.php:544
+msgid "Cache Status"
+msgstr "Stare cache"
+
+#: src/Admin/Dashboard.php:561
+msgid "stored in %s"
+msgstr "stocat în %s"
+
+#: src/Admin/Dashboard.php:571
+msgid "Manage %s"
+msgstr "Gestionați %s"
+
+#: src/Admin/Dashboard.php:573
+msgid "Configure"
+msgstr "Configurați"
+
+#: src/Admin/Dashboard.php:573
+msgid "Remove"
+msgstr "Eliminați"
+
+#: src/Admin/Dashboard.php:578
+msgid "The stylesheets in the cache do not reflect the current settings. Either <a href=\"#\" id=\"omgf-cache-refresh\">refresh</a> the cache (and maintain settings) or <a href=\"#\" id=\"omgf-cache-flush\">flush</a> it and start over."
+msgstr "Fișierele de stil din cache nu reflectă setările curente. Fie <a href=\"#\" id=\"omgf-cache-refresh\">reîmprospătați</a> cache-ul (și mențineți setările), fie <a href=\"#\" id=\"omgf-cache-flush\">goliți-l</a> și începeți de la capăt."
+
+#: src/Admin/Dashboard.php:587
+msgid "No stylesheets in cache."
+msgstr "Nu există fișiere de stil în cache."
+
+#: src/Admin/Dashboard.php:595
+msgid "Status Legend"
+msgstr "Legendă stare"
+
+#: src/Admin/Dashboard.php:598
+msgid "<span class=\"omgf-cache-legend-item-title\">Found</span> Stylesheet exists on your file system."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Găsit</span> Fișierul de stil există pe sistemul dvs. de fișiere."
+
+#: src/Admin/Dashboard.php:604
+msgid "<span class=\"omgf-cache-legend-item-title\">Unloaded</span> Stylesheet exists but is not loaded in the frontend."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Descărcat</span> Fișierul de stil există, dar nu este încărcat în frontend."
+
+#: src/Admin/Dashboard.php:610
+msgid "<span class=\"omgf-cache-legend-item-title\">Stale</span> Settings were changed and the stylesheet's content does not reflect those changes."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Vechi</span> Setările au fost modificate, iar conținutul fișierului de stil nu reflectă aceste modificări."
+
+#: src/Admin/Dashboard.php:616
+msgid "<span class='omgf-cache-legend-item-title'>Pending / Not Found</span> Any changes you made to this stylesheet will be processed the next time the page it was found on is requested. If you didn't make any changes, it's probably orphaned and it's safe to remove it."
+msgstr "<span class='omgf-cache-legend-item-title'>În așteptare / Negăsit</span> Orice modificări pe care le-ați făcut acestui fișier de stil vor fi procesate la următoarea solicitare a paginii pe care a fost găsit. Dacă nu ați făcut nicio modificare, este probabil orfan și este sigur să-l eliminați."
+
+#: src/Admin/Settings.php:212
+msgid "Save & Optimize"
+msgstr "Salvați și optimizați"
+
+#: src/Admin/Settings.php:252
+msgid "You're not cool enough to access this page."
+msgstr "Nu ești suficient de cool pentru a accesa această pagină."
+
+#: src/Admin/Settings.php:257
+msgid "OMGF | Optimize My Google Fonts"
+msgstr "OMGF | Optimize My Google Fonts"
+
+#: src/Admin/Settings.php:338
+#: src/Admin/Settings/Optimize.php:288
+msgid "Local Fonts"
+msgstr "Fonturi locale"
+
+#: src/Admin/Settings.php:372
+msgid "Advanced"
+msgstr "Avansat"
+
+#: src/Admin/Settings.php:385
+msgid "Help"
+msgstr "Ajutor"
+
+#: src/Admin/Settings.php:480
+msgid "Coded with %s in The Netherlands @ <strong>Daan.dev</strong>."
+msgstr "Codat cu %s în Olanda @ <strong>Daan.dev</strong>."
+
+#: src/Admin/Settings.php:543
+msgid "Recently tagged <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> on my blog:"
+msgstr "Etichetat recent <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> pe blogul meu:"
+
+#: src/Admin/Settings/Advanced.php:60
+msgid "Fonts Cache Directory"
+msgstr "Director cache fonturi"
+
+#: src/Admin/Settings/Advanced.php:64
+msgid "Downloaded stylesheets and font files %1$s are stored in: <code>%2$s</code>."
+msgstr "Fișierele de stil și fișierele de fonturi descărcate %1$s sunt stocate în: <code>%2$s</code>."
+
+#: src/Admin/Settings/Advanced.php:68
+msgid "(for this site)"
+msgstr "(pentru acest site)"
+
+#: src/Admin/Settings/Advanced.php:82
+msgid "White-label Stylesheets (Pro)"
+msgstr "Fișiere de stil white-label (pro)"
+
+#: src/Admin/Settings/Advanced.php:85
+msgid "Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size. %s"
+msgstr "Activați această opțiune pentru a elimina toate elementele de branding și comentariile din fișierele de stil generate, reducând și mai mult dimensiunea acestora. %s"
+
+#: src/Admin/Settings/Advanced.php:98
+msgid "Enable this option (on all instances) if you're planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production workflow. %s"
+msgstr "Activați această opțiune (pe toate instanțele) dacă intenționați să utilizați %s într-un (o variație a unui) flux de lucru Dezvoltare > Testare > Acceptare/Staging > Producție. %s"
+
+#: src/Admin/Settings/Advanced.php:108
+msgid "Developer Mode (Pro)"
+msgstr "Mod dezvoltator (pro)"
+
+#: src/Admin/Settings/Advanced.php:119
+msgid "This option is disabled, because <strong>Developer Mode (Pro)</strong> is enabled."
+msgstr "Această opțiune este dezactivată, deoarece <strong>Modul dezvoltator (Pro)</strong> este activat."
+
+#: src/Admin/Settings/Advanced.php:123
+msgid "Modify the <code>src</code> attribute for font files and stylesheets generated by OMGF Pro. This can be anything; from an absolute URL pointing to your CDN (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>) to work with <em>security thru obscurity</em> plugins. Enter the full path to OMGF's files. Default: (empty) %s"
+msgstr "Modificați atributul <code>src</code> pentru fișierele de fonturi și fișierele de stil generate de OMGF Pro. Acesta poate fi orice; de la un URL absolut care indică CDN-ul dvs. (de exemplu, <code>%s</code>) la un URL relativ alternativ (de exemplu, <code>/director-wp-content-redenumit/cale-alternativa/catre-fisiere-fonturi</code>) pentru a funcționa cu pluginuri de <em>securitate prin obscuritate</em>. Introduceți calea completă către fișierele OMGF. Implicit: (gol) %s"
+
+#: src/Admin/Settings/Advanced.php:132
+msgid "Modify Source URL (Pro)"
+msgstr "Modificați URL-ul sursă (pro)"
+
+#: src/Admin/Settings/Advanced.php:134
+msgid "e.g. https://cdn.mydomain.com/alternate/relative-path"
+msgstr "de exemplu, https://cdn.mydomain.com/cale-relativă-alternativă"
+
+#: src/Admin/Settings/Advanced.php:145
+msgid "Legacy Browser Compatibility"
+msgstr "Compatibilitate cu browserele vechi"
+
+#: src/Admin/Settings/Advanced.php:147
+msgid "Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Enabling this option negatively impacts file compression and disables Variable Fonts support. Default: off."
+msgstr "Activați această opțiune pentru a utiliza un User-Agent mai vechi (Windows 7) pentru a adăuga suport pentru browserele vechi. Activarea acestei opțiuni afectează negativ compresia fișierelor și dezactivează suportul pentru Fonturi Variabile. Implicit: dezactivat."
+
+#: src/Admin/Settings/Advanced.php:159
+msgid "Divi Compatibility"
+msgstr "Compatibilitate Divi"
+
+#: src/Admin/Settings/Advanced.php:161
+msgid "Divi uses the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off"
+msgstr "Divi utilizează același handle pentru fișierele de stil Google Fonts cu configurații diferite. OMGF include remedieri de compatibilitate pentru a se asigura că aceste fișiere de stil diferite sunt procesate corect. Activați aceasta dacă observați că unele fonturi nu apar corect. Implicit: dezactivat"
+
+#: src/Admin/Settings/Advanced.php:170
+msgid "Auto-Configure Subsets"
+msgstr "Configurare automată subseturi"
+
+#: src/Admin/Settings/Advanced.php:173
+msgid "When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that're available for <u>all</u> detected font families. Novice users are advised to leave this enabled."
+msgstr "Când această opțiune este bifată, %s va seta opțiunea <strong>Subset(uri) utilizat(e)</strong> pentru a utiliza doar subseturi care sunt disponibile pentru <u>toate</u> familiile de fonturi detectate. Utilizatorilor începători li se recomandă să lase această opțiune activată."
+
+#: src/Admin/Settings/Advanced.php:191
+msgid "Used Subset(s)"
+msgstr "Subset(uri) utilizat(e)"
+
+#: src/Admin/Settings/Advanced.php:195
+msgid "Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. Disable it if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn't change this setting</u>!"
+msgstr "Orice modificări făcute acestei setări vor fi suprascrise, deoarece <strong>Configurare automată subseturi</strong> este activată. Dezactivați-o dacă doriți să gestionați singur <strong>Subset(uri) utilizat(e)</strong>. <u>Utilizatorii începători nu ar trebui să modifice această setare</u>!"
+
+#: src/Admin/Settings/Advanced.php:198
+msgid "A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are an add-ons for Latin and can't be used by itself. Use CTRL + click to select multiple values.</em>"
+msgstr "Un subset este un set (limitat) de caractere aparținând unui alfabet. Implicit: <code>latin</code>, <code>latin-ext</code>. Limitați selecția la subseturile pe care site-ul dvs. le utilizează efectiv. Selectarea <u>prea multor</u> subseturi poate afecta negativ performanța! <em>Latin Extended și Vietnameză sunt add-on-uri pentru Latin și nu pot fi utilizate singure. Utilizați CTRL + clic pentru a selecta mai multe valori.</em>"
+
+#: src/Admin/Settings/Advanced.php:209
+msgid "This disables the %s admin bar menu item and stops the Google Fonts checker from running in the frontend."
+msgstr "Aceasta dezactivează elementul de meniu al barei de administrare %s și oprește rularea verificatorului Google Fonts în frontend."
+
+#: src/Admin/Settings/Advanced.php:217
+msgid "This setting will resume functioning once the Google Fonts checker has finished running."
+msgstr "Această setare va relua funcționarea odată ce verificatorul Google Fonts a terminat de rulat."
+
+#: src/Admin/Settings/Advanced.php:221
+msgid "Disable Admin Bar Menu"
+msgstr "Dezactivați meniul barei de administrare"
+
+#: src/Admin/Settings/Advanced.php:230
+msgid "Debug Mode"
+msgstr "Mod depanare"
+
+#: src/Admin/Settings/Advanced.php:232
+msgid "Don't enable this option, unless when asked by me (Daan) or, if you know what you're doing."
+msgstr "Nu activați această opțiune, decât dacă vă cer eu (Daan) sau dacă știți ce faceți."
+
+#: src/Admin/Settings/Advanced.php:256
+msgid "Download Log"
+msgstr "Descărcați jurnalul"
+
+#: src/Admin/Settings/Advanced.php:261
+msgid "Delete log"
+msgstr "Ștergeți jurnalul"
+
+#: src/Admin/Settings/Advanced.php:266
+msgid "Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again."
+msgstr "Fișierul dvs. jurnal este în prezent mai mare de 1MB. Pentru a vă proteja sistemul de fișiere, înregistrarea depanării a fost oprită. Ștergeți fișierul jurnal pentru a activa din nou înregistrarea depanării."
+
+#: src/Admin/Settings/Advanced.php:272
+msgid "No log file available for download."
+msgstr "Nu este disponibil niciun fișier jurnal pentru descărcare."
+
+#: src/Admin/Settings/Advanced.php:288
+msgid "Remove Settings/Files At Uninstall"
+msgstr "Eliminați setările/fișierele la dezinstalare"
+
+#: src/Admin/Settings/Advanced.php:290
+msgid "Warning! This will remove all settings and cached fonts upon plugin deletion."
+msgstr "Atenție! Aceasta va elimina toate setările și fonturile stocate în cache la ștergerea pluginului."
+
+#: src/Admin/Settings/Builder.php:51
+msgid "<a href=\"%s\" target=\"_blank\">Upgrade to Pro</a> to unlock this option."
+msgstr "<a href=\"%s\" target=\"_blank\">Faceți upgrade la Pro</a> pentru a debloca această opțiune."
+
+#: src/Admin/Settings/Help.php:27
+msgid "Help & Documentation"
+msgstr "Ajutor și documentație"
+
+#: src/Admin/Settings/Help.php:43
+msgid "Thank you for using %s!"
+msgstr "Vă mulțumim că utilizați %s!"
+
+#: src/Admin/Settings/Help.php:48
+msgid "Need help configuring %s? Please refer to the links below to get you started."
+msgstr "Aveți nevoie de ajutor pentru configurarea %s? Vă rugăm să consultați linkurile de mai jos pentru a începe."
+
+#: src/Admin/Settings/Help.php:58
+msgid "Need Help?"
+msgstr "Aveți nevoie de ajutor?"
+
+#: src/Admin/Settings/Help.php:64
+msgid "Quick Start Guide"
+msgstr "Ghid de pornire rapidă"
+
+#: src/Admin/Settings/Help.php:68
+msgid "User Manual"
+msgstr "Manual de utilizare"
+
+#: src/Admin/Settings/Help.php:72
+msgid "FAQ"
+msgstr "Întrebări frecvente"
+
+#: src/Admin/Settings/Help.php:76
+msgid "Troubleshooting Guide"
+msgstr "Ghid de depanare"
+
+#: src/Admin/Settings/Help.php:80
+msgid "Get Support"
+msgstr "Obțineți suport"
+
+#: src/Admin/Settings/Help.php:85
+msgid "Support %s & Spread the Word!"
+msgstr "Susțineți %s și răspândiți vestea!"
+
+#: src/Admin/Settings/Help.php:92
+msgid "Write a 5-star Review or,"
+msgstr "Scrieți o recenzie de 5 stele sau,"
+
+#: src/Admin/Settings/Help.php:94
+msgid "Tweet about it!"
+msgstr "Distribuiți pe Twitter!"
+
+#: src/Admin/Settings/Help.php:98
+msgid "Coded with %s by"
+msgstr "Codat cu %s de"
+
+#: src/Admin/Settings/Help.php:100
+#: src/Admin/Settings/Help.php:101
+msgid "Visit Daan.dev"
+msgstr "Vizitați daan.dev"
+
+#: src/Admin/Settings/Optimize.php:38
+msgid "Optimize Local Google Fonts"
+msgstr "Optimizați Google Fonts locale"
+
+#: src/Admin/Settings/Optimize.php:69
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: src/Admin/Settings/Optimize.php:73
+msgid "OMGF (Optimize My Google Fonts) automatically replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href=\"#omgf-manage-optimized-fonts\">Optimize Local Fonts</a>."
+msgstr "OMGF (Optimize My Google Fonts) înlocuiește automat fișierele de stil Google Fonts (de exemplu, https://fonts.googleapis.com/css?family=Open+Sans) cu copii găzduite local. Pentru a elimina/descărca Google Fonts în întregime sau după stil/greutate, accesați <a href=\"#omgf-manage-optimized-fonts\">Optimizați fonturile locale</a>."
+
+#: src/Admin/Settings/Optimize.php:87
+msgid "Run Google Fonts Checker in the background (Pro)"
+msgstr "Rulați verificatorul Google Fonts în fundal (Pro)"
+
+#: src/Admin/Settings/Optimize.php:90
+msgid "Normally, the Google Fonts Checker only runs for logged-in administrators. If you want to organically scan all your pages for Google Fonts, enable this option. %s"
+msgstr "În mod normal, verificatorul Google Fonts rulează doar pentru administratorii autentificați. Dacă doriți să scanați organic toate paginile dvs. pentru Google Fonts, activați această opțiune. %s"
+
+#: src/Admin/Settings/Optimize.php:99
+msgid "Disable Google Fonts Checker after... (Pro)"
+msgstr "Dezactivați verificatorul Google Fonts după... (Pro)"
+
+#: src/Admin/Settings/Optimize.php:102
+msgid "7 Days (default)"
+msgstr "7 zile (implicit)"
+
+#: src/Admin/Settings/Optimize.php:103
+msgid "14 Days"
+msgstr "14 zile"
+
+#: src/Admin/Settings/Optimize.php:104
+msgid "1 Month"
+msgstr "1 lună"
+
+#: src/Admin/Settings/Optimize.php:105
+msgid "Always"
+msgstr "Întotdeauna"
+
+#: src/Admin/Settings/Optimize.php:109
+msgid "When enabled, the Google Fonts Checker loads a tiny snippet (<3KB) of JS code in your frontend. While the impact is barely noticeable, it's advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s"
+msgstr "Când este activat, verificatorul Google Fonts încarcă un mic fragment (<3KB) de cod JS în frontend-ul dvs. Deși impactul este abia sesizabil, este recomandat să-l rulați doar pentru o perioadă de timp stabilită, de exemplu, după ce ați instalat OMGF Pro, ați schimbat teme sau ați instalat pluginuri. %s"
+
+#: src/Admin/Settings/Optimize.php:127
+msgid "Manage Cache"
+msgstr "Gestionați memoria cache"
+
+#: src/Admin/Settings/Optimize.php:131
+msgid "Empty Cache"
+msgstr "Goliți memoria cache"
+
+#: src/Admin/Settings/Optimize.php:137
+msgid "Refresh Cache (and maintain settings)"
+msgstr "Reîmprospătați memoria cache (și mențineți setările)"
+
+#: src/Admin/Settings/Optimize.php:162
+msgid "recommended"
+msgstr "recomandat"
+
+#: src/Admin/Settings/Optimize.php:165
+msgid "Font-Display Option"
+msgstr "Opțiune Font-Display"
+
+#: src/Admin/Settings/Optimize.php:169
+msgid "Select which value to set the font-display attribute to. Defaults to Swap (recommended)."
+msgstr "Selectați valoarea pentru atributul font-display. Implicit este Swap (recomandat)."
+
+#: src/Admin/Settings/Optimize.php:181
+msgid "Apply Font-Display Option Globally (Pro)"
+msgstr "Aplicați opțiunea Font-Display global (Pro)"
+
+#: src/Admin/Settings/Optimize.php:183
+msgid "Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>."
+msgstr "Aplicați valoarea atributului <code>font-display</code> de mai sus tuturor declarațiilor <code>@font-face</code> găsite pe site-ul dvs. pentru a <strong>asigura că textul rămâne vizibil în timpul încărcării fonturilor web</strong>."
+
+#: src/Admin/Settings/Optimize.php:197
+msgid "Smart Preload (Pro)"
+msgstr "Smart Preload (Pro)"
+
+#: src/Admin/Settings/Optimize.php:199
+msgid "When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them. Preload settings can be overwritten on a per-page level by clicking <strong>Auto-configure preload settings for this page</strong> in the top Admin Bar menu."
+msgstr "Când este activat, OMGF Pro va detecta automat ce Google Fonts sunt încărcate deasupra paginii și le va preîncărca. Setările de preîncărcare pot fi suprascrise la nivel de pagină făcând clic pe <strong>Configurare automată setări de preîncărcare pentru această pagină</strong> în meniul superior al barei de administrare."
+
+#: src/Admin/Settings/Optimize.php:213
+msgid "Optimize Local Fonts"
+msgstr "Optimizați fonturile locale"
+
+#: src/Admin/Settings/Optimize.php:217
+msgid "The options below allow you to tweak the performance of all fonts detected by %s. Don't know where or how to start optimizing your Google Fonts? That's okay. <a href=\"%s\">This guide</a> will get you sorted."
+msgstr "Opțiunile de mai jos vă permit să ajustați performanța tuturor fonturilor detectate de %s. Nu știți de unde sau cum să începeți optimizarea Google Fonts? Este în regulă. <a href=\"%s\">Acest ghid</a> vă va ajuta."
+
+#: src/Admin/Settings/Optimize.php:256
+msgid "Wow! That's a lot of Preloads! 😲"
+msgstr "Uau! Sunt o mulțime de preîncărcări! 😲"
+
+#: src/Admin/Settings/Optimize.php:258
+msgid "You've selected 5 (!) font styles to load early. Selecting more font styles to preload will affect your site's performance. The <code>preload</code> attribute should only be used for font styles loaded above the fold i.e. <strong>The top portion of a web page that's visible without scrolling</strong>."
+msgstr "Ați selectat 5 (!) stiluri de fonturi pentru a se încărca devreme. Selectarea mai multor stiluri de fonturi pentru preîncărcare va afecta performanța site-ului dvs. Atributul <code>preload</code> ar trebui utilizat doar pentru stilurile de fonturi încărcate deasupra paginii, adică <strong>Partea superioară a unei pagini web vizibilă fără a derula</strong>."
+
+#: src/Admin/Settings/Optimize.php:265
+msgid "Refer to the <a href=\"%s\" target=\"_blank\">Plugin documentation</a> for more information."
+msgstr "Consultați <a href=\"%s\" target=\"_blank\">documentația pluginului</a> pentru mai multe informații."
+
+#: src/Admin/Settings/Optimize.php:292
+msgid "This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically when other Google Fonts stylesheets are discovered."
+msgstr "Această listă este populată cu toate fișierele de stil Google Fonts capturate și descărcate pe întregul site. Va crește organic pe măsură ce sunt descoperite alte fișiere de stil Google Fonts."
+
+#: src/Admin/Settings/Optimize.php:302
+msgid "Style"
+msgstr "Stil"
+
+#: src/Admin/Settings/Optimize.php:303
+msgid "Weight"
+msgstr "Greutate"
+
+#: src/Admin/Settings/Optimize.php:304
+msgid "Load Early"
+msgstr "Încărcați devreme"
+
+#: src/Admin/Settings/Optimize.php:307
+msgid "<a href=\"%s\">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold."
+msgstr "<a href=\"%s\">Preîncărcați fișierele de fonturi</a> înainte de redarea paginii pentru a îmbunătăți timpii de încărcare percepuți. Utilizați preîncărcarea doar pentru fișierele de fonturi care sunt utilizate deasupra paginii."
+
+#: src/Admin/Settings/Optimize.php:314
+msgid "Don't Load"
+msgstr "Nu încărcați"
+
+#: src/Admin/Settings/Optimize.php:316
+msgid "Many themes/plugins load Google Fonts you're not using. Checking <strong>Don't Load</strong> will make sure they're not loaded in the frontend to save bandwidth."
+msgstr "Multe teme/pluginuri încarcă Google Fonts pe care nu le utilizați. Bifarea opțiunii <strong>Nu încărcați</strong> va asigura că acestea nu sunt încărcate în frontend pentru a economisi lățime de bandă."
+
+#: src/Admin/Settings/Optimize.php:320
+msgid "Fallback (Pro)"
+msgstr "Fallback (Pro)"
+
+#: src/Admin/Settings/Optimize.php:323
+msgid "Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded. %s"
+msgstr "Reduceți schimbarea cumulativă a aspectului (CLS) asigurându-vă că tot textul care utilizează Google Fonts are un font de sistem similar de afișat în timp ce Google Fonts sunt descărcate. %s"
+
+#: src/Admin/Settings/Optimize.php:329
+msgid "Replace (Pro)"
+msgstr "Înlocuiți (pro)"
+
+#: src/Admin/Settings/Optimize.php:332
+msgid "When the <a href=\"%s\">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback. %s"
+msgstr "Când opțiunea <a href=\"%s\">Înlocuire</a> este bifată, stiva de fonturi Fallback selectată va înlocui familia de fonturi Google corespunzătoare, în loc să funcționeze ca un fallback. %s"
+
+#: src/Admin/Settings/Optimize.php:354
+msgid "Stylesheet handle: %s"
+msgstr "Handle fișier de stil: %s"
+
+#: src/Admin/Settings/Optimize.php:368
+msgid "Unload italics"
+msgstr "Descărcați cursive"
+
+#: src/Admin/Settings/Optimize.php:371
+msgid "In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles."
+msgstr "În majoritatea situațiilor, puteți descărca în siguranță toate stilurile de fonturi cursive. Browserele moderne sunt capabile să imite stilurile de fonturi cursive."
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Unload all"
+msgstr "Descărcați tot"
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Load all"
+msgstr "Încărcați tot"
+
+#: src/Admin/Settings/Optimize.php:382
+msgid "None (default)"
+msgstr "Niciunul (implicit)"
+
+#: src/Admin/Settings/Optimize.php:514
+msgid "After clicking <strong>Save & Optimize</strong>, this section will be populated with any Google Fonts (along with requested styles and available options) requested on <code>%s</code>. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site."
+msgstr "După ce faceți clic pe <strong>Salvați și optimizați</strong>, această secțiune va fi populată cu orice Google Fonts (împreună cu stilurile solicitate și opțiunile disponibile) solicitate pe <code>%s</code>. Lista va crește organic dacă alte fișiere de stil Google Fonts sunt descoperite pe întregul site."
+
+#: src/Admin/Settings/Optimize.php:520
+msgid "Why aren't my Google Fonts showing up on this list?"
+msgstr "De ce nu apar Google Fonts pe această listă?"
+
+#: src/Admin/Settings/Optimize.php:544
+msgid "Test Mode"
+msgstr "Mod testare"
+
+#: src/Admin/Settings/Optimize.php:546
+msgid "With this setting enabled, OMGF's optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend."
+msgstr "Cu această setare activată, optimizările OMGF vor fi vizibile doar pentru administratorii autentificați sau când <code>?omgf=1</code> este adăugat la un URL în frontend."
+
+#: src/DB/Migrate/V600.php:60
+msgid "Thanks for upgrading to OMGF v6! 🎉 <a href=\"%s\" target=\"_blank\">Click here to learn about all the exciting, new features in this release!</a>"
+msgstr "Vă mulțumim pentru upgrade-ul la OMGF v6! 🎉 <a href=\"%s\" target=\"_blank\">Faceți clic aici pentru a afla despre toate noile funcționalități interesante din această versiune!</a>"
+
+#: src/Download.php:89
+msgid "OMGF encountered an error while downloading font files"
+msgstr "OMGF a întâmpinat o eroare la descărcarea fișierelor de fonturi"
+
+#: src/Download.php:107
+msgid "OMGF received a non-success HTTP status while downloading"
+msgstr "OMGF a primit un status HTTP de non-succes la descărcare"
+
+#: src/Download.php:120
+msgid "OMGF couldn't determine the mime-type for the downloaded font file"
+msgstr "OMGF nu a putut determina tipul MIME pentru fișierul de fonturi descărcat"
+
+#: src/Download.php:144
+msgid "OMGF couldn't determine the file extension for the downloaded font file"
+msgstr "OMGF nu a putut determina extensia fișierului pentru fișierul de fonturi descărcat"
+
+#: src/Download.php:158
+msgid "OMGF failed to move downloaded file to final location"
+msgstr "OMGF nu a reușit să mute fișierul descărcat în locația finală"
+
+#: src/Frontend/Actions.php:65
+msgid "Run fonts optimization"
+msgstr "Rulați optimizarea fonturilor"
+
+#: src/Frontend/Actions.php:85
+msgid "Run fonts optimization for current page"
+msgstr "Rulați optimizarea fonturilor pentru pagina curentă"
+
+#: src/Frontend/Actions.php:135
+msgid "Google Fonts were found on this page. Click here for more information."
+msgstr "Google Fonts au fost găsite pe această pagină. Faceți clic aici pentru mai multe informații."
+
+#: src/Frontend/Actions.php:136
+msgid "There are potential issues in your configuration that require your attention."
+msgstr "Există probleme potențiale în configurația dvs. care necesită atenția dvs."
+
+#: src/Frontend/Process.php:717
+msgid "Google Fonts optimization completed. Return to the <a href=\"%s\">settings screen</a> to see the results."
+msgstr "Optimizarea Google Fonts a fost finalizată. Reveniți la <a href=\"%s\">ecranul de setări</a> pentru a vedea rezultatele."
+
+#: src/Helper.php:361
+msgid "Filtered Subsets"
+msgstr "Subseturi filtrate"
+
+#: src/Helper.php:399
+msgid "Showing debug information for"
+msgstr "Se afișează informații de depanare pentru"
+
+#: src/Helper.php:404
+msgid "Subelement %s is array/object"
+msgstr "Subelementul %s este matrice/obiect"
+
+#: src/Optimize.php:111
+msgid "OMGF couldn't find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%1$s</code> and <code>%2$s</code>."
+msgstr "OMGF nu a putut găsi parametrul necesar pentru handle-ul fișierului de stil în timp ce încerca să comunice cu API-ul. Valorile trimise au fost <code>%1$s</code> și <code>%2$s</code>."
+
+#: src/Optimize.php:184
+msgid "Processing downloads for"
+msgstr "Se procesează descărcările pentru"
+
+#: src/Optimize.php:230
+msgid "Finished downloading for"
+msgstr "Descărcare finalizată pentru"
+
+#: src/Optimize.php:290
+msgid "Fetching stylesheet from: "
+msgstr "Se preia fișierul de stil de la: "
+
+#: src/Optimize.php:334
+msgid "Stylesheet fetched. Parsing for font-families..."
+msgstr "Fișier de stil preluat. Se analizează pentru familii de fonturi..."
+
+#: src/Optimize.php:345
+msgid "Font-families found"
+msgstr "Familii de fonturi găsite"
+
+#: src/Optimize.php:369
+msgid "Stylesheet successfully converted to object."
+msgstr "Fișier de stil convertit cu succes în obiect."
+
+#: src/Optimize.php:383
+msgid "Parsing variants."
+msgstr "Se analizează variantele."
+
+#: src/Optimize.php:399
+msgid "Found %s @font-face statements."
+msgstr "S-au găsit %s declarații @font-face."
+
+#: src/Optimize.php:466
+msgid "Same file used for multiple @font-face statements. This is a variable font: "
+msgstr "Același fișier utilizat pentru mai multe declarații @font-face. Acesta este un font variabil: "
+
+#: src/Optimize.php:474
+msgid "Generated @font-face objects"
+msgstr "Obiecte @font-face generate"
+
+#: src/Optimize.php:476
+msgid "All @font-face statements processed."
+msgstr "Toate declarațiile @font-face au fost procesate."
+
+#: src/Optimize.php:486
+msgid "Parsing subsets."
+msgstr "Se analizează subseturile."
+
+#: src/Optimize.php:504
+msgid "Subset @font-face statements"
+msgstr "Declarații @font-face subset"
+
+#: src/Optimize.php:602
+msgid "Rewriting URLs for each font variant..."
+msgstr "Se rescriu URL-urile pentru fiecare variantă de font..."
+
+#: src/Optimize/Run.php:84
+msgid "%s encountered an error while fetching this site's frontend HTML"
+msgstr "%s a întâmpinat o eroare la preluarea HTML-ului frontend al acestui site"
+
+#: src/Optimize/Run.php:93
+msgid "It looks like OMGF isn't allowed to fetch your frontend. Try <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">running the optimization manually</a> (you might have to allow pop-ups) and return here after the page has finished loading."
+msgstr "Se pare că OMGF nu are permisiunea de a prelua frontend-ul dvs. Încercați să <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">rulați optimizarea manual</a> (s-ar putea să trebuiască să permiteți ferestrele pop-up) și reveniți aici după ce pagina a terminat de încărcat."
+
+#: src/Optimize/Run.php:173
+msgid "%s is removed as a Used Subset, as not all detected font families are available in this subset. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "%s este eliminat ca subset utilizat, deoarece nu toate familiile de fonturi detectate sunt disponibile în acest subset. <a href=\"#\" id=\"omgf-optimize-again\">Rulați optimizarea din nou</a> pentru a procesa aceste modificări."
+msgstr[1] "%s sunt eliminate ca subset(uri) utilizat(e), deoarece nu toate familiile de fonturi detectate sunt disponibile în aceste subseturi. <a href=\"#\" id=\"omgf-optimize-again\">Rulați optimizarea din nou</a> pentru a procesa aceste modificări."
+msgstr[2] "%s sunt eliminate ca subset(uri) utilizat(e), deoarece nu toate familiile de fonturi detectate sunt disponibile în aceste subseturi. <a href=\"#\" id=\"omgf-optimize-again\">Rulați optimizarea din nou</a> pentru a procesa aceste modificări."
+
+#: src/Optimize/Run.php:201
+msgid "Used Subset(s) is set to Latin, since %s isn't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "Used Subset(s) is set to Latin, since %s aren't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "Subset(uri) utilizat(e) este setat la Latin, deoarece %s nu este disponibil în niciuna dintre familiile de fonturi detectate. <a href=\"#\" id=\"omgf-optimize-again\">Rulați optimizarea din nou</a> pentru a procesa aceste modificări."
+msgstr[1] "Subset(uri) utilizat(e) este setat la Latin, deoarece %s nu sunt disponibile în niciuna dintre familiile de fonturi detectate. <a href=\"#\" id=\"omgf-optimize-again\">Rulați optimizarea din nou</a> pentru a procesa aceste modificări."
+msgstr[2] "Subset(uri) utilizat(e) este setat la Latin, deoarece %s nu sunt disponibile în niciuna dintre familiile de fonturi detectate. <a href=\"#\" id=\"omgf-optimize-again\">Rulați optimizarea din nou</a> pentru a procesa aceste modificări."
+
+#: src/Optimize/Run.php:222
+msgid "Optimization completed successfully."
+msgstr "Optimizare finalizată cu succes."
+
+#: src/Optimize/Run.php:228
+msgid "Make sure you flush any caches of 3rd party plugins you're using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s's optimizations to take effect. "
+msgstr "Asigurați-vă că goliți orice cache-uri ale pluginurilor terțe pe care le utilizați (de exemplu, Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache etc.) pentru a permite optimizărilor %s să intre în vigoare. "
