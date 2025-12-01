@@ -2,8 +2,8 @@
 Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
-Tested up to: 6.8
-Stable tag: 6.0.10
+Tested up to: 6.9
+Stable tag: 6.0.11
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,12 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.0.11 | December 1st, 2025 =
+* Tested with WP 6.9
+* Improved: Renamed Divi/Elementor compatibility to just Divi compatibility, since Elementor compatibility is now always on.
+* Added: Colibri WP theme to list of themes that require additional configuration.
+* Fixed: an Uncaught TypeError would appear in the admin screen on some instances.
 
 = 6.0.10 | October 10th, 2025 =
 * Improved: subset and font-family detection to avoid false positives.
