@@ -65,7 +65,7 @@ class Elementor {
 	 * Adds a piece of validation to make sure Elementor's stylesheets are included.
 	 *
 	 * @filter omgf_frontend_process_parse_links
-	 * @see    \OMGF\Frontend\Process::parse()
+	 * @see    \OMGF\Frontend\Process::find_and_replace()
 	 *
 	 * @param $is_valid
 	 * @param $link

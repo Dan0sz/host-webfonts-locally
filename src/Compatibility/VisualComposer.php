@@ -51,6 +51,6 @@ class VisualComposer {
 			$processor = new Process( true );
 		}
 
-		return $processor->parse( $data );
+		return $processor->find_and_replace( $data );
 	}
 }
