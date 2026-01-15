@@ -1,0 +1,770 @@
+# Copyright (C) 2025 Daan from Daan.dev
+# This file is distributed under the GPL2v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: OMGF 6.0.10\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/host-webfonts-local\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-10-16T11:57:19+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: host-webfonts-local\n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#: src/Frontend/Actions.php:56
+msgid "OMGF"
+msgstr "OMGF"
+
+#. Plugin URI of the plugin
+msgid "https://daan.dev/wordpress/omgf/"
+msgstr "https://daan.dev/wordpress/omgf/"
+
+#. Description of the plugin
+msgid "Increase GDPR/DSGVO compliance and leverage browser cache by automatically self-hosting Google Fonts."
+msgstr "Αυξήστε τη συμμόρφωση με τον GDPR/DSGVO και αξιοποιήστε την προσωρινή μνήμη του προγράμματος περιήγησης, φιλοξενώντας αυτόματα τις γραμματοσειρές Google Fonts."
+
+#. Author of the plugin
+msgid "Daan from Daan.dev"
+msgstr "Daan από το daan.dev"
+
+#. Author URI of the plugin
+msgid "https://daan.dev"
+msgstr "https://daan.dev"
+
+#: src/Admin.php:255
+msgid "OMGF's cached stylesheets don't reflect the current settings. Refresh the cache from the <a href=\"%s\">Dashboard</a>."
+msgstr "Τα φύλλα στυλ στην προσωρινή μνήμη του OMGF δεν αντικατοπτρίζουν τις τρέχουσες ρυθμίσεις. Ανανεώστε την προσωρινή μνήμη από τον <a href=\"%s\">Πίνακα ελέγχου</a>."
+
+#: src/Admin/Actions.php:171
+msgid "This update includes major changes, please <a href=\"%s\" target=\"_blank\">read this</a> before continuing."
+msgstr "Αυτή η ενημέρωση περιλαμβάνει σημαντικές αλλαγές, παρακαλούμε <a href=\"%s\" target=\"_blank\">διαβάστε αυτό</a> πριν συνεχίσετε."
+
+#: src/Admin/Ajax.php:44
+msgid "Hmmm, are you lost?"
+msgstr "Χμμμ, χαθήκατε;"
+
+#: src/Admin/Ajax.php:70
+#: src/Admin/Ajax.php:128
+#: src/Admin/Ajax.php:206
+#: src/Admin/Ajax.php:234
+#: src/Admin/Ajax.php:279
+msgid "Hmmm, you're not supposed to be here."
+msgstr "Χμμμ, δεν υποτίθεται ότι βρίσκεστε εδώ."
+
+#: src/Admin/Ajax.php:214
+msgid "Cache directory successfully emptied."
+msgstr "Ο κατάλογος προσωρινής μνήμης αδειάστηκε επιτυχώς."
+
+#: src/Admin/Ajax.php:217
+msgid "OMGF encountered an error while emptying the cache directory: "
+msgstr "Το OMGF αντιμετώπισε ένα σφάλμα κατά το άδειασμα του καταλόγου προσωρινής μνήμης: "
+
+#: src/Admin/Ajax.php:290
+msgid "Log file successfully deleted"
+msgstr "Το αρχείο καταγραφής διαγράφηκε επιτυχώς"
+
+#: src/Admin/Dashboard.php:102
+msgid "Test Mode is Enabled"
+msgstr "Η δοκιμαστική λειτουργία είναι ενεργοποιημένη"
+
+#: src/Admin/Dashboard.php:106
+msgid "All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone."
+msgstr "Όλες οι βελτιστοποιήσεις που έγιναν από το %s είναι <strong>ορατές μόνο σε εσάς</strong> και στους χρήστες που προσθέτουν <code>?omgf=1</code> στην URL. Απενεργοποιήστε τη δοκιμαστική λειτουργία (στο κάτω μέρος αυτής της σελίδας) για να κάνετε τις βελτιστοποιήσεις ορατές σε όλους."
+
+#: src/Admin/Dashboard.php:137
+msgid "%1$s wasn't able to process all Google Fonts on your site. %2$s"
+msgstr "Το %1$s δεν μπόρεσε να επεξεργαστεί όλες τις γραμματοσειρές Google Fonts στον ιστότοπό σας. %2$s"
+
+#: src/Admin/Dashboard.php:152
+msgid "OMGF's integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) that cannot be automatically processed."
+msgstr "Ο ενσωματωμένος έλεγχος γραμματοσειρών Google Fonts του OMGF (που εισήχθη στην έκδοση 6) βρήκε υλοποιήσεις γραμματοσειρών Google Fonts (που προστέθηκαν από το θέμα σας ή ένα πρόσθετο) οι οποίες δεν μπορούν να επεξεργαστούν αυτόματα."
+
+#: src/Admin/Dashboard.php:166
+msgid "You can read <a href=\"%s\" target=\"_blank\">this guide</a> and attempt to fix it manually or, <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> to fix it automatically."
+msgstr "Μπορείτε να διαβάσετε <a href=\"%s\" target=\"_blank\">αυτόν τον οδηγό</a> και να προσπαθήσετε να το διορθώσετε χειροκίνητα ή, <a href=\"%s\" target=\"_blank\">να αναβαθμίσετε στο OMGF Pro</a> για να το διορθώσετε αυτόματα."
+
+#: src/Admin/Dashboard.php:180
+msgid "Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> might be required."
+msgstr "Ορισμένες (ή όλες) από τις καταχωρίσεις που αναφέρονται εδώ ενδέχεται να συμπίπτουν με τη λίστα πιθανών προβλημάτων που αναφέρονται παρακάτω στο κίτρινο πλαίσιο. Διορθώστε τα πρώτα και επισκεφθείτε τους παρακάτω συνδέσμους, για να ανανεώσετε αυτά τα αποτελέσματα. Σε ορισμένες περιπτώσεις, ενδέχεται να απαιτείται <a href=\"%s\" target=\"_blank\">αναβάθμιση στο OMGF Pro</a>."
+
+#: src/Admin/Dashboard.php:191
+msgid "was found on:"
+msgstr "βρέθηκε στο:"
+
+#: src/Admin/Dashboard.php:209
+msgid "This list is limited to 5 pages, because most entries will most likely be duplicates."
+msgstr "Αυτή η λίστα περιορίζεται σε 5 σελίδες, επειδή οι περισσότερες καταχωρίσεις πιθανότατα θα είναι διπλότυπες."
+
+#: src/Admin/Dashboard.php:216
+msgid "Let's get started!"
+msgstr "Ας ξεκινήσουμε!"
+
+#: src/Admin/Dashboard.php:220
+msgid "Hit the <strong>Save & Optimize</strong> at the bottom of this page to run a Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can't detect and optimize automatically."
+msgstr "Πατήστε το κουμπί <strong>Αποθήκευση & Βελτιστοποίηση</strong> στο κάτω μέρος αυτής της σελίδας για να εκτελέσετε μια βελτιστοποίηση γραμματοσειρών Google Fonts στην αρχική σας σελίδα. Μετά από αυτό, το %s θα εκτελείται αθόρυβα στο παρασκήνιο και θα σας αναφέρει σε αυτόν τον Πίνακα ελέγχου εάν εντοπίσει γραμματοσειρές Google Fonts που δεν μπορεί να εντοπίσει και να βελτιστοποιήσει αυτόματα."
+
+#: src/Admin/Dashboard.php:231
+msgid "Google Fonts optimization seems to be failing."
+msgstr "Η βελτιστοποίηση γραμματοσειρών Google Fonts φαίνεται να αποτυγχάνει."
+
+#: src/Admin/Dashboard.php:235
+msgid "%s isn't detecting any Google Fonts on your homepage. This could be for several reasons. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Click here</a> to run a deeper investigation."
+msgstr "Το %s δεν εντοπίζει γραμματοσειρές Google Fonts στην αρχική σας σελίδα. Αυτό μπορεί να οφείλεται σε διάφορους λόγους. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Κάντε κλικ εδώ</a> για να εκτελέσετε μια βαθύτερη έρευνα."
+
+#: src/Admin/Dashboard.php:247
+msgid "No external Google Fonts found on your site."
+msgstr "Δεν βρέθηκαν εξωτερικές γραμματοσειρές Google Fonts στον ιστότοπό σας."
+
+#: src/Admin/Dashboard.php:253
+msgid "Cool! %s is successfully hosting all Google Fonts locally."
+msgstr "Ωραία! Το %s φιλοξενεί επιτυχώς όλες τις γραμματοσειρές Google Fonts τοπικά."
+
+#: src/Admin/Dashboard.php:264
+msgid "No potential issues found in your configuration."
+msgstr "Δεν βρέθηκαν πιθανά προβλήματα στη διαμόρφωσή σας."
+
+#: src/Admin/Dashboard.php:271
+msgid "Great job! Your configuration allows %s to run smoothly."
+msgstr "Εξαιρετική δουλειά! Η διαμόρφωσή σας επιτρέπει στο %s να λειτουργεί ομαλά."
+
+#: src/Admin/Dashboard.php:284
+msgid "%s potential issue found in your configuration."
+msgid_plural "%s potential issues found in your configuration."
+msgstr[0] "Βρέθηκε %s πιθανό πρόβλημα στη διαμόρφωσή σας."
+msgstr[1] "Βρέθηκαν %s πιθανά προβλήματα στη διαμόρφωσή σας."
+
+#: src/Admin/Dashboard.php:300
+msgid "It seems like Multisite is enabled. OMGF doesn't natively support Multisite. If you're getting CORS related errors on any of your network's sites, consider <a href=\"%s\" target=\"_blank\">upgrading to OMGF Pro</a>."
+msgstr "Φαίνεται ότι το Multisite είναι ενεργοποιημένο. Το OMGF δεν υποστηρίζει εγγενώς το Multisite. Εάν λαμβάνετε σφάλματα που σχετίζονται με το CORS σε οποιονδήποτε από τους ιστότοπους του δικτύου σας, εξετάστε το ενδεχόμενο <a href=\"%s\" target=\"_blank\">αναβάθμισης στο OMGF Pro</a>."
+
+#: src/Admin/Dashboard.php:310
+msgid "Your WordPress configuration isn't setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">these steps</a> to fix it."
+msgstr "Η διαμόρφωση του WordPress σας δεν έχει ρυθμιστεί για χρήση SSL (https://). Εάν το frontend σας εμφανίζει γραμματοσειρές συστήματος μετά τη βελτιστοποίηση, αυτό μπορεί να οφείλεται σε Mixed-Content ή/και προειδοποιήσεις CORS. Ακολουθήστε <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">αυτά τα βήματα</a> για να το διορθώσετε."
+
+#: src/Admin/Dashboard.php:327
+msgid "Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> to fix it."
+msgstr "Το θέμα σας (%1$s) απαιτεί πρόσθετη διαμόρφωση για να είναι συμβατό με το %2$s, ελέγξτε τη λίστα των <a href=\"%3$s\" target=\"_blank\">γνωστών προβλημάτων</a> για να το διορθώσετε."
+
+#: src/Admin/Dashboard.php:348
+msgid "The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> for more information."
+msgstr "Το πρόσθετο, <strong>%1$s</strong>, είναι ασύμβατο με το %2$s και πρέπει να απενεργοποιηθεί για να λειτουργήσει σωστά το %2$s. Δείτε τη λίστα των <a href=\"%3$s\" target=\"_blank\">γνωστών προβλημάτων</a> για περισσότερες πληροφορίες."
+
+#: src/Admin/Dashboard.php:370
+msgid "The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href=\"%3$s\" target=\"_blank\">list of known issues</a> to fix it."
+msgstr "Το πρόσθετο, <strong>%1$s</strong>, απαιτεί πρόσθετη διαμόρφωση για να είναι συμβατό με το %2$s. Ελέγξτε τη <a href=\"%3$s\" target=\"_blank\">λίστα γνωστών προβλημάτων</a> για να το διορθώσετε."
+
+#: src/Admin/Dashboard.php:385
+msgid "%1$s is loading an embedded iframe on your site. %2$s can't process Google Fonts inside iframes. <a href=\"%3$s\" target=\"_blank\">Click here</a> to find out why and what you can do about it."
+msgstr "Το %1$s φορτώνει ένα ενσωματωμένο iframe στον ιστότοπό σας. Το %2$s δεν μπορεί να επεξεργαστεί γραμματοσειρές Google Fonts μέσα σε iframes. <a href=\"%3$s\" target=\"_blank\">Κάντε κλικ εδώ</a> για να μάθετε γιατί και τι μπορείτε να κάνετε γι' αυτό."
+
+#: src/Admin/Dashboard.php:401
+msgid "Mark as fixed"
+msgstr "Σήμανση ως διορθωμένο"
+
+#: src/Admin/Dashboard.php:411
+msgid "After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won't disappear by itself."
+msgstr "Αφού κάνετε τις προτεινόμενες αλλαγές όπου χρειάζεται, κάντε κλικ στο <strong>Σήμανση ως διορθωμένο</strong> για να αφαιρέσετε την ειδοποίηση. Δεν θα εξαφανιστεί από μόνη της."
+
+#: src/Admin/Dashboard.php:544
+msgid "Cache Status"
+msgstr "Κατάσταση προσωρινής μνήμης"
+
+#: src/Admin/Dashboard.php:561
+msgid "stored in %s"
+msgstr "αποθηκευμένο στο %s"
+
+#: src/Admin/Dashboard.php:571
+msgid "Manage %s"
+msgstr "Διαχείριση %s"
+
+#: src/Admin/Dashboard.php:573
+msgid "Configure"
+msgstr "Διαμόρφωση"
+
+#: src/Admin/Dashboard.php:573
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#: src/Admin/Dashboard.php:578
+msgid "The stylesheets in the cache do not reflect the current settings. Either <a href=\"#\" id=\"omgf-cache-refresh\">refresh</a> the cache (and maintain settings) or <a href=\"#\" id=\"omgf-cache-flush\">flush</a> it and start over."
+msgstr "Τα φύλλα στυλ στην προσωρινή μνήμη δεν αντικατοπτρίζουν τις τρέχουσες ρυθμίσεις. Είτε <a href=\"#\" id=\"omgf-cache-refresh\">ανανεώστε</a> την προσωρινή μνήμη (και διατηρήστε τις ρυθμίσεις) είτε <a href=\"#\" id=\"omgf-cache-flush\">αδειάστε</a> την και ξεκινήστε από την αρχή."
+
+#: src/Admin/Dashboard.php:587
+msgid "No stylesheets in cache."
+msgstr "Δεν υπάρχουν φύλλα στυλ στην προσωρινή μνήμη."
+
+#: src/Admin/Dashboard.php:595
+msgid "Status Legend"
+msgstr "Υπόμνημα κατάστασης"
+
+#: src/Admin/Dashboard.php:598
+msgid "<span class=\"omgf-cache-legend-item-title\">Found</span> Stylesheet exists on your file system."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Βρέθηκε</span> Το φύλλο στυλ υπάρχει στο σύστημα αρχείων σας."
+
+#: src/Admin/Dashboard.php:604
+msgid "<span class=\"omgf-cache-legend-item-title\">Unloaded</span> Stylesheet exists but is not loaded in the frontend."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Αφορτωμένο</span> Το φύλλο στυλ υπάρχει αλλά δεν φορτώνεται στο frontend."
+
+#: src/Admin/Dashboard.php:610
+msgid "<span class=\"omgf-cache-legend-item-title\">Stale</span> Settings were changed and the stylesheet's content does not reflect those changes."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Παρωχημένο</span> Οι ρυθμίσεις άλλαξαν και το περιεχόμενο του φύλλου στυλ δεν αντικατοπτρίζει αυτές τις αλλαγές."
+
+#: src/Admin/Dashboard.php:616
+msgid "<span class='omgf-cache-legend-item-title'>Pending / Not Found</span> Any changes you made to this stylesheet will be processed the next time the page it was found on is requested. If you didn't make any changes, it's probably orphaned and it's safe to remove it."
+msgstr "<span class='omgf-cache-legend-item-title'>Σε εκκρεμότητα / Δεν βρέθηκε</span> Οποιεσδήποτε αλλαγές κάνατε σε αυτό το φύλλο στυλ θα επεξεργαστούν την επόμενη φορά που θα ζητηθεί η σελίδα στην οποία βρέθηκε. Εάν δεν κάνατε αλλαγές, πιθανότατα είναι ορφανό και είναι ασφαλές να το αφαιρέσετε."
+
+#: src/Admin/Settings.php:212
+msgid "Save & Optimize"
+msgstr "Αποθήκευση & Βελτιστοποίηση"
+
+#: src/Admin/Settings.php:252
+msgid "You're not cool enough to access this page."
+msgstr "Δεν είστε αρκετά cool για να αποκτήσετε πρόσβαση σε αυτή τη σελίδα."
+
+#: src/Admin/Settings.php:257
+msgid "OMGF | Optimize My Google Fonts"
+msgstr "OMGF | Βελτιστοποίηση των γραμματοσειρών Google Fonts μου"
+
+#: src/Admin/Settings.php:338
+#: src/Admin/Settings/Optimize.php:288
+msgid "Local Fonts"
+msgstr "Τοπικές γραμματοσειρές"
+
+#: src/Admin/Settings.php:372
+msgid "Advanced"
+msgstr "Για προχωρημένους"
+
+#: src/Admin/Settings.php:385
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: src/Admin/Settings.php:480
+msgid "Coded with %s in The Netherlands @ <strong>Daan.dev</strong>."
+msgstr "Κωδικοποιήθηκε με %s στην Ολλανδία @ <strong>Daan.dev</strong>."
+
+#: src/Admin/Settings.php:543
+msgid "Recently tagged <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> on my blog:"
+msgstr "Πρόσφατα προστέθηκε ετικέτα <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> στο ιστολόγιό μου:"
+
+#: src/Admin/Settings/Advanced.php:60
+msgid "Fonts Cache Directory"
+msgstr "Κατάλογος προσωρινής μνήμης γραμματοσειρών"
+
+#: src/Admin/Settings/Advanced.php:64
+msgid "Downloaded stylesheets and font files %1$s are stored in: <code>%2$s</code>."
+msgstr "Τα ληφθέντα φύλλα στυλ και αρχεία γραμματοσειρών %1$s αποθηκεύονται στο: <code>%2$s</code>."
+
+#: src/Admin/Settings/Advanced.php:68
+msgid "(for this site)"
+msgstr "(για αυτόν τον ιστότοπο)"
+
+#: src/Admin/Settings/Advanced.php:82
+msgid "White-label Stylesheets (Pro)"
+msgstr "Φύλλα στυλ White-label (pro)"
+
+#: src/Admin/Settings/Advanced.php:85
+msgid "Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size. %s"
+msgstr "Ενεργοποιήστε αυτήν την επιλογή για να αφαιρέσετε όλα τα branding και τα σχόλια από τα δημιουργημένα φύλλα στυλ, μειώνοντας περαιτέρω το μέγεθός τους. %s"
+
+#: src/Admin/Settings/Advanced.php:98
+msgid "Enable this option (on all instances) if you're planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production workflow. %s"
+msgstr "Ενεργοποιήστε αυτήν την επιλογή (σε όλες τις περιπτώσεις) εάν σκοπεύετε να χρησιμοποιήσετε το %s σε μια (παραλλαγή) ροής εργασίας Ανάπτυξης > Δοκιμών > Αποδοχής/Σταδιοποίησης > Παραγωγής. %s"
+
+#: src/Admin/Settings/Advanced.php:108
+msgid "Developer Mode (Pro)"
+msgstr "Λειτουργία προγραμματιστή (pro)"
+
+#: src/Admin/Settings/Advanced.php:119
+msgid "This option is disabled, because <strong>Developer Mode (Pro)</strong> is enabled."
+msgstr "Αυτή η επιλογή είναι απενεργοποιημένη, επειδή η <strong>Λειτουργία προγραμματιστή (Pro)</strong> είναι ενεργοποιημένη."
+
+#: src/Admin/Settings/Advanced.php:123
+msgid "Modify the <code>src</code> attribute for font files and stylesheets generated by OMGF Pro. This can be anything; from an absolute URL pointing to your CDN (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>) to work with <em>security thru obscurity</em> plugins. Enter the full path to OMGF's files. Default: (empty) %s"
+msgstr "Τροποποιήστε το χαρακτηριστικό <code>src</code> για αρχεία γραμματοσειρών και φύλλα στυλ που δημιουργούνται από το OMGF Pro. Αυτό μπορεί να είναι οτιδήποτε· από μια απόλυτη URL που δείχνει στο CDN σας (π.χ. <code>%s</code>) έως μια εναλλακτική σχετική URL (π.χ. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>) για να λειτουργεί με πρόσθετα <em>ασφάλειας μέσω αδιαφάνειας</em>. Εισαγάγετε την πλήρη διαδρομή στα αρχεία του OMGF. Προεπιλογή: (κενό) %s"
+
+#: src/Admin/Settings/Advanced.php:132
+msgid "Modify Source URL (Pro)"
+msgstr "Τροποποίηση URL πηγής (pro)"
+
+#: src/Admin/Settings/Advanced.php:134
+msgid "e.g. https://cdn.mydomain.com/alternate/relative-path"
+msgstr "π.χ. https://cdn.mydomain.com/alternate/relative-path"
+
+#: src/Admin/Settings/Advanced.php:145
+msgid "Legacy Browser Compatibility"
+msgstr "Συμβατότητα με παλαιότερα προγράμματα περιήγησης"
+
+#: src/Admin/Settings/Advanced.php:147
+msgid "Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Enabling this option negatively impacts file compression and disables Variable Fonts support. Default: off."
+msgstr "Ενεργοποιήστε αυτήν την επιλογή για να χρησιμοποιήσετε έναν παλαιότερο User-Agent (Windows 7) για να προσθέσετε υποστήριξη για παλαιότερα προγράμματα περιήγησης. Η ενεργοποίηση αυτής της επιλογής επηρεάζει αρνητικά τη συμπίεση αρχείων και απενεργοποιεί την υποστήριξη μεταβλητών γραμματοσειρών. Προεπιλογή: απενεργοποιημένο."
+
+#: src/Admin/Settings/Advanced.php:159
+msgid "Divi Compatibility"
+msgstr "Συμβατότητα με Divi"
+
+#: src/Admin/Settings/Advanced.php:161
+msgid "Divi uses the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off"
+msgstr "Το Divi χρησιμοποιεί την ίδια λαβή για φύλλα στυλ Google Fonts με διαφορετικές διαμορφώσεις. Το OMGF περιλαμβάνει διορθώσεις συμβατότητας για να διασφαλίσει ότι αυτά τα διαφορετικά φύλλα στυλ επεξεργάζονται σωστά. Ενεργοποιήστε το αν βλέπετε ότι κάποιες γραμματοσειρές δεν εμφανίζονται σωστά. Προεπιλογή: απενεργοποιημένο"
+
+#: src/Admin/Settings/Advanced.php:170
+msgid "Auto-Configure Subsets"
+msgstr "Αυτόματη διαμόρφωση υποσυνόλων"
+
+#: src/Admin/Settings/Advanced.php:173
+msgid "When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that're available for <u>all</u> detected font families. Novice users are advised to leave this enabled."
+msgstr "Όταν αυτή η επιλογή είναι επιλεγμένη, το %s θα ορίσει την επιλογή <strong>Χρησιμοποιούμενα υποσύνολα</strong> ώστε να χρησιμοποιεί μόνο υποσύνολα που είναι διαθέσιμα για <u>όλες</u> τις ανιχνευμένες οικογένειες γραμματοσειρών. Συνιστάται στους αρχάριους χρήστες να το αφήσουν ενεργοποιημένο."
+
+#: src/Admin/Settings/Advanced.php:191
+msgid "Used Subset(s)"
+msgstr "Χρησιμοποιούμενο(α) υποσύνολο(α)"
+
+#: src/Admin/Settings/Advanced.php:195
+msgid "Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. Disable it if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn't change this setting</u>!"
+msgstr "Οποιεσδήποτε αλλαγές γίνουν σε αυτήν τη ρύθμιση θα αντικατασταθούν, επειδή η <strong>Αυτόματη διαμόρφωση υποσυνόλων</strong> είναι ενεργοποιημένη. Απενεργοποιήστε την εάν επιθυμείτε να διαχειριστείτε τα <strong>Χρησιμοποιούμενα υποσύνολα</strong> μόνοι σας. <u>Οι αρχάριοι χρήστες δεν πρέπει να αλλάξουν αυτήν τη ρύθμιση</u>!"
+
+#: src/Admin/Settings/Advanced.php:198
+msgid "A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are an add-ons for Latin and can't be used by itself. Use CTRL + click to select multiple values.</em>"
+msgstr "Ένα υποσύνολο είναι ένα (περιορισμένο) σύνολο χαρακτήρων που ανήκουν σε ένα αλφάβητο. Προεπιλογή: <code>latin</code>, <code>latin-ext</code>. Περιορίστε την επιλογή στα υποσύνολα που χρησιμοποιεί πραγματικά ο ιστότοπός σας. Η επιλογή <u>πάρα πολλών</u> υποσυνόλων μπορεί να επηρεάσει αρνητικά την απόδοση! <em>Το Latin Extended και το Βιετναμέζικο είναι πρόσθετα για το Latin και δεν μπορούν να χρησιμοποιηθούν μόνα τους. Χρησιμοποιήστε CTRL + κλικ για να επιλέξετε πολλαπλές τιμές.</em>"
+
+#: src/Admin/Settings/Advanced.php:209
+msgid "This disables the %s admin bar menu item and stops the Google Fonts checker from running in the frontend."
+msgstr "Αυτό απενεργοποιεί το στοιχείο μενού της γραμμής διαχείρισης %s και σταματά τον έλεγχο γραμματοσειρών Google Fonts από την εκτέλεση στο frontend."
+
+#: src/Admin/Settings/Advanced.php:217
+msgid "This setting will resume functioning once the Google Fonts checker has finished running."
+msgstr "Αυτή η ρύθμιση θα συνεχίσει να λειτουργεί μόλις ολοκληρωθεί ο έλεγχος γραμματοσειρών Google Fonts."
+
+#: src/Admin/Settings/Advanced.php:221
+msgid "Disable Admin Bar Menu"
+msgstr "Απενεργοποίηση μενού γραμμής διαχείρισης"
+
+#: src/Admin/Settings/Advanced.php:230
+msgid "Debug Mode"
+msgstr "Λειτουργία εντοπισμού σφαλμάτων"
+
+#: src/Admin/Settings/Advanced.php:232
+msgid "Don't enable this option, unless when asked by me (Daan) or, if you know what you're doing."
+msgstr "Μην ενεργοποιείτε αυτήν την επιλογή, εκτός αν σας ζητηθεί από εμένα (Daan) ή, αν γνωρίζετε τι κάνετε."
+
+#: src/Admin/Settings/Advanced.php:256
+msgid "Download Log"
+msgstr "Λήψη αρχείου καταγραφής"
+
+#: src/Admin/Settings/Advanced.php:261
+msgid "Delete log"
+msgstr "Διαγραφή αρχείου καταγραφής"
+
+#: src/Admin/Settings/Advanced.php:266
+msgid "Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again."
+msgstr "Το αρχείο καταγραφής σας είναι αυτή τη στιγμή μεγαλύτερο από 1MB. Για την προστασία του συστήματος αρχείων σας, η καταγραφή εντοπισμού σφαλμάτων έχει σταματήσει. Διαγράψτε το αρχείο καταγραφής για να ενεργοποιήσετε ξανά την καταγραφή εντοπισμού σφαλμάτων."
+
+#: src/Admin/Settings/Advanced.php:272
+msgid "No log file available for download."
+msgstr "Δεν υπάρχει αρχείο καταγραφής διαθέσιμο για λήψη."
+
+#: src/Admin/Settings/Advanced.php:288
+msgid "Remove Settings/Files At Uninstall"
+msgstr "Αφαίρεση ρυθμίσεων/αρχείων κατά την απεγκατάσταση"
+
+#: src/Admin/Settings/Advanced.php:290
+msgid "Warning! This will remove all settings and cached fonts upon plugin deletion."
+msgstr "Προσοχή! Αυτό θα αφαιρέσει όλες τις ρυθμίσεις και τις γραμματοσειρές που έχουν αποθηκευτεί στην προσωρινή μνήμη κατά τη διαγραφή του πρόσθετου."
+
+#: src/Admin/Settings/Builder.php:51
+msgid "<a href=\"%s\" target=\"_blank\">Upgrade to Pro</a> to unlock this option."
+msgstr "<a href=\"%s\" target=\"_blank\">Αναβαθμίστε σε Pro</a> για να ξεκλειδώσετε αυτήν την επιλογή."
+
+#: src/Admin/Settings/Help.php:27
+msgid "Help & Documentation"
+msgstr "Βοήθεια & Τεκμηρίωση"
+
+#: src/Admin/Settings/Help.php:43
+msgid "Thank you for using %s!"
+msgstr "Σας ευχαριστούμε που χρησιμοποιείτε το %s!"
+
+#: src/Admin/Settings/Help.php:48
+msgid "Need help configuring %s? Please refer to the links below to get you started."
+msgstr "Χρειάζεστε βοήθεια για τη διαμόρφωση του %s; Ανατρέξτε στους παρακάτω συνδέσμους για να ξεκινήσετε."
+
+#: src/Admin/Settings/Help.php:58
+msgid "Need Help?"
+msgstr "Χρειάζεστε βοήθεια;"
+
+#: src/Admin/Settings/Help.php:64
+msgid "Quick Start Guide"
+msgstr "Οδηγός γρήγορης εκκίνησης"
+
+#: src/Admin/Settings/Help.php:68
+msgid "User Manual"
+msgstr "Εγχειρίδιο χρήστη"
+
+#: src/Admin/Settings/Help.php:72
+msgid "FAQ"
+msgstr "Συχνές ερωτήσεις"
+
+#: src/Admin/Settings/Help.php:76
+msgid "Troubleshooting Guide"
+msgstr "Οδηγός αντιμετώπισης προβλημάτων"
+
+#: src/Admin/Settings/Help.php:80
+msgid "Get Support"
+msgstr "Λάβετε υποστήριξη"
+
+#: src/Admin/Settings/Help.php:85
+msgid "Support %s & Spread the Word!"
+msgstr "Υποστηρίξτε το %s & Διαδώστε το!"
+
+#: src/Admin/Settings/Help.php:92
+msgid "Write a 5-star Review or,"
+msgstr "Γράψτε μια κριτική 5 αστέρων ή,"
+
+#: src/Admin/Settings/Help.php:94
+msgid "Tweet about it!"
+msgstr "Κάντε tweet γι' αυτό!"
+
+#: src/Admin/Settings/Help.php:98
+msgid "Coded with %s by"
+msgstr "Κωδικοποιήθηκε με %s από"
+
+#: src/Admin/Settings/Help.php:100
+#: src/Admin/Settings/Help.php:101
+msgid "Visit Daan.dev"
+msgstr "Επισκεφθείτε το daan.dev"
+
+#: src/Admin/Settings/Optimize.php:38
+msgid "Optimize Local Google Fonts"
+msgstr "Βελτιστοποίηση τοπικών γραμματοσειρών Google"
+
+#: src/Admin/Settings/Optimize.php:69
+msgid "Dashboard"
+msgstr "Πίνακας ελέγχου"
+
+#: src/Admin/Settings/Optimize.php:73
+msgid "OMGF (Optimize My Google Fonts) automatically replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href=\"#omgf-manage-optimized-fonts\">Optimize Local Fonts</a>."
+msgstr "Το OMGF (Optimize My Google Fonts) αντικαθιστά αυτόματα τα φύλλα στυλ των Google Fonts (π.χ. https://fonts.googleapis.com/css?family=Open+Sans) με τοπικά φιλοξενούμενα αντίγραφα. Για να αφαιρέσετε/αφορτώσετε πλήρως τις Google Fonts ή ανά στυλ/βάρος, μεταβείτε στο <a href=\"#omgf-manage-optimized-fonts\">Βελτιστοποίηση τοπικών γραμματοσειρών</a>."
+
+#: src/Admin/Settings/Optimize.php:87
+msgid "Run Google Fonts Checker in the background (Pro)"
+msgstr "Εκτέλεση ελέγχου γραμματοσειρών Google στο παρασκήνιο (Pro)"
+
+#: src/Admin/Settings/Optimize.php:90
+msgid "Normally, the Google Fonts Checker only runs for logged-in administrators. If you want to organically scan all your pages for Google Fonts, enable this option. %s"
+msgstr "Κανονικά, ο Έλεγχος Γραμματοσειρών Google εκτελείται μόνο για συνδεδεμένους διαχειριστές. Εάν θέλετε να σαρώσετε οργανικά όλες τις σελίδες σας για Γραμματοσειρές Google, ενεργοποιήστε αυτήν την επιλογή. %s"
+
+#: src/Admin/Settings/Optimize.php:99
+msgid "Disable Google Fonts Checker after... (Pro)"
+msgstr "Απενεργοποίηση ελέγχου γραμματοσειρών Google μετά από... (Pro)"
+
+#: src/Admin/Settings/Optimize.php:102
+msgid "7 Days (default)"
+msgstr "7 ημέρες (προεπιλογή)"
+
+#: src/Admin/Settings/Optimize.php:103
+msgid "14 Days"
+msgstr "14 ημέρες"
+
+#: src/Admin/Settings/Optimize.php:104
+msgid "1 Month"
+msgstr "1 μήνας"
+
+#: src/Admin/Settings/Optimize.php:105
+msgid "Always"
+msgstr "Πάντα"
+
+#: src/Admin/Settings/Optimize.php:109
+msgid "When enabled, the Google Fonts Checker loads a tiny snippet (<3KB) of JS code in your frontend. While the impact is barely noticeable, it's advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s"
+msgstr "Όταν είναι ενεργοποιημένο, ο Έλεγχος Γραμματοσειρών Google φορτώνει ένα μικρό απόσπασμα (<3KB) κώδικα JS στο frontend σας. Ενώ ο αντίκτυπος είναι ελάχιστα αισθητός, συνιστάται να το εκτελείτε μόνο για ένα καθορισμένο χρονικό διάστημα, π.χ. αφού εγκαταστήσετε για πρώτη φορά το OMGF Pro, αλλάξετε θέματα ή εγκαταστήσετε πρόσθετα. %s"
+
+#: src/Admin/Settings/Optimize.php:127
+msgid "Manage Cache"
+msgstr "Διαχείριση προσωρινής μνήμης"
+
+#: src/Admin/Settings/Optimize.php:131
+msgid "Empty Cache"
+msgstr "Άδειασμα προσωρινής μνήμης"
+
+#: src/Admin/Settings/Optimize.php:137
+msgid "Refresh Cache (and maintain settings)"
+msgstr "Ανανέωση προσωρινής μνήμης (και διατήρηση ρυθμίσεων)"
+
+#: src/Admin/Settings/Optimize.php:162
+msgid "recommended"
+msgstr "συνιστάται"
+
+#: src/Admin/Settings/Optimize.php:165
+msgid "Font-Display Option"
+msgstr "Επιλογή Font-Display"
+
+#: src/Admin/Settings/Optimize.php:169
+msgid "Select which value to set the font-display attribute to. Defaults to Swap (recommended)."
+msgstr "Επιλέξτε ποια τιμή θα οριστεί στο χαρακτηριστικό font-display. Προεπιλογή σε Swap (συνιστάται)."
+
+#: src/Admin/Settings/Optimize.php:181
+msgid "Apply Font-Display Option Globally (Pro)"
+msgstr "Εφαρμογή επιλογής Font-Display παγκοσμίως (Pro)"
+
+#: src/Admin/Settings/Optimize.php:183
+msgid "Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>."
+msgstr "Εφαρμόστε την παραπάνω τιμή χαρακτηριστικού <code>font-display</code> σε όλες τις δηλώσεις <code>@font-face</code> που βρέθηκαν στον ιστότοπό σας για να <strong>διασφαλίσετε ότι το κείμενο παραμένει ορατό κατά τη φόρτωση της γραμματοσειράς ιστού</strong>."
+
+#: src/Admin/Settings/Optimize.php:197
+msgid "Smart Preload (Pro)"
+msgstr "Έξυπνη προφόρτωση (Pro)"
+
+#: src/Admin/Settings/Optimize.php:199
+msgid "When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them. Preload settings can be overwritten on a per-page level by clicking <strong>Auto-configure preload settings for this page</strong> in the top Admin Bar menu."
+msgstr "Όταν είναι ενεργοποιημένο, το OMGF Pro θα εντοπίζει αυτόματα ποιες γραμματοσειρές Google φορτώνονται πάνω από την πτυχή και θα τις προφορτώνει. Οι ρυθμίσεις προφόρτωσης μπορούν να αντικατασταθούν σε επίπεδο σελίδας κάνοντας κλικ στο <strong>Αυτόματη διαμόρφωση ρυθμίσεων προφόρτωσης για αυτήν τη σελίδα</strong> στο επάνω μενού της γραμμής διαχείρισης."
+
+#: src/Admin/Settings/Optimize.php:213
+msgid "Optimize Local Fonts"
+msgstr "Βελτιστοποίηση τοπικών γραμματοσειρών"
+
+#: src/Admin/Settings/Optimize.php:217
+msgid "The options below allow you to tweak the performance of all fonts detected by %s. Don't know where or how to start optimizing your Google Fonts? That's okay. <a href=\"%s\">This guide</a> will get you sorted."
+msgstr "Οι παρακάτω επιλογές σάς επιτρέπουν να προσαρμόσετε την απόδοση όλων των γραμματοσειρών που εντοπίστηκαν από το %s. Δεν ξέρετε από πού ή πώς να ξεκινήσετε τη βελτιστοποίηση των γραμματοσειρών Google Fonts; Δεν πειράζει. <a href=\"%s\">Αυτός ο οδηγός</a> θα σας βοηθήσει."
+
+#: src/Admin/Settings/Optimize.php:256
+msgid "Wow! That's a lot of Preloads! 😲"
+msgstr "Ουάου! Πολλές προφορτώσεις! 😲"
+
+#: src/Admin/Settings/Optimize.php:258
+msgid "You've selected 5 (!) font styles to load early. Selecting more font styles to preload will affect your site's performance. The <code>preload</code> attribute should only be used for font styles loaded above the fold i.e. <strong>The top portion of a web page that's visible without scrolling</strong>."
+msgstr "Έχετε επιλέξει 5 (!) στυλ γραμματοσειράς για να φορτωθούν νωρίς. Η επιλογή περισσότερων στυλ γραμματοσειράς για προφόρτωση θα επηρεάσει την απόδοση του ιστότοπού σας. Το χαρακτηριστικό <code>preload</code> πρέπει να χρησιμοποιείται μόνο για αρχεία γραμματοσειρών που χρησιμοποιούνται πάνω από την πτυχή, δηλαδή <strong>το επάνω μέρος μιας ιστοσελίδας που είναι ορατό χωρίς κύλιση</strong>."
+
+#: src/Admin/Settings/Optimize.php:265
+msgid "Refer to the <a href=\"%s\" target=\"_blank\">Plugin documentation</a> for more information."
+msgstr "Ανατρέξτε στην <a href=\"%s\" target=\"_blank\">τεκμηρίωση του πρόσθετου</a> για περισσότερες πληροφορίες."
+
+#: src/Admin/Settings/Optimize.php:292
+msgid "This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically when other Google Fonts stylesheets are discovered."
+msgstr "Αυτή η λίστα συμπληρώνεται με όλα τα φύλλα στυλ Google Fonts που έχουν καταγραφεί και ληφθεί σε όλο τον ιστότοπό σας. Θα αυξάνεται οργανικά όταν ανακαλύπτονται άλλα φύλλα στυλ Google Fonts."
+
+#: src/Admin/Settings/Optimize.php:302
+msgid "Style"
+msgstr "Στυλ"
+
+#: src/Admin/Settings/Optimize.php:303
+msgid "Weight"
+msgstr "Βάρος"
+
+#: src/Admin/Settings/Optimize.php:304
+msgid "Load Early"
+msgstr "Φόρτωση νωρίς"
+
+#: src/Admin/Settings/Optimize.php:307
+msgid "<a href=\"%s\">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold."
+msgstr "<a href=\"%s\">Προφόρτωση αρχείων γραμματοσειρών</a> πριν από την απόδοση της σελίδας για βελτίωση των αντιληπτών χρόνων φόρτωσης. Χρησιμοποιήστε την προφόρτωση μόνο για αρχεία γραμματοσειρών που χρησιμοποιούνται πάνω από την πτυχή."
+
+#: src/Admin/Settings/Optimize.php:314
+msgid "Don't Load"
+msgstr "Μην φορτώνετε"
+
+#: src/Admin/Settings/Optimize.php:316
+msgid "Many themes/plugins load Google Fonts you're not using. Checking <strong>Don't Load</strong> will make sure they're not loaded in the frontend to save bandwidth."
+msgstr "Πολλά θέματα/πρόσθετα φορτώνουν γραμματοσειρές Google που δεν χρησιμοποιείτε. Ο έλεγχος του <strong>Μην φορτώνετε</strong> θα διασφαλίσει ότι δεν φορτώνονται στο frontend για εξοικονόμηση εύρους ζώνης."
+
+#: src/Admin/Settings/Optimize.php:320
+msgid "Fallback (Pro)"
+msgstr "Εφεδρική (Pro)"
+
+#: src/Admin/Settings/Optimize.php:323
+msgid "Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded. %s"
+msgstr "Μειώστε τη Συσσωρευτική Μετατόπιση Διάταξης (CLS) διασφαλίζοντας ότι όλο το κείμενο που χρησιμοποιεί γραμματοσειρές Google έχει μια παρόμοια γραμματοσειρά συστήματος για εμφάνιση ενώ οι γραμματοσειρές Google κατεβαίνουν. %s"
+
+#: src/Admin/Settings/Optimize.php:329
+msgid "Replace (Pro)"
+msgstr "Αντικατάσταση (pro)"
+
+#: src/Admin/Settings/Optimize.php:332
+msgid "When the <a href=\"%s\">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback. %s"
+msgstr "Όταν είναι επιλεγμένη η <a href=\"%s\">επιλογή Αντικατάστασης</a>, η επιλεγμένη στοίβα εφεδρικών γραμματοσειρών θα αντικαταστήσει την αντίστοιχη οικογένεια γραμματοσειρών Google, αντί να λειτουργεί ως εφεδρική. %s"
+
+#: src/Admin/Settings/Optimize.php:354
+msgid "Stylesheet handle: %s"
+msgstr "Λαβή φύλλου στυλ: %s"
+
+#: src/Admin/Settings/Optimize.php:368
+msgid "Unload italics"
+msgstr "Αφόρτωση πλάγιων γραμματοσειρών"
+
+#: src/Admin/Settings/Optimize.php:371
+msgid "In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles."
+msgstr "Στις περισσότερες περιπτώσεις μπορείτε να αφορτώσετε με ασφάλεια όλα τα πλάγια στυλ γραμματοσειρών. Τα σύγχρονα προγράμματα περιήγησης είναι ικανά να μιμούνται πλάγια στυλ γραμματοσειρών."
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Unload all"
+msgstr "Αφόρτωση όλων"
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Load all"
+msgstr "Φόρτωση όλων"
+
+#: src/Admin/Settings/Optimize.php:382
+msgid "None (default)"
+msgstr "Κανένα (προεπιλογή)"
+
+#: src/Admin/Settings/Optimize.php:514
+msgid "After clicking <strong>Save & Optimize</strong>, this section will be populated with any Google Fonts (along with requested styles and available options) requested on <code>%s</code>. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site."
+msgstr "Αφού κάνετε κλικ στο <strong>Αποθήκευση & Βελτιστοποίηση</strong>, αυτή η ενότητα θα συμπληρωθεί με τυχόν γραμματοσειρές Google Fonts (μαζί με τα ζητούμενα στυλ και τις διαθέσιμες επιλογές) που ζητήθηκαν στο <code>%s</code>. Η λίστα θα αυξάνεται οργανικά εάν ανακαλυφθούν άλλα φύλλα στυλ Google Fonts σε όλο τον ιστότοπό σας."
+
+#: src/Admin/Settings/Optimize.php:520
+msgid "Why aren't my Google Fonts showing up on this list?"
+msgstr "Γιατί οι γραμματοσειρές Google Fonts μου δεν εμφανίζονται σε αυτήν τη λίστα;"
+
+#: src/Admin/Settings/Optimize.php:544
+msgid "Test Mode"
+msgstr "Λειτουργία δοκιμής"
+
+#: src/Admin/Settings/Optimize.php:546
+msgid "With this setting enabled, OMGF's optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend."
+msgstr "Με αυτήν τη ρύθμιση ενεργοποιημένη, οι βελτιστοποιήσεις του OMGF θα είναι ορατές μόνο σε συνδεδεμένους διαχειριστές ή όταν το <code>?omgf=1</code> προστεθεί σε μια URL στο frontend."
+
+#: src/DB/Migrate/V600.php:60
+msgid "Thanks for upgrading to OMGF v6! 🎉 <a href=\"%s\" target=\"_blank\">Click here to learn about all the exciting, new features in this release!</a>"
+msgstr "Ευχαριστούμε για την αναβάθμιση στο OMGF v6! 🎉 <a href=\"%s\" target=\"_blank\">Κάντε κλικ εδώ για να μάθετε για όλες τις συναρπαστικές, νέες λειτουργίες σε αυτήν την έκδοση!</a>"
+
+#: src/Download.php:89
+msgid "OMGF encountered an error while downloading font files"
+msgstr "Το OMGF αντιμετώπισε ένα σφάλμα κατά τη λήψη αρχείων γραμματοσειρών"
+
+#: src/Download.php:107
+msgid "OMGF received a non-success HTTP status while downloading"
+msgstr "Το OMGF έλαβε μια κατάσταση HTTP μη επιτυχίας κατά τη λήψη"
+
+#: src/Download.php:120
+msgid "OMGF couldn't determine the mime-type for the downloaded font file"
+msgstr "Το OMGF δεν μπόρεσε να προσδιορίσει τον τύπο mime για το ληφθέν αρχείο γραμματοσειράς"
+
+#: src/Download.php:144
+msgid "OMGF couldn't determine the file extension for the downloaded font file"
+msgstr "Το OMGF δεν μπόρεσε να προσδιορίσει την επέκταση αρχείου για το ληφθέν αρχείο γραμματοσειράς"
+
+#: src/Download.php:158
+msgid "OMGF failed to move downloaded file to final location"
+msgstr "Το OMGF απέτυχε να μετακινήσει το ληφθέν αρχείο στην τελική τοποθεσία"
+
+#: src/Frontend/Actions.php:65
+msgid "Run fonts optimization"
+msgstr "Εκτέλεση βελτιστοποίησης γραμματοσειρών"
+
+#: src/Frontend/Actions.php:85
+msgid "Run fonts optimization for current page"
+msgstr "Εκτέλεση βελτιστοποίησης γραμματοσειρών για την τρέχουσα σελίδα"
+
+#: src/Frontend/Actions.php:135
+msgid "Google Fonts were found on this page. Click here for more information."
+msgstr "Βρέθηκαν γραμματοσειρές Google σε αυτήν τη σελίδα. Κάντε κλικ εδώ για περισσότερες πληροφορίες."
+
+#: src/Frontend/Actions.php:136
+msgid "There are potential issues in your configuration that require your attention."
+msgstr "Υπάρχουν πιθανά προβλήματα στη διαμόρφωσή σας που απαιτούν την προσοχή σας."
+
+#: src/Frontend/Process.php:717
+msgid "Google Fonts optimization completed. Return to the <a href=\"%s\">settings screen</a> to see the results."
+msgstr "Η βελτιστοποίηση γραμματοσειρών Google Fonts ολοκληρώθηκε. Επιστρέψτε στην <a href=\"%s\">οθόνη ρυθμίσεων</a> για να δείτε τα αποτελέσματα."
+
+#: src/Helper.php:361
+msgid "Filtered Subsets"
+msgstr "Φιλτραρισμένα υποσύνολα"
+
+#: src/Helper.php:399
+msgid "Showing debug information for"
+msgstr "Εμφάνιση πληροφοριών εντοπισμού σφαλμάτων για"
+
+#: src/Helper.php:404
+msgid "Subelement %s is array/object"
+msgstr "Το υποστοιχείο %s είναι πίνακας/αντικείμενο"
+
+#: src/Optimize.php:111
+msgid "OMGF couldn't find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%1$s</code> and <code>%2$s</code>."
+msgstr "Το OMGF δεν μπόρεσε να βρει την απαιτούμενη παράμετρο λαβής φύλλου στυλ κατά την προσπάθεια επικοινωνίας με το API. Οι τιμές που στάλθηκαν ήταν <code>%1$s</code> και <code>%2$s</code>."
+
+#: src/Optimize.php:184
+msgid "Processing downloads for"
+msgstr "Επεξεργασία λήψεων για"
+
+#: src/Optimize.php:230
+msgid "Finished downloading for"
+msgstr "Ολοκληρώθηκε η λήψη για"
+
+#: src/Optimize.php:290
+msgid "Fetching stylesheet from: "
+msgstr "Ανάκτηση φύλλου στυλ από: "
+
+#: src/Optimize.php:334
+msgid "Stylesheet fetched. Parsing for font-families..."
+msgstr "Το φύλλο στυλ ανακτήθηκε. Ανάλυση για οικογένειες γραμματοσειρών..."
+
+#: src/Optimize.php:345
+msgid "Font-families found"
+msgstr "Βρέθηκαν οικογένειες γραμματοσειρών"
+
+#: src/Optimize.php:369
+msgid "Stylesheet successfully converted to object."
+msgstr "Το φύλλο στυλ μετατράπηκε επιτυχώς σε αντικείμενο."
+
+#: src/Optimize.php:383
+msgid "Parsing variants."
+msgstr "Ανάλυση παραλλαγών."
+
+#: src/Optimize.php:399
+msgid "Found %s @font-face statements."
+msgstr "Βρέθηκαν %s δηλώσεις @font-face."
+
+#: src/Optimize.php:466
+msgid "Same file used for multiple @font-face statements. This is a variable font: "
+msgstr "Το ίδιο αρχείο χρησιμοποιείται για πολλαπλές δηλώσεις @font-face. Αυτή είναι μια μεταβλητή γραμματοσειρά: "
+
+#: src/Optimize.php:474
+msgid "Generated @font-face objects"
+msgstr "Δημιουργήθηκαν αντικείμενα @font-face"
+
+#: src/Optimize.php:476
+msgid "All @font-face statements processed."
+msgstr "Όλες οι δηλώσεις @font-face επεξεργάστηκαν."
+
+#: src/Optimize.php:486
+msgid "Parsing subsets."
+msgstr "Ανάλυση υποσυνόλων."
+
+#: src/Optimize.php:504
+msgid "Subset @font-face statements"
+msgstr "Δηλώσεις @font-face υποσυνόλου"
+
+#: src/Optimize.php:602
+msgid "Rewriting URLs for each font variant..."
+msgstr "Επανεγγραφή URL για κάθε παραλλαγή γραμματοσειράς..."
+
+#: src/Optimize/Run.php:84
+msgid "%s encountered an error while fetching this site's frontend HTML"
+msgstr "Το %s αντιμετώπισε ένα σφάλμα κατά την ανάκτηση του frontend HTML αυτού του ιστότοπου"
+
+#: src/Optimize/Run.php:93
+msgid "It looks like OMGF isn't allowed to fetch your frontend. Try <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">running the optimization manually</a> (you might have to allow pop-ups) and return here after the page has finished loading."
+msgstr "Φαίνεται ότι το OMGF δεν επιτρέπεται να ανακτήσει το frontend σας. Δοκιμάστε να <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">εκτελέσετε τη βελτιστοποίηση χειροκίνητα</a> (ίσως χρειαστεί να επιτρέψετε τα αναδυόμενα παράθυρα) και επιστρέψτε εδώ αφού ολοκληρωθεί η φόρτωση της σελίδας."
+
+#: src/Optimize/Run.php:173
+msgid "%s is removed as a Used Subset, as not all detected font families are available in this subset. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "Το %s αφαιρείται ως χρησιμοποιούμενο υποσύνολο, καθώς δεν είναι διαθέσιμες όλες οι ανιχνευμένες οικογένειες γραμματοσειρών σε αυτό το υποσύνολο. <a href=\"#\" id=\"omgf-optimize-again\">Εκτελέστε ξανά τη βελτιστοποίηση</a> για να επεξεργαστείτε αυτές τις αλλαγές."
+msgstr[1] "Τα %s αφαιρούνται ως χρησιμοποιούμενα υποσύνολα, καθώς δεν είναι διαθέσιμες όλες οι ανιχνευμένες οικογένειες γραμματοσειρών σε αυτά τα υποσύνολα. <a href=\"#\" id=\"omgf-optimize-again\">Εκτελέστε ξανά τη βελτιστοποίηση</a> για να επεξεργαστείτε αυτές τις αλλαγές."
+
+#: src/Optimize/Run.php:201
+msgid "Used Subset(s) is set to Latin, since %s isn't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "Used Subset(s) is set to Latin, since %s aren't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "Το χρησιμοποιούμενο υποσύνολο έχει οριστεί σε Latin, καθώς το %s δεν είναι διαθέσιμο σε καμία από τις ανιχνευμένες οικογένειες γραμματοσειρών. <a href=\"#\" id=\"omgf-optimize-again\">Εκτελέστε ξανά τη βελτιστοποίηση</a> για να επεξεργαστείτε αυτές τις αλλαγές."
+msgstr[1] "Τα χρησιμοποιούμενα υποσύνολα έχουν οριστεί σε Latin, καθώς τα %s δεν είναι διαθέσιμα σε καμία από τις ανιχνευμένες οικογένειες γραμματοσειρών. <a href=\"#\" id=\"omgf-optimize-again\">Εκτελέστε ξανά τη βελτιστοποίηση</a> για να επεξεργαστείτε αυτές τις αλλαγές."
+
+#: src/Optimize/Run.php:222
+msgid "Optimization completed successfully."
+msgstr "Η βελτιστοποίηση ολοκληρώθηκε επιτυχώς."
+
+#: src/Optimize/Run.php:228
+msgid "Make sure you flush any caches of 3rd party plugins you're using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s's optimizations to take effect. "
+msgstr "Βεβαιωθείτε ότι έχετε αδειάσει τυχόν προσωρινές μνήμες πρόσθετων τρίτων που χρησιμοποιείτε (π.χ. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, κ.λπ.) για να επιτρέψετε στις βελτιστοποιήσεις του %s να τεθούν σε ισχύ. "
