@@ -39,7 +39,7 @@ class WPTT {
 	 * Adds a piece of validation to make sure stylesheets added using the WPTT Webfont Loader are included.
 	 *
 	 * @filter omgf_frontend_process_parse_links
-	 * @see    \OMGF\Frontend\Process::parse()
+	 * @see    \OMGF\Frontend\Process::find_and_replace()
 	 *
 	 * @param $is_valid
 	 * @param $link

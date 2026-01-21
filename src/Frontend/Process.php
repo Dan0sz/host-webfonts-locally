@@ -158,7 +158,7 @@ class Process {
 
 		/** Only hook into our own filter if Smart Slider 3 or Groovy Menu aren't active, as they have their own output filter. */
 		if ( ! function_exists( 'smart_slider_3_plugins_loaded' ) || ! function_exists( 'groovy_menu_init_classes' ) ) {
-			add_filter( 'omgf_buffer_output', [ $this, 'parse' ] );
+			add_filter( 'omgf_buffer_output', [ $this, 'find_and_replace' ] );
 		}
 
 		add_filter( 'omgf_buffer_output', [ $this, 'add_success_message' ] );
@@ -421,7 +421,7 @@ class Process {
 	}
 
 	/**
-	 * This method uses Regular Expressions to parse the HTML. It's tested to be at least
+	 * This method uses Regular Expressions to find Google Fonts requests in the HTML. It's tested to be at least
 	 * twice as fast compared to using Xpath.
 	 * Test results (in seconds, with XDebug enabled)
 	 * Uncached:    17.81094789505
@@ -432,11 +432,15 @@ class Process {
 	 *              0.00053095817565918
 	 * Using Xpath proved to be untestable, because it varied anywhere between 38 seconds and, well, timeouts.
 	 *
+	 * All matches are optimized and replaces with locally hosted files.
+	 *
 	 * @param string $html Valid HTML.
 	 *
-	 * @return string Valid HTML, filtered by @filter omgf_processed_html.
+	 * @return string Valid HTML
+	 *
+	 * @filter omgf_processed_html.
 	 */
-	public function parse( $html ) {
+	public function find_and_replace( $html ) {
 		if ( $this->is_amp() ) {
 			return apply_filters( 'omgf_processed_html', $html, $this ); // @codeCoverageIgnore
 		}

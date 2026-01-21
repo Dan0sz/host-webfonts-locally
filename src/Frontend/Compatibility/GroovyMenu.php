@@ -43,6 +43,6 @@ class GroovyMenu {
 	 */
 	private function init() {
 		/** Groovy Menu compatibility */
-		add_filter( 'groovy_menu_final_output', [ $this->process, 'parse' ], 11 );
+		add_filter( 'groovy_menu_final_output', [ $this->process, 'find_and_replace' ], 11 );
 	}
 }

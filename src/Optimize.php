@@ -291,8 +291,6 @@ class Optimize {
 
 		/**
 		 * @since v6.0.6 Fallback for already locally hosted stylesheets e.g., used by Elementor, etc.
-		 *
-		 * @codeCoverageIgnoreStart
 		 */
 		if ( str_contains( $url, get_home_url() ) ) {
 			$path = str_replace( get_home_url(), ABSPATH, $url );
@@ -301,7 +299,6 @@ class Optimize {
 				return file_get_contents( $path );
 			}
 		}
-		/** @codeCoverageIgnoreEnd */
 
 		$response = wp_remote_get(
 			$url,
@@ -315,6 +312,22 @@ class Optimize {
 		);
 
 		$code = wp_remote_retrieve_response_code( $response );
+
+		// If the first request fails with 400/404, retry with HTML entities encoded
+		if ( in_array( $code, [ 400, 404 ], true ) ) {
+			OMGF::debug( __( 'First request failed, retrying with HTML entities encoded...', 'host-webfonts-local' ) );
+
+			$encoded_url = htmlspecialchars( $url, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+
+			$response = wp_remote_get(
+				$encoded_url,
+				[
+					'user-agent' => apply_filters( 'omgf_optimize_user_agent', self::USER_AGENT[ 'woff2' ] ),
+				]
+			);
+
+			$code = wp_remote_retrieve_response_code( $response );
+		}
 
 		if ( $code !== 200 ) {
 			return ''; // @codeCoverageIgnore
