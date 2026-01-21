@@ -6,8 +6,17 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' => array($vendorDir . '/php-parallel-lint/php-console-highlighter/src'),
+    'PHP_Parallel_Lint\\PhpConsoleColor\\' => array($vendorDir . '/php-parallel-lint/php-console-color/src'),
+    'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),
     'OMGF\\Tests\\Unit\\' => array($baseDir . '/tests/unit'),
+    'OMGF\\Tests\\Mocks\\' => array($baseDir . '/tests/mocks'),
     'OMGF\\Tests\\Integration\\' => array($baseDir . '/tests/integration'),
     'OMGF\\Tests\\' => array($baseDir . '/tests'),
     'OMGF\\' => array($baseDir . '/src'),
+    'Mockery\\' => array($vendorDir . '/mockery/mockery/library/Mockery'),
+    'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'Brain\\Monkey\\' => array($vendorDir . '/brain/monkey/src'),
 );
