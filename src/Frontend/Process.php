@@ -156,8 +156,8 @@ class Process {
 		 */
 		add_filter( 'omgf_buffer_output', [ $this, 'remove_resource_hints' ], 11 );
 
-		/** Only hook into our own filter if Smart Slider 3 or Groovy Menu aren't active, as they have their own output filter. */
-		if ( ! function_exists( 'smart_slider_3_plugins_loaded' ) || ! function_exists( 'groovy_menu_init_classes' ) ) {
+		/** Only hook into our own filter if Smart Slider 3 and Groovy Menu aren't active, as they have their own output filter. */
+		if ( ! function_exists( 'smart_slider_3_plugins_loaded' ) && ! function_exists( 'groovy_menu_init_classes' ) ) {
 			add_filter( 'omgf_buffer_output', [ $this, 'parse' ] );
 		}
 
