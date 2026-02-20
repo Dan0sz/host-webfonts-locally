@@ -334,7 +334,7 @@ class Helper {
 		 * @since v4.5.6
 		 */
 		if ( is_string( self::$admin_optimized_fonts ) && self::$admin_optimized_fonts !== '' ) {
-			self::$admin_optimized_fonts = unserialize( self::$admin_optimized_fonts ); // @codeCoverageIgnore
+			self::$admin_optimized_fonts = maybe_unserialize( self::$admin_optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -381,7 +381,7 @@ class Helper {
 		 * @since v4.5.6
 		 */
 		if ( is_string( self::$optimized_fonts ) && self::$optimized_fonts !== '' ) {
-			self::$optimized_fonts = unserialize( self::$optimized_fonts ); // @codeCoverageIgnore
+			self::$optimized_fonts = maybe_unserialize( self::$optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -411,7 +411,7 @@ class Helper {
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 */
 		if ( is_string( self::$subsets ) ) {
-			self::$subsets = unserialize( self::$subsets ); // @codeCoverageIgnore
+			self::$subsets = maybe_unserialize( self::$subsets ); // @codeCoverageIgnore
 		}
 
 		/**
