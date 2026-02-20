@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 6.1.1
+Stable tag: 6.1.2
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.1.2 | February 20th, 2026 =
+* Fixed: if the expected MIME type of a downloaded file didn't match, a class OMGF\OMGF exception would be thrown.
+* Dev: Updated CI tools.
 
 = 6.1.1 | January 26th, 2026 =
 * Fixed: font-weights would sometimes break when Smart Slider 3 or Groovy Menu was enabled.
