@@ -21,9 +21,9 @@ use OMGF\Admin\Settings;
 class Helper {
 	/**
 	 * Property to hold all settings.
-	 * @var mixed
+	 * @var array
 	 */
-	private static $settings;
+	private static $settings = [];
 
 	/**
 	 * @var array $preloaded_fonts
@@ -76,20 +76,26 @@ class Helper {
 		if ( str_starts_with( $setting, 'omgf_' ) ) {
 			$updated = update_option( $setting, $value, $autoload );
 
-			self::reset_cache();
+			if ( $updated ) {
+				self::reset_cache();
+			}
 
 			return $updated;
 		}
 
-		if ( self::$settings === null ) {
+		if ( empty( self::$settings ) ) {
 			self::$settings = self::get_settings(); // @codeCoverageIgnore
 		}
 
 		self::$settings[ $setting ] = $value;
 
-		self::reset_cache();
+		$updated = update_option( 'omgf_settings', self::$settings );
 
-		return update_option( 'omgf_settings', self::$settings );
+		if ( $updated ) {
+			self::reset_cache();
+		}
+
+		return $updated;
 	}
 
 	/**
@@ -98,6 +104,7 @@ class Helper {
 	 * @return void
 	 */
 	public static function reset_cache() {
+		self::$settings              = [];
 		self::$preloaded_fonts       = [];
 		self::$unloaded_fonts        = [];
 		self::$unloaded_stylesheets  = [];
@@ -117,15 +124,17 @@ class Helper {
 		$defaults = apply_filters(
 			'omgf_settings_defaults',
 			[
-				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION    => 'swap',
-				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE         => '',
-				Settings::OMGF_ADV_SETTING_LEGACY_MODE            => '',
-				Settings::OMGF_ADV_SETTING_COMPATIBILITY          => '',
-				Settings::OMGF_ADV_SETTING_AUTO_SUBSETS           => 'on',
-				Settings::OMGF_ADV_SETTING_SUBSETS                => [ 'latin', 'latin-ext' ],
-				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU => '',
-				Settings::OMGF_ADV_SETTING_DEBUG_MODE             => '',
-				Settings::OMGF_ADV_SETTING_UNINSTALL              => '',
+				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     => 'swap',
+				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE          => '',
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => '',
+				Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
+				Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
+				Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
+				Settings::OMGF_ADV_SETTING_AUTO_SUBSETS            => 'on',
+				Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
+				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
+				Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
+				Settings::OMGF_ADV_SETTING_UNINSTALL               => '',
 			]
 		);
 
@@ -150,7 +159,9 @@ class Helper {
 		if ( str_starts_with( $setting, 'omgf_' ) || apply_filters( 'omgf_delete_option', false, $setting ) ) {
 			$deleted = delete_option( $setting );
 
-			self::reset_cache();
+			if ( $deleted ) {
+				self::reset_cache();
+			}
 
 			return $deleted;
 		}
@@ -162,9 +173,13 @@ class Helper {
 
 		unset( self::$settings[ $setting ] );
 
-		self::reset_cache();
+		$deleted = update_option( 'omgf_settings', self::$settings );
 
-		return update_option( 'omgf_settings', self::$settings );
+		if ( $deleted ) {
+			self::reset_cache();
+		}
+
+		return $deleted;
 	}
 
 	/**
