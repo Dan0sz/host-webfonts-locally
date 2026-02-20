@@ -51,6 +51,11 @@ class Helper {
 	private static $optimized_fonts = [];
 
 	/**
+	 * @var array $optimized_fonts
+	 */
+	private static $admin_optimized_fonts = [];
+
+	/**
 	 * @var array $subsets
 	 */
 	private static $subsets = [];
@@ -118,12 +123,13 @@ class Helper {
 	 * @return void
 	 */
 	public static function reset_cache() {
-		self::$preloaded_fonts      = [];
-		self::$unloaded_fonts       = [];
-		self::$unloaded_stylesheets = [];
-		self::$cache_keys           = [];
-		self::$optimized_fonts      = [];
-		self::$subsets              = [];
+		self::$preloaded_fonts       = [];
+		self::$unloaded_fonts        = [];
+		self::$unloaded_stylesheets  = [];
+		self::$cache_keys            = [];
+		self::$admin_optimized_fonts = [];
+		self::$optimized_fonts       = [];
+		self::$subsets               = [];
 	}
 
 	/**
@@ -280,6 +286,7 @@ class Helper {
 
 	/**
 	 * Optimized Local Fonts to be displayed in the Optimize Local Fonts table.
+	 *
 	 * Use a static variable to reduce database reads/writes.
 	 *
 	 * @param bool $force_add
@@ -295,27 +302,27 @@ class Helper {
 		/**
 		 * Get a fresh copy from the database if self::$optimized_fonts is empty|null|false (on 1st run)
 		 */
-		if ( empty( self::$optimized_fonts ) ) {
-			self::$optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
+		if ( empty( self::$admin_optimized_fonts ) ) {
+			self::$admin_optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
 		}
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 * @since v4.5.6
 		 */
-		if ( is_string( self::$optimized_fonts ) && self::$optimized_fonts !== '' ) {
-			self::$optimized_fonts = unserialize( self::$optimized_fonts ); // @codeCoverageIgnore
+		if ( is_string( self::$admin_optimized_fonts ) && self::$admin_optimized_fonts !== '' ) {
+			self::$admin_optimized_fonts = unserialize( self::$admin_optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
 		 * If $maybe_add doesn't exist in the cache layer yet, add it.
 		 * @since v4.5.7
 		 */
-		if ( ! empty( $maybe_add ) && ( ! isset( self::$optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
-			self::$optimized_fonts = array_merge( self::$optimized_fonts, $maybe_add );
+		if ( ! empty( $maybe_add ) && ( ! isset( self::$admin_optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
+			self::$admin_optimized_fonts = array_merge( self::$admin_optimized_fonts, $maybe_add );
 		}
 
-		return self::$optimized_fonts ?: [];
+		return self::$admin_optimized_fonts ?: [];
 	}
 
 	/**
@@ -340,7 +347,7 @@ class Helper {
 		}
 
 		/**
-		 * Fallback to original Optimized Fonts table.
+		 * Fallback to the original Optimized Fonts table.
 		 */
 		if ( empty( self::$optimized_fonts ) ) {
 			self::$optimized_fonts = self::admin_optimized_fonts();
