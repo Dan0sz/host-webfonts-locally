@@ -51,7 +51,7 @@ class Helper {
 	private static $optimized_fonts = [];
 
 	/**
-	 * @var array $optimized_fonts
+	 * @var array $admin_optimized_fonts
 	 */
 	private static $admin_optimized_fonts = [];
 
@@ -250,11 +250,8 @@ class Helper {
 	public static function unloaded_stylesheets() {
 		if ( empty( self::$unloaded_stylesheets ) ) {
 			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
-			self::$unloaded_stylesheets = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
+			self::$unloaded_stylesheets = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) ) );
 		}
-
-		// Remove empty elements (and store it to the static variable before returning it)
-		self::$unloaded_stylesheets = array_filter( self::$unloaded_stylesheets );
 
 		return self::$unloaded_stylesheets;
 	}
@@ -288,11 +285,9 @@ class Helper {
 	 */
 	public static function cache_keys() {
 		if ( empty( self::$cache_keys ) ) {
-			self::$cache_keys = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) );
+			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
+			self::$cache_keys = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) ) );
 		}
-
-		// Remove empty elements.
-		self::$cache_keys = array_filter( self::$cache_keys );
 
 		/**
 		 * If the cache keys option is empty, this means that it hasn't been saved before. So, let's fetch
