@@ -89,7 +89,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 == Changelog ==
 
 = 6.1.2 | February 20th, 2026 =
-* Fixed: if the expected MIME type of a downloaded file didn't match, a class OMGF\OMGF exception would be thrown.
+* Fixed: if the expected MIME type of the downloaded file didn't match, a class OMGF\OMGF exception would be thrown.
 * Dev: Updated CI tools.
 
 = 6.1.1 | January 26th, 2026 =
