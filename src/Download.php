@@ -16,6 +16,7 @@
 
 namespace OMGF;
 
+use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
 
 class Download {
@@ -127,7 +128,7 @@ class Download {
 		}
 
 		// Normalize Content-Type before lookup (strip parameters, lowercase)
-		$content_type = strtolower( trim( explode( ';', $content_type )[ 0 ] ) );
+		$content_type = strtolower( trim( explode( ';', $content_type )[0] ) );
 		$extension    = $this->mime_map[ $content_type ] ?? '';
 
 		if ( ! $extension ) {
