@@ -74,7 +74,11 @@ class Helper {
 	public static function update_option( $setting, $value, $autoload = true ) {
 		// If $setting starts with 'omgf_' it should be saved in a separate row.
 		if ( str_starts_with( $setting, 'omgf_' ) ) {
-			return update_option( $setting, $value, $autoload );
+			$updated = update_option( $setting, $value, $autoload );
+
+			self::reset_cache();
+
+			return $updated;
 		}
 
 		if ( self::$settings === null ) {
@@ -86,6 +90,21 @@ class Helper {
 		self::reset_cache();
 
 		return update_option( 'omgf_settings', self::$settings );
+	}
+
+	/**
+	 * Resets all static caches.
+	 *
+	 * @return void
+	 */
+	public static function reset_cache() {
+		self::$preloaded_fonts       = [];
+		self::$unloaded_fonts        = [];
+		self::$unloaded_stylesheets  = [];
+		self::$cache_keys            = [];
+		self::$admin_optimized_fonts = [];
+		self::$optimized_fonts       = [];
+		self::$subsets               = [];
 	}
 
 	/**
@@ -118,21 +137,6 @@ class Helper {
 	}
 
 	/**
-	 * Resets all static caches.
-	 *
-	 * @return void
-	 */
-	public static function reset_cache() {
-		self::$preloaded_fonts       = [];
-		self::$unloaded_fonts        = [];
-		self::$unloaded_stylesheets  = [];
-		self::$cache_keys            = [];
-		self::$admin_optimized_fonts = [];
-		self::$optimized_fonts       = [];
-		self::$subsets               = [];
-	}
-
-	/**
 	 * This is basically a wrapper around delete_option() to offer a centralized interface for
 	 * removing OMGF's settings in the wp_options table.
 	 *
@@ -144,7 +148,11 @@ class Helper {
 	 */
 	public static function delete_option( $setting ) {
 		if ( str_starts_with( $setting, 'omgf_' ) || apply_filters( 'omgf_delete_option', false, $setting ) ) {
-			return delete_option( $setting );
+			$deleted = delete_option( $setting );
+
+			self::reset_cache();
+
+			return $deleted;
 		}
 
 		// This prevents settings from 'mysteriously' returning after being unset.
