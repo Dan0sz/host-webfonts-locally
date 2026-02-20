@@ -21,9 +21,44 @@ use OMGF\Admin\Settings;
 class Helper {
 	/**
 	 * Property to hold all settings.
-	 * @var mixed
+	 * @var array
 	 */
-	private static $settings;
+	private static $settings = [];
+
+	/**
+	 * @var array $preloaded_fonts
+	 */
+	private static $preloaded_fonts = [];
+
+	/**
+	 * @var array $unloaded_fonts
+	 */
+	private static $unloaded_fonts = [];
+
+	/**
+	 * @var array $unloaded_stylesheets
+	 */
+	private static $unloaded_stylesheets = [];
+
+	/**
+	 * @var array $cache_keys
+	 */
+	private static $cache_keys = [];
+
+	/**
+	 * @var array $optimized_fonts
+	 */
+	private static $optimized_fonts = [];
+
+	/**
+	 * @var array $admin_optimized_fonts
+	 */
+	private static $admin_optimized_fonts = [];
+
+	/**
+	 * @var array $subsets
+	 */
+	private static $subsets = [];
 
 	/**
 	 * This is basically a wrapper around update_option() to offer a centralized interface for
@@ -39,16 +74,44 @@ class Helper {
 	public static function update_option( $setting, $value, $autoload = true ) {
 		// If $setting starts with 'omgf_' it should be saved in a separate row.
 		if ( str_starts_with( $setting, 'omgf_' ) ) {
-			return update_option( $setting, $value, $autoload );
+			$updated = update_option( $setting, $value, $autoload );
+
+			if ( $updated ) {
+				self::reset_cache();
+			}
+
+			return $updated;
 		}
 
-		if ( self::$settings === null ) {
+		if ( empty( self::$settings ) ) {
 			self::$settings = self::get_settings(); // @codeCoverageIgnore
 		}
 
 		self::$settings[ $setting ] = $value;
 
-		return update_option( 'omgf_settings', self::$settings );
+		$updated = update_option( 'omgf_settings', self::$settings );
+
+		if ( $updated ) {
+			self::reset_cache();
+		}
+
+		return $updated;
+	}
+
+	/**
+	 * Resets all static caches.
+	 *
+	 * @return void
+	 */
+	public static function reset_cache() {
+		self::$settings              = [];
+		self::$preloaded_fonts       = [];
+		self::$unloaded_fonts        = [];
+		self::$unloaded_stylesheets  = [];
+		self::$cache_keys            = [];
+		self::$admin_optimized_fonts = [];
+		self::$optimized_fonts       = [];
+		self::$subsets               = [];
 	}
 
 	/**
@@ -61,15 +124,17 @@ class Helper {
 		$defaults = apply_filters(
 			'omgf_settings_defaults',
 			[
-				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION    => 'swap',
-				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE         => '',
-				Settings::OMGF_ADV_SETTING_LEGACY_MODE            => '',
-				Settings::OMGF_ADV_SETTING_COMPATIBILITY          => '',
-				Settings::OMGF_ADV_SETTING_AUTO_SUBSETS           => 'on',
-				Settings::OMGF_ADV_SETTING_SUBSETS                => [ 'latin', 'latin-ext' ],
-				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU => '',
-				Settings::OMGF_ADV_SETTING_DEBUG_MODE             => '',
-				Settings::OMGF_ADV_SETTING_UNINSTALL              => '',
+				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     => 'swap',
+				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE          => '',
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => '',
+				Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
+				Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
+				Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
+				Settings::OMGF_ADV_SETTING_AUTO_SUBSETS            => 'on',
+				Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
+				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
+				Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
+				Settings::OMGF_ADV_SETTING_UNINSTALL               => '',
 			]
 		);
 
@@ -92,7 +157,13 @@ class Helper {
 	 */
 	public static function delete_option( $setting ) {
 		if ( str_starts_with( $setting, 'omgf_' ) || apply_filters( 'omgf_delete_option', false, $setting ) ) {
-			return delete_option( $setting );
+			$deleted = delete_option( $setting );
+
+			if ( $deleted ) {
+				self::reset_cache();
+			}
+
+			return $deleted;
 		}
 
 		// This prevents settings from 'mysteriously' returning after being unset.
@@ -102,7 +173,13 @@ class Helper {
 
 		unset( self::$settings[ $setting ] );
 
-		return update_option( 'omgf_settings', self::$settings );
+		$deleted = update_option( 'omgf_settings', self::$settings );
+
+		if ( $deleted ) {
+			self::reset_cache();
+		}
+
+		return $deleted;
 	}
 
 	/**
@@ -111,13 +188,11 @@ class Helper {
 	 * @codeCoverageIgnore
 	 */
 	public static function preloaded_fonts() {
-		static $preloaded_fonts = [];
-
-		if ( empty( $preloaded_fonts ) ) {
-			$preloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
+		if ( empty( self::$preloaded_fonts ) ) {
+			self::$preloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
 		}
 
-		return $preloaded_fonts;
+		return self::$preloaded_fonts;
 	}
 
 	/**
@@ -160,13 +235,11 @@ class Helper {
 	 * @codeCoverageIgnore
 	 */
 	public static function unloaded_fonts() {
-		static $unloaded_fonts = [];
-
-		if ( empty( $unloaded_fonts ) ) {
-			$unloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
+		if ( empty( self::$unloaded_fonts ) ) {
+			self::$unloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
 		}
 
-		return $unloaded_fonts;
+		return self::$unloaded_fonts;
 	}
 
 	/**
@@ -175,17 +248,12 @@ class Helper {
 	 * @codeCoverageIgnore
 	 */
 	public static function unloaded_stylesheets() {
-		static $unloaded_stylesheets = [];
-
-		if ( empty( $unloaded_stylesheets ) ) {
+		if ( empty( self::$unloaded_stylesheets ) ) {
 			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
-			$unloaded_stylesheets = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
+			self::$unloaded_stylesheets = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) ) );
 		}
 
-		// Remove empty elements (and store it to the static variable before returning it)
-		$unloaded_stylesheets = array_filter( $unloaded_stylesheets );
-
-		return $unloaded_stylesheets;
+		return self::$unloaded_stylesheets;
 	}
 
 	/**
@@ -216,30 +284,27 @@ class Helper {
 	 * @since v5.6.4 Extract cache keys from Optimized Fonts option if the option itself appears empty.
 	 */
 	public static function cache_keys() {
-		static $cache_keys = [];
-
-		if ( empty( $cache_keys ) ) {
-			$cache_keys = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) );
+		if ( empty( self::$cache_keys ) ) {
+			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
+			self::$cache_keys = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) ) );
 		}
-
-		// Remove empty elements.
-		$cache_keys = array_filter( $cache_keys );
 
 		/**
 		 * If the cache keys option is empty, this means that it hasn't been saved before. So, let's fetch
 		 * the (default) stylesheet handles from the optimized fonts option.
 		 */
-		if ( empty( $cache_keys ) ) {
+		if ( empty( self::$cache_keys ) ) {
 			$optimized_fonts = self::admin_optimized_fonts(); // @codeCoverageIgnore
 
-			$cache_keys = array_keys( $optimized_fonts ); //@codeCoverageIgnore
+			self::$cache_keys = array_keys( $optimized_fonts ); //@codeCoverageIgnore
 		}
 
-		return $cache_keys;
+		return self::$cache_keys;
 	}
 
 	/**
 	 * Optimized Local Fonts to be displayed in the Optimize Local Fonts table.
+	 *
 	 * Use a static variable to reduce database reads/writes.
 	 *
 	 * @param bool $force_add
@@ -252,32 +317,30 @@ class Helper {
 	 *
 	 */
 	public static function admin_optimized_fonts( $maybe_add = [], $force_add = false ) {
-		static $optimized_fonts = [];
-
 		/**
-		 * Get a fresh copy from the database if $optimized_fonts is empty|null|false (on 1st run)
+		 * Get a fresh copy from the database if self::$optimized_fonts is empty|null|false (on 1st run)
 		 */
-		if ( empty( $optimized_fonts ) ) {
-			$optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
+		if ( empty( self::$admin_optimized_fonts ) ) {
+			self::$admin_optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
 		}
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 * @since v4.5.6
 		 */
-		if ( is_string( $optimized_fonts ) && $optimized_fonts !== '' ) {
-			$optimized_fonts = unserialize( $optimized_fonts ); // @codeCoverageIgnore
+		if ( is_string( self::$admin_optimized_fonts ) && self::$admin_optimized_fonts !== '' ) {
+			self::$admin_optimized_fonts = maybe_unserialize( self::$admin_optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
 		 * If $maybe_add doesn't exist in the cache layer yet, add it.
 		 * @since v4.5.7
 		 */
-		if ( ! empty( $maybe_add ) && ( ! isset( $optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
-			$optimized_fonts = array_merge( $optimized_fonts, $maybe_add );
+		if ( ! empty( $maybe_add ) && ( ! isset( self::$admin_optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
+			self::$admin_optimized_fonts = array_merge( self::$admin_optimized_fonts, $maybe_add );
 		}
 
-		return $optimized_fonts ?: [];
+		return self::$admin_optimized_fonts ?: [];
 	}
 
 	/**
@@ -294,39 +357,37 @@ class Helper {
 	 *
 	 */
 	public static function optimized_fonts( $maybe_add = [], $force_add = false ) {
-		static $optimized_fonts = [];
-
 		/**
-		 * Get a fresh copy from the database if $optimized_fonts is empty|null|false (on 1st run)
+		 * Get a fresh copy from the database if self::$optimized_fonts is empty|null|false (on 1st run)
 		 */
-		if ( empty( $optimized_fonts ) ) {
-			$optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND, [] );
+		if ( empty( self::$optimized_fonts ) ) {
+			self::$optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND, [] );
 		}
 
 		/**
-		 * Fallback to original Optimized Fonts table.
+		 * Fallback to the original Optimized Fonts table.
 		 */
-		if ( empty( $optimized_fonts ) ) {
-			$optimized_fonts = self::admin_optimized_fonts();
+		if ( empty( self::$optimized_fonts ) ) {
+			self::$optimized_fonts = self::admin_optimized_fonts();
 		}
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 * @since v4.5.6
 		 */
-		if ( is_string( $optimized_fonts ) && $optimized_fonts !== '' ) {
-			$optimized_fonts = unserialize( $optimized_fonts ); // @codeCoverageIgnore
+		if ( is_string( self::$optimized_fonts ) && self::$optimized_fonts !== '' ) {
+			self::$optimized_fonts = maybe_unserialize( self::$optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
 		 * If $maybe_add doesn't exist in the cache layer yet, add it.
 		 * @since v4.5.7
 		 */
-		if ( ! empty( $maybe_add ) && ( ! isset( $optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
-			$optimized_fonts = array_merge( $optimized_fonts, $maybe_add );
+		if ( ! empty( $maybe_add ) && ( ! isset( self::$optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
+			self::$optimized_fonts = array_merge( self::$optimized_fonts, $maybe_add );
 		}
 
-		return $optimized_fonts ?: [];
+		return self::$optimized_fonts ?: [];
 	}
 
 	/**
@@ -337,24 +398,22 @@ class Helper {
 	 *               Functions as a temporary cache layer to reduce DB reads with get_option().
 	 */
 	public static function available_used_subsets( $maybe_add = [], $intersect = false ) {
-		static $subsets = [];
-
-		if ( empty( $subsets ) ) {
-			$subsets = self::get_option( Settings::OMGF_AVAILABLE_USED_SUBSETS, [] );
+		if ( empty( self::$subsets ) ) {
+			self::$subsets = self::get_option( Settings::OMGF_AVAILABLE_USED_SUBSETS, [] );
 		}
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 */
-		if ( is_string( $subsets ) ) {
-			$subsets = unserialize( $subsets ); // @codeCoverageIgnore
+		if ( is_string( self::$subsets ) ) {
+			self::$subsets = maybe_unserialize( self::$subsets ); // @codeCoverageIgnore
 		}
 
 		/**
 		 * If $maybe_add doesn't exist in the cache layer yet, add it.
 		 */
-		if ( ! empty( $maybe_add ) && ( ! isset( $subsets[ key( $maybe_add ) ] ) ) ) {
-			$subsets = array_merge( $subsets, $maybe_add );
+		if ( ! empty( $maybe_add ) && ( ! isset( self::$subsets[ key( $maybe_add ) ] ) ) ) {
+			self::$subsets = array_merge( self::$subsets, $maybe_add );
 		}
 
 		/**
@@ -366,7 +425,7 @@ class Helper {
 			 * @var array $filtered_subsets Contains an array of Font Families along with the available selected subsets, e.g.
 			 *                              { 'Lato' => { 'latin', 'latin-ext' } }
 			 */
-			$filtered_subsets = apply_filters( 'omgf_available_filtered_subsets', array_values( array_filter( $subsets ) ) );
+			$filtered_subsets = apply_filters( 'omgf_available_filtered_subsets', array_values( array_filter( self::$subsets ) ) );
 
 			self::debug_array( __( 'Filtered Subsets', 'host-webfonts-local' ), $filtered_subsets );
 
@@ -381,7 +440,7 @@ class Helper {
 			return $filtered_subsets;
 		}
 
-		return apply_filters( 'omgf_available_subsets', $subsets );
+		return apply_filters( 'omgf_available_subsets', self::$subsets );
 	}
 
 	/**
