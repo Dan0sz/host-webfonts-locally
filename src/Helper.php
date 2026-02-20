@@ -180,8 +180,10 @@ class Helper {
 		if ( empty( $unloaded_stylesheets ) ) {
 			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
 			$unloaded_stylesheets = explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) );
-			$unloaded_stylesheets = array_filter( $unloaded_stylesheets );
 		}
+
+		// Remove empty elements (and store it to the static variable before returning it)
+		$unloaded_stylesheets = array_filter( $unloaded_stylesheets );
 
 		return $unloaded_stylesheets;
 	}
