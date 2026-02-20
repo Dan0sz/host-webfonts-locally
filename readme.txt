@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 6.1.2
+Stable tag: 6.1.3
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.1.3 =
+* Coincidentally found a bug that has been haunting me for years, that's why I'm releasing this quick patch release.
+* Fixed: in some scenarios, unloaded_stylesheets would be stored as an array with one empty element in the database.
 
 = 6.1.2 | February 20th, 2026 =
 * Fixed: if the expected MIME type of the downloaded file didn't match, a class OMGF\OMGF exception would be thrown.
