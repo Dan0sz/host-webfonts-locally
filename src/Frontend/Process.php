@@ -33,14 +33,14 @@ class Process {
 		],
 	];
 
-	const RESOURCE_HINTS_URLS  = [
+	const RESOURCE_HINTS_URLS = [
 		'fonts.googleapis.com',
 		'fonts.gstatic.com',
 		'fonts.bunny.net',
 		'fonts-api.wp.com',
 	];
 
-	const RESOURCE_HINTS_ATTR  = [ 'dns-prefetch', 'preconnect', 'preload' ];
+	const RESOURCE_HINTS_ATTR = [ 'dns-prefetch', 'preconnect', 'preload' ];
 
 	/**
 	 * Post types that still trigger template_redirect.
@@ -111,12 +111,12 @@ class Process {
 	/**
 	 * Generates a timestamp and stores it to the DB, which is appended to the stylesheet and fonts URLs.
 	 *
-	 * @see StylesheetGenerator::build_source_string()
-	 * @see self::build_search_replace()
-	 *
 	 * @return int
 	 *
 	 * @codeCoverageIgnore
+	 * @see self::build_search_replace()
+	 *
+	 * @see StylesheetGenerator::build_source_string()
 	 */
 	private function generate_timestamp() {
 		$timestamp = time();
@@ -142,8 +142,8 @@ class Process {
 		$test_mode_enabled = ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) );
 
 		if ( $this->break ||
-			isset( $_GET[ 'nomgf' ] ) ||
-			( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf_optimize' ] ) ) && ( ! current_user_can( 'manage_options' ) && ! isset( $_GET[ 'omgf' ] ) ) ) ) {
+		     isset( $_GET['nomgf'] ) ||
+		     ( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! isset( $_GET['omgf_optimize'] ) ) && ( ! current_user_can( 'manage_options' ) && ! isset( $_GET['omgf'] ) ) ) ) {
 			return;
 		}
 
@@ -170,13 +170,13 @@ class Process {
 	 * properly. When configured handle by handle, it works fine. PHP multi-threading issues?
 	 */
 	public function add_preloads() {
-		$preloaded_fonts = apply_filters( 'omgf_frontend_preloaded_fonts', OMGF::preloaded_fonts() );
+		$preloaded_fonts = OMGF::preloaded_fonts();
 
 		if ( ! $preloaded_fonts ) {
 			return; // @codeCoverageIgnore
 		}
 
-		$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', OMGF::optimized_fonts() );
+		$optimized_fonts = OMGF::optimized_fonts();
 		$i               = 0;
 
 		foreach ( $optimized_fonts as $stylesheet_handle => $font_faces ) {
@@ -209,8 +209,8 @@ class Process {
 					 */
 					$url_parts = parse_url( $url );
 
-					if ( ! empty( $url_parts[ 'host' ] ) && ! empty( $url_parts[ 'path' ] ) ) {
-						$url = '//' . $url_parts[ 'host' ] . $url_parts[ 'path' ]; // @codeCoverageIgnore
+					if ( ! empty( $url_parts['host'] ) && ! empty( $url_parts['path'] ) ) {
+						$url = '//' . $url_parts['host'] . $url_parts['path']; // @codeCoverageIgnore
 					} else {
 						$url = str_replace( [ 'http:', 'https:' ], '', $url );
 					}
@@ -299,7 +299,7 @@ class Process {
 		 * Post edit actions
 		 */
 		if ( self::query_param_exists( 'action' ) ) {
-			if ( in_array( $_GET[ 'action' ], self::$edit_actions, true ) ) {
+			if ( in_array( $_GET['action'], self::$edit_actions, true ) ) {
 				return false;
 			}
 		}
@@ -309,7 +309,7 @@ class Process {
 		 *
 		 * @see https://www.modpagespeed.com/doc/experiment#ModPagespeed
 		 */
-		if ( self::query_param_exists( 'PageSpeed' ) && 'off' === $_GET[ 'PageSpeed' ] ) {
+		if ( self::query_param_exists( 'PageSpeed' ) && 'off' === $_GET['PageSpeed'] ) {
 			return false;
 		}
 
@@ -339,6 +339,9 @@ class Process {
 	/**
 	 * Returns the buffer for filtering, so page cache doesn't break.
 	 *
+	 * @return string Valid HTML
+	 *
+	 * @codeCoverageIgnore
 	 * @since v5.0.0 Tested with:
 	 *               - Asset Cleanup Pro
 	 *                 - Works
@@ -362,9 +365,6 @@ class Process {
 	 *                 - Page Cache: Enabled
 	 * Not tested (yet):
 	 * TODO: [OMGF-41] - Swift Performance
-	 * @return string Valid HTML
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function return_buffer( $html ) {
 		if ( ! $html ) {
@@ -377,11 +377,11 @@ class Process {
 	/**
 	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
 	 *
-	 * @since v5.0.5 Use a regular expression to match all resource hints.
-	 *
 	 * @param string $html Valid HTML.
 	 *
 	 * @return string Valid HTML.
+	 * @since v5.0.5 Use a regular expression to match all resource hints.
+	 *
 	 */
 	public function remove_resource_hints( $html ) {
 		/**
@@ -390,7 +390,7 @@ class Process {
 		 */
 		preg_match_all( '/(?=<link).+?(?<=>)/s', $html, $resource_hints );
 
-		if ( empty( $resource_hints[ 0 ] ) ) {
+		if ( empty( $resource_hints[0] ) ) {
 			return $html; // @codeCoverageIgnore
 		}
 
@@ -401,17 +401,17 @@ class Process {
 		 *               e.g. data-wpacu-to-be-preloaded, which would also match in strpos('preload', $match).
 		 */
 		$search = array_filter(
-			$resource_hints[ 0 ],
+			$resource_hints[0],
 			function ( $resource_hint ) {
 				preg_match( '/href=[\'"](https?:)?\/\/(.*?)[\'"\/]/', $resource_hint, $url );
 				preg_match( '/rel=[\'"](.*?)[ \'"]/', $resource_hint, $attr );
 
-				if ( empty( $url[ 2 ] ) || empty( $attr[ 1 ] ) ) {
+				if ( empty( $url[2] ) || empty( $attr[1] ) ) {
 					return false; // @codeCoverageIgnore
 				}
 
-				$url  = $url[ 2 ];
-				$attr = $attr[ 1 ];
+				$url  = $url[2];
+				$attr = $attr[1];
 
 				return ! empty( preg_grep( "/$url/", self::RESOURCE_HINTS_URLS ) ) && in_array( $attr, self::RESOURCE_HINTS_ATTR );
 			}
@@ -446,7 +446,7 @@ class Process {
 		 */
 		preg_match_all( '/<link.*?[\/]?>/s', $html, $links );
 
-		if ( empty( $links[ 0 ] ) ) {
+		if ( empty( $links[0] ) ) {
 			return apply_filters( 'omgf_processed_html', $html, $this ); // @codeCoverageIgnore
 		}
 
@@ -460,7 +460,7 @@ class Process {
 		 * @since  v5.5.0 Added compatibility for WP.com's "GDPR compliant" Google Fonts API.
 		 */
 		$links = array_filter(
-			$links[ 0 ],
+			$links[0],
 			function ( $link ) {
 				return apply_filters(
 					'omgf_frontend_process_parse_links',
@@ -473,7 +473,7 @@ class Process {
 		$google_fonts   = $this->build_fonts_set( $links );
 		$search_replace = $this->build_search_replace( $google_fonts );
 
-		if ( empty( $search_replace[ 'search' ] ) || empty( $search_replace[ 'replace' ] ) ) {
+		if ( empty( $search_replace['search'] ) || empty( $search_replace['replace'] ) ) {
 			return apply_filters( 'omgf_processed_html', $html, $this );
 		}
 
@@ -483,11 +483,11 @@ class Process {
 		 *
 		 * @since v5.3.7
 		 */
-		foreach ( $search_replace[ 'search' ] as $key => $search ) {
+		foreach ( $search_replace['search'] as $key => $search ) {
 			$position = strpos( $html, $search );
 
-			if ( $position !== false && isset( $search_replace[ 'replace' ][ $key ] ) ) {
-				$html = substr_replace( $html, $search_replace[ 'replace' ][ $key ], $position, strlen( $search ) );
+			if ( $position !== false && isset( $search_replace['replace'][ $key ] ) ) {
+				$html = substr_replace( $html, $search_replace['replace'][ $key ], $position, strlen( $search ) );
 			}
 		}
 
@@ -497,8 +497,8 @@ class Process {
 	}
 
 	/**
-	 * @since v5.0.5 Check if current page is AMP page.
 	 * @return bool
+	 * @since v5.0.5 Check if current page is AMP page.
 	 */
 	private function is_amp() {
 		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) || ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() );
@@ -507,7 +507,7 @@ class Process {
 	/**
 	 * Builds a processable array of Google Fonts' ID and (external) URL.
 	 *
-	 * @param array  $links
+	 * @param array $links
 	 * @param string $handle If an ID attribute is not defined, this will be used instead.
 	 *
 	 * @return array [ 0 => [ 'id' => (string), 'href' => (string) ] ]
@@ -521,14 +521,14 @@ class Process {
 			/**
 			 * @var array $id Fallback to empty string if no id attribute exists.
 			 */
-			$id = $this->strip_css_tag( $id[ 'id' ] ?? '' );
+			$id = $this->strip_css_tag( $id['id'] ?? '' );
 
 			preg_match( '/href=[\'"](?P<href>.*?)[\'"]/', $link, $href );
 
 			/**
 			 * No valid href attribute provide in link element.
 			 */
-			if ( ! isset( $href[ 'href' ] ) ) {
+			if ( ! isset( $href['href'] ) ) {
 				continue; // @codeCoverageIgnore
 			}
 
@@ -542,15 +542,15 @@ class Process {
 			 * @var string $id
 			 */
 			if ( ! $id ) {
-				$id = "$handle-" . strlen( $href[ 'href' ] ); // @codeCoverageIgnore
+				$id = "$handle-" . strlen( $href['href'] ); // @codeCoverageIgnore
 			}
 
-			$google_fonts[ $key ][ 'id' ]   = apply_filters( 'omgf_frontend_process_fonts_set', $id, $href );
-			$google_fonts[ $key ][ 'link' ] = $link;
+			$google_fonts[ $key ]['id']   = apply_filters( 'omgf_frontend_process_fonts_set', $id, $href );
+			$google_fonts[ $key ]['link'] = $link;
 			/**
 			 * This is used for search/replace later on. This shouldn't be tampered with.
 			 */
-			$google_fonts[ $key ][ 'href' ] = apply_filters( 'omgf_frontend_process_fonts_set_href', $href[ 'href' ], $link );
+			$google_fonts[ $key ]['href'] = apply_filters( 'omgf_frontend_process_fonts_set_href', $href['href'], $link );
 		}
 
 		return $google_fonts;
@@ -559,11 +559,11 @@ class Process {
 	/**
 	 * Strip "-css" from the end of the stylesheet id, which WordPress adds to properly enqueued stylesheets.
 	 *
-	 * @since v5.0.1 This eases the migration from v4.6.0.
-	 *
 	 * @param mixed $handle
 	 *
 	 * @return mixed
+	 * @since v5.0.1 This eases the migration from v4.6.0.
+	 *
 	 */
 	private function strip_css_tag( $handle ) {
 		if ( ! str_ends_with( $handle, '-css' ) ) {
@@ -599,7 +599,7 @@ class Process {
 			/**
 			 * Handles should be all lowercase to prevent duplication issues on some filesystems.
 			 */
-			$handle          = strtolower( $stack[ 'id' ] );
+			$handle          = strtolower( $stack['id'] );
 			$original_handle = $handle;
 
 			/**
@@ -610,13 +610,13 @@ class Process {
 				'omgf_unloaded_stylesheets',
 				OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() )
 			) ) {
-				$search[ $key ]  = $stack[ 'link' ]; // @codeCoverageIgnore
+				$search[ $key ]  = $stack['link']; // @codeCoverageIgnore
 				$replace[ $key ] = ''; // @codeCoverageIgnore
 
 				continue; // @codeCoverageIgnore
 			}
 
-			$cache_key = OMGF::get_cache_key( $stack[ 'id' ] );
+			$cache_key = OMGF::get_cache_key( $stack['id'] );
 
 			/**
 			 * $cache_key is used for caching. $handle contains the original handle.
@@ -628,8 +628,8 @@ class Process {
 			/**
 			 * Regular requests (in the frontend) will end here if the file exists.
 			 */
-			if ( ! isset( $_GET[ 'omgf_optimize' ] ) && file_exists( OMGF_UPLOAD_DIR . "/$handle/$handle.css" ) ) {
-				$search[ $key ]  = $stack[ 'href' ];
+			if ( ! isset( $_GET['omgf_optimize'] ) && file_exists( OMGF_UPLOAD_DIR . "/$handle/$handle.css" ) ) {
+				$search[ $key ]  = $stack['href'];
 				$replace[ $key ] = OMGF_UPLOAD_URL . "/$handle/$handle.css?ver=" . $this->timestamp;
 
 				continue;
@@ -638,7 +638,7 @@ class Process {
 			/**
 			 * @since v5.3.7 decode URL and special HTML chars to make sure all params are properly processed later on.
 			 */
-			$href         = urldecode( htmlspecialchars_decode( $stack[ 'href' ] ) );
+			$href         = urldecode( htmlspecialchars_decode( $stack['href'] ) );
 			$parsed_query = wp_parse_url( $href, PHP_URL_QUERY );
 			$query        = [];
 
@@ -649,21 +649,21 @@ class Process {
 			/**
 			 * If required parameters aren't set, this request is most likely invalid. Let's just remove it.
 			 */
-			if ( apply_filters( 'omgf_frontend_process_invalid_request', ! isset( $query[ 'family' ] ), $href ) ) {
-				$search[ $key ]  = $stack[ 'link' ];
+			if ( apply_filters( 'omgf_frontend_process_invalid_request', ! isset( $query['family'] ), $href ) ) {
+				$search[ $key ]  = $stack['link'];
 				$replace[ $key ] = '';
 
 				continue;
 			}
 
-			$optimize = new Optimize( $stack[ 'href' ], $handle, $original_handle );
+			$optimize = new Optimize( $stack['href'], $handle, $original_handle );
 
 			/**
 			 * @var string $cached_url Absolute URL or empty string.
 			 */
 			$cached_url = $optimize->process();
 
-			$search[ $key ]  = $stack[ 'href' ];
+			$search[ $key ]  = $stack['href'];
 			$replace[ $key ] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : '';
 		}
 
@@ -703,13 +703,13 @@ class Process {
 	 * @return string
 	 */
 	public function add_success_message( $html ) {
-		if ( ! isset( $_GET[ 'omgf_optimize' ] ) || wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) {
+		if ( ! isset( $_GET['omgf_optimize'] ) || wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) {
 			return $html;
 		}
 
 		$parts = preg_split( '/(<body.*?>)/', $html, - 1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
 
-		if ( empty( $parts[ 0 ] ) || empty( $parts[ 1 ] ) || empty( $parts[ 2 ] ) ) {
+		if ( empty( $parts[0] ) || empty( $parts[1] ) || empty( $parts[2] ) ) {
 			return $html;
 		}
 
@@ -719,6 +719,6 @@ class Process {
 			admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE )
 		);
 
-		return $parts[ 0 ] . $parts[ 1 ] . sprintf( $message_div, $message ) . $parts[ 2 ];
+		return $parts[0] . $parts[1] . sprintf( $message_div, $message ) . $parts[2];
 	}
 }

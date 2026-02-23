@@ -15,8 +15,8 @@ class ProcessTest extends TestCase {
 	/**
 	 * Is the Success-message added properly?
 	 *
-	 * @see Process::add_success_message()
 	 * @return void
+	 * @see Process::add_success_message()
 	 */
 	public function testAddSuccessMessage() {
 		$class = new Process ( true );
@@ -24,7 +24,7 @@ class ProcessTest extends TestCase {
 
 		$this->assertEmpty( $html );
 
-		$_GET[ 'omgf_optimize' ] = 1;
+		$_GET['omgf_optimize'] = 1;
 
 		$html = $class->add_success_message( '' );
 
@@ -38,8 +38,8 @@ class ProcessTest extends TestCase {
 	/**
 	 * Are Google Fonts properly downloaded/replaced?
 	 *
-	 * @see Process::parse()
 	 * @return void
+	 * @see Process::parse()
 	 */
 	public function testParse() {
 		$class     = new Process( true );
@@ -55,8 +55,8 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Tests the omgf_optimize_url filter.
-	 * @see Filters::decode_url()
 	 * @return void
+	 * @see Filters::decode_url()
 	 */
 	public function testParseWithEncodedUrls() {
 		$class     = new Process( true );
@@ -72,23 +72,25 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are preloads output properly?
-	 * @see Process::add_preloads()
 	 * @return void
+	 * @see Process::add_preloads()
 	 */
 	public function testAddPreloads() {
-		add_filter( 'omgf_frontend_preloaded_fonts', [ $this, 'addPreloads' ] );
-		add_filter( 'omgf_frontend_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
+		try {
+			add_filter( 'omgf_filter_preloaded_fonts', [ $this, 'addPreloads' ] );
+			add_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
 
-		$class = new Process( true );
+			$class = new Process( true );
 
-		// Usually the "ver" param contains a timestamp, but that's not really relevant to test here.
-		$this->expectOutputRegex(
-			"~<link id='omgf-preload-.?' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-.*?\.woff2\?ver=.*?' as='font' type='font/woff2' crossorigin />~i"
-		);
-		$class->add_preloads();
-
-		remove_filter( 'omgf_frontend_preloaded_fonts', [ $this, 'addPreloads' ] );
-		remove_filter( 'omgf_frontend_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
+			// Usually the "ver" param contains a timestamp, but that's not really relevant to test here.
+			$this->expectOutputRegex(
+				"~<link id='omgf-preload-.?' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-.*?\.woff2\?ver=.*?' as='font' type='font/woff2' crossorigin />~i"
+			);
+			$class->add_preloads();
+		} finally {
+			remove_filter( 'omgf_filter_preloaded_fonts', [ $this, 'addPreloads' ] );
+			remove_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
+		}
 	}
 
 	/**
@@ -117,49 +119,49 @@ class ProcessTest extends TestCase {
 
 	public function testShouldStart() {
 		// OMGF Save & Optimize.
-		$_GET[ 'omgf_optimize' ] = 1;
+		$_GET['omgf_optimize'] = 1;
 
 		$should_start = Process::should_start();
 
 		$this->assertTrue( $should_start );
 
-		unset( $_GET[ 'omgf_optimize' ] );
+		unset( $_GET['omgf_optimize'] );
 
 		// Pagebuilders and Frontend Asset Managers.
-		$_GET[ 'perfmatters' ] = 1;
+		$_GET['perfmatters'] = 1;
 
 		$should_start = Process::should_start();
 
 		$this->assertFalse( $should_start );
 
-		unset( $_GET[ 'perfmatters' ] );
+		unset( $_GET['perfmatters'] );
 
 		// Editors in custom post types.
-		$_GET[ 'tqb_quiz' ] = 1;
+		$_GET['tqb_quiz'] = 1;
 
 		$should_start = Process::should_start();
 
 		$this->assertFalse( $should_start );
 
-		unset( $_GET[ 'tqb_quiz' ] );
+		unset( $_GET['tqb_quiz'] );
 
 		// Post edit screens.
-		$_GET[ 'action' ] = 'edit';
+		$_GET['action'] = 'edit';
 
 		$should_start = Process::should_start();
 
 		$this->assertFalse( $should_start );
 
-		unset( $_GET[ 'action' ] );
+		unset( $_GET['action'] );
 
 		// Pagebuilders.
-		$_GET[ 'PageSpeed' ] = 'off';
+		$_GET['PageSpeed'] = 'off';
 
 		$should_start = Process::should_start();
 
 		$this->assertFalse( $should_start );
 
-		unset( $_GET[ 'PageSpeed' ] );
+		unset( $_GET['PageSpeed'] );
 
 		// Regular frontend request.
 		$should_start = Process::should_start();
@@ -169,8 +171,8 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are resource hints properly removed from HTML?
-	 * @see Process::remove_resource_hints()
 	 * @return void
+	 * @see Process::remove_resource_hints()
 	 */
 	public function testRemoveResourceHints() {
 		$class     = new Process( true );

@@ -192,7 +192,16 @@ class Helper {
 			self::$preloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
 		}
 
-		return self::$preloaded_fonts;
+		/**
+		 * Just to make sure that everything keeps working.
+		 */
+		if ( has_filter( 'omgf_frontend_preloaded_fonts' ) ) {
+			_deprecated_hook( 'omgf_frontend_preloaded_fonts', '6.1.4', 'omgf_filter_preloaded_fonts' );
+
+			self::$preloaded_fonts = apply_filters( 'omgf_frontend_preloaded_fonts', self::$preloaded_fonts );
+		}
+
+		return apply_filters( 'omgf_filter_preloaded_fonts', self::$preloaded_fonts );
 	}
 
 	/**
@@ -244,7 +253,7 @@ class Helper {
 			self::$unloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [] );
 		}
 
-		return self::$unloaded_fonts;
+		return apply_filters( 'omgf_filter_unloaded_fonts', self::$unloaded_fonts );
 	}
 
 	/**
@@ -258,7 +267,7 @@ class Helper {
 			self::$unloaded_stylesheets = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) ) );
 		}
 
-		return self::$unloaded_stylesheets;
+		return apply_filters( 'omgf_filter_unloaded_stylesheets', self::$unloaded_stylesheets );
 	}
 
 	/**
@@ -345,7 +354,7 @@ class Helper {
 			self::$admin_optimized_fonts = array_merge( self::$admin_optimized_fonts, $maybe_add );
 		}
 
-		return self::$admin_optimized_fonts ?: [];
+		return apply_filters( 'omgf_filter_admin_optimized_fonts', self::$admin_optimized_fonts ?: [] );
 	}
 
 	/**
@@ -392,7 +401,16 @@ class Helper {
 			self::$optimized_fonts = array_merge( self::$optimized_fonts, $maybe_add );
 		}
 
-		return self::$optimized_fonts ?: [];
+		/**
+		 * Just to make sure that everything keeps working.
+		 */
+		if ( has_filter( 'omgf_frontend_optimized_fonts' ) ) {
+			_deprecated_hook( 'omgf_frontend_optimized_fonts', '6.1.4', 'omgf_filter_optimized_fonts' );
+
+			self::$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', self::$optimized_fonts );
+		}
+
+		return apply_filters( 'omgf_filter_optimized_fonts', self::$optimized_fonts ?: [] );
 	}
 
 	/**
