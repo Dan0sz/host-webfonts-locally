@@ -213,6 +213,11 @@ class Helper {
 			$value = get_option( $name, $default );
 			$name  = str_replace( 'omgf_', '', $name );
 
+			// get_option() should take care of this, but sometimes it doesn't.
+			if ( is_string( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
 			return apply_filters( "omgf_setting_$name", $value );
 		}
 
