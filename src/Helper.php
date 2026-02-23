@@ -192,6 +192,8 @@ class Helper {
 			self::$preloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
 		}
 
+		self::$preloaded_fonts = apply_filters( 'omgf_filter_preloaded_fonts', self::$preloaded_fonts );
+
 		/**
 		 * Just to make sure that everything keeps working.
 		 */
@@ -201,7 +203,7 @@ class Helper {
 			self::$preloaded_fonts = apply_filters( 'omgf_frontend_preloaded_fonts', self::$preloaded_fonts );
 		}
 
-		return apply_filters( 'omgf_filter_preloaded_fonts', self::$preloaded_fonts );
+		return self::$preloaded_fonts;
 	}
 
 	/**
@@ -358,7 +360,7 @@ class Helper {
 	}
 
 	/**
-	 * Optimized Local Fonts to be used in the frontend. Doesn\'t contain unloaded fonts.
+	 * Optimized Local Fonts to be used in the frontend. Doesn't contain unloaded fonts.
 	 * Use a static variable to reduce database reads/writes.
 	 *
 	 * @param bool $force_add
@@ -368,7 +370,6 @@ class Helper {
 	 *
 	 * @codeCoverageIgnore
 	 * @since v5.8.1
-	 *
 	 */
 	public static function optimized_fonts( $maybe_add = [], $force_add = false ) {
 		/**
@@ -401,6 +402,8 @@ class Helper {
 			self::$optimized_fonts = array_merge( self::$optimized_fonts, $maybe_add );
 		}
 
+		self::$optimized_fonts = apply_filters( 'omgf_filter_optimized_fonts', self::$optimized_fonts ?: [] );
+
 		/**
 		 * Just to make sure that everything keeps working.
 		 */
@@ -410,7 +413,7 @@ class Helper {
 			self::$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', self::$optimized_fonts );
 		}
 
-		return apply_filters( 'omgf_filter_optimized_fonts', self::$optimized_fonts ?: [] );
+		return self::$optimized_fonts;
 	}
 
 	/**
