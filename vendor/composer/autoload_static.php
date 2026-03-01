@@ -16,14 +16,14 @@ class ComposerStaticInit20ffbdf9670d31d6ed9d94ce50faf1c3
     );
 
     public static $prefixLengthsPsr4 = array (
-        'P' =>
+        'P' => 
         array (
             'PhpParser\\' => 10,
             'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' => 40,
             'PHP_Parallel_Lint\\PhpConsoleColor\\' => 34,
             'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 57,
         ),
-        'O' =>
+        'O' => 
         array (
             'OMGF\\Tests\\Unit\\' => 16,
             'OMGF\\Tests\\Mocks\\' => 17,
@@ -31,71 +31,71 @@ class ComposerStaticInit20ffbdf9670d31d6ed9d94ce50faf1c3
             'OMGF\\Tests\\' => 11,
             'OMGF\\' => 5,
         ),
-        'M' =>
+        'M' => 
         array (
             'Mockery\\' => 8,
         ),
-        'D' =>
+        'D' => 
         array (
             'Doctrine\\Instantiator\\' => 22,
             'DeepCopy\\' => 9,
         ),
-        'B' =>
+        'B' => 
         array (
             'Brain\\Monkey\\' => 13,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'PhpParser\\' =>
+        'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' =>
+        'PHP_Parallel_Lint\\PhpConsoleHighlighter\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-highlighter/src',
         ),
-        'PHP_Parallel_Lint\\PhpConsoleColor\\' =>
+        'PHP_Parallel_Lint\\PhpConsoleColor\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-parallel-lint/php-console-color/src',
         ),
-        'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' =>
+        'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
         array (
             0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
         ),
-        'OMGF\\Tests\\Unit\\' =>
+        'OMGF\\Tests\\Unit\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests/unit',
         ),
-        'OMGF\\Tests\\Mocks\\' =>
+        'OMGF\\Tests\\Mocks\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests/mocks',
         ),
-        'OMGF\\Tests\\Integration\\' =>
+        'OMGF\\Tests\\Integration\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests/integration',
         ),
-        'OMGF\\Tests\\' =>
+        'OMGF\\Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'OMGF\\' =>
+        'OMGF\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Mockery\\' =>
+        'Mockery\\' => 
         array (
             0 => __DIR__ . '/..' . '/mockery/mockery/library/Mockery',
         ),
-        'Doctrine\\Instantiator\\' =>
+        'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
         ),
-        'DeepCopy\\' =>
+        'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Brain\\Monkey\\' =>
+        'Brain\\Monkey\\' => 
         array (
             0 => __DIR__ . '/..' . '/brain/monkey/src',
         ),
