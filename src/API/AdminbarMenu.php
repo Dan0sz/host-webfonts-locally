@@ -90,19 +90,39 @@ class AdminbarMenu {
 	 * @return void
 	 */
 	public function get_admin_bar_status( $request ) {
-		$params         = $this->clean( $request->get_params() );
-		$stored_results = $this->update_results( $params );
-		$status         = 'success';
+		$params           = $this->clean( $request->get_params() );
+		$stored_results   = $this->update_results( $params );
+		$status           = 'success';
+		$missing_preloads = isset( $params['missing_preloads'] ) ? json_decode( $params['missing_preloads'], true ) : [];
+		$unused_fonts     = isset( $params['unused_fonts'] ) ? json_decode( $params['unused_fonts'], true ) : [];
 
 		if ( ! empty( $stored_results ) ) {
 			$status = 'alert';
 		}
 
-		if ( empty( $stored_results ) && $this->has_warnings() ) {
-			$status = 'notice';
+		if ( empty( $stored_results ) ) {
+			if ( $this->has_warnings() ) {
+				$status = 'notice';
+			}
+
+			$multilingual_plugin = $this->get_multilingual_plugin();
+
+			if ( $multilingual_plugin ) {
+				$status = 'notice';
+			}
+
+			if ( ! empty( $missing_preloads ) ) {
+				$status = 'notice';
+				OMGF::update_option( Settings::OMGF_FOUND_MISSING_PRELOADS, $missing_preloads );
+			}
+
+			if ( ! empty( $unused_fonts ) ) {
+				$status = 'notice';
+				OMGF::update_option( Settings::OMGF_FOUND_UNUSED_FONTS, $unused_fonts );
+			}
 		}
 
-		return apply_filters( 'omgf_ajax_admin_bar_status', $status );
+		return [ 'status' => apply_filters( 'omgf_ajax_admin_bar_status', $status ) ];
 	}
 
 	/**
@@ -124,8 +144,8 @@ class AdminbarMenu {
 			// Parse the variable using the wp_parse_url function.
 			$parsed = wp_parse_url( $var );
 			// If the variable has a scheme (e.g. http:// or https://), sanitize the variable using the esc_url_raw function.
-			if ( isset( $parsed[ 'scheme' ] ) ) {
-				return esc_url_raw( wp_unslash( $var ), [ $parsed[ 'scheme' ] ] );
+			if ( isset( $parsed['scheme'] ) ) {
+				return esc_url_raw( wp_unslash( $var ), [ $parsed['scheme'] ] );
 			}
 
 			// Decode percent encoded characters before sanitization.
@@ -145,15 +165,15 @@ class AdminbarMenu {
 	 * @return array
 	 */
 	private function update_results( $post ) {
-		$path           = $post[ 'path' ];
-		$params         = isset( $post[ 'params' ] ) ? json_decode( $post[ 'params' ], true ) : [];
+		$path           = $post['path'];
+		$params         = isset( $post['params'] ) ? json_decode( $post['params'], true ) : [];
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		if ( empty( $path ) || ! is_string( $path ) ) {
 			return $stored_results; // @codeCoverageIgnore
 		}
 
-		$urls = $post[ 'urls' ] ?? [];
+		$urls = $post['urls'] ?? [];
 
 		// Decode if $urls is valid JSON.
 		if ( is_string( $urls ) && is_array( json_decode( $urls ) ) && json_last_error() === JSON_ERROR_NONE ) {
@@ -220,5 +240,38 @@ class AdminbarMenu {
 		$warnings     = $task_manager->get_warnings();
 
 		return ! empty( $warnings );
+	}
+
+	/**
+	 * @return string
+	 */
+	private function get_multilingual_plugin() {
+		$multilingual_plugins = [
+			'sitepress-multilingual-cms/sitepress.php' => 'WPML',
+			'translatepress-multilingual/index.php'    => 'TranslatePress',
+			'polylang/polylang.php'                    => 'Polylang',
+			'polylang-pro/polylang.php'                => 'Polylang Pro',
+			'weglot/weglot.php'                        => 'Weglot',
+			'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
+		];
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		foreach ( $multilingual_plugins as $path => $name ) {
+			if ( is_plugin_active( $path ) ) {
+				return $name;
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function has_multilingual_plugin() {
+		return ! empty( $this->get_multilingual_plugin() );
 	}
 }

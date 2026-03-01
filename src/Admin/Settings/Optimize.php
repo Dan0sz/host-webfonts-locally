@@ -158,8 +158,8 @@ class Optimize extends Builder {
 	 *
 	 */
 	public function do_display_option() {
-		$options           = Settings::OMGF_FONT_DISPLAY_OPTIONS;
-		$options[ 'swap' ] .= ' (' . __( 'recommended', 'host-webfonts-local' ) . ')';
+		$options         = Settings::OMGF_FONT_DISPLAY_OPTIONS;
+		$options['swap'] .= ' (' . __( 'recommended', 'host-webfonts-local' ) . ')';
 
 		$this->do_select(
 			__( 'Font-Display Option', 'host-webfonts-local' ),
@@ -194,10 +194,10 @@ class Optimize extends Builder {
 	 */
 	public function do_promo_auto_preload() {
 		$this->do_checkbox(
-			__( 'Smart Preload (Pro)', 'host-webfonts-local' ),
+			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
 			'auto_preload', ! empty( OMGF::get_option( 'auto_preload' ) ),
 			__(
-				'When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them. Preload settings can be overwritten on a per-page level by clicking <strong>Auto-configure preload settings for this page</strong> in the top Admin Bar menu.',
+				'Let OMGF figure it out. Smart Optimize automatically detects the right fonts, subsets and preloads for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
 				'host-webfonts-local'
 			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
 		);
@@ -371,7 +371,8 @@ class Optimize extends Builder {
 										); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?php echo __(
 												'In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.',
 												'host-webfonts-local'
-											); ?></span></span> | <a class="unload-all"><?php echo esc_html__( 'Unload all', 'host-webfonts-local' ); ?></a> | <a class="load-all"><?php echo esc_html__(
+											); ?></span></span> | <a class="unload-all"><?php echo esc_html__( 'Unload all', 'host-webfonts-local' ); ?></a> | <a
+										class="load-all"><?php echo esc_html__(
 											'Load all',
 											'host-webfonts-local'
 										); ?></a>)</span></td>
@@ -392,8 +393,8 @@ class Optimize extends Builder {
 							<td class="replace">
 								<?php
 								$replace  = defined( 'OMGF_PRO_ACTIVE' ) &&
-								isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
-								OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
+											isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
+											OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
 								$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset(
 										OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ]
 									) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';

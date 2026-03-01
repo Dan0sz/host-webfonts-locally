@@ -122,10 +122,10 @@ class Dashboard {
 				<?php
 				$plugins                      = self::get_active_plugins();
 				$warnings                     = self::get_warnings();
-				$google_fonts_checker_results = $warnings[ 'google_fonts_checker' ] ?? [];
+				$google_fonts_checker_results = $warnings['google_fonts_checker'] ?? [];
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
-					unset( $warnings[ 'google_fonts_checker' ] );
+					unset( $warnings['google_fonts_checker'] );
 				}
 				?>
 				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
@@ -295,6 +295,42 @@ class Dashboard {
 							<?php foreach ( $warnings as $warning_id ) : ?>
 								<?php $show_mark_as_fixed = true; ?>
 								<li id="omgf-notice-<?php echo esc_attr( $warning_id ); ?>">
+									<?php if ( $warning_id === 'multilingual_plugin' ) : ?>
+										<?php
+										$multilingual_plugin_name = self::get_multilingual_plugin();
+										$show_mark_as_fixed       = false;
+										?>
+										<?php echo apply_filters(
+											'omgf_notice_multilingual',
+											sprintf(
+												__(
+													'You\'re using %s — make sure your fonts match. OMGF Pro loads only the right font subsets per page, so your multilingual site stays fast in every language.',
+													'host-webfonts-local'
+												),
+												$multilingual_plugin_name
+											)
+										); ?>
+									<?php endif; ?>
+									<?php if ( $warning_id === 'missing_preloads' ) : ?>
+										<?php $show_mark_as_fixed = false; ?>
+										<?php echo apply_filters(
+											'omgf_notice_missing_preloads',
+											__(
+												'Your fonts are loading late. OMGF Pro automatically preloads the right fonts per page — shaving milliseconds off your LCP score.',
+												'host-webfonts-local'
+											)
+										); ?>
+									<?php endif; ?>
+									<?php if ( $warning_id === 'unused_fonts' ) : ?>
+										<?php $show_mark_as_fixed = false; ?>
+										<?php echo apply_filters(
+											'omgf_notice_unused_fonts',
+											__(
+												'You\'re loading fonts this page doesn\'t even use. OMGF Pro automatically removes unused fonts per page — less weight, faster load.',
+												'host-webfonts-local'
+											)
+										); ?>
+									<?php endif; ?>
 									<?php if ( $warning_id === 'is_multisite' ) : ?>
 										<?php echo wp_kses_post(
 											sprintf(
@@ -437,7 +473,7 @@ class Dashboard {
 		foreach ( $active_plugins as $basename => $plugin ) {
 			$slug = preg_replace( '/\/.*?\.php$/', '', $basename );
 
-			$plugins[ $slug ] = $plugin[ 'Name' ];
+			$plugins[ $slug ] = $plugin['Name'];
 		}
 
 		return $plugins;
@@ -512,7 +548,19 @@ class Dashboard {
 		$google_fonts_checker_results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		foreach ( $google_fonts_checker_results as $path => $found_urls ) {
-			$warnings[ 'google_fonts_checker' ][ $path ] = $found_urls; // @codeCoverageIgnore
+			$warnings['google_fonts_checker'][ $path ] = $found_urls; // @codeCoverageIgnore
+		}
+
+		if ( ! empty( self::get_multilingual_plugin() ) ) {
+			$warnings[] = 'multilingual_plugin';
+		}
+
+		if ( ! empty( OMGF::get_option( Settings::OMGF_FOUND_MISSING_PRELOADS ) ) ) {
+			$warnings[] = 'missing_preloads';
+		}
+
+		if ( ! empty( OMGF::get_option( Settings::OMGF_FOUND_UNUSED_FONTS ) ) ) {
+			$warnings[] = 'unused_fonts';
 		}
 
 		/**
@@ -525,6 +573,29 @@ class Dashboard {
 		}
 
 		return $warnings;
+	}
+
+	private static function get_multilingual_plugin() {
+		$multilingual_plugins = [
+			'sitepress-multilingual-cms/sitepress.php' => 'WPML',
+			'translatepress-multilingual/index.php'    => 'TranslatePress',
+			'polylang/polylang.php'                    => 'Polylang',
+			'polylang-pro/polylang.php'                => 'Polylang Pro',
+			'weglot/weglot.php'                        => 'Weglot',
+			'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
+		];
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		foreach ( $multilingual_plugins as $path => $name ) {
+			if ( is_plugin_active( $path ) ) {
+				return $name;
+			}
+		}
+
+		return '';
 	}
 
 	/**

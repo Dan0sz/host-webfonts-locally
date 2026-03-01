@@ -15,7 +15,8 @@ window.addEventListener('load', () => {
 		init: async function () {
 			try {
 				let google_fonts = this.filterGoogleFonts();
-				let status = await this.getStatus(google_fonts);
+				let response = await this.getStatus(google_fonts);
+				let status = response.status;
 
 				// menu_item only exists if the logged-in user has the manage_options cap.
 				if (this.menu_item === null) {
@@ -73,11 +74,50 @@ window.addEventListener('load', () => {
 		getStatus: async (google_fonts) => {
 			const urlSearchParams = new URLSearchParams(window.location.search);
 			const params = Object.fromEntries(urlSearchParams.entries());
+			let missing_preloads = [];
+			let unused_fonts = [];
+
+			if (typeof document.fonts !== 'undefined' && typeof document.fonts.ready !== 'undefined') {
+				await document.fonts.ready;
+
+				let preloaded_fonts = [];
+				let links = document.head.querySelectorAll('link[rel="preload"][as="font"]');
+
+				links.forEach((link) => {
+					preloaded_fonts.push(link.href);
+				});
+
+				document.fonts.forEach((font) => {
+					/**
+					 * Scenario 2: Missing Preloads
+					 *
+					 * Check if any loaded fonts are not preloaded.
+					 */
+					if (font.status === 'loaded') {
+						let is_preloaded = preloaded_fonts.some((url) => {
+							return url.includes(font.family);
+						});
+
+						if (!is_preloaded) {
+							missing_preloads.push(font.family);
+						}
+					}
+
+					/**
+					 * Scenario 3: Unused Fonts
+					 */
+					if (font.status === 'unloaded') {
+						unused_fonts.push(font.family);
+					}
+				});
+			}
 
 			let data = new FormData();
 			data.append('path', document.location.pathname);
 			data.append('urls', JSON.stringify(google_fonts));
 			data.append('params', JSON.stringify(params));
+			data.append('missing_preloads', JSON.stringify(missing_preloads));
+			data.append('unused_fonts', JSON.stringify(unused_fonts));
 
 			return await omgf_frontend.ajax(data);
 		},
