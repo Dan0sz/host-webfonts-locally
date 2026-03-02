@@ -129,7 +129,91 @@ class Dashboard {
 					unset( $warnings['google_fonts_checker'] );
 				}
 				?>
-				<?php if ( empty( OMGF::admin_optimized_fonts() ) && ! OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
+				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
+					<div class="task-manager-notice <?php echo apply_filters( 'omgf_task_manager_notice_class', 'alert' ); ?>">
+						<h4>
+							<?php echo wp_kses_post(
+								apply_filters(
+									'omgf_google_fonts_checker_title',
+									sprintf(
+										__(
+											'%1$s wasn\'t able to process all Google Fonts on your site. %2$s',
+											'host-webfonts-local'
+										),
+										apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+										count( $google_fonts_checker_results ) === 5 ? '*' : ''
+									)
+								)
+							); ?>
+						</h4>
+						<p>
+							<?php echo wp_kses_post(
+								apply_filters(
+									'omgf_google_fonts_checker_general_text',
+									sprintf(
+										__(
+											'OMGF\'s integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) that cannot be automatically processed.',
+											'host-webfonts-local'
+										),
+										apply_filters( 'omgf_settings_page_title', 'OMGF' )
+									)
+								)
+							); ?>
+						</p>
+						<?php if ( empty( $warnings ) ): ?>
+							<p>
+								<?php echo apply_filters(
+									'omgf_google_fonts_checker_no_potential_issues',
+									sprintf(
+										__(
+											'You can read <a href="%s" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
+											'host-webfonts-local'
+										),
+										'https://daan.dev/docs/omgf-pro-troubleshooting/external-requests/',
+										Settings::DAAN_WORDPRESS_OMGF_PRO
+									)
+								); ?>
+							</p>
+						<?php else: ?>
+							<p>
+								<?php echo apply_filters(
+									'omgf_google_fonts_checker_potential_issues',
+									sprintf(
+										__(
+											'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href="%s" target="_blank">upgrade to OMGF Pro</a> might be required.',
+											'host-webfonts-local'
+										),
+										Settings::DAAN_WORDPRESS_OMGF_PRO
+									)
+								); ?>
+							</p>
+						<?php endif; ?>
+						<ol>
+							<?php foreach ( $google_fonts_checker_results as $url => $paths ) : ?>
+								<li><strong><?php echo esc_html( $url ); ?></strong> <?php _e( 'was found on:', 'host-webfonts-local' ); ?></li>
+								<ul>
+									<?php foreach ( $paths as $path ) : ?>
+										<li>
+											<?php
+											$href = OMGF::no_cache_optimize_url( $path );
+											$path = $path === '/' ? '/ (home)' : $path;
+											?>
+											<a class="omgf-google-fonts-checker-result" href="<?php echo esc_attr( $href ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php echo esc_html(
+													$path
+												); ?></a>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+							<?php endforeach; ?>
+						</ol>
+						<?php if ( count( $google_fonts_checker_results ) === 5 ): ?>
+							<sub>* <em><?php echo wp_kses_post(
+										__( 'This list is limited to 5 pages, because most entries will most likely be duplicates.', 'host-webfonts-local' )
+									); ?></em>
+							</sub>
+						<?php endif; ?>
+					</div>
+				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && ! OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -174,11 +258,6 @@ class Dashboard {
 								)
 							); ?>
 						</p>
-						<?php if ( empty( $smart_optimize_metrics ) ) : ?>
-							<p>
-								<sub><em><?php echo esc_html__( 'Smart Optimize has not detected significant font impact yet.', 'host-webfonts-local' ); ?></em></sub>
-							</p>
-						<?php endif; ?>
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
