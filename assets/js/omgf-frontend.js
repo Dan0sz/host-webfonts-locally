@@ -311,7 +311,7 @@ window.addEventListener('load', () => {
 
 				if (result.potential_delay_ms > 100) {
 					result.impact = "High";
-				} else if (result.potential_delay_ms > 0) {
+				} else if (result.potential_delay_ms > 5) {
 					result.impact = "Medium";
 				}
 			} catch (e) {
