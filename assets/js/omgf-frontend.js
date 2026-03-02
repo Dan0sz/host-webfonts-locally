@@ -105,7 +105,10 @@ window.addEventListener('load', () => {
 				/**
 				 * Only fonts used above the fold should be suggested for preload.
 				 */
-				document.querySelectorAll('*').forEach((element) => {
+				const elements = document.querySelectorAll('body *');
+				const scan_limit = 1500; // keep analysis bounded on very large DOMs
+				for (let i = 0; i < elements.length && i < scan_limit; i++) {
+					const element = elements[i];
 					let rect = element.getBoundingClientRect();
 
 					// If the element is in the viewport.
@@ -121,7 +124,7 @@ window.addEventListener('load', () => {
 							}
 						});
 					}
-				});
+				}
 
 				document.fonts.forEach((font) => {
 					let family = font.family.replace(/["']/g, '');
