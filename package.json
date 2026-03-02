@@ -1,5 +1,6 @@
 {
   "name": "@dan0sz/omgf",
+  "type": "module",
   "description": "",
   "repository": {
     "type": "git",
@@ -10,5 +11,15 @@
   "bugs": {
     "url": "https://wordpress.org/support/plugin/host-webfonts-local/"
   },
-  "homepage": "https://wordpress.org/plugins/host-webfonts-local/"
+  "homepage": "https://wordpress.org/plugins/host-webfonts-local/",
+  "scripts": {
+    "prod": "node scripts/minify-all.js",
+    "watch": "chokidar 'assets/js/**/*.js' 'assets/css/**/*.css' -i 'assets/**/*.min.*' -c 'npm run prod'"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "clean-css": "^5.3.3",
+    "glob": "^13.0.6",
+    "uglify-js": "^3.19.3"
+  }
 }
