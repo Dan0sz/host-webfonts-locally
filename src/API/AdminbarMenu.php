@@ -112,13 +112,45 @@ class AdminbarMenu {
 			}
 
 			if ( ! empty( $missing_preloads ) ) {
-				$status = 'notice';
+				$status = 'info';
 				OMGF::update_option( Settings::OMGF_FOUND_MISSING_PRELOADS, $missing_preloads );
+			} else {
+				delete_option( Settings::OMGF_FOUND_MISSING_PRELOADS );
 			}
 
 			if ( ! empty( $unused_fonts ) ) {
-				$status = 'notice';
+				$status = 'info';
 				OMGF::update_option( Settings::OMGF_FOUND_UNUSED_FONTS, $unused_fonts );
+			} else {
+				delete_option( Settings::OMGF_FOUND_UNUSED_FONTS );
+			}
+
+			$unused_fonts_analysis = isset( $params['unused_fonts_analysis'] ) ? json_decode( $params['unused_fonts_analysis'], true ) : [];
+			$preload_analysis      = isset( $params['preload_analysis'] ) ? json_decode( $params['preload_analysis'], true ) : [];
+
+			if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) ) {
+				$stored_metrics = OMGF::get_option( Settings::OMGF_SMART_OPTIMIZE_METRICS, [] );
+				$updated        = false;
+
+				if ( ! empty( $unused_fonts_analysis['total_kb'] ) && ( empty( $stored_metrics['highest_unused_kb'] ) || $unused_fonts_analysis['total_kb'] > $stored_metrics['highest_unused_kb'] ) ) {
+					$stored_metrics['highest_unused_kb']        = $unused_fonts_analysis['total_kb'];
+					$stored_metrics['highest_unused_path']      = $params['path'];
+					$stored_metrics['highest_unused_impact']    = $unused_fonts_analysis['impact'];
+					$stored_metrics['highest_unused_timestamp'] = time();
+					$updated                                    = true;
+				}
+
+				if ( ! empty( $preload_analysis['potential_delay_ms'] ) && ( empty( $stored_metrics['highest_delay_ms'] ) || $preload_analysis['potential_delay_ms'] > $stored_metrics['highest_delay_ms'] ) ) {
+					$stored_metrics['highest_delay_ms']        = $preload_analysis['potential_delay_ms'];
+					$stored_metrics['highest_delay_path']      = $params['path'];
+					$stored_metrics['highest_delay_impact']    = $preload_analysis['impact'];
+					$stored_metrics['highest_delay_timestamp'] = time();
+					$updated                                   = true;
+				}
+
+				if ( $updated ) {
+					OMGF::update_option( Settings::OMGF_SMART_OPTIMIZE_METRICS, $stored_metrics );
+				}
 			}
 		}
 

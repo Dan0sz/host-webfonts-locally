@@ -49,6 +49,12 @@ class Settings extends Admin {
 
 	const OMGF_FOUND_UNUSED_FONTS = 'omgf_found_unused_fonts';
 
+	const OMGF_UNUSED_FONTS_ANALYSIS = 'omgf_unused_fonts_analysis';
+
+	const OMGF_PRELOAD_ANALYSIS = 'omgf_preload_analysis';
+
+	const OMGF_SMART_OPTIMIZE_METRICS = 'omgf_smart_optimize_metrics';
+
 	/**
 	 * Settings Fields
 	 */
