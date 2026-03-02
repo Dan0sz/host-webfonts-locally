@@ -87,14 +87,14 @@ class AdminbarMenu {
 	 *
 	 * @filter omgf_ajax_admin_bar_status
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public function get_admin_bar_status( $request ) {
 		$params           = $this->clean( $request->get_params() );
 		$stored_results   = $this->update_results( $params );
 		$status           = 'success';
-		$missing_preloads = isset( $params['missing_preloads'] ) ? json_decode( $params['missing_preloads'], true ) : [];
-		$unused_fonts     = isset( $params['unused_fonts'] ) ? json_decode( $params['unused_fonts'], true ) : [];
+		$missing_preloads = isset( $request->get_params()['missing_preloads'] ) ? json_decode( $params['missing_preloads'], true ) : [];
+		$unused_fonts     = isset( $request->get_params()['unused_fonts'] ) ? json_decode( $params['unused_fonts'], true ) : [];
 
 		if ( ! empty( $stored_results ) ) {
 			$status = 'alert';

@@ -88,6 +88,8 @@ window.addEventListener('load', () => {
 				});
 
 				document.fonts.forEach((font) => {
+					let family = font.family.replace(/["']/g, '');
+
 					/**
 					 * Scenario 2: Missing Preloads
 					 *
@@ -95,19 +97,19 @@ window.addEventListener('load', () => {
 					 */
 					if (font.status === 'loaded') {
 						let is_preloaded = preloaded_fonts.some((url) => {
-							return url.includes(font.family);
+							return url.toLowerCase().includes(family.toLowerCase().replace(/\s/g, '-'));
 						});
 
-						if (!is_preloaded) {
-							missing_preloads.push(font.family);
+						if (!is_preloaded && !missing_preloads.includes(family)) {
+							missing_preloads.push(family);
 						}
 					}
 
 					/**
 					 * Scenario 3: Unused Fonts
 					 */
-					if (font.status === 'unloaded') {
-						unused_fonts.push(font.family);
+					if (font.status === 'unloaded' && !unused_fonts.includes(family)) {
+						unused_fonts.push(family);
 					}
 				});
 			}
