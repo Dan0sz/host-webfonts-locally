@@ -41,7 +41,10 @@ const cssFiles = globSync(`${CSS_DIR}/**/*.css`, {
 
 for (const file of cssFiles) {
 	const css = fs.readFileSync(file, 'utf8');
-	const result = cleanCss.minify(css);
+	const result = new CleanCSS({
+		level: 2,
+		inline: false
+	}).minify(css);
 
 	if (result.errors.length) {
 		console.error(`❌ CSS minify failed: ${file}`);
