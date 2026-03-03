@@ -132,11 +132,13 @@ class Actions {
 			self::FRONTEND_ASSET_HANDLE,
 			'omgf_frontend_i18n',
 			[
-				'info_box_alert_text'  => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
-				'info_box_notice_text' => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
-				'info_box_admin_url'   => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
-				'api_url'              => get_rest_url( null, 'omgf/v1/adminbar-menu/status' ),
-				'nonce'                => wp_create_nonce( 'wp_rest' ),
+				'info_box_alert_text'   => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
+				'info_box_notice_text'  => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
+				'info_box_preload_text' => __( 'Potential render delay on this page: ~%sms (%s fonts not preloaded | Impact: %s)', 'host-webfonts-local' ),
+				'info_box_unload_text'  => __( '~%s KB unused fonts on this page (%s unnecessary font files | Impact: %s)', 'host-webfonts-local' ),
+				'info_box_admin_url'    => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
+				'api_url'               => get_rest_url( null, 'omgf/v1/adminbar-menu/status' ),
+				'nonce'                 => wp_create_nonce( 'wp_rest' ),
 			]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );

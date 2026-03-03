@@ -365,12 +365,14 @@ window.addEventListener('load', () => {
 
 			if (status === 'unload_notice') {
 				info_box.id = 'wp-admin-bar-omgf-unload-info';
-				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">~${data.total_kb || 0} KB unused fonts on this page (${data.count || 0} unnecessary font files | Impact: ${data.impact || 'Low'})</a>`;
+				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_unload_text, data.total_kb || 0, data.count || 0, data.impact || 'Low');
+				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
 			}
 
 			if (status === 'preload_notice') {
 				info_box.id = 'wp-admin-bar-omgf-preload-info';
-				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">Potential render delay on this page: ~${data.potential_delay_ms || 0}ms (${count || 0} fonts not preloaded | Impact: ${data.impact || 'Low'})</a>`;
+				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_preload_text, data.potential_delay_ms || 0, count || 0, data.impact || 'Low');
+				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
 			}
 
 			if (status === 'unload_notice' || status === 'preload_notice') {
@@ -379,6 +381,30 @@ window.addEventListener('load', () => {
 
 			omgf_frontend.sub_menu.prepend(info_box);
 		},
+
+		/**
+		 * Sprintf JS polyfill.
+		 *
+		 * @param str
+		 * @returns {*}
+		 */
+		sprintf: function (str) {
+			let args = arguments, i = 1;
+
+			return str.replace(/%(s|d|0\d+d)/g, function (x, type) {
+				let value = args[i++];
+				switch (type) {
+					case 's':
+						return value;
+					case 'd':
+						return parseInt(value, 10);
+					default:
+						value = String(parseInt(value, 10));
+						const n = Number(type.slice(1, -1));
+						return '0'.repeat(n).slice(value.length) + value;
+				}
+			});
+		}
 	}
 
 	// Make sure we've collected all resources before continuing.
