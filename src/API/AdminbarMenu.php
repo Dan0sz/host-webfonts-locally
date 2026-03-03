@@ -104,7 +104,7 @@ class AdminbarMenu {
 			$status = 'notice';
 		}
 
-		if ( empty ( $stored_results ) && $this->has_multilingual_plugin() ) {
+		if ( empty ( $stored_results ) && Dashboard::has_multilingual_plugin() ) {
 			$status = 'notice';
 		}
 
@@ -299,12 +299,5 @@ class AdminbarMenu {
 		$warnings     = $task_manager->get_warnings();
 
 		return ! empty( $warnings );
-	}
-
-	/**
-	 * @return bool
-	 */
-	private function has_multilingual_plugin() {
-		return ! empty( Dashboard::get_multilingual_plugin() );
 	}
 }
