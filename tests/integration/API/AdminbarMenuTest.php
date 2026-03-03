@@ -135,7 +135,7 @@ class AdminbarMenuTest extends TestCase {
 	/**
 	 * @return void
 	 */
-	public function testNoNoticesWhenConditionsNotMet() {
+	public function testNoticeStatusWhenSSLWarningExists() {
 		$api     = new AdminbarMenu();
 		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 		$request->set_param( 'path', '/' );
@@ -143,7 +143,7 @@ class AdminbarMenuTest extends TestCase {
 
 		$response = $api->get_admin_bar_status( $request );
 
-		// This will return 'notice', because the test env doesn't have SSL.
+		// Test env doesn't have SSL configured, which triggers the 'no_ssl' warning.
 		$this->assertEquals( 'notice', $response['status'] );
 	}
 }
