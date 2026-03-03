@@ -123,7 +123,7 @@ class AdminbarMenu {
 			if ( ! empty( $unused_fonts_analysis['total_kb'] ) && ( empty( $stored_metrics['highest_unused_kb'] ) || $unused_fonts_analysis['total_kb'] > $stored_metrics['highest_unused_kb'] ) ) {
 				$stored_metrics['highest_unused_kb']        = $unused_fonts_analysis['total_kb'];
 				$stored_metrics['highest_unused_path']      = $path;
-				$stored_metrics['highest_unused_impact']    = $unused_fonts_analysis['impact'];
+				$stored_metrics['highest_unused_impact']    = $unused_fonts_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
 				$stored_metrics['highest_unused_timestamp'] = time();
 				$updated                                    = true;
 			}
@@ -131,7 +131,7 @@ class AdminbarMenu {
 			if ( ! empty( $preload_analysis['potential_delay_ms'] ) && ( empty( $stored_metrics['highest_delay_ms'] ) || $preload_analysis['potential_delay_ms'] > $stored_metrics['highest_delay_ms'] ) ) {
 				$stored_metrics['highest_delay_ms']        = $preload_analysis['potential_delay_ms'];
 				$stored_metrics['highest_delay_path']      = $path;
-				$stored_metrics['highest_delay_impact']    = $preload_analysis['impact'];
+				$stored_metrics['highest_delay_impact']    = $preload_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
 				$stored_metrics['highest_delay_timestamp'] = time();
 				$updated                                   = true;
 			}
