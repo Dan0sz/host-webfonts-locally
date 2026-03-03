@@ -43,17 +43,9 @@ class Settings extends Admin {
 
 	const OMGF_GOOGLE_FONTS_CHECKER_RESULTS = 'omgf_google_fonts_checker_results';
 
+	const OMGF_PERF_CHECK = 'omgf_perf_check';
+
 	const OMGF_HIDDEN_NOTICES = 'omgf_hidden_notices';
-
-	const OMGF_FOUND_MISSING_PRELOADS = 'omgf_found_missing_preloads';
-
-	const OMGF_FOUND_UNUSED_FONTS = 'omgf_found_unused_fonts';
-
-	const OMGF_UNUSED_FONTS_ANALYSIS = 'omgf_unused_fonts_analysis';
-
-	const OMGF_PRELOAD_ANALYSIS = 'omgf_preload_analysis';
-
-	const OMGF_SMART_OPTIMIZE_METRICS = 'omgf_smart_optimize_metrics';
 
 	/**
 	 * Settings Fields

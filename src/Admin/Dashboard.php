@@ -132,7 +132,7 @@ class Dashboard {
 				$plugins                      = self::get_active_plugins();
 				$warnings                     = self::get_warnings();
 				$google_fonts_checker_results = $warnings['google_fonts_checker'] ?? [];
-				$smart_optimize_metrics       = OMGF::get_option( Settings::OMGF_SMART_OPTIMIZE_METRICS, [] );
+				$smart_optimize_metrics       = OMGF::get_option( Settings::OMGF_PERF_CHECK, [] );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
 					unset( $warnings['google_fonts_checker'] );

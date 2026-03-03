@@ -90,11 +90,9 @@ class AdminbarMenu {
 	 * @return array
 	 */
 	public function get_admin_bar_status( $request ) {
-		$params           = $this->clean( $request->get_params() );
-		$stored_results   = $this->update_results( $params );
-		$status           = 'success';
-		$missing_preloads = $this->decode_json_array( $params['missing_preloads'] ?? [] );
-		$unused_fonts     = $this->decode_json_array( $params['unused_fonts'] ?? [] );
+		$params         = $this->clean( $request->get_params() );
+		$stored_results = $this->update_results( $params );
+		$status         = 'success';
 
 		if ( ! empty( $stored_results ) ) {
 			$status = 'alert';
@@ -108,29 +106,16 @@ class AdminbarMenu {
 			$status = 'notice';
 		}
 
-		if ( ! empty( $missing_preloads ) ) {
-			// Alert takes precedence over info.
-			if ( $status !== 'alert' ) {
-				$status = 'info';
-			}
-
-			OMGF::update_option( Settings::OMGF_FOUND_MISSING_PRELOADS, $missing_preloads );
-		}
-
-		if ( ! empty( $unused_fonts ) ) {
-			// Alert takes precedence over info.
-			if ( $status !== 'alert' ) {
-				$status = 'info';
-			}
-
-			OMGF::update_option( Settings::OMGF_FOUND_UNUSED_FONTS, $unused_fonts );
-		}
-
 		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
 		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
 
 		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) ) {
-			$stored_metrics = OMGF::get_option( Settings::OMGF_SMART_OPTIMIZE_METRICS, [] );
+			// Alerts and notices should take precedence.
+			if ( $status !== 'alert' && $status !== 'notice' ) {
+				$status = 'info';
+			}
+
+			$stored_metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK, [] );
 			$stored_metrics = is_array( $stored_metrics ) ? $stored_metrics : [];
 			$updated        = false;
 			$path           = $params['path'] ?? '';
@@ -152,7 +137,7 @@ class AdminbarMenu {
 			}
 
 			if ( $updated ) {
-				OMGF::update_option( Settings::OMGF_SMART_OPTIMIZE_METRICS, $stored_metrics );
+				OMGF::update_option( Settings::OMGF_PERF_CHECK, $stored_metrics );
 			}
 		}
 
@@ -270,6 +255,18 @@ class AdminbarMenu {
 	}
 
 	/**
+	 * Check if OMGF has logged any configuration issues that require attention.
+	 *
+	 * @return bool
+	 */
+	private function has_warnings() {
+		$task_manager = new Dashboard();
+		$warnings     = $task_manager->get_warnings();
+
+		return ! empty( $warnings );
+	}
+
+	/**
 	 * Array normalization.
 	 *
 	 * @param $value
@@ -288,17 +285,5 @@ class AdminbarMenu {
 		$decoded = json_decode( $value, true );
 
 		return is_array( $decoded ) ? $decoded : [];
-	}
-
-	/**
-	 * Check if OMGF has logged any configuration issues that require attention.
-	 *
-	 * @return bool
-	 */
-	private function has_warnings() {
-		$task_manager = new Dashboard();
-		$warnings     = $task_manager->get_warnings();
-
-		return ! empty( $warnings );
 	}
 }

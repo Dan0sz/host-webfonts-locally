@@ -32,10 +32,10 @@ class Ajax {
 	}
 
 	/**
-	 * @since              v5.4.0 Remove notice from dashboard and return new HTML.
 	 * @return void Valid HTML.
 	 *
 	 * @codeCoverageIgnore because code execution is killed at the end.
+	 * @since              v5.4.0 Remove notice from dashboard and return new HTML.
 	 */
 	public function hide_notice() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -44,7 +44,7 @@ class Ajax {
 			wp_die( __( 'Hmmm, are you lost?', 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
-		$warning_id     = $_POST[ 'warning_id' ];
+		$warning_id     = $_POST['warning_id'];
 		$hidden_notices = OMGF::get_option( Settings::OMGF_HIDDEN_NOTICES, [] );
 
 		if ( ! in_array( $warning_id, $hidden_notices ) ) {
@@ -70,7 +70,7 @@ class Ajax {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
-		$handle                   = $_POST[ 'handle' ];
+		$handle                   = $_POST['handle'];
 		$optimized_fonts          = OMGF::admin_optimized_fonts();
 		$optimized_fonts_frontend = OMGF::optimized_fonts();
 		$unloaded_fonts           = OMGF::unloaded_fonts();
@@ -89,10 +89,10 @@ class Ajax {
 	/**
 	 * Unset a $key from $array and update $option_name. Optionally, store the array as a comma-separated string.
 	 *
-	 * @param string $option_name     The option name to update.
-	 * @param array  $array           The array to saarch.
-	 * @param string $key             The key to unset when found.
-	 * @param bool   $comma_separated When true, $array is converted to a comma-separated string before saving it
+	 * @param string $option_name The option name to update.
+	 * @param array $array The array to saarch.
+	 * @param string $key The key to unset when found.
+	 * @param bool $comma_separated When true, $array is converted to a comma-separated string before saving it
 	 *                                to the database.
 	 *
 	 * @return void
@@ -147,7 +147,7 @@ class Ajax {
 	}
 
 	/**
-	 * Empties all cache related entries in the database.
+	 * Empties all cache-related entries in the database.
 	 *
 	 * @param string $initiator
 	 *
@@ -180,14 +180,14 @@ class Ajax {
 		);
 
 		foreach ( $entries as $entry ) {
-			if ( in_array( $entry, $instructions[ 'exclude' ] ) ) {
+			if ( in_array( $entry, $instructions['exclude'] ) ) {
 				continue;
 			}
 
 			OMGF::delete( $entry );
 		}
 
-		foreach ( $instructions[ 'queue' ] as $option ) {
+		foreach ( $instructions['queue'] as $option ) {
 			OMGF::delete_option( $option );
 		}
 	}
@@ -207,7 +207,7 @@ class Ajax {
 		}
 
 		try {
-			$init = $_POST[ 'init' ] ?? '';
+			$init = $_POST['init'] ?? '';
 
 			$this->empty_cache( $init );
 
