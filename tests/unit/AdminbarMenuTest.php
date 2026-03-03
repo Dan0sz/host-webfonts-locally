@@ -51,7 +51,7 @@ class AdminbarMenuTest extends TestCase {
 			'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
 		];
 
-		foreach ( $multilingual_plugins as $path => $name ) {
+		foreach ( $multilingual_plugins as $path => $_ ) {
 			Functions\when( 'is_plugin_active' )->alias( function ( $plugin_path ) use ( $path ) {
 				return $plugin_path === $path;
 			} );
