@@ -131,6 +131,7 @@ class AdminbarMenu {
 
 		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) ) {
 			$stored_metrics = OMGF::get_option( Settings::OMGF_SMART_OPTIMIZE_METRICS, [] );
+			$stored_metrics = is_array( $stored_metrics ) ? $stored_metrics : [];
 			$updated        = false;
 			$path           = $params['path'] ?? '';
 
