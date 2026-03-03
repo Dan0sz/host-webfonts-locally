@@ -292,7 +292,7 @@ class Dashboard {
 							) ); ?>
 						</p>
 						<ol>
-							<?php if ( ! empty( $smart_optimize_metrics['highest_unused_kb'] ) ) : ?>
+							<?php if ( isset( $smart_optimize_metrics['highest_unused_kb'], $smart_optimize_metrics['highest_unused_path'] ) && (float) $smart_optimize_metrics['highest_unused_kb'] > 0 ) : ?>
 								<li>
 									<?php echo wp_kses_post( sprintf( __( 'Up to <strong>%s KB of unused fonts</strong> were detected on your site.', 'host-webfonts-local' ),
 										$smart_optimize_metrics['highest_unused_kb'] ) ); ?>
@@ -304,7 +304,7 @@ class Dashboard {
 									) ); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( ! empty( $smart_optimize_metrics['highest_delay_ms'] ) ) : ?>
+							<?php if ( isset( $smart_optimize_metrics['highest_delay_ms'], $smart_optimize_metrics['highest_delay_path'] ) && (int) $smart_optimize_metrics['highest_delay_ms'] > 0 ) : ?>
 								<li>
 									<?php echo wp_kses_post( sprintf( __( 'Font loading is causing up to <strong>%sms of delay</strong> on your site.', 'host-webfonts-local' ),
 										$smart_optimize_metrics['highest_delay_ms'] ) ); ?>
