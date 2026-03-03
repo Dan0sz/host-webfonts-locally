@@ -288,27 +288,32 @@ class Dashboard {
 						<ol>
 							<?php if ( ! empty( $smart_optimize_metrics['highest_unused_kb'] ) ) : ?>
 								<li>
-									<?php echo sprintf( esc_html__( 'Up to %s KB of unused font data was detected on your site.', 'host-webfonts-local' ), $smart_optimize_metrics['highest_unused_kb'] ); ?>
+									<?php echo wp_kses_post( sprintf( __( 'Up to <strong>%s KB of unused fonts</strong> were detected on your site.', 'host-webfonts-local' ),
+										$smart_optimize_metrics['highest_unused_kb'] ) ); ?>
 									<?php echo wp_kses_post( sprintf(
-										__( 'Example: <a href="%s" target="_blank">%s</a>', 'host-webfonts-local' ),
-										esc_url( home_url( $smart_optimize_metrics['highest_unused_path'] ) ),
-										$smart_optimize_metrics['highest_unused_path'] === '/' ? __( 'Homepage', 'host-webfonts-local' ) : $smart_optimize_metrics['highest_unused_path']
+										__( 'Most impacted page: <a href="%s" target="_blank">%s</a>', 'host-webfonts-local' ),
+										home_url( $smart_optimize_metrics['highest_unused_path'] ),
+										$smart_optimize_metrics['highest_unused_path'] === '/' ? $smart_optimize_metrics['highest_unused_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
+											$smart_optimize_metrics['highest_unused_path']
 									) ); ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( ! empty( $smart_optimize_metrics['highest_delay_ms'] ) ) : ?>
 								<li>
-									<?php echo sprintf( esc_html__( 'Font loading is causing up to %sms of delay on your site.', 'host-webfonts-local' ), $smart_optimize_metrics['highest_delay_ms'] ); ?>
+									<?php echo wp_kses_post( sprintf( __( 'Font loading is causing up to <strong>%sms of delay</strong> on your site.', 'host-webfonts-local' ),
+										$smart_optimize_metrics['highest_delay_ms'] ) ); ?>
 									<?php echo wp_kses_post( sprintf(
-										__( 'Example: <a href="%s" target="_blank">%s</a>', 'host-webfonts-local' ),
-										esc_url( home_url( $smart_optimize_metrics['highest_delay_path'] ) ),
-										$smart_optimize_metrics['highest_delay_path'] === '/' ? __( 'Homepage', 'host-webfonts-local' ) : $smart_optimize_metrics['highest_delay_path']
+										__( 'Most impacted page: <a href="%s" target="_blank">%s</a>', 'host-webfonts-local' ),
+										home_url( $smart_optimize_metrics['highest_delay_path'] ),
+										$smart_optimize_metrics['highest_delay_path'] === '/' ? $smart_optimize_metrics['highest_delay_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
+											$smart_optimize_metrics['highest_delay_path']
 									) ); ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( self::has_multilingual_plugin() ) : ?>
 								<li>
-									<?php echo sprintf( esc_html__( '%s detected: optimize font subsets per language with Smart Optimize.', 'host-webfonts-local' ), self::get_multilingual_plugin() ); ?>
+									<?php echo wp_kses_post( sprintf( __( '<strong>%s detected</strong>: optimize font subsets per language with Smart Optimize.', 'host-webfonts-local' ),
+										self::get_multilingual_plugin() ) ); ?>
 								</li>
 							<?php endif; ?>
 						</ol>
