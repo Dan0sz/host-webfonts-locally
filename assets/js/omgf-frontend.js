@@ -325,7 +325,8 @@ window.addEventListener('load', () => {
 					result.impact = "Medium";
 				}
 			} catch (e) {
-				return result;
+				console.warn('OMGF - Error analyzing preload impact:', e);
+				return {};
 			}
 
 			return result;
