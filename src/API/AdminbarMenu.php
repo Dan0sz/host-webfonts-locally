@@ -93,8 +93,8 @@ class AdminbarMenu {
 		$params           = $this->clean( $request->get_params() );
 		$stored_results   = $this->update_results( $params );
 		$status           = 'success';
-		$missing_preloads = isset( $request->get_params()['missing_preloads'] ) ? json_decode( $params['missing_preloads'], true ) : [];
-		$unused_fonts     = isset( $request->get_params()['unused_fonts'] ) ? json_decode( $params['unused_fonts'], true ) : [];
+		$missing_preloads = $this->decode_json_array( $params['missing_preloads'] ?? [] );
+		$unused_fonts     = $this->decode_json_array( $params['unused_fonts'] ?? [] );
 
 		if ( ! empty( $stored_results ) ) {
 			$status = 'alert';
@@ -126,8 +126,8 @@ class AdminbarMenu {
 			OMGF::update_option( Settings::OMGF_FOUND_UNUSED_FONTS, $unused_fonts );
 		}
 
-		$unused_fonts_analysis = isset( $params['unused_fonts_analysis'] ) ? json_decode( $params['unused_fonts_analysis'], true ) : [];
-		$preload_analysis      = isset( $params['preload_analysis'] ) ? json_decode( $params['preload_analysis'], true ) : [];
+		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
+		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
 
 		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) ) {
 			$stored_metrics = OMGF::get_option( Settings::OMGF_SMART_OPTIMIZE_METRICS, [] );
@@ -265,6 +265,27 @@ class AdminbarMenu {
 		OMGF::update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
 		return $stored_results;
+	}
+
+	/**
+	 * Array normalization.
+	 *
+	 * @param $value
+	 *
+	 * @return array
+	 */
+	private function decode_json_array( $value ) {
+		if ( is_array( $value ) ) {
+			return $value;
+		}
+
+		if ( ! is_string( $value ) || $value === '' ) {
+			return [];
+		}
+
+		$decoded = json_decode( $value, true );
+
+		return is_array( $decoded ) ? $decoded : [];
 	}
 
 	/**
