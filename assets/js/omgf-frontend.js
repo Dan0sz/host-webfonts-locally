@@ -182,6 +182,35 @@ window.addEventListener('load', () => {
 		},
 
 		/**
+		 * @param {Array} families
+		 * @param {Array} font_resources
+		 * @param {Function} callback
+		 */
+		for_each_matching_resource: function (families, font_resources, callback) {
+			families.forEach((family) => {
+				let normalized_family = family.toLowerCase().replace(/\s/g, '-');
+				let matching_entry = font_resources.find((entry) => {
+					let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([._-]|\\.|$)', 'i');
+					return pattern.test(entry.name.toLowerCase());
+				});
+
+				if (matching_entry) {
+					callback(matching_entry, family);
+				}
+			});
+		},
+
+		/**
+		 * @returns {Array}
+		 */
+		get_font_resources: function () {
+			let entries = window.performance.getEntriesByType("resource");
+			return entries.filter((entry) => {
+				return entry.name.match(/\.(woff|woff2|ttf|otf)(\?.*)?$/i);
+			});
+		},
+
+		/**
 		 * Analyze unused fonts for impact.
 		 *
 		 * @param {Array} unused_fonts
@@ -199,29 +228,19 @@ window.addEventListener('load', () => {
 				files: []
 			};
 
-			let entries = window.performance.getEntriesByType("resource");
-			let font_resources = entries.filter((entry) => {
-				return entry.name.match(/\.(woff|woff2|ttf|otf)(\?.*)?$/i);
-			});
+			let font_resources = this.get_font_resources();
 
-			unused_fonts.forEach((family) => {
-				let normalized_family = family.toLowerCase().replace(/\s/g, '-');
-				let matching_entry = font_resources.find((entry) => {
-					return entry.name.toLowerCase().includes(normalized_family);
+			this.for_each_matching_resource(unused_fonts, font_resources, (matching_entry, family) => {
+				let size = matching_entry.transferSize || matching_entry.encodedBodySize || 0;
+				let kb = Math.round((size / 1024) * 10) / 10;
+
+				result.total_kb += kb;
+				result.count++;
+				result.files.push({
+					family: family,
+					url: matching_entry.name,
+					kb: kb
 				});
-
-				if (matching_entry) {
-					let size = matching_entry.transferSize || matching_entry.encodedBodySize || 0;
-					let kb = Math.round((size / 1024) * 10) / 10;
-
-					result.total_kb += kb;
-					result.count++;
-					result.files.push({
-						family: family,
-						url: matching_entry.name,
-						kb: kb
-					});
-				}
 			});
 
 			if (result.count === 0) {
@@ -294,26 +313,15 @@ window.addEventListener('load', () => {
 					return result;
 				}
 
-				let entries = window.performance.getEntriesByType("resource");
-				let font_resources = entries.filter((entry) => {
-					return entry.name.match(/\.(woff|woff2|ttf|otf)(\?.*)?$/i);
-				});
-
+				let font_resources = this.get_font_resources();
 				let max_delay = 0;
 
-				missing_preloads.forEach((family) => {
-					let normalized_family = family.toLowerCase().replace(/\s/g, '-');
-					let matching_entry = font_resources.find((entry) => {
-						return entry.name.toLowerCase().includes(normalized_family);
-					});
-
-					if (matching_entry) {
-						let delay = matching_entry.responseEnd - lcp_entry.startTime;
-						if (delay > 0) {
-							result.affects_lcp = true;
-							if (delay > max_delay) {
-								max_delay = delay;
-							}
+				this.for_each_matching_resource(missing_preloads, font_resources, (matching_entry) => {
+					let delay = matching_entry.responseEnd - lcp_entry.startTime;
+					if (delay > 0) {
+						result.affects_lcp = true;
+						if (delay > max_delay) {
+							max_delay = delay;
 						}
 					}
 				});
