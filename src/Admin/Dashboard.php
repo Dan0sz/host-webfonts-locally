@@ -276,7 +276,7 @@ class Dashboard {
 						<p>
 							<?php echo wp_kses_post(
 								apply_filters(
-									'omgf_google_fonts_checker_general_text',
+									'omgf_performance_checker_general_text',
 									__(
 										'OMGF\'s integrated Fonts Performance Checker (introduced in v6.2) detected font files that should be optimized.',
 										'host-webfonts-local'
