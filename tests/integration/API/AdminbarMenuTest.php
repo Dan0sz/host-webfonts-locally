@@ -82,8 +82,12 @@ class AdminbarMenuTest extends TestCase {
 	 * @return void
 	 */
 	public function testMultilingualPluginDetection() {
+		$original_home    = get_option( 'home' );
+		$original_siteurl = get_option( 'siteurl' );
 		try {
 			add_filter( 'omgf_has_multilang_plugin', '__return_true' );
+			update_option( 'home', preg_replace( '#^http://#', 'https://', (string) $original_home ) );
+			update_option( 'siteurl', preg_replace( '#^http://#', 'https://', (string) $original_siteurl ) );
 
 			$api     = new AdminbarMenu();
 			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
@@ -92,6 +96,8 @@ class AdminbarMenuTest extends TestCase {
 
 			$response = $api->get_admin_bar_status( $request );
 		} finally {
+			update_option( 'home', $original_home );
+			update_option( 'siteurl', $original_siteurl );
 			remove_filter( 'omgf_has_multilang_plugin', '__return_true' );
 		}
 
