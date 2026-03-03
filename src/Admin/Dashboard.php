@@ -297,7 +297,7 @@ class Dashboard {
 									<?php echo wp_kses_post( sprintf( __( 'Up to <strong>%s KB of unused fonts</strong> were detected on your site.', 'host-webfonts-local' ),
 										$smart_optimize_metrics['highest_unused_kb'] ) ); ?>
 									<?php echo wp_kses_post( sprintf(
-										__( 'Most impacted page: <a href="%s" target="_blank">%s</a>', 'host-webfonts-local' ),
+										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
 										home_url( $smart_optimize_metrics['highest_unused_path'] ),
 										$smart_optimize_metrics['highest_unused_path'] === '/' ? $smart_optimize_metrics['highest_unused_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
 											$smart_optimize_metrics['highest_unused_path']
@@ -309,7 +309,7 @@ class Dashboard {
 									<?php echo wp_kses_post( sprintf( __( 'Font loading is causing up to <strong>%sms of delay</strong> on your site.', 'host-webfonts-local' ),
 										$smart_optimize_metrics['highest_delay_ms'] ) ); ?>
 									<?php echo wp_kses_post( sprintf(
-										__( 'Most impacted page: <a href="%s" target="_blank">%s</a>', 'host-webfonts-local' ),
+										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
 										home_url( $smart_optimize_metrics['highest_delay_path'] ),
 										$smart_optimize_metrics['highest_delay_path'] === '/' ? $smart_optimize_metrics['highest_delay_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
 											$smart_optimize_metrics['highest_delay_path']
