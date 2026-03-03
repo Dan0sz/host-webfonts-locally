@@ -280,9 +280,10 @@ window.addEventListener('load', () => {
 				// Determine if LCP element contains visible text.
 				let lcp_element = lcp_entry.element;
 				let has_text = false;
-				if (lcp_element) {
-					has_text = lcp_element.innerText && lcp_element.innerText.trim().length > 0;
-				}
+			let has_text = false;
+			if (lcp_element) {
+				has_text = typeof lcp_element.innerText === 'string' && lcp_element.innerText.trim().length > 0;
+			}
 
 				if (!has_text) {
 					return result;
