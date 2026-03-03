@@ -312,8 +312,12 @@ class Dashboard {
 							<?php endif; ?>
 							<?php if ( self::has_multilingual_plugin() ) : ?>
 								<li>
-									<?php echo wp_kses_post( sprintf( __( '<strong>%s detected</strong>: optimize font subsets per language with Smart Optimize.', 'host-webfonts-local' ),
-										self::get_multilingual_plugin() ) ); ?>
+									<?php echo wp_kses_post(
+										sprintf(
+											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize to load font subsets per language and improve performance.', 'host-webfonts-local' ),
+											self::get_multilingual_plugin()
+										)
+									); ?>
 								</li>
 							<?php endif; ?>
 						</ol>
