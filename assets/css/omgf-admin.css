@@ -16,7 +16,7 @@
 /**
  * Typography
  */
-@import url("omgf-admin-google-fonts.min.css");
+@import "omgf-admin-google-fonts.min.css";
 
 #wpwrap {
 	background-color: rgb(248 250 252 / 1);
