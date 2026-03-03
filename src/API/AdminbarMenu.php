@@ -197,8 +197,9 @@ class AdminbarMenu {
 	 * @return array
 	 */
 	private function update_results( $post ) {
-		$path           = $post['path'];
+		$path           = isset( $post['path'] ) && is_string( $post['path'] ) ? $post['path'] : '';
 		$params         = isset( $post['params'] ) ? json_decode( $post['params'], true ) : [];
+		$params         = is_array( $params ) ? $params : [];
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		if ( empty( $path ) || ! is_string( $path ) ) {
@@ -207,9 +208,13 @@ class AdminbarMenu {
 
 		$urls = $post['urls'] ?? [];
 
-		// Decode if $urls is valid JSON.
-		if ( is_string( $urls ) && is_array( json_decode( $urls ) ) && json_last_error() === JSON_ERROR_NONE ) {
-			$urls = json_decode( $urls );
+		if ( is_string( $urls ) ) {
+			$decoded = json_decode( $urls, true );
+			$urls    = is_array( $decoded ) ? $decoded : [];
+		}
+
+		if ( ! is_array( $urls ) ) {
+			$urls = [];
 		}
 
 		$urls        = apply_filters( 'omgf_ajax_results', $urls, $params, $path );
