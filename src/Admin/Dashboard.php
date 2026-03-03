@@ -306,6 +306,11 @@ class Dashboard {
 									) ); ?>
 								</li>
 							<?php endif; ?>
+							<?php if ( self::has_multilingual_plugin() ) : ?>
+								<li>
+									<?php echo sprintf( esc_html__( '%s detected: optimize font subsets per language with Smart Optimize.', 'host-webfonts-local' ), self::get_multilingual_plugin() ); ?>
+								</li>
+							<?php endif; ?>
 						</ol>
 					</div>
 				<?php endif; ?>
@@ -326,22 +331,6 @@ class Dashboard {
 							<?php foreach ( $warnings as $warning_id ) : ?>
 								<?php $show_mark_as_fixed = true; ?>
 								<li id="omgf-notice-<?php echo esc_attr( $warning_id ); ?>">
-									<?php if ( $warning_id === 'multilingual_plugin' ) : ?>
-										<?php
-										$multilingual_plugin_name = self::get_multilingual_plugin();
-										$show_mark_as_fixed       = false;
-										?>
-										<?php echo apply_filters(
-											'omgf_notice_multilingual',
-											sprintf(
-												__(
-													'You\'re using %s — make sure your fonts match. OMGF Pro loads only the right font subsets per page, so your multilingual site stays fast in every language.',
-													'host-webfonts-local'
-												),
-												$multilingual_plugin_name
-											)
-										); ?>
-									<?php endif; ?>
 									<?php if ( $warning_id === 'is_multisite' ) : ?>
 										<?php echo wp_kses_post(
 											sprintf(
@@ -562,10 +551,6 @@ class Dashboard {
 			$warnings['google_fonts_checker'][ $path ] = $found_urls; // @codeCoverageIgnore
 		}
 
-		if ( ! empty( self::get_multilingual_plugin() ) ) {
-			$warnings[] = 'multilingual_plugin';
-		}
-
 		/**
 		 * Process hidden warnings.
 		 */
@@ -578,7 +563,27 @@ class Dashboard {
 		return $warnings;
 	}
 
-	private static function get_multilingual_plugin() {
+	/**
+	 * Check if this setup has a Multilingual Plugin.
+	 *
+	 * @return bool
+	 */
+	public static function has_multilingual_plugin() {
+		return ! empty( self::get_multilingual_plugin() );
+	}
+
+	/**
+	 * Checks if this has a Multilingual Plugin activated and returns the name.
+	 *
+	 * @return string Name of the activated Multilingual Plugin.
+	 */
+	public static function get_multilingual_plugin() {
+		static $plugin_name = '';
+
+		if ( ! empty( $plugin_name ) ) {
+			return $plugin_name;
+		}
+
 		$multilingual_plugins = [
 			'sitepress-multilingual-cms/sitepress.php' => 'WPML',
 			'translatepress-multilingual/index.php'    => 'TranslatePress',
@@ -594,6 +599,8 @@ class Dashboard {
 
 		foreach ( $multilingual_plugins as $path => $name ) {
 			if ( is_plugin_active( $path ) ) {
+				$plugin_name = $name;
+
 				return $name;
 			}
 		}

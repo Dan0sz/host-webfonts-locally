@@ -278,32 +278,6 @@ class AdminbarMenu {
 	 * @return bool
 	 */
 	private function has_multilingual_plugin() {
-		return ! empty( $this->get_multilingual_plugin() );
-	}
-
-	/**
-	 * @return string
-	 */
-	private function get_multilingual_plugin() {
-		$multilingual_plugins = [
-			'sitepress-multilingual-cms/sitepress.php' => 'WPML',
-			'translatepress-multilingual/index.php'    => 'TranslatePress',
-			'polylang/polylang.php'                    => 'Polylang',
-			'polylang-pro/polylang.php'                => 'Polylang Pro',
-			'weglot/weglot.php'                        => 'Weglot',
-			'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
-		];
-
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		foreach ( $multilingual_plugins as $path => $name ) {
-			if ( is_plugin_active( $path ) ) {
-				return $name;
-			}
-		}
-
-		return '';
+		return ! empty( Dashboard::get_multilingual_plugin() );
 	}
 }
