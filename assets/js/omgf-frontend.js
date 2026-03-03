@@ -226,6 +226,9 @@ window.addEventListener('load', () => {
 				result.impact = "High";
 			} else if (result.total_kb >= 20) {
 				result.impact = "Medium";
+			} else if (result.total_kb <= 20) {
+				// Ignore results under 20KB.
+				return {};
 			}
 
 			return result;
@@ -305,13 +308,13 @@ window.addEventListener('load', () => {
 
 				result.potential_delay_ms = Math.round(max_delay);
 
-				if (result.potential_delay_ms === 0) {
-					return result;
+				if (result.potential_delay_ms <= 10) {
+					return {};
 				}
 
 				if (result.potential_delay_ms > 100) {
 					result.impact = "High";
-				} else if (result.potential_delay_ms > 5) {
+				} else if (result.potential_delay_ms > 10) {
 					result.impact = "Medium";
 				}
 			} catch (e) {
