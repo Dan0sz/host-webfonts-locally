@@ -33,18 +33,16 @@ for (const file of jsFiles) {
    ===== */
 
 const CSS_DIR = 'assets/css';
-const cleanCss = new CleanCSS({level: 2});
-
+const cleanCss = new CleanCSS({
+	level: 2,
+	inline: false
+});
 const cssFiles = globSync(`${CSS_DIR}/**/*.css`, {
 	ignore: [`${CSS_DIR}/**/*.min.css`]
 });
 
 for (const file of cssFiles) {
 	const css = fs.readFileSync(file, 'utf8');
-	const cleanCss = new CleanCSS({
-		level: 2,
-		inline: false
-	});
 
 	const result = cleanCss.minify(css);
 
