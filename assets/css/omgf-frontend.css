@@ -21,7 +21,7 @@
 	animation: waiting 2.5s;
 }
 
-@-webkit-keyframes waiting {
+@keyframes waiting {
 	12.5%, 37.5%, 67.5%, 87.5% {
 		background-color: transparent;
 	}
@@ -46,7 +46,7 @@
 	animation: blinking-alert 2.5s; /* IE 10+, Fx 29+ */
 }
 
-@-webkit-keyframes blinking-alert {
+@keyframes blinking-alert {
 	12.5%, 37.5%, 67.5%, 87.5% {
 		background-color: transparent;
 	}
@@ -63,7 +63,7 @@
 	animation: blinking-warning 2.5s; /* IE 10+, Fx 29+ */
 }
 
-@-webkit-keyframes blinking-warning {
+@keyframes blinking-warning {
 	12.5%, 37.5%, 67.5%, 87.5% {
 		background-color: transparent;
 	}
@@ -80,7 +80,7 @@
 	animation: blinking-notice 2.5s; /* IE 10+, Fx 29+ */
 }
 
-@-webkit-keyframes blinking-notice {
+@keyframes blinking-notice {
 	12.5%, 37.5%, 67.5%, 87.5% {
 		background-color: transparent;
 	}
@@ -97,7 +97,7 @@
 	animation: blinking-info 2.5s; /* IE 10+, Fx 29+ */
 }
 
-@-webkit-keyframes blinking-info {
+@keyframes blinking-info {
 	12.5%, 37.5%, 67.5%, 87.5% {
 		background-color: transparent;
 	}
