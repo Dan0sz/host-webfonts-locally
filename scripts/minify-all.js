@@ -25,6 +25,11 @@ for (const file of jsFiles) {
 		process.exit(1);
 	}
 
+	if (!result.code) {
+		console.error(`❌ JS minify produced no output: ${file}`);
+		process.exit(1);
+	}
+
 	fs.writeFileSync(file.replace(/\.js$/, '.min.js'), result.code);
 }
 
