@@ -102,34 +102,39 @@ class AdminbarMenuTest extends TestCase {
 	 * @return void
 	 */
 	public function testMissingPreloadsNotice() {
-		$api     = new AdminbarMenu();
-		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
-		$request->set_param( 'path', '/' );
-		$request->set_param( 'urls', [] );
-		$request->set_param( 'missing_preloads', json_encode( [ 'Open Sans' ] ) );
+		try {
+			$api     = new AdminbarMenu();
+			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request->set_param( 'path', '/' );
+			$request->set_param( 'urls', [] );
+			$request->set_param( 'missing_preloads', json_encode( [ 'Open Sans' ] ) );
 
-		$response = $api->get_admin_bar_status( $request );
+			$response = $api->get_admin_bar_status( $request );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_FOUND_MISSING_PRELOADS );
+		}
 
 		$this->assertEquals( 'info', $response['status'] );
-
-		OMGF::delete_option( Settings::OMGF_FOUND_MISSING_PRELOADS );
 	}
 
 	/**
 	 * @return void
 	 */
 	public function testUnusedFontsNotice() {
-		$api     = new AdminbarMenu();
-		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
-		$request->set_param( 'path', '/' );
-		$request->set_param( 'urls', [] );
-		$request->set_param( 'unused_fonts', json_encode( [ 'Lato' ] ) );
+		try {
+			$api     = new AdminbarMenu();
+			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request->set_param( 'path', '/' );
+			$request->set_param( 'urls', [] );
+			$request->set_param( 'unused_fonts', json_encode( [ 'Lato' ] ) );
 
-		$response = $api->get_admin_bar_status( $request );
+			$response = $api->get_admin_bar_status( $request );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_FOUND_UNUSED_FONTS );
+
+		}
 
 		$this->assertEquals( 'info', $response['status'] );
-
-		OMGF::delete_option( Settings::OMGF_FOUND_UNUSED_FONTS );
 	}
 
 	/**
