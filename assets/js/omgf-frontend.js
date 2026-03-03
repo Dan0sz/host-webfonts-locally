@@ -14,6 +14,11 @@ window.addEventListener('load', () => {
 		 */
 		init: async function () {
 			try {
+				// menu_item only exists if the logged-in user has the manage_options cap.
+				if (this.menu_item === null) {
+					return;
+				}
+				
 				let google_fonts = this.filterGoogleFonts();
 				let response = await this.getStatus(google_fonts);
 
@@ -26,10 +31,6 @@ window.addEventListener('load', () => {
 				let preload_analysis = response.preload_analysis || {};
 				let missing_preloads = response.missing_preloads || [];
 
-				// menu_item only exists if the logged-in user has the manage_options cap.
-				if (this.menu_item === null) {
-					return;
-				}
 
 				this.menu_item.classList.add('dot');
 
@@ -37,8 +38,7 @@ window.addEventListener('load', () => {
 					this.menu_item.classList.add(status);
 				}
 
-				// Always include "on this page".
-				if (unused_fonts_analysis && unused_fonts_analysis.total_kb && unused_fonts_analysis.total_kb >= 10) {
+				if (unused_fonts_analysis && unused_fonts_analysis.total_kb) {
 					this.addInfoBox('unload_notice', unused_fonts_analysis);
 				}
 
@@ -225,13 +225,15 @@ window.addEventListener('load', () => {
 
 			result.total_kb = Math.round(result.total_kb * 10) / 10;
 
+			// Ignore results under 20KB.
+			if (result.total_kb <= 20) {
+				return {};
+			}
+
 			if (result.total_kb > 80) {
 				result.impact = "High";
-			} else if (result.total_kb >= 20) {
+			} else if (result.total_kb >= 50) {
 				result.impact = "Medium";
-			} else if (result.total_kb <= 20) {
-				// Ignore results under 20KB.
-				return {};
 			}
 
 			return result;
@@ -255,21 +257,21 @@ window.addEventListener('load', () => {
 			};
 
 			try {
-			let lcp_entry = await new Promise((resolve) => {
-				let observer = new PerformanceObserver((list) => {
-					let entries = list.getEntries();
-					let last_entry = entries[entries.length - 1];
-					observer.disconnect();
-					resolve(last_entry);
-				});
-				observer.observe({type: 'largest-contentful-paint', buffered: true});
+				let lcp_entry = await new Promise((resolve) => {
+					let observer = new PerformanceObserver((list) => {
+						let entries = list.getEntries();
+						let last_entry = entries[entries.length - 1];
+						observer.disconnect();
+						resolve(last_entry);
+					});
+					observer.observe({type: 'largest-contentful-paint', buffered: true});
 
-				// Timeout after 2 seconds if no LCP found.
-				setTimeout(() => {
-					observer.disconnect();
-					resolve(null);
-				}, 2000);
-			});
+					// Timeout after 2 seconds if no LCP found.
+					setTimeout(() => {
+						observer.disconnect();
+						resolve(null);
+					}, 2000);
+				});
 
 				if (!lcp_entry) {
 					return result;
@@ -312,13 +314,14 @@ window.addEventListener('load', () => {
 
 				result.potential_delay_ms = Math.round(max_delay);
 
+				// Ignore results under 10ms.
 				if (result.potential_delay_ms <= 10) {
 					return {};
 				}
 
 				if (result.potential_delay_ms > 100) {
 					result.impact = "High";
-				} else if (result.potential_delay_ms > 10) {
+				} else if (result.potential_delay_ms > 20) {
 					result.impact = "Medium";
 				}
 			} catch (e) {
