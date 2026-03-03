@@ -165,8 +165,6 @@ window.addEventListener('load', () => {
 			data.append('path', document.location.pathname);
 			data.append('urls', JSON.stringify(google_fonts));
 			data.append('params', JSON.stringify(params));
-			data.append('missing_preloads', JSON.stringify(missing_preloads));
-			data.append('unused_fonts', JSON.stringify(unused_fonts));
 			data.append('unused_fonts_analysis', JSON.stringify(unused_fonts_analysis));
 			data.append('preload_analysis', JSON.stringify(preload_analysis));
 
