@@ -140,7 +140,7 @@ window.addEventListener('load', () => {
 							let url_lower = url.toLowerCase();
 							// Use regex with word boundaries or check for the exact segment match
 							let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([._-]|\\.|$)', 'i');
-							
+
 							return pattern.test(url_lower);
 						});
 
@@ -388,6 +388,10 @@ window.addEventListener('load', () => {
 
 			if (status === 'unload_notice' || status === 'preload_notice') {
 				info_box.classList.add('info');
+			}
+
+			if (!omgf_frontend.sub_menu) {
+				return;
 			}
 
 			omgf_frontend.sub_menu.prepend(info_box);
