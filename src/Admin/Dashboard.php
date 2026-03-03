@@ -75,6 +75,15 @@ class Dashboard {
 		'youtube'                     => '//www.youtube.com/embed/', // Youtube Embeds
 	];
 
+	const MULTILANG_PLUGINS = [
+		'sitepress-multilingual-cms/sitepress.php' => 'WPML',
+		'translatepress-multilingual/index.php'    => 'TranslatePress',
+		'polylang/polylang.php'                    => 'Polylang',
+		'polylang-pro/polylang.php'                => 'Polylang Pro',
+		'weglot/weglot.php'                        => 'Weglot',
+		'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
+	];
+
 	/**
 	 * Generates the HTML for the dashboard by rendering any warnings and capturing the output buffer.
 	 *
@@ -593,20 +602,11 @@ class Dashboard {
 			return $plugin_name;
 		}
 
-		$multilingual_plugins = [
-			'sitepress-multilingual-cms/sitepress.php' => 'WPML',
-			'translatepress-multilingual/index.php'    => 'TranslatePress',
-			'polylang/polylang.php'                    => 'Polylang',
-			'polylang-pro/polylang.php'                => 'Polylang Pro',
-			'weglot/weglot.php'                        => 'Weglot',
-			'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
-		];
-
 		if ( ! function_exists( 'is_plugin_active' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		foreach ( $multilingual_plugins as $path => $name ) {
+		foreach ( self::MULTILANG_PLUGINS as $path => $name ) {
 			if ( is_plugin_active( $path ) ) {
 				$plugin_name = $name;
 

@@ -5,6 +5,8 @@
 
 namespace OMGF\Tests\Unit;
 
+use Brain\Monkey\Expectation\Exception\ExpectationArgsRequired;
+use OMGF\Admin\Dashboard;
 use OMGF\API\AdminbarMenu;
 use OMGF\Tests\TestCase;
 use Brain\Monkey\Functions;
@@ -40,18 +42,10 @@ class AdminbarMenuTest extends TestCase {
 
 	/**
 	 * @return void
+	 * @throws ExpectationArgsRequired
 	 */
 	public function testMultilingualPluginDetection() {
-		$multilingual_plugins = [
-			'sitepress-multilingual-cms/sitepress.php' => 'WPML',
-			'translatepress-multilingual/index.php'    => 'TranslatePress',
-			'polylang/polylang.php'                    => 'Polylang',
-			'polylang-pro/polylang.php'                => 'Polylang Pro',
-			'weglot/weglot.php'                        => 'Weglot',
-			'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
-		];
-
-		foreach ( $multilingual_plugins as $path => $_ ) {
+		foreach ( array_keys( Dashboard::MULTILANG_PLUGINS ) as $path ) {
 			Functions\when( 'is_plugin_active' )->alias( function ( $plugin_path ) use ( $path ) {
 				return $plugin_path === $path;
 			} );
