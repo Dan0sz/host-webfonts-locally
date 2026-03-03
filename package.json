@@ -14,7 +14,7 @@
   "homepage": "https://wordpress.org/plugins/host-webfonts-local/",
   "scripts": {
     "prod": "node scripts/minify-all.js",
-    "watch": "chokidar 'assets/js/**/*.js' 'assets/css/**/*.css' -i 'assets/**/*.min.*' -c 'npm run prod'"
+    "watch": "chokidar \"assets/js/**/*.js\" \"assets/css/**/*.css\" -i \"assets/**/*.min.*\" -c \"npm run prod\""
   },
   "devDependencies": {
     "chokidar-cli": "^3.0.0",
