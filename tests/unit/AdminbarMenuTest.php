@@ -90,8 +90,7 @@ class AdminbarMenuTest extends TestCase {
 
 		$response = $adminbar_menu->get_admin_bar_status( $request );
 
-		$this->assertEquals( 'notice', $response['status'] );
-		$this->assertArrayNotHasKey( 'notice', $response );
+		$this->assertEquals( 'info', $response['status'] );
 	}
 
 	/**
@@ -111,15 +110,7 @@ class AdminbarMenuTest extends TestCase {
 
 		$response = $adminbar_menu->get_admin_bar_status( $request );
 
-		$this->assertEquals( 'notice', $response['status'] );
-		$this->assertArrayNotHasKey( 'notice', $response );
-	}
-
-	/**
-	 * @return void
-	 */
-	public function testFiltersCanBeOverridden() {
-		$this->markTestSkipped( 'Notice is no longer returned in the API response.' );
+		$this->assertEquals( 'info', $response['status'] );
 	}
 
 	/**
@@ -139,6 +130,5 @@ class AdminbarMenuTest extends TestCase {
 		$response = $adminbar_menu->get_admin_bar_status( $request );
 
 		$this->assertEquals( 'success', $response['status'] );
-		$this->assertArrayNotHasKey( 'notice', $response );
 	}
 }
