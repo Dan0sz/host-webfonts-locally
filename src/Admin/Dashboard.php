@@ -175,7 +175,7 @@ class Dashboard {
 									'omgf_google_fonts_checker_no_potential_issues',
 									sprintf(
 										__(
-											'You can read <a href="%s" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
+											'You can read <a href="%s" rel="noopener noreferrer" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" rel="noopener noreferrer" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
 											'host-webfonts-local'
 										),
 										'https://daan.dev/docs/omgf-pro-troubleshooting/external-requests/',
@@ -189,7 +189,7 @@ class Dashboard {
 									'omgf_google_fonts_checker_potential_issues',
 									sprintf(
 										__(
-											'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href="%s" target="_blank">upgrade to OMGF Pro</a> might be required.',
+											'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href="%s" rel="noopener noreferrer" target="_blank">upgrade to OMGF Pro</a> might be required.',
 											'host-webfonts-local'
 										),
 										Settings::DAAN_WORDPRESS_OMGF_PRO
@@ -286,7 +286,7 @@ class Dashboard {
 						</p>
 						<p>
 							<?php echo wp_kses_post( sprintf(
-								__( 'You can <a href="%s" target="_blank">adjust font settings globally</a> in OMGF, or <a href="%s" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize font loading per page.', 'host-webfonts-local' ),
+								__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">adjust font settings globally</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize font loading per page.', 'host-webfonts-local' ),
 								'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold',
 								Settings::DAAN_WORDPRESS_OMGF_PRO
 							) ); ?>
@@ -350,7 +350,7 @@ class Dashboard {
 										<?php echo wp_kses_post(
 											sprintf(
 												__(
-													'It seems like Multisite is enabled. OMGF doesn\'t natively support Multisite. If you\'re getting CORS related errors on any of your network\'s sites, consider <a href="%s" target="_blank">upgrading to OMGF Pro</a>.',
+													'It seems like Multisite is enabled. OMGF doesn\'t natively support Multisite. If you\'re getting CORS related errors on any of your network\'s sites, consider <a href="%s" rel="noopener noreferrer" target="_blank">upgrading to OMGF Pro</a>.',
 													'host-webfonts-local'
 												),
 												Settings::DAAN_WORDPRESS_OMGF_PRO
@@ -359,9 +359,12 @@ class Dashboard {
 									<?php endif; ?>
 									<?php if ( $warning_id === 'no_ssl' ) : ?>
 										<?php echo wp_kses_post(
-											__(
-												'Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.',
-												'host-webfonts-local'
+											sprintf(
+												__(
+													'Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="%s" rel="noopener noreferrer" target="_blank">these steps</a> to fix it.',
+													'host-webfonts-local'
+												),
+												'https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/'
 											)
 										); ?>
 									<?php endif; ?>
@@ -377,7 +380,7 @@ class Dashboard {
 										<?php echo wp_kses_post(
 											sprintf(
 												__(
-													'Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href="%3$s" target="_blank">known issues</a> to fix it.',
+													'Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href="%3$s" rel="noopener noreferrer" target="_blank">known issues</a> to fix it.',
 													'host-webfonts-local'
 												),
 												ucfirst( $template_id ),
@@ -398,7 +401,7 @@ class Dashboard {
 										<?php echo wp_kses_post(
 											sprintf(
 												__(
-													'The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href="%3$s" target="_blank">known issues</a> for more information.',
+													'The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href="%3$s" rel="noopener noreferrer" target="_blank">known issues</a> for more information.',
 													'host-webfonts-local'
 												),
 												$plugin_name,
@@ -420,7 +423,7 @@ class Dashboard {
 										echo wp_kses_post(
 											sprintf(
 												__(
-													'The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href="%3$s" target="_blank">list of known issues</a> to fix it.',
+													'The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href="%3$s" rel="noopener noreferrer" target="_blank">list of known issues</a> to fix it.',
 													'host-webfonts-local'
 												),
 												$plugin_name,
@@ -435,7 +438,7 @@ class Dashboard {
 										<?php echo wp_kses_post(
 											sprintf(
 												__(
-													'%1$s is loading an embedded iframe on your site. %2$s can\'t process Google Fonts inside iframes. <a href="%3$s" target="_blank">Click here</a> to find out why and what you can do about it.',
+													'%1$s is loading an embedded iframe on your site. %2$s can\'t process Google Fonts inside iframes. <a href="%3$s" rel="noopener noreferrer" target="_blank">Click here</a> to find out why and what you can do about it.',
 													'host-webfonts-local'
 												),
 												$iframe_name,
