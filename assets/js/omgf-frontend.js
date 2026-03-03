@@ -18,7 +18,7 @@ window.addEventListener('load', () => {
 				if (this.menu_item === null) {
 					return;
 				}
-				
+
 				let google_fonts = this.filterGoogleFonts();
 				let response = await this.getStatus(google_fonts);
 
@@ -136,7 +136,12 @@ window.addEventListener('load', () => {
 					 */
 					if (font.status === 'loaded' && used_fonts_above_the_fold.includes(family)) {
 						let is_preloaded = preloaded_fonts.some((url) => {
-							return url.toLowerCase().includes(family.toLowerCase().replace(/\s/g, '-'));
+							let normalized_family = family.toLowerCase().replace(/\s/g, '-');
+							let url_lower = url.toLowerCase();
+							// Use regex with word boundaries or check for the exact segment match
+							let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([._-]|\\.|$)', 'i');
+							
+							return pattern.test(url_lower);
 						});
 
 						if (!is_preloaded && !missing_preloads.includes(family)) {
@@ -280,10 +285,10 @@ window.addEventListener('load', () => {
 				// Determine if LCP element contains visible text.
 				let lcp_element = lcp_entry.element;
 				let has_text = false;
-			let has_text = false;
-			if (lcp_element) {
-				has_text = typeof lcp_element.innerText === 'string' && lcp_element.innerText.trim().length > 0;
-			}
+
+				if (lcp_element) {
+					has_text = typeof lcp_element.innerText === 'string' && lcp_element.innerText.trim().length > 0;
+				}
 
 				if (!has_text) {
 					return result;
