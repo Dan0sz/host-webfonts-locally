@@ -319,12 +319,12 @@ class Dashboard {
 									) ); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( self::has_multilingual_plugin() ) : ?>
+							<?php if ( self::has_multilang_plugin() ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
 											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize to load font subsets per language and improve performance.', 'host-webfonts-local' ),
-											self::get_multilingual_plugin()
+											self::get_multilang_plugin()
 										)
 									); ?>
 								</li>
@@ -586,8 +586,8 @@ class Dashboard {
 	 *
 	 * @return bool
 	 */
-	public static function has_multilingual_plugin() {
-		return ! empty( self::get_multilingual_plugin() );
+	public static function has_multilang_plugin() {
+		return apply_filters( 'omgf_has_multilang_plugin', ! empty( self::get_multilang_plugin() ) );
 	}
 
 	/**
@@ -595,7 +595,7 @@ class Dashboard {
 	 *
 	 * @return string Name of the activated Multilingual Plugin.
 	 */
-	public static function get_multilingual_plugin() {
+	public static function get_multilang_plugin() {
 		static $plugin_name = '';
 
 		if ( ! empty( $plugin_name ) ) {

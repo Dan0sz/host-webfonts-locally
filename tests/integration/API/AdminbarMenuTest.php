@@ -77,4 +77,73 @@ class AdminbarMenuTest extends TestCase {
 			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
 	}
+
+	/**
+	 * @return void
+	 */
+	public function testMultilingualPluginDetection() {
+		try {
+			add_filter( 'omgf_has_multilang_plugin', '__return_true' );
+
+			$api     = new AdminbarMenu();
+			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request->set_param( 'path', '/' );
+			$request->set_param( 'urls', [] );
+
+			$response = $api->get_admin_bar_status( $request );
+		} finally {
+			remove_filter( 'omgf_has_multilang_plugin', '__return_true' );
+		}
+
+		$this->assertEquals( 'notice', $response['status'] );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testMissingPreloadsNotice() {
+		$api     = new AdminbarMenu();
+		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+		$request->set_param( 'path', '/' );
+		$request->set_param( 'urls', [] );
+		$request->set_param( 'missing_preloads', json_encode( [ 'Open Sans' ] ) );
+
+		$response = $api->get_admin_bar_status( $request );
+
+		$this->assertEquals( 'info', $response['status'] );
+
+		OMGF::delete_option( Settings::OMGF_FOUND_MISSING_PRELOADS );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testUnusedFontsNotice() {
+		$api     = new AdminbarMenu();
+		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+		$request->set_param( 'path', '/' );
+		$request->set_param( 'urls', [] );
+		$request->set_param( 'unused_fonts', json_encode( [ 'Lato' ] ) );
+
+		$response = $api->get_admin_bar_status( $request );
+
+		$this->assertEquals( 'info', $response['status'] );
+
+		OMGF::delete_option( Settings::OMGF_FOUND_UNUSED_FONTS );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testNoNoticesWhenConditionsNotMet() {
+		$api     = new AdminbarMenu();
+		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+		$request->set_param( 'path', '/' );
+		$request->set_param( 'urls', [] );
+
+		$response = $api->get_admin_bar_status( $request );
+
+		// This will return 'notice', because the test env doesn't have SSL.
+		$this->assertEquals( 'notice', $response['status'] );
+	}
 }

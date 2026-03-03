@@ -104,7 +104,7 @@ class AdminbarMenu {
 			$status = 'notice';
 		}
 
-		if ( empty ( $stored_results ) && Dashboard::has_multilingual_plugin() ) {
+		if ( empty ( $stored_results ) && Dashboard::has_multilang_plugin() ) {
 			$status = 'notice';
 		}
 
