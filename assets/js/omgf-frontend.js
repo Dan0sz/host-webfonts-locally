@@ -189,15 +189,16 @@ window.addEventListener('load', () => {
 		for_each_matching_resource: function (families, font_resources, callback) {
 			families.forEach((family) => {
 				let normalized_family = family.toLowerCase().replace(/\s/g, '-');
-				let matching_entry = font_resources.find((entry) => {
+				let matching_entries = font_resources.filter((entry) => {
 					let url_lower = entry.name.toLowerCase();
-					let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([._-]|\\.|$)', 'i');
+					let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([./_-]|\\.|$)', 'i');
+
 					return pattern.test(url_lower);
 				});
 
-				if (matching_entry) {
+				matching_entries.forEach((matching_entry) => {
 					callback(matching_entry, family);
-				}
+				});
 			});
 		},
 
