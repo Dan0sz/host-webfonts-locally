@@ -264,6 +264,27 @@ class Dashboard {
 				<?php if ( ! empty( $smart_optimize_metrics ) && OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Font loading on your site isn\'t fully optimized.', 'host-webfonts-local' ); ?></h4>
+						<p>
+							<?php echo wp_kses_post(
+								apply_filters(
+									'omgf_google_fonts_checker_general_text',
+									sprintf(
+										__(
+											'OMGF\'s integrated Fonts Performance Checker (introduced in v6.2) detected font files that should be optimized.',
+											'host-webfonts-local'
+										),
+										apply_filters( 'omgf_settings_page_title', 'OMGF' )
+									)
+								)
+							); ?>
+						</p>
+						<p>
+							<?php echo wp_kses_post( sprintf(
+								__( 'You can <a href="%s" target="_blank">adjust font settings globally</a> in OMGF, or <a href="%s" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize font loading per page.', 'host-webfonts-local' ),
+								'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold',
+								Settings::DAAN_WORDPRESS_OMGF_PRO
+							) ); ?>
+						</p>
 						<ol>
 							<?php if ( ! empty( $smart_optimize_metrics['highest_unused_kb'] ) ) : ?>
 								<li>
@@ -286,12 +307,6 @@ class Dashboard {
 								</li>
 							<?php endif; ?>
 						</ol>
-						<p>
-							<?php echo wp_kses_post( sprintf(
-								__( '<a href="%s" target="_blank">Upgrade to OMGF Pro</a> to fix this automatically.', 'host-webfonts-local' ),
-								Settings::DAAN_WORDPRESS_OMGF_PRO
-							) ); ?>
-						</p>
 					</div>
 				<?php endif; ?>
 				<?php if ( ! empty( $warnings ) ) : ?>
