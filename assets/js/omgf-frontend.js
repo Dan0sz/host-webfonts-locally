@@ -255,20 +255,21 @@ window.addEventListener('load', () => {
 			};
 
 			try {
-				let lcp_entry = await new Promise((resolve) => {
-					let observer = new PerformanceObserver((list) => {
-						let entries = list.getEntries();
-						let last_entry = entries[entries.length - 1];
-						resolve(last_entry);
-					});
-					observer.observe({type: 'largest-contentful-paint', buffered: true});
-
-					// Timeout after 2 seconds if no LCP found.
-					setTimeout(() => {
-						observer.disconnect();
-						resolve(null);
-					}, 2000);
+			let lcp_entry = await new Promise((resolve) => {
+				let observer = new PerformanceObserver((list) => {
+					let entries = list.getEntries();
+					let last_entry = entries[entries.length - 1];
+					observer.disconnect();
+					resolve(last_entry);
 				});
+				observer.observe({type: 'largest-contentful-paint', buffered: true});
+
+				// Timeout after 2 seconds if no LCP found.
+				setTimeout(() => {
+					observer.disconnect();
+					resolve(null);
+				}, 2000);
+			});
 
 				if (!lcp_entry) {
 					return result;
