@@ -164,6 +164,7 @@ class Ajax {
 				'exclude' => [],
 				'queue'   => [
 					Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS,
+					Settings::OMGF_PERF_CHECK,
 					Settings::OMGF_AVAILABLE_USED_SUBSETS,
 					Settings::OMGF_CACHE_IS_STALE,
 					Settings::OMGF_CACHE_TIMESTAMP,
