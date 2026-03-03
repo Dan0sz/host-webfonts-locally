@@ -190,8 +190,9 @@ window.addEventListener('load', () => {
 			families.forEach((family) => {
 				let normalized_family = family.toLowerCase().replace(/\s/g, '-');
 				let matching_entry = font_resources.find((entry) => {
+					let url_lower = entry.name.toLowerCase();
 					let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([._-]|\\.|$)', 'i');
-					return pattern.test(entry.name.toLowerCase());
+					return pattern.test(url_lower);
 				});
 
 				if (matching_entry) {
