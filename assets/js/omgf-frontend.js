@@ -39,11 +39,11 @@ window.addEventListener('load', () => {
 				}
 
 				if (unused_fonts_analysis && unused_fonts_analysis.total_kb) {
-					this.addInfoBox('unload_notice', unused_fonts_analysis);
+					this.add_info_box('unload_notice', unused_fonts_analysis);
 				}
 
 				if (preload_analysis && preload_analysis.impact && missing_preloads.length > 0) {
-					this.addInfoBox('preload_notice', preload_analysis, missing_preloads ? missing_preloads.length : 0);
+					this.add_info_box('preload_notice', preload_analysis, missing_preloads ? missing_preloads.length : 0);
 				}
 			} catch (error) {
 				console.error('OMGF - Error running Google Fonts Checker:', error);
@@ -531,7 +531,7 @@ window.addEventListener('load', () => {
 		/**
 		 * Adds the info box to the submenu.
 		 */
-		addInfoBox: function (status, data, count) {
+		add_info_box: function (status, data, count) {
 			let info_box = document.createElement('li');
 			info_box.id = 'wp-admin-bar-omgf-info';
 
