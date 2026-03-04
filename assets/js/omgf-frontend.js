@@ -39,11 +39,11 @@ window.addEventListener('load', () => {
 				}
 
 				if (unused_fonts_analysis && unused_fonts_analysis.count) {
-					this.add_info_box('unload_notice', unused_fonts_analysis);
+					this.addInfoBox('unload_notice', unused_fonts_analysis);
 				}
 
 				if (preload_analysis && preload_analysis.potential_delay_ms > 0 && missing_preloads.length > 0) {
-					this.add_info_box('preload_notice', preload_analysis, missing_preloads ? missing_preloads.length : 0);
+					this.addInfoBox('preload_notice', preload_analysis, missing_preloads ? missing_preloads.length : 0);
 				}
 			} catch (error) {
 				console.error('OMGF - Error running Google Fonts Checker:', error);
@@ -85,7 +85,7 @@ window.addEventListener('load', () => {
 		 * @param {string} property
 		 * @returns {string|null}
 		 */
-		get_font_face_property: function (rule, property) {
+		getFontFaceProperty: function (rule, property) {
 			let value = rule.style.getPropertyValue(property);
 
 			if (value) {
@@ -198,9 +198,9 @@ window.addEventListener('load', () => {
 							for (let j = 0; j < rules.length; j++) {
 								let rule = rules[j];
 								if (rule.constructor.name === 'CSSFontFaceRule' || rule.type === CSSRule.FONT_FACE_RULE) {
-									let rule_family = this.get_font_face_property(rule, 'font-family');
-									let rule_weight = this.get_font_face_property(rule, 'font-weight') || '400';
-									let rule_style = this.get_font_face_property(rule, 'font-style') || 'normal';
+									let rule_family = this.getFontFaceProperty(rule, 'font-family');
+									let rule_weight = this.getFontFaceProperty(rule, 'font-weight') || '400';
+									let rule_style = this.getFontFaceProperty(rule, 'font-style') || 'normal';
 
 									if (rule_weight === 'normal') rule_weight = '400';
 									if (rule_weight === 'bold') rule_weight = '700';
@@ -209,7 +209,7 @@ window.addEventListener('load', () => {
 										let src = rule.style.getPropertyValue('src') || rule.style.src;
 
 										if (!src) {
-											src = this.get_font_face_property(rule, 'src');
+											src = this.getFontFaceProperty(rule, 'src');
 										}
 
 										let match = src ? src.match(/url\(["']?([^"')]+)["']?\)/) : null;
@@ -280,8 +280,8 @@ window.addEventListener('load', () => {
 				});
 			}
 
-			const unused_fonts_analysis = this.analyze_unused_fonts(unused_fonts);
-			const preload_analysis = await this.analyze_preload_impact(missing_preloads);
+			const unused_fonts_analysis = this.analyzeUnusedFonts(unused_fonts);
+			const preload_analysis = await this.analyzePreloadImpact(missing_preloads);
 
 			let data = new FormData();
 			data.append('path', document.location.pathname);
@@ -306,7 +306,7 @@ window.addEventListener('load', () => {
 		 * @param {Array} font_resources
 		 * @param {Function} callback
 		 */
-		for_each_matching_resource: function (faces, font_resources, callback) {
+		forEachMatchingResources: function (faces, font_resources, callback) {
 			faces.forEach((face) => {
 				let family = face.family;
 				let font_url = face.url;
@@ -365,7 +365,7 @@ window.addEventListener('load', () => {
 		/**
 		 * @returns {Array}
 		 */
-		get_font_resources: function () {
+		getFontResources: function () {
 			let entries = window.performance.getEntriesByType("resource");
 			return entries.filter((entry) => {
 				return entry.name.match(/\.(woff|woff2|ttf|otf)(\?.*)?$/i);
@@ -378,7 +378,7 @@ window.addEventListener('load', () => {
 		 * @param {Array} unused_faces
 		 * @returns {Object}
 		 */
-		analyze_unused_fonts: function (unused_faces) {
+		analyzeUnusedFonts: function (unused_faces) {
 			if (unused_faces.length === 0) {
 				return {};
 			}
@@ -404,7 +404,7 @@ window.addEventListener('load', () => {
 		 * @param {Array} missing_preloads
 		 * @returns {Promise<Object>}
 		 */
-		analyze_preload_impact: async function (missing_preloads) {
+		analyzePreloadImpact: async function (missing_preloads) {
 			if (missing_preloads.length === 0) {
 				return {};
 			}
@@ -448,10 +448,10 @@ window.addEventListener('load', () => {
 					return result;
 				}
 
-				let font_resources = this.get_font_resources();
+				let font_resources = this.getFontResources();
 				let max_delay = 0;
 
-				this.for_each_matching_resource(missing_preloads, font_resources, (matching_entry) => {
+				this.forEachMatchingResources(missing_preloads, font_resources, (matching_entry) => {
 					let delay = matching_entry.responseEnd - lcp_entry.startTime;
 					if (delay > 0) {
 						result.affects_lcp = true;
@@ -505,7 +505,7 @@ window.addEventListener('load', () => {
 		/**
 		 * Adds the info box to the submenu.
 		 */
-		add_info_box: function (status, data, count) {
+		addInfoBox: function (status, data, count) {
 			let info_box = document.createElement('li');
 			info_box.id = 'wp-admin-bar-omgf-info';
 
