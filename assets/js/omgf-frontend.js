@@ -34,7 +34,7 @@ window.addEventListener('load', () => {
 
 				this.menu_item.classList.add('dot');
 
-				if (status && this.menu_item !== null) {
+				if (status) {
 					this.menu_item.classList.add(status);
 				}
 
