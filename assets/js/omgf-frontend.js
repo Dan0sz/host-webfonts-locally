@@ -42,7 +42,7 @@ window.addEventListener('load', () => {
 					this.add_info_box('unload_notice', unused_fonts_analysis);
 				}
 
-				if (preload_analysis && preload_analysis.impact && missing_preloads.length > 0) {
+				if (preload_analysis && preload_analysis.potential_delay_ms > 0 && missing_preloads.length > 0) {
 					this.add_info_box('preload_notice', preload_analysis, missing_preloads ? missing_preloads.length : 0);
 				}
 			} catch (error) {
