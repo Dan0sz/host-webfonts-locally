@@ -236,8 +236,6 @@ window.addEventListener('load', () => {
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
 					if (font.status === 'loaded' && used_faces_above_the_fold.includes(face_id)) {
-						console.log('Checking preload for:', family, weight, '| font_url:', font_url, '| face_id:', face_id);
-
 						let is_preloaded = preloaded_fonts.some((url) => {
 							// If we have the actual font URL, use it for exact matching.
 							if (font_url && url === font_url) {
