@@ -101,7 +101,7 @@ class AdminbarMenuTest extends TestCase {
 			remove_filter( 'omgf_has_multilang_plugin', '__return_true' );
 		}
 
-		$this->assertEquals( 'notice', $response['status'] );
+		$this->assertEquals( 'info', $response['status'] );
 	}
 
 	/**
