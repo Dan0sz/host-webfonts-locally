@@ -103,7 +103,7 @@ class AdminbarMenu {
 		}
 
 		if ( empty ( $stored_results ) && Dashboard::has_multilang_plugin() ) {
-			$status = 'notice';
+			$status = 'info';
 		}
 
 		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
