@@ -131,6 +131,12 @@ window.addEventListener('load', () => {
 				const scan_limit = 1500; // keep analysis bounded on very large DOMs
 				for (let i = 0; i < elements.length && i < scan_limit; i++) {
 					const element = elements[i];
+
+					// Skip the admin bar.
+					if (element.closest('#wpadminbar')) {
+						continue;
+					}
+
 					let rect = element.getBoundingClientRect();
 					let style = window.getComputedStyle(element);
 					let family = style.fontFamily.replace(/["']/g, '');
