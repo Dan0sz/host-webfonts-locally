@@ -302,10 +302,10 @@ class Dashboard {
 									); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( isset( $performance_checker_results['highest_unused_kb'], $performance_checker_results['highest_unused_path'] ) && (float) $performance_checker_results['highest_unused_kb'] > 0 ) : ?>
+							<?php if ( isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0 ) : ?>
 								<li>
-									<?php echo wp_kses_post( sprintf( __( 'Up to <strong>%s KB of unused fonts</strong> were detected on your site.', 'host-webfonts-local' ),
-										$performance_checker_results['highest_unused_kb'] ) ); ?>
+									<?php echo wp_kses_post( sprintf( _n( '<strong>%s unused font face</strong> was detected on your site.', 'Up to <strong>%s unused font faces</strong> were detected on your site.', (int) $performance_checker_results['highest_unused_count'], 'host-webfonts-local' ),
+										$performance_checker_results['highest_unused_count'] ) ); ?>
 									<?php echo wp_kses_post( sprintf(
 										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
 										home_url( $performance_checker_results['highest_unused_path'] ),

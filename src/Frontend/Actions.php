@@ -135,7 +135,7 @@ class Actions {
 				'info_box_alert_text'    => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
 				'info_box_notice_text'   => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
 				'info_box_preload_text'  => __( 'Potential render delay on this page: ~%sms (%s fonts not preloaded | Impact: %s)', 'host-webfonts-local' ),
-				'info_box_unload_text'   => __( '~%s KB unused fonts on this page (%s unnecessary font files | Impact: %s)', 'host-webfonts-local' ),
+				'info_box_unload_text'   => __( '%s unnecessary font files on this page | Impact: %s', 'host-webfonts-local' ),
 				'info_box_impact_high'   => __( 'High', 'host-webfonts-local' ),
 				'info_box_impact_medium' => __( 'Medium', 'host-webfonts-local' ),
 				'info_box_impact_low'    => __( 'Low', 'host-webfonts-local' ),

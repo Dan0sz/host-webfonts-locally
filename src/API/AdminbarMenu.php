@@ -120,8 +120,8 @@ class AdminbarMenu {
 			$updated        = false;
 			$path           = $params['path'] ?? '';
 
-			if ( ! empty( $unused_fonts_analysis['total_kb'] ) && ( empty( $stored_metrics['highest_unused_kb'] ) || $unused_fonts_analysis['total_kb'] > $stored_metrics['highest_unused_kb'] ) ) {
-				$stored_metrics['highest_unused_kb']        = $unused_fonts_analysis['total_kb'];
+			if ( ! empty( $unused_fonts_analysis['count'] ) && ( empty( $stored_metrics['highest_unused_count'] ) || $unused_fonts_analysis['count'] > $stored_metrics['highest_unused_count'] ) ) {
+				$stored_metrics['highest_unused_count']     = $unused_fonts_analysis['count'];
 				$stored_metrics['highest_unused_path']      = $path;
 				$stored_metrics['highest_unused_impact']    = $unused_fonts_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
 				$stored_metrics['highest_unused_timestamp'] = time();

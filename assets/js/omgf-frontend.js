@@ -38,7 +38,7 @@ window.addEventListener('load', () => {
 					this.menu_item.classList.add(status);
 				}
 
-				if (unused_fonts_analysis && unused_fonts_analysis.total_kb) {
+				if (unused_fonts_analysis && unused_fonts_analysis.count) {
 					this.add_info_box('unload_notice', unused_fonts_analysis);
 				}
 
@@ -216,9 +216,15 @@ window.addEventListener('load', () => {
 										if (match) {
 											let candidate_url = new URL(match[1], sheet.href || document.baseURI).href;
 
+											// Pass 1: find actual loaded URL.
 											if (loaded_font_urls.has(candidate_url)) {
 												font_url = candidate_url;
 												break;
+											}
+
+											// Pass 2: fallback to first valid candidate URL (for unused fonts).
+											if (!font_url) {
+												font_url = candidate_url;
 											}
 										}
 									}
@@ -227,7 +233,7 @@ window.addEventListener('load', () => {
 						} catch (e) {
 							// Ignore cross-origin stylesheet errors.
 						}
-						if (font_url) break;
+						if (font_url && loaded_font_urls.has(font_url)) break;
 					}
 
 					/**
@@ -261,9 +267,9 @@ window.addEventListener('load', () => {
 					/**
 					 * Scenario 3: Unused Fonts
 					 *
-					 * A font face is considered unused if it's loaded but not used ANYWHERE in the document.
+					 * A font face is considered unused if it's explicitly defined in the stylesheet, but the browser never loaded it (status === 'unloaded').
 					 */
-					if (font.status === 'loaded' && !used_faces_entire_document.includes(face_id)) {
+					if (font.status === 'unloaded' && !used_faces_entire_document.includes(face_id)) {
 						unused_fonts.push({
 							family: family,
 							weight: weight,
@@ -377,51 +383,19 @@ window.addEventListener('load', () => {
 				return {};
 			}
 
-			let result = {
-				total_kb: 0,
-				count: 0,
-				impact: omgf_frontend_i18n.info_box_impact_low,
-				files: []
+			let count = unused_faces.length;
+			let impact = omgf_frontend_i18n.info_box_impact_low;
+
+			if (count > 6) {
+				impact = omgf_frontend_i18n.info_box_impact_high;
+			} else if (count >= 3) {
+				impact = omgf_frontend_i18n.info_box_impact_medium;
+			}
+
+			return {
+				count: count,
+				impact: impact
 			};
-
-			let font_resources = this.get_font_resources();
-
-			this.for_each_matching_resource(unused_faces, font_resources, (matching_entry, family) => {
-				// Avoid double-counting the same file.
-				if (result.files.some((file) => file.url === matching_entry.name)) {
-					return;
-				}
-
-				let size = matching_entry.transferSize || matching_entry.encodedBodySize || 0;
-				let kb = Math.round((size / 1024) * 10) / 10;
-
-				result.total_kb += kb;
-				result.count++;
-				result.files.push({
-					family: family,
-					url: matching_entry.name,
-					kb: kb
-				});
-			});
-
-			if (result.count === 0) {
-				return result;
-			}
-
-			result.total_kb = Math.round(result.total_kb * 10) / 10;
-
-			// Ignore results under 20KB.
-			if (result.total_kb <= 20) {
-				return {};
-			}
-
-			if (result.total_kb > 80) {
-				result.impact = omgf_frontend_i18n.info_box_impact_high;
-			} else if (result.total_kb >= 50) {
-				result.impact = omgf_frontend_i18n.info_box_impact_medium;
-			}
-
-			return result;
 		},
 
 		/**
@@ -545,7 +519,7 @@ window.addEventListener('load', () => {
 
 			if (status === 'unload_notice') {
 				info_box.id = 'wp-admin-bar-omgf-unload-info';
-				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_unload_text, data.total_kb || 0, data.count || 0, data.impact || omgf_frontend_i18n.info_box_impact_low);
+				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_unload_text, data.count || 0, data.impact || omgf_frontend_i18n.info_box_impact_low);
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
 			}
 
