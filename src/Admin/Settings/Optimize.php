@@ -39,7 +39,7 @@ class Optimize extends Builder {
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'open_task_manager' ], 20 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 21 );
-		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_warnings' ], 23 );
+		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_notices' ], 23 );
 		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_status' ], 25 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_google_fonts_checker' ], 27 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_test_mode' ], 29 );
