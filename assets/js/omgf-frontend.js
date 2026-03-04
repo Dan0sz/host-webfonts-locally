@@ -79,6 +79,26 @@ window.addEventListener('load', () => {
 		},
 
 		/**
+		 * Helper to get property value from a CSSRule, with fallback for Firefox.
+		 *
+		 * @param {CSSRule} rule
+		 * @param {string} property
+		 * @returns {string|null}
+		 */
+		get_font_face_property: function (rule, property) {
+			let value = rule.style.getPropertyValue(property);
+
+			if (value) {
+				return value.replace(/["']/g, '').trim();
+			}
+
+			// Fallback: parse cssText (needed for Firefox)
+			let match = rule.cssText.match(new RegExp(property + '\\s*:\\s*([^;]+)', 'i'));
+
+			return match ? match[1].replace(/["']/g, '').trim() : null;
+		},
+
+		/**
 		 * Stores google_fonts in the DB and retrieves the status to be added to the admin bar classList.
 		 *
 		 * @param google_fonts
@@ -133,15 +153,82 @@ window.addEventListener('load', () => {
 							used_faces_entire_document.push(face_id);
 						}
 					});
+
+					['::before', '::after'].forEach((pseudo) => {
+						let pseudo_style = window.getComputedStyle(element, pseudo);
+						let pseudo_family = pseudo_style.fontFamily.replace(/["']/g, '');
+						let pseudo_weight = pseudo_style.fontWeight;
+						let pseudo_font_style = pseudo_style.fontStyle;
+
+						pseudo_family.split(',').forEach((font) => {
+							font = font.trim();
+							let face_id = `${font}-${pseudo_weight}-${pseudo_font_style}`;
+
+							if (in_viewport && !used_faces_above_the_fold.includes(face_id)) {
+								used_faces_above_the_fold.push(face_id);
+							}
+
+							if (!used_faces_entire_document.includes(face_id)) {
+								used_faces_entire_document.push(face_id);
+							}
+						});
+					});
 				}
+
+				let loaded_font_urls = new Set(
+					window.performance.getEntriesByType('resource')
+						.filter(e => e.name.match(/\.(woff2?|ttf|otf)(\?.*)?$/i))
+						.map(e => e.name)
+				);
 
 				document.fonts.forEach((font) => {
 					let family = font.family.replace(/["']/g, '');
 					let weight = font.weight;
 					let style = font.style;
 					let face_id = `${family}-${weight}-${style}`;
-					let font_src = font.src ? font.src.match(/url\("?(.+?)"?\)/) : null;
-					let font_url = font_src ? font_src[1] : '';
+					let font_url = '';
+
+					// Try to find the URL for this font face in the stylesheet rules.
+					for (let i = 0; i < document.styleSheets.length; i++) {
+						try {
+							let sheet = document.styleSheets[i];
+							let rules = sheet.cssRules || sheet.rules;
+							if (!rules) continue;
+
+							for (let j = 0; j < rules.length; j++) {
+								let rule = rules[j];
+								if (rule.constructor.name === 'CSSFontFaceRule' || rule.type === CSSRule.FONT_FACE_RULE) {
+									let rule_family = this.get_font_face_property(rule, 'font-family');
+									let rule_weight = this.get_font_face_property(rule, 'font-weight') || '400';
+									let rule_style = this.get_font_face_property(rule, 'font-style') || 'normal';
+
+									if (rule_weight === 'normal') rule_weight = '400';
+									if (rule_weight === 'bold') rule_weight = '700';
+
+									if (rule_family === family && rule_weight === weight && rule_style === style) {
+										let src = rule.style.getPropertyValue('src') || rule.style.src;
+
+										if (!src) {
+											src = this.get_font_face_property(rule, 'src');
+										}
+
+										let match = src ? src.match(/url\(["']?([^"')]+)["']?\)/) : null;
+										if (match) {
+											let candidate_url = new URL(match[1], sheet.href || document.baseURI).href;
+
+											if (loaded_font_urls.has(candidate_url)) {
+												font_url = candidate_url;
+												break;
+											}
+										}
+									}
+								}
+							}
+						} catch (e) {
+							// Ignore cross-origin stylesheet errors.
+						}
+						if (font_url) break;
+					}
 
 					/**
 					 * Scenario 2: Missing Preloads
@@ -149,6 +236,8 @@ window.addEventListener('load', () => {
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
 					if (font.status === 'loaded' && used_faces_above_the_fold.includes(face_id)) {
+						console.log('Checking preload for:', family, weight, '| font_url:', font_url, '| face_id:', face_id);
+
 						let is_preloaded = preloaded_fonts.some((url) => {
 							// If we have the actual font URL, use it for exact matching.
 							if (font_url && url === font_url) {
@@ -163,8 +252,11 @@ window.addEventListener('load', () => {
 							return pattern.test(url_lower);
 						});
 
-						if (!is_preloaded && !missing_preloads.includes(family)) {
-							missing_preloads.push(family);
+						if (!is_preloaded && !missing_preloads.some(f => f.family === family && f.url === font_url)) {
+							missing_preloads.push({
+								family: family,
+								url: font_url
+							});
 						}
 					}
 
@@ -212,8 +304,8 @@ window.addEventListener('load', () => {
 		 */
 		for_each_matching_resource: function (faces, font_resources, callback) {
 			faces.forEach((face) => {
-				let family = typeof face === 'string' ? face : face.family;
-				let font_url = typeof face === 'object' ? face.url : '';
+				let family = face.family;
+				let font_url = face.url;
 				let normalized_family = family.toLowerCase().replace(/\s/g, '-');
 
 				let matching_entries = font_resources.filter((entry) => {
@@ -231,7 +323,7 @@ window.addEventListener('load', () => {
 					}
 
 					// If we only have a family (e.g. for preload check), stop here.
-					if (typeof face === 'string') {
+					if (typeof face.weight === 'undefined') {
 						return true;
 					}
 
