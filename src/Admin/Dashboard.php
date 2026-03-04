@@ -94,7 +94,7 @@ class Dashboard {
 	public static function get_dashboard_html() {
 		ob_start();
 
-		self::render_warnings();
+		self::render_notices();
 
 		return ob_get_clean();
 	}
@@ -104,7 +104,7 @@ class Dashboard {
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public static function render_warnings() {
+	public static function render_notices() {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
 			<tr id="task-manager-notice-test-mode-row">
 				<td colspan="2" class="task-manager-row">
@@ -132,7 +132,7 @@ class Dashboard {
 				$plugins                      = self::get_active_plugins();
 				$warnings                     = self::get_warnings();
 				$google_fonts_checker_results = $warnings['google_fonts_checker'] ?? [];
-				$smart_optimize_metrics       = OMGF::get_option( Settings::OMGF_PERF_CHECK, [] );
+				$performance_checker_results  = OMGF::get_option( Settings::OMGF_PERF_CHECK, [] );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
 					unset( $warnings['google_fonts_checker'] );
@@ -270,7 +270,7 @@ class Dashboard {
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
-				<?php if ( ! empty( $smart_optimize_metrics ) && OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
+				<?php if ( ! empty( $performance_checker_results ) ) : ?>
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Font loading on your site isn\'t fully optimized.', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -286,44 +286,44 @@ class Dashboard {
 						</p>
 						<p>
 							<?php echo wp_kses_post( sprintf(
-								__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">adjust font settings globally</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize font loading per page.', 'host-webfonts-local' ),
+								__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">manually adjust font settings globally</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize font loading per page.', 'host-webfonts-local' ),
 								'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold',
 								Settings::DAAN_WORDPRESS_OMGF_PRO
 							) ); ?>
 						</p>
 						<ol>
-							<?php if ( isset( $smart_optimize_metrics['highest_unused_kb'], $smart_optimize_metrics['highest_unused_path'] ) && (float) $smart_optimize_metrics['highest_unused_kb'] > 0 ) : ?>
-								<li>
-									<?php echo wp_kses_post( sprintf( __( 'Up to <strong>%s KB of unused fonts</strong> were detected on your site.', 'host-webfonts-local' ),
-										$smart_optimize_metrics['highest_unused_kb'] ) ); ?>
-									<?php echo wp_kses_post( sprintf(
-										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
-										home_url( $smart_optimize_metrics['highest_unused_path'] ),
-										$smart_optimize_metrics['highest_unused_path'] === '/' ? $smart_optimize_metrics['highest_unused_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
-											$smart_optimize_metrics['highest_unused_path']
-									) ); ?>
-								</li>
-							<?php endif; ?>
-							<?php if ( isset( $smart_optimize_metrics['highest_delay_ms'], $smart_optimize_metrics['highest_delay_path'] ) && (int) $smart_optimize_metrics['highest_delay_ms'] > 0 ) : ?>
-								<li>
-									<?php echo wp_kses_post( sprintf( __( 'Font loading is causing up to <strong>%sms of delay</strong> on your site.', 'host-webfonts-local' ),
-										$smart_optimize_metrics['highest_delay_ms'] ) ); ?>
-									<?php echo wp_kses_post( sprintf(
-										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
-										home_url( $smart_optimize_metrics['highest_delay_path'] ),
-										$smart_optimize_metrics['highest_delay_path'] === '/' ? $smart_optimize_metrics['highest_delay_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
-											$smart_optimize_metrics['highest_delay_path']
-									) ); ?>
-								</li>
-							<?php endif; ?>
 							<?php if ( self::has_multilang_plugin() ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
-											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize to load font subsets per language and improve performance.', 'host-webfonts-local' ),
+											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize (Pro) to load separate font subsets per language and improve performance.', 'host-webfonts-local' ),
 											self::get_multilang_plugin()
 										)
 									); ?>
+								</li>
+							<?php endif; ?>
+							<?php if ( isset( $performance_checker_results['highest_unused_kb'], $performance_checker_results['highest_unused_path'] ) && (float) $performance_checker_results['highest_unused_kb'] > 0 ) : ?>
+								<li>
+									<?php echo wp_kses_post( sprintf( __( 'Up to <strong>%s KB of unused fonts</strong> were detected on your site.', 'host-webfonts-local' ),
+										$performance_checker_results['highest_unused_kb'] ) ); ?>
+									<?php echo wp_kses_post( sprintf(
+										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
+										home_url( $performance_checker_results['highest_unused_path'] ),
+										$performance_checker_results['highest_unused_path'] === '/' ? $performance_checker_results['highest_unused_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
+											$performance_checker_results['highest_unused_path']
+									) ); ?>
+								</li>
+							<?php endif; ?>
+							<?php if ( isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0 ) : ?>
+								<li>
+									<?php echo wp_kses_post( sprintf( __( 'Font loading is causing up to <strong>%sms of delay</strong> on your site.', 'host-webfonts-local' ),
+										$performance_checker_results['highest_delay_ms'] ) ); ?>
+									<?php echo wp_kses_post( sprintf(
+										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
+										home_url( $performance_checker_results['highest_delay_path'] ),
+										$performance_checker_results['highest_delay_path'] === '/' ? $performance_checker_results['highest_delay_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
+											$performance_checker_results['highest_delay_path']
+									) ); ?>
 								</li>
 							<?php endif; ?>
 						</ol>
