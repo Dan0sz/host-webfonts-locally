@@ -100,42 +100,61 @@ window.addEventListener('load', () => {
 					preloaded_fonts.push(link.href);
 				});
 
-				let used_fonts_above_the_fold = [];
+				let used_faces_above_the_fold = [];
+				let used_faces_entire_document = [];
 
 				/**
-				 * Only fonts used above the fold should be suggested for preload.
+				 * Both Missing Preloads and Unused Font Faces should detect font faces.
+				 * Missing Preloads only scans Above The Fold, and Unused Font Faces scans the entire document.
 				 */
 				const elements = document.querySelectorAll('body *');
 				const scan_limit = 1500; // keep analysis bounded on very large DOMs
 				for (let i = 0; i < elements.length && i < scan_limit; i++) {
 					const element = elements[i];
 					let rect = element.getBoundingClientRect();
+					let style = window.getComputedStyle(element);
+					let family = style.fontFamily.replace(/["']/g, '');
+					let weight = style.fontWeight;
+					let font_style = style.fontStyle;
 
 					// If the element is in the viewport.
-					if (rect.top < window.innerHeight && rect.bottom > 0 && rect.left < window.innerWidth && rect.right > 0) {
-						let family = window.getComputedStyle(element).fontFamily.replace(/["']/g, '');
+					let in_viewport = rect.top < window.innerHeight && rect.bottom > 0 && rect.left < window.innerWidth && rect.right > 0;
 
-						// Handle font-family stacks (e.g. "Open Sans", sans-serif).
-						family.split(',').forEach((font) => {
-							font = font.trim();
+					// Handle font-family stacks (e.g. "Open Sans", sans-serif).
+					family.split(',').forEach((font) => {
+						font = font.trim();
+						let face_id = `${font}-${weight}-${font_style}`;
 
-							if (!used_fonts_above_the_fold.includes(font)) {
-								used_fonts_above_the_fold.push(font);
-							}
-						});
-					}
+						if (in_viewport && !used_faces_above_the_fold.includes(face_id)) {
+							used_faces_above_the_fold.push(face_id);
+						}
+
+						if (!used_faces_entire_document.includes(face_id)) {
+							used_faces_entire_document.push(face_id);
+						}
+					});
 				}
 
 				document.fonts.forEach((font) => {
 					let family = font.family.replace(/["']/g, '');
+					let weight = font.weight;
+					let style = font.style;
+					let face_id = `${family}-${weight}-${style}`;
+					let font_src = font.src ? font.src.match(/url\("?(.+?)"?\)/) : null;
+					let font_url = font_src ? font_src[1] : '';
 
 					/**
 					 * Scenario 2: Missing Preloads
 					 *
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
-					if (font.status === 'loaded' && used_fonts_above_the_fold.includes(family)) {
+					if (font.status === 'loaded' && used_faces_above_the_fold.includes(face_id)) {
 						let is_preloaded = preloaded_fonts.some((url) => {
+							// If we have the actual font URL, use it for exact matching.
+							if (font_url && url === font_url) {
+								return true;
+							}
+
 							let normalized_family = family.toLowerCase().replace(/\s/g, '-');
 							let url_lower = url.toLowerCase();
 							// Use regex with word boundaries or check for the exact segment match
@@ -151,9 +170,16 @@ window.addEventListener('load', () => {
 
 					/**
 					 * Scenario 3: Unused Fonts
+					 *
+					 * A font face is considered unused if it's loaded but not used ANYWHERE in the document.
 					 */
-					if (font.status === 'unloaded' && !unused_fonts.includes(family)) {
-						unused_fonts.push(family);
+					if (font.status === 'loaded' && !used_faces_entire_document.includes(face_id)) {
+						unused_fonts.push({
+							family: family,
+							weight: weight,
+							style: style,
+							url: font_url
+						});
 					}
 				});
 			}
@@ -180,18 +206,58 @@ window.addEventListener('load', () => {
 		},
 
 		/**
-		 * @param {Array} families
+		 * @param {Array} faces
 		 * @param {Array} font_resources
 		 * @param {Function} callback
 		 */
-		for_each_matching_resource: function (families, font_resources, callback) {
-			families.forEach((family) => {
+		for_each_matching_resource: function (faces, font_resources, callback) {
+			faces.forEach((face) => {
+				let family = typeof face === 'string' ? face : face.family;
+				let font_url = typeof face === 'object' ? face.url : '';
 				let normalized_family = family.toLowerCase().replace(/\s/g, '-');
+
 				let matching_entries = font_resources.filter((entry) => {
 					let url_lower = entry.name.toLowerCase();
+
+					// If we have an exact URL match, prioritize it.
+					if (font_url && entry.name === font_url) {
+						return true;
+					}
+
 					let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([./_-]|\\.|$)', 'i');
 
-					return pattern.test(url_lower);
+					if (!pattern.test(url_lower)) {
+						return false;
+					}
+
+					// If we only have a family (e.g. for preload check), stop here.
+					if (typeof face === 'string') {
+						return true;
+					}
+
+					/**
+					 * For unused font analysis, we want to match the specific face (weight/style).
+					 */
+					let weight = face.weight;
+					let style = face.style;
+
+					// Map common font weight names to numbers if needed (document.fonts already uses numbers mostly)
+					// Handle cases like "normal", "bold", etc.
+					if (weight === 'normal') weight = '400';
+					if (weight === 'bold') weight = '700';
+
+					// Check if the URL contains the weight.
+					let weight_pattern = new RegExp(`[./_-]${weight}([./_-]|\\.|$)`, 'i');
+
+					// Check for italic.
+					let style_match = true;
+					if (style === 'italic') {
+						style_match = url_lower.includes('italic') || url_lower.includes('i.woff'); // Handle some minified naming
+					} else if (style === 'normal') {
+						style_match = !url_lower.includes('italic');
+					}
+
+					return weight_pattern.test(url_lower) && style_match;
 				});
 
 				matching_entries.forEach((matching_entry) => {
@@ -213,11 +279,11 @@ window.addEventListener('load', () => {
 		/**
 		 * Analyze unused fonts for impact.
 		 *
-		 * @param {Array} unused_fonts
+		 * @param {Array} unused_faces
 		 * @returns {Object}
 		 */
-		analyze_unused_fonts: function (unused_fonts) {
-			if (unused_fonts.length === 0) {
+		analyze_unused_fonts: function (unused_faces) {
+			if (unused_faces.length === 0) {
 				return {};
 			}
 
@@ -230,7 +296,12 @@ window.addEventListener('load', () => {
 
 			let font_resources = this.get_font_resources();
 
-			this.for_each_matching_resource(unused_fonts, font_resources, (matching_entry, family) => {
+			this.for_each_matching_resource(unused_faces, font_resources, (matching_entry, family) => {
+				// Avoid double-counting the same file.
+				if (result.files.some((file) => file.url === matching_entry.name)) {
+					return;
+				}
+
 				let size = matching_entry.transferSize || matching_entry.encodedBodySize || 0;
 				let kb = Math.round((size / 1024) * 10) / 10;
 
