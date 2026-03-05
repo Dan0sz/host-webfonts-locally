@@ -292,7 +292,7 @@ class Dashboard {
 							) ); ?>
 						</p>
 						<ol>
-							<?php if ( self::has_multilang_plugin() ) : ?>
+							<?php if ( self::has_multilang_plugin() && count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) ) > 1 ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
