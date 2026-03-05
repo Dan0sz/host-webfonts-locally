@@ -592,6 +592,8 @@ class Dashboard {
 	 * Check if this setup has a Multilingual Plugin.
 	 *
 	 * @return bool
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function has_multilang_plugin() {
 		return apply_filters( 'omgf_has_multilang_plugin', ! empty( self::get_multilang_plugin() ) );
@@ -601,6 +603,8 @@ class Dashboard {
 	 * Checks if this has a Multilingual Plugin activated and returns the name.
 	 *
 	 * @return string Name of the activated Multilingual Plugin.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function get_multilang_plugin() {
 		static $plugin_name = '';

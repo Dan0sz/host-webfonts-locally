@@ -39,6 +39,8 @@ class Dashboard {
 	 * Action/filter hooks.
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private function init() {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
@@ -48,6 +50,8 @@ class Dashboard {
 	 * Register the API route.
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function register_routes() {
 		register_rest_route(

@@ -12,6 +12,13 @@ use OMGF\Helper as OMGF;
 use OMGF\Tests\TestCase;
 
 class AdminbarMenuTest extends TestCase {
+	public function setUp(): void {
+		parent::setUp();
+		// Ensure we start with clean options
+		OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		OMGF::delete_option( Settings::OMGF_PERF_CHECK );
+	}
+
 	/**
 	 * @see AdminbarMenu::get_admin_bar_status()
 	 * @return void
@@ -266,5 +273,80 @@ class AdminbarMenuTest extends TestCase {
 		}
 
 		$this->assertEquals( 150, $metrics['highest_delay_ms'] );
+	}
+
+	/**
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	public function testUpdateGoogleFontsCheckerResultsEdgeCases() {
+		// Case 1: urls is a JSON string (covers lines 195-196)
+		try {
+			$api = new AdminbarMenu();
+
+			// Use reflection to test private method update_google_fonts_checker_results
+			$reflection = new \ReflectionClass( $api );
+			$method     = $reflection->getMethod( 'update_google_fonts_checker_results' );
+			$method->setAccessible( true );
+
+			$urls = [ 'https://fonts.googleapis.com/css?family=Open+Sans' ];
+			$post = [
+				'path' => '/edge-case-test',
+				'urls' => json_encode( $urls ),
+			];
+			$method->invoke( $api, $post );
+
+			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
+
+		$this->assertArrayHasKey( $urls[0], $results );
+
+		// Case 2: urls is not a string or array (covers line 200)
+		try {
+			$post = [
+				'path' => '/edge-case-test',
+				'urls' => 123, // Invalid type
+			];
+			$method->invoke( $api, $post );
+
+			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
+
+		$this->assertEmpty( $results );
+	}
+
+	/**
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	public function testDecodeJsonArrayEdgeCases() {
+		try {
+			$api = new AdminbarMenu();
+
+			// Use reflection to test private method decode_json_array
+			$reflection = new \ReflectionClass( $api );
+			$method     = $reflection->getMethod( 'decode_json_array' );
+			$method->setAccessible( true );
+		} finally {
+			// Do nothing.
+		}
+
+		// Case: input is not a string or is empty (covers line 278)
+		$this->assertEquals( [], $method->invoke( $api, null ) );
+		$this->assertEquals( [], $method->invoke( $api, '' ) );
+		$this->assertEquals( [], $method->invoke( $api, 123 ) );
+
+		// Case: input is valid array
+		$this->assertEquals( [ 'test' ], $method->invoke( $api, [ 'test' ] ) );
+
+		// Case: input is valid JSON string
+		$this->assertEquals( [ 'test' => 1 ], $method->invoke( $api, '{"test":1}' ) );
+
+		// Case: input is an invalid JSON string
+		$this->assertEquals( [], $method->invoke( $api, '{invalid' ) );
 	}
 }

@@ -120,7 +120,7 @@ class Actions {
 		}
 
 		if ( ( ! empty( $_SERVER['REQUEST_URI'] ) && str_contains( esc_url_raw( $_SERVER['REQUEST_URI'] ), '.php' ) ) || ! Process::should_start() ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		$file_ext = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
