@@ -31,7 +31,6 @@ window.addEventListener('load', () => {
 				let preload_analysis = response.preload_analysis || {};
 				let missing_preloads = response.missing_preloads || [];
 
-
 				this.menu_item.classList.add('dot');
 
 				if (status) {
@@ -127,15 +126,10 @@ window.addEventListener('load', () => {
 				 * Both Missing Preloads and Unused Font Faces should detect font faces.
 				 * Missing Preloads only scans Above The Fold, and Unused Font Faces scans the entire document.
 				 */
-				const elements = document.querySelectorAll('body *');
+				const elements = document.querySelectorAll('body *:not(#wpadminbar):not(#wpadminbar *)');
 				const scan_limit = 1500; // keep analysis bounded on very large DOMs
 				for (let i = 0; i < elements.length && i < scan_limit; i++) {
 					const element = elements[i];
-
-					// Skip the admin bar.
-					if (element.closest('#wpadminbar')) {
-						continue;
-					}
 
 					let rect = element.getBoundingClientRect();
 					let style = window.getComputedStyle(element);
