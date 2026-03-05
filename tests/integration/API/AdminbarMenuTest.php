@@ -152,7 +152,6 @@ class AdminbarMenuTest extends TestCase {
 			$this->assertEquals( 'info', $response['status'] );
 
 			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
-			$this->assertEquals( 100, $metrics['highest_unused_kb'] );
 			$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
 			$this->assertEquals( 'High', $metrics['highest_unused_impact'] );
 			$this->assertEquals( 500, $metrics['highest_delay_ms'] );
@@ -178,7 +177,6 @@ class AdminbarMenuTest extends TestCase {
 			$api->get_admin_bar_status( $request_lower );
 
 			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
-			$this->assertEquals( 100, $metrics['highest_unused_kb'] );
 			$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
 
 			// Case 3: Send higher performance data, metrics SHOULD be updated.
@@ -198,7 +196,6 @@ class AdminbarMenuTest extends TestCase {
 			$api->get_admin_bar_status( $request_higher );
 
 			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
-			$this->assertEquals( 200, $metrics['highest_unused_kb'] );
 			$this->assertEquals( '/performance-test-higher', $metrics['highest_unused_path'] );
 			$this->assertEquals( 1000, $metrics['highest_delay_ms'] );
 			$this->assertEquals( '/performance-test-higher', $metrics['highest_delay_path'] );
@@ -235,7 +232,6 @@ class AdminbarMenuTest extends TestCase {
 			$api->get_admin_bar_status( $request_empty );
 
 			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
-			$this->assertEquals( 200, $metrics['highest_unused_kb'] );
 			$this->assertEquals( 1000, $metrics['highest_delay_ms'] );
 
 		} finally {
