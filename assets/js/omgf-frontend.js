@@ -39,21 +39,24 @@ window.addEventListener('load', () => {
 
 				if (omgf_frontend_i18n.multilang_plugin_used) {
 					let count = omgf_frontend_i18n.subsets_count;
-					let impact = omgf_frontend_i18n.info_box_impact_low;
+					
+					if (count > 1) {
+						let impact = omgf_frontend_i18n.info_box_impact_low;
 
-					if (count > 1 && count <= 3) {
-						impact = omgf_frontend_i18n.info_box_impact_medium;
-					} else if (count > 3) {
-						impact = omgf_frontend_i18n.info_box_impact_high;
+						if (count <= 3) {
+							impact = omgf_frontend_i18n.info_box_impact_medium;
+						} else if (count > 3) {
+							impact = omgf_frontend_i18n.info_box_impact_high;
+						}
+
+						let multilang_plugin = {
+							"name": omgf_frontend_i18n.multilang_plugin_name,
+							"subsets_count": count,
+							"impact": impact,
+						}
+
+						this.addInfoBox('multilang_plugin', multilang_plugin);
 					}
-
-					let multilang_plugin = {
-						"name": omgf_frontend_i18n.multilang_plugin_name,
-						"subsets_count": omgf_frontend_i18n.subsets_count,
-						"impact": impact,
-					}
-
-					this.addInfoBox('multilang_plugin', multilang_plugin);
 				}
 
 				if (unused_fonts_analysis && unused_fonts_analysis.count) {
