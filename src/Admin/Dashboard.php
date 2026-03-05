@@ -290,6 +290,7 @@ class Dashboard {
 								'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold',
 								Settings::DAAN_WORDPRESS_OMGF_PRO
 							) ); ?>
+
 						</p>
 						<ol>
 							<?php if ( self::has_multilang_plugin() && count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) ) > 1 ) : ?>
