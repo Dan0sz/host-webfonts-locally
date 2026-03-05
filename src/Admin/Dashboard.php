@@ -272,13 +272,13 @@ class Dashboard {
 				<?php endif; ?>
 				<?php if ( ! empty( $performance_checker_results ) ) : ?>
 					<div class="task-manager-notice info">
-						<h4><?php echo esc_html__( 'Font loading on your site isn\'t fully optimized.', 'host-webfonts-local' ); ?></h4>
+						<h4><?php echo esc_html__( 'Your fonts are slowing down this site.', 'host-webfonts-local' ); ?></h4>
 						<p>
 							<?php echo wp_kses_post(
 								apply_filters(
 									'omgf_performance_checker_general_text',
 									__(
-										'OMGF\'s integrated Fonts Performance Checker (introduced in v6.2) detected font files that should be optimized.',
+										'OMGF\'s Font Performance Checker detected issues affecting your load times.',
 										'host-webfonts-local'
 									)
 								)
@@ -286,7 +286,7 @@ class Dashboard {
 						</p>
 						<p>
 							<?php echo wp_kses_post( sprintf(
-								__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">manually adjust font settings globally</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize font loading per page.', 'host-webfonts-local' ),
+								__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">manually adjust global font settings</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize fonts per page.', 'host-webfonts-local' ),
 								'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold',
 								Settings::DAAN_WORDPRESS_OMGF_PRO
 							) ); ?>
@@ -297,7 +297,7 @@ class Dashboard {
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
-											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize (Pro) to load separate font subsets per language and improve performance.', 'host-webfonts-local' ),
+											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize (Pro) to load only the right font subsets per language—instead of all subsets on every page.', 'host-webfonts-local' ),
 											self::get_multilang_plugin()
 										)
 									); ?>
@@ -305,7 +305,8 @@ class Dashboard {
 							<?php endif; ?>
 							<?php if ( isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0 ) : ?>
 								<li>
-									<?php echo wp_kses_post( sprintf( _n( '<strong>%s unused font face</strong> was detected on your site.', 'Up to <strong>%s unused font faces</strong> were detected on your site.', (int) $performance_checker_results['highest_unused_count'], 'host-webfonts-local' ),
+									<?php echo wp_kses_post( sprintf( _n( '<strong>%s unused font face</strong> detected.', 'Up to <strong>%s unused font faces</strong> detected—OMGF Pro fixes this per page automatically.', (int)
+									$performance_checker_results['highest_unused_count'], 'host-webfonts-local' ),
 										$performance_checker_results['highest_unused_count'] ) ); ?>
 									<?php echo wp_kses_post( sprintf(
 										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
@@ -317,7 +318,7 @@ class Dashboard {
 							<?php endif; ?>
 							<?php if ( isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0 ) : ?>
 								<li>
-									<?php echo wp_kses_post( sprintf( __( 'Font loading is causing up to <strong>%sms of delay</strong> on your site.', 'host-webfonts-local' ),
+									<?php echo wp_kses_post( sprintf( __( 'Font loading is <strong>adding ~%sms to your LCP score</strong>—OMGF Pro fixes this per page automatically.', 'host-webfonts-local' ),
 										$performance_checker_results['highest_delay_ms'] ) ); ?>
 									<?php echo wp_kses_post( sprintf(
 										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
