@@ -46,6 +46,7 @@ class Plugin {
 
 		// Load globally.
 		new API\AdminbarMenu();
+		new API\Dashboard();
 		new Compatibility();
 		new Filters();
 

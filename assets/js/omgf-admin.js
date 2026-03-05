@@ -450,7 +450,7 @@ jQuery(document).ready(function ($) {
 
 			$.ajax({
 				type: 'POST',
-				url: omgf_admin_i18n.rest_url + '/dismiss-notice',
+				url: omgf_admin_i18n.rest_url + '/dashboard/dismiss-notice',
 				beforeSend: function (xhr) {
 					xhr.setRequestHeader('X-WP-Nonce', omgf_admin_i18n.nonce);
 					omgf_admin.show_loader();
