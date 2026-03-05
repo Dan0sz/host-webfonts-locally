@@ -105,7 +105,7 @@ class AdminbarMenu {
 		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
 		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
 
-		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis || Dashboard::has_multilang_plugin() ) ) {
+		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() ) {
 			// Alerts and notices should take precedence.
 			if ( $status !== 'alert' && $status !== 'notice' ) {
 				$status = 'info';
