@@ -91,7 +91,7 @@ class AdminbarMenu {
 	 */
 	public function get_admin_bar_status( $request ) {
 		$params         = $this->clean( $request->get_params() );
-		$stored_results = $this->update_results( $params );
+		$stored_results = $this->update_google_fonts_checker_results( $params );
 		$status         = 'success';
 
 		if ( ! empty( $stored_results ) ) {
@@ -102,14 +102,10 @@ class AdminbarMenu {
 			$status = 'notice';
 		}
 
-		if ( empty ( $stored_results ) && Dashboard::has_multilang_plugin() ) {
-			$status = 'info';
-		}
-
 		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
 		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
 
-		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) ) {
+		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis || Dashboard::has_multilang_plugin() ) ) {
 			// Alerts and notices should take precedence.
 			if ( $status !== 'alert' && $status !== 'notice' ) {
 				$status = 'info';
@@ -183,7 +179,7 @@ class AdminbarMenu {
 	 *
 	 * @return array
 	 */
-	private function update_results( $post ) {
+	private function update_google_fonts_checker_results( $post ) {
 		$path           = isset( $post['path'] ) && is_string( $post['path'] ) ? $post['path'] : '';
 		$params         = isset( $post['params'] ) ? json_decode( $post['params'], true ) : [];
 		$params         = is_array( $params ) ? $params : [];
