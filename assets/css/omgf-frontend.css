@@ -119,17 +119,10 @@
 	color: black !important;
 }
 
-#wp-admin-bar-omgf.info #wp-admin-bar-omgf-info {
+#wp-admin-bar-omgf.info .info {
 	background-color: #0074D9 !important;
 }
 
-#wp-admin-bar-omgf-unload-info .ab-item,
-#wp-admin-bar-omgf-preload-info .ab-item {
+#wp-admin-bar-omgf.info .info .ab-item {
 	color: white !important;
 }
-
-#wp-admin-bar-omgf-unload-info,
-#wp-admin-bar-omgf-preload-info {
-	background-color: #0074D9 !important;
-}
-

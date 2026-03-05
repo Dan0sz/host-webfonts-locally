@@ -37,6 +37,25 @@ window.addEventListener('load', () => {
 					this.menu_item.classList.add(status);
 				}
 
+				if (omgf_frontend_i18n.multilang_plugin_used) {
+					let count = omgf_frontend_i18n.subsets_count;
+					let impact = omgf_frontend_i18n.info_box_impact_low;
+
+					if (count > 1 && count <= 3) {
+						impact = omgf_frontend_i18n.info_box_impact_medium;
+					} else if (count > 3) {
+						impact = omgf_frontend_i18n.info_box_impact_high;
+					}
+
+					let multilang_plugin = {
+						"name": omgf_frontend_i18n.multilang_plugin_name,
+						"subsets_count": omgf_frontend_i18n.subsets_count,
+						"impact": impact,
+					}
+
+					this.addInfoBox('multilang_plugin', multilang_plugin);
+				}
+
 				if (unused_fonts_analysis && unused_fonts_analysis.count) {
 					this.addInfoBox('unload_notice', unused_fonts_analysis);
 				}
@@ -509,6 +528,12 @@ window.addEventListener('load', () => {
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${omgf_frontend_i18n.info_box_notice_text}</a>`;
 			}
 
+			if (status === 'multilang_plugin') {
+				info_box.id = 'wp-admin-bar-omgf-multilang-info';
+				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_multilang_plugin_text, omgf_frontend_i18n.multilang_plugin_name, data.subsets_count, data.impact);
+				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
+			}
+
 			if (status === 'unload_notice') {
 				info_box.id = 'wp-admin-bar-omgf-unload-info';
 				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_unload_text, data.count || 0, data.impact || omgf_frontend_i18n.info_box_impact_low);
@@ -521,7 +546,7 @@ window.addEventListener('load', () => {
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
 			}
 
-			if (status === 'unload_notice' || status === 'preload_notice') {
+			if (status === 'unload_notice' || status === 'preload_notice' || status === 'multilang_plugin') {
 				info_box.classList.add('info');
 			}
 
