@@ -52,8 +52,7 @@ jQuery(document).ready(function ($) {
 			$('#omgf-delete-log').on('click', this.delete_log);
 			$('.omgf-optimize-preload-warning-close').on('click', this.hide_preload_warning);
 			$('.omgf-optimize-forbidden').on('click', this.wait_for_page_reload);
-			$('#omgf-dismiss-performance-checker-notice').on('click', this.dismiss_performance_checker_notice);
-
+			$(document).on('click', '#omgf-dismiss-performance-checker-notice', this.dismiss_performance_checker_notice);
 			// Ticker
 			setInterval(this.loop_ticker_items, 4000);
 		},
