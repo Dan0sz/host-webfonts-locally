@@ -137,11 +137,11 @@ class AdminbarMenuTest extends TestCase {
 			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request->set_param( 'path', '/performance-test' );
 			$unused_fonts_analysis = [
-				'total_kb' => 100,
-				'impact'   => 'High',
+				'count'  => 10,
+				'impact' => 'High',
 			];
 			$preload_analysis      = [
-				'potential_delay_ms' => 500,
+				'potential_delay_ms' => 80,
 				'impact'             => 'Medium',
 			];
 			$request->set_param( 'unused_fonts_analysis', json_encode( $unused_fonts_analysis ) );
@@ -164,11 +164,11 @@ class AdminbarMenuTest extends TestCase {
 			$request_lower = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_lower->set_param( 'path', '/performance-test-lower' );
 			$unused_fonts_analysis_lower = [
-				'total_kb' => 50,
-				'impact'   => 'Low',
+				'count'  => 2,
+				'impact' => 'Low',
 			];
 			$preload_analysis_lower      = [
-				'potential_delay_ms' => 200,
+				'potential_delay_ms' => 15,
 				'impact'             => 'Low',
 			];
 			$request_lower->set_param( 'unused_fonts_analysis', json_encode( $unused_fonts_analysis_lower ) );
@@ -183,11 +183,11 @@ class AdminbarMenuTest extends TestCase {
 			$request_higher = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_higher->set_param( 'path', '/performance-test-higher' );
 			$unused_fonts_analysis_higher = [
-				'total_kb' => 200,
-				'impact'   => 'High',
+				'count'  => 7,
+				'impact' => 'High',
 			];
 			$preload_analysis_higher      = [
-				'potential_delay_ms' => 1000,
+				'potential_delay_ms' => 150,
 				'impact'             => 'High',
 			];
 			$request_higher->set_param( 'unused_fonts_analysis', json_encode( $unused_fonts_analysis_higher ) );
@@ -226,7 +226,7 @@ class AdminbarMenuTest extends TestCase {
 			// Case 6: Empty values in analysis shouldn't overwrite existing metrics.
 			$request_empty = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_empty->set_param( 'path', '/empty-test' );
-			$request_empty->set_param( 'unused_fonts_analysis', json_encode( [ 'total_kb' => 0 ] ) );
+			$request_empty->set_param( 'unused_fonts_analysis', json_encode( [ 'count' => 0 ] ) );
 			$request_empty->set_param( 'preload_analysis', json_encode( [ 'potential_delay_ms' => 0 ] ) );
 
 			$api->get_admin_bar_status( $request_empty );
