@@ -145,7 +145,13 @@ class Actions {
 				'multilang_plugin_used'          => Dashboard::has_multilang_plugin(),
 				'multilang_plugin_name'          => Dashboard::get_multilang_plugin(),
 				'nonce'                          => wp_create_nonce( 'wp_rest' ),
-				'subsets_count'                  => count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) ),
+			$subsets = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
+
+			wp_localize_script(
+				self::FRONTEND_ASSET_HANDLE,
+				'omgf_frontend_i18n',
+				[
+					'subsets_count'                  => is_countable( $subsets ) ? count( $subsets ) : 0,
 			]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
