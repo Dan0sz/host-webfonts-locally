@@ -261,7 +261,7 @@ window.addEventListener('load', () => {
 					 *
 					 * A font face is considered unused if it's explicitly defined in the stylesheet, but the browser never loaded it (status === 'unloaded').
 					 */
-					if (font.status === 'unloaded' && !used_faces_entire_document.has(face_id)) {
+					if (font.status === 'unloaded' && !used_faces_entire_document.has(face_id) && font_url) {
 						unused_fonts.push({
 							family: family,
 							weight: weight,
