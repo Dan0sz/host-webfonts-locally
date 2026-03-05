@@ -119,8 +119,8 @@ window.addEventListener('load', () => {
 					preloaded_fonts.push(link.href);
 				});
 
-				let used_faces_above_the_fold = [];
-				let used_faces_entire_document = [];
+				let used_faces_above_the_fold = new Set();
+				let used_faces_entire_document = new Set();
 
 				/**
 				 * Both Missing Preloads and Unused Font Faces should detect font faces.
@@ -145,13 +145,11 @@ window.addEventListener('load', () => {
 						font = font.trim();
 						let face_id = `${font}-${weight}-${font_style}`;
 
-						if (in_viewport && !used_faces_above_the_fold.includes(face_id)) {
-							used_faces_above_the_fold.push(face_id);
+						if (in_viewport) {
+							used_faces_above_the_fold.add(face_id);
 						}
 
-						if (!used_faces_entire_document.includes(face_id)) {
-							used_faces_entire_document.push(face_id);
-						}
+						used_faces_entire_document.add(face_id);
 					});
 
 					['::before', '::after'].forEach((pseudo) => {
@@ -164,13 +162,11 @@ window.addEventListener('load', () => {
 							font = font.trim();
 							let face_id = `${font}-${pseudo_weight}-${pseudo_font_style}`;
 
-							if (in_viewport && !used_faces_above_the_fold.includes(face_id)) {
-								used_faces_above_the_fold.push(face_id);
+							if (in_viewport) {
+								used_faces_above_the_fold.add(face_id);
 							}
 
-							if (!used_faces_entire_document.includes(face_id)) {
-								used_faces_entire_document.push(face_id);
-							}
+							used_faces_entire_document.add(face_id);
 						});
 					});
 				}
@@ -181,67 +177,63 @@ window.addEventListener('load', () => {
 						.map(e => e.name)
 				);
 
+				// Build font face URL map once.
+				let font_face_url_map = new Map();
+
+				for (let i = 0; i < document.styleSheets.length; i++) {
+					try {
+						let sheet = document.styleSheets[i];
+						let rules = sheet.cssRules || sheet.rules;
+						if (!rules) continue;
+
+						for (let j = 0; j < rules.length; j++) {
+							let rule = rules[j];
+							if (rule.constructor.name === 'CSSFontFaceRule' || rule.type === CSSRule.FONT_FACE_RULE) {
+								let rule_family = this.getFontFaceProperty(rule, 'font-family');
+								let rule_weight = this.getFontFaceProperty(rule, 'font-weight') || '400';
+								let rule_style = this.getFontFaceProperty(rule, 'font-style') || 'normal';
+
+								if (rule_weight === 'normal') rule_weight = '400';
+								if (rule_weight === 'bold') rule_weight = '700';
+
+								let src = rule.style.getPropertyValue('src') || rule.style.src;
+								if (!src) src = this.getFontFaceProperty(rule, 'src');
+
+								let match = src ? src.match(/url\(["']?([^"')]+)["']?\)/) : null;
+								if (!match) continue;
+
+								let candidate_url = new URL(match[1], sheet.href || document.baseURI).href;
+								let key = `${rule_family}-${rule_weight}-${rule_style}`;
+
+								// Pass 1: fallback to first valid candidate URL.
+								if (!font_face_url_map.has(key)) {
+									font_face_url_map.set(key, candidate_url);
+								}
+
+								// Pass 2: prefer loaded URL.
+								if (loaded_font_urls.has(candidate_url)) {
+									font_face_url_map.set(key, candidate_url);
+								}
+							}
+						}
+					} catch (e) {
+						// Ignore cross-origin stylesheet errors.
+					}
+				}
+
 				document.fonts.forEach((font) => {
 					let family = font.family.replace(/["']/g, '');
 					let weight = font.weight;
 					let style = font.style;
 					let face_id = `${family}-${weight}-${style}`;
-					let font_url = '';
-
-					// Try to find the URL for this font face in the stylesheet rules.
-					for (let i = 0; i < document.styleSheets.length; i++) {
-						try {
-							let sheet = document.styleSheets[i];
-							let rules = sheet.cssRules || sheet.rules;
-							if (!rules) continue;
-
-							for (let j = 0; j < rules.length; j++) {
-								let rule = rules[j];
-								if (rule.constructor.name === 'CSSFontFaceRule' || rule.type === CSSRule.FONT_FACE_RULE) {
-									let rule_family = this.getFontFaceProperty(rule, 'font-family');
-									let rule_weight = this.getFontFaceProperty(rule, 'font-weight') || '400';
-									let rule_style = this.getFontFaceProperty(rule, 'font-style') || 'normal';
-
-									if (rule_weight === 'normal') rule_weight = '400';
-									if (rule_weight === 'bold') rule_weight = '700';
-
-									if (rule_family === family && rule_weight === weight && rule_style === style) {
-										let src = rule.style.getPropertyValue('src') || rule.style.src;
-
-										if (!src) {
-											src = this.getFontFaceProperty(rule, 'src');
-										}
-
-										let match = src ? src.match(/url\(["']?([^"')]+)["']?\)/) : null;
-										if (match) {
-											let candidate_url = new URL(match[1], sheet.href || document.baseURI).href;
-
-											// Pass 1: find actual loaded URL.
-											if (loaded_font_urls.has(candidate_url)) {
-												font_url = candidate_url;
-												break;
-											}
-
-											// Pass 2: fallback to first valid candidate URL (for unused fonts).
-											if (!font_url) {
-												font_url = candidate_url;
-											}
-										}
-									}
-								}
-							}
-						} catch (e) {
-							// Ignore cross-origin stylesheet errors.
-						}
-						if (font_url && loaded_font_urls.has(font_url)) break;
-					}
+					let font_url = font_face_url_map.get(face_id) || '';
 
 					/**
 					 * Scenario 2: Missing Preloads
 					 *
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
-					if (font.status === 'loaded' && used_faces_above_the_fold.includes(face_id)) {
+					if (font.status === 'loaded' && used_faces_above_the_fold.has(face_id)) {
 						let is_preloaded = preloaded_fonts.some((url) => {
 							// If we have the actual font URL, use it for exact matching.
 							if (font_url && url === font_url) {
@@ -269,7 +261,7 @@ window.addEventListener('load', () => {
 					 *
 					 * A font face is considered unused if it's explicitly defined in the stylesheet, but the browser never loaded it (status === 'unloaded').
 					 */
-					if (font.status === 'unloaded' && !used_faces_entire_document.includes(face_id)) {
+					if (font.status === 'unloaded' && !used_faces_entire_document.has(face_id)) {
 						unused_fonts.push({
 							family: family,
 							weight: weight,
