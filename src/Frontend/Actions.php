@@ -135,7 +135,7 @@ class Actions {
 				'api_url'                        => get_rest_url( null, 'omgf/v1/adminbar-menu/status' ),
 				'info_box_alert_text'            => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
 				'info_box_notice_text'           => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
-				'info_box_preload_text'          => __( '%s fonts missing preload hints · ~%sms delay · %s impact)', 'host-webfonts-local' ),
+				'info_box_preload_text'          => __( '%s fonts missing preload hints · ~%sms delay · %s impact', 'host-webfonts-local' ),
 				'info_box_unload_text'           => __( '%s fonts loaded but unused · %s impact', 'host-webfonts-local' ),
 				'info_box_multilang_plugin_text' => __( '%s detected · %d subsets loading on every page · %s impact', 'host-webfonts-local' ),
 				'info_box_impact_high'           => __( 'High', 'host-webfonts-local' ),
