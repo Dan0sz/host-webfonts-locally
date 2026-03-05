@@ -52,6 +52,7 @@ jQuery(document).ready(function ($) {
 			$('#omgf-delete-log').on('click', this.delete_log);
 			$('.omgf-optimize-preload-warning-close').on('click', this.hide_preload_warning);
 			$('.omgf-optimize-forbidden').on('click', this.wait_for_page_reload);
+			$('#omgf-dismiss-performance-checker-notice').on('click', this.dismiss_performance_checker_notice);
 
 			// Ticker
 			setInterval(this.loop_ticker_items, 4000);
@@ -438,6 +439,31 @@ jQuery(document).ready(function ($) {
 		hide_loader: function () {
 			$('.omgf-loading').fadeOut(300, function () {
 				$('.omgf-loading').remove()
+			});
+		},
+
+		/**
+		 * Dismiss the performance checker notice for 30 days.
+		 */
+		dismiss_performance_checker_notice: function (e) {
+			e.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: omgf_admin_i18n.rest_url + '/dismiss-notice',
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', omgf_admin_i18n.nonce);
+					omgf_admin.show_loader();
+				},
+				complete: function (result) {
+					if (result.responseJSON !== undefined && result.responseJSON.success) {
+						$('#omgf-performance-checker-notice').fadeOut(300, function () {
+							$(this).remove();
+						});
+					}
+
+					omgf_admin.hide_loader();
+				}
 			});
 		},
 

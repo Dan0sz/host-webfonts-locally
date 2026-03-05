@@ -47,6 +47,8 @@ class Settings extends Admin {
 
 	const OMGF_HIDDEN_NOTICES = 'omgf_hidden_notices';
 
+	const OMGF_DISMISS_NOTICE_TRANSIENT = 'omgf_dismiss_notice_';
+
 	/**
 	 * Settings Fields
 	 */

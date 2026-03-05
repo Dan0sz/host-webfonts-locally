@@ -270,8 +270,8 @@ class Dashboard {
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
-				<?php if ( ! empty( $performance_checker_results ) ) : ?>
-					<div class="task-manager-notice info">
+				<?php if ( ! empty( $performance_checker_results ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) : ?>
+					<div class="task-manager-notice info" id="omgf-performance-checker-notice">
 						<h4><?php echo esc_html__( 'Your fonts are slowing down this site.', 'host-webfonts-local' ); ?></h4>
 						<p>
 							<?php echo wp_kses_post(
@@ -329,6 +329,11 @@ class Dashboard {
 								</li>
 							<?php endif; ?>
 						</ol>
+						<p style="text-align: right; margin-bottom: 0;">
+							<small>
+								[ <a href="#" id="omgf-dismiss-performance-checker-notice"><?php _e( 'Remind me in 30 days', 'host-webfonts-local' ); ?></a> ]
+							</small>
+						</p>
 					</div>
 				<?php endif; ?>
 				<?php if ( ! empty( $warnings ) ) : ?>

@@ -63,6 +63,19 @@ class AdminbarMenu {
 				'schema' => null,
 			]
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/dismiss-notice',
+			[
+				[
+					'methods'             => 'POST',
+					'callback'            => [ $this, 'dismiss_notice' ],
+					'permission_callback' => [ $this, 'get_permission' ],
+				],
+				'schema' => null,
+			]
+		);
 	}
 
 	/**
@@ -281,5 +294,16 @@ class AdminbarMenu {
 		$decoded = json_decode( $value, true );
 
 		return is_array( $decoded ) ? $decoded : [];
+	}
+
+	/**
+	 * Dismiss the performance checker notice for 30 days.
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function dismiss_notice() {
+		set_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id(), true, 30 * DAY_IN_SECONDS );
+
+		return new \WP_REST_Response( [ 'success' => true ] );
 	}
 }
