@@ -39,7 +39,7 @@ window.addEventListener('load', () => {
 
 				if (omgf_frontend_i18n.multilang_plugin_used) {
 					let count = omgf_frontend_i18n.subsets_count;
-					
+
 					if (count > 1) {
 						let impact = omgf_frontend_i18n.info_box_impact_low;
 
@@ -65,6 +65,10 @@ window.addEventListener('load', () => {
 
 				if (preload_analysis && preload_analysis.potential_delay_ms > 0 && missing_preloads.length > 0) {
 					this.addInfoBox('preload_notice', preload_analysis, missing_preloads ? missing_preloads.length : 0);
+				}
+
+				if ((status !== 'success' && status !== 'warning') && this.sub_menu !== null) {
+					this.addInfoBox(status);
 				}
 			} catch (error) {
 				console.error('OMGF - Error running Google Fonts Checker:', error);
@@ -255,7 +259,7 @@ window.addEventListener('load', () => {
 					 *
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
-					if (font.status === 'loaded' && used_faces_above_the_fold.has(face_id)) {
+					if (font.status === 'loaded' && font_url && used_faces_above_the_fold.has(face_id)) {
 						let is_preloaded = preloaded_fonts.some((url) => {
 							// If we have the actual font URL, use it for exact matching.
 							if (font_url && url === font_url) {
@@ -265,7 +269,7 @@ window.addEventListener('load', () => {
 							let normalized_family = family.toLowerCase().replace(/\s/g, '-');
 							let url_lower = url.toLowerCase();
 							// Use regex with word boundaries or check for the exact segment match
-							let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([._-]|\\.|$)', 'i');
+							let pattern = new RegExp('(^|[/_-])' + normalized_family.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([./_-]|$)', 'i');
 
 							return pattern.test(url_lower);
 						});
@@ -466,7 +470,7 @@ window.addEventListener('load', () => {
 				let max_delay = 0;
 
 				this.forEachMatchingResources(missing_preloads, font_resources, (matching_entry) => {
-					let delay = matching_entry.responseEnd - lcp_entry.startTime;
+					let delay = matching_entry.responseEnd - matching_entry.startTime;
 					if (delay > 0) {
 						result.affects_lcp = true;
 						if (delay > max_delay) {
@@ -545,7 +549,7 @@ window.addEventListener('load', () => {
 
 			if (status === 'preload_notice') {
 				info_box.id = 'wp-admin-bar-omgf-preload-info';
-				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_preload_text, data.potential_delay_ms || 0, count || 0, data.impact || omgf_frontend_i18n.info_box_impact_low);
+				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_preload_text, count || 0, data.potential_delay_ms || 0, data.impact || omgf_frontend_i18n.info_box_impact_low);
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
 			}
 
