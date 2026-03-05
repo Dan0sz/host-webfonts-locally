@@ -5,6 +5,7 @@
 
 namespace OMGF\Tests\Integration\API;
 
+use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
 use OMGF\API\AdminbarMenu;
 use OMGF\Helper as OMGF;
@@ -126,14 +127,13 @@ class AdminbarMenuTest extends TestCase {
 	public function testPerformanceMetrics() {
 		$api = new AdminbarMenu();
 
-		// Case 1: Send performance data, status should become 'info' (assuming no other notices/alerts)
-		// We need to bypass the SSL warning which defaults to 'notice' in this test environment.
-		$original_home    = get_option( 'home' );
-		$original_siteurl = get_option( 'siteurl' );
-		update_option( 'home', 'https://example.com' );
-		update_option( 'siteurl', 'https://example.com' );
-
 		try {
+			// Case 1: Send performance data, status should become 'info' (assuming no other notices/alerts)
+			// We need to bypass the SSL warning which defaults to 'notice' in this test environment.
+			$original_home    = get_option( 'home' );
+			$original_siteurl = get_option( 'siteurl' );
+			update_option( 'home', 'https://example.com' );
+			update_option( 'siteurl', 'https://example.com' );
 			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request->set_param( 'path', '/performance-test' );
 			$unused_fonts_analysis = [
@@ -148,19 +148,22 @@ class AdminbarMenuTest extends TestCase {
 			$request->set_param( 'preload_analysis', json_encode( $preload_analysis ) );
 
 			$response = $api->get_admin_bar_status( $request );
+			$metrics  = OMGF::get_option( Settings::OMGF_PERF_CHECK );
+		} finally {
+			// No cleanup needed.
+		}
 
-			$this->assertEquals( 'info', $response['status'] );
+		$this->assertEquals( 'info', $response['status'] );
+		$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
+		$this->assertEquals( 'High', $metrics['highest_unused_impact'] );
+		$this->assertEquals( 80, $metrics['highest_delay_ms'] );
+		$this->assertEquals( '/performance-test', $metrics['highest_delay_path'] );
+		$this->assertEquals( 'Medium', $metrics['highest_delay_impact'] );
+		$this->assertNotNull( $metrics['highest_unused_timestamp'] );
+		$this->assertNotNull( $metrics['highest_delay_timestamp'] );
 
-			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
-			$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
-			$this->assertEquals( 'High', $metrics['highest_unused_impact'] );
-			$this->assertEquals( 500, $metrics['highest_delay_ms'] );
-			$this->assertEquals( '/performance-test', $metrics['highest_delay_path'] );
-			$this->assertEquals( 'Medium', $metrics['highest_delay_impact'] );
-			$this->assertNotNull( $metrics['highest_unused_timestamp'] );
-			$this->assertNotNull( $metrics['highest_delay_timestamp'] );
-
-			// Case 2: Send lower performance data, metrics should NOT be updated.
+		// Case 2: Send lower performance data, metrics should NOT be updated.
+		try {
 			$request_lower = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_lower->set_param( 'path', '/performance-test-lower' );
 			$unused_fonts_analysis_lower = [
@@ -177,13 +180,19 @@ class AdminbarMenuTest extends TestCase {
 			$api->get_admin_bar_status( $request_lower );
 
 			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
-			$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
+		} finally {
+			// No cleanup needed.
+		}
 
-			// Case 3: Send higher performance data, metrics SHOULD be updated.
+		$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
+		$this->assertEquals( 80, $metrics['highest_delay_ms'] );
+
+		// Case 3: Send higher performance data, metrics SHOULD be updated.
+		try {
 			$request_higher = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_higher->set_param( 'path', '/performance-test-higher' );
 			$unused_fonts_analysis_higher = [
-				'count'  => 7,
+				'count'  => 15,
 				'impact' => 'High',
 			];
 			$preload_analysis_higher      = [
@@ -196,34 +205,51 @@ class AdminbarMenuTest extends TestCase {
 			$api->get_admin_bar_status( $request_higher );
 
 			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
-			$this->assertEquals( '/performance-test-higher', $metrics['highest_unused_path'] );
-			$this->assertEquals( 1000, $metrics['highest_delay_ms'] );
-			$this->assertEquals( '/performance-test-higher', $metrics['highest_delay_path'] );
+		} finally {
 
-			// Case 4: Test precedence of alert/notice over info.
-			// Trigger an alert by sending a URL.
+		}
+
+		$this->assertEquals( '/performance-test-higher', $metrics['highest_unused_path'] );
+		$this->assertEquals( 150, $metrics['highest_delay_ms'] );
+		$this->assertEquals( '/performance-test-higher', $metrics['highest_delay_path'] );
+
+		// Case 4: Test precedence of alert/notice over info.
+		// Trigger an alert by sending a URL.
+		try {
 			$request_alert = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_alert->set_param( 'path', '/alert-test' );
 			$request_alert->set_param( 'urls', [ 'https://fonts.googleapis.com/css?family=Roboto' ] );
 			$request_alert->set_param( 'unused_fonts_analysis', json_encode( $unused_fonts_analysis_higher ) );
 
 			$response_alert = $api->get_admin_bar_status( $request_alert );
-			$this->assertEquals( 'alert', $response_alert['status'] );
+		} finally {
+			// No cleanup needed.
+		}
 
-			// Case 5: Test precedence of notice over info.
-			// Bypassing SSL for this part too, and triggering notice via filter.
-			add_filter( 'omgf_has_multilang_plugin', '__return_true' );
+		$this->assertEquals( 'alert', $response_alert['status'] );
+
+		// Case 5: Test precedence of notice over info.
+		// Bypassing SSL for this part too, and triggering notice via filter.
+		try {
 			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS ); // Clear results to avoid 'alert'
+			// To trigger 'notice' instead of 'info' (which is triggered by multilang plugin), we need has_warnings() to be true.
+			// has_warnings() checks if any of the warning options are not empty.
+			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, [ 'https://example.com' ] );
+
 			$request_notice = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_notice->set_param( 'path', '/notice-test' );
 			$request_notice->set_param( 'urls', [] );
 			$request_notice->set_param( 'unused_fonts_analysis', json_encode( $unused_fonts_analysis_higher ) );
 
 			$response_notice = $api->get_admin_bar_status( $request_notice );
-			$this->assertEquals( 'notice', $response_notice['status'] );
-			remove_filter( 'omgf_has_multilang_plugin', '__return_true' );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_FOUND_IFRAMES );
+		}
 
-			// Case 6: Empty values in analysis shouldn't overwrite existing metrics.
+		$this->assertEquals( 'notice', $response_notice['status'] );
+
+		// Case 6: Empty values in analysis shouldn't overwrite existing metrics.
+		try {
 			$request_empty = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_empty->set_param( 'path', '/empty-test' );
 			$request_empty->set_param( 'unused_fonts_analysis', json_encode( [ 'count' => 0 ] ) );
@@ -232,13 +258,13 @@ class AdminbarMenuTest extends TestCase {
 			$api->get_admin_bar_status( $request_empty );
 
 			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
-			$this->assertEquals( 1000, $metrics['highest_delay_ms'] );
-
 		} finally {
 			update_option( 'home', $original_home );
 			update_option( 'siteurl', $original_siteurl );
 			OMGF::delete_option( Settings::OMGF_PERF_CHECK );
 			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
+
+		$this->assertEquals( 150, $metrics['highest_delay_ms'] );
 	}
 }
