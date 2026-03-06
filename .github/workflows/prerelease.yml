@@ -18,6 +18,18 @@ jobs:
         with:
           dev: no
 
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Minify JS/CSS
+        run: npm run prod
+
       - name: Generate plugin asset
         run: |
           rsync -rc --exclude-from="$GITHUB_WORKSPACE/.distignore" "$GITHUB_WORKSPACE/" release/ --delete --delete-excluded

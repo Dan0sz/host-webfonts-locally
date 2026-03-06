@@ -17,6 +17,18 @@ jobs:
         with:
           dev: no
 
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Minify JS/CSS
+        run: npm run prod
+
       - name: Release plugin on wp.org
         id: deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
