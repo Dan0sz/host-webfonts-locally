@@ -6,6 +6,7 @@ window.addEventListener('load', () => {
 	let omgf_frontend = {
 		menu_item: document.getElementById('wp-admin-bar-omgf'),
 		sub_menu: document.getElementById('wp-admin-bar-omgf-default'),
+		skip_ajax: false,
 
 		/**
 		 * Run it all.
@@ -13,6 +14,9 @@ window.addEventListener('load', () => {
 		 * @return void
 		 */
 		init: async function () {
+			let missing_preloads = [];
+			let unused_fonts = [];
+
 			try {
 				// menu_item only exists if the logged-in user has the manage_options cap.
 				if (this.menu_item === null) {
@@ -29,7 +33,8 @@ window.addEventListener('load', () => {
 				let status = response.status;
 				let unused_fonts_analysis = response.unused_fonts_analysis || {};
 				let preload_analysis = response.preload_analysis || {};
-				let missing_preloads = response.missing_preloads || [];
+				missing_preloads = response.missing_preloads || [];
+				unused_fonts = response.unused_fonts || [];
 
 				this.menu_item.classList.add('dot');
 
@@ -73,7 +78,12 @@ window.addEventListener('load', () => {
 			} catch (error) {
 				console.error('OMGF - Error running Google Fonts Checker:', error);
 			} finally {
-				document.dispatchEvent(new Event('omgf_frontend_loaded'));
+				document.dispatchEvent(new CustomEvent('omgf_frontend_loaded', {
+					detail: {
+						missing_preloads: missing_preloads,
+						unused_fonts: unused_fonts,
+					}
+				}));
 			}
 		},
 
@@ -313,6 +323,7 @@ window.addEventListener('load', () => {
 					response.unused_fonts_analysis = unused_fonts_analysis;
 					response.preload_analysis = preload_analysis;
 					response.missing_preloads = missing_preloads;
+					response.unused_fonts = unused_fonts;
 				}
 
 				return response;
@@ -507,6 +518,10 @@ window.addEventListener('load', () => {
 		 * @return object
 		 */
 		ajax: function (data) {
+			if (this.skip_ajax) {
+				return Promise.resolve(false);
+			}
+
 			return fetch(
 				omgf_frontend_i18n.api_url,
 				{
