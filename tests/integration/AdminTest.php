@@ -78,6 +78,8 @@ class AdminTest extends TestCase {
 	public function testMaybeShowStaleCacheNoticeWithExistingErrors() {
 		global $wp_settings_errors;
 
+		$original_get = $_GET;
+
 		try {
 			$wp_settings_errors = [
 				[
@@ -94,13 +96,15 @@ class AdminTest extends TestCase {
 
 			OMGF::delete_option( Settings::OMGF_CACHE_IS_STALE );
 
-			// This should trigger line 248 ($show_message = false) because of existing 'omgf' error
+			// This should trigger line 248 ($show_message = false) because of the existing 'omgf' error
 			$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin-ext' ] ], [ 'subsets' => [ 'latin' ] ] );
+
+			$this->assertNull( OMGF::get_option( Settings::OMGF_CACHE_IS_STALE ) );
 		} finally {
 			// Cleanup
 			$wp_settings_errors = [];
+			$_GET               = $original_get;
+			OMGF::delete_option( Settings::OMGF_CACHE_IS_STALE );
 		}
-
-		$this->assertNull( OMGF::get_option( Settings::OMGF_CACHE_IS_STALE ) );
 	}
 }
