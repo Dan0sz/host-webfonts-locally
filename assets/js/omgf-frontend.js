@@ -26,7 +26,7 @@ window.addEventListener('load', () => {
 				let google_fonts = this.filterGoogleFonts();
 				let response = await this.getStatus(google_fonts);
 
-				if (!response) {
+				if (!response && !omgf_frontend_i18n.skip_ajax) {
 					return;
 				}
 
@@ -312,6 +312,16 @@ window.addEventListener('load', () => {
 
 			const unused_fonts_analysis = this.analyzeUnusedFonts(unused_fonts);
 			const preload_analysis = await this.analyzePreloadImpact(missing_preloads);
+
+			if (omgf_frontend_i18n.skip_ajax) {
+				return {
+					status: null,
+					unused_fonts_analysis: unused_fonts_analysis,
+					preload_analysis: preload_analysis,
+					missing_preloads: missing_preloads,
+					unused_fonts: unused_fonts
+				};
+			}
 
 			let data = new FormData();
 			data.append('path', document.location.pathname);
