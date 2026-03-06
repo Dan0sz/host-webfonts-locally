@@ -279,17 +279,20 @@ class Helper {
 	 */
 	public static function get_cache_key( $handle ) {
 		$cache_keys = self::cache_keys();
+		$cache_key  = '';
 
 		foreach ( $cache_keys as $key ) {
 			/**
 			 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
 			 */
 			if ( str_contains( $key, strtolower( $handle ) ) ) {
-				return $key;
+				$cache_key = $key;
+
+				break;
 			}
 		}
 
-		return '';
+		return apply_filters( 'omgf_cache_key', $cache_key, $handle );
 	}
 
 	/**
