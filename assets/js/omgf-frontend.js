@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
 	let omgf_frontend = {
 		menu_item: document.getElementById('wp-admin-bar-omgf'),
 		sub_menu: document.getElementById('wp-admin-bar-omgf-default'),
-		skip_ajax: false,
+		skip_ajax: omgf_frontend_i18n.skip_ajax || false,
 
 		/**
 		 * Run it all.
@@ -518,7 +518,7 @@ window.addEventListener('load', () => {
 		 * @return object
 		 */
 		ajax: function (data) {
-			if (this.skip_ajax) {
+			if (omgf_frontend.skip_ajax) {
 				return Promise.resolve(false);
 			}
 
