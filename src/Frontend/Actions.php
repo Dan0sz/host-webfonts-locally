@@ -126,6 +126,7 @@ class Actions {
 		$file_ext = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$js_file  = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
 		$js_path  = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
+		$subsets  = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 
 		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_path ), [ 'strategy' => 'defer' ] );
 		wp_localize_script(
@@ -145,13 +146,7 @@ class Actions {
 				'multilang_plugin_used'          => Dashboard::has_multilang_plugin(),
 				'multilang_plugin_name'          => Dashboard::get_multilang_plugin(),
 				'nonce'                          => wp_create_nonce( 'wp_rest' ),
-			$subsets = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
-
-			wp_localize_script(
-				self::FRONTEND_ASSET_HANDLE,
-				'omgf_frontend_i18n',
-				[
-					'subsets_count'                  => is_countable( $subsets ) ? count( $subsets ) : 0,
+				'subsets_count'                  => is_countable( $subsets ) ? count( $subsets ) : 0,
 			]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
