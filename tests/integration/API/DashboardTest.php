@@ -16,6 +16,9 @@ class DashboardTest extends TestCase {
 	 * @return void
 	 */
 	public function testDismissNotice() {
+		$user_id       = 0;
+		$other_user_id = 0;
+
 		try {
 			$user_id = wp_insert_user(
 				[
@@ -24,19 +27,19 @@ class DashboardTest extends TestCase {
 					'role'       => 'administrator',
 				]
 			);
+
+			if ( is_wp_error( $user_id ) ) {
+				$this->fail( $user_id->get_error_message() );
+			}
+
 			wp_set_current_user( $user_id );
 
 			$api      = new DashboardAPI();
 			$response = $api->dismiss_notice();
-		} finally {
-			// Do nothing.
-		}
 
-		$this->assertEquals( 200, $response->get_status() );
-		$this->assertTrue( (bool) get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . $user_id ) );
+			$this->assertEquals( 200, $response->get_status() );
+			$this->assertTrue( (bool) get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . $user_id ) );
 
-		// Test user specific
-		try {
 			$other_user_id = wp_insert_user(
 				[
 					'user_login' => 'other_test_user',
@@ -44,39 +47,41 @@ class DashboardTest extends TestCase {
 					'role'       => 'administrator',
 				]
 			);
-		} finally {
-			// Do nothing.
-		}
 
-		$this->assertFalse( (bool) get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . $other_user_id ) );
+			if ( is_wp_error( $other_user_id ) ) {
+				$this->fail( $other_user_id->get_error_message() );
+			}
 
-		// Test Dashboard visibility
-		try {
+			$this->assertFalse( (bool) get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . $other_user_id ) );
+
+			// Test Dashboard visibility
 			OMGF::update_option( Settings::OMGF_PERF_CHECK, [ 'highest_unused_count' => 1, 'highest_unused_path' => '/' ] );
 
 			ob_start();
 			Dashboard::render_notices();
 			$output = ob_get_clean();
-		} finally {
 
-		}
+			$this->assertStringNotContainsString( 'id="omgf-performance-checker-notice"', $output );
 
-		$this->assertStringNotContainsString( 'id="omgf-performance-checker-notice"', $output );
-
-		try {
-			// Switch to other user
+			// Switch to another user
 			wp_set_current_user( $other_user_id );
 			ob_start();
 			Dashboard::render_notices();
 			$output = ob_get_clean();
-		} finally {
-			// Cleanup
-			delete_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . $user_id );
-			wp_delete_user( $user_id );
-			wp_delete_user( $other_user_id );
-			OMGF::delete_option( Settings::OMGF_PERF_CHECK );
-		}
 
-		$this->assertStringContainsString( 'id="omgf-performance-checker-notice"', $output );
+			$this->assertStringContainsString( 'id="omgf-performance-checker-notice"', $output );
+		} finally {
+			if ( is_int( $user_id ) && $user_id > 0 ) {
+				delete_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . $user_id );
+				wp_delete_user( $user_id );
+			}
+
+			if ( is_int( $other_user_id ) && $other_user_id > 0 ) {
+				wp_delete_user( $other_user_id );
+			}
+
+			OMGF::delete_option( Settings::OMGF_PERF_CHECK );
+			wp_set_current_user( 0 );
+		}
 	}
 }
