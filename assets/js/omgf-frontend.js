@@ -287,6 +287,8 @@ window.addEventListener('load', () => {
 						if (!is_preloaded && !missing_preloads.some(f => f.family === family && f.url === font_url)) {
 							missing_preloads.push({
 								family: family,
+								weight: weight,
+								style: style,
 								url: font_url
 							});
 						}
