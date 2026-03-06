@@ -160,7 +160,7 @@ class AdminbarMenu {
 			$parsed = wp_parse_url( $var );
 			// If the variable has a scheme (e.g. http:// or https://), sanitize the variable using the esc_url_raw function.
 			if ( isset( $parsed['scheme'] ) ) {
-				return esc_url_raw( wp_unslash( $var ), [ $parsed['scheme'] ] );
+				return esc_url_raw( wp_unslash( $var ) );
 			}
 
 			// Decode percent encoded characters before sanitization.
