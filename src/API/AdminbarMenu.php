@@ -180,10 +180,18 @@ class AdminbarMenu {
 	 * @return array
 	 */
 	private function update_google_fonts_checker_results( $post ) {
-		$path           = isset( $post['path'] ) && is_string( $post['path'] ) ? $post['path'] : '';
-		$params         = isset( $post['params'] ) ? json_decode( $post['params'], true ) : [];
-		$params         = is_array( $params ) ? $params : [];
 		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+		$path           = isset( $post['path'] ) && is_string( $post['path'] ) ? $post['path'] : '';
+		$raw_params     = $post['params'] ?? [];
+
+		if ( is_string( $raw_params ) ) {
+			$params = json_decode( $raw_params, true );
+			$params = is_array( $params ) ? $params : [];
+		} elseif ( is_array( $raw_params ) ) {
+			$params = $raw_params;
+		} else {
+			$params = [];
+		}
 
 		if ( empty( $path ) || ! is_string( $path ) ) {
 			return $stored_results; // @codeCoverageIgnore
