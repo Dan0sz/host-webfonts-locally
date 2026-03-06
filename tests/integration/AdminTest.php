@@ -78,7 +78,8 @@ class AdminTest extends TestCase {
 	public function testMaybeShowStaleCacheNoticeWithExistingErrors() {
 		global $wp_settings_errors;
 
-		$original_get = $_GET;
+		$original_wp_settings_errors = $wp_settings_errors ?? [];
+		$original_get                = $_GET;
 
 		try {
 			$wp_settings_errors = [
@@ -102,7 +103,7 @@ class AdminTest extends TestCase {
 			$this->assertNull( OMGF::get_option( Settings::OMGF_CACHE_IS_STALE ) );
 		} finally {
 			// Cleanup
-			$wp_settings_errors = [];
+			$wp_settings_errors = $original_wp_settings_errors;
 			$_GET               = $original_get;
 			OMGF::delete_option( Settings::OMGF_CACHE_IS_STALE );
 		}
