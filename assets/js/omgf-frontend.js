@@ -25,18 +25,17 @@ window.addEventListener('load', () => {
 
 				let google_fonts = this.filterGoogleFonts();
 				let response = await this.getStatus(google_fonts);
-
-				if (!response.status && omgf_frontend.skip_ajax) {
-					return;
-				}
-
-				let status = response.status;
+				let status = response.status || null;
 				let unused_fonts_analysis = response.unused_fonts_analysis || {};
 				let preload_analysis = response.preload_analysis || {};
 				missing_preloads = response.missing_preloads || [];
 				unused_fonts = response.unused_fonts || [];
 
 				this.menu_item.classList.add('dot');
+
+				if (!status && omgf_frontend.skip_ajax) {
+					return;
+				}
 
 				if (status) {
 					this.menu_item.classList.add(status);
