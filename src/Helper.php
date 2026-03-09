@@ -580,7 +580,7 @@ class Helper {
 	}
 
 	/**
-	 * Delete file or directory from filesystem.
+	 * Delete a file or directory from the filesystem.
 	 *
 	 * @param $entry
 	 */
