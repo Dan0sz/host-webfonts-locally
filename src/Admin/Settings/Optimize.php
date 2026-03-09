@@ -195,7 +195,7 @@ class Optimize extends Builder {
 	public function do_promo_auto_preload() {
 		$this->do_checkbox(
 			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
-			'auto_preload', ! empty( OMGF::get_option( 'auto_preload' ) ),
+			'smart_optimize', ! empty( OMGF::get_option( 'smart_optimize' ) ),
 			__(
 				'Let OMGF figure it out. Smart Optimize automatically detects the right fonts, subsets and preloads for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
 				'host-webfonts-local'
