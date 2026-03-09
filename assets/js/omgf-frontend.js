@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
 	let omgf_frontend = {
 		menu_item: document.getElementById('wp-admin-bar-omgf'),
 		sub_menu: document.getElementById('wp-admin-bar-omgf-default'),
-		skip_ajax: omgf_frontend_i18n.skip_ajax || false,
+		skip_ajax: omgf_frontend_ajax.skip || false,
 
 		/**
 		 * Run it all.
@@ -26,7 +26,7 @@ window.addEventListener('load', () => {
 				let google_fonts = this.filterGoogleFonts();
 				let response = await this.getStatus(google_fonts);
 
-				if (!response && !omgf_frontend_i18n.skip_ajax) {
+				if (!response.status && omgf_frontend.skip_ajax) {
 					return;
 				}
 
@@ -313,7 +313,7 @@ window.addEventListener('load', () => {
 			const unused_fonts_analysis = this.analyzeUnusedFonts(unused_fonts);
 			const preload_analysis = await this.analyzePreloadImpact(missing_preloads);
 
-			if (omgf_frontend_i18n.skip_ajax) {
+			if (omgf_frontend.skip_ajax) {
 				return {
 					status: null,
 					unused_fonts_analysis: unused_fonts_analysis,
