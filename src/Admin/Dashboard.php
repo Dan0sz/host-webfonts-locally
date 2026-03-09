@@ -270,7 +270,7 @@ class Dashboard {
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
-				<?php if ( ! empty( $performance_checker_results ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) : ?>
+				<?php if ( apply_filters( 'omgf_performance_checker_notice', ! empty( $performance_checker_results ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) ): ?>
 					<div class="task-manager-notice info" id="omgf-performance-checker-notice">
 						<h4><?php echo esc_html__( 'Your fonts are slowing down this site.', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -284,14 +284,16 @@ class Dashboard {
 								)
 							); ?>
 						</p>
-						<p>
-							<?php echo wp_kses_post( sprintf(
-								__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">manually adjust global font settings</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize fonts per page.', 'host-webfonts-local' ),
-								'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold',
-								Settings::DAAN_WORDPRESS_OMGF_PRO
-							) ); ?>
+						<?php if ( apply_filters( 'omgf_performance_checker_show_cta', ! defined( 'OMGF_PRO_ACTIVE' ) ) ) : ?>
+							<p>
+								<?php echo wp_kses_post( sprintf(
+									__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">manually adjust global font settings</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize fonts per page.', 'host-webfonts-local' ),
+									'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold',
+									Settings::DAAN_WORDPRESS_OMGF_PRO
+								) ); ?>
 
-						</p>
+							</p>
+						<?php endif; ?>
 						<ol>
 							<?php if ( self::has_multilang_plugin() && count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) ) > 1 ) : ?>
 								<li>
