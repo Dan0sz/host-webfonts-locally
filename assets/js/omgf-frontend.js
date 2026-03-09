@@ -18,11 +18,6 @@ window.addEventListener('load', () => {
 			let unused_fonts = [];
 
 			try {
-				// menu_item only exists if the logged-in user has the manage_options cap.
-				if (this.menu_item === null) {
-					return;
-				}
-
 				let google_fonts = this.filterGoogleFonts();
 				let response = await this.getStatus(google_fonts);
 				let status = response.status || null;
@@ -30,6 +25,11 @@ window.addEventListener('load', () => {
 				let preload_analysis = response.preload_analysis || {};
 				missing_preloads = response.missing_preloads || [];
 				unused_fonts = response.unused_fonts || [];
+
+				// menu_item only exists if the logged-in user has the manage_options cap.
+				if (this.menu_item === null) {
+					return;
+				}
 
 				this.menu_item.classList.add('dot');
 
