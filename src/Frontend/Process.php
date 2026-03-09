@@ -111,12 +111,12 @@ class Process {
 	/**
 	 * Generates a timestamp and stores it to the DB, which is appended to the stylesheet and fonts URLs.
 	 *
-	 * @return int
-	 *
-	 * @codeCoverageIgnore
 	 * @see self::build_search_replace()
 	 *
 	 * @see StylesheetGenerator::build_source_string()
+	 * @return int
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private function generate_timestamp() {
 		$timestamp = time();
@@ -667,10 +667,10 @@ class Process {
 			$replace[ $key ] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : '';
 		}
 
-		return [
+		return apply_filters( 'omgf_process_search_replace', [
 			'search'  => $search,
 			'replace' => $replace,
-		];
+		] );
 	}
 
 	/**
