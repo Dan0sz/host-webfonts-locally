@@ -151,6 +151,8 @@ class Actions {
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
 
+		do_action( 'omgf_frontend_assets_enqueued' );
+
 		// Even if the above filter forces the JS to load, we'll only need the CSS if the current user is an admin.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
@@ -160,5 +162,6 @@ class Actions {
 		$css_path = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
 
 		wp_enqueue_style( self::FRONTEND_ASSET_HANDLE, $css_file, [], filemtime( $css_path ) );
+
 	}
 }
