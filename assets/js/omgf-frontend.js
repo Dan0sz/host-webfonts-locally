@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
 	let omgf_frontend = {
 		menu_item: document.getElementById('wp-admin-bar-omgf'),
 		sub_menu: document.getElementById('wp-admin-bar-omgf-default'),
-		skip_ajax: omgf_frontend_ajax.skip || false,
+		skip_results: omgf_frontend_results.skip || false,
 
 		/**
 		 * Run it all.
@@ -33,12 +33,12 @@ window.addEventListener('load', () => {
 
 				this.menu_item.classList.add('dot');
 
-				if (!status && omgf_frontend.skip_ajax) {
-					return;
-				}
-
 				if (status) {
 					this.menu_item.classList.add(status);
+				}
+
+				if (omgf_frontend.skip_results) {
+					return;
 				}
 
 				if (omgf_frontend_i18n.multilang_plugin_used) {
@@ -312,16 +312,6 @@ window.addEventListener('load', () => {
 			const unused_fonts_analysis = this.analyzeUnusedFonts(unused_fonts);
 			const preload_analysis = await this.analyzePreloadImpact(missing_preloads);
 
-			if (omgf_frontend.skip_ajax) {
-				return {
-					status: null,
-					unused_fonts_analysis: unused_fonts_analysis,
-					preload_analysis: preload_analysis,
-					missing_preloads: missing_preloads,
-					unused_fonts: unused_fonts
-				};
-			}
-
 			let data = new FormData();
 			data.append('path', document.location.pathname);
 			data.append('urls', JSON.stringify(google_fonts));
@@ -529,10 +519,6 @@ window.addEventListener('load', () => {
 		 * @return object
 		 */
 		ajax: function (data) {
-			if (omgf_frontend.skip_ajax) {
-				return Promise.resolve(false);
-			}
-
 			return fetch(
 				omgf_frontend_i18n.api_url,
 				{
