@@ -133,6 +133,54 @@ window.addEventListener('load', () => {
 		},
 
 		/**
+		 * @param {CSSRuleList} rules
+		 * @param {CSSStyleSheet} sheet
+		 * @param {Map} font_face_url_map
+		 * @param {Set} loaded_font_urls
+		 */
+		extractFontFaceRules: function (rules, sheet, font_face_url_map, loaded_font_urls) {
+			for (let j = 0; j < rules.length; j++) {
+				let rule = rules[j];
+
+				// Recurse into @import rules.
+				if (rule.type === CSSRule.IMPORT_RULE && rule.styleSheet) {
+					let imported_rules = rule.styleSheet.cssRules || rule.styleSheet.rules;
+					if (imported_rules) {
+						this.extractFontFaceRules(imported_rules, rule.styleSheet, font_face_url_map, loaded_font_urls);
+					}
+				}
+
+				if (rule.constructor.name === 'CSSFontFaceRule' || rule.type === CSSRule.FONT_FACE_RULE) {
+					let rule_family = this.getFontFaceProperty(rule, 'font-family');
+					let rule_weight = this.getFontFaceProperty(rule, 'font-weight') || '400';
+					let rule_style = this.getFontFaceProperty(rule, 'font-style') || 'normal';
+
+					if (rule_weight === 'normal') rule_weight = '400';
+					if (rule_weight === 'bold') rule_weight = '700';
+
+					let src = rule.style.getPropertyValue('src') || rule.style.src;
+					if (!src) src = this.getFontFaceProperty(rule, 'src');
+
+					let match = src ? src.match(/url\(["']?([^"')]+)["']?\)/) : null;
+					if (!match) continue;
+
+					let candidate_url = new URL(match[1], sheet.href || document.baseURI).href;
+					let key = `${rule_family}-${rule_weight}-${rule_style}`.toLowerCase();
+
+					// Pass 1: fallback to the first valid candidate URL.
+					if (!font_face_url_map.has(key)) {
+						font_face_url_map.set(key, candidate_url);
+					}
+
+					// Pass 2: prefer loaded URL.
+					if (loaded_font_urls.has(candidate_url)) {
+						font_face_url_map.set(key, candidate_url);
+					}
+				}
+			}
+		},
+
+		/**
 		 * Stores google_fonts in the DB and retrieves the status to be added to the admin bar classList.
 		 *
 		 * @param google_fonts
@@ -178,7 +226,7 @@ window.addEventListener('load', () => {
 					// Handle font-family stacks (e.g. "Open Sans", sans-serif).
 					family.split(',').forEach((font) => {
 						font = font.trim();
-						let face_id = `${font}-${weight}-${font_style}`;
+						let face_id = `${font}-${weight}-${font_style}`.toLowerCase();
 
 						if (in_viewport) {
 							used_faces_above_the_fold.add(face_id);
@@ -195,7 +243,7 @@ window.addEventListener('load', () => {
 
 						pseudo_family.split(',').forEach((font) => {
 							font = font.trim();
-							let face_id = `${font}-${pseudo_weight}-${pseudo_font_style}`;
+							let face_id = `${font}-${pseudo_weight}-${pseudo_font_style}`.toLowerCase();
 
 							if (in_viewport) {
 								used_faces_above_the_fold.add(face_id);
@@ -221,36 +269,7 @@ window.addEventListener('load', () => {
 						let rules = sheet.cssRules || sheet.rules;
 						if (!rules) continue;
 
-						for (let j = 0; j < rules.length; j++) {
-							let rule = rules[j];
-							if (rule.constructor.name === 'CSSFontFaceRule' || rule.type === CSSRule.FONT_FACE_RULE) {
-								let rule_family = this.getFontFaceProperty(rule, 'font-family');
-								let rule_weight = this.getFontFaceProperty(rule, 'font-weight') || '400';
-								let rule_style = this.getFontFaceProperty(rule, 'font-style') || 'normal';
-
-								if (rule_weight === 'normal') rule_weight = '400';
-								if (rule_weight === 'bold') rule_weight = '700';
-
-								let src = rule.style.getPropertyValue('src') || rule.style.src;
-								if (!src) src = this.getFontFaceProperty(rule, 'src');
-
-								let match = src ? src.match(/url\(["']?([^"')]+)["']?\)/) : null;
-								if (!match) continue;
-
-								let candidate_url = new URL(match[1], sheet.href || document.baseURI).href;
-								let key = `${rule_family}-${rule_weight}-${rule_style}`;
-
-								// Pass 1: fallback to first valid candidate URL.
-								if (!font_face_url_map.has(key)) {
-									font_face_url_map.set(key, candidate_url);
-								}
-
-								// Pass 2: prefer loaded URL.
-								if (loaded_font_urls.has(candidate_url)) {
-									font_face_url_map.set(key, candidate_url);
-								}
-							}
-						}
+						this.extractFontFaceRules(rules, sheet, font_face_url_map, loaded_font_urls);
 					} catch (e) {
 						// Ignore cross-origin stylesheet errors.
 					}
@@ -260,7 +279,7 @@ window.addEventListener('load', () => {
 					let family = font.family.replace(/["']/g, '');
 					let weight = font.weight;
 					let style = font.style;
-					let face_id = `${family}-${weight}-${style}`;
+					let face_id = `${family}-${weight}-${style}`.toLowerCase();
 					let font_url = font_face_url_map.get(face_id) || '';
 
 					/**
@@ -308,6 +327,9 @@ window.addEventListener('load', () => {
 					}
 				});
 			}
+
+			console.log('missing_preloads:', missing_preloads);
+			console.log('unused_fonts:', unused_fonts);
 
 			const unused_fonts_analysis = this.analyzeUnusedFonts(unused_fonts);
 			const preload_analysis = await this.analyzePreloadImpact(missing_preloads);
