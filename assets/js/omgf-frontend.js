@@ -322,7 +322,8 @@ window.addEventListener('load', () => {
 							family: family,
 							weight: weight,
 							style: style,
-							url: font_url
+							url: font_url,
+							unicode_range: font.unicodeRange
 						});
 					}
 				});
