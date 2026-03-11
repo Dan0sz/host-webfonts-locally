@@ -191,6 +191,8 @@ class Ajax {
 		foreach ( $instructions['queue'] as $option ) {
 			OMGF::delete_option( $option );
 		}
+
+		do_action( 'omgf_after_clean_up' );
 	}
 
 	/**
