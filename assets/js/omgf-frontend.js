@@ -329,9 +329,6 @@ window.addEventListener('load', () => {
 				});
 			}
 
-			console.log('missing_preloads:', missing_preloads);
-			console.log('unused_fonts:', unused_fonts);
-
 			const unused_fonts_analysis = this.analyzeUnusedFonts(unused_fonts);
 			const preload_analysis = await this.analyzePreloadImpact(missing_preloads);
 
