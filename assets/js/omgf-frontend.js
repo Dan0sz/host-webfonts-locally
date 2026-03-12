@@ -165,7 +165,8 @@ window.addEventListener('load', () => {
 					if (!match) continue;
 
 					let candidate_url = new URL(match[1], sheet.href || document.baseURI).href;
-					let key = `${rule_family}-${rule_weight}-${rule_style}`.toLowerCase();
+					let unicode_range = rule.style.getPropertyValue('unicode-range') || '';
+					let key = `${rule_family}-${rule_weight}-${rule_style}${unicode_range ? '-' + unicode_range : ''}`.toLowerCase();
 
 					// Pass 1: fallback to the first valid candidate URL.
 					if (!font_face_url_map.has(key)) {
@@ -280,14 +281,16 @@ window.addEventListener('load', () => {
 					let weight = font.weight;
 					let style = font.style;
 					let face_id = `${family}-${weight}-${style}`.toLowerCase();
-					let font_url = font_face_url_map.get(face_id) || '';
+					let face_id_with_range = `${face_id}-${(font.unicodeRange || '')}`.toLowerCase();
+					let font_url = font_face_url_map.get(face_id_with_range) || font_face_url_map.get(face_id);
+					let effective_face_id = font_face_url_map.has(face_id_with_range) ? face_id_with_range : face_id;
 
 					/**
 					 * Scenario 2: Missing Preloads
 					 *
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
-					if (font.status === 'loaded' && font_url && used_faces_above_the_fold.has(face_id)) {
+					if (font.status === 'loaded' && font_url && used_faces_above_the_fold.has(face_id || effective_face_id)) {
 						let is_preloaded = preloaded_fonts.some((url) => {
 							// If we have the actual font URL, use it for exact matching.
 							if (font_url && url === font_url) {
@@ -317,7 +320,7 @@ window.addEventListener('load', () => {
 					 *
 					 * A font face is considered unused if it's explicitly defined in the stylesheet, but the browser never loaded it (status === 'unloaded').
 					 */
-					if (font.status === 'unloaded' && !used_faces_entire_document.has(face_id) && font_url) {
+					if (font.status === 'unloaded' && !used_faces_entire_document.has(effective_face_id) && font_url) {
 						unused_fonts.push({
 							family: family,
 							weight: weight,
