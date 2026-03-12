@@ -58,15 +58,6 @@ class Actions {
 			]
 		);
 
-		$admin_bar->add_menu(
-			[
-				'id'     => 'omgf-optimize',
-				'parent' => 'omgf',
-				'title'  => __( 'Run fonts optimization', 'host-webfonts-local' ),
-				'href'   => add_query_arg( 'omgf_optimize', '1', home_url() ),
-			]
-		);
-
 		global $wp;
 
 		$permalink_structure = get_option( 'permalink_structure' );
@@ -82,7 +73,7 @@ class Actions {
 			[
 				'id'     => 'omgf-optimize-this',
 				'parent' => 'omgf',
-				'title'  => __( 'Run fonts optimization for current page', 'host-webfonts-local' ),
+				'title'  => __( 'Optimize this page', 'host-webfonts-local' ),
 				'href'   => add_query_arg( 'omgf_optimize', '1', $site_url ),
 			]
 		);
