@@ -15,10 +15,10 @@
 	border-radius: 50%;
 	background-color: grey;
 	display: inline-block;
-	-webkit-animation: waiting 2.5s;
-	-moz-animation: waiting 2.5s;
-	-o-animation: waiting 2.5s;
-	animation: waiting 2.5s;
+	-webkit-animation: waiting 2.5s infinite;
+	-moz-animation: waiting 2.5s infinite;
+	-o-animation: waiting 2.5s infinite;
+	animation: waiting 2.5s infinite;
 }
 
 @keyframes waiting {
@@ -36,6 +36,7 @@
 
 #wp-admin-bar-omgf.dot.success > .ab-item:after {
 	background-color: #2ECC40;
+	animation: none;
 }
 
 #wp-admin-bar-omgf.dot.alert > .ab-item:after {
