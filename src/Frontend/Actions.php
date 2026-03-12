@@ -151,8 +151,6 @@ class Actions {
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
 
-		do_action( 'omgf_frontend_assets_enqueued' );
-
 		// Even if the above filter forces the JS to load, we'll only need the CSS if the current user is an admin.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
