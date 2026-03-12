@@ -40,7 +40,6 @@ class Advanced extends Builder {
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 80 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 90 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 100 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_auto_config_subsets' ], 110 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 120 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_admin_bar_menu' ], 130 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 140 );
@@ -165,22 +164,6 @@ class Advanced extends Builder {
 		);
 	}
 
-	public function do_auto_config_subsets() {
-		$this->do_checkbox(
-			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, 'on' ) ),
-			sprintf(
-				__(
-					'When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.',
-					'host-webfonts-local'
-				),
-				apply_filters( 'omgf_settings_page_title', 'OMGF' )
-			),
-			false,
-			'task-manager-row'
-		);
-	}
-
 	/**
 	 * Preload Subsets
 	 *
@@ -192,10 +175,7 @@ class Advanced extends Builder {
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_SUBSETS,
 			OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ),
-			( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . __(
-					'Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. Disable it if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn\'t change this setting</u>!',
-					'host-webfonts-local'
-				) . '</span>' : '' ) . __(
+			__(
 				'A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are an add-ons for Latin and can\'t be used by itself. Use CTRL + click to select multiple values.</em>',
 				'host-webfonts-local'
 			),

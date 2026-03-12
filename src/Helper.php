@@ -64,12 +64,13 @@ class Helper {
 	 * This is basically a wrapper around update_option() to offer a centralized interface for
 	 * storing OMGF's settings in the wp_options table.
 	 *
-	 * @param mixed $value
-	 * @param string $setting
-	 *
-	 * @return bool
 	 * @since v5.6.0
 	 *
+	 * @param string $setting
+	 *
+	 * @param mixed  $value
+	 *
+	 * @return bool
 	 */
 	public static function update_option( $setting, $value, $autoload = true ) {
 		// If $setting starts with 'omgf_' it should be saved in a separate row.
@@ -117,8 +118,8 @@ class Helper {
 	/**
 	 * Gets all settings for OMGF.
 	 * @filter omgf_settings
-	 * @return array
 	 * @since  5.5.7
+	 * @return array
 	 */
 	public static function get_settings() {
 		$defaults = apply_filters(
@@ -130,7 +131,6 @@ class Helper {
 				Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
 				Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
 				Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
-				Settings::OMGF_ADV_SETTING_AUTO_SUBSETS            => 'on',
 				Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
 				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
 				Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
@@ -149,11 +149,11 @@ class Helper {
 	 * This is basically a wrapper around delete_option() to offer a centralized interface for
 	 * removing OMGF's settings in the wp_options table.
 	 *
+	 * @since v5.6.0
+	 *
 	 * @param string $setting
 	 *
 	 * @return bool
-	 * @since v5.6.0
-	 *
 	 */
 	public static function delete_option( $setting ) {
 		if ( str_starts_with( $setting, 'omgf_' ) || apply_filters( 'omgf_delete_option', false, $setting ) ) {
@@ -212,11 +212,11 @@ class Helper {
 	 *
 	 * @filter omgf_setting_{$name}
 	 *
-	 * @param mixed $default (optional)
-	 * @param string $name
-	 *
 	 * @since  v5.6.0
 	 *
+	 * @param string $name
+	 *
+	 * @param mixed  $default (optional)
 	 */
 	public static function get_option( $name, $default = null ) {
 		// If $name starts with 'omgf_' it means it is saved in a separate row.
@@ -297,10 +297,10 @@ class Helper {
 
 	/**
 	 * Fetch cache keys from the DB.
+	 * @since v5.6.4 Extract cache keys from Optimized Fonts option if the option itself appears empty.
 	 * @return array
 	 *
 	 * @codeCoverageIgnore
-	 * @since v5.6.4 Extract cache keys from Optimized Fonts option if the option itself appears empty.
 	 */
 	public static function cache_keys() {
 		if ( empty( self::$cache_keys ) ) {
@@ -326,14 +326,15 @@ class Helper {
 	 *
 	 * Use a static variable to reduce database reads/writes.
 	 *
-	 * @param bool $force_add
+	 * @since v4.5.7
+	 *
 	 * @param array $maybe_add If it doesn't exist, it's added to the cache layer.
+	 *
+	 * @param bool  $force_add
 	 *
 	 * @return array
 	 *
 	 * @codeCoverageIgnore
-	 * @since v4.5.7
-	 *
 	 */
 	public static function admin_optimized_fonts( $maybe_add = [], $force_add = false ) {
 		/**
@@ -366,13 +367,15 @@ class Helper {
 	 * Optimized Local Fonts to be used in the frontend. Doesn't contain unloaded fonts.
 	 * Use a static variable to reduce database reads/writes.
 	 *
-	 * @param bool $force_add
+	 * @since v5.8.1
+	 *
 	 * @param array $maybe_add If it doesn't exist, it's added to the cache layer.
+	 *
+	 * @param bool  $force_add
 	 *
 	 * @return array
 	 *
 	 * @codeCoverageIgnore
-	 * @since v5.8.1
 	 */
 	public static function optimized_fonts( $maybe_add = [], $force_add = false ) {
 		/**
@@ -420,11 +423,11 @@ class Helper {
 	}
 
 	/**
+	 * @since v5.4.4 Returns the available subsets in all requested fonts/stylesheets.
+	 *               Functions as a temporary cache layer to reduce DB reads with get_option().
 	 * @return array
 	 *
 	 * @codeCoverageIgnore
-	 * @since v5.4.4 Returns the available subsets in all requested fonts/stylesheets.
-	 *               Functions as a temporary cache layer to reduce DB reads with get_option().
 	 */
 	public static function available_used_subsets( $maybe_add = [], $intersect = false ) {
 		if ( empty( self::$subsets ) ) {
@@ -476,14 +479,15 @@ class Helper {
 	 * To prevent "Cannot use output buffering  in output buffering display handlers" errors, I introduced a debug
 	 * array feature, to easily display, well, arrays in the debug log (duh!)
 	 *
+	 * @since v5.3.7
+	 *
+	 * @param string       $name  A descriptive name to be shown in the debug log
+	 *
 	 * @param array|object $array The array to be displayed in the debug log
-	 * @param string $name A descriptive name to be shown in the debug log
 	 *
 	 * @return void
 	 *
 	 * @codeCoverageIgnore
-	 * @since v5.3.7
-	 *
 	 */
 	public static function debug_array( $name, $array ) {
 		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
@@ -603,11 +607,11 @@ class Helper {
 	/**
 	 * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
 	 *
+	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
+	 *
 	 * @param $url A (relative or absolute) URL, defaults to home URL.
 	 *
 	 * @return string
-	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
-	 *
 	 */
 	public static function no_cache_optimize_url( $url = '' ) {
 		if ( ! $url ) {
