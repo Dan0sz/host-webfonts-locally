@@ -51,7 +51,7 @@ class Optimize extends Builder {
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 50 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 60 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 70 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_auto_preload' ], 80 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_smart_optimize' ], 80 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 90 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_contents' ], 100 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'close_optimize_fonts_container' ], 300 );
@@ -192,12 +192,12 @@ class Optimize extends Builder {
 	 *
 	 * @return void
 	 */
-	public function do_promo_auto_preload() {
+	public function do_promo_smart_optimize() {
 		$this->do_checkbox(
 			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
 			'smart_optimize', ! empty( OMGF::get_option( 'smart_optimize' ) ),
 			__(
-				'Let OMGF figure it out. Smart Optimize automatically detects the right fonts, subsets and preloads for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
+				'Let OMGF Pro figure it out! Smart Optimize automatically detects the right fonts, subsets and preloads for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
 				'host-webfonts-local'
 			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
 		);
@@ -341,6 +341,7 @@ class Optimize extends Builder {
 				<?php
 				$cache_handles   = OMGF::cache_keys();
 				$disable_preload = apply_filters( 'omgf_local_fonts_disable_preload', false );
+				$disable_unload  = apply_filters( 'omgf_local_fonts_disable_unload', false );
 				?>
 				<?php foreach ( $this->optimized_fonts as $handle => $fonts ) : ?>
 					<?php
@@ -482,7 +483,8 @@ class Optimize extends Builder {
 										   ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
 											   $variant->id
 										   ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload ? 'disabled' : ''; ?> />
+										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload || $disable_unload ? 'disabled' : '';
+									?> />
 								</td>
 							</tr>
 						<?php endforeach; ?>
