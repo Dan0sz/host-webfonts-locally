@@ -94,6 +94,10 @@ class AdminbarMenu {
 		$stored_results = $this->update_google_fonts_checker_results( $params );
 		$status         = 'success';
 
+		if ( ! Dashboard::optimize_has_run() ) {
+			$status = 'info';
+		}
+
 		if ( ! empty( $stored_results ) ) {
 			$status = 'alert';
 		}
@@ -264,8 +268,7 @@ class AdminbarMenu {
 	 * @return bool
 	 */
 	private function has_warnings() {
-		$task_manager = new Dashboard();
-		$warnings     = $task_manager->get_warnings();
+		$warnings = Dashboard::get_warnings();
 
 		return ! empty( $warnings );
 	}

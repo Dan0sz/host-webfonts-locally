@@ -222,7 +222,7 @@ class Dashboard {
 							</sub>
 						<?php endif; ?>
 					</div>
-				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && ! OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
+				<?php elseif ( ! self::optimize_has_run() ) : ?>
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -588,6 +588,13 @@ class Dashboard {
 		}
 
 		return $warnings;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function optimize_has_run(): bool {
+		return ! empty( OMGF::admin_optimized_fonts() ) || OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN );
 	}
 
 	/**
