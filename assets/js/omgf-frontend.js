@@ -37,6 +37,10 @@ window.addEventListener('load', () => {
 					this.menu_item.classList.add(status);
 				}
 
+				if ((status !== 'success' && status !== 'warning') && this.sub_menu !== null) {
+					this.addInfoBox(status);
+				}
+
 				if (omgf_frontend.skip_results) {
 					return;
 				}
@@ -71,9 +75,6 @@ window.addEventListener('load', () => {
 					this.addInfoBox('preload_notice', preload_analysis, missing_preloads ? missing_preloads.length : 0);
 				}
 
-				if ((status !== 'success' && status !== 'warning') && this.sub_menu !== null) {
-					this.addInfoBox(status);
-				}
 			} catch (error) {
 				console.error('OMGF - Error running Google Fonts Checker:', error);
 			} finally {
@@ -561,6 +562,11 @@ window.addEventListener('load', () => {
 		addInfoBox: function (status, data, count) {
 			let info_box = document.createElement('li');
 			info_box.id = 'wp-admin-bar-omgf-info';
+
+			if (status === 'info') {
+				info_box.id = 'wp-admin-bar-omgf-first-run';
+				info_box.innerHTML = `<a class=ab-item" href="${omgf_frontend_i18n.info_box_optimize_url}">${omgf_frontend_i18n.info_box_first_run_text}</a>`;
+			}
 
 			if (status === 'alert') {
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${omgf_frontend_i18n.info_box_alert_text}</a>`;
