@@ -30,6 +30,7 @@ class Actions {
 		add_action( 'init', [ $this, 'init_frontend' ], 50 );
 		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_item' ], 1000 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_frontend_assets' ] );
+		add_action( 'template_redirect', [ $this, 'mark_optimize_as_done' ], 100 );
 	}
 
 	/**
@@ -135,7 +136,7 @@ class Actions {
 				'info_box_impact_medium'         => __( 'Medium', 'host-webfonts-local' ),
 				'info_box_impact_low'            => __( 'Low', 'host-webfonts-local' ),
 				'info_box_admin_url'             => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
-				'info_box_optimize_url'          => add_query_arg( 'omgf_optimize', '1' ),
+				'info_box_optimize_url'          => OMGF::no_cache_optimize_url(),
 				'multilang_plugin_used'          => Dashboard::has_multilang_plugin(),
 				'multilang_plugin_name'          => Dashboard::get_multilang_plugin(),
 				'nonce'                          => wp_create_nonce( 'wp_rest' ),
@@ -153,6 +154,18 @@ class Actions {
 		$css_path = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
 
 		wp_enqueue_style( self::FRONTEND_ASSET_HANDLE, $css_file, [], filemtime( $css_path ) );
+	}
 
+	/**
+	 * Mark optimization as done,
+	 *
+	 * @return void
+	 */
+	public function mark_optimize_as_done() {
+		if ( ! isset( $_GET['omgf_optimize'] ) ) {
+			return;
+		}
+
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
 	}
 }

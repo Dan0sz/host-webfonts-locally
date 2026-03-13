@@ -37,8 +37,6 @@ class Run {
 	 * @return void
 	 */
 	private function run() {
-		OMGF::update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
-
 		$front_html = $this->get_front_html( get_home_url() );
 
 		if ( is_wp_error( $front_html ) || wp_remote_retrieve_response_code( $front_html ) != 200 ) {

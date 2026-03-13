@@ -222,7 +222,7 @@ class Dashboard {
 							</sub>
 						<?php endif; ?>
 					</div>
-				<?php elseif ( ! self::optimize_has_run() ) : ?>
+				<?php elseif ( ! self::optimize_succeeded() ) : ?>
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -237,7 +237,7 @@ class Dashboard {
 							); ?>
 						</p>
 					</div>
-				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
+				<?php elseif ( self::optimize_failed() ) : ?>
 					<div class="task-manager-notice warning">
 						<h4><?php echo esc_html__( 'Google Fonts optimization seems to be failing.', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -593,8 +593,15 @@ class Dashboard {
 	/**
 	 * @return bool
 	 */
-	public static function optimize_has_run(): bool {
+	public static function optimize_succeeded(): bool {
 		return ! empty( OMGF::admin_optimized_fonts() ) || OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public static function optimize_failed(): bool {
+		return empty( OMGF::admin_optimized_fonts() ) && OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN );
 	}
 
 	/**
