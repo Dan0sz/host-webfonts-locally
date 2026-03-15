@@ -18,7 +18,6 @@ namespace OMGF\Admin\Settings;
 
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
-use OMGF\Helper;
 
 /**
  * @codeCoverageIgnore
@@ -225,7 +224,7 @@ class Advanced extends Builder {
 			<tr>
 				<th></th>
 				<td>
-					<?php if ( file_exists( Helper::log_file() ) ) : ?>
+					<?php if ( file_exists( OMGF::log_file() ) ) : ?>
 						<?php
 						clearstatcache();
 						$nonce = wp_create_nonce( Settings::OMGF_ADMIN_PAGE );
@@ -242,7 +241,7 @@ class Advanced extends Builder {
 								'Delete log',
 								'host-webfonts-local'
 							); ?></a>
-						<?php if ( filesize( Helper::log_file() ) > MB_IN_BYTES ) : ?>
+						<?php if ( filesize( OMGF::log_file() ) > MB_IN_BYTES ) : ?>
 							<p class="omgf-warning"><?php _e(
 									'Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again.',
 									'host-webfonts-local'

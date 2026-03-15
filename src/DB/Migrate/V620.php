@@ -18,7 +18,6 @@
 namespace OMGF\DB\Migrate;
 
 use OMGF\Admin\Settings;
-use OMGF\Helper;
 use OMGF\Helper as OMGF;
 
 /**
@@ -41,8 +40,8 @@ class V620 {
 	 * @return void
 	 */
 	private function init() {
-		Helper::delete_option( 'omgf_optimize_has_run' );
-		Helper::delete_option( 'auto_subsets' );
+		OMGF::delete_option( 'omgf_optimize_has_run' );
+		OMGF::delete_option( 'auto_subsets' );
 
 		/**
 		 * Update stored version number.
