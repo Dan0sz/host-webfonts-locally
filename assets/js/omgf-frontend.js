@@ -563,11 +563,6 @@ window.addEventListener('load', () => {
 			let info_box = document.createElement('li');
 			info_box.id = 'wp-admin-bar-omgf-info';
 
-			if (status === 'info') {
-				info_box.id = 'wp-admin-bar-omgf-first-run';
-				info_box.innerHTML = `<a class=ab-item" href="${omgf_frontend_i18n.info_box_optimize_url}">${omgf_frontend_i18n.info_box_first_run_text}</a>`;
-			}
-
 			if (status === 'alert') {
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${omgf_frontend_i18n.info_box_alert_text}</a>`;
 			}
@@ -596,6 +591,10 @@ window.addEventListener('load', () => {
 
 			if (status === 'unload_notice' || status === 'preload_notice' || status === 'multilang_plugin') {
 				info_box.classList.add('info');
+			}
+
+			if (status === 'info' && omgf_frontend_i18n.first_run) {
+				document.getElementById('wp-admin-bar-omgf-optimize-this').classList.add('info');
 			}
 
 			if (!omgf_frontend.sub_menu) {

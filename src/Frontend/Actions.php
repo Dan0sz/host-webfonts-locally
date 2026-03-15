@@ -125,8 +125,8 @@ class Actions {
 			'omgf_frontend_i18n',
 			[
 				'api_url'                        => get_rest_url( null, 'omgf/v1/adminbar-menu/status' ),
+				'first_run'                      => ! OMGF::optimize_succeeded(),
 				'info_box_alert_text'            => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
-				'info_box_first_run_text'        => __( 'Run Optimization', 'host-webfonts-local' ),
 				'info_box_notice_text'           => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
 				'info_box_preload_text'          => __( 'Preloading %s fonts could save ~%sms on your LCP · %s impact', 'host-webfonts-local' ),
 				'info_box_unload_text'           => __( '%s fonts loaded but unused · %s impact', 'host-webfonts-local' ),
@@ -135,7 +135,6 @@ class Actions {
 				'info_box_impact_medium'         => __( 'Medium', 'host-webfonts-local' ),
 				'info_box_impact_low'            => __( 'Low', 'host-webfonts-local' ),
 				'info_box_admin_url'             => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
-				'info_box_optimize_url'          => OMGF::no_cache_optimize_url(),
 				'multilang_plugin_used'          => Dashboard::has_multilang_plugin(),
 				'multilang_plugin_name'          => Dashboard::get_multilang_plugin(),
 				'nonce'                          => wp_create_nonce( 'wp_rest' ),
