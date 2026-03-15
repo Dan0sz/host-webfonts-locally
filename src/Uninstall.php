@@ -50,7 +50,6 @@ class Uninstall {
 				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
 				Settings::OMGF_AVAILABLE_USED_SUBSETS,
 				Settings::OMGF_NEWS_REEL,
-				Settings::OMGF_OPTIMIZE_HAS_RUN,
 				Settings::OMGF_CACHE_IS_STALE,
 				Settings::OMGF_CURRENT_DB_VERSION,
 				Settings::OMGF_CACHE_TIMESTAMP,

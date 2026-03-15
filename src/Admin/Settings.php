@@ -31,8 +31,6 @@ class Settings extends Admin {
 
 	const OMGF_NEWS_REEL = 'omgf_news_reel';
 
-	const OMGF_OPTIMIZE_HAS_RUN = 'omgf_optimize_has_run';
-
 	const OMGF_CACHE_IS_STALE = 'omgf_cache_is_stale';
 
 	const OMGF_CURRENT_DB_VERSION = 'omgf_current_db_version';
@@ -144,13 +142,11 @@ class Settings extends Admin {
 
 	const OMGF_OPTIMIZE_SETTING_TEST_MODE = 'test_mode';
 
-	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'unload_stylesheets';
-
-	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS = 'cache_keys';
-
 	/**
 	 * Optimize Fonts (Hidden Settings)
 	 */
+	const OMGF_OPTIMIZE_SETTING_CACHE_KEYS = 'cache_keys';
+
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS = 'omgf_optimized_fonts';
 
 	const OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND = 'omgf_optimized_fonts_frontend';
@@ -159,14 +155,14 @@ class Settings extends Admin {
 
 	const OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS = 'omgf_unload_fonts';
 
+	const OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS = 'unload_stylesheets';
+
 	/**
 	 * Advanced Settings
 	 */
 	const OMGF_ADV_SETTING_LEGACY_MODE = 'legacy';
 
 	const OMGF_ADV_SETTING_COMPATIBILITY = 'compatibility';
-
-	const OMGF_ADV_SETTING_AUTO_SUBSETS = 'auto_subsets';
 
 	const OMGF_ADV_SETTING_SUBSETS = 'subsets';
 
@@ -180,8 +176,6 @@ class Settings extends Admin {
 	 * Miscellaneous
 	 */
 	const OMGF_OPTIONS_GENERAL_PAGE_OPTIMIZE_WEBFONTS = 'options-general.php?page=optimize-webfonts';
-
-	const OMGF_PLUGINS_INSTALL_CHANGELOG_SECTION = 'plugin-install.php?tab=plugin-information&plugin=host-webfonts-local&TB_iframe=true&width=772&height=1015&section=changelog';
 
 	const DAAN_WORDPRESS_OMGF_PRO = 'https://daan.dev/wordpress/omgf-pro/';
 

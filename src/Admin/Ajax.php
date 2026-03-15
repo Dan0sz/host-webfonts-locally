@@ -32,10 +32,10 @@ class Ajax {
 	}
 
 	/**
+	 * @since              v5.4.0 Remove notice from dashboard and return new HTML.
 	 * @return void Valid HTML.
 	 *
 	 * @codeCoverageIgnore because code execution is killed at the end.
-	 * @since              v5.4.0 Remove notice from dashboard and return new HTML.
 	 */
 	public function hide_notice() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -89,10 +89,10 @@ class Ajax {
 	/**
 	 * Unset a $key from $array and update $option_name. Optionally, store the array as a comma-separated string.
 	 *
-	 * @param string $option_name The option name to update.
-	 * @param array $array The array to saarch.
-	 * @param string $key The key to unset when found.
-	 * @param bool $comma_separated When true, $array is converted to a comma-separated string before saving it
+	 * @param string $option_name     The option name to update.
+	 * @param array  $array           The array to saarch.
+	 * @param string $key             The key to unset when found.
+	 * @param bool   $comma_separated When true, $array is converted to a comma-separated string before saving it
 	 *                                to the database.
 	 *
 	 * @return void
@@ -169,7 +169,6 @@ class Ajax {
 					Settings::OMGF_CACHE_IS_STALE,
 					Settings::OMGF_CACHE_TIMESTAMP,
 					Settings::OMGF_FOUND_IFRAMES,
-					Settings::OMGF_OPTIMIZE_HAS_RUN,
 					Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
 					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
 					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND,

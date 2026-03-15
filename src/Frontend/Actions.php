@@ -30,7 +30,6 @@ class Actions {
 		add_action( 'init', [ $this, 'init_frontend' ], 50 );
 		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_item' ], 1000 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_frontend_assets' ] );
-		add_action( 'template_redirect', [ $this, 'mark_optimize_as_done' ], 100 );
 	}
 
 	/**
@@ -143,6 +142,11 @@ class Actions {
 				'subsets_count'                  => is_countable( $subsets ) ? count( $subsets ) : 0,
 			]
 		);
+		wp_localize_script(
+			self::FRONTEND_ASSET_HANDLE,
+			'omgf_frontend_results',
+			[ 'skip' => ! OMGF::optimize_succeeded() ]
+		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
 
 		// Even if the above filter forces the JS to load, we'll only need the CSS if the current user is an admin.
@@ -154,18 +158,5 @@ class Actions {
 		$css_path = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
 
 		wp_enqueue_style( self::FRONTEND_ASSET_HANDLE, $css_file, [], filemtime( $css_path ) );
-	}
-
-	/**
-	 * Mark optimization as done,
-	 *
-	 * @return void
-	 */
-	public function mark_optimize_as_done() {
-		if ( ! isset( $_GET['omgf_optimize'] ) ) {
-			return;
-		}
-
-		OMGF::update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
 	}
 }

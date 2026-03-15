@@ -94,7 +94,7 @@ class AdminbarMenu {
 		$stored_results = $this->update_google_fonts_checker_results( $params );
 		$status         = 'success';
 
-		if ( ! Dashboard::optimize_succeeded() ) {
+		if ( ! OMGF::optimize_succeeded() ) {
 			$status = 'info';
 		}
 

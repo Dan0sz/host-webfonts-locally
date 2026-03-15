@@ -653,4 +653,13 @@ class Helper {
 
 		return apply_filters( 'omgf_is_running_optimize', ( array_key_exists( 'omgf_optimize', $post ) || $is_running ) );
 	}
+
+	/**
+	 * If admin_optimized_fonts() is not empty, we can assume optimize has succeeded.
+	 *
+	 * @return bool
+	 */
+	public static function optimize_succeeded() {
+		return ! empty( Helper::admin_optimized_fonts() );
+	}
 }
