@@ -354,16 +354,12 @@ class AdminbarMenuTest extends TestCase {
 	 * @throws \ReflectionException
 	 */
 	public function testDecodeJsonArrayEdgeCases() {
-		try {
-			$api = new AdminbarMenu();
+		$api = new AdminbarMenu();
 
-			// Use reflection to test private method decode_json_array
-			$reflection = new \ReflectionClass( $api );
-			$method     = $reflection->getMethod( 'decode_json_array' );
-			$method->setAccessible( true );
-		} finally {
-			// Do nothing.
-		}
+		// Use reflection to test the private method decode_json_array
+		$reflection = new \ReflectionClass( $api );
+		$method     = $reflection->getMethod( 'decode_json_array' );
+		$method->setAccessible( true );
 
 		// Case: input is not a string or is empty (covers line 278)
 		$this->assertEquals( [], $method->invoke( $api, null ) );
