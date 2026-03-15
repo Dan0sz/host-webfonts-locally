@@ -5,7 +5,6 @@
 
 namespace OMGF\Tests\Integration\API;
 
-use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
 use OMGF\API\AdminbarMenu;
 use OMGF\Helper as OMGF;
@@ -258,6 +257,52 @@ class AdminbarMenuTest extends TestCase {
 		}
 
 		$this->assertEquals( 150, $metrics['highest_delay_ms'] );
+	}
+
+	/**
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	public function testUpdateGoogleFontsCheckerResultsParamsEdgeCases() {
+		$api = new AdminbarMenu();
+
+		// Use reflection to test private method update_google_fonts_checker_results
+		$reflection = new \ReflectionClass( $api );
+		$method     = $reflection->getMethod( 'update_google_fonts_checker_results' );
+		$method->setAccessible( true );
+
+		// Case: params is a JSON string (covers lines 192-193)
+		try {
+			$params = [ 'test' => 1 ];
+			$post   = [
+				'path'   => '/params-json-test',
+				'params' => json_encode( $params ),
+				'urls'   => [ 'https://fonts.googleapis.com/css?family=Open+Sans' ],
+			];
+
+			$method->invoke( $api, $post );
+
+			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Open+Sans', $results );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
+
+		// Case: params is neither string nor array (covers line 197)
+		try {
+			$post = [
+				'path'   => '/params-invalid-test',
+				'params' => 123, // Invalid type
+				'urls'   => [ 'https://fonts.googleapis.com/css?family=Roboto' ],
+			];
+
+			$method->invoke( $api, $post );
+
+			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto', $results );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
 	}
 
 	/**
