@@ -90,56 +90,14 @@ class AdminbarMenu {
 	 * @return array
 	 */
 	public function get_admin_bar_status( $request ) {
-		$params         = $this->clean( $request->get_params() );
-		$stored_results = $this->update_google_fonts_checker_results( $params );
-		$status         = 'success';
-
-		if ( ! OMGF::optimize_succeeded() ) {
-			$status = 'info';
-		}
-
-		if ( ! empty( $stored_results ) ) {
-			$status = 'alert';
-		}
-
-		if ( empty( $stored_results ) && $this->has_warnings() ) {
-			$status = 'notice';
-		}
-
+		$params                = $this->clean( $request->get_params() );
+		$stored_results        = $this->update_google_fonts_checker_results( $params );
 		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
 		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
 
-		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() ) {
-			// Alerts and notices should take precedence.
-			if ( $status !== 'alert' && $status !== 'notice' ) {
-				$status = 'info';
-			}
+		$this->update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis );
 
-			$stored_metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK, [] );
-			$stored_metrics = is_array( $stored_metrics ) ? $stored_metrics : [];
-			$updated        = false;
-			$path           = $params['path'] ?? '';
-
-			if ( ! empty( $unused_fonts_analysis['count'] ) && ( empty( $stored_metrics['highest_unused_count'] ) || $unused_fonts_analysis['count'] > $stored_metrics['highest_unused_count'] ) ) {
-				$stored_metrics['highest_unused_count']     = $unused_fonts_analysis['count'];
-				$stored_metrics['highest_unused_path']      = $path;
-				$stored_metrics['highest_unused_impact']    = $unused_fonts_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
-				$stored_metrics['highest_unused_timestamp'] = time();
-				$updated                                    = true;
-			}
-
-			if ( ! empty( $preload_analysis['potential_delay_ms'] ) && ( empty( $stored_metrics['highest_delay_ms'] ) || $preload_analysis['potential_delay_ms'] > $stored_metrics['highest_delay_ms'] ) ) {
-				$stored_metrics['highest_delay_ms']        = $preload_analysis['potential_delay_ms'];
-				$stored_metrics['highest_delay_path']      = $path;
-				$stored_metrics['highest_delay_impact']    = $preload_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
-				$stored_metrics['highest_delay_timestamp'] = time();
-				$updated                                   = true;
-			}
-
-			if ( $updated ) {
-				OMGF::update_option( Settings::OMGF_PERF_CHECK, $stored_metrics );
-			}
-		}
+		$status = $this->calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis );
 
 		return [ 'status' => apply_filters( 'omgf_ajax_admin_bar_status', $status ) ];
 	}
@@ -263,17 +221,6 @@ class AdminbarMenu {
 	}
 
 	/**
-	 * Check if OMGF has logged any configuration issues that require attention.
-	 *
-	 * @return bool
-	 */
-	private function has_warnings() {
-		$warnings = Dashboard::get_warnings();
-
-		return ! empty( $warnings );
-	}
-
-	/**
 	 * Array normalization.
 	 *
 	 * @param $value
@@ -292,5 +239,86 @@ class AdminbarMenu {
 		$decoded = json_decode( $value, true );
 
 		return is_array( $decoded ) ? $decoded : [];
+	}
+
+	/**
+	 * @param array $params
+	 * @param array $unused_fonts_analysis
+	 * @param array $preload_analysis
+	 *
+	 * @return void
+	 */
+	private function update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis ) {
+		if ( empty( $unused_fonts_analysis ) && empty( $preload_analysis ) && ! Dashboard::has_multilang_plugin() ) {
+			return;
+		}
+
+		$stored_metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK, [] );
+		$stored_metrics = is_array( $stored_metrics ) ? $stored_metrics : [];
+		$updated        = false;
+		$path           = $params['path'] ?? '';
+
+		if ( ! empty( $unused_fonts_analysis['count'] ) && ( empty( $stored_metrics['highest_unused_count'] ) || $unused_fonts_analysis['count'] > $stored_metrics['highest_unused_count'] ) ) {
+			$stored_metrics['highest_unused_count']     = $unused_fonts_analysis['count'];
+			$stored_metrics['highest_unused_path']      = $path;
+			$stored_metrics['highest_unused_impact']    = $unused_fonts_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
+			$stored_metrics['highest_unused_timestamp'] = time();
+			$updated                                    = true;
+		}
+
+		if ( ! empty( $preload_analysis['potential_delay_ms'] ) && ( empty( $stored_metrics['highest_delay_ms'] ) || $preload_analysis['potential_delay_ms'] > $stored_metrics['highest_delay_ms'] ) ) {
+			$stored_metrics['highest_delay_ms']        = $preload_analysis['potential_delay_ms'];
+			$stored_metrics['highest_delay_path']      = $path;
+			$stored_metrics['highest_delay_impact']    = $preload_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
+			$stored_metrics['highest_delay_timestamp'] = time();
+			$updated                                   = true;
+		}
+
+		if ( $updated ) {
+			OMGF::update_option( Settings::OMGF_PERF_CHECK, $stored_metrics );
+		}
+	}
+
+	/**
+	 * @param array $stored_results
+	 * @param array $unused_fonts_analysis
+	 * @param array $preload_analysis
+	 *
+	 * @return string
+	 */
+	private function calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis ) {
+		$status = 'success';
+
+		if ( ! OMGF::optimize_succeeded() ) {
+			$status = 'info';
+		}
+
+		if ( ! empty( $stored_results ) ) {
+			$status = 'alert';
+		}
+
+		if ( empty( $stored_results ) && $this->has_warnings() ) {
+			$status = 'notice';
+		}
+
+		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() ) {
+			// Alerts and notices should take precedence.
+			if ( $status !== 'alert' && $status !== 'notice' ) {
+				$status = 'info';
+			}
+		}
+
+		return $status;
+	}
+
+	/**
+	 * Check if OMGF has logged any configuration issues that require attention.
+	 *
+	 * @return bool
+	 */
+	private function has_warnings() {
+		$warnings = Dashboard::get_warnings();
+
+		return ! empty( $warnings );
 	}
 }
