@@ -15,7 +15,7 @@
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
-namespace DB\Migrate;
+namespace OMGF\DB\Migrate;
 
 use OMGF\Admin\Settings;
 use OMGF\Helper;
