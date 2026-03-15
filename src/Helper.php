@@ -660,6 +660,6 @@ class Helper {
 	 * @return bool
 	 */
 	public static function optimize_succeeded() {
-		return ! empty( Helper::admin_optimized_fonts() );
+		return ! empty( self::admin_optimized_fonts() );
 	}
 }
