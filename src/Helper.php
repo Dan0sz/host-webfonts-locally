@@ -569,7 +569,7 @@ class Helper {
 	public static function download( $url, $filename, $path ) {
 		$download = new Download( $url, $filename, $path );
 
-		return $download->download();
+		return apply_filters( 'omgf_download', $download->download() );
 	}
 
 	/**
