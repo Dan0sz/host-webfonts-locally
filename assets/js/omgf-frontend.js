@@ -409,8 +409,10 @@ window.addEventListener('load', () => {
 
 					// Check for italic.
 					let style_match = true;
+					
 					if (style === 'italic') {
-						style_match = url_lower.includes('italic') || url_lower.includes('i.woff'); // Handle some minified naming
+						// Match 'italic', '-i.woff', '_i.woff', or common patterns like '400i.woff'
+						style_match = url_lower.includes('italic') || /[._-]i\.(woff|woff2|ttf|otf)/.test(url_lower) || /\d{3}i\.(woff|woff2|ttf|otf)/.test(url_lower);
 					} else if (style === 'normal') {
 						style_match = !url_lower.includes('italic');
 					}
