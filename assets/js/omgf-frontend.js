@@ -410,6 +410,8 @@ window.addEventListener('load', () => {
 					return weight_pattern.test(url_lower) && style_match;
 				});
 
+				console.log('matching_entries for', family, ':', matching_entries);
+
 				matching_entries.forEach((matching_entry) => {
 					callback(matching_entry, family);
 				});
@@ -495,7 +497,8 @@ window.addEventListener('load', () => {
 				let has_text = false;
 
 				if (lcp_element) {
-					has_text = typeof lcp_element.innerText === 'string' && lcp_element.innerText.trim().length > 0;
+					has_text = (typeof lcp_element.innerText === 'string' && lcp_element.innerText.trim().length > 0)
+						|| (typeof lcp_element.textContent === 'string' && lcp_element.textContent.trim().length > 0);
 				}
 
 				if (!has_text) {
@@ -517,8 +520,8 @@ window.addEventListener('load', () => {
 
 				result.potential_delay_ms = Math.round(max_delay);
 
-				// Ignore results under 10ms.
-				if (result.potential_delay_ms <= 10) {
+				// Ignore results under 5ms.
+				if (result.potential_delay_ms <= 5) {
 					return {};
 				}
 
