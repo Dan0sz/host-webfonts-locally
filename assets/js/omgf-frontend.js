@@ -52,7 +52,7 @@ window.addEventListener('load', () => {
 					if (count > 1) {
 						let impact = omgf_frontend_i18n.info_box_impact_low;
 
-						if (count <= 3) {
+						if (count === 3) {
 							impact = omgf_frontend_i18n.info_box_impact_medium;
 						} else if (count > 3) {
 							impact = omgf_frontend_i18n.info_box_impact_high;
