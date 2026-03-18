@@ -20,8 +20,6 @@ use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
-defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
-
 /**
  * @codeCoverageIgnore
  */
