@@ -162,7 +162,13 @@ window.addEventListener('load', () => {
 					let src = rule.style.getPropertyValue('src') || rule.style.src;
 					if (!src) src = this.getFontFaceProperty(rule, 'src');
 
-					let match = src ? src.match(/url\(["']?([^"')]+)["']?\)/) : null;
+					let match = src ? src.match(/url\(["']?([^"')]+\.woff2[^"')]*?)["']?\)/) : null;
+
+					// Fallback to any font URL if no woff2 found.
+					if (!match) {
+						match = src ? src.match(/url\(["']?([^"')]+)["']?\)/) : null;
+					}
+
 					if (!match) continue;
 
 					let candidate_url = new URL(match[1], sheet.href || document.baseURI).href;
@@ -409,8 +415,6 @@ window.addEventListener('load', () => {
 
 					return weight_pattern.test(url_lower) && style_match;
 				});
-
-				console.log('matching_entries for', family, ':', matching_entries);
 
 				matching_entries.forEach((matching_entry) => {
 					callback(matching_entry, family);
