@@ -74,10 +74,11 @@ class AdminbarMenu {
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function get_permission() {
+	public function get_permission( \WP_REST_Request $request ) {
 		$is_allowed = current_user_can( 'manage_options' );
+		$nonce      = $request->get_header( 'X-WP-Nonce' );
 
-		return apply_filters( 'omgf_api_adminbar_menu_permission', $is_allowed );
+		return apply_filters( 'omgf_api_adminbar_menu_permission', $is_allowed && wp_verify_nonce( $nonce, 'wp_rest' ) );
 	}
 
 	/**
