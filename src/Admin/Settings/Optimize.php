@@ -41,11 +41,10 @@ class Optimize extends Builder {
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 21 );
 		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_notices' ], 23 );
 		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_status' ], 25 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_google_fonts_checker' ], 27 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_test_mode' ], 29 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_cache_management' ], 31 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 33 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 34 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_test_mode' ], 27 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_cache_management' ], 29 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 31 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 33 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 40 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 50 );
@@ -76,45 +75,6 @@ class Optimize extends Builder {
 				)
 			); ?>
 		</p>
-		<?php
-	}
-
-	public function do_google_fonts_checker() {
-		?>
-		<tr>
-			<?php
-			$this->do_checkbox(
-				__( 'Run Google Fonts Checker in the background (Pro)', 'host-webfonts-local' ),
-				'google_fonts_checker', ! empty( OMGF::get_option( 'google_fonts_checker' ) ),
-				sprintf(
-					__(
-						'Normally, the Google Fonts Checker only runs for logged-in administrators. If you want to organically scan all your pages for Google Fonts, enable this option. %s',
-						'host-webfonts-local'
-					),
-					$this->promo
-				), ! defined( 'OMGF_PRO_ACTIVE' )
-			); ?>
-			<?php
-			$this->do_select(
-				__( 'Disable Google Fonts Checker after... (Pro)', 'host-webfonts-local' ),
-				'checker_timeout',
-				[
-					'7'      => __( '7 Days (default)', 'host-webfonts-local' ),
-					'14'     => __( '14 Days', 'host-webfonts-local' ),
-					'30'     => __( '1 Month', 'host-webfonts-local' ),
-					'always' => __( 'Always', 'host-webfonts-local' ),
-				],
-				OMGF::get_option( 'checker_timeout', 7 ),
-				sprintf(
-					__(
-						'When enabled, the Google Fonts Checker loads a tiny snippet (<3KB) of JS code in your frontend. While the impact is barely noticeable, it\'s advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s',
-						'host-webfonts-local'
-					),
-					$this->promo
-				),
-				false, ! defined( 'OMGF_PRO_ACTIVE' ) || empty( OMGF::get_option( 'google_fonts_checker' ) )
-			); ?>
-		</tr>
 		<?php
 	}
 

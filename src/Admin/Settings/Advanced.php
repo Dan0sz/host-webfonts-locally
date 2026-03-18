@@ -192,10 +192,6 @@ class Advanced extends Builder {
 			apply_filters( 'omgf_settings_page_title', 'OMGF' )
 		);
 
-		if ( $checked && OMGF::get_option( 'google_fonts_checker' ) && get_transient( 'omgf_pro_run_google_fonts_checker' ) ) {
-			$description .= ' ' . __( 'This setting will resume functioning once the Google Fonts checker has finished running.', 'host-webfonts-local' );
-		}
-
 		$this->do_checkbox(
 			__( 'Disable Admin Bar Menu', 'host-webfonts-local' ),
 			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU,
