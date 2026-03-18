@@ -78,7 +78,7 @@ class AdminbarMenu {
 		$is_allowed = current_user_can( 'manage_options' );
 		$nonce      = $request->get_header( 'X-WP-Nonce' );
 
-		return apply_filters( 'omgf_api_adminbar_menu_permission', $is_allowed && wp_verify_nonce( $nonce, 'wp_rest' ) );
+		return apply_filters( 'omgf_api_adminbar_menu_permission', $is_allowed ) && wp_verify_nonce( $nonce, 'wp_rest' );
 	}
 
 	/**
