@@ -146,7 +146,7 @@ class Optimize extends Builder {
 	}
 
 	/**
-	 * Auto Preload Fonts (Pro) option.
+	 * Smart Optimize (Pro) option.
 	 *
 	 * @return void
 	 */
