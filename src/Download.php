@@ -38,10 +38,6 @@ class Download {
 		'application/vnd.ms-fontobject' => 'eot',
 	];
 
-	/**
-	 * @var string[] Backwards compatibility.
-	 */
-	private $mime_map = self::MIME_MAP;
 
 	/** @var string $url */
 	private $url;
