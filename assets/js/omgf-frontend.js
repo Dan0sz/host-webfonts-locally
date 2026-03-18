@@ -16,13 +16,14 @@ window.addEventListener('load', () => {
 		init: async function () {
 			let missing_preloads = [];
 			let unused_fonts = [];
+			let status = null;
 
 			try {
 				let google_fonts = this.filterGoogleFonts();
 				let response = await this.getStatus(google_fonts);
-				let status = response.status || null;
 				let unused_fonts_analysis = response.unused_fonts_analysis || {};
 				let preload_analysis = response.preload_analysis || {};
+				status = response.status || null;
 				missing_preloads = response.missing_preloads || [];
 				unused_fonts = response.unused_fonts || [];
 
@@ -82,6 +83,7 @@ window.addEventListener('load', () => {
 					detail: {
 						missing_preloads: missing_preloads,
 						unused_fonts: unused_fonts,
+						status: status,
 					}
 				}));
 			}
