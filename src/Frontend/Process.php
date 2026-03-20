@@ -710,14 +710,14 @@ class Process {
 	}
 
 	/**
-	 * Adds a little success message to the HTML, to create a more logic user flow when manually optimizing pages.
+	 * Adds a little success message to the HTML to create a more logic user flow when manually optimizing pages.
 	 *
 	 * @param string $html Valid HTML
 	 *
 	 * @return string
 	 */
 	public function add_success_message( $html ) {
-		if ( ! isset( $_GET['omgf_optimize'] ) || wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) || ! isset( $_GET['omgf_optimize'] ) || wp_doing_ajax() ) {
 			return $html;
 		}
 
