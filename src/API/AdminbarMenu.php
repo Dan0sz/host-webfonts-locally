@@ -75,10 +75,13 @@ class AdminbarMenu {
 	 * @codeCoverageIgnore
 	 */
 	public function get_permission( \WP_REST_Request $request ) {
-		$is_allowed = current_user_can( 'manage_options' );
-		$nonce      = $request->get_header( 'X-WP-Nonce' );
+		$is_allowed = apply_filters( 'omgf_api_adminbar_menu_permission', current_user_can( 'manage_options' ), $request );
 
-		return apply_filters( 'omgf_api_adminbar_menu_permission', $is_allowed ) && wp_verify_nonce( $nonce, 'wp_rest' );
+		if ( true !== $is_allowed ) {
+			return $is_allowed;
+		}
+
+		return (bool) wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' );
 	}
 
 	/**
