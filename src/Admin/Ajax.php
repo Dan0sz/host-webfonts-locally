@@ -135,7 +135,7 @@ class Ajax {
 					'init'    => Settings::OMGF_ADMIN_PAGE,
 					'exclude' => [],
 					'queue'   => [
-						Settings::OMGF_CACHE_IS_STALE,
+						Settings::OMGF_FLAG_CACHE_IS_STALE,
 					],
 				];
 			}
@@ -143,7 +143,7 @@ class Ajax {
 
 		$this->empty_cache();
 
-		delete_option( Settings::OMGF_CACHE_IS_STALE );
+		delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
 	}
 
 	/**
@@ -156,26 +156,15 @@ class Ajax {
 	 * @codeCoverageIgnore because this works the file system.
 	 */
 	private function empty_cache( $initiator = 'optimize-webfonts' ) {
-		$entries      = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*' ) );
+		$entries    = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*' ) );
+		$flush_rows = OMGF::get_db_rows_by( [ 'OMGF_FLAG_', 'OMGF_DB_', 'OMGF_OPTIMIZE_SETTING_' ], [ Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE, Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION ] );
+
 		$instructions = apply_filters(
 			'omgf_clean_up_instructions',
 			[
 				'init'    => $initiator,
 				'exclude' => [],
-				'queue'   => [
-					Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS,
-					Settings::OMGF_PERF_CHECK,
-					Settings::OMGF_AVAILABLE_USED_SUBSETS,
-					Settings::OMGF_CACHE_IS_STALE,
-					Settings::OMGF_CACHE_TIMESTAMP,
-					Settings::OMGF_FOUND_IFRAMES,
-					Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
-					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
-					Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND,
-					Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
-					Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
-					Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS,
-				],
+				'queue'   => $flush_rows,
 			]
 		);
 

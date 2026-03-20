@@ -150,12 +150,12 @@ class Admin {
 	/**
 	 * @see    OMGF::admin_optimized_fonts()
 	 *
-	 * @param array $alloptions
-	 *
-	 * @return array
 	 * @since  v5.0.5 Forces get_option() to fetch a fresh copy of omgf_optimized_fonts from the database,
 	 *               we're doing plenty to limit reads from the DB already. So, this is warranted.
 	 *
+	 * @param array $alloptions
+	 *
+	 * @return array
 	 */
 	public function force_optimized_fonts_from_db( $alloptions ) {
 		if ( isset( $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) && ! $alloptions[ Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ] ) {
@@ -257,7 +257,7 @@ class Admin {
 		}
 
 		if ( $show_message ) {
-			OMGF::update_option( Settings::OMGF_CACHE_IS_STALE, true );
+			OMGF::update_option( Settings::OMGF_FLAG_CACHE_IS_STALE, true );
 
 			add_settings_error(
 				'general',

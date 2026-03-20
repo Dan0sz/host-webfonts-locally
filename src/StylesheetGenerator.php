@@ -38,7 +38,7 @@ class StylesheetGenerator {
 	) {
 		$this->fonts     = $fonts;
 		$this->plugin    = $plugin;
-		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP );
+		$this->timestamp = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
 	}
 
 	/**

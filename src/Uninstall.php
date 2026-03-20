@@ -17,6 +17,7 @@
 namespace OMGF;
 
 use OMGF\Admin\Settings;
+use OMGF\Helper as OMGF;
 
 /**
  * @codeCoverageIgnore
@@ -38,26 +39,11 @@ class Uninstall {
 
 	/**
 	 * Remove all settings stored in the wp_options table.
+	 * @throws \ReflectionException
 	 */
 	private function remove_db_entries() {
-		$db_entries = apply_filters(
-			'omgf_uninstall_db_entries',
-			[
-				'omgf_settings',
-				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
-				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND,
-				Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
-				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
-				Settings::OMGF_AVAILABLE_USED_SUBSETS,
-				Settings::OMGF_NEWS_REEL,
-				Settings::OMGF_CACHE_IS_STALE,
-				Settings::OMGF_CURRENT_DB_VERSION,
-				Settings::OMGF_CACHE_TIMESTAMP,
-				Settings::OMGF_FOUND_IFRAMES,
-				Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS,
-				Settings::OMGF_HIDDEN_NOTICES,
-			]
-		);
+		$db_rows    = OMGF::get_db_rows_by( [ 'OMGF_FLAG_', 'OMGF_DB_', 'OMGF_OPTIMIZE_SETTING_', 'OMGF_CURRENT_DB_VERSION', 'OMGF_HIDDEN_NOTICES', 'OMGF_NEWS_REEL' ] );
+		$db_entries = apply_filters( 'omgf_uninstall_db_entries', array_merge( $db_rows, [ 'omgf_settings' ] ) );
 
 		foreach ( $db_entries as $entry ) {
 			delete_option( $entry );

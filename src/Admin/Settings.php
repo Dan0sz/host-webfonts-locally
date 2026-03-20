@@ -25,27 +25,32 @@ class Settings extends Admin {
 	const OMGF_ADMIN_PAGE = 'optimize-webfonts';
 
 	/**
+	 * Flags & Persisted Values
+	 */
+	const OMGF_FLAG_OPTIMIZE_HAS_RUN = 'omgf_optimize_has_run';
+
+	const OMGF_FLAG_CACHE_IS_STALE = 'omgf_cache_is_stale';
+
+	const OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS = 'omgf_google_fonts_checker_results';
+
+	const OMGF_DB_PERF_CHECK = 'omgf_perf_check';
+
+	const OMGF_DB_AVAILABLE_USED_SUBSETS = 'omgf_available_used_subsets';
+
+	const OMGF_DB_CACHE_TIMESTAMP = 'omgf_cache_timestamp';
+
+	const OMGF_DB_FOUND_IFRAMES = 'omgf_found_iframes';
+
+	/**
 	 * Transients
 	 */
-	const OMGF_AVAILABLE_USED_SUBSETS = 'omgf_available_used_subsets';
+	const OMGF_CURRENT_DB_VERSION = 'omgf_current_db_version';
 
 	const OMGF_NEWS_REEL = 'omgf_news_reel';
 
-	const OMGF_CACHE_IS_STALE = 'omgf_cache_is_stale';
-
-	const OMGF_CURRENT_DB_VERSION = 'omgf_current_db_version';
-
-	const OMGF_CACHE_TIMESTAMP = 'omgf_cache_timestamp';
-
-	const OMGF_FOUND_IFRAMES = 'omgf_found_iframes';
-
-	const OMGF_GOOGLE_FONTS_CHECKER_RESULTS = 'omgf_google_fonts_checker_results';
-
-	const OMGF_PERF_CHECK = 'omgf_perf_check';
+	const OMGF_DISMISS_NOTICE_TRANSIENT = 'omgf_dismiss_notice_';
 
 	const OMGF_HIDDEN_NOTICES = 'omgf_hidden_notices';
-
-	const OMGF_DISMISS_NOTICE_TRANSIENT = 'omgf_dismiss_notice_';
 
 	/**
 	 * Settings Fields
@@ -137,7 +142,6 @@ class Settings extends Admin {
 	/**
 	 * Optimize Fonts
 	 */
-
 	const OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION = 'display_option';
 
 	const OMGF_OPTIMIZE_SETTING_TEST_MODE = 'test_mode';
@@ -289,19 +293,8 @@ class Settings extends Admin {
 	 * @throws ReflectionException
 	 */
 	public function get_settings() {
-		$reflection = new \ReflectionClass( $this );
-		$constants  = apply_filters( 'omgf_settings_constants', $reflection->getConstants() );
-
-		switch ( $this->active_tab ) {
-			case ( self::OMGF_SETTINGS_FIELD_ADVANCED ):
-				$needle = 'OMGF_ADV_SETTING_';
-				break;
-			case ( self::OMGF_SETTINGS_FIELD_HELP ):
-				$needle = 'OMGF_HELP_SETTING_';
-				break;
-			default:
-				$needle = apply_filters( 'omgf_settings_needle', 'OMGF_OPTIMIZE_SETTING_' );
-		}
+		$constants = $this->get_constants();
+		$needle    = $this->get_needle();
 
 		$settings = array_filter(
 			$constants,
@@ -322,6 +315,37 @@ class Settings extends Admin {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Get a list of constants representing belonging to a settings tab in this class.
+	 *
+	 * @return array
+	 */
+	public function get_constants(): array {
+		$reflection = new \ReflectionClass( $this );
+
+		return apply_filters( 'omgf_settings_constants', $reflection->getConstants() );
+	}
+
+	/**
+	 * Decides which needle to use for filtering settings.
+	 *
+	 * @return mixed|string|null
+	 */
+	public function get_needle() {
+		switch ( $this->active_tab ) {
+			case ( self::OMGF_SETTINGS_FIELD_ADVANCED ):
+				$needle = 'OMGF_ADV_SETTING_';
+				break;
+			case ( self::OMGF_SETTINGS_FIELD_HELP ):
+				$needle = 'OMGF_HELP_SETTING_';
+				break;
+			default:
+				$needle = apply_filters( 'omgf_settings_needle', 'OMGF_OPTIMIZE_SETTING_' );
+		}
+
+		return $needle;
 	}
 
 	/**

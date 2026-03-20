@@ -99,7 +99,7 @@ class Process {
 	 */
 	public function __construct( $break = false ) {
 		$this->break     = $break;
-		$this->timestamp = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP, '' );
+		$this->timestamp = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP, '' );
 
 		if ( ! $this->timestamp ) {
 			$this->timestamp = $this->generate_timestamp(); // @codeCoverageIgnore
@@ -121,7 +121,7 @@ class Process {
 	private function generate_timestamp() {
 		$timestamp = time();
 
-		OMGF::update_option( Settings::OMGF_CACHE_TIMESTAMP, $timestamp ); // @codeCoverageIgnore
+		OMGF::update_option( Settings::OMGF_DB_CACHE_TIMESTAMP, $timestamp ); // @codeCoverageIgnore
 
 		return $timestamp;
 	}
@@ -149,10 +149,11 @@ class Process {
 
 		add_action( 'wp_head', [ $this, 'add_preloads' ], 3 );
 		add_action( 'template_redirect', [ $this, 'maybe_buffer_output' ], 3 );
+		add_action( 'template_redirect', [ $this, 'maybe_set_optimize_has_run' ] );
 		add_action( 'login_init', [ $this, 'maybe_buffer_output' ], 3 );
 		/**
-		 * @since v5.3.10 parse() runs on priority 10. Run this afterward, to make sure e.g. the <preload> -> <noscript> approach some theme
-		 *                developers use keeps working.
+		 * @since v5.3.10 parse() runs on priority 10. Run this afterward, to make sure e.g., the <preload> -> <noscript> approaches some theme
+		 *                developers use keep working.
 		 */
 		add_filter( 'omgf_buffer_output', [ $this, 'remove_resource_hints' ], 11 );
 
@@ -229,7 +230,7 @@ class Process {
 					}
 
 					$preloaded[] = $url;
-					$timestamp   = OMGF::get_option( Settings::OMGF_CACHE_TIMESTAMP );
+					$timestamp   = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
 					$url         .= str_contains( $url, '?' ) ? "&ver=$timestamp" : "?ver=$timestamp";
 
 					/**
@@ -337,11 +338,21 @@ class Process {
 	}
 
 	/**
+	 * Sets the Optimize Has Run flag after the first run.
+	 *
+	 * @since v6.2.0
+	 *
+	 * @return void
+	 */
+	public function maybe_set_optimize_has_run() {
+		if ( self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() ) {
+			update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
+		}
+	}
+
+	/**
 	 * Returns the buffer for filtering, so page cache doesn't break.
 	 *
-	 * @return string Valid HTML
-	 *
-	 * @codeCoverageIgnore
 	 * @since v5.0.0 Tested with:
 	 *               - Asset Cleanup Pro
 	 *                 - Works
@@ -365,6 +376,9 @@ class Process {
 	 *                 - Page Cache: Enabled
 	 * Not tested (yet):
 	 * TODO: [OMGF-41] - Swift Performance
+	 * @return string Valid HTML
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function return_buffer( $html ) {
 		if ( ! $html ) {
@@ -377,11 +391,11 @@ class Process {
 	/**
 	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
 	 *
+	 * @since v5.0.5 Use a regular expression to match all resource hints.
+	 *
 	 * @param string $html Valid HTML.
 	 *
 	 * @return string Valid HTML.
-	 * @since v5.0.5 Use a regular expression to match all resource hints.
-	 *
 	 */
 	public function remove_resource_hints( $html ) {
 		/**
@@ -497,8 +511,8 @@ class Process {
 	}
 
 	/**
-	 * @return bool
 	 * @since v5.0.5 Check if current page is AMP page.
+	 * @return bool
 	 */
 	private function is_amp() {
 		return ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) || ( function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint() );
@@ -507,7 +521,7 @@ class Process {
 	/**
 	 * Builds a processable array of Google Fonts' ID and (external) URL.
 	 *
-	 * @param array $links
+	 * @param array  $links
 	 * @param string $handle If an ID attribute is not defined, this will be used instead.
 	 *
 	 * @return array [ 0 => [ 'id' => (string), 'href' => (string) ] ]
@@ -559,11 +573,11 @@ class Process {
 	/**
 	 * Strip "-css" from the end of the stylesheet id, which WordPress adds to properly enqueued stylesheets.
 	 *
+	 * @since v5.0.1 This eases the migration from v4.6.0.
+	 *
 	 * @param mixed $handle
 	 *
 	 * @return mixed
-	 * @since v5.0.1 This eases the migration from v4.6.0.
-	 *
 	 */
 	private function strip_css_tag( $handle ) {
 		if ( ! str_ends_with( $handle, '-css' ) ) {
@@ -681,7 +695,7 @@ class Process {
 	 * @return void
 	 */
 	private function parse_iframes( $html ) {
-		$found_iframes = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
+		$found_iframes = OMGF::get_option( Settings::OMGF_DB_FOUND_IFRAMES, [] );
 		$count_iframes = count( $found_iframes );
 
 		foreach ( Dashboard::IFRAMES_LOADING_FONTS as $script_id => $script ) {
@@ -691,7 +705,7 @@ class Process {
 		}
 
 		if ( $count_iframes !== count( $found_iframes ) ) {
-			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, $found_iframes );
+			OMGF::update_option( Settings::OMGF_DB_FOUND_IFRAMES, $found_iframes );
 		}
 	}
 

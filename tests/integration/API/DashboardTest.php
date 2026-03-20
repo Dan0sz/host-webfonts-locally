@@ -55,7 +55,7 @@ class DashboardTest extends TestCase {
 			$this->assertFalse( (bool) get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . $other_user_id ) );
 
 			// Test Dashboard visibility
-			OMGF::update_option( Settings::OMGF_PERF_CHECK, [ 'highest_unused_count' => 1, 'highest_unused_path' => '/' ] );
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_unused_count' => 1, 'highest_unused_path' => '/' ] );
 
 			ob_start();
 			Dashboard::render_notices();
@@ -80,7 +80,7 @@ class DashboardTest extends TestCase {
 				wp_delete_user( $other_user_id );
 			}
 
-			OMGF::delete_option( Settings::OMGF_PERF_CHECK );
+			OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
 			wp_set_current_user( 0 );
 		}
 	}

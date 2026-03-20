@@ -477,7 +477,7 @@ class Optimize extends Builder {
 								'host-webfonts-local'
 							),
 							get_site_url()
-						); ?></em> [<a href="https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/"
+						); ?></em> [<a href="<?php echo esc_url( Dashboard::DAAN_DEV_DOCS_TROUBLESHOOTING_NO_FONTS_DETECTED ); ?>"
 									   target="_blank"><?php echo __(
 							'Why aren\'t my Google Fonts showing up on this list?',
 							'host-webfonts-local'

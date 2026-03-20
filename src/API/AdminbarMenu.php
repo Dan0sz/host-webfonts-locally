@@ -143,7 +143,7 @@ class AdminbarMenu {
 	 * @return array
 	 */
 	private function update_google_fonts_checker_results( $post ) {
-		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+		$stored_results = get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 		$path           = isset( $post['path'] ) && is_string( $post['path'] ) ? $post['path'] : '';
 		$raw_params     = $post['params'] ?? [];
 
@@ -216,7 +216,7 @@ class AdminbarMenu {
 			$stored_results = array_slice( $stored_results, 0, 5, true );
 		}
 
-		OMGF::update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
+		OMGF::update_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
 		return $stored_results;
 	}
@@ -254,7 +254,7 @@ class AdminbarMenu {
 			return;
 		}
 
-		$stored_metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK, [] );
+		$stored_metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 		$stored_metrics = is_array( $stored_metrics ) ? $stored_metrics : [];
 		$updated        = false;
 		$path           = $params['path'] ?? '';
@@ -276,7 +276,7 @@ class AdminbarMenu {
 		}
 
 		if ( $updated ) {
-			OMGF::update_option( Settings::OMGF_PERF_CHECK, $stored_metrics );
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, $stored_metrics );
 		}
 	}
 

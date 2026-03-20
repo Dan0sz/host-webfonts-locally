@@ -14,8 +14,8 @@ class AdminbarMenuTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
 		// Ensure we start with clean options
-		OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
-		OMGF::delete_option( Settings::OMGF_PERF_CHECK );
+		OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+		OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
 	}
 
 	/**
@@ -33,7 +33,7 @@ class AdminbarMenuTest extends TestCase {
 
 			$api->get_admin_bar_status( $request );
 
-			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 
 			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
 		} finally {
@@ -48,7 +48,7 @@ class AdminbarMenuTest extends TestCase {
 
 			$api->get_admin_bar_status( $request );
 
-			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 
 			$this->assertArrayNotHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
 		} finally {
@@ -75,13 +75,13 @@ class AdminbarMenuTest extends TestCase {
 
 			$api->get_admin_bar_status( $request );
 
-			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 
 			$this->assertCount( 5, $results );
 		} finally {
 			remove_filter( 'omgf_is_running_optimize', '__return_true' );
 
-			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
 	}
 
@@ -154,7 +154,7 @@ class AdminbarMenuTest extends TestCase {
 		$request->set_param( 'preload_analysis', json_encode( $preload_analysis ) );
 
 		$response = $api->get_admin_bar_status( $request );
-		$metrics  = OMGF::get_option( Settings::OMGF_PERF_CHECK );
+		$metrics  = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
 
 		$this->assertEquals( 'info', $response['status'] );
 		$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
@@ -181,7 +181,7 @@ class AdminbarMenuTest extends TestCase {
 
 		$api->get_admin_bar_status( $request_lower );
 
-		$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
+		$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
 
 		$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
 		$this->assertEquals( 80, $metrics['highest_delay_ms'] );
@@ -202,7 +202,7 @@ class AdminbarMenuTest extends TestCase {
 
 		$api->get_admin_bar_status( $request_higher );
 
-		$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
+		$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
 
 		$this->assertEquals( '/performance-test-higher', $metrics['highest_unused_path'] );
 		$this->assertEquals( 150, $metrics['highest_delay_ms'] );
@@ -222,10 +222,10 @@ class AdminbarMenuTest extends TestCase {
 		// Case 5: Test precedence of notice over info.
 		// Bypassing SSL for this part too, and triggering notice via filter.
 		try {
-			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS ); // Clear results to avoid 'alert'
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS ); // Clear results to avoid 'alert'
 			// To trigger 'notice' instead of 'info' (which is triggered by multilang plugin), we need has_warnings() to be true.
 			// has_warnings() checks if any of the warning options are not empty.
-			OMGF::update_option( Settings::OMGF_FOUND_IFRAMES, [ 'https://example.com' ] );
+			OMGF::update_option( Settings::OMGF_DB_FOUND_IFRAMES, [ 'https://example.com' ] );
 
 			$request_notice = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_notice->set_param( 'path', '/notice-test' );
@@ -234,7 +234,7 @@ class AdminbarMenuTest extends TestCase {
 
 			$response_notice = $api->get_admin_bar_status( $request_notice );
 		} finally {
-			OMGF::delete_option( Settings::OMGF_FOUND_IFRAMES );
+			OMGF::delete_option( Settings::OMGF_DB_FOUND_IFRAMES );
 		}
 
 		$this->assertEquals( 'notice', $response_notice['status'] );
@@ -248,12 +248,12 @@ class AdminbarMenuTest extends TestCase {
 
 			$api->get_admin_bar_status( $request_empty );
 
-			$metrics = OMGF::get_option( Settings::OMGF_PERF_CHECK );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
 		} finally {
 			update_option( 'home', $original_home );
 			update_option( 'siteurl', $original_siteurl );
-			OMGF::delete_option( Settings::OMGF_PERF_CHECK );
-			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
 
 		$this->assertEquals( 150, $metrics['highest_delay_ms'] );
@@ -282,10 +282,10 @@ class AdminbarMenuTest extends TestCase {
 
 			$method->invoke( $api, $post );
 
-			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Open+Sans', $results );
 		} finally {
-			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
 
 		// Case: params is neither string nor array (covers line 197)
@@ -298,10 +298,10 @@ class AdminbarMenuTest extends TestCase {
 
 			$method->invoke( $api, $post );
 
-			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto', $results );
 		} finally {
-			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
 	}
 
@@ -326,9 +326,9 @@ class AdminbarMenuTest extends TestCase {
 			];
 			$method->invoke( $api, $post );
 
-			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		} finally {
-			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
 
 		$this->assertArrayHasKey( $urls[0], $results );
@@ -341,9 +341,9 @@ class AdminbarMenuTest extends TestCase {
 			];
 			$method->invoke( $api, $post );
 
-			$results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		} finally {
-			OMGF::delete_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS );
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		}
 
 		$this->assertEmpty( $results );

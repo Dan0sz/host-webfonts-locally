@@ -431,7 +431,7 @@ class Helper {
 	 */
 	public static function available_used_subsets( $maybe_add = [], $intersect = false ) {
 		if ( empty( self::$subsets ) ) {
-			self::$subsets = self::get_option( Settings::OMGF_AVAILABLE_USED_SUBSETS, [] );
+			self::$subsets = self::get_option( Settings::OMGF_DB_AVAILABLE_USED_SUBSETS, [] );
 		}
 
 		/**
@@ -655,11 +655,52 @@ class Helper {
 	}
 
 	/**
-	 * If admin_optimized_fonts() is not empty, we can assume optimize has succeeded.
+	 * If admin_optimized_fonts() is not empty and optimize has run, we can assume optimize has succeeded.
+	 *
+	 * @since v6.2.0
 	 *
 	 * @return bool
 	 */
 	public static function optimize_succeeded() {
-		return ! empty( self::admin_optimized_fonts() );
+		return ! empty( self::admin_optimized_fonts() ) && self::get_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
+	}
+
+	/**
+	 * If admin_optimized_fonts() is empty, but optimize has run, we can assume optimize has failed.
+	 *
+	 * @since v6.2.0
+	 *
+	 * @return bool
+	 */
+	public static function optimize_failed() {
+		return empty( self::admin_optimized_fonts() ) && self::get_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
+	}
+
+	/**
+	 * Returns an array of settings rows, filtered by $needles, derived directly from the Settings class.
+	 *
+	 * Used in:
+	 * - @see Uninstall::remove_db_entries()
+	 * - @see Ajax::empty_cache()
+	 *
+	 * @param array $needles
+	 * @param array $ignore
+	 *
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public static function get_db_rows_by( $needles = [], $ignore = [] ) {
+		$settings_class = ( new \ReflectionClass( Settings::class ) )->newInstanceWithoutConstructor();
+		$settings       = $settings_class->get_constants();
+
+		return array_filter( $settings, function ( $row, $constant ) use ( $needles, $ignore ) {
+			foreach ( $needles as $needle ) {
+				if ( str_starts_with( $constant, $needle ) && ! in_array( $row, $ignore, true ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		}, ARRAY_FILTER_USE_BOTH );
 	}
 }

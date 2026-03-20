@@ -84,6 +84,8 @@ class Dashboard {
 		'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
 	];
 
+	const DAAN_DEV_DOCS_TROUBLESHOOTING_NO_FONTS_DETECTED = 'https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/';
+
 	/**
 	 * Generates the HTML for the dashboard by rendering any warnings and capturing the output buffer.
 	 *
@@ -132,7 +134,7 @@ class Dashboard {
 				$plugins                      = self::get_active_plugins();
 				$warnings                     = self::get_warnings();
 				$google_fonts_checker_results = $warnings['google_fonts_checker'] ?? [];
-				$performance_checker_results  = OMGF::get_option( Settings::OMGF_PERF_CHECK, [] );
+				$performance_checker_results  = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
 					unset( $warnings['google_fonts_checker'] );
@@ -222,7 +224,7 @@ class Dashboard {
 							</sub>
 						<?php endif; ?>
 					</div>
-				<?php elseif ( ! OMGF::optimize_succeeded() ) : ?>
+				<?php elseif ( ! OMGF::optimize_succeeded() && ! OMGF::optimize_failed() ): ?>
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -237,17 +239,18 @@ class Dashboard {
 							); ?>
 						</p>
 					</div>
-				<?php elseif ( ! OMGF::optimize_succeeded() ) : ?>
+				<?php elseif ( OMGF::optimize_failed() ) : ?>
 					<div class="task-manager-notice warning">
 						<h4><?php echo esc_html__( 'Google Fonts optimization seems to be failing.', 'host-webfonts-local' ); ?></h4>
 						<p>
 							<?php echo wp_kses_post(
 								sprintf(
 									__(
-										'%s isn\'t detecting any Google Fonts on your homepage. This could be for several reasons. <a href="%s" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
+										'%s isn\'t detecting any Google Fonts on your homepage. This could be for <a href="%s" target="_blank">several reasons</a>. <a href="%s" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+									esc_url( self::DAAN_DEV_DOCS_TROUBLESHOOTING_NO_FONTS_DETECTED ),
 									OMGF::no_cache_optimize_url()
 								)
 							); ?>
@@ -566,13 +569,13 @@ class Dashboard {
 		/**
 		 * @since v5.4.0 OMGF-70 Notify users if they're loading scripts loading embedded iframes, e.g. Google Maps, Youtube, etc.
 		 */
-		$iframe_scripts = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
+		$iframe_scripts = OMGF::get_option( Settings::OMGF_DB_FOUND_IFRAMES, [] );
 
 		foreach ( $iframe_scripts as $script_id ) {
 			$warnings[] = $script_id; // @codeCoverageIgnore
 		}
 
-		$google_fonts_checker_results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+		$google_fonts_checker_results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		foreach ( $google_fonts_checker_results as $path => $found_urls ) {
 			$warnings['google_fonts_checker'][ $path ] = $found_urls; // @codeCoverageIgnore
