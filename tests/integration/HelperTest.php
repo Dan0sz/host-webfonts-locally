@@ -83,4 +83,20 @@ class HelperTest extends TestCase {
 
 		$this->assertEquals( 'swap', $font_display );
 	}
+
+	/**
+	 * @see Helper::get_db_rows_by()
+	 * @return void
+	 */
+	public function testGetDbRowsBy() {
+		$db_rows = OMGF::get_db_rows_by( [ 'OMGF_FLAG' ] );
+
+		$this->assertArrayHasKey( 'OMGF_FLAG_OPTIMIZE_HAS_RUN', $db_rows );
+		$this->assertArrayHasKey( 'OMGF_FLAG_CACHE_IS_STALE', $db_rows );
+
+		$db_rows = OMGF::get_db_rows_by( [ 'OMGF_FLAG' ], [ Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ] );
+
+		$this->assertArrayNotHasKey( 'OMGF_FLAG_OPTIMIZE_HAS_RUN', $db_rows );
+		$this->assertArrayHasKey( 'OMGF_FLAG_CACHE_IS_STALE', $db_rows );
+	}
 }
