@@ -147,6 +147,7 @@ class AdminbarMenu {
 	 */
 	private function update_google_fonts_checker_results( $post ) {
 		$stored_results = get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+		$stored_results = is_array( $stored_results ) ? $stored_results : [];
 		$path           = isset( $post['path'] ) && is_string( $post['path'] ) ? $post['path'] : '';
 		$raw_params     = $post['params'] ?? [];
 
@@ -260,9 +261,9 @@ class AdminbarMenu {
 		$stored_metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 		$stored_metrics = is_array( $stored_metrics ) ? $stored_metrics : [];
 		$updated        = false;
-		$path           = $params['path'] ?? '';
+		$path           = isset( $params['path'] ) && is_string( $params['path'] ) ? $params['path'] : '';
 
-		if ( ! empty( $unused_fonts_analysis['count'] ) && ( empty( $stored_metrics['highest_unused_count'] ) || $unused_fonts_analysis['count'] > $stored_metrics['highest_unused_count'] ) ) {
+		if ( $path !== '' && ! empty( $unused_fonts_analysis['count'] ) && ( empty( $stored_metrics['highest_unused_count'] ) || $unused_fonts_analysis['count'] > $stored_metrics['highest_unused_count'] ) ) {
 			$stored_metrics['highest_unused_count']     = $unused_fonts_analysis['count'];
 			$stored_metrics['highest_unused_path']      = $path;
 			$stored_metrics['highest_unused_impact']    = $unused_fonts_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
@@ -270,7 +271,7 @@ class AdminbarMenu {
 			$updated                                    = true;
 		}
 
-		if ( ! empty( $preload_analysis['potential_delay_ms'] ) && ( empty( $stored_metrics['highest_delay_ms'] ) || $preload_analysis['potential_delay_ms'] > $stored_metrics['highest_delay_ms'] ) ) {
+		if ( $path !== '' && ! empty( $preload_analysis['potential_delay_ms'] ) && ( empty( $stored_metrics['highest_delay_ms'] ) || $preload_analysis['potential_delay_ms'] > $stored_metrics['highest_delay_ms'] ) ) {
 			$stored_metrics['highest_delay_ms']        = $preload_analysis['potential_delay_ms'];
 			$stored_metrics['highest_delay_path']      = $path;
 			$stored_metrics['highest_delay_impact']    = $preload_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
