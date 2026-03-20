@@ -26,7 +26,7 @@ class ProcessTest extends TestCase {
 
 		try {
 			$_GET['omgf_optimize'] = 1;
-			add_filter( 'user_has_cap', [ $this, 'grantManageOptions' ] );
+			add_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
 
 			$html = $class->add_success_message( '' );
 
@@ -37,7 +37,7 @@ class ProcessTest extends TestCase {
 			$this->assertStringContainsString( 'omgf-optimize-success-message', $html );
 		} finally {
 			unset( $_GET['omgf_optimize'] );
-			remove_filter( 'user_has_cap', [ $this, 'grantManageOptions' ] );
+			remove_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
 		}
 	}
 
