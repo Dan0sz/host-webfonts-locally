@@ -345,7 +345,7 @@ class Process {
 	 * @return void
 	 */
 	public function maybe_set_optimize_has_run() {
-		if ( self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() ) {
+		if ( current_user_can( 'manage_options' ) && self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() ) {
 			update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
 		}
 	}
