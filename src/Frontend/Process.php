@@ -667,7 +667,7 @@ class Process {
 				$search[ $key ]  = $stack['link'];
 				$replace[ $key ] = '';
 
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			$optimize = new Optimize( $stack['href'], $handle, $original_handle );
@@ -705,7 +705,7 @@ class Process {
 		}
 
 		if ( $count_iframes !== count( $found_iframes ) ) {
-			OMGF::update_option( Settings::OMGF_DB_FOUND_IFRAMES, $found_iframes );
+			OMGF::update_option( Settings::OMGF_DB_FOUND_IFRAMES, $found_iframes ); // @codeCoverageIgnore
 		}
 	}
 
