@@ -20,8 +20,6 @@ use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
-defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
-
 /**
  * @codeCoverageIgnore
  */
@@ -39,19 +37,18 @@ class Optimize extends Builder {
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'open_task_manager' ], 20 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 21 );
-		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_warnings' ], 23 );
+		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_notices' ], 23 );
 		add_action( 'omgf_optimize_settings_content', [ Dashboard::class, 'render_status' ], 25 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_google_fonts_checker' ], 27 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_test_mode' ], 29 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_cache_management' ], 31 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 33 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 34 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_test_mode' ], 27 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_cache_management' ], 29 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 31 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'close_task_manager' ], 33 );
 
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_container' ], 40 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_before' ], 50 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 60 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 70 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_auto_preload' ], 80 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_smart_optimize' ], 80 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 90 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_contents' ], 100 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'close_optimize_fonts_container' ], 300 );
@@ -76,45 +73,6 @@ class Optimize extends Builder {
 				)
 			); ?>
 		</p>
-		<?php
-	}
-
-	public function do_google_fonts_checker() {
-		?>
-		<tr>
-			<?php
-			$this->do_checkbox(
-				__( 'Run Google Fonts Checker in the background (Pro)', 'host-webfonts-local' ),
-				'google_fonts_checker', ! empty( OMGF::get_option( 'google_fonts_checker' ) ),
-				sprintf(
-					__(
-						'Normally, the Google Fonts Checker only runs for logged-in administrators. If you want to organically scan all your pages for Google Fonts, enable this option. %s',
-						'host-webfonts-local'
-					),
-					$this->promo
-				), ! defined( 'OMGF_PRO_ACTIVE' )
-			); ?>
-			<?php
-			$this->do_select(
-				__( 'Disable Google Fonts Checker after... (Pro)', 'host-webfonts-local' ),
-				'checker_timeout',
-				[
-					'7'      => __( '7 Days (default)', 'host-webfonts-local' ),
-					'14'     => __( '14 Days', 'host-webfonts-local' ),
-					'30'     => __( '1 Month', 'host-webfonts-local' ),
-					'always' => __( 'Always', 'host-webfonts-local' ),
-				],
-				OMGF::get_option( 'checker_timeout', 7 ),
-				sprintf(
-					__(
-						'When enabled, the Google Fonts Checker loads a tiny snippet (<3KB) of JS code in your frontend. While the impact is barely noticeable, it\'s advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s',
-						'host-webfonts-local'
-					),
-					$this->promo
-				),
-				false, ! defined( 'OMGF_PRO_ACTIVE' ) || empty( OMGF::get_option( 'google_fonts_checker' ) )
-			); ?>
-		</tr>
 		<?php
 	}
 
@@ -158,8 +116,8 @@ class Optimize extends Builder {
 	 *
 	 */
 	public function do_display_option() {
-		$options           = Settings::OMGF_FONT_DISPLAY_OPTIONS;
-		$options[ 'swap' ] .= ' (' . __( 'recommended', 'host-webfonts-local' ) . ')';
+		$options         = Settings::OMGF_FONT_DISPLAY_OPTIONS;
+		$options['swap'] .= ' (' . __( 'recommended', 'host-webfonts-local' ) . ')';
 
 		$this->do_select(
 			__( 'Font-Display Option', 'host-webfonts-local' ),
@@ -188,16 +146,16 @@ class Optimize extends Builder {
 	}
 
 	/**
-	 * Auto Preload Fonts (Pro) option.
+	 * Smart Optimize (Pro) option.
 	 *
 	 * @return void
 	 */
-	public function do_promo_auto_preload() {
+	public function do_promo_smart_optimize() {
 		$this->do_checkbox(
-			__( 'Smart Preload (Pro)', 'host-webfonts-local' ),
-			'auto_preload', ! empty( OMGF::get_option( 'auto_preload' ) ),
+			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
+			'smart_optimize', ! empty( OMGF::get_option( 'smart_optimize' ) ),
 			__(
-				'When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them. Preload settings can be overwritten on a per-page level by clicking <strong>Auto-configure preload settings for this page</strong> in the top Admin Bar menu.',
+				'Let OMGF Pro figure it out! Smart Optimize automatically detects the right fonts, subsets and preloads for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
 				'host-webfonts-local'
 			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
 		);
@@ -341,6 +299,7 @@ class Optimize extends Builder {
 				<?php
 				$cache_handles   = OMGF::cache_keys();
 				$disable_preload = apply_filters( 'omgf_local_fonts_disable_preload', false );
+				$disable_unload  = apply_filters( 'omgf_local_fonts_disable_unload', false );
 				?>
 				<?php foreach ( $this->optimized_fonts as $handle => $fonts ) : ?>
 					<?php
@@ -371,7 +330,8 @@ class Optimize extends Builder {
 										); ?></a> <span class="dashicons dashicons-info tooltip"><span class="tooltip-text"><?php echo __(
 												'In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles.',
 												'host-webfonts-local'
-											); ?></span></span> | <a class="unload-all"><?php echo esc_html__( 'Unload all', 'host-webfonts-local' ); ?></a> | <a class="load-all"><?php echo esc_html__(
+											); ?></span></span> | <a class="unload-all"><?php echo esc_html__( 'Unload all', 'host-webfonts-local' ); ?></a> | <a
+										class="load-all"><?php echo esc_html__(
 											'Load all',
 											'host-webfonts-local'
 										); ?></a>)</span></td>
@@ -392,8 +352,8 @@ class Optimize extends Builder {
 							<td class="replace">
 								<?php
 								$replace  = defined( 'OMGF_PRO_ACTIVE' ) &&
-								isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
-								OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
+											isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
+											OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
 								$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset(
 										OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ]
 									) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';
@@ -445,43 +405,29 @@ class Optimize extends Builder {
 								<td><?php echo esc_attr( $variant->fontStyle ); ?></td>
 								<td><?php echo esc_attr( $variant->fontWeight ); ?></td>
 								<td class="preload-<?php echo esc_attr( $class ); ?>">
-									<input type="hidden" name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr(
-										$font->id
-									); ?>][<?php echo esc_attr( $variant->id ); ?>]" value="0"/>
+									<input type="hidden"
+										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
+										   value="0"
+									/>
 									<input data-handle="<?php echo esc_attr( $handle ); ?>"
 										   data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>"
 										   autocomplete="off" type="checkbox"
 										   class="preload"
-										   name="<?php echo esc_attr(
-											   Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS
-										   ); ?>[<?php echo esc_attr(
-											   $handle
-										   ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
-											   $variant->id
-										   ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload || $disable_preload ? 'disabled' : ''; ?> />
+										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
+										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload || $disable_preload ? 'disabled' : ''; ?>
+									/>
 								</td>
 								<td class="unload-<?php echo esc_attr( $class ); ?>">
 									<input type="hidden"
-										   name="<?php echo esc_attr(
-											   Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS
-										   ); ?>[<?php echo esc_attr(
-											   $handle
-										   ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
-											   $variant->id
-										   ); ?>]" value="0"/>
+										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
+										   value="0"/>
 									<input data-handle="<?php echo esc_attr( $handle ); ?>"
 										   data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>"
 										   autocomplete="off" type="checkbox"
 										   class="unload"
-										   name="<?php echo esc_attr(
-											   Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS
-										   ); ?>[<?php echo esc_attr(
-											   $handle
-										   ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr(
-											   $variant->id
-										   ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload ? 'disabled' : ''; ?> />
+										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
+										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload || $disable_unload ? 'disabled' : ''; ?>
+									/>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -516,7 +462,7 @@ class Optimize extends Builder {
 								'host-webfonts-local'
 							),
 							get_site_url()
-						); ?></em> [<a href="https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/"
+						); ?></em> [<a href="<?php echo esc_url( Dashboard::DAAN_DEV_DOCS_TROUBLESHOOTING_NO_FONTS_DETECTED ); ?>"
 									   target="_blank"><?php echo __(
 							'Why aren\'t my Google Fonts showing up on this list?',
 							'host-webfonts-local'

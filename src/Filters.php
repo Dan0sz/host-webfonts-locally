@@ -17,7 +17,7 @@
 namespace OMGF;
 
 use OMGF\Admin\Settings;
-use OMGF\Frontend\Process;
+use OMGF\Helper as OMGF;
 
 class Filters {
 	/**
@@ -83,8 +83,8 @@ class Filters {
 	 * @return mixed|string[]
 	 */
 	public function maybe_do_legacy_mode( $user_agent ) {
-		if ( ! empty( Helper::get_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE ) ) ) {
-			return Optimize::USER_AGENT_COMPATIBILITY[ 'woff2' ];
+		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_LEGACY_MODE ) ) ) {
+			return Optimize::USER_AGENT_COMPATIBILITY['woff2'];
 		}
 
 		return $user_agent;
@@ -101,7 +101,7 @@ class Filters {
 	 * @return bool
 	 */
 	public function maybe_load_frontend_assets( $value ) {
-		if ( Helper::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) ) {
+		if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU ) ) {
 			return true; // Don't load.
 		}
 

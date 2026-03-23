@@ -74,10 +74,14 @@ class AdminbarMenu {
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function get_permission() {
-		$is_allowed = current_user_can( 'manage_options' );
+	public function get_permission( \WP_REST_Request $request ) {
+		$is_allowed = apply_filters( 'omgf_api_adminbar_menu_permission', current_user_can( 'manage_options' ), $request );
 
-		return apply_filters( 'omgf_api_adminbar_menu_permission', $is_allowed );
+		if ( true !== $is_allowed ) {
+			return $is_allowed;
+		}
+
+		return (bool) wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' );
 	}
 
 	/**
@@ -87,22 +91,19 @@ class AdminbarMenu {
 	 *
 	 * @filter omgf_ajax_admin_bar_status
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public function get_admin_bar_status( $request ) {
-		$params         = $this->clean( $request->get_params() );
-		$stored_results = $this->update_results( $params );
-		$status         = 'success';
+		$params                = $this->clean( $request->get_params() );
+		$stored_results        = $this->update_google_fonts_checker_results( $params );
+		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
+		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
 
-		if ( ! empty( $stored_results ) ) {
-			$status = 'alert';
-		}
+		$this->update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis );
 
-		if ( empty( $stored_results ) && $this->has_warnings() ) {
-			$status = 'notice';
-		}
+		$status = $this->calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis );
 
-		return apply_filters( 'omgf_ajax_admin_bar_status', $status );
+		return [ 'status' => apply_filters( 'omgf_ajax_admin_bar_status', $status ) ];
 	}
 
 	/**
@@ -124,8 +125,8 @@ class AdminbarMenu {
 			// Parse the variable using the wp_parse_url function.
 			$parsed = wp_parse_url( $var );
 			// If the variable has a scheme (e.g. http:// or https://), sanitize the variable using the esc_url_raw function.
-			if ( isset( $parsed[ 'scheme' ] ) ) {
-				return esc_url_raw( wp_unslash( $var ), [ $parsed[ 'scheme' ] ] );
+			if ( isset( $parsed['scheme'] ) ) {
+				return esc_url_raw( wp_unslash( $var ) );
 			}
 
 			// Decode percent encoded characters before sanitization.
@@ -144,20 +145,34 @@ class AdminbarMenu {
 	 *
 	 * @return array
 	 */
-	private function update_results( $post ) {
-		$path           = $post[ 'path' ];
-		$params         = isset( $post[ 'params' ] ) ? json_decode( $post[ 'params' ], true ) : [];
-		$stored_results = get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+	private function update_google_fonts_checker_results( $post ) {
+		$stored_results = get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+		$stored_results = is_array( $stored_results ) ? $stored_results : [];
+		$path           = isset( $post['path'] ) && is_string( $post['path'] ) ? $post['path'] : '';
+		$raw_params     = $post['params'] ?? [];
+
+		if ( is_string( $raw_params ) ) {
+			$params = json_decode( $raw_params, true );
+			$params = is_array( $params ) ? $params : [];
+		} elseif ( is_array( $raw_params ) ) {
+			$params = $raw_params;
+		} else {
+			$params = [];
+		}
 
 		if ( empty( $path ) || ! is_string( $path ) ) {
 			return $stored_results; // @codeCoverageIgnore
 		}
 
-		$urls = $post[ 'urls' ] ?? [];
+		$urls = $post['urls'] ?? [];
 
-		// Decode if $urls is valid JSON.
-		if ( is_string( $urls ) && is_array( json_decode( $urls ) ) && json_last_error() === JSON_ERROR_NONE ) {
-			$urls = json_decode( $urls );
+		if ( is_string( $urls ) ) {
+			$decoded = json_decode( $urls, true );
+			$urls    = is_array( $decoded ) ? $decoded : [];
+		}
+
+		if ( ! is_array( $urls ) ) {
+			$urls = [];
 		}
 
 		$urls        = apply_filters( 'omgf_ajax_results', $urls, $params, $path );
@@ -205,9 +220,100 @@ class AdminbarMenu {
 			$stored_results = array_slice( $stored_results, 0, 5, true );
 		}
 
-		OMGF::update_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
+		OMGF::update_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS, $stored_results, false );
 
 		return $stored_results;
+	}
+
+	/**
+	 * Array normalization.
+	 *
+	 * @param $value
+	 *
+	 * @return array
+	 */
+	private function decode_json_array( $value ) {
+		if ( is_array( $value ) ) {
+			return $value;
+		}
+
+		if ( ! is_string( $value ) || $value === '' ) {
+			return [];
+		}
+
+		$decoded = json_decode( $value, true );
+
+		return is_array( $decoded ) ? $decoded : [];
+	}
+
+	/**
+	 * @param array $params
+	 * @param array $unused_fonts_analysis
+	 * @param array $preload_analysis
+	 *
+	 * @return void
+	 */
+	private function update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis ) {
+		if ( empty( $unused_fonts_analysis ) && empty( $preload_analysis ) && ! Dashboard::has_multilang_plugin() ) {
+			return;
+		}
+
+		$stored_metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
+		$stored_metrics = is_array( $stored_metrics ) ? $stored_metrics : [];
+		$updated        = false;
+		$path           = isset( $params['path'] ) && is_string( $params['path'] ) ? $params['path'] : '';
+
+		if ( $path !== '' && ! empty( $unused_fonts_analysis['count'] ) && ( empty( $stored_metrics['highest_unused_count'] ) || $unused_fonts_analysis['count'] > $stored_metrics['highest_unused_count'] ) ) {
+			$stored_metrics['highest_unused_count']     = $unused_fonts_analysis['count'];
+			$stored_metrics['highest_unused_path']      = $path;
+			$stored_metrics['highest_unused_impact']    = $unused_fonts_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
+			$stored_metrics['highest_unused_timestamp'] = time();
+			$updated                                    = true;
+		}
+
+		if ( $path !== '' && ! empty( $preload_analysis['potential_delay_ms'] ) && ( empty( $stored_metrics['highest_delay_ms'] ) || $preload_analysis['potential_delay_ms'] > $stored_metrics['highest_delay_ms'] ) ) {
+			$stored_metrics['highest_delay_ms']        = $preload_analysis['potential_delay_ms'];
+			$stored_metrics['highest_delay_path']      = $path;
+			$stored_metrics['highest_delay_impact']    = $preload_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
+			$stored_metrics['highest_delay_timestamp'] = time();
+			$updated                                   = true;
+		}
+
+		if ( $updated ) {
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, $stored_metrics );
+		}
+	}
+
+	/**
+	 * @param array $stored_results
+	 * @param array $unused_fonts_analysis
+	 * @param array $preload_analysis
+	 *
+	 * @return string
+	 */
+	private function calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis ) {
+		$status = 'success';
+
+		if ( ! OMGF::optimize_succeeded() ) {
+			$status = 'info';
+		}
+
+		if ( ! empty( $stored_results ) ) {
+			$status = 'alert';
+		}
+
+		if ( empty( $stored_results ) && $this->has_warnings() ) {
+			$status = 'notice';
+		}
+
+		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() ) {
+			// Alerts and notices should take precedence.
+			if ( $status !== 'alert' && $status !== 'notice' ) {
+				$status = 'info';
+			}
+		}
+
+		return $status;
 	}
 
 	/**
@@ -216,8 +322,7 @@ class AdminbarMenu {
 	 * @return bool
 	 */
 	private function has_warnings() {
-		$task_manager = new Dashboard();
-		$warnings     = $task_manager->get_warnings();
+		$warnings = Dashboard::get_warnings();
 
 		return ! empty( $warnings );
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /* * * * * * * * * * * * * * * * * * * * *
 *
 *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
@@ -16,67 +17,30 @@
 
 namespace OMGF\DB\Migrate;
 
-use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
+use OMGF\Helper as OMGF;
 
 /**
  * @codeCoverageIgnore
  */
-class V534 {
+class V620 {
 	/** @var $version string The version number this migration script was introduced with. */
-	private $version = '5.3.4';
+	private $version = '6.2.0';
 
 	/**
-	 * Buid
-	 *
-	 * @return void
+	 * Build class.
 	 */
 	public function __construct() {
 		$this->init();
 	}
 
 	/**
-	 * Initialize
+	 * This migration script doesn't do much, besides showing a notice after updating.
 	 *
 	 * @return void
 	 */
 	private function init() {
-		$optimized_fonts = OMGF::admin_optimized_fonts() ?? [];
-		$upgrade_req     = false;
-
-		foreach ( $optimized_fonts as $stylesheet => $fonts ) {
-			foreach ( $fonts as $font ) {
-				$variants = $font->variants ?? [];
-
-				foreach ( $variants as $key => $variant ) {
-					/**
-					 * Optimized Fonts needs upgrading if $variants is still an indexed array.
-					 *
-					 * @since v5.3.0 $variants should be an associative array.
-					 */
-					if ( is_numeric( $key ) ) {
-						$upgrade_req = true;
-
-						break;
-					}
-				}
-
-				if ( $upgrade_req ) {
-					break;
-				}
-			}
-
-			if ( $upgrade_req ) {
-				break;
-			}
-		}
-
-		/**
-		 * Mark cache as stale if upgrade is required.
-		 */
-		if ( $upgrade_req ) {
-			OMGF::update_option( Settings::OMGF_FLAG_CACHE_IS_STALE, $upgrade_req );
-		}
+		OMGF::delete_option( 'auto_subsets' );
 
 		/**
 		 * Update stored version number.

@@ -20,16 +20,11 @@ use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
 
 class Download {
-	/** @var string $url */
-	private $url;
-
-	/** @var string $filename */
-	private $filename;
-
-	/** @var string $path */
-	private $path;
-
-	private $mime_map = [
+	/**
+	 * Used to map Mime Types to file extensions.
+	 * The most likely MIME type is at the top, so it can be used with array_search().
+	 */
+	const MIME_MAP = [
 		'font/woff2'                    => 'woff2',
 		'application/font-woff2'        => 'woff2',
 		'font/woff'                     => 'woff',
@@ -42,6 +37,16 @@ class Download {
 		'application/x-font-opentype'   => 'otf',
 		'application/vnd.ms-fontobject' => 'eot',
 	];
+
+
+	/** @var string $url */
+	private $url;
+
+	/** @var string $filename */
+	private $filename;
+
+	/** @var string $path */
+	private $path;
 
 	/**
 	 * OMGF\Download constructor.
@@ -129,7 +134,7 @@ class Download {
 
 		// Normalize Content-Type before lookup (strip parameters, lowercase)
 		$content_type = strtolower( trim( explode( ';', $content_type )[0] ) );
-		$extension    = $this->mime_map[ $content_type ] ?? '';
+		$extension    = self::MIME_MAP[ $content_type ] ?? '';
 
 		if ( ! $extension ) {
 			OMGF::debug(

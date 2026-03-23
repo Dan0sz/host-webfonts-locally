@@ -15,8 +15,8 @@ class ProcessTest extends TestCase {
 	/**
 	 * Is the Success-message added properly?
 	 *
-	 * @return void
 	 * @see Process::add_success_message()
+	 * @return void
 	 */
 	public function testAddSuccessMessage() {
 		$class = new Process ( true );
@@ -24,22 +24,28 @@ class ProcessTest extends TestCase {
 
 		$this->assertEmpty( $html );
 
-		$_GET['omgf_optimize'] = 1;
+		try {
+			$_GET['omgf_optimize'] = 1;
+			add_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
 
-		$html = $class->add_success_message( '' );
+			$html = $class->add_success_message( '' );
 
-		$this->assertEmpty( $html );
+			$this->assertEmpty( $html );
 
-		$html = $class->add_success_message( '<head></head><body></body>' );
+			$html = $class->add_success_message( '<head></head><body></body>' );
 
-		$this->assertStringContainsString( 'omgf-optimize-success-message', $html );
+			$this->assertStringContainsString( 'omgf-optimize-success-message', $html );
+		} finally {
+			unset( $_GET['omgf_optimize'] );
+			remove_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
+		}
 	}
 
 	/**
 	 * Are Google Fonts properly downloaded/replaced?
 	 *
-	 * @return void
 	 * @see Process::parse()
+	 * @return void
 	 */
 	public function testParse() {
 		$class     = new Process( true );
@@ -55,8 +61,8 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Tests the omgf_optimize_url filter.
-	 * @return void
 	 * @see Filters::decode_url()
+	 * @return void
 	 */
 	public function testParseWithEncodedUrls() {
 		$class     = new Process( true );
@@ -72,8 +78,8 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Are preloads output properly?
-	 * @return void
 	 * @see Process::add_preloads()
+	 * @return void
 	 */
 	public function testAddPreloads() {
 		try {
@@ -118,50 +124,60 @@ class ProcessTest extends TestCase {
 	}
 
 	public function testShouldStart() {
-		// OMGF Save & Optimize.
-		$_GET['omgf_optimize'] = 1;
+		try {
+			// OMGF Save & Optimize.
+			$_GET['omgf_optimize'] = 1;
 
-		$should_start = Process::should_start();
+			$should_start = Process::should_start();
 
-		$this->assertTrue( $should_start );
+			$this->assertTrue( $should_start );
+		} finally {
+			unset( $_GET['omgf_optimize'] );
+		}
 
-		unset( $_GET['omgf_optimize'] );
+		try {
+			// Pagebuilders and Frontend Asset Managers.
+			$_GET['perfmatters'] = 1;
 
-		// Pagebuilders and Frontend Asset Managers.
-		$_GET['perfmatters'] = 1;
+			$should_start = Process::should_start();
 
-		$should_start = Process::should_start();
+			$this->assertFalse( $should_start );
+		} finally {
+			unset( $_GET['perfmatters'] );
+		}
 
-		$this->assertFalse( $should_start );
+		try {
+			// Editors in custom post types.
+			$_GET['tqb_quiz'] = 1;
 
-		unset( $_GET['perfmatters'] );
+			$should_start = Process::should_start();
 
-		// Editors in custom post types.
-		$_GET['tqb_quiz'] = 1;
+			$this->assertFalse( $should_start );
+		} finally {
+			unset( $_GET['tqb_quiz'] );
+		}
 
-		$should_start = Process::should_start();
+		try {
+			// Post edit screens.
+			$_GET['action'] = 'edit';
 
-		$this->assertFalse( $should_start );
+			$should_start = Process::should_start();
 
-		unset( $_GET['tqb_quiz'] );
+			$this->assertFalse( $should_start );
+		} finally {
+			unset( $_GET['action'] );
+		}
 
-		// Post edit screens.
-		$_GET['action'] = 'edit';
+		try {
+			// Pagebuilders.
+			$_GET['PageSpeed'] = 'off';
 
-		$should_start = Process::should_start();
+			$should_start = Process::should_start();
 
-		$this->assertFalse( $should_start );
-
-		unset( $_GET['action'] );
-
-		// Pagebuilders.
-		$_GET['PageSpeed'] = 'off';
-
-		$should_start = Process::should_start();
-
-		$this->assertFalse( $should_start );
-
-		unset( $_GET['PageSpeed'] );
+			$this->assertFalse( $should_start );
+		} finally {
+			unset( $_GET['PageSpeed'] );
+		}
 
 		// Regular frontend request.
 		$should_start = Process::should_start();
@@ -170,9 +186,51 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
-	 * Are resource hints properly removed from HTML?
+	 * @see Process::maybe_set_optimize_has_run()
 	 * @return void
+	 */
+	public function testMaybeSetOptimizeHasRun() {
+		$class = new Process( true );
+
+		// Case 1: omgf_optimize not set.
+		unset( $_GET['omgf_optimize'] );
+		delete_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
+
+		$class->maybe_set_optimize_has_run();
+
+		$this->assertEmpty( get_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
+
+		try {
+			// Case 2: omgf_optimize set, but optimize not succeeded (this should set the flag).
+			$_GET['omgf_optimize'] = 1;
+			$class->maybe_set_optimize_has_run();
+
+			$this->assertTrue( (bool) get_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
+		} finally {
+			unset( $_GET['omgf_optimize'] );
+		}
+
+		try {
+			// Reset Case 3: omgf_optimize set and optimize succeeded (this should NOT update the flag, but it's already true from Case 2).
+			// Actually, the logic is: if ( self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() )
+			// So if optimize_succeeded() is TRUE, it won't enter the IF.
+
+			delete_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
+			add_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] ); // This makes optimize_succeeded() true if FLAG_OPTIMIZE_HAS_RUN is also true.
+			update_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
+
+			// If it's already true and succeeded, it stays true.
+			$class->maybe_set_optimize_has_run();
+			$this->assertTrue( (bool) get_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
+		} finally {
+			remove_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
+		}
+	}
+
+	/**
+	 * Are resource hints properly removed from HTML?
 	 * @see Process::remove_resource_hints()
+	 * @return void
 	 */
 	public function testRemoveResourceHints() {
 		$class     = new Process( true );

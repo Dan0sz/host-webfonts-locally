@@ -16,3 +16,7 @@ vendor/*
 !vendor/composer/
 !vendor/autoload.php
 /vendor/composer/autoload_files.php
+
+node_modules/
+release/
+*.zip

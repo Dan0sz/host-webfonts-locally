@@ -75,6 +75,17 @@ class Dashboard {
 		'youtube'                     => '//www.youtube.com/embed/', // Youtube Embeds
 	];
 
+	const MULTILANG_PLUGINS = [
+		'sitepress-multilingual-cms/sitepress.php' => 'WPML',
+		'translatepress-multilingual/index.php'    => 'TranslatePress',
+		'polylang/polylang.php'                    => 'Polylang',
+		'polylang-pro/polylang.php'                => 'Polylang Pro',
+		'weglot/weglot.php'                        => 'Weglot',
+		'qtranslate-xt/qtranslate-core.php'        => 'qTranslate-XT',
+	];
+
+	const DAAN_DEV_DOCS_TROUBLESHOOTING_NO_FONTS_DETECTED = 'https://daan.dev/docs/omgf-pro-troubleshooting/no-fonts-detected/';
+
 	/**
 	 * Generates the HTML for the dashboard by rendering any warnings and capturing the output buffer.
 	 *
@@ -85,7 +96,7 @@ class Dashboard {
 	public static function get_dashboard_html() {
 		ob_start();
 
-		self::render_warnings();
+		self::render_notices();
 
 		return ob_get_clean();
 	}
@@ -95,7 +106,7 @@ class Dashboard {
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public static function render_warnings() {
+	public static function render_notices() {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ) && ! wp_doing_ajax() ) : ?>
 			<tr id="task-manager-notice-test-mode-row">
 				<td colspan="2" class="task-manager-row">
@@ -122,10 +133,11 @@ class Dashboard {
 				<?php
 				$plugins                      = self::get_active_plugins();
 				$warnings                     = self::get_warnings();
-				$google_fonts_checker_results = $warnings[ 'google_fonts_checker' ] ?? [];
+				$google_fonts_checker_results = $warnings['google_fonts_checker'] ?? [];
+				$performance_checker_results  = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
-					unset( $warnings[ 'google_fonts_checker' ] );
+					unset( $warnings['google_fonts_checker'] );
 				}
 				?>
 				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
@@ -165,7 +177,7 @@ class Dashboard {
 									'omgf_google_fonts_checker_no_potential_issues',
 									sprintf(
 										__(
-											'You can read <a href="%s" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
+											'You can read <a href="%s" rel="noopener noreferrer" target="_blank">this guide</a> and attempt to fix it manually or, <a href="%s" rel="noopener noreferrer" target="_blank">upgrade to OMGF Pro</a> to fix it automatically.',
 											'host-webfonts-local'
 										),
 										'https://daan.dev/docs/omgf-pro-troubleshooting/external-requests/',
@@ -179,7 +191,7 @@ class Dashboard {
 									'omgf_google_fonts_checker_potential_issues',
 									sprintf(
 										__(
-											'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href="%s" target="_blank">upgrade to OMGF Pro</a> might be required.',
+											'Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href="%s" rel="noopener noreferrer" target="_blank">upgrade to OMGF Pro</a> might be required.',
 											'host-webfonts-local'
 										),
 										Settings::DAAN_WORDPRESS_OMGF_PRO
@@ -212,7 +224,7 @@ class Dashboard {
 							</sub>
 						<?php endif; ?>
 					</div>
-				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && ! OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
+				<?php elseif ( ! OMGF::optimize_succeeded() && ! OMGF::optimize_failed() ): ?>
 					<div class="task-manager-notice info">
 						<h4><?php echo esc_html__( 'Let\'s get started!', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -227,17 +239,18 @@ class Dashboard {
 							); ?>
 						</p>
 					</div>
-				<?php elseif ( empty( OMGF::admin_optimized_fonts() ) && OMGF::get_option( Settings::OMGF_OPTIMIZE_HAS_RUN ) ) : ?>
+				<?php elseif ( OMGF::optimize_failed() ) : ?>
 					<div class="task-manager-notice warning">
 						<h4><?php echo esc_html__( 'Google Fonts optimization seems to be failing.', 'host-webfonts-local' ); ?></h4>
 						<p>
 							<?php echo wp_kses_post(
 								sprintf(
 									__(
-										'%s isn\'t detecting any Google Fonts on your homepage. This could be for several reasons. <a href="%s" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
+										'%s isn\'t detecting any Google Fonts on your homepage. This could be for <a href="%s" target="_blank">several reasons</a>. <a href="%s" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+									esc_url( self::DAAN_DEV_DOCS_TROUBLESHOOTING_NO_FONTS_DETECTED ),
 									OMGF::no_cache_optimize_url()
 								)
 							); ?>
@@ -245,13 +258,13 @@ class Dashboard {
 					</div>
 				<?php else: ?>
 					<div class="task-manager-notice success">
-						<h4><?php echo esc_html__( 'All Google Fonts are optimized and hosted locally.', 'host-webfonts-local' ); ?></h4>
+						<h4><?php echo esc_html__( 'All Google Fonts on your site are stored on your server.', 'host-webfonts-local' ); ?></h4>
 						<p>
 							<?php echo apply_filters(
 								'omgf_dashboard_success_message',
 								wp_kses_post(
 									sprintf(
-										__( 'Cool! %s is successfully hosting all Google Fonts locally.', 'host-webfonts-local' ),
+										__( 'Cool! %s has detected all Google Fonts on your Site and is hosting them locally.', 'host-webfonts-local' ),
 										apply_filters( 'omgf_settings_page_title', 'OMGF' )
 									)
 								)
@@ -260,25 +273,75 @@ class Dashboard {
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
-				<?php if ( empty( $warnings ) ) : ?>
-					<div class="task-manager-notice success">
-						<h4><?php echo esc_html__(
-								'No potential issues found in your configuration.',
-								'host-webfonts-local'
-							); ?></h4>
+				<?php if ( apply_filters( 'omgf_performance_checker_notice', ! empty( $performance_checker_results ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) ): ?>
+					<div class="task-manager-notice info" id="omgf-performance-checker-notice">
+						<h4><?php echo esc_html__( 'Your fonts are slowing down this site.', 'host-webfonts-local' ); ?></h4>
 						<p>
 							<?php echo wp_kses_post(
-								sprintf(
+								apply_filters(
+									'omgf_performance_checker_general_text',
 									__(
-										'Great job! Your configuration allows %s to run smoothly.',
+										'OMGF\'s Font Performance Checker detected issues affecting your load times.',
 										'host-webfonts-local'
-									),
-									apply_filters( 'omgf_settings_page_title', 'OMGF' )
+									)
 								)
 							); ?>
 						</p>
+						<?php if ( apply_filters( 'omgf_performance_checker_show_cta', ! defined( 'OMGF_PRO_ACTIVE' ) ) ) : ?>
+							<p>
+								<?php echo wp_kses_post( sprintf(
+									__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">manually adjust global font settings</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize fonts per page.', 'host-webfonts-local' ),
+									'https://daan.dev/blog/how-to/wordpress-google-fonts/#3-2-preloading-font-files-above-the-fold',
+									Settings::DAAN_WORDPRESS_OMGF_PRO
+								) ); ?>
+
+							</p>
+						<?php endif; ?>
+						<ol>
+							<?php if ( self::has_multilang_plugin() && count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) ) > 1 ) : ?>
+								<li>
+									<?php echo wp_kses_post(
+										sprintf(
+											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize (Pro) to load only the right font subsets per language—instead of all subsets on every page.', 'host-webfonts-local' ),
+											self::get_multilang_plugin()
+										)
+									); ?>
+								</li>
+							<?php endif; ?>
+							<?php if ( isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0 ) : ?>
+								<li>
+									<?php echo wp_kses_post( sprintf( _n( '<strong>%s unused font face</strong> detected.', 'Up to <strong>%s unused font faces</strong> detected—OMGF Pro fixes this per page automatically.', (int)
+									$performance_checker_results['highest_unused_count'], 'host-webfonts-local' ),
+										$performance_checker_results['highest_unused_count'] ) ); ?>
+									<?php echo wp_kses_post( sprintf(
+										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
+										home_url( $performance_checker_results['highest_unused_path'] ),
+										$performance_checker_results['highest_unused_path'] === '/' ? $performance_checker_results['highest_unused_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
+											$performance_checker_results['highest_unused_path']
+									) ); ?>
+								</li>
+							<?php endif; ?>
+							<?php if ( isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0 ) : ?>
+								<li>
+									<?php echo wp_kses_post( sprintf( __( 'Font loading is <strong>adding ~%sms to your LCP score</strong>—OMGF Pro fixes this per page automatically.', 'host-webfonts-local' ),
+										$performance_checker_results['highest_delay_ms'] ) ); ?>
+									<?php echo wp_kses_post( sprintf(
+										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
+										home_url( $performance_checker_results['highest_delay_path'] ),
+										$performance_checker_results['highest_delay_path'] === '/' ? $performance_checker_results['highest_delay_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
+											$performance_checker_results['highest_delay_path']
+									) ); ?>
+								</li>
+							<?php endif; ?>
+						</ol>
+						<p style="text-align: right; margin-bottom: 0;">
+							<small>
+								[ <a href="#" id="omgf-dismiss-performance-checker-notice"><?php _e( 'Remind me in 30 days', 'host-webfonts-local' ); ?></a> ]
+							</small>
+						</p>
 					</div>
-				<?php else : ?>
+				<?php endif; ?>
+				<?php if ( ! empty( $warnings ) ) : ?>
 					<div class="task-manager-notice warning">
 						<h4><?php echo sprintf(
 								esc_html(
@@ -299,7 +362,7 @@ class Dashboard {
 										<?php echo wp_kses_post(
 											sprintf(
 												__(
-													'It seems like Multisite is enabled. OMGF doesn\'t natively support Multisite. If you\'re getting CORS related errors on any of your network\'s sites, consider <a href="%s" target="_blank">upgrading to OMGF Pro</a>.',
+													'It seems like Multisite is enabled. OMGF doesn\'t natively support Multisite. If you\'re getting CORS related errors on any of your network\'s sites, consider <a href="%s" rel="noopener noreferrer" target="_blank">upgrading to OMGF Pro</a>.',
 													'host-webfonts-local'
 												),
 												Settings::DAAN_WORDPRESS_OMGF_PRO
@@ -308,9 +371,12 @@ class Dashboard {
 									<?php endif; ?>
 									<?php if ( $warning_id === 'no_ssl' ) : ?>
 										<?php echo wp_kses_post(
-											__(
-												'Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/" target="_blank">these steps</a> to fix it.',
-												'host-webfonts-local'
+											sprintf(
+												__(
+													'Your WordPress configuration isn\'t setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href="%s" rel="noopener noreferrer" target="_blank">these steps</a> to fix it.',
+													'host-webfonts-local'
+												),
+												'https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/'
 											)
 										); ?>
 									<?php endif; ?>
@@ -326,7 +392,7 @@ class Dashboard {
 										<?php echo wp_kses_post(
 											sprintf(
 												__(
-													'Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href="%3$s" target="_blank">known issues</a> to fix it.',
+													'Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href="%3$s" rel="noopener noreferrer" target="_blank">known issues</a> to fix it.',
 													'host-webfonts-local'
 												),
 												ucfirst( $template_id ),
@@ -347,7 +413,7 @@ class Dashboard {
 										<?php echo wp_kses_post(
 											sprintf(
 												__(
-													'The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href="%3$s" target="_blank">known issues</a> for more information.',
+													'The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href="%3$s" rel="noopener noreferrer" target="_blank">known issues</a> for more information.',
 													'host-webfonts-local'
 												),
 												$plugin_name,
@@ -369,7 +435,7 @@ class Dashboard {
 										echo wp_kses_post(
 											sprintf(
 												__(
-													'The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href="%3$s" target="_blank">list of known issues</a> to fix it.',
+													'The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href="%3$s" rel="noopener noreferrer" target="_blank">list of known issues</a> to fix it.',
 													'host-webfonts-local'
 												),
 												$plugin_name,
@@ -384,7 +450,7 @@ class Dashboard {
 										<?php echo wp_kses_post(
 											sprintf(
 												__(
-													'%1$s is loading an embedded iframe on your site. %2$s can\'t process Google Fonts inside iframes. <a href="%3$s" target="_blank">Click here</a> to find out why and what you can do about it.',
+													'%1$s is loading an embedded iframe on your site. %2$s can\'t process Google Fonts inside iframes. <a href="%3$s" rel="noopener noreferrer" target="_blank">Click here</a> to find out why and what you can do about it.',
 													'host-webfonts-local'
 												),
 												$iframe_name,
@@ -437,7 +503,7 @@ class Dashboard {
 		foreach ( $active_plugins as $basename => $plugin ) {
 			$slug = preg_replace( '/\/.*?\.php$/', '', $basename );
 
-			$plugins[ $slug ] = $plugin[ 'Name' ];
+			$plugins[ $slug ] = $plugin['Name'];
 		}
 
 		return $plugins;
@@ -503,16 +569,16 @@ class Dashboard {
 		/**
 		 * @since v5.4.0 OMGF-70 Notify users if they're loading scripts loading embedded iframes, e.g. Google Maps, Youtube, etc.
 		 */
-		$iframe_scripts = OMGF::get_option( Settings::OMGF_FOUND_IFRAMES, [] );
+		$iframe_scripts = OMGF::get_option( Settings::OMGF_DB_FOUND_IFRAMES, [] );
 
 		foreach ( $iframe_scripts as $script_id ) {
 			$warnings[] = $script_id; // @codeCoverageIgnore
 		}
 
-		$google_fonts_checker_results = OMGF::get_option( Settings::OMGF_GOOGLE_FONTS_CHECKER_RESULTS, [] );
+		$google_fonts_checker_results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS, [] );
 
 		foreach ( $google_fonts_checker_results as $path => $found_urls ) {
-			$warnings[ 'google_fonts_checker' ][ $path ] = $found_urls; // @codeCoverageIgnore
+			$warnings['google_fonts_checker'][ $path ] = $found_urls; // @codeCoverageIgnore
 		}
 
 		/**
@@ -525,6 +591,46 @@ class Dashboard {
 		}
 
 		return $warnings;
+	}
+
+	/**
+	 * Check if this setup has a Multilingual Plugin.
+	 *
+	 * @return bool
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public static function has_multilang_plugin() {
+		return apply_filters( 'omgf_has_multilang_plugin', ! empty( self::get_multilang_plugin() ) );
+	}
+
+	/**
+	 * Checks if this has a Multilingual Plugin activated and returns the name.
+	 *
+	 * @return string Name of the activated Multilingual Plugin.
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public static function get_multilang_plugin() {
+		static $plugin_name = '';
+
+		if ( ! empty( $plugin_name ) ) {
+			return $plugin_name;
+		}
+
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		foreach ( self::MULTILANG_PLUGINS as $path => $name ) {
+			if ( is_plugin_active( $path ) ) {
+				$plugin_name = $name;
+
+				return $name;
+			}
+		}
+
+		return '';
 	}
 
 	/**

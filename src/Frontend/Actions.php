@@ -58,15 +58,6 @@ class Actions {
 			]
 		);
 
-		$admin_bar->add_menu(
-			[
-				'id'     => 'omgf-optimize',
-				'parent' => 'omgf',
-				'title'  => __( 'Run fonts optimization', 'host-webfonts-local' ),
-				'href'   => add_query_arg( 'omgf_optimize', '1', home_url() ),
-			]
-		);
-
 		global $wp;
 
 		$permalink_structure = get_option( 'permalink_structure' );
@@ -82,7 +73,7 @@ class Actions {
 			[
 				'id'     => 'omgf-optimize-this',
 				'parent' => 'omgf',
-				'title'  => __( 'Run fonts optimization for current page', 'host-webfonts-local' ),
+				'title'  => __( 'Optimize this page', 'host-webfonts-local' ),
 				'href'   => add_query_arg( 'omgf_optimize', '1', $site_url ),
 			]
 		);
@@ -119,25 +110,41 @@ class Actions {
 			return;
 		}
 
-		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) && str_contains( esc_url_raw( $_SERVER[ 'REQUEST_URI' ] ), '.php' ) || ! Process::should_start() ) {
-			return;
+		if ( ( ! empty( $_SERVER['REQUEST_URI'] ) && str_contains( esc_url_raw( $_SERVER['REQUEST_URI'] ), '.php' ) ) || ! Process::should_start() ) {
+			return; // @codeCoverageIgnore
 		}
 
 		$file_ext = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$js_file  = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
 		$js_path  = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
+		$subsets  = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 
 		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_path ), [ 'strategy' => 'defer' ] );
 		wp_localize_script(
 			self::FRONTEND_ASSET_HANDLE,
 			'omgf_frontend_i18n',
 			[
-				'info_box_alert_text'  => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
-				'info_box_notice_text' => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
-				'info_box_admin_url'   => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
-				'api_url'              => get_rest_url( null, 'omgf/v1/adminbar-menu/status' ),
-				'nonce'                => wp_create_nonce( 'wp_rest' ),
+				'api_url'                        => get_rest_url( null, 'omgf/v1/adminbar-menu/status' ),
+				'first_run'                      => ! OMGF::optimize_succeeded(),
+				'info_box_alert_text'            => __( 'Google Fonts were found on this page. Click here for more information.', 'host-webfonts-local' ),
+				'info_box_notice_text'           => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
+				'info_box_preload_text'          => __( 'Preloading %s fonts could save ~%sms on your LCP · %s impact', 'host-webfonts-local' ),
+				'info_box_unload_text'           => __( '%s fonts loaded but unused · %s impact', 'host-webfonts-local' ),
+				'info_box_multilang_plugin_text' => __( '%s detected · %d subsets loading on every page · %s impact', 'host-webfonts-local' ),
+				'info_box_impact_high'           => __( 'High', 'host-webfonts-local' ),
+				'info_box_impact_medium'         => __( 'Medium', 'host-webfonts-local' ),
+				'info_box_impact_low'            => __( 'Low', 'host-webfonts-local' ),
+				'info_box_admin_url'             => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
+				'multilang_plugin_used'          => Dashboard::has_multilang_plugin(),
+				'multilang_plugin_name'          => Dashboard::get_multilang_plugin(),
+				'nonce'                          => wp_create_nonce( 'wp_rest' ),
+				'subsets_count'                  => is_countable( $subsets ) ? count( $subsets ) : 0,
 			]
+		);
+		wp_localize_script(
+			self::FRONTEND_ASSET_HANDLE,
+			'omgf_frontend_results',
+			[ 'skip' => ! OMGF::optimize_succeeded() ]
 		);
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
 

@@ -18,7 +18,6 @@ namespace OMGF\Admin\Settings;
 
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
-use OMGF\Helper;
 
 /**
  * @codeCoverageIgnore
@@ -40,7 +39,6 @@ class Advanced extends Builder {
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 80 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 90 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 100 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_auto_config_subsets' ], 110 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 120 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_admin_bar_menu' ], 130 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 140 );
@@ -165,22 +163,6 @@ class Advanced extends Builder {
 		);
 	}
 
-	public function do_auto_config_subsets() {
-		$this->do_checkbox(
-			__( 'Auto-Configure Subsets', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS, 'on' ) ),
-			sprintf(
-				__(
-					'When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that\'re available for <u>all</u> detected font families. Novice users are advised to leave this enabled.',
-					'host-webfonts-local'
-				),
-				apply_filters( 'omgf_settings_page_title', 'OMGF' )
-			),
-			false,
-			'task-manager-row'
-		);
-	}
-
 	/**
 	 * Preload Subsets
 	 *
@@ -192,11 +174,8 @@ class Advanced extends Builder {
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_SUBSETS,
 			OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ),
-			( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ? '<span class="used-subsets-notice info">' . __(
-					'Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. Disable it if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn\'t change this setting</u>!',
-					'host-webfonts-local'
-				) . '</span>' : '' ) . __(
-				'A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are an add-ons for Latin and can\'t be used by itself. Use CTRL + click to select multiple values.</em>',
+			__(
+				'A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are add-ons for Latin and can\'t be used by themselves. Use CTRL + click to select multiple values.</em>',
 				'host-webfonts-local'
 			),
 			true
@@ -212,10 +191,6 @@ class Advanced extends Builder {
 			),
 			apply_filters( 'omgf_settings_page_title', 'OMGF' )
 		);
-
-		if ( $checked && OMGF::get_option( 'google_fonts_checker' ) && get_transient( 'omgf_pro_run_google_fonts_checker' ) ) {
-			$description .= ' ' . __( 'This setting will resume functioning once the Google Fonts checker has finished running.', 'host-webfonts-local' );
-		}
 
 		$this->do_checkbox(
 			__( 'Disable Admin Bar Menu', 'host-webfonts-local' ),
@@ -245,7 +220,7 @@ class Advanced extends Builder {
 			<tr>
 				<th></th>
 				<td>
-					<?php if ( file_exists( Helper::log_file() ) ) : ?>
+					<?php if ( file_exists( OMGF::log_file() ) ) : ?>
 						<?php
 						clearstatcache();
 						$nonce = wp_create_nonce( Settings::OMGF_ADMIN_PAGE );
@@ -262,7 +237,7 @@ class Advanced extends Builder {
 								'Delete log',
 								'host-webfonts-local'
 							); ?></a>
-						<?php if ( filesize( Helper::log_file() ) > MB_IN_BYTES ) : ?>
+						<?php if ( filesize( OMGF::log_file() ) > MB_IN_BYTES ) : ?>
 							<p class="omgf-warning"><?php _e(
 									'Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again.',
 									'host-webfonts-local'

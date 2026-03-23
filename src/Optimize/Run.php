@@ -37,8 +37,6 @@ class Run {
 	 * @return void
 	 */
 	private function run() {
-		OMGF::update_option( Settings::OMGF_OPTIMIZE_HAS_RUN, true );
-
 		$front_html = $this->get_front_html( get_home_url() );
 
 		if ( is_wp_error( $front_html ) || wp_remote_retrieve_response_code( $front_html ) != 200 ) {
@@ -162,58 +160,6 @@ class Run {
 
 		if ( empty( $diff ) ) {
 			$break = true; // @codeCoverageIgnore
-		}
-
-		if ( ! $break && ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_AUTO_SUBSETS ) ) ) {
-			if ( $available_used_subsets ) {
-				OMGF::debug_array( 'Remaining Subsets (compared to Available Used Subsets)', $diff );
-
-				Notice::set_notice(
-					sprintf(
-						_n(
-							'%s is removed as a Used Subset, as not all detected font families are available in this subset. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
-							'%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
-							count( $diff ),
-							'host-webfonts-local'
-						),
-						$this->fluent_implode( $diff )
-					),
-					'omgf-used-subsets-removed',
-					'info'
-				);
-
-				OMGF::update_option( Settings::OMGF_ADV_SETTING_SUBSETS, $available_used_subsets );
-
-				return;
-			}
-
-			/**
-			 * If detected fonts aren't available in any of the subsets that were selected, just set Used Subsets to Latin
-			 * to make sure nothing breaks.
-			 */
-			$diff = array_diff( $used_subsets, [ 'latin' ] );
-
-			if ( ! empty ( $diff ) ) {
-				OMGF::debug_array( 'Remaining Subsets (compared to Latin)', $diff );
-
-				Notice::set_notice(
-					sprintf(
-						_n(
-							'Used Subset(s) is set to Latin, since %s isn\'t available in any of the detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
-							'Used Subset(s) is set to Latin, since %s aren\'t available in any of the detected font-families. <a href="#" id="omgf-optimize-again">Run optimization again</a> to process these changes.',
-							count( $diff ),
-							'host-webfonts-local'
-						),
-						$this->fluent_implode( $diff )
-					),
-					'omgf-used-subsets-defaults',
-					'info'
-				);
-
-				OMGF::update_option( Settings::OMGF_ADV_SETTING_SUBSETS, [ 'latin' ] );
-
-				return;
-			}
 		}
 
 		add_settings_error(

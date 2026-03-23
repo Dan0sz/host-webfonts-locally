@@ -61,13 +61,51 @@ class AdminTest extends TestCase {
 
 		$class = new Admin();
 
-		$_GET[ 'page' ] = Settings::OMGF_ADMIN_PAGE;
-		$_GET[ 'tab' ]  = 'test';
+		$_GET['page'] = Settings::OMGF_ADMIN_PAGE;
+		$_GET['tab']  = 'test';
 
 		$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin-ext' ] ], [ 'subsets' => [ 'latin' ] ] );
 
-		$this->assertTrue( OMGF::get_option( Settings::OMGF_CACHE_IS_STALE ) );
+		$this->assertTrue( OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
 
-		OMGF::delete_option( Settings::OMGF_CACHE_IS_STALE );
+		OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
+	}
+
+	/**
+	 * @see Admin::maybe_show_stale_cache_notice()
+	 * @return void
+	 */
+	public function testMaybeShowStaleCacheNoticeWithExistingErrors() {
+		global $wp_settings_errors;
+
+		$original_wp_settings_errors = $wp_settings_errors ?? [];
+		$original_get                = $_GET;
+
+		try {
+			$wp_settings_errors = [
+				[
+					'code'    => 'omgf_some_error',
+					'message' => 'Some OMGF error',
+					'type'    => 'error',
+				],
+			];
+
+			$class = new Admin();
+
+			$_GET['page'] = Settings::OMGF_ADMIN_PAGE;
+			$_GET['tab']  = 'test';
+
+			OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
+
+			// This should trigger line 248 ($show_message = false) because of the existing 'omgf' error
+			$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin-ext' ] ], [ 'subsets' => [ 'latin' ] ] );
+
+			$this->assertNull( OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
+		} finally {
+			// Cleanup
+			$wp_settings_errors = $original_wp_settings_errors;
+			$_GET               = $original_get;
+			OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
+		}
 	}
 }

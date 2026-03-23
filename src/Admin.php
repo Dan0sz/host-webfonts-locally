@@ -22,7 +22,7 @@ use OMGF\Admin\Settings;
 use OMGF\Admin\Updates;
 
 class Admin {
-	const OMGF_ADMIN_JS_HANDLE  = 'omgf-admin-js';
+	const OMGF_ADMIN_JS_HANDLE = 'omgf-admin-js';
 
 	const OMGF_ADMIN_CSS_HANDLE = 'omgf-admin-css';
 
@@ -125,6 +125,16 @@ class Admin {
 				[],
 				filemtime( OMGF_PLUGIN_DIR . 'assets/css/omgf-admin.css' )
 			);
+
+			wp_localize_script(
+				self::OMGF_ADMIN_JS_HANDLE,
+				'omgf_admin_i18n',
+				[
+					'rest_url'             => get_rest_url( null, 'omgf/v1' ),
+					'nonce'                => wp_create_nonce( 'wp_rest' ),
+					'remind_me_in_30_days' => __( 'Remind me in 30 days', 'host-webfonts-local' ),
+				]
+			);
 		}
 	}
 
@@ -139,6 +149,7 @@ class Admin {
 
 	/**
 	 * @see    OMGF::admin_optimized_fonts()
+	 *
 	 * @since  v5.0.5 Forces get_option() to fetch a fresh copy of omgf_optimized_fonts from the database,
 	 *               we're doing plenty to limit reads from the DB already. So, this is warranted.
 	 *
@@ -192,7 +203,7 @@ class Admin {
 		/**
 		 * Don't show this message on the Main tab.
 		 */
-		if ( ! array_key_exists( 'tab', $_GET ) || ( $_GET[ 'tab' ] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) ) {
+		if ( ! array_key_exists( 'tab', $_GET ) || ( $_GET['tab'] === Settings::OMGF_SETTINGS_FIELD_OPTIMIZE ) ) {
 			return; // @codeCoverageIgnore
 		}
 
@@ -233,7 +244,7 @@ class Admin {
 
 		if ( ! empty( $wp_settings_errors ) ) {
 			foreach ( $wp_settings_errors as $error ) {
-				if ( str_contains( $error[ 'code' ], 'omgf' ) ) {
+				if ( str_contains( $error['code'], 'omgf' ) ) {
 					$show_message = false;
 
 					break;
@@ -246,7 +257,7 @@ class Admin {
 		}
 
 		if ( $show_message ) {
-			OMGF::update_option( Settings::OMGF_CACHE_IS_STALE, true );
+			OMGF::update_option( Settings::OMGF_FLAG_CACHE_IS_STALE, true );
 
 			add_settings_error(
 				'general',
