@@ -40,7 +40,6 @@ class V620 {
 	 * @return void
 	 */
 	private function init() {
-		OMGF::delete_option( 'omgf_optimize_has_run' );
 		OMGF::delete_option( 'auto_subsets' );
 
 		/**
