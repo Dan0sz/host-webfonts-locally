@@ -605,7 +605,7 @@ window.addEventListener('load', () => {
 			}
 
 			if (status === 'info' && omgf_frontend_i18n.first_run) {
-				document.getElementById('wp-admin-bar-omgf-optimize-this').classList.add('info');
+				document.getElementById('wp-admin-bar-omgf-optimize-this')?.classList.add('info');
 			}
 
 			if (!omgf_frontend.sub_menu) {
