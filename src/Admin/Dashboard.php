@@ -315,7 +315,12 @@ class Dashboard {
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
-											__( '<a href="%s" target="_blank">This page</a> is loading <strong>%s font faces it doesn\'t need</strong>—and chances are, other pages are too. OMGF Pro\'s Smart Optimize removes them automatically, on every page.', 'host-webfonts-local' ),
+											_n(
+												'<a href="%1$s" target="_blank" rel="noopener noreferrer">This page</a> is loading <strong>%2$s font face it doesn\'t need</strong>—and chances are, other pages are too. OMGF Pro\'s Smart Optimize removes them automatically, on every page.',
+												'<a href="%1$s" target="_blank" rel="noopener noreferrer">This page</a> is loading <strong>%2$s font faces it doesn\'t need</strong>—and chances are, other pages are too. OMGF Pro\'s Smart Optimize removes them automatically, on every page.',
+												(int) $performance_checker_results['highest_unused_count'],
+												'host-webfonts-local'
+											),
 											home_url( $performance_checker_results['highest_unused_path'] ),
 											(int) $performance_checker_results['highest_unused_count']
 										)
