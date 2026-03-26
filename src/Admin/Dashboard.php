@@ -304,7 +304,7 @@ class Dashboard {
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
-											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize (Pro) to load only the right font subsets per language—instead of all %s subsets on every page.', 'host-webfonts-local' ),
+											__( 'Since you\'re using <strong>%s</strong>, Smart Optimize (Pro) loads only the right font subsets per language—instead of the currently configured %s subsets on every page.', 'host-webfonts-local' ),
 											self::get_multilang_plugin(),
 											$count_subsets
 										)
