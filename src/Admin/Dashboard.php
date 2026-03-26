@@ -299,7 +299,7 @@ class Dashboard {
 						<?php endif; ?>
 						<ol>
 							<?php
-							$count_subsets = count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
+							$count_subsets = (int) count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
 							if ( self::has_multilang_plugin() && $count_subsets > 1 ) : ?>
 								<li>
 									<?php echo wp_kses_post(
