@@ -298,39 +298,44 @@ class Dashboard {
 							</p>
 						<?php endif; ?>
 						<ol>
-							<?php if ( self::has_multilang_plugin() && count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) ) > 1 ) : ?>
+							<?php
+							$count_subsets = (int) count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
+							if ( self::has_multilang_plugin() && $count_subsets > 1 ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
-											__( 'Since you\'re using <strong>%s</strong>, enable Smart Optimize (Pro) to load only the right font subsets per language—instead of all subsets on every page.', 'host-webfonts-local' ),
-											self::get_multilang_plugin()
+											__( 'Since you\'re using <strong>%s</strong>, Smart Optimize (Pro) loads only the right font subsets per language—instead of the currently configured %s subsets on every page.', 'host-webfonts-local' ),
+											self::get_multilang_plugin(),
+											$count_subsets
 										)
 									); ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0 ) : ?>
 								<li>
-									<?php echo wp_kses_post( sprintf( _n( '<strong>%s unused font face</strong> detected.', 'Up to <strong>%s unused font faces</strong> detected—OMGF Pro fixes this per page automatically.', (int)
-									$performance_checker_results['highest_unused_count'], 'host-webfonts-local' ),
-										$performance_checker_results['highest_unused_count'] ) ); ?>
-									<?php echo wp_kses_post( sprintf(
-										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
-										home_url( $performance_checker_results['highest_unused_path'] ),
-										$performance_checker_results['highest_unused_path'] === '/' ? $performance_checker_results['highest_unused_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
-											$performance_checker_results['highest_unused_path']
-									) ); ?>
+									<?php echo wp_kses_post(
+										sprintf(
+											_n(
+												'<a href="%1$s" target="_blank" rel="noopener noreferrer">This page</a> is loading <strong>%2$s font face it doesn\'t need</strong>—and chances are, other pages are too. OMGF Pro\'s Smart Optimize removes them automatically, on every page.',
+												'<a href="%1$s" target="_blank" rel="noopener noreferrer">This page</a> is loading <strong>%2$s font faces it doesn\'t need</strong>—and chances are, other pages are too. OMGF Pro\'s Smart Optimize removes them automatically, on every page.',
+												(int) $performance_checker_results['highest_unused_count'],
+												'host-webfonts-local'
+											),
+											home_url( $performance_checker_results['highest_unused_path'] ),
+											(int) $performance_checker_results['highest_unused_count']
+										)
+									); ?>
 								</li>
 							<?php endif; ?>
 							<?php if ( isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0 ) : ?>
 								<li>
-									<?php echo wp_kses_post( sprintf( __( 'Font loading is <strong>adding ~%sms to your LCP score</strong>—OMGF Pro fixes this per page automatically.', 'host-webfonts-local' ),
-										$performance_checker_results['highest_delay_ms'] ) ); ?>
-									<?php echo wp_kses_post( sprintf(
-										__( 'Most impacted page: <a href="%s">%s</a>', 'host-webfonts-local' ),
-										home_url( $performance_checker_results['highest_delay_path'] ),
-										$performance_checker_results['highest_delay_path'] === '/' ? $performance_checker_results['highest_delay_path'] . ' ' . __( '(home)', 'host-webfonts-local' ) :
-											$performance_checker_results['highest_delay_path']
-									) ); ?>
+									<?php echo wp_kses_post(
+										sprintf(
+											__( 'Your fonts are <strong>slowing down your LCP by ~%sms</strong> on <a href="%s" target="_blank">this page</a>—and chances are, other pages are affected too. OMGF Pro\'s Smart Optimize removes them automatically, on every page.', 'host-webfonts-local' ),
+											$performance_checker_results['highest_delay_ms'],
+											home_url( $performance_checker_results['highest_delay_path'] )
+										)
+									); ?>
 								</li>
 							<?php endif; ?>
 						</ol>
