@@ -18,7 +18,6 @@ namespace OMGF\Optimize;
 
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
-use OMGF\Admin\Settings;
 use WP_Error;
 
 class Run {
@@ -54,14 +53,12 @@ class Run {
 	 * @return array|WP_Error
 	 */
 	private function get_front_html( $url ) {
-		$result = wp_remote_get(
+		return wp_remote_get(
 			OMGF::no_cache_optimize_url( $url ),
 			[
 				'timeout' => 60,
 			]
 		);
-
-		return $result;
 	}
 
 	/**
@@ -144,24 +141,6 @@ class Run {
 			$wp_settings_errors = [];
 		}
 
-		/**
-		 * @since v5.4.4 Check if selected Used Subset(s) are actually available in all detected font families,
-		 *               and update the Used Subset(s) option if not.
-		 */
-		$available_used_subsets = OMGF::available_used_subsets( null, true );
-		$used_subsets           = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
-
-		/**
-		 * If $diff is empty, this means that the detected fonts are available in all selected subsets in the
-		 * Used Subset(s) option and no further action is required.
-		 */
-		$diff  = array_diff( $used_subsets, $available_used_subsets );
-		$break = false;
-
-		if ( empty( $diff ) ) {
-			$break = true; // @codeCoverageIgnore
-		}
-
 		add_settings_error(
 			'general',
 			'omgf_optimization_success',
@@ -180,58 +159,5 @@ class Run {
 			'omgf-cache-notice',
 			'warning'
 		);
-	}
-
-	/**
-	 * Generate a fluent sentence from $array, e.g. "1, 2, 3 and 4" if the count is > 1.
-	 *
-	 * @since v5.4.4
-	 *
-	 * @param array $array
-	 *
-	 * @return string
-	 *
-	 * @codeCoverageIgnore
-	 */
-	private function fluent_implode( $array ) {
-		if ( count( $array ) == 1 ) {
-			$string = reset( $array );
-
-			return $this->find_first_string( $string );
-		}
-
-		$last  = array_pop( $array );
-		$first = implode( ', ', array_map( 'ucfirst', $array ) );
-
-		return $first . ' and ' . ucfirst( $last );
-	}
-
-	/**
-	 * Keep resetting $value until it's not an array anymore.
-	 *
-	 * @since v6.0.6 This function was introduced to fix a bug where sometimes the string value would be 2 levels deep. I added recursion, just in case.
-	 *
-	 * @param $value
-	 *
-	 * @return string
-	 *
-	 * @codeCoverageIgnore
-	 */
-	private function find_first_string( $value ) {
-		if ( is_array( $value ) ) {
-			if ( empty( $value ) ) {
-				return ''; // Return an empty string if the array is empty.
-			}
-
-			$value = reset( $value );
-
-			return $this->find_first_string( $value );
-		}
-
-		if ( is_string( $value ) ) {
-			return ucfirst( $value );
-		}
-
-		return $value;
 	}
 }
