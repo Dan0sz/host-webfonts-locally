@@ -28,8 +28,8 @@ class CompatibilityHookRegistrar {
 	/**
 	 * Build class.
 	 */
-	public function __construct( string $hooks = '' ) {
-		if ( $hooks ) {
+	public function __construct( $hooks = [] ) {
+		if ( ! empty( $hooks ) ) {
 			$this->hooks = $hooks;
 		}
 
