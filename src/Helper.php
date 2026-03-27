@@ -573,6 +573,7 @@ class Helper {
 
 		/**
 		 * Just to make sure that everything keeps working.
+		 */
 		$preloaded_fonts = apply_filters( 'omgf_filter_preloaded_fonts', self::$preloaded_fonts );
 
 		/**
