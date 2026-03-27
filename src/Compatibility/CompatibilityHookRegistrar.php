@@ -33,6 +33,10 @@ class CompatibilityHookRegistrar {
 			$this->hook = $hook;
 		}
 
+		if ( empty( $this->hook ) ) {
+			return;
+		}
+
 		add_action( $this->hook, [ $this, 'flush_third_party_cache' ] );
 	}
 
