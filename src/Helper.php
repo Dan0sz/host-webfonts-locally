@@ -114,6 +114,75 @@ class Helper {
 	}
 
 	/**
+	 * Method to retrieve OMGF's settings from database.
+	 * WARNING: DO NOT ATTEMPT TO RETRIEVE WP CORE SETTINGS USING THIS METHOD. IT WILL FAIL.
+	 *
+	 * @filter omgf_setting_{$name}
+	 *
+	 * @since  v5.6.0
+	 *
+	 * @param string $name
+	 *
+	 * @param mixed  $default (optional)
+	 */
+	public static function get_option( $name, $default = null ) {
+		// If $name starts with 'omgf_' it means it is saved in a separate row.
+		if ( str_starts_with( $name, 'omgf_' ) ) {
+			$value = get_option( $name, $default );
+			$name  = str_replace( 'omgf_', '', $name );
+
+			// get_option() should take care of this, but sometimes it doesn't.
+			if ( is_string( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
+			return apply_filters( "omgf_setting_$name", $value );
+		}
+
+		$value = self::get_settings()[ $name ] ?? $default;
+
+		if ( empty( $value ) && ! $default && $name === Settings::OMGF_ADV_SETTING_SUBSETS ) {
+			$default = [ 'latin', 'latin-ext' ]; // @codeCoverageIgnore
+		}
+
+		if ( empty( $value ) && $value !== '0' && $default !== null ) {
+			$value = $default;
+		}
+
+		return apply_filters( "omgf_setting_$name", $value );
+	}
+
+	/**
+	 * Gets all settings for OMGF.
+	 * @filter omgf_settings
+	 * @since  5.5.7
+	 * @return array
+	 */
+	public static function get_settings() {
+		$defaults = apply_filters(
+			'omgf_settings_defaults',
+			[
+				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     => 'swap',
+				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE          => '',
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => '',
+				Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
+				Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
+				Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
+				Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
+				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
+				Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
+				Settings::OMGF_ADV_SETTING_UNINSTALL               => '',
+			]
+		);
+
+		if ( empty( self::$settings ) ) {
+			self::$settings = get_option( 'omgf_settings', [] ); // @codeCoverageIgnore
+		}
+
+		return apply_filters( 'omgf_settings', wp_parse_args( self::$settings, $defaults ) );
+	}
+
+	/**
 	 * To prevent "Cannot use output buffering  in output buffering display handlers" errors, I introduced a debug
 	 * array feature, to easily display, well, arrays in the debug log (duh!)
 	 *
@@ -199,8 +268,14 @@ class Helper {
 	 * Delete a file or directory from the filesystem.
 	 *
 	 * @param $entry
+	 *
+	 * @return bool|void
 	 */
 	public static function delete( $entry ) {
+		if ( is_link( $entry ) ) {
+			return unlink( $entry );
+		}
+
 		if ( is_dir( $entry ) ) {
 			$file = new \FilesystemIterator( $entry );
 
@@ -251,6 +326,22 @@ class Helper {
 		}
 
 		return $deleted;
+	}
+
+	/**
+	 * Resets all static caches.
+	 *
+	 * @return void
+	 */
+	public static function reset_cache() {
+		self::$settings              = [];
+		self::$preloaded_fonts       = [];
+		self::$unloaded_fonts        = [];
+		self::$unloaded_stylesheets  = [];
+		self::$cache_keys            = [];
+		self::$admin_optimized_fonts = [];
+		self::$optimized_fonts       = [];
+		self::$subsets               = [];
 	}
 
 	/**
@@ -577,45 +668,6 @@ class Helper {
 	}
 
 	/**
-	 * Method to retrieve OMGF's settings from database.
-	 * WARNING: DO NOT ATTEMPT TO RETRIEVE WP CORE SETTINGS USING THIS METHOD. IT WILL FAIL.
-	 *
-	 * @filter omgf_setting_{$name}
-	 *
-	 * @since  v5.6.0
-	 *
-	 * @param string $name
-	 *
-	 * @param mixed  $default (optional)
-	 */
-	public static function get_option( $name, $default = null ) {
-		// If $name starts with 'omgf_' it means it is saved in a separate row.
-		if ( str_starts_with( $name, 'omgf_' ) ) {
-			$value = get_option( $name, $default );
-			$name  = str_replace( 'omgf_', '', $name );
-
-			// get_option() should take care of this, but sometimes it doesn't.
-			if ( is_string( $value ) ) {
-				$value = maybe_unserialize( $value );
-			}
-
-			return apply_filters( "omgf_setting_$name", $value );
-		}
-
-		$value = self::get_settings()[ $name ] ?? $default;
-
-		if ( empty( $value ) && ! $default && $name === Settings::OMGF_ADV_SETTING_SUBSETS ) {
-			$default = [ 'latin', 'latin-ext' ]; // @codeCoverageIgnore
-		}
-
-		if ( empty( $value ) && $value !== '0' && $default !== null ) {
-			$value = $default;
-		}
-
-		return apply_filters( "omgf_setting_$name", $value );
-	}
-
-	/**
 	 * @return array
 	 *
 	 * @codeCoverageIgnore
@@ -679,51 +731,5 @@ class Helper {
 		}
 
 		return $updated;
-	}
-
-	/**
-	 * Resets all static caches.
-	 *
-	 * @return void
-	 */
-	public static function reset_cache() {
-		self::$settings              = [];
-		self::$preloaded_fonts       = [];
-		self::$unloaded_fonts        = [];
-		self::$unloaded_stylesheets  = [];
-		self::$cache_keys            = [];
-		self::$admin_optimized_fonts = [];
-		self::$optimized_fonts       = [];
-		self::$subsets               = [];
-	}
-
-	/**
-	 * Gets all settings for OMGF.
-	 * @filter omgf_settings
-	 * @since  5.5.7
-	 * @return array
-	 */
-	public static function get_settings() {
-		$defaults = apply_filters(
-			'omgf_settings_defaults',
-			[
-				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     => 'swap',
-				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE          => '',
-				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => '',
-				Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
-				Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
-				Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
-				Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
-				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
-				Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
-				Settings::OMGF_ADV_SETTING_UNINSTALL               => '',
-			]
-		);
-
-		if ( empty( self::$settings ) ) {
-			self::$settings = get_option( 'omgf_settings', [] ); // @codeCoverageIgnore
-		}
-
-		return apply_filters( 'omgf_settings', wp_parse_args( self::$settings, $defaults ) );
 	}
 }
