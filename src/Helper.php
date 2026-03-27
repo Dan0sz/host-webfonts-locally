@@ -407,8 +407,7 @@ class Helper {
 	 * @throws \ReflectionException
 	 */
 	public static function get_db_rows_by( $needles = [], $ignore = [] ) {
-		$settings_class = ( new \ReflectionClass( Settings::class ) )->newInstanceWithoutConstructor();
-		$settings       = $settings_class->get_constants();
+		$settings = ( new \ReflectionClass( Settings::class ) )->getConstants();
 
 		return array_filter( $settings, function ( $row, $constant ) use ( $needles, $ignore ) {
 			foreach ( $needles as $needle ) {
