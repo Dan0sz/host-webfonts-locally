@@ -632,27 +632,7 @@ class Helper {
 
 		/**
 		 * Just to make sure that everything keeps working.
-		 */
-		if ( has_filter( 'omgf_frontend_optimized_fonts' ) ) {
-			_deprecated_hook( 'omgf_frontend_optimized_fonts', '6.1.4', 'omgf_filter_optimized_fonts' );
-
-			self::$optimized_fonts = apply_filters( 'omgf_frontend_optimized_fonts', self::$optimized_fonts );
-		}
-
-		return self::$optimized_fonts;
-	}
-
-	/**
-	 * @return array
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public static function preloaded_fonts() {
-		if ( empty( self::$preloaded_fonts ) ) {
-			self::$preloaded_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [] );
-		}
-
-		self::$preloaded_fonts = apply_filters( 'omgf_filter_preloaded_fonts', self::$preloaded_fonts );
+		$preloaded_fonts = apply_filters( 'omgf_filter_preloaded_fonts', self::$preloaded_fonts );
 
 		/**
 		 * Just to make sure that everything keeps working.
@@ -660,10 +640,10 @@ class Helper {
 		if ( has_filter( 'omgf_frontend_preloaded_fonts' ) ) {
 			_deprecated_hook( 'omgf_frontend_preloaded_fonts', '6.1.4', 'omgf_filter_preloaded_fonts' );
 
-			self::$preloaded_fonts = apply_filters( 'omgf_frontend_preloaded_fonts', self::$preloaded_fonts );
+			$preloaded_fonts = apply_filters( 'omgf_frontend_preloaded_fonts', $preloaded_fonts );
 		}
 
-		return self::$preloaded_fonts;
+		return $preloaded_fonts;
 	}
 
 	/**
