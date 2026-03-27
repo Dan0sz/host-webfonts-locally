@@ -45,6 +45,10 @@ class Compatibility {
 		new Compatibility\Core();
 		new Compatibility\CachingPlugins();
 
+		if ( defined( 'AVADA_VERSION' ) ) {
+			new Compatibility\Avada();
+		}
+
 		if ( defined( 'ELEMENTOR_VERSION' ) ) {
 			new Compatibility\Elementor();
 		}

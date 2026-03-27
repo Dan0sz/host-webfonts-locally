@@ -22,22 +22,24 @@ use OMGF\Helper as OMGF;
  * @codeCoverageIgnore because it depends on 3rd party plugins.
  */
 class CompatibilityHookRegistrar {
-	/** @var string $hook */
-	protected $hook;
+	/** @var array $hooks */
+	protected $hooks;
 
 	/**
 	 * Build class.
 	 */
-	public function __construct( string $hook = '' ) {
-		if ( $hook ) {
-			$this->hook = $hook;
+	public function __construct( string $hooks = '' ) {
+		if ( $hooks ) {
+			$this->hooks = $hooks;
 		}
 
-		if ( empty( $this->hook ) ) {
+		if ( empty( $this->hooks ) ) {
 			return;
 		}
 
-		add_action( $this->hook, [ $this, 'flush_third_party_cache' ] );
+		foreach ( $this->hooks as $hook ) {
+			add_action( $hook, [ $this, 'flush_third_party_cache' ] );
+		}
 	}
 
 	/**
