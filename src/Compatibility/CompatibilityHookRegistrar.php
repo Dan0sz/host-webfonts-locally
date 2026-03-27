@@ -42,6 +42,14 @@ class CompatibilityHookRegistrar {
 	 * @return void
 	 */
 	public function flush_third_party_cache() {
+		static $flushed = false;
+
+		if ( $flushed ) {
+			return;
+		}
+
+		$flushed = true;
+
 		OMGF::flush_third_party_cache();
 	}
 }
