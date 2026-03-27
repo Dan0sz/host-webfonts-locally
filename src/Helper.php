@@ -56,61 +56,47 @@ class Helper {
 	private static $admin_optimized_fonts = [];
 
 	/**
-	 * @var array $subsets
-	 */
-	private static $subsets = [];
-
-	/**
-	 * @since v5.4.4 Returns the available subsets in all requested fonts/stylesheets.
-	 *               Functions as a temporary cache layer to reduce DB reads with get_option().
-	 * @return array
+	 * To prevent "Cannot use output buffering  in output buffering display handlers" errors, I introduced a debug
+	 * array feature, to easily display, well, arrays in the debug log (duh!)
+	 *
+	 * @since v5.3.7
+	 *
+	 * @param string       $name  A descriptive name to be shown in the debug log
+	 *
+	 * @param array|object $array The array to be displayed in the debug log
+	 *
+	 * @return void
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public static function available_used_subsets( $maybe_add = [], $intersect = false ) {
-		if ( empty( self::$subsets ) ) {
-			self::$subsets = self::get_option( Settings::OMGF_DB_AVAILABLE_USED_SUBSETS, [] );
+	public static function debug_array( $name, $array ) {
+		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
+		     ( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES ) ) {
+			return;
 		}
 
-		/**
-		 * get_option() should take care of this, but sometimes it doesn't.
-		 */
-		if ( is_string( self::$subsets ) ) {
-			self::$subsets = maybe_unserialize( self::$subsets ); // @codeCoverageIgnore
+		if ( ! is_array( $array ) && ! is_object( $array ) ) {
+			return;
 		}
 
-		/**
-		 * If $maybe_add doesn't exist in the cache layer yet, add it.
-		 */
-		if ( ! empty( $maybe_add ) && ( ! isset( self::$subsets[ key( $maybe_add ) ] ) ) ) {
-			self::$subsets = array_merge( self::$subsets, $maybe_add );
-		}
+		self::debug( __( 'Showing debug information for', 'host-webfonts-local' ) . ': ' . $name );
 
-		/**
-		 * Return only subsets that are available in all font families.
-		 * @see OMGF_Optimize_Run
-		 */
-		if ( $intersect ) {
-			/**
-			 * @var array $filtered_subsets Contains an array of Font Families along with the available selected subsets, e.g.
-			 *                              { 'Lato' => { 'latin', 'latin-ext' } }
-			 */
-			$filtered_subsets = apply_filters( 'omgf_available_filtered_subsets', array_values( array_filter( self::$subsets ) ) );
+		foreach ( $array as $key => $elem ) {
+			if ( is_array( $elem ) || is_object( $elem ) ) {
+				self::debug_array(
+					sprintf( __( 'Subelement %s is array/object', 'host-webfonts-local' ), $key ),
+					$elem
+				);
 
-			self::debug_array( __( 'Filtered Subsets', 'host-webfonts-local' ), $filtered_subsets );
-
-			if ( count( $filtered_subsets ) === 1 ) {
-				return reset( $filtered_subsets ); // @codeCoverageIgnore
+				continue;
 			}
 
-			if ( ! empty( $filtered_subsets ) ) {
-				return call_user_func_array( 'array_intersect', $filtered_subsets );
-			}
-
-			return $filtered_subsets;
+			error_log(
+				current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ': ' . $key . ' => ' . $elem . "\n",
+				3,
+				self::log_file()
+			);
 		}
-
-		return apply_filters( 'omgf_available_subsets', self::$subsets );
 	}
 
 	/**
@@ -180,50 +166,6 @@ class Helper {
 		}
 
 		return apply_filters( 'omgf_settings', wp_parse_args( self::$settings, $defaults ) );
-	}
-
-	/**
-	 * To prevent "Cannot use output buffering  in output buffering display handlers" errors, I introduced a debug
-	 * array feature, to easily display, well, arrays in the debug log (duh!)
-	 *
-	 * @since v5.3.7
-	 *
-	 * @param string       $name  A descriptive name to be shown in the debug log
-	 *
-	 * @param array|object $array The array to be displayed in the debug log
-	 *
-	 * @return void
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public static function debug_array( $name, $array ) {
-		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-		     ( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES ) ) {
-			return;
-		}
-
-		if ( ! is_array( $array ) && ! is_object( $array ) ) {
-			return;
-		}
-
-		self::debug( __( 'Showing debug information for', 'host-webfonts-local' ) . ': ' . $name );
-
-		foreach ( $array as $key => $elem ) {
-			if ( is_array( $elem ) || is_object( $elem ) ) {
-				self::debug_array(
-					sprintf( __( 'Subelement %s is array/object', 'host-webfonts-local' ), $key ),
-					$elem
-				);
-
-				continue;
-			}
-
-			error_log(
-				current_time( 'Y-m-d H:i:s' ) . ' ' . microtime() . ': ' . $key . ' => ' . $elem . "\n",
-				3,
-				self::log_file()
-			);
-		}
 	}
 
 	/**
@@ -341,7 +283,6 @@ class Helper {
 		self::$cache_keys            = [];
 		self::$admin_optimized_fonts = [];
 		self::$optimized_fonts       = [];
-		self::$subsets               = [];
 	}
 
 	/**
