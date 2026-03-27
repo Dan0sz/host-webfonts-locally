@@ -14,6 +14,8 @@ class CachingPlugins {
 	 * Flush the entire cache of popular caching plugins after a successful OMGF optimize run.
 	 *
 	 * @return void
+	 *
+	 * @codeCoverageIgnore Because it relies on 3rd party plugins.
 	 */
 	public function maybe_flush_cache() {
 		if ( ! isset( $_GET['omgf_optimize'] ) || ! current_user_can( 'manage_options' ) ) {
