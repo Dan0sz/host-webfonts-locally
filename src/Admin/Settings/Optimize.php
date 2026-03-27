@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -56,23 +56,22 @@ class Optimize extends Builder {
 	}
 
 	/**
-	 * Opens the Force info screen container.
+	 *
+	 */
+	public function close_optimize_fonts_container() {
+		?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Close the container.
 	 *
 	 * @return void
 	 */
-	public function open_task_manager() {
+	public function close_task_manager() {
 		?>
-		<div class="omgf-task-manager postbox">
-		<h3><?php echo __( 'Dashboard', 'host-webfonts-local' ); ?></h3>
-		<p>
-			<?php echo apply_filters(
-				'omgf_dashboard_intro',
-				__(
-					'OMGF (Optimize My Google Fonts) automatically replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href="#omgf-manage-optimized-fonts">Optimize Local Fonts</a>.',
-					'host-webfonts-local'
-				)
-			); ?>
-		</p>
+		</div>
 		<?php
 	}
 
@@ -102,17 +101,6 @@ class Optimize extends Builder {
 	}
 
 	/**
-	 * Close the container.
-	 *
-	 * @return void
-	 */
-	public function close_task_manager() {
-		?>
-		</div>
-		<?php
-	}
-
-	/**
 	 *
 	 */
 	public function do_display_option() {
@@ -128,36 +116,6 @@ class Optimize extends Builder {
 				'Select which value to set the font-display attribute to. Defaults to Swap (recommended).',
 				'host-webfonts-local'
 			)
-		);
-	}
-
-	/**
-	 * Force Font-Display Option Site Wide
-	 */
-	public function do_promo_apply_font_display_globally() {
-		$this->do_checkbox(
-			__( 'Apply Font-Display Option Globally (Pro)', 'host-webfonts-local' ),
-			'force_font_display', ! empty( OMGF::get_option( 'force_font_display' ) ),
-			__(
-				'Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.',
-				'host-webfonts-local'
-			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
-		);
-	}
-
-	/**
-	 * Smart Optimize (Pro) option.
-	 *
-	 * @return void
-	 */
-	public function do_promo_smart_optimize() {
-		$this->do_checkbox(
-			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
-			'smart_optimize', ! empty( OMGF::get_option( 'smart_optimize' ) ),
-			__(
-				'Let OMGF Pro figure it out! Smart Optimize automatically detects the right fonts, subsets and preloads for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
-				'host-webfonts-local'
-			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
 		);
 	}
 
@@ -474,12 +432,33 @@ class Optimize extends Builder {
 	}
 
 	/**
-	 *
+	 * Force Font-Display Option Site Wide
 	 */
-	public function close_optimize_fonts_container() {
-		?>
-		</div>
-		<?php
+	public function do_promo_apply_font_display_globally() {
+		$this->do_checkbox(
+			__( 'Apply Font-Display Option Globally (Pro)', 'host-webfonts-local' ),
+			'force_font_display', ! empty( OMGF::get_option( 'force_font_display' ) ),
+			__(
+				'Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.',
+				'host-webfonts-local'
+			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
+		);
+	}
+
+	/**
+	 * Smart Optimize (Pro) option.
+	 *
+	 * @return void
+	 */
+	public function do_promo_smart_optimize() {
+		$this->do_checkbox(
+			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
+			'smart_optimize', ! empty( OMGF::get_option( 'smart_optimize' ) ),
+			__(
+				'Let OMGF Pro figure it out! Smart Optimize automatically detects the right fonts, subsets and preloads for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
+				'host-webfonts-local'
+			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
+		);
 	}
 
 	/**
@@ -494,5 +473,26 @@ class Optimize extends Builder {
 				'host-webfonts-local'
 			)
 		);
+	}
+
+	/**
+	 * Opens the Force info screen container.
+	 *
+	 * @return void
+	 */
+	public function open_task_manager() {
+		?>
+		<div class="omgf-task-manager postbox">
+		<h3><?php echo __( 'Dashboard', 'host-webfonts-local' ); ?></h3>
+		<p>
+			<?php echo apply_filters(
+				'omgf_dashboard_intro',
+				__(
+					'OMGF (Optimize My Google Fonts) automatically replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href="#omgf-manage-optimized-fonts">Optimize Local Fonts</a>.',
+					'host-webfonts-local'
+				)
+			); ?>
+		</p>
+		<?php
 	}
 }

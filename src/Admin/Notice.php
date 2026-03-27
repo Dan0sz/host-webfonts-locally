@@ -10,19 +10,48 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
 namespace OMGF\Admin;
 
 class Notice {
-	const OMGF_ADMIN_NOTICE_TRANSIENT  = 'omgf_admin_notice';
+	const OMGF_ADMIN_NOTICE_TRANSIENT = 'omgf_admin_notice';
 
 	const OMGF_ADMIN_NOTICE_EXPIRATION = 60;
 
 	/** @var array $notices */
 	public static $notices = [];
+
+	/**
+	 * Prints notice (if any) grouped by type.
+	 */
+	public static function print_notices() {
+		$admin_notices = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
+
+		if ( is_array( $admin_notices ) ) {
+			$current_screen = get_current_screen();
+
+			foreach ( $admin_notices as $screen => $notice ) {
+				if ( ! defined( 'DAAN_DOING_TESTS' ) && $current_screen->id != $screen && $screen != 'all' ) {
+					continue; // @codeCoverageIgnore
+				}
+
+				foreach ( $notice as $type => $message ) {
+					?>
+					<div id="message" class="notice notice-<?php echo $type; ?> is-dismissible">
+						<?php foreach ( $message as $line ) : ?>
+							<p><strong><?php echo $line; ?></strong></p>
+						<?php endforeach; ?>
+					</div>
+					<?php
+				}
+			}
+		}
+
+		delete_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
+	}
 
 	/**
 	 * @param        $message
@@ -66,34 +95,5 @@ class Notice {
 		}
 
 		set_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT, self::$notices, self::OMGF_ADMIN_NOTICE_EXPIRATION );
-	}
-
-	/**
-	 * Prints notice (if any) grouped by type.
-	 */
-	public static function print_notices() {
-		$admin_notices = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
-
-		if ( is_array( $admin_notices ) ) {
-			$current_screen = get_current_screen();
-
-			foreach ( $admin_notices as $screen => $notice ) {
-				if ( ! defined( 'DAAN_DOING_TESTS' ) && $current_screen->id != $screen && $screen != 'all' ) {
-					continue; // @codeCoverageIgnore
-				}
-
-				foreach ( $notice as $type => $message ) {
-					?>
-					<div id="message" class="notice notice-<?php echo $type; ?> is-dismissible">
-						<?php foreach ( $message as $line ) : ?>
-							<p><strong><?php echo $line; ?></strong></p>
-						<?php endforeach; ?>
-					</div>
-					<?php
-				}
-			}
-		}
-
-		delete_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
 	}
 }

@@ -14,41 +14,12 @@
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
-namespace OMGF\DB\Migrate;
-
-use OMGF\Admin\Settings;
-use OMGF\Helper as OMGF;
+namespace OMGF\Compatibility;
 
 /**
  * @codeCoverageIgnore
  */
-class V581 {
-	/** @var $version string The version number this migration script was introduced with. */
-	private $version = '5.8.1';
-
-	/**
-	 * Build class
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-		$this->init();
-	}
-
-	/**
-	 * Initialize
-	 *
-	 * @return void
-	 */
-	private function init() {
-		/**
-		 * Delete the omgf_fonts object which is no longer used.
-		 */
-		OMGF::delete_option( 'omgf_fonts' );
-
-		/**
-		 * Update stored version number.
-		 */
-		OMGF::update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
-	}
+class BeaverBuilder extends CompatibilityHookRegistrar {
+	/** @var array $hooks */
+	protected $hooks = [ 'fl_builder_after_save_layout' ];
 }

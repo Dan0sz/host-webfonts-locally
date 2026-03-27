@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -67,12 +67,6 @@ class Optimize {
 	 * @since v5.3.0
 	 */
 	private $variable_fonts = [];
-
-	/**
-	 * @var array $available_used_subsets Contains an array_intersect() of subsets that're set to be used AND are actually available.
-	 * @since v5.4.4
-	 */
-	private $available_used_subsets = [];
 
 	/**
 	 * @param string $url             Google Fonts API URL, e.g. "fonts.googleapis.com/css?family="Lato:100,200,300,etc."
@@ -258,16 +252,6 @@ class Optimize {
 		$optimized_fonts_frontend = OMGF::optimized_fonts( $current_stylesheet, true );
 
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND, $optimized_fonts_frontend );
-
-		/**
-		 * @see   OMGF_Optimize_Run
-		 * @since v5.4.4 Stores the subsets actually available in this configuration to the database.
-		 */
-		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) ) ) {
-			$available_used_subsets = OMGF::available_used_subsets( $this->available_used_subsets );
-
-			OMGF::update_option( Settings::OMGF_DB_AVAILABLE_USED_SUBSETS, $available_used_subsets );
-		}
 
 		switch ( $this->return ) {
 			case 'path':
@@ -492,14 +476,6 @@ class Optimize {
 		}
 
 		$subsets = array_unique( $subsets[1] );
-
-		/**
-		 * @since v5.4.4 Stores all subsets that are selected to be used AND are actually available in this font-family.
-		 */
-		$this->available_used_subsets[ $font_family ] = array_intersect(
-			$subsets,
-			OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS )
-		);
 
 		OMGF::debug_array( __( 'Subset @font-face statements', 'host-webfonts-local' ), $subsets );
 

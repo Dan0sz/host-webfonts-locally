@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -99,7 +99,7 @@ class Help extends Builder {
 						<p class="signature">
 							<a target="_blank" title="<?php echo __( 'Visit Daan.dev', 'host-webfonts-local' ); ?>" href="https://daan.dev/wordpress-plugins/">
 								<img class="signature-image" alt="<?php echo __( 'Visit Daan.dev', 'host-webfonts-local' ); ?>" src="<?php echo plugin_dir_url( OMGF_PLUGIN_FILE ) .
-									'assets/images/logo-color-small@2x.png'; ?>"/>
+																																				'assets/images/logo-color-small@2x.png'; ?>"/>
 							</a>
 						</p>
 					</div>

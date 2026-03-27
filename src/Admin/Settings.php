@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -34,8 +34,6 @@ class Settings extends Admin {
 	const OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS = 'omgf_google_fonts_checker_results';
 
 	const OMGF_DB_PERF_CHECK = 'omgf_perf_check';
-
-	const OMGF_DB_AVAILABLE_USED_SUBSETS = 'omgf_available_used_subsets';
 
 	const OMGF_DB_CACHE_TIMESTAMP = 'omgf_cache_timestamp';
 
@@ -231,59 +229,58 @@ class Settings extends Admin {
 	}
 
 	/**
-	 * Creates the menu item.
+	 * Render Advanced Settings content
 	 */
-	public function create_menu() {
-		$title = apply_filters( 'omgf_settings_page_title', 'OMGF' );
-		add_options_page(
-			$title,
-			$title,
-			'manage_options',
-			self::OMGF_ADMIN_PAGE,
-			[ $this, 'create_settings_page' ]
-		);
-
-		add_action( 'admin_init', [ $this, 'register_settings' ] );
+	public function advanced_settings_content() {
+		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_ADVANCED );
 	}
 
 	/**
-	 * Display the settings page.
+	 * @param $field
 	 */
-	public function create_settings_page() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( "You're not cool enough to access this page.", 'host-webfonts-local' ) );
+	private function do_settings_content( $field ) {
+		if ( $this->active_tab !== $field ) {
+			return;
 		}
 		?>
-		<div class="wrap omgf">
-			<h1>
-				<?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?>
-			</h1>
-			<div class="settings-column">
-				<h2 class="omgf-nav nav-tab-wrapper">
-					<?php do_action( 'omgf_settings_tab' ); ?>
-				</h2>
-				<?php do_action( 'omgf_settings_content' ); ?>
-			</div>
-		</div>
+		<form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post"
+			  action="<?php echo apply_filters(
+				  'omgf_form_action',
+				  admin_url( 'options.php?tab=' . $this->active_tab ),
+				  $this->page,
+				  $this->active_tab
+			  ); ?>" autocomplete="off">
+			<?php
+			ob_start();
+			settings_fields( $field );
+			/**
+			 * We use a custom update action, so we can group all settings in one DB row upon form submit.
+			 *
+			 * @see \OMGF\Helper update_options()
+			 */
+			$settings_fields = ob_get_clean();
+			$settings_fields = str_replace( 'value="update"', 'value="omgf-update"', $settings_fields );
+			echo $settings_fields;
+			do_settings_sections( $field );
+
+			do_action( 'omgf_before_settings_form_settings' );
+
+			echo do_action( str_replace( '-', '_', $field ) . '_content', '' );
+
+			do_action( 'omgf_after_settings_form_settings' );
+
+			?>
+			<?php if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) : ?>
+				<?php submit_button(
+					$this->submit_button_text,
+					'primary',
+					'submit',
+					false,
+					empty( $this->get_settings() ) ? 'disabled' : null
+				); ?>
+			<?php endif; ?>
+		</form>
 		<?php
-	}
-
-	/**
-	 * Register all settings.
-	 *
-	 * @throws ReflectionException
-	 */
-	public function register_settings() {
-		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED && $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) {
-			$this->active_tab = apply_filters( 'omgf_admin_settings_active_tab', self::OMGF_SETTINGS_FIELD_OPTIMIZE );
-		}
-
-		foreach ( $this->get_settings() as $constant => $value ) {
-			register_setting(
-				$this->active_tab,
-				$value
-			);
-		}
 	}
 
 	/**
@@ -349,15 +346,13 @@ class Settings extends Admin {
 	}
 
 	/**
-	 * Add Local Fonts tab to Settings Screen.
-	 *
-	 * @return void
+	 * Add Advanced Settings Tab to Settings Screen.
 	 */
-	public function optimize_fonts_tab() {
+	public function advanced_settings_tab() {
 		$this->generate_tab(
-			self::OMGF_SETTINGS_FIELD_OPTIMIZE,
-			'dashicons-performance',
-			__( 'Local Fonts', 'host-webfonts-local' )
+			self::OMGF_SETTINGS_FIELD_ADVANCED,
+			'dashicons-admin-settings',
+			__( 'Advanced', 'host-webfonts-local' )
 		);
 	}
 
@@ -385,98 +380,19 @@ class Settings extends Admin {
 	}
 
 	/**
-	 * Add Advanced Settings Tab to Settings Screen.
+	 * Creates the menu item.
 	 */
-	public function advanced_settings_tab() {
-		$this->generate_tab(
-			self::OMGF_SETTINGS_FIELD_ADVANCED,
-			'dashicons-admin-settings',
-			__( 'Advanced', 'host-webfonts-local' )
+	public function create_menu() {
+		$title = apply_filters( 'omgf_settings_page_title', 'OMGF' );
+		add_options_page(
+			$title,
+			$title,
+			'manage_options',
+			self::OMGF_ADMIN_PAGE,
+			[ $this, 'create_settings_page' ]
 		);
-	}
 
-	/**
-	 * Add Help Tab to Settings Screen.
-	 *
-	 * @return void
-	 */
-	public function help_tab() {
-		$this->generate_tab(
-			self::OMGF_SETTINGS_FIELD_HELP,
-			'dashicons-editor-help',
-			__( 'Help', 'host-webfonts-local' )
-		);
-	}
-
-	/**
-	 *
-	 */
-	public function optimize_fonts_content() {
-		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_OPTIMIZE );
-	}
-
-	/**
-	 * @param $field
-	 */
-	private function do_settings_content( $field ) {
-		if ( $this->active_tab !== $field ) {
-			return;
-		}
-		?>
-		<form id="<?php echo esc_attr( $field ); ?>-form" name="omgf-settings-form" method="post"
-			  action="<?php echo apply_filters(
-				  'omgf_form_action',
-				  admin_url( 'options.php?tab=' . $this->active_tab ),
-				  $this->page,
-				  $this->active_tab
-			  ); ?>" autocomplete="off">
-			<?php
-			ob_start();
-			settings_fields( $field );
-			/**
-			 * We use a custom update action, so we can group all settings in one DB row upon form submit.
-			 *
-			 * @see \OMGF\Helper update_options()
-			 */
-			$settings_fields = ob_get_clean();
-			$settings_fields = str_replace( 'value="update"', 'value="omgf-update"', $settings_fields );
-			echo $settings_fields;
-			do_settings_sections( $field );
-
-			do_action( 'omgf_before_settings_form_settings' );
-
-			echo do_action( str_replace( '-', '_', $field ) . '_content', '' );
-
-			do_action( 'omgf_after_settings_form_settings' );
-
-			?>
-			<?php if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) : ?>
-				<?php submit_button(
-					$this->submit_button_text,
-					'primary',
-					'submit',
-					false,
-					empty( $this->get_settings() ) ? 'disabled' : null
-				); ?>
-			<?php endif; ?>
-		</form>
-		<?php
-	}
-
-	/**
-	 * Render Advanced Settings content
-	 */
-	public function advanced_settings_content() {
-		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_ADVANCED );
-	}
-
-	/**
-	 * Render Help content
-	 *
-	 * @return void
-	 */
-	public function help_content() {
-		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_HELP );
+		add_action( 'admin_init', [ $this, 'register_settings' ] );
 	}
 
 	/**
@@ -490,6 +406,28 @@ class Settings extends Admin {
 		array_push( $links, $settingsLink );
 
 		return $links;
+	}
+
+	/**
+	 * Display the settings page.
+	 */
+	public function create_settings_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( "You're not cool enough to access this page.", 'host-webfonts-local' ) );
+		}
+		?>
+		<div class="wrap omgf">
+			<h1>
+				<?php echo apply_filters( 'omgf_settings_page_title', __( 'OMGF | Optimize My Google Fonts', 'host-webfonts-local' ) ); ?>
+			</h1>
+			<div class="settings-column">
+				<h2 class="omgf-nav nav-tab-wrapper">
+					<?php do_action( 'omgf_settings_tab' ); ?>
+				</h2>
+				<?php do_action( 'omgf_settings_content' ); ?>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
@@ -580,5 +518,65 @@ class Settings extends Admin {
 		$text .= '</span>';
 
 		return $text;
+	}
+
+	/**
+	 * Render Help content
+	 *
+	 * @return void
+	 */
+	public function help_content() {
+		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_HELP );
+	}
+
+	/**
+	 * Add Help Tab to Settings Screen.
+	 *
+	 * @return void
+	 */
+	public function help_tab() {
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_HELP,
+			'dashicons-editor-help',
+			__( 'Help', 'host-webfonts-local' )
+		);
+	}
+
+	/**
+	 *
+	 */
+	public function optimize_fonts_content() {
+		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_OPTIMIZE );
+	}
+
+	/**
+	 * Add Local Fonts tab to Settings Screen.
+	 *
+	 * @return void
+	 */
+	public function optimize_fonts_tab() {
+		$this->generate_tab(
+			self::OMGF_SETTINGS_FIELD_OPTIMIZE,
+			'dashicons-performance',
+			__( 'Local Fonts', 'host-webfonts-local' )
+		);
+	}
+
+	/**
+	 * Register all settings.
+	 *
+	 * @throws ReflectionException
+	 */
+	public function register_settings() {
+		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_OPTIMIZE && $this->active_tab !== self::OMGF_SETTINGS_FIELD_ADVANCED && $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) {
+			$this->active_tab = apply_filters( 'omgf_admin_settings_active_tab', self::OMGF_SETTINGS_FIELD_OPTIMIZE );
+		}
+
+		foreach ( $this->get_settings() as $constant => $value ) {
+			register_setting(
+				$this->active_tab,
+				$value
+			);
+		}
 	}
 }
