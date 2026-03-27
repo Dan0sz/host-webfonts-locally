@@ -385,6 +385,8 @@ class Process {
 			return $html;
 		}
 
+		do_action( 'omgf_return_buffer' );
+
 		return apply_filters( 'omgf_buffer_output', $html );
 	}
 
@@ -492,7 +494,7 @@ class Process {
 		}
 
 		/**
-		 * Use string position of $search to make sure only that instance of the string is replaced.
+		 * Use the string position of $search to make sure only that instance of the string is replaced.
 		 * This is to prevent duplicate replaces.
 		 *
 		 * @since v5.3.7

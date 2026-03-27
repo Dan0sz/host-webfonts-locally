@@ -43,6 +43,7 @@ class Compatibility {
 	 */
 	public function load_global_plugin_compatibility_fixes() {
 		new Compatibility\Core();
+		new Compatibility\CachingPlugins();
 
 		if ( defined( 'ELEMENTOR_VERSION' ) ) {
 			new Compatibility\Elementor();
