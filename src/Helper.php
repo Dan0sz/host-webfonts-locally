@@ -318,6 +318,14 @@ class Helper {
 	 * @return void
 	 */
 	public static function flush_third_party_cache() {
+		static $flushed = false;
+
+		if ( $flushed ) {
+			return;
+		}
+
+		$flushed = true;
+
 		$cache = new Cache();
 
 		$cache->flush_third_party();
