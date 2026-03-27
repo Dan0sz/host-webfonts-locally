@@ -143,23 +143,9 @@ class Ajax {
 			}
 		);
 
-		$this->empty_cache();
+		OMGF::flush_cache();
 
 		delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
-	}
-
-	/**
-	 * Empties all cache-related entries in the database.
-	 *
-	 * @param string $initiator
-	 *
-	 * @return void
-	 *
-	 * @codeCoverageIgnore because this works the file system.
-	 * @throws \ReflectionException
-	 */
-	private function empty_cache( $initiator = 'optimize-webfonts' ) {
-		Cache::flush();
 	}
 
 	/**
@@ -179,7 +165,7 @@ class Ajax {
 		try {
 			$init = $_POST['init'] ?? '';
 
-			$this->empty_cache( $init );
+			OMGF::flush_cache( $init );
 
 			Notice::set_notice( __( 'Cache directory successfully emptied.', 'host-webfonts-local' ) );
 		} catch ( \Exception $e ) {

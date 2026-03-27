@@ -18,6 +18,7 @@ class Core {
 	 * Flush cache.
 	 *
 	 * @return void
+	 * @throws \ReflectionException
 	 */
 	public function flush_cache() {
 		OMGF::flush_cache();

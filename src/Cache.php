@@ -12,14 +12,14 @@ class Cache {
 	 * @return void
 	 * @throws \ReflectionException
 	 */
-	public static function flush() {
+	public function flush( $initiator ) {
 		$entries    = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*' ) );
 		$flush_rows = OMGF::get_db_rows_by( [ 'OMGF_FLAG_', 'OMGF_DB_', 'OMGF_OPTIMIZE_SETTING_' ], [ Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE, Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION ] );
 
 		$instructions = apply_filters(
 			'omgf_clean_up_instructions',
 			[
-				'init'    => 'flush',
+				'init'    => $initiator,
 				'exclude' => [],
 				'queue'   => $flush_rows,
 			]
@@ -46,7 +46,7 @@ class Cache {
 	 *
 	 * @return void
 	 */
-	public static function flush_third_party() {
+	public function flush_third_party() {
 		$cache_keys = array_values( OMGF::cache_keys() );
 		$entries    = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*', GLOB_ONLYDIR ) );
 
