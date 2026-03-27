@@ -307,6 +307,14 @@ class Helper {
 	 * @throws \ReflectionException
 	 */
 	public static function flush_cache( $initiator = 'optimize-webfonts' ) {
+		static $flushed = false;
+
+		if ( $flushed ) {
+			return;
+		}
+
+		$flushed = true;
+
 		$cache = new Cache();
 
 		$cache->flush( $initiator );
