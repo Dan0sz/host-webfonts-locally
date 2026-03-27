@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -248,6 +248,33 @@ class Process {
 	}
 
 	/**
+	 * Adds a little success message to the HTML to create a more logic user flow when manually optimizing pages.
+	 *
+	 * @param string $html Valid HTML
+	 *
+	 * @return string
+	 */
+	public function add_success_message( $html ) {
+		if ( ! current_user_can( 'manage_options' ) || ! isset( $_GET['omgf_optimize'] ) || wp_doing_ajax() ) {
+			return $html;
+		}
+
+		$parts = preg_split( '/(<body.*?>)/', $html, - 1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
+
+		if ( empty( $parts[0] ) || empty( $parts[1] ) || empty( $parts[2] ) ) {
+			return $html;
+		}
+
+		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
+		$message     = sprintf(
+			__( 'Google Fonts optimization completed. Return to the <a href="%s">settings screen</a> to see the results.', 'host-webfonts-local' ),
+			admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE )
+		);
+
+		return $parts[0] . $parts[1] . sprintf( $message_div, $message ) . $parts[2];
+	}
+
+	/**
 	 * Start the output buffer.
 	 *
 	 * @action template_redirect
@@ -348,92 +375,6 @@ class Process {
 		if ( current_user_can( 'manage_options' ) && self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() ) {
 			update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
 		}
-	}
-
-	/**
-	 * Returns the buffer for filtering, so page cache doesn't break.
-	 *
-	 * @since v5.0.0 Tested with:
-	 *               - Asset Cleanup Pro
-	 *                 - Works
-	 *               - Cache Enabler v1.8.7
-	 *                 - Default Settings
-	 *               - Kinsta Cache (Same as Cache Enabler?)
-	 *                 - Works on Daan.dev
-	 *               - LiteSpeed Cache
-	 *                 - Don't know (Gal Baras tested it: https://wordpress.org/support/topic/completely-broke-wp-rocket-plugin/#post-15377538)
-	 *               - W3 Total Cache v2.2.1:
-	 *                 - Page Cache: Disk (basic)
-	 *                 - Database/Object Cache: Off
-	 *                 - JS/CSS minify/combine: On
-	 *               - WP Fastest Cache v0.9.5
-	 *                 - JS/CSS minify/combine: On
-	 *                 - Page Cache: On
-	 *               - WP Rocket v3.8.8:
-	 *                 - Page Cache: Enabled
-	 *                 - JS/CSS minify/combine: Enabled
-	 *               - WP Super Cache v1.7.4
-	 *                 - Page Cache: Enabled
-	 * Not tested (yet):
-	 * TODO: [OMGF-41] - Swift Performance
-	 * @return string Valid HTML
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function return_buffer( $html ) {
-		if ( ! $html ) {
-			return $html;
-		}
-
-		do_action( 'omgf_return_buffer' );
-
-		return apply_filters( 'omgf_buffer_output', $html );
-	}
-
-	/**
-	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
-	 *
-	 * @since v5.0.5 Use a regular expression to match all resource hints.
-	 *
-	 * @param string $html Valid HTML.
-	 *
-	 * @return string Valid HTML.
-	 */
-	public function remove_resource_hints( $html ) {
-		/**
-		 * @since v5.1.5 Use a lookaround that matches all link elements, because otherwise
-		 *               matches grow past their supposed boundaries.
-		 */
-		preg_match_all( '/(?=<link).+?(?<=>)/s', $html, $resource_hints );
-
-		if ( empty( $resource_hints[0] ) ) {
-			return $html; // @codeCoverageIgnore
-		}
-
-		/**
-		 * @since v5.1.5 Filter out any resource hints with a href pointing to Google Fonts' APIs.
-		 * @since v5.2.1 Use preg_match() to exactly match an element's attribute, since 3rd party
-		 *               plugins (e.g. Asset Cleanup) also tend to include their own custom attributes,
-		 *               e.g. data-wpacu-to-be-preloaded, which would also match in strpos('preload', $match).
-		 */
-		$search = array_filter(
-			$resource_hints[0],
-			function ( $resource_hint ) {
-				preg_match( '/href=[\'"](https?:)?\/\/(.*?)[\'"\/]/', $resource_hint, $url );
-				preg_match( '/rel=[\'"](.*?)[ \'"]/', $resource_hint, $attr );
-
-				if ( empty( $url[2] ) || empty( $attr[1] ) ) {
-					return false; // @codeCoverageIgnore
-				}
-
-				$url  = $url[2];
-				$attr = $attr[1];
-
-				return ! empty( preg_grep( "/$url/", self::RESOURCE_HINTS_URLS ) ) && in_array( $attr, self::RESOURCE_HINTS_ATTR );
-			}
-		);
-
-		return str_replace( $search, '', $html );
 	}
 
 	/**
@@ -712,29 +653,88 @@ class Process {
 	}
 
 	/**
-	 * Adds a little success message to the HTML to create a more logic user flow when manually optimizing pages.
+	 * We're downloading the fonts, so preconnecting to Google is a waste of time. Literally.
 	 *
-	 * @param string $html Valid HTML
+	 * @since v5.0.5 Use a regular expression to match all resource hints.
 	 *
-	 * @return string
+	 * @param string $html Valid HTML.
+	 *
+	 * @return string Valid HTML.
 	 */
-	public function add_success_message( $html ) {
-		if ( ! current_user_can( 'manage_options' ) || ! isset( $_GET['omgf_optimize'] ) || wp_doing_ajax() ) {
-			return $html;
+	public function remove_resource_hints( $html ) {
+		/**
+		 * @since v5.1.5 Use a lookaround that matches all link elements, because otherwise
+		 *               matches grow past their supposed boundaries.
+		 */
+		preg_match_all( '/(?=<link).+?(?<=>)/s', $html, $resource_hints );
+
+		if ( empty( $resource_hints[0] ) ) {
+			return $html; // @codeCoverageIgnore
 		}
 
-		$parts = preg_split( '/(<body.*?>)/', $html, - 1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
+		/**
+		 * @since v5.1.5 Filter out any resource hints with a href pointing to Google Fonts' APIs.
+		 * @since v5.2.1 Use preg_match() to exactly match an element's attribute, since 3rd party
+		 *               plugins (e.g. Asset Cleanup) also tend to include their own custom attributes,
+		 *               e.g. data-wpacu-to-be-preloaded, which would also match in strpos('preload', $match).
+		 */
+		$search = array_filter(
+			$resource_hints[0],
+			function ( $resource_hint ) {
+				preg_match( '/href=[\'"](https?:)?\/\/(.*?)[\'"\/]/', $resource_hint, $url );
+				preg_match( '/rel=[\'"](.*?)[ \'"]/', $resource_hint, $attr );
 
-		if ( empty( $parts[0] ) || empty( $parts[1] ) || empty( $parts[2] ) ) {
-			return $html;
-		}
+				if ( empty( $url[2] ) || empty( $attr[1] ) ) {
+					return false; // @codeCoverageIgnore
+				}
 
-		$message_div = '<div class="omgf-optimize-success-message" style="padding: 25px 15px 15px; background-color: #fff; border-left: 3px solid #00a32a; border-top: 1px solid #c3c4c7; border-bottom: 1px solid #c3c4c7; border-right: 1px solid #c3c4c7; margin: 5px 20px 15px; font-family: Arial, \'Helvetica Neue\', sans-serif; font-weight: bold; font-size: 13px; color: #3c434a;"><span>%s</span></div>';
-		$message     = sprintf(
-			__( 'Google Fonts optimization completed. Return to the <a href="%s">settings screen</a> to see the results.', 'host-webfonts-local' ),
-			admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE )
+				$url  = $url[2];
+				$attr = $attr[1];
+
+				return ! empty( preg_grep( "/$url/", self::RESOURCE_HINTS_URLS ) ) && in_array( $attr, self::RESOURCE_HINTS_ATTR );
+			}
 		);
 
-		return $parts[0] . $parts[1] . sprintf( $message_div, $message ) . $parts[2];
+		return str_replace( $search, '', $html );
+	}
+
+	/**
+	 * Returns the buffer for filtering, so page cache doesn't break.
+	 *
+	 * @since v5.0.0 Tested with:
+	 *               - Asset Cleanup Pro
+	 *                 - Works
+	 *               - Cache Enabler v1.8.7
+	 *                 - Default Settings
+	 *               - Kinsta Cache (Same as Cache Enabler?)
+	 *                 - Works on Daan.dev
+	 *               - LiteSpeed Cache
+	 *                 - Don't know (Gal Baras tested it: https://wordpress.org/support/topic/completely-broke-wp-rocket-plugin/#post-15377538)
+	 *               - W3 Total Cache v2.2.1:
+	 *                 - Page Cache: Disk (basic)
+	 *                 - Database/Object Cache: Off
+	 *                 - JS/CSS minify/combine: On
+	 *               - WP Fastest Cache v0.9.5
+	 *                 - JS/CSS minify/combine: On
+	 *                 - Page Cache: On
+	 *               - WP Rocket v3.8.8:
+	 *                 - Page Cache: Enabled
+	 *                 - JS/CSS minify/combine: Enabled
+	 *               - WP Super Cache v1.7.4
+	 *                 - Page Cache: Enabled
+	 * Not tested (yet):
+	 * TODO: [OMGF-41] - Swift Performance
+	 * @return string Valid HTML
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function return_buffer( $html ) {
+		if ( ! $html ) {
+			return $html;
+		}
+
+		do_action( 'omgf_return_buffer' );
+
+		return apply_filters( 'omgf_buffer_output', $html );
 	}
 }

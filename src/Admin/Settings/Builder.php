@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -43,6 +43,83 @@ class Builder {
 	/**
 	 *
 	 */
+	public function do_after() {
+		?>
+		</table>
+		<?php
+	}
+
+	/**
+	 *
+	 */
+	public function do_before() { ?>
+		<table class="form-table">
+		<?php
+	}
+
+	/**
+	 * Generate checkbox setting.
+	 *
+	 * @param $label
+	 * @param $name
+	 * @param $checked
+	 * @param $description
+	 */
+	public function do_checkbox( $label, $name, $checked, $description, $disabled = false, $td_classes = '' ) {
+		?>
+		<tr>
+			<th scope="row"><?php echo esc_attr( apply_filters( $name . '_setting_label', $label ) ); ?></th>
+			<td <?php echo esc_attr( $td_classes ? "class=$td_classes" : '' ); ?>>
+				<label for="<?php echo esc_attr( $name ); ?>">
+					<?php if ( ! $disabled ) : ?>
+						<input type="hidden" name="omgf_settings[<?php echo esc_attr( $name ); ?>]" value="0"/>
+					<?php endif; ?>
+					<input id="<?php echo esc_attr( $name ); ?>" type="checkbox" <?php echo apply_filters(
+						$name . '_setting_disabled',
+						$disabled
+					) ? 'disabled' : ''; ?> class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>"
+						   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" <?php echo esc_attr(
+						$checked ? 'checked = "checked"' : ''
+					); ?>
+						   value="on"/>
+					<?php echo wp_kses_post(
+						apply_filters( $name . '_setting_description', $description )
+					); ?>
+				</label>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Generate number setting.
+	 *
+	 * @param $label
+	 * @param $name
+	 * @param $value
+	 * @param $description
+	 */
+	public function do_number( $label, $name, $value, $description, $min = 0, $visible = true ) {
+		?>
+		<tr valign="top" <?php echo $visible ? '' : 'style="display: none;"'; ?>>
+			<th scope="row"><?php echo esc_html( apply_filters( $name . '_setting_label', $label ) ); ?></th>
+			<td>
+				<input class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>" type="number"
+					   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" min="<?php echo esc_attr( $min ); ?>"
+					   value="<?php echo esc_attr( $value ); ?>"/>
+				<p class="description">
+					<?php echo wp_kses_post(
+						apply_filters( $name . '_setting_description', $description )
+					); ?>
+				</p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 *
+	 */
 	public function do_promo() {
 		if ( apply_filters( 'apply_omgf_pro_promo', true ) ) {
 			$this->promo = apply_filters(
@@ -56,32 +133,6 @@ class Builder {
 				)
 			);
 		}
-	}
-
-	/**
-	 *
-	 */
-	public function do_before() { ?>
-		<table class="form-table">
-		<?php
-	}
-
-	/**
-	 *
-	 */
-	public function do_after() {
-		?>
-		</table>
-		<?php
-	}
-
-	/**
-	 *
-	 */
-	public function do_title() {
-		?>
-		<h3><?php echo esc_html( $this->title ); ?></h3>
-		<?php
 	}
 
 	/**
@@ -178,32 +229,6 @@ class Builder {
 	}
 
 	/**
-	 * Generate number setting.
-	 *
-	 * @param $label
-	 * @param $name
-	 * @param $value
-	 * @param $description
-	 */
-	public function do_number( $label, $name, $value, $description, $min = 0, $visible = true ) {
-		?>
-		<tr valign="top" <?php echo $visible ? '' : 'style="display: none;"'; ?>>
-			<th scope="row"><?php echo esc_html( apply_filters( $name . '_setting_label', $label ) ); ?></th>
-			<td>
-				<input class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>" type="number"
-					   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" min="<?php echo esc_attr( $min ); ?>"
-					   value="<?php echo esc_attr( $value ); ?>"/>
-				<p class="description">
-					<?php echo wp_kses_post(
-						apply_filters( $name . '_setting_description', $description )
-					); ?>
-				</p>
-			</td>
-		</tr>
-		<?php
-	}
-
-	/**
 	 * Generate text setting.
 	 *
 	 * @param        $label
@@ -234,36 +259,11 @@ class Builder {
 	}
 
 	/**
-	 * Generate checkbox setting.
 	 *
-	 * @param $label
-	 * @param $name
-	 * @param $checked
-	 * @param $description
 	 */
-	public function do_checkbox( $label, $name, $checked, $description, $disabled = false, $td_classes = '' ) {
+	public function do_title() {
 		?>
-		<tr>
-			<th scope="row"><?php echo esc_attr( apply_filters( $name . '_setting_label', $label ) ); ?></th>
-			<td <?php echo esc_attr( $td_classes ? "class=$td_classes" : '' ); ?>>
-				<label for="<?php echo esc_attr( $name ); ?>">
-					<?php if ( ! $disabled ) : ?>
-						<input type="hidden" name="omgf_settings[<?php echo esc_attr( $name ); ?>]" value="0"/>
-					<?php endif; ?>
-					<input id="<?php echo esc_attr( $name ); ?>" type="checkbox" <?php echo apply_filters(
-						$name . '_setting_disabled',
-						$disabled
-					) ? 'disabled' : ''; ?> class="<?php echo esc_attr( str_replace( '_', '-', $name ) ); ?>"
-						   name="omgf_settings[<?php echo esc_attr( $name ); ?>]" <?php echo esc_attr(
-						$checked ? 'checked = "checked"' : ''
-					); ?>
-						   value="on"/>
-					<?php echo wp_kses_post(
-						apply_filters( $name . '_setting_description', $description )
-					); ?>
-				</label>
-			</td>
-		</tr>
+		<h3><?php echo esc_html( $this->title ); ?></h3>
 		<?php
 	}
 }
