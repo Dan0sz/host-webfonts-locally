@@ -4,6 +4,9 @@ namespace OMGF\Compatibility;
 
 use OMGF\Helper as OMGF;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Core {
 	/**
 	 * Build class.

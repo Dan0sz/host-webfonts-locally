@@ -27,7 +27,7 @@ class Cache {
 
 		foreach ( $entries as $entry ) {
 			if ( in_array( $entry, $instructions['exclude'] ) ) {
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			OMGF::delete( $entry );
