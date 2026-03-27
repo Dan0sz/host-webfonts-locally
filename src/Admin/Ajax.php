@@ -16,6 +16,7 @@
 
 namespace OMGF\Admin;
 
+use OMGF\Cache;
 use OMGF\Helper as OMGF;
 
 class Ajax {
@@ -120,6 +121,7 @@ class Ajax {
 	 * Removes the stale cache mark. Should be triggered along with a form submit.
 	 *
 	 * @codeCoverageIgnore Because all it does, basically, is delete an option from the DB.
+	 * @throws \ReflectionException
 	 */
 	public function refresh_cache() {
 		check_ajax_referer( Settings::OMGF_ADMIN_PAGE, 'nonce' );
@@ -154,33 +156,10 @@ class Ajax {
 	 * @return void
 	 *
 	 * @codeCoverageIgnore because this works the file system.
+	 * @throws \ReflectionException
 	 */
 	private function empty_cache( $initiator = 'optimize-webfonts' ) {
-		$entries    = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*' ) );
-		$flush_rows = OMGF::get_db_rows_by( [ 'OMGF_FLAG_', 'OMGF_DB_', 'OMGF_OPTIMIZE_SETTING_' ], [ Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE, Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION ] );
-
-		$instructions = apply_filters(
-			'omgf_clean_up_instructions',
-			[
-				'init'    => $initiator,
-				'exclude' => [],
-				'queue'   => $flush_rows,
-			]
-		);
-
-		foreach ( $entries as $entry ) {
-			if ( in_array( $entry, $instructions['exclude'] ) ) {
-				continue;
-			}
-
-			OMGF::delete( $entry );
-		}
-
-		foreach ( $instructions['queue'] as $option ) {
-			OMGF::delete_option( $option );
-		}
-
-		do_action( 'omgf_after_clean_up' );
+		Cache::flush();
 	}
 
 	/**

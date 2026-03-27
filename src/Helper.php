@@ -61,6 +61,24 @@ class Helper {
 	private static $subsets = [];
 
 	/**
+	 * Flush the entire OMGF cache.
+	 *
+	 * @return void
+	 */
+	public static function flush_cache() {
+		Cache::flush();
+	}
+
+	/**
+	 * Flush only 3rd party stylesheet cache directories.
+	 *
+	 * @return void
+	 */
+	public static function flush_third_party_cache() {
+		Cache::flush_third_party();
+	}
+
+	/**
 	 * This is basically a wrapper around update_option() to offer a centralized interface for
 	 * storing OMGF's settings in the wp_options table.
 	 *
