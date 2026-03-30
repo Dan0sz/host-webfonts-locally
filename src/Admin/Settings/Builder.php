@@ -69,7 +69,7 @@ class Builder {
 		?>
 		<tr>
 			<th scope="row"><?php echo esc_attr( apply_filters( $name . '_setting_label', $label ) ); ?></th>
-			<td <?php echo esc_attr( $td_classes ? "class=$td_classes" : '' ); ?>>
+			<td <?php echo $td_classes ? ' class="' . esc_attr( $td_classes ) . '"' : ''; ?>>
 				<label for="<?php echo esc_attr( $name ); ?>">
 					<?php if ( ! $disabled ) : ?>
 						<input type="hidden" name="omgf_settings[<?php echo esc_attr( $name ); ?>]" value="0"/>
