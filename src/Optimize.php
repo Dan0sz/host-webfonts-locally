@@ -233,12 +233,14 @@ class Optimize {
 		$written = @file_put_contents( $local_file, $stylesheet );
 		$length  = strlen( $stylesheet );
 
+		/** @codeCoverageIgnoreStart */
 		if ( $written === false || $written !== $length ) {
 			OMGF::debug( __( 'Failed to write stylesheet:', 'host-webfonts-local' ) . ' ' . $local_file );
 			OMGF::delete( $local_file );
 
 			return '';
 		}
+		/** @codeCoverageIgnoreEnd */
 
 		/**
 		 * @var object $fonts_bak is used to list the fonts in wp-admin (and for loading preloads in the frontend.)
