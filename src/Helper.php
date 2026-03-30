@@ -218,23 +218,31 @@ class Helper {
 	 * @return bool|void
 	 */
 	public static function delete( $entry ) {
+		if ( ! file_exists( $entry ) ) {
+			return true;
+		}
+
 		if ( is_link( $entry ) ) {
 			return unlink( $entry );
 		}
 
 		if ( is_dir( $entry ) ) {
-			$file = new \FilesystemIterator( $entry );
+			$file    = new \FilesystemIterator( $entry );
+			$success = true;
 
 			// If dir is empty, valid() returns false.
 			while ( $file->valid() ) {
-				self::delete( $file->getPathName() );
+				if ( ! self::delete( $file->getPathname() ) ) {
+					$success = false;
+				}
+
 				$file->next();
 			}
 
-			rmdir( $entry );
-		} else {
-			unlink( $entry );
+			return rmdir( $entry ) && $success;
 		}
+
+		return unlink( $entry );
 	}
 
 	/**
