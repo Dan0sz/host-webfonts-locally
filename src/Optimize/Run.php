@@ -65,13 +65,11 @@ class Run {
 
 	/**
 	 * @param $response WP_Error|array
-	 *
-	 * @codeCoverageIgnore
 	 */
 	private function frontend_fetch_failed( $response ) {
 		if ( $response instanceof \WP_REST_Response && $response->is_error() ) {
 			// Convert to WP_Error if WP_REST_Response
-			$response = $response->as_error();
+			$response = $response->as_error(); // @codeCoverageIgnore
 		}
 
 		add_settings_error(
@@ -80,10 +78,10 @@ class Run {
 			sprintf(
 				__( '%s encountered an error while fetching this site\'s frontend HTML', 'host-webfonts-local' ),
 				apply_filters( 'omgf_settings_page_title', 'OMGF' )
-			) . ': ' . $this->get_error_code( $response ) . ' - ' . $this->get_error_message( $response ),
-			'error'
+			) . ': ' . $this->get_error_code( $response ) . ' - ' . $this->get_error_message( $response )
 		);
 
+		// @codeCoverageIgnoreStart
 		if ( $this->get_error_code( $response ) == '403' ) {
 			Notice::set_notice(
 				sprintf(
@@ -97,6 +95,7 @@ class Run {
 				'info'
 			);
 		}
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**

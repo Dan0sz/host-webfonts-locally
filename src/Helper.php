@@ -535,7 +535,7 @@ class Helper {
 			]
 		);
 
-		return add_query_arg( $args, $url );
+		return apply_filters( 'omgf_filter_optimize_url', add_query_arg( $args, $url ) );
 	}
 
 	/**

@@ -26,7 +26,29 @@ class Plugin {
 	 */
 	public function __construct() {
 		$this->define_constants();
+		$this->init();
+	}
 
+	/**
+	 * Define constants.
+	 *
+	 * @codeCoverageIgnore
+	 */
+	private function define_constants() {
+		if ( defined( 'OMGF_UPLOAD_URL' ) ) {
+			return;
+		}
+
+		/** Prevents undefined constant errors in OMGF Pro if it's not at version v3.3.0 (yet) */
+		define( 'OMGF_OPTIMIZATION_MODE', false );
+		define( 'OMGF_SITE_URL', 'https://daan.dev' );
+		define( 'OMGF_CACHE_IS_STALE', OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
+		define( 'OMGF_CURRENT_DB_VERSION', OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION, '1.0.0' ) );
+		define( 'OMGF_UPLOAD_DIR', apply_filters( 'omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf' ) );
+		define( 'OMGF_UPLOAD_URL', apply_filters( 'omgf_upload_url', str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' ) ) );
+	}
+
+	private function init() {
 		if ( version_compare( OMGF_CURRENT_DB_VERSION, OMGF_DB_VERSION ) < 0 ) {
 			add_action( 'plugins_loaded', [ $this, 'do_migrate_db' ] );
 		}
@@ -53,25 +75,9 @@ class Plugin {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
 			register_uninstall_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'do_uninstall' ] ); // @codeCoverageIgnore
 		}
-	}
 
-	/**
-	 * Define constants.
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function define_constants() {
-		if ( defined( 'OMGF_UPLOAD_URL' ) ) {
-			return;
-		}
-
-		/** Prevents undefined constant errors in OMGF Pro if it's not at version v3.3.0 (yet) */
-		define( 'OMGF_OPTIMIZATION_MODE', false );
-		define( 'OMGF_SITE_URL', 'https://daan.dev' );
-		define( 'OMGF_CACHE_IS_STALE', esc_attr( OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) ) );
-		define( 'OMGF_CURRENT_DB_VERSION', esc_attr( OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION ) ) );
-		define( 'OMGF_UPLOAD_DIR', apply_filters( 'omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf' ) );
-		define( 'OMGF_UPLOAD_URL', apply_filters( 'omgf_upload_url', str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' ) ) );
+		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'maybe_install_mu_plugin' ] );
+		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'uninstall_mu_plugin' ] );
 	}
 
 	/**
