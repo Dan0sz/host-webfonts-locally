@@ -39,7 +39,6 @@ class Avada extends CompatibilityHookRegistrar {
 	 *
 	 * @param $post_id
 	 * @param $post
-	 * @param $update
 	 *
 	 * @return void
 	 */
