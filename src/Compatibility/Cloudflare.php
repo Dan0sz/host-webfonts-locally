@@ -1,7 +1,24 @@
 <?php
+/* * * * * * * * * * * * * * * * * * * * *
+*
+*  ██████╗ ███╗   ███╗ ██████╗ ███████╗
+* ██╔═══██╗████╗ ████║██╔════╝ ██╔════╝
+* ██║   ██║██╔████╔██║██║  ███╗█████╗
+* ██║   ██║██║╚██╔╝██║██║   ██║██╔══╝
+* ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║
+*  ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝
+*
+* @package  : OMGF
+* @author   : Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
+* @url      : https://daan.dev
+* * * * * * * * * * * * * * * * * * * */
 
 namespace OMGF\Compatibility;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Cloudflare {
 	const MU_PLUGIN_FILENAME = 'omgf-cloudflare-compatibility.php';
 

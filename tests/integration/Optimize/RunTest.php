@@ -29,7 +29,7 @@ class RunTest extends TestCase {
 
 		try {
 			$filter_home_url = function () {
-				return 'http://non-existing-domain.tld';
+				return 'http://example.invalid';
 			};
 			add_filter( 'omgf_filter_optimize_url', $filter_home_url );
 
