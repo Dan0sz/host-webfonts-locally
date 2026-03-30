@@ -31,7 +31,7 @@ class Avada extends CompatibilityHookRegistrar {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'wp_after_insert_post', [ $this, 'maybe_flush_third_party_cache' ], 10, 3 );
+		add_action( 'wp_after_insert_post', [ $this, 'maybe_flush_third_party_cache' ], 10, 2 );
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Avada extends CompatibilityHookRegistrar {
 	 *
 	 * @return void
 	 */
-	public function maybe_flush_third_party_cache( $post_id, $post, $update ) {
+	public function maybe_flush_third_party_cache( $post_id, $post ) {
 		if ( $post->post_status !== 'publish' || wp_is_post_revision( $post_id ) ) {
 			return;
 		}
