@@ -29,6 +29,7 @@ class Uninstall {
 
 	/**
 	 *
+	 * @throws \ReflectionException
 	 */
 	public function __construct() {
 		$this->cache_dir = OMGF_UPLOAD_DIR;
