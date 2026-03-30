@@ -215,15 +215,15 @@ class Helper {
 	 *
 	 * @param $entry
 	 *
-	 * @return bool|void
+	 * @return bool
 	 */
 	public static function delete( $entry ) {
-		if ( ! file_exists( $entry ) ) {
-			return true;
-		}
-
 		if ( is_link( $entry ) ) {
 			return unlink( $entry );
+		}
+
+		if ( ! file_exists( $entry ) ) {
+			return true;
 		}
 
 		if ( is_dir( $entry ) ) {
