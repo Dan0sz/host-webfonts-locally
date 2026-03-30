@@ -21,5 +21,5 @@ namespace OMGF\Compatibility;
  */
 class BeaverBuilder extends CompatibilityHookRegistrar {
 	/** @var array $hooks */
-	protected $hooks = [ 'fl_builder_after_save_layout' => 'flush_third_party_cache' ];
+	protected $hooks = [ 'fl_builder_after_save_layout' => self::HOOK_FLUSH_THIRD_PARTY ];
 }

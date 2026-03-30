@@ -22,8 +22,8 @@ namespace OMGF\Compatibility;
 class Core extends CompatibilityHookRegistrar {
 	/** @var array $hooks */
 	protected $hooks = [
-		'switch_theme'                => 'flush_cache',
-		'upgrader_process_complete'   => 'flush_third_party_cache',
-		'permalink_structure_changed' => 'flush_third_party_cache',
+		'switch_theme'                => self::HOOK_FLUSH_CACHE,
+		'upgrader_process_complete'   => self::HOOK_FLUSH_THIRD_PARTY,
+		'permalink_structure_changed' => self::HOOK_FLUSH_THIRD_PARTY,
 	];
 }
