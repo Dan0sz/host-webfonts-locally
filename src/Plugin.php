@@ -34,7 +34,7 @@ class Plugin {
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public function define_constants() {
+	private function define_constants() {
 		if ( defined( 'OMGF_UPLOAD_URL' ) ) {
 			return;
 		}
