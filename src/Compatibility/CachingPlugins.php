@@ -36,6 +36,11 @@ class CachingPlugins {
 			return;
 		}
 
+		// Autoptimize
+		if ( class_exists( 'autoptimizeCache' ) ) {
+			\autoptimizeCache::clearall();
+		}
+
 		// FlyingPress
 		if ( has_action( 'flying_press_purge_all' ) ) {
 			do_action( 'flying_press_purge_all' );
