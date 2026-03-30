@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 define( 'OMGF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OMGF_PLUGIN_FILE', __FILE__ );
 define( 'OMGF_PLUGIN_BASENAME', plugin_basename( OMGF_PLUGIN_FILE ) );
-define( 'OMGF_DB_VERSION', '6.2.0' );
+define( 'OMGF_DB_VERSION', '6.3.1' );
 
 /**
  * Takes care of loading classes on demand.
@@ -29,5 +29,3 @@ require_once OMGF_PLUGIN_DIR . 'vendor/autoload.php';
  * All systems GO!!!
  */
 $omgf = new OMGF\Plugin();
-
-register_deactivation_hook( __FILE__, [ '\OMGF\Compatibility\Cloudflare', 'uninstall_mu_plugin' ] );

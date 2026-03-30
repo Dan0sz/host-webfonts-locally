@@ -53,6 +53,8 @@ class Plugin {
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
 			register_uninstall_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'do_uninstall' ] ); // @codeCoverageIgnore
 		}
+
+		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'uninstall_mu_plugin' ] );
 	}
 
 	/**
