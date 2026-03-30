@@ -70,8 +70,10 @@ class Helper {
 	 * @codeCoverageIgnore
 	 */
 	public static function debug_array( $name, $array ) {
-		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-		     ( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES ) ) {
+		$debug_mode = self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE );
+
+		if ( ! $debug_mode ||
+		     ( file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES ) ) {
 			return;
 		}
 
@@ -194,8 +196,10 @@ class Helper {
 	 * @codeCoverageIgnore
 	 */
 	public static function debug( $message ) {
-		if ( ! self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) ||
-		     ( self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE ) && file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES ) ) {
+		$debug_mode = self::get_option( Settings::OMGF_ADV_SETTING_DEBUG_MODE );
+
+		if ( ! $debug_mode ||
+		     ( file_exists( self::log_file() ) && filesize( self::log_file() ) > MB_IN_BYTES ) ) {
 			return;
 		}
 
