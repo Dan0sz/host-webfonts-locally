@@ -41,6 +41,8 @@ class Run {
 		if ( is_wp_error( $front_html ) || wp_remote_retrieve_response_code( $front_html ) != 200 ) {
 			$this->frontend_fetch_failed( $front_html ); // @codeCoverageIgnore
 		} else {
+			do_action( 'omgf_optimize_succeeded' );
+
 			$this->optimization_succeeded();
 		}
 	}

@@ -21,7 +21,7 @@ class CachingPlugins {
 	 * Build class.
 	 */
 	public function __construct() {
-		add_action( 'omgf_return_buffer', [ $this, 'maybe_flush_cache' ] );
+		add_action( 'omgf_optimize_succeeded', [ $this, 'maybe_flush_cache' ] );
 	}
 
 	/**
@@ -32,7 +32,17 @@ class CachingPlugins {
 	 * @codeCoverageIgnore Because it relies on 3rd party plugins.
 	 */
 	public function maybe_flush_cache() {
-		if ( ! isset( $_GET['omgf_optimize'] ) || ! current_user_can( 'manage_options' ) ) {
+		/**
+		 * We will only reach this point if:
+		 * - The `admin_init` action is triggered,
+		 * - This is OMGF's settings page,
+		 * - Settings are updated.
+		 *
+		 * So, finally, we need to check if this is an administrator.
+		 *
+		 * @see \OMGF\Admin\Optimize::init()
+		 */
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
