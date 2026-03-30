@@ -35,12 +35,16 @@ class V631 {
 	}
 
 	/**
-	 * This migration script doesn't do much, besides showing a notice after updating.
+	 * Install the Cloudflare MU plugin.
 	 *
 	 * @return void
 	 */
 	private function init() {
-		Cloudflare::maybe_install_mu_plugin();
+		$installed = Cloudflare::maybe_install_mu_plugin();
+
+		if ( ! $installed ) {
+			return;
+		}
 
 		/**
 		 * Update stored version number.

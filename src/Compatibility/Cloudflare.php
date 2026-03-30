@@ -16,6 +16,8 @@
 
 namespace OMGF\Compatibility;
 
+use OMGF\Helper as OMGF;
+
 /**
  * @codeCoverageIgnore
  */
@@ -27,21 +29,30 @@ class Cloudflare {
 	/**
 	 * Install the mu-plugin if it doesn't exist yet.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public static function maybe_install_mu_plugin() {
 		if ( ! is_plugin_active( 'cloudflare/cloudflare.php' ) ) {
-			return;
+			return true;
 		}
 
 		$destination = WPMU_PLUGIN_DIR . '/' . self::MU_PLUGIN_FILENAME;
 
 		if ( file_exists( $destination ) ) {
-			return;
+			return true;
 		}
 
 		wp_mkdir_p( WPMU_PLUGIN_DIR );
-		copy( self::MU_PLUGIN_SOURCE, $destination );
+
+		$copied = copy( self::MU_PLUGIN_SOURCE, $destination );
+
+		if ( ! $copied ) {
+			OMGF::debug( sprintf( __( 'Could not copy %1$s to %2$s.', 'host-webfonts-local' ), self::MU_PLUGIN_SOURCE, $destination ) );
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
