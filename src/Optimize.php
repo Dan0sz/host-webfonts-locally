@@ -215,7 +215,7 @@ class Optimize {
 					);
 
 					/**
-					 * If file already exists the OMGF_Download class bails early.
+					 * If the file already exists, the OMGF_Download class will bail early.
 					 */
 					$variant->woff2 = OMGF::download( $variant->woff2, $filename, $this->path );
 				}
@@ -230,7 +230,15 @@ class Optimize {
 			wp_mkdir_p( $this->path ); // @codeCoverageIgnore
 		}
 
-		file_put_contents( $local_file, $stylesheet );
+		$written = file_put_contents( $local_file, $stylesheet );
+
+		if ( $written === false || $written === 0 ) {
+			if ( file_exists( $local_file ) ) {
+				unlink( $local_file );
+			}
+
+			return '';
+		}
 
 		/**
 		 * @var object $fonts_bak is used to list the fonts in wp-admin (and for loading preloads in the frontend.)
