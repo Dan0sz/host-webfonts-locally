@@ -16,7 +16,7 @@ class Cloudflare {
 	 *
 	 * @return void
 	 */
-	public static function uninstall_mu_plugin() {
+	public static function uninstall_mu_plugin( $plugin_file = null ) {
 		$destination = WPMU_PLUGIN_DIR . '/' . self::MU_PLUGIN_FILENAME;
 
 		if ( file_exists( $destination ) ) {
@@ -30,6 +30,10 @@ class Cloudflare {
 	 * @return void
 	 */
 	public function maybe_install_mu_plugin() {
+		if ( ! is_plugin_active( 'cloudflare/cloudflare.php' ) ) {
+			return;
+		}
+
 		$destination = WPMU_PLUGIN_DIR . '/' . self::MU_PLUGIN_FILENAME;
 
 		if ( file_exists( $destination ) ) {
