@@ -22,7 +22,9 @@ use OMGF\Helper as OMGF;
  * @codeCoverageIgnore because it depends on 3rd party plugins.
  */
 class CompatibilityHookRegistrar {
-	/** @var array $hooks */
+	/**
+	 * @var array $hooks [ 'hook' => 'callback' ] $hook provided by the 3rd party, $callback should be available in OMGF's Helper class.
+	 */
 	protected $hooks;
 
 	/**
@@ -37,17 +39,14 @@ class CompatibilityHookRegistrar {
 			return;
 		}
 
-		foreach ( $this->hooks as $hook ) {
-			add_action( $hook, [ $this, 'flush_third_party_cache' ] );
+		/**
+		 * @var string $callback In most cases, this will be:
+		 *
+		 * @see Helper::flush_third_party_cache() or,
+		 * @see Helper::flush_cache()
+		 */
+		foreach ( $this->hooks as $hook => $callback ) {
+			add_action( $hook, [ OMGF::class, $callback ] );
 		}
-	}
-
-	/**
-	 * Flush 3rd party cache.
-	 *
-	 * @return void
-	 */
-	public function flush_third_party_cache() {
-		OMGF::flush_third_party_cache();
 	}
 }

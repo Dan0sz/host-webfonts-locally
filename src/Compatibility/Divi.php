@@ -22,7 +22,7 @@ namespace OMGF\Compatibility;
 class Divi extends CompatibilityHookRegistrar {
 	/** @var array $hooks */
 	protected $hooks = [
-		'et_core_static_resources_removed',
-		'et_save_post',
+		'et_core_static_resources_removed' => 'flush_third_party_cache',
+		'et_save_post'                     => 'flush_third_party_cache',
 	];
 }

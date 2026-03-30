@@ -21,5 +21,5 @@ namespace OMGF\Compatibility;
  */
 class Bricks extends CompatibilityHookRegistrar {
 	/** @var array $hooks */
-	protected $hooks = [ 'bricks/builder/save_post' ];
+	protected $hooks = [ 'bricks/builder/save_post' => 'flush_third_party_cache' ];
 }

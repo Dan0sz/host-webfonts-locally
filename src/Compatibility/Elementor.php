@@ -22,7 +22,7 @@ namespace OMGF\Compatibility;
 class Elementor extends CompatibilityHookRegistrar {
 	/** @var string $hook */
 	protected $hooks = [
-		'elementor/core/files/clear_cache',
-		'elementor/editor/after_save',
+		'elementor/core/files/clear_cache' => 'flush_third_party_cache',
+		'elementor/editor/after_save'      => 'flush_third_party_cache',
 	];
 }

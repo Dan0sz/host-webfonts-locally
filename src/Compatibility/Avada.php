@@ -23,7 +23,7 @@ use OMGF\Helper as OMGF;
  */
 class Avada extends CompatibilityHookRegistrar {
 	/** @var array $hooks */
-	protected $hooks = [ 'fusion_cache_reset_after' ];
+	protected $hooks = [ 'fusion_cache_reset_after' => 'flush_third_party_cache' ];
 
 	/**
 	 * Build class.

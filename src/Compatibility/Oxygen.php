@@ -21,5 +21,5 @@ namespace OMGF\Compatibility;
  */
 class Oxygen extends CompatibilityHookRegistrar {
 	/** @var array $hooks */
-	protected $hooks = [ 'oxygen_vsb_post_compiled' ];
+	protected $hooks = [ 'oxygen_vsb_post_compiled' => 'flush_third_party_cache' ];
 }
