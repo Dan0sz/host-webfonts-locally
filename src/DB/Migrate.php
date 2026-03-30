@@ -62,10 +62,14 @@ class Migrate {
 		if ( $this->should_run_migration( '6.3.0' ) ) {
 			new Migrate\V630();
 		}
+
+		if ( $this->should_run_migration( '6.3.1' ) ) {
+			new Migrate\V631();
+		}
 	}
 
 	/**
-	 * Checks whether migration script has been run.
+	 * Checks whether the migration script should run.
 	 *
 	 * @param mixed $version
 	 *
