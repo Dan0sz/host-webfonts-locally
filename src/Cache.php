@@ -61,7 +61,7 @@ class Cache {
 	 * @return void
 	 */
 	public function flush_third_party() {
-		$cache_keys = array_values( OMGF::cache_keys() );
+		$cache_keys = array_values( OMGF::cache_keys( true ) );
 		$entries    = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*', GLOB_ONLYDIR ) );
 
 		foreach ( $entries as $entry ) {

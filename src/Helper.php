@@ -388,12 +388,15 @@ class Helper {
 	/**
 	 * Fetch cache keys from the DB.
 	 * @since v5.6.4 Extract cache keys from Optimized Fonts option if the option itself appears empty.
+	 *
+	 * @param bool $force_refresh
+	 *
 	 * @return array
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public static function cache_keys() {
-		if ( empty( self::$cache_keys ) ) {
+	public static function cache_keys( $force_refresh = false ) {
+		if ( empty( self::$cache_keys ) || $force_refresh ) {
 			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
 			self::$cache_keys = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) ) );
 		}
@@ -408,7 +411,7 @@ class Helper {
 			self::$cache_keys = array_keys( $optimized_fonts ); //@codeCoverageIgnore
 		}
 
-		return self::$cache_keys;
+		return apply_filters( 'omgf_cache_keys', self::$cache_keys );
 	}
 
 	/**
@@ -511,7 +514,7 @@ class Helper {
 	 */
 	public static function no_cache_optimize_url( $url = '' ) {
 		if ( ! $url ) {
-			$url = get_home_url();
+			$url = get_home_url(); // @codeCoverageIgnore
 		}
 
 		if ( wp_make_link_relative( $url ) === $url ) {
@@ -636,6 +639,16 @@ class Helper {
 		}
 
 		return $preloaded_fonts;
+	}
+
+	/**
+	 * @return void
+	 * @codeCoverageIgnore
+	 */
+	public static function reset_static_properties() {
+		self::$cache_keys            = [];
+		self::$admin_optimized_fonts = [];
+		self::$optimized_fonts       = [];
 	}
 
 	/**

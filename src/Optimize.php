@@ -230,11 +230,15 @@ class Optimize {
 			wp_mkdir_p( $this->path ); // @codeCoverageIgnore
 		}
 
-		$written = file_put_contents( $local_file, $stylesheet );
+		$written = @file_put_contents( $local_file, $stylesheet );
 
 		if ( $written === false || $written === 0 ) {
 			if ( file_exists( $local_file ) ) {
-				unlink( $local_file );
+				if ( is_dir( $local_file ) ) {
+					rmdir( $local_file );
+				} else {
+					unlink( $local_file );
+				}
 			}
 
 			return '';
