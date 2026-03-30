@@ -82,8 +82,8 @@ class Process {
 	 * Break out early, e.g. if we want to parse other resources and don't need to
 	 * set up all the hooks and filters.
 	 *
-	 * @since v5.4.0
 	 * @var bool $break
+	 * @since v5.4.0
 	 */
 	private $break = false;
 
@@ -365,14 +365,17 @@ class Process {
 	}
 
 	/**
-	 * Sets the Optimize Has Run flag after the first run.
+	 * Sets the Optimize Has Run flag after the first run, i.e.,
+	 * - when the omgf_optimize parameter,
+	 * - the flag isn't set yet, and,
+	 * - @see OMGF::admin_optimized_fonts() returns empty.
 	 *
 	 * @since v6.2.0
 	 *
 	 * @return void
 	 */
 	public function maybe_set_optimize_has_run() {
-		if ( current_user_can( 'manage_options' ) && self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() ) {
+		if ( self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() ) {
 			update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
 		}
 	}
@@ -494,9 +497,9 @@ class Process {
 			 * using proper WordPress conventions. We generate our own using the length of the href attribute
 			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
 			 *
+			 * @var string $id
 			 * @since v5.1.4
 			 *
-			 * @var string $id
 			 */
 			if ( ! $id ) {
 				$id = "$handle-" . strlen( $href['href'] ); // @codeCoverageIgnore

@@ -235,7 +235,7 @@ class Builder {
 	 * @param        $placeholder
 	 * @param        $value
 	 * @param string $description
-	 * @param bool   $update_required
+	 * @param bool   $disabled
 	 */
 	public function do_text( $label, $name, $placeholder, $value, $description = '', $disabled = false ) {
 		?>
@@ -249,20 +249,11 @@ class Builder {
 					value="<?php echo esc_attr( $value ); ?>"/>
 				<p class="description">
 					<?php echo wp_kses_post(
-						apply_filters( $name . 'setting_description', $description )
+						apply_filters( $name . '_setting_description', $description )
 					); ?>
 				</p>
 			</td>
 		</tr>
-		<?php
-	}
-
-	/**
-	 *
-	 */
-	public function do_title() {
-		?>
-		<h3><?php echo esc_html( $this->title ); ?></h3>
 		<?php
 	}
 }
