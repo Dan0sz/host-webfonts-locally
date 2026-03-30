@@ -198,8 +198,8 @@ class Settings extends Admin {
 	public function __construct() {
 		parent::__construct();
 
-		$this->active_tab = $_GET['tab'] ?? self::OMGF_SETTINGS_FIELD_OPTIMIZE;
-		$this->page       = $_GET['page'] ?? '';
+		$this->active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : self::OMGF_SETTINGS_FIELD_OPTIMIZE;
+		$this->page       = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
 		add_action( 'admin_menu', [ $this, 'create_menu' ] );
 		add_filter( 'plugin_action_links_' . plugin_basename( OMGF_PLUGIN_FILE ), [ $this, 'create_settings_link' ] );
@@ -265,7 +265,7 @@ class Settings extends Admin {
 
 			do_action( 'omgf_before_settings_form_settings' );
 
-			echo do_action( str_replace( '-', '_', $field ) . '_content', '' );
+			do_action( str_replace( '-', '_', $field ) . '_content', '' );
 
 			do_action( 'omgf_after_settings_form_settings' );
 
@@ -572,7 +572,7 @@ class Settings extends Admin {
 			$this->active_tab = apply_filters( 'omgf_admin_settings_active_tab', self::OMGF_SETTINGS_FIELD_OPTIMIZE );
 		}
 
-		foreach ( $this->get_settings() as $constant => $value ) {
+		foreach ( $this->get_settings() as $value ) {
 			register_setting(
 				$this->active_tab,
 				$value
