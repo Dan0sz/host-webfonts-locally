@@ -42,12 +42,20 @@ class Cloudflare {
 			return true;
 		}
 
-		wp_mkdir_p( WPMU_PLUGIN_DIR );
+		if ( ! wp_mkdir_p( WPMU_PLUGIN_DIR ) ) {
+			OMGF::debug( sprintf( __( 'Could not create directory %s.', 'host-webfonts-local' ), WPMU_PLUGIN_DIR ) );
+
+			return false;
+		}
 
 		$copied = copy( self::MU_PLUGIN_SOURCE, $destination );
 
 		if ( ! $copied ) {
 			OMGF::debug( sprintf( __( 'Could not copy %1$s to %2$s.', 'host-webfonts-local' ), self::MU_PLUGIN_SOURCE, $destination ) );
+
+			if ( file_exists( $destination ) ) {
+				unlink( $destination );
+			}
 
 			return false;
 		}
@@ -56,15 +64,25 @@ class Cloudflare {
 	}
 
 	/**
-	 * Remove the mu-plugin when OMGF is deactivated.
+	 * Remove the mu-plugin when OMGF is deactivated or uninstalled.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public static function uninstall_mu_plugin() {
 		$destination = WPMU_PLUGIN_DIR . '/' . self::MU_PLUGIN_FILENAME;
 
-		if ( file_exists( $destination ) ) {
-			unlink( $destination );
+		if ( ! file_exists( $destination ) ) {
+			return true;
 		}
+
+		$unlinked = unlink( $destination );
+
+		if ( ! $unlinked ) {
+			OMGF::debug( sprintf( __( 'Could not remove %s.', 'host-webfonts-local' ), $destination ) );
+
+			return false;
+		}
+
+		return true;
 	}
 }

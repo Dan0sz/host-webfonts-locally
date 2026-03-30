@@ -17,6 +17,7 @@
 namespace OMGF;
 
 use OMGF\Admin\Settings;
+use OMGF\Compatibility\Cloudflare;
 use OMGF\Helper as OMGF;
 
 /**
@@ -35,6 +36,7 @@ class Uninstall {
 		$this->remove_db_entries();
 		$this->delete_files();
 		$this->delete_dir();
+		$this->uninstall_mu_plugin();
 	}
 
 	/**
@@ -53,7 +55,7 @@ class Uninstall {
 	/**
 	 * Delete all files stored in the cache directory.
 	 *
-	 * @return array
+	 * @return void
 	 */
 	private function delete_files() {
 		array_map( 'unlink', glob( $this->cache_dir . '/*.*' ) );
@@ -62,9 +64,20 @@ class Uninstall {
 	/**
 	 * Delete the cache directory.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	private function delete_dir() {
-		rmdir( $this->cache_dir );
+		if ( is_dir( $this->cache_dir ) ) {
+			rmdir( $this->cache_dir );
+		}
+	}
+
+	/**
+	 * Remove the Cloudflare MU plugin if it exists.
+	 *
+	 * @return void
+	 */
+	private function uninstall_mu_plugin() {
+		Cloudflare::uninstall_mu_plugin();
 	}
 }
