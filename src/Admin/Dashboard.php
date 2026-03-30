@@ -246,7 +246,7 @@ class Dashboard {
 							<?php echo wp_kses_post(
 								sprintf(
 									__(
-										'%s isn\'t detecting any Google Fonts on your homepage. This could be for <a href="%s" target="_blank">several reasons</a>. <a href="%s" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
+										'%s isn\'t detecting any Google Fonts on your homepage. This could be for <a href="%s" rel="noopener noreferrer" target="_blank">several reasons</a>. <a href="%s" class="omgf-google-fonts-checker-result">Click here</a> to run a deeper investigation.',
 										'host-webfonts-local'
 									),
 									apply_filters( 'omgf_settings_page_title', 'OMGF' ),
