@@ -7,11 +7,59 @@
 
 namespace OMGF\Tests\Integration\Frontend;
 
+use OMGF\Admin\Settings;
 use OMGF\Frontend\Filters;
 use OMGF\Frontend\Process;
 use OMGF\Tests\TestCase;
 
 class ProcessTest extends TestCase {
+	/**
+	 * @return mixed
+	 */
+	public function addOptimizedFonts() {
+		return unserialize(
+			'a:1:{s:18:"astra-google-fonts";a:1:{s:4:"jost";O:8:"stdClass":4:{s:2:"id";s:4:"jost";s:6:"family";s:4:"Jost";s:8:"variants";a:3:{s:9:"latin-400";O:8:"stdClass":7:{s:2:"id";s:3:"400";s:10:"fontFamily";s:4:"Jost";s:9:"fontStyle";s:6:"normal";s:10:"fontWeight";s:3:"400";s:5:"woff2";s:81:"/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-400.woff2";s:6:"subset";s:5:"latin";s:5:"range";s:178:"U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";}s:9:"latin-500";O:8:"stdClass":7:{s:2:"id";s:3:"500";s:10:"fontFamily";s:4:"Jost";s:9:"fontStyle";s:6:"normal";s:10:"fontWeight";s:3:"500";s:5:"woff2";s:78:"https://fonts.gstatic.com/s/jost/v15/92zPtBhPNqw79Ij1E865zBUv7myRJTVBNIg.woff2";s:6:"subset";s:5:"latin";s:5:"range";s:178:"U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";}s:9:"latin-600";O:8:"stdClass":7:{s:2:"id";s:3:"600";s:10:"fontFamily";s:4:"Jost";s:9:"fontStyle";s:6:"normal";s:10:"fontWeight";s:3:"600";s:5:"woff2";s:81:"/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-600.woff2";s:6:"subset";s:5:"latin";s:5:"range";s:178:"U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";}}s:7:"subsets";a:3:{i:0;s:8:"cyrillic";i:1;s:9:"latin-ext";i:2;s:5:"latin";}}}}'
+		);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function addPreloads() {
+		return [
+			'astra-google-fonts' => [
+				'jost' => [
+					400 => "400",
+					500 => '0',
+					600 => '600',
+				],
+			],
+		];
+	}
+
+	/**
+	 * Are preloads output properly?
+	 * @see Process::add_preloads()
+	 * @return void
+	 */
+	public function testAddPreloads() {
+		try {
+			add_filter( 'omgf_filter_preloaded_fonts', [ $this, 'addPreloads' ] );
+			add_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
+
+			$class = new Process( true );
+
+			// Usually the "ver" param contains a timestamp, but that's not really relevant to test here.
+			$this->expectOutputRegex(
+				"~<link id='omgf-preload-.?' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-.*?\.woff2\?ver=.*?' as='font' type='font/woff2' crossorigin />~i"
+			);
+			$class->add_preloads();
+		} finally {
+			remove_filter( 'omgf_filter_preloaded_fonts', [ $this, 'addPreloads' ] );
+			remove_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
+		}
+	}
+
 	/**
 	 * Is the Success-message added properly?
 	 *
@@ -38,6 +86,30 @@ class ProcessTest extends TestCase {
 		} finally {
 			unset( $_GET['omgf_optimize'] );
 			remove_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
+		}
+	}
+
+	/**
+	 * @see Process::maybe_set_optimize_has_run()
+	 * @return void
+	 */
+	public function testMaybeSetOptimizeHasRun() {
+		$class = new Process( true );
+
+		// Make sure this isn't set.
+		delete_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
+
+		try {
+			// omgf_optimize is set and hasn't run yet.
+			$_GET['omgf_optimize'] = 1;
+
+			$class->maybe_set_optimize_has_run();
+
+			$this->assertTrue( (bool) get_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
+		} finally {
+			unset( $_GET['omgf_optimize'] );
+
+			delete_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
 		}
 	}
 
@@ -77,50 +149,20 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
-	 * Are preloads output properly?
-	 * @see Process::add_preloads()
+	 * Are resource hints properly removed from HTML?
+	 * @see Process::remove_resource_hints()
 	 * @return void
 	 */
-	public function testAddPreloads() {
-		try {
-			add_filter( 'omgf_filter_preloaded_fonts', [ $this, 'addPreloads' ] );
-			add_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
+	public function testRemoveResourceHints() {
+		$class     = new Process( true );
+		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/resource-hints.html' );
 
-			$class = new Process( true );
+		$html = $class->remove_resource_hints( $test_html );
 
-			// Usually the "ver" param contains a timestamp, but that's not really relevant to test here.
-			$this->expectOutputRegex(
-				"~<link id='omgf-preload-.?' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-.*?\.woff2\?ver=.*?' as='font' type='font/woff2' crossorigin />~i"
-			);
-			$class->add_preloads();
-		} finally {
-			remove_filter( 'omgf_filter_preloaded_fonts', [ $this, 'addPreloads' ] );
-			remove_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
-		}
-	}
-
-	/**
-	 * @return array
-	 */
-	public function addPreloads() {
-		return [
-			'astra-google-fonts' => [
-				'jost' => [
-					400 => "400",
-					500 => '0',
-					600 => '600',
-				],
-			],
-		];
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function addOptimizedFonts() {
-		return unserialize(
-			'a:1:{s:18:"astra-google-fonts";a:1:{s:4:"jost";O:8:"stdClass":4:{s:2:"id";s:4:"jost";s:6:"family";s:4:"Jost";s:8:"variants";a:3:{s:9:"latin-400";O:8:"stdClass":7:{s:2:"id";s:3:"400";s:10:"fontFamily";s:4:"Jost";s:9:"fontStyle";s:6:"normal";s:10:"fontWeight";s:3:"400";s:5:"woff2";s:81:"/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-400.woff2";s:6:"subset";s:5:"latin";s:5:"range";s:178:"U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";}s:9:"latin-500";O:8:"stdClass":7:{s:2:"id";s:3:"500";s:10:"fontFamily";s:4:"Jost";s:9:"fontStyle";s:6:"normal";s:10:"fontWeight";s:3:"500";s:5:"woff2";s:78:"https://fonts.gstatic.com/s/jost/v15/92zPtBhPNqw79Ij1E865zBUv7myRJTVBNIg.woff2";s:6:"subset";s:5:"latin";s:5:"range";s:178:"U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";}s:9:"latin-600";O:8:"stdClass":7:{s:2:"id";s:3:"600";s:10:"fontFamily";s:4:"Jost";s:9:"fontStyle";s:6:"normal";s:10:"fontWeight";s:3:"600";s:5:"woff2";s:81:"/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-600.woff2";s:6:"subset";s:5:"latin";s:5:"range";s:178:"U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";}}s:7:"subsets";a:3:{i:0;s:8:"cyrillic";i:1;s:9:"latin-ext";i:2;s:5:"latin";}}}}'
-		);
+		$this->assertNotEquals( $test_html, $html );
+		$this->assertStringNotContainsString( 'fonts.googleapis.com', $html );
+		$this->assertStringNotContainsString( 'fonts.gstatic.com', $html );
+		$this->assertStringNotContainsString( 'https://fonts.gstatic.com/s/inter', $html );
 	}
 
 	public function testShouldStart() {
@@ -183,64 +225,5 @@ class ProcessTest extends TestCase {
 		$should_start = Process::should_start();
 
 		$this->assertTrue( $should_start );
-	}
-
-	/**
-	 * @see Process::maybe_set_optimize_has_run()
-	 * @return void
-	 */
-	public function testMaybeSetOptimizeHasRun() {
-		$class = new Process( true );
-
-		// Case 1: omgf_optimize not set.
-		unset( $_GET['omgf_optimize'] );
-		delete_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
-
-		$class->maybe_set_optimize_has_run();
-
-		$this->assertEmpty( get_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
-
-		try {
-			// Case 2: omgf_optimize set, but optimize not succeeded (this should set the flag).
-			$_GET['omgf_optimize'] = 1;
-			$class->maybe_set_optimize_has_run();
-
-			$this->assertTrue( (bool) get_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
-		} finally {
-			unset( $_GET['omgf_optimize'] );
-		}
-
-		try {
-			// Reset Case 3: omgf_optimize set and optimize succeeded (this should NOT update the flag, but it's already true from Case 2).
-			// Actually, the logic is: if ( self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() )
-			// So if optimize_succeeded() is TRUE, it won't enter the IF.
-
-			delete_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
-			add_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] ); // This makes optimize_succeeded() true if FLAG_OPTIMIZE_HAS_RUN is also true.
-			update_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
-
-			// If it's already true and succeeded, it stays true.
-			$class->maybe_set_optimize_has_run();
-			$this->assertTrue( (bool) get_option( \OMGF\Admin\Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
-		} finally {
-			remove_filter( 'omgf_filter_optimized_fonts', [ $this, 'addOptimizedFonts' ] );
-		}
-	}
-
-	/**
-	 * Are resource hints properly removed from HTML?
-	 * @see Process::remove_resource_hints()
-	 * @return void
-	 */
-	public function testRemoveResourceHints() {
-		$class     = new Process( true );
-		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/resource-hints.html' );
-
-		$html = $class->remove_resource_hints( $test_html );
-
-		$this->assertNotEquals( $test_html, $html );
-		$this->assertStringNotContainsString( 'fonts.googleapis.com', $html );
-		$this->assertStringNotContainsString( 'fonts.gstatic.com', $html );
-		$this->assertStringNotContainsString( 'https://fonts.gstatic.com/s/inter', $html );
 	}
 }

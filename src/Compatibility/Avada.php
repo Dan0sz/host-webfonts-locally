@@ -1,5 +1,4 @@
 <?php
-
 /* * * * * * * * * * * * * * * * * * * * *
 *
 *  ██████╗ ███╗   ███╗ ██████╗ ███████╗
@@ -15,54 +14,39 @@
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
-namespace OMGF\DB\Migrate;
+namespace OMGF\Compatibility;
 
-use OMGF\Admin\Settings;
-use OMGF\Admin\Notice;
 use OMGF\Helper as OMGF;
 
 /**
  * @codeCoverageIgnore
  */
-class V600 {
-	/** @var $version string The version number this migration script was introduced with. */
-	private $version = '6.0.0';
+class Avada extends CompatibilityHookRegistrar {
+	/** @var array $hooks */
+	protected $hooks = [ 'fusion_cache_reset_after' => self::HOOK_FLUSH_THIRD_PARTY ];
 
 	/**
 	 * Build class.
 	 */
 	public function __construct() {
-		$this->init();
+		parent::__construct();
+
+		add_action( 'wp_after_insert_post', [ $this, 'maybe_flush_third_party_cache' ], 10, 2 );
 	}
 
 	/**
-	 * This migration script doesn't do much, besides showing a notice after updating.
+	 * Only flush the cache if this is a published post.
+	 *
+	 * @param $post_id
+	 * @param $post
 	 *
 	 * @return void
 	 */
-	private function init() {
-		add_action( 'init', [ $this, 'set_upgrade_notice' ] );
+	public function maybe_flush_third_party_cache( $post_id, $post ) {
+		if ( $post->post_status !== 'publish' || wp_is_post_revision( $post_id ) ) {
+			return;
+		}
 
-		/**
-		 * Update stored version number.
-		 */
-		OMGF::update_option( Settings::OMGF_CURRENT_DB_VERSION, $this->version );
-	}
-
-	/**
-	 * Sets an upgrade notice if the OMGF Pro plugin is not active.
-	 *
-	 * @return void
-	 */
-	public function set_upgrade_notice() {
-		Notice::set_notice(
-			sprintf(
-				__(
-					'Thanks for upgrading to OMGF v6! 🎉 <a href="%s" target="_blank">Click here to learn about all the exciting, new features in this release!</a>',
-					'host-webfonts-local'
-				),
-				'https://daan.dev/blog/wordpress/omgf-v6-omgf-pro-v4/'
-			)
-		);
+		OMGF::flush_third_party_cache();
 	}
 }

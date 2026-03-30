@@ -10,7 +10,7 @@
 *
 * @package  : OMGF
 * @author   : Daan van den Bergh
-* @copyright: © 2025 Daan van den Bergh
+* @copyright: © 2026 Daan van den Bergh
 * @url      : https://daan.dev
 * * * * * * * * * * * * * * * * * * * */
 
@@ -104,6 +104,30 @@ class Admin {
 	}
 
 	/**
+	 * Triggered when unload settings is changed, cleans up old cache files.
+	 * TODO: Clean up doesn't work on 2nd run?
+	 */
+	public function clean_up_cache( $value, $old_value ) {
+		if ( $old_value == $value ) {
+			return; // @codeCoverageIgnore
+		}
+
+		if ( $old_value == null ) {
+			return; // @codeCoverageIgnore
+		}
+
+		$cache_keys = explode( ',', $old_value );
+
+		foreach ( $cache_keys as $key ) {
+			$entries = array_filter( (array) glob( OMGF_UPLOAD_DIR . "/*$key" ) );
+
+			foreach ( $entries as $entry ) {
+				OMGF::delete( $entry );
+			}
+		}
+	}
+
+	/**
 	 * Enqueues the necessary JS and CSS and passes options as a JS object.
 	 *
 	 * @param $hook
@@ -139,15 +163,6 @@ class Admin {
 	}
 
 	/**
-	 * Add notice to admin screen.
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function print_notices() {
-		Notice::print_notices();
-	}
-
-	/**
 	 * @see    OMGF::admin_optimized_fonts()
 	 *
 	 * @since  v5.0.5 Forces get_option() to fetch a fresh copy of omgf_optimized_fonts from the database,
@@ -163,30 +178,6 @@ class Admin {
 		}
 
 		return $alloptions;
-	}
-
-	/**
-	 * Triggered when unload settings is changed, cleans up old cache files.
-	 * TODO: Clean up doesn't work on 2nd run?
-	 */
-	public function clean_up_cache( $value, $old_value ) {
-		if ( $old_value == $value ) {
-			return; // @codeCoverageIgnore
-		}
-
-		if ( $old_value == null ) {
-			return; // @codeCoverageIgnore
-		}
-
-		$cache_keys = explode( ',', $old_value );
-
-		foreach ( $cache_keys as $key ) {
-			$entries = array_filter( (array) glob( OMGF_UPLOAD_DIR . "/*$key" ) );
-
-			foreach ( $entries as $entry ) {
-				OMGF::delete( $entry );
-			}
-		}
 	}
 
 	/**
@@ -304,5 +295,14 @@ class Admin {
 		}
 
 		return $diff;
+	}
+
+	/**
+	 * Add notice to admin screen.
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function print_notices() {
+		Notice::print_notices();
 	}
 }
