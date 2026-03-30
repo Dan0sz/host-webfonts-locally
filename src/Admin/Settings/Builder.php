@@ -22,9 +22,6 @@ use OMGF\Admin\Settings;
  * @codeCoverageIgnore
  */
 class Builder {
-	/** @var string $plugin_text_domain */
-	protected $plugin_text_domain = 'host-webfonts-local';
-
 	/** @var $title */
 	protected $title;
 
@@ -32,7 +29,7 @@ class Builder {
 	protected $promo;
 
 	/**
-	 * Only sets the promo string on settings load.
+	 * Only sets the promo string when Settings are loaded.
 	 * Settings_Builder constructor.
 	 */
 	public function __construct() {
@@ -64,11 +61,13 @@ class Builder {
 	 * @param $name
 	 * @param $checked
 	 * @param $description
+	 * @param bool $disabled
+	 * @param string $td_classes
 	 */
 	public function do_checkbox( $label, $name, $checked, $description, $disabled = false, $td_classes = '' ) {
 		?>
 		<tr>
-			<th scope="row"><?php echo esc_attr( apply_filters( $name . '_setting_label', $label ) ); ?></th>
+			<th scope="row"><?php echo esc_html( apply_filters( $name . '_setting_label', $label ) ); ?></th>
 			<td <?php echo $td_classes ? ' class="' . esc_attr( $td_classes ) . '"' : ''; ?>>
 				<label for="<?php echo esc_attr( $name ); ?>">
 					<?php if ( ! $disabled ) : ?>
