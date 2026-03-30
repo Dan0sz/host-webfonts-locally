@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 6.3.0
+Stable tag: 6.3.1
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.3.1 =
+* Fixed: flushing the cache after running Save & Optimize didn't work.
+* Added: compatibility with the official Cloudflare plugin.
 
 = 6.3.0 | March 30th, 2026 =
 * Improved: clarified the dialog shown in the Performance Checker.
