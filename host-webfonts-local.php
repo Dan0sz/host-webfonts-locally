@@ -29,3 +29,5 @@ require_once OMGF_PLUGIN_DIR . 'vendor/autoload.php';
  * All systems GO!!!
  */
 $omgf = new OMGF\Plugin();
+
+register_deactivation_hook( __FILE__, [ '\OMGF\Compatibility\Cloudflare', 'uninstall_mu_plugin' ] );
