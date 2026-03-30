@@ -235,7 +235,7 @@ class Helper {
 			// If dir is empty, valid() returns false.
 			while ( $file->valid() ) {
 				if ( ! self::delete( $file->getPathname() ) ) {
-					$success = false;
+					$success = false; // @codeCoverageIgnore
 				}
 
 				$file->next();

@@ -31,6 +31,8 @@ class Optimize {
 
 	/**
 	 * OMGF\Admin\Optimize constructor.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function __construct() {
 		$this->settings_page    = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
@@ -80,6 +82,8 @@ class Optimize {
 	 * @param $args
 	 *
 	 * @return array
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function verify_ssl( $args ) {
 		$args['sslverify'] = apply_filters(
