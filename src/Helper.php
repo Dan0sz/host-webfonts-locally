@@ -473,20 +473,23 @@ class Helper {
 	}
 
 	/**
-	 * @param array $post
+	 * @param array $params
 	 *
 	 * @return bool
 	 *
 	 * @codeCoverageIgnore
 	 */
-	public static function is_running_optimize( $post = [] ) {
+	public static function is_running_optimize( $params = [] ) {
 		$is_running = false;
 
-		if ( isset( $_GET ) ) {
+		/**
+		 * If a dev did unset($_GET) somewhere, we can't assume that it exists.
+		 */
+		if ( ! empty( $_GET ) ) {
 			$is_running = array_key_exists( 'omgf_optimize', $_GET );
 		}
 
-		return apply_filters( 'omgf_is_running_optimize', ( array_key_exists( 'omgf_optimize', $post ) || $is_running ) );
+		return apply_filters( 'omgf_is_running_optimize', ( array_key_exists( 'omgf_optimize', $params ) || $is_running ) );
 	}
 
 	/**
@@ -494,7 +497,7 @@ class Helper {
 	 *
 	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
 	 *
-	 * @param $url A (relative or absolute) URL, defaults to home URL.
+	 * @param string $url A (relative or absolute) URL, defaults to home URL.
 	 *
 	 * @return string
 	 */
