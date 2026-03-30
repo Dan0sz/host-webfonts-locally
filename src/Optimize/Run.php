@@ -147,17 +147,5 @@ class Run {
 			__( 'Optimization completed successfully.', 'host-webfonts-local' ) . '</a>',
 			'success'
 		);
-
-		Notice::set_notice(
-			sprintf(
-				__(
-					'Make sure you flush any caches of 3rd party plugins you\'re using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s\'s optimizations to take effect. ',
-					'host-webfonts-local'
-				),
-				apply_filters( 'omgf_settings_page_title', 'OMGF' )
-			),
-			'omgf-cache-notice',
-			'warning'
-		);
 	}
 }
