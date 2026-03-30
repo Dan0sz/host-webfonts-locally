@@ -17,6 +17,7 @@
 namespace OMGF\DB\Migrate;
 
 use OMGF\Admin\Settings;
+use OMGF\Compatibility\Cloudflare;
 use OMGF\Helper as OMGF;
 
 /**
@@ -39,9 +40,7 @@ class V631 {
 	 * @return void
 	 */
 	private function init() {
-		if ( is_plugin_active( 'cloudflare/cloudflare.php' ) ) {
-			( new \OMGF\Compatibility\Cloudflare() )->maybe_install_mu_plugin();
-		}
+		Cloudflare::maybe_install_mu_plugin();
 
 		/**
 		 * Update stored version number.
