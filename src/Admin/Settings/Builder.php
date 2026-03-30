@@ -128,7 +128,7 @@ class Builder {
 						'<a href="%s" target="_blank">Upgrade to Pro</a> to unlock this option.',
 						'host-webfonts-local'
 					),
-					Settings::DAAN_WORDPRESS_OMGF_PRO
+					esc_url( Settings::DAAN_WORDPRESS_OMGF_PRO )
 				)
 			);
 		}
