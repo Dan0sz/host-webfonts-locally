@@ -17,9 +17,11 @@ class RunTest extends TestCase {
 	 * @return void
 	 */
 	public function testRun() {
+		$before = did_action( 'omgf_optimize_succeeded' );
+
 		new Run();
 
-		$this->assertTrue( (bool) did_action( 'omgf_optimize_succeeded' ) );
+		$this->assertSame( $before + 1, did_action( 'omgf_optimize_succeeded' ) );
 
 		global $wp_settings_errors;
 
