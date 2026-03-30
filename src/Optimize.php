@@ -231,15 +231,11 @@ class Optimize {
 		}
 
 		$written = @file_put_contents( $local_file, $stylesheet );
+		$length  = strlen( $stylesheet );
 
-		if ( $written === false || $written === 0 ) {
-			if ( file_exists( $local_file ) ) {
-				if ( is_dir( $local_file ) ) {
-					rmdir( $local_file );
-				} else {
-					unlink( $local_file );
-				}
-			}
+		if ( $written === false || $written !== $length ) {
+			OMGF::debug( __( 'Failed to write stylesheet:', 'host-webfonts-local' ) . ' ' . $local_file );
+			OMGF::delete( $local_file );
 
 			return '';
 		}

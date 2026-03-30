@@ -218,6 +218,8 @@ class Helper {
 	 * @return bool
 	 */
 	public static function delete( $entry ) {
+		self::debug( 'Deleting entry: ' . $entry );
+
 		if ( is_link( $entry ) ) {
 			return unlink( $entry );
 		}
