@@ -33,7 +33,7 @@ class Migrate {
 		/**
 		 * Can be used to block migration scripts that shouldn't be run on a fresh installation.
 		 */
-		$this->current_version = OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION, '1.0.0' );
+		$this->current_version = OMGF_CURRENT_DB_VERSION;
 
 		if ( $this->should_run_migration( '5.3.3' ) ) {
 			new Migrate\V533();

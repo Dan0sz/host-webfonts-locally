@@ -43,7 +43,7 @@ class Plugin {
 		define( 'OMGF_OPTIMIZATION_MODE', false );
 		define( 'OMGF_SITE_URL', 'https://daan.dev' );
 		define( 'OMGF_CACHE_IS_STALE', OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
-		define( 'OMGF_CURRENT_DB_VERSION', OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION ) );
+		define( 'OMGF_CURRENT_DB_VERSION', OMGF::get_option( Settings::OMGF_CURRENT_DB_VERSION, '1.0.0' ) );
 		define( 'OMGF_UPLOAD_DIR', apply_filters( 'omgf_upload_dir', WP_CONTENT_DIR . '/uploads/omgf' ) );
 		define( 'OMGF_UPLOAD_URL', apply_filters( 'omgf_upload_url', str_replace( [ 'http:', 'https:' ], '', WP_CONTENT_URL . '/uploads/omgf' ) ) );
 	}
