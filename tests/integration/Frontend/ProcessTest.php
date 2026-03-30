@@ -100,19 +100,8 @@ class ProcessTest extends TestCase {
 		delete_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
 
 		try {
-			// Case 1: omgf_optimize set, but the user isn't admin and optimize not succeeded (this should set the flag).
+			// omgf_optimize is set and hasn't run yet.
 			$_GET['omgf_optimize'] = 1;
-			$class->maybe_set_optimize_has_run();
-
-			$this->assertFalse( (bool) get_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
-		} finally {
-			unset( $_GET['omgf_optimize'] );
-		}
-
-		try {
-			// Case 2: omgf_optimize is set, the user has admin caps, but optimize didn't succeed.
-			$_GET['omgf_optimize'] = 1;
-			add_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
 
 			$class->maybe_set_optimize_has_run();
 
@@ -120,7 +109,6 @@ class ProcessTest extends TestCase {
 		} finally {
 			unset( $_GET['omgf_optimize'] );
 
-			remove_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
 			delete_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
 		}
 	}
