@@ -12,15 +12,35 @@ use OMGF\Tests\TestCase;
 
 class AdminTest extends TestCase {
 	/**
-	 * @see Admin::do_optimize_settings()
-	 * @return void
+	 * @see Admin::clean_up_cache()
+	 * Ensure entries matching old cache keys are removed from OMGF_UPLOAD_DIR.
 	 */
-	public function testDoOptimizeSettings() {
-		new Admin();
+	public function testCleanUpCacheDeletesMatchingEntries() {
+		$admin = new Admin();
 
-		$this->expectOutputContains( 'Dashboard' );
+		// Ensure cache directory exists.
+		wp_mkdir_p( OMGF_UPLOAD_DIR );
 
-		do_action( 'omgf_optimize_settings_content' );
+		$dir_to_remove  = OMGF_UPLOAD_DIR . '/foo-key1';
+		$file_to_remove = OMGF_UPLOAD_DIR . '/bar-key2';
+		$dir_to_keep    = OMGF_UPLOAD_DIR . '/keep-this';
+
+		// Create dummy entries.
+		wp_mkdir_p( $dir_to_remove );
+		file_put_contents( $dir_to_remove . '/dummy.txt', 'test' );
+		file_put_contents( $file_to_remove, 'test' );
+		wp_mkdir_p( $dir_to_keep );
+
+		// Invoke cleanup with old value containing two keys.
+		$admin->clean_up_cache( 'new-value', 'key1,key2' );
+
+		// Assert matching entries are deleted and unrelated remain.
+		$this->assertDirectoryDoesNotExist( $dir_to_remove );
+		$this->assertFileDoesNotExist( $file_to_remove );
+		$this->assertDirectoryExists( $dir_to_keep );
+
+		// Cleanup remaining artifact.
+		OMGF::delete( $dir_to_keep );
 	}
 
 	/**
@@ -48,27 +68,15 @@ class AdminTest extends TestCase {
 	}
 
 	/**
-	 * @see Admin::maybe_show_stale_cache_notice()
+	 * @see Admin::do_optimize_settings()
 	 * @return void
 	 */
-	public function testShowStaleCacheNotice() {
-		global $wp_settings_errors;
+	public function testDoOptimizeSettings() {
+		new Admin();
 
-		/**
-		 * Make sure it's empty.
-		 */
-		$wp_settings_errors = [];
+		$this->expectOutputContains( 'Dashboard' );
 
-		$class = new Admin();
-
-		$_GET['page'] = Settings::OMGF_ADMIN_PAGE;
-		$_GET['tab']  = 'test';
-
-		$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin-ext' ] ], [ 'subsets' => [ 'latin' ] ] );
-
-		$this->assertTrue( OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
-
-		OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
+		do_action( 'omgf_optimize_settings_content' );
 	}
 
 	/**
@@ -107,5 +115,29 @@ class AdminTest extends TestCase {
 			$_GET               = $original_get;
 			OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
 		}
+	}
+
+	/**
+	 * @see Admin::maybe_show_stale_cache_notice()
+	 * @return void
+	 */
+	public function testShowStaleCacheNotice() {
+		global $wp_settings_errors;
+
+		/**
+		 * Make sure it's empty.
+		 */
+		$wp_settings_errors = [];
+
+		$class = new Admin();
+
+		$_GET['page'] = Settings::OMGF_ADMIN_PAGE;
+		$_GET['tab']  = 'test';
+
+		$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin-ext' ] ], [ 'subsets' => [ 'latin' ] ] );
+
+		$this->assertTrue( OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
+
+		OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
 	}
 }
