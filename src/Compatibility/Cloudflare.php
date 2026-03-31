@@ -32,6 +32,10 @@ class Cloudflare {
 	 * @return bool
 	 */
 	public static function maybe_install_mu_plugin() {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
 		if ( ! is_plugin_active( 'cloudflare/cloudflare.php' ) ) {
 			return true;
 		}
