@@ -486,7 +486,7 @@ class Settings extends Admin {
 		 * Make sure the XML is properly encoded.
 		 */
 		libxml_use_internal_errors( true );
-		$xml = mb_convert_encoding( html_entity_decode( $xml ), 'UTF-8' );
+		$xml = mb_convert_encoding( $xml, 'UTF-8' );
 		$xml = simplexml_load_string( $xml );
 
 		if ( ! $xml ) {
