@@ -45,10 +45,6 @@ class Compatibility {
 		new Compatibility\Core();
 		new Compatibility\CachingPlugins();
 
-		if ( is_plugin_active( 'cloudflare/cloudflare.php' ) ) {
-			new Compatibility\Cloudflare();
-		}
-
 		if ( defined( 'AVADA_VERSION' ) ) {
 			new Compatibility\Avada();
 		}
