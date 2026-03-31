@@ -453,7 +453,7 @@ class Settings extends Admin {
 	 * @return mixed
 	 */
 	public function footer_text_right( $text ) {
-		if ( ! extension_loaded( 'simplexml' ) ) {
+		if ( ! extension_loaded( 'simplexml' ) || ! extension_loaded( 'mbstring' ) ) {
 			return $text;
 		}
 
@@ -486,7 +486,7 @@ class Settings extends Admin {
 		 * Make sure the XML is properly encoded.
 		 */
 		libxml_use_internal_errors( true );
-		$xml = html_entity_decode( $xml );
+		$xml = mb_convert_encoding( html_entity_decode( $xml ), 'UTF-8' );
 		$xml = simplexml_load_string( $xml );
 
 		if ( ! $xml ) {
