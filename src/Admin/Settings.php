@@ -460,7 +460,10 @@ class Settings extends Admin {
 		/**
 		 * If a WordPress update is available, show the original text.
 		 */
-		if ( str_contains( $text, 'Get Version' ) ) {
+		$update_core = get_site_transient( 'update_core' );
+		$update      = ! empty( $update_core->updates ) && $update_core->updates[0]->response === 'upgrade';
+
+		if ( $update ) {
 			return $text;
 		}
 
