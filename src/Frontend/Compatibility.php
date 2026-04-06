@@ -62,6 +62,9 @@ class Compatibility {
 			new Compatibility\GroovyMenu();
 		}
 
+		/**
+		 * Logo Carousel Pro appends a unique ID to Google Fonts requests on every page load, sending OMGF's cache into a tailspin.
+		 */
 		if ( class_exists( 'SP_Logo_Carousel' ) ) {
 			new Compatibility\LogoCarouselPro();
 		}
@@ -71,6 +74,14 @@ class Compatibility {
 		 */
 		if ( function_exists( 'smart_slider_3_plugins_loaded' ) || function_exists( 'smart_slider_3_pro_plugins_loaded' ) ) {
 			new Compatibility\SmartSlider3();
+		}
+
+		/**
+		 * V3.x of WP Carousel Pro (like Logo Carousel Pro) appends a unique ID to Google Fonts requests on every page load, sending OMGF's cache into a tailspin.
+		 * This is fixed in WP Carousel Pro v4.
+		 */
+		if ( function_exists( 'sp_wpcp' ) ) {
+			new Compatibility\WPCarouselPro();
 		}
 
 		/**
