@@ -312,22 +312,18 @@ class Optimize extends Builder {
 							</td>
 							<td class="replace">
 								<?php
-								$replace  = defined( 'OMGF_PRO_ACTIVE' ) &&
+								$checked  = defined( 'OMGF_PRO_ACTIVE' ) &&
 											isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
 											OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
-								$fallback = defined( 'OMGF_PRO_ACTIVE' ) && isset(
+								$disabled = apply_filters( 'omgf_local_fonts_disable_replace', defined( 'OMGF_PRO_ACTIVE' ) && isset(
 										OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ]
-									) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '';
+									) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '' );
 								?>
 								<?php do_action( 'omgf_optimize_local_fonts_replace', $handle, $font->id ); ?>
-								<input autocomplete="off" type="checkbox" class="replace" <?php echo esc_attr(
-									$replace
-								); ?> <?php echo esc_attr(
-									$fallback ? '' : 'disabled'
-								); ?> <?php echo ! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled' : ''; ?>
-									   name="omgf_pro_replace_font[<?php echo esc_attr(
-										   $handle
-									   ); ?>][<?php echo esc_attr( $font->id ); ?>]"/>
+								<input autocomplete="off" type="checkbox" class="replace"
+									<?php echo esc_attr( $checked ); ?>
+									<?php echo esc_attr( $disabled ? '' : 'disabled' ); ?>
+									   name="omgf_pro_replace_font[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]"/>
 							</td>
 						</tr>
 						<?php $id = ''; ?>
