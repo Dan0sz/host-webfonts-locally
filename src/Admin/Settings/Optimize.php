@@ -255,9 +255,11 @@ class Optimize extends Builder {
 				</tr>
 				</thead>
 				<?php
-				$cache_handles   = OMGF::cache_keys();
-				$disable_preload = apply_filters( 'omgf_local_fonts_disable_preload', false );
-				$disable_unload  = apply_filters( 'omgf_local_fonts_disable_unload', false );
+				$cache_handles                = OMGF::cache_keys();
+				$disable_preload              = apply_filters( 'omgf_local_fonts_disable_preload', false );
+				$disable_unload               = apply_filters( 'omgf_local_fonts_disable_unload', false );
+				$disable_fallback_font_stacks = ! defined( 'OMGF_PRO_ACTIVE' );
+				$hide_fallback_font_stacks    = apply_filters( 'omgf_local_fonts_hide_fallback_font_stacks', false );
 				?>
 				<?php foreach ( $this->optimized_fonts as $handle => $fonts ) : ?>
 					<?php
@@ -294,20 +296,19 @@ class Optimize extends Builder {
 											'host-webfonts-local'
 										); ?></a>)</span></td>
 							<td class="fallback-font-stack">
-								<?php if ( ! apply_filters( 'omgf_local_fonts_disable_fallback_font_stacks', true ) ) : ?>
-									<select data-handle="<?php echo esc_attr( $handle ); ?>" data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>" <?php echo esc_attr(
-										! defined( 'OMGF_PRO_ACTIVE' ) ? 'disabled="disabled"' : ''
-									); ?> name="omgf_pro_fallback_font_stack[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]">
-										<option value=''><?php echo esc_attr__( 'None (default)', 'host-webfonts-local' ); ?></option>
-										<?php foreach ( apply_filters( 'omgf_pro_fallback_font_stacks', Settings::OMGF_FALLBACK_FONT_STACKS_OPTIONS ) as $value => $label ) : ?>
-											<option <?php echo esc_attr(
-												defined( 'OMGF_PRO_ACTIVE' ) &&
-												isset( OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] ) &&
-												OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] === $value ? 'selected' : ''
-											); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
-										<?php endforeach; ?>
-									</select>
-								<?php endif; ?>
+								<select data-handle="<?php echo esc_attr( $handle ); ?>" data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>"
+									<?php echo $disable_fallback_font_stacks ? 'disabled="disabled"' : ''; ?>
+									<?php echo $hide_fallback_font_stacks ? 'style="display: none;"' : ''; ?>
+										name="omgf_pro_fallback_font_stack[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]">
+									<option value=''><?php echo esc_attr__( 'None (default)', 'host-webfonts-local' ); ?></option>
+									<?php foreach ( apply_filters( 'omgf_pro_fallback_font_stacks', Settings::OMGF_FALLBACK_FONT_STACKS_OPTIONS ) as $value => $label ) : ?>
+										<option <?php echo esc_attr(
+											defined( 'OMGF_PRO_ACTIVE' ) &&
+											isset( OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] ) &&
+											OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] === $value ? 'selected' : ''
+										); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
+									<?php endforeach; ?>
+								</select>
 								<?php do_action( 'omgf_optimize_local_fonts_fallback_font_stacks', $font->family, $font->id, $handle ); ?>
 							</td>
 							<td class="replace">
