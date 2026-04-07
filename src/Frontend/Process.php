@@ -159,7 +159,7 @@ class Process {
 
 		/** Only hook into our own filter if Smart Slider 3 and Groovy Menu aren't active, as they have their own output filter. */
 		if ( ! function_exists( 'smart_slider_3_plugins_loaded' ) && ! function_exists( 'groovy_menu_init_classes' ) ) {
-			add_filter( 'omgf_buffer_output', [ $this, 'parse' ] );
+			add_filter( 'omgf_buffer_output', [ $this, 'process' ] );
 		}
 
 		add_filter( 'omgf_buffer_output', [ $this, 'add_success_message' ] );
@@ -381,8 +381,9 @@ class Process {
 	}
 
 	/**
-	 * This method uses Regular Expressions to parse the HTML. It's tested to be at least
+	 * This method uses Regular Expressions to process the HTML produced by the buffer. It's tested to be at least
 	 * twice as fast compared to using Xpath.
+	 *
 	 * Test results (in seconds, with XDebug enabled)
 	 * Uncached:    17.81094789505
 	 *              18.687641859055
@@ -396,7 +397,7 @@ class Process {
 	 *
 	 * @return string Valid HTML, filtered by @filter omgf_processed_html.
 	 */
-	public function parse( $html ) {
+	public function process( $html ) {
 		if ( $this->is_amp() ) {
 			return apply_filters( 'omgf_processed_html', $html, $this ); // @codeCoverageIgnore
 		}

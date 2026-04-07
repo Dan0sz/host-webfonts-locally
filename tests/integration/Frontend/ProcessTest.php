@@ -116,14 +116,14 @@ class ProcessTest extends TestCase {
 	/**
 	 * Are Google Fonts properly downloaded/replaced?
 	 *
-	 * @see Process::parse()
+	 * @see Process::process()
 	 * @return void
 	 */
 	public function testParse() {
 		$class     = new Process( true );
 		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/google-fonts.html' );
 
-		$html = $class->parse( $test_html );
+		$html = $class->process( $test_html );
 
 		$this->AssertStringContainsString(
 			'//example.org/wp-content/uploads/omgf/astra-google-fonts/astra-google-fonts.css',
@@ -140,7 +140,7 @@ class ProcessTest extends TestCase {
 		$class     = new Process( true );
 		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/encoded-urls.html' );
 
-		$html = $class->parse( $test_html );
+		$html = $class->process( $test_html );
 
 		$this->assertStringContainsString(
 			'//example.org/wp-content/uploads/omgf/encoded-urls/encoded-urls.css',
