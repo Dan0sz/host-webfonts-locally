@@ -455,7 +455,7 @@ class Optimize extends Builder {
 			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
 			'smart_optimize', ! empty( OMGF::get_option( 'smart_optimize' ) ),
 			__(
-				'Let OMGF Pro figure it out! Smart Optimize automatically detects the right fonts, subsets and preloads for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
+				'Let OMGF Pro figure it out! Smart Optimize automatically detects the right fonts, subsets, preloads and fallback font stacks for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
 				'host-webfonts-local'
 			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
 		);
