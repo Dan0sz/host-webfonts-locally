@@ -2,6 +2,52 @@
  * @package OMGF
  * @author Daan van den Bergh
  */
+// Start measuring CLS as early as possible, before the load event.
+let omgf_font_cls = 0;
+let omgf_fonts_ready = false;
+let omgf_dom_content_loaded = document.readyState !== 'loading';
+let omgf_cls_supported = false;
+
+if (!omgf_dom_content_loaded) {
+	document.addEventListener('DOMContentLoaded', () => {
+		omgf_dom_content_loaded = true;
+	});
+}
+
+// Feature detect layout-shift support before observing.
+try {
+	let test_observer = new PerformanceObserver(() => {
+	});
+	test_observer.observe({type: 'layout-shift', buffered: false});
+	test_observer.disconnect();
+	omgf_cls_supported = true;
+} catch (e) {
+	// layout-shift not supported in this browser.
+}
+
+if (omgf_cls_supported) {
+	try {
+		let omgf_cls_observer = new PerformanceObserver((list) => {
+			list.getEntries().forEach((entry) => {
+				// Only count shifts during the font swap window:
+				// after DOMContentLoaded, before fonts.ready, without user input.
+				if (!entry.hadRecentInput && omgf_dom_content_loaded && !omgf_fonts_ready) {
+					omgf_font_cls += entry.value;
+				}
+			});
+		});
+		omgf_cls_observer.observe({type: 'layout-shift', buffered: true});
+
+		// Stop observer once fonts are ready.
+		document.fonts.ready.then(() => {
+			omgf_fonts_ready = true;
+			omgf_cls_observer.disconnect();
+		});
+	} catch (e) {
+		// Observer setup failed.
+	}
+}
+
 window.addEventListener('load', () => {
 	let omgf_frontend = {
 		menu_item: document.getElementById('wp-admin-bar-omgf'),
@@ -14,18 +60,21 @@ window.addEventListener('load', () => {
 		 * @return void
 		 */
 		init: async function () {
+			let response = null;
 			let missing_preloads = [];
 			let unused_fonts = [];
 			let status = null;
+			let font_cls = 0;
 
 			try {
 				let google_fonts = this.filterGoogleFonts();
-				let response = await this.getStatus(google_fonts);
+				response = await this.getStatus(google_fonts);
 				let unused_fonts_analysis = response.unused_fonts_analysis || {};
 				let preload_analysis = response.preload_analysis || {};
-				status = response.status || null;
 				missing_preloads = response.missing_preloads || [];
 				unused_fonts = response.unused_fonts || [];
+				status = response.status || null;
+				font_cls = response?.font_cls || 0;
 
 				// menu_item only exists if the logged-in user has the manage_options cap.
 				if (this.menu_item === null) {
@@ -76,6 +125,26 @@ window.addEventListener('load', () => {
 					this.addInfoBox('preload_notice', preload_analysis, missing_preloads.length);
 				}
 
+				const MIN_CLS_THRESHOLD = 0.01;
+
+				if (font_cls > MIN_CLS_THRESHOLD) {
+					let impact = omgf_frontend_i18n.info_box_impact_low;
+
+					if (font_cls > 0.1) {
+						impact = omgf_frontend_i18n.info_box_impact_medium;
+					}
+
+					if (font_cls > 0.25) {
+						impact = omgf_frontend_i18n.info_box_impact_high;
+					}
+
+					let cls_notice = {
+						cls: Math.round(font_cls * 1000) / 1000,
+						impact: impact,
+					}
+
+					this.addInfoBox('cls_notice', cls_notice);
+				}
 			} catch (error) {
 				console.error('OMGF - Error running Google Fonts Checker:', error);
 			} finally {
@@ -83,6 +152,7 @@ window.addEventListener('load', () => {
 					detail: {
 						missing_preloads: missing_preloads,
 						unused_fonts: unused_fonts,
+						cls: font_cls || 0,
 						status: status,
 					}
 				}));
@@ -357,6 +427,7 @@ window.addEventListener('load', () => {
 					response.preload_analysis = preload_analysis;
 					response.missing_preloads = missing_preloads;
 					response.unused_fonts = unused_fonts;
+					response.font_cls = omgf_font_cls;
 				}
 
 				return response;
@@ -598,6 +669,13 @@ window.addEventListener('load', () => {
 				info_box.id = 'wp-admin-bar-omgf-preload-info';
 				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_preload_text, count || 0, data.potential_delay_ms || 0, data.impact || omgf_frontend_i18n.info_box_impact_low);
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
+			}
+
+			if (status === 'cls_notice') {
+				info_box.id = 'wp-admin-bar-omgf-cls-info';
+				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_cls_text, data.cls, data.impact);
+				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
+				info_box.classList.add('info');
 			}
 
 			if (status === 'unload_notice' || status === 'preload_notice' || status === 'multilang_plugin') {
