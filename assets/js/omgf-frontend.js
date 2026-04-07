@@ -420,6 +420,7 @@ window.addEventListener('load', () => {
 			data.append('params', JSON.stringify(params));
 			data.append('unused_fonts_analysis', JSON.stringify(unused_fonts_analysis));
 			data.append('preload_analysis', JSON.stringify(preload_analysis));
+			data.append('font_cls', omgf_font_cls);
 
 			return await omgf_frontend.ajax(data).then(response => {
 				if (response) {

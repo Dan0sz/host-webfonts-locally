@@ -44,47 +44,6 @@ class AdminbarMenu {
 	}
 
 	/**
-	 * Register the API route.
-	 *
-	 * @return void
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function register_routes() {
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->base . '/' . $this->endpoint,
-			[
-				[
-					'methods'             => 'POST',
-					'callback'            => [ $this, 'get_admin_bar_status' ],
-					'permission_callback' => [ $this, 'get_permission' ],
-				],
-				'schema' => null,
-			]
-		);
-	}
-
-	/**
-	 * Only logged-in administrators should be allowed to use the API.
-	 *
-	 * @filter omgf_api_adminbar_menu_permission
-	 *
-	 * @return mixed|null
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function get_permission( \WP_REST_Request $request ) {
-		$is_allowed = apply_filters( 'omgf_api_adminbar_menu_permission', current_user_can( 'manage_options' ), $request );
-
-		if ( true !== $is_allowed ) {
-			return $is_allowed;
-		}
-
-		return (bool) wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' );
-	}
-
-	/**
 	 * Generate and return the status of the Google Fonts Checker.
 	 *
 	 * @param \WP_REST_Request $request The request object.
@@ -98,8 +57,9 @@ class AdminbarMenu {
 		$stored_results        = $this->update_google_fonts_checker_results( $params );
 		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
 		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
+		$font_cls              = isset( $params['font_cls'] ) ? (float) $params['font_cls'] : 0.0;
 
-		$this->update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis );
+		$this->update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis, $font_cls );
 
 		$status = $this->calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis );
 
@@ -250,11 +210,12 @@ class AdminbarMenu {
 	 * @param array $params
 	 * @param array $unused_fonts_analysis
 	 * @param array $preload_analysis
+	 * @param float $font_cls
 	 *
 	 * @return void
 	 */
-	private function update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis ) {
-		if ( empty( $unused_fonts_analysis ) && empty( $preload_analysis ) && ! Dashboard::has_multilang_plugin() ) {
+	private function update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis, $font_cls = 0.0 ) {
+		if ( empty( $unused_fonts_analysis ) && empty( $preload_analysis ) && ! Dashboard::has_multilang_plugin() && $font_cls <= 0.0 ) {
 			return;
 		}
 
@@ -279,9 +240,37 @@ class AdminbarMenu {
 			$updated                                   = true;
 		}
 
+		// Store highest CLS score.
+		if ( $path !== '' && $font_cls > 0.01 && ( empty( $stored_metrics['highest_cls'] ) || $font_cls > $stored_metrics['highest_cls'] ) ) {
+			$stored_metrics['highest_cls']           = round( $font_cls, 3 );
+			$stored_metrics['highest_cls_path']      = $path;
+			$stored_metrics['highest_cls_impact']    = $this->calculate_cls_impact( $font_cls );
+			$stored_metrics['highest_cls_timestamp'] = time();
+			$updated                                 = true;
+		}
+
 		if ( $updated ) {
 			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, $stored_metrics );
 		}
+	}
+
+	/**
+	 * Calculate CLS impact label based on PageSpeed Insights thresholds.
+	 *
+	 * @param float $cls
+	 *
+	 * @return string
+	 */
+	private function calculate_cls_impact( $cls ) {
+		if ( $cls > 0.25 ) {
+			return __( 'High', 'host-webfonts-local' );
+		}
+
+		if ( $cls > 0.1 ) {
+			return __( 'Medium', 'host-webfonts-local' );
+		}
+
+		return __( 'Low', 'host-webfonts-local' );
 	}
 
 	/**
@@ -325,5 +314,46 @@ class AdminbarMenu {
 		$warnings = Dashboard::get_warnings();
 
 		return ! empty( $warnings );
+	}
+
+	/**
+	 * Only logged-in administrators should be allowed to use the API.
+	 *
+	 * @filter omgf_api_adminbar_menu_permission
+	 *
+	 * @return mixed|null
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function get_permission( \WP_REST_Request $request ) {
+		$is_allowed = apply_filters( 'omgf_api_adminbar_menu_permission', current_user_can( 'manage_options' ), $request );
+
+		if ( true !== $is_allowed ) {
+			return $is_allowed;
+		}
+
+		return (bool) wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' );
+	}
+
+	/**
+	 * Register the API route.
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function register_routes() {
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->base . '/' . $this->endpoint,
+			[
+				[
+					'methods'             => 'POST',
+					'callback'            => [ $this, 'get_admin_bar_status' ],
+					'permission_callback' => [ $this, 'get_permission' ],
+				],
+				'schema' => null,
+			]
+		);
 	}
 }
