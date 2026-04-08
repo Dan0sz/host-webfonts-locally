@@ -241,8 +241,10 @@ class AdminbarMenu {
 		}
 
 		// Store highest CLS score.
-		if ( $path !== '' && $font_cls > 0.01 && ( empty( $stored_metrics['highest_cls'] ) || $font_cls > $stored_metrics['highest_cls'] ) ) {
-			$stored_metrics['highest_cls']           = round( $font_cls, 3 );
+		$rounded_font_cls = round( $font_cls, 3 );
+
+		if ( $path !== '' && $rounded_font_cls > 0.01 && ( empty( $stored_metrics['highest_cls'] ) || $rounded_font_cls > (float) $stored_metrics['highest_cls'] ) ) {
+			$stored_metrics['highest_cls']           = $rounded_font_cls;
 			$stored_metrics['highest_cls_path']      = $path;
 			$stored_metrics['highest_cls_impact']    = $this->calculate_cls_impact( $font_cls );
 			$stored_metrics['highest_cls_timestamp'] = time();
