@@ -76,9 +76,12 @@ class StylesheetGenerator {
 					'font-family'   => "'$font_family'",
 					'font-style'    => $variant->fontStyle,
 					'font-weight'   => $variant->fontWeight,
-					'src'           => self::build_source_string( [ 'woff2' => $variant->woff2 ] ),
 					'unicode-range' => $variant->range ?? '',
 				];
+
+				if ( ! empty( $variant->woff2 ) ) {
+					$properties['src'] = self::build_source_string( [ 'woff2' => $variant->woff2 ] );
+				}
 
 				$stylesheet .= self::generate_font_face( $properties );
 			}
@@ -95,9 +98,8 @@ class StylesheetGenerator {
 	 * @return string
 	 */
 	public static function build_source_string( $sources, $type = 'url', $end_semi_colon = true ) {
-		$last_src = end( $sources );
-		$source   = '';
-		$n        = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ? "\n" : '';
+		$fragments = [];
+		$n         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ? "\n" : '';
 
 		foreach ( $sources as $format => $url ) {
 			$source = $type === 'url' ? $url . '?ver=' . self::$timestamp : $url;
@@ -107,14 +109,10 @@ class StylesheetGenerator {
 				$source .= ( ! is_numeric( $format ) ? "format('$format')" : '' );
 			}
 
-			if ( $url === $last_src && $end_semi_colon ) {
-				$source .= ";";
-			} else {
-				$source .= ",$n";
-			}
+			$fragments[] = $source;
 		}
 
-		return $source;
+		return implode( ",$n", $fragments ) . ( $end_semi_colon ? ';' : '' );
 	}
 
 	/**
@@ -139,9 +137,9 @@ class StylesheetGenerator {
 				continue;
 			}
 
-			$end = $name === 'src' ? '' : ';';
+			$value = rtrim( $value, '; ' );
 
-			$css .= "$name: $value{$end}$n";
+			$css .= "$name: $value;$n";
 		}
 
 		$css .= "}$n";
