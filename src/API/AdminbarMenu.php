@@ -61,7 +61,7 @@ class AdminbarMenu {
 
 		$this->update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis, $font_cls );
 
-		$status = $this->calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis );
+		$status = $this->calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis, $font_cls );
 
 		return [ 'status' => apply_filters( 'omgf_ajax_admin_bar_status', $status ) ];
 	}
@@ -243,7 +243,7 @@ class AdminbarMenu {
 		// Store highest CLS score.
 		$rounded_font_cls = round( $font_cls, 3 );
 
-		if ( $path !== '' && $rounded_font_cls > 0.01 && ( empty( $stored_metrics['highest_cls'] ) || $rounded_font_cls > (float) $stored_metrics['highest_cls'] ) ) {
+		if ( $path !== '' && $rounded_font_cls > 0.01 && ( empty( $stored_metrics['highest_cls'] ) || $rounded_font_cls > round( (float) $stored_metrics['highest_cls'], 3 ) ) ) {
 			$stored_metrics['highest_cls']           = $rounded_font_cls;
 			$stored_metrics['highest_cls_path']      = $path;
 			$stored_metrics['highest_cls_impact']    = $this->calculate_cls_impact( $font_cls );
@@ -279,10 +279,11 @@ class AdminbarMenu {
 	 * @param array $stored_results
 	 * @param array $unused_fonts_analysis
 	 * @param array $preload_analysis
+	 * @param float $font_cls
 	 *
 	 * @return string
 	 */
-	private function calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis ) {
+	private function calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis, $font_cls = 0.0 ) {
 		$status = 'success';
 
 		if ( ! OMGF::optimize_succeeded() ) {
@@ -297,7 +298,7 @@ class AdminbarMenu {
 			$status = 'notice';
 		}
 
-		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() ) {
+		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() || $font_cls > 0.01 ) {
 			// Alerts and notices should take precedence.
 			if ( $status !== 'alert' && $status !== 'notice' ) {
 				$status = 'info';
