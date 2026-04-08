@@ -98,21 +98,24 @@ class StylesheetGenerator {
 	 * @return string
 	 */
 	public static function build_source_string( $sources, $type = 'url', $end_semi_colon = true ) {
-		$fragments = [];
-		$n         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ? "\n" : '';
+		$source   = '';
+		$n        = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ? "\n" : '';
+		$last_src = array_key_last( $sources );
 
 		foreach ( $sources as $format => $url ) {
-			$source = $type === 'url' ? $url . '?ver=' . self::$timestamp : $url;
-			$source = "$type('$source')";
+			$url    = $type === 'url' ? $url . '?ver=' . self::$timestamp : $url;
+			$source .= "$type('$url')";
 
 			if ( $type !== 'local' ) {
-				$source .= ( ! is_numeric( $format ) ? "format('$format')" : '' );
+				$source .= ( ! is_numeric( $format ) ? " format('$format')" : '' );
 			}
 
-			$fragments[] = $source;
+			if ( $format !== $last_src ) {
+				$source .= ",$n";
+			}
 		}
 
-		return implode( ",$n", $fragments ) . ( $end_semi_colon ? ';' : '' );
+		return $source . ( $end_semi_colon ? ';' : '' );
 	}
 
 	/**
