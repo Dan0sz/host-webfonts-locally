@@ -19,6 +19,33 @@ class AdminbarMenuTest extends TestCase {
 	}
 
 	/**
+	 * @return void
+	 * @throws \ReflectionException
+	 */
+	public function testDecodeJsonArrayEdgeCases() {
+		$api = new AdminbarMenu();
+
+		// Use reflection to test the private method decode_json_array
+		$reflection = new \ReflectionClass( $api );
+		$method     = $reflection->getMethod( 'decode_json_array' );
+		$method->setAccessible( true );
+
+		// Case: input is not a string or is empty (covers line 278)
+		$this->assertEquals( [], $method->invoke( $api, null ) );
+		$this->assertEquals( [], $method->invoke( $api, '' ) );
+		$this->assertEquals( [], $method->invoke( $api, 123 ) );
+
+		// Case: input is valid array
+		$this->assertEquals( [ 'test' ], $method->invoke( $api, [ 'test' ] ) );
+
+		// Case: input is valid JSON string
+		$this->assertEquals( [ 'test' => 1 ], $method->invoke( $api, '{"test":1}' ) );
+
+		// Case: input is an invalid JSON string
+		$this->assertEquals( [], $method->invoke( $api, '{invalid' ) );
+	}
+
+	/**
 	 * @see AdminbarMenu::get_admin_bar_status()
 	 * @return void
 	 */
@@ -268,45 +295,59 @@ class AdminbarMenuTest extends TestCase {
 	 * @return void
 	 * @throws \ReflectionException
 	 */
-	public function testUpdateGoogleFontsCheckerResultsParamsEdgeCases() {
+	public function testPerformanceMetricsCLS() {
 		$api = new AdminbarMenu();
 
-		// Use reflection to test private method update_google_fonts_checker_results
-		$reflection = new \ReflectionClass( $api );
-		$method     = $reflection->getMethod( 'update_google_fonts_checker_results' );
-		$method->setAccessible( true );
-
-		// Case: params is a JSON string (covers lines 192-193)
+		// Case 1: Initial CLS metric update.
 		try {
-			$params = [ 'test' => 1 ];
-			$post   = [
-				'path'   => '/params-json-test',
-				'params' => json_encode( $params ),
-				'urls'   => [ 'https://fonts.googleapis.com/css?family=Open+Sans' ],
+			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request->set_param( 'path', '/cls-test' );
+			$cls_analysis = [
+				'cls'    => 0.1234,
+				'impact' => 'Medium',
 			];
+			$request->set_param( 'cls_analysis', json_encode( $cls_analysis ) );
 
-			$method->invoke( $api, $post );
+			$api->get_admin_bar_status( $request );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
 
-			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
-			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Open+Sans', $results );
-		} finally {
-			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
-		}
+			$this->assertEquals( 0.123, $metrics['highest_cls'] );
+			$this->assertEquals( '/cls-test', $metrics['highest_cls_path'] );
+			$this->assertEquals( 'Medium', $metrics['highest_cls_impact'] );
+			$this->assertNotNull( $metrics['highest_cls_timestamp'] );
 
-		// Case: params is neither string nor array (covers line 197)
-		try {
-			$post = [
-				'path'   => '/params-invalid-test',
-				'params' => 123, // Invalid type
-				'urls'   => [ 'https://fonts.googleapis.com/css?family=Roboto' ],
+			// Case 2: Update with higher CLS value (should update).
+			$request_higher = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request_higher->set_param( 'path', '/cls-test-higher' );
+			$cls_analysis_higher = [
+				'cls'    => 0.2345,
+				'impact' => 'High',
 			];
+			$request_higher->set_param( 'cls_analysis', json_encode( $cls_analysis_higher ) );
 
-			$method->invoke( $api, $post );
+			$api->get_admin_bar_status( $request_higher );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
 
-			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
-			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto', $results );
+			$this->assertEquals( 0.235, $metrics['highest_cls'] );
+			$this->assertEquals( '/cls-test-higher', $metrics['highest_cls_path'] );
+			$this->assertEquals( 'High', $metrics['highest_cls_impact'] );
+
+			// Case 3: Attempt update with lower CLS value (should NOT update).
+			$request_lower = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request_lower->set_param( 'path', '/cls-test-lower' );
+			$cls_analysis_lower = [
+				'cls'    => 0.05,
+				'impact' => 'Low',
+			];
+			$request_lower->set_param( 'cls_analysis', json_encode( $cls_analysis_lower ) );
+
+			$api->get_admin_bar_status( $request_lower );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+
+			$this->assertEquals( 0.235, $metrics['highest_cls'] );
+			$this->assertEquals( '/cls-test-higher', $metrics['highest_cls_path'] );
 		} finally {
-			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+			OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
 		}
 	}
 
@@ -358,26 +399,45 @@ class AdminbarMenuTest extends TestCase {
 	 * @return void
 	 * @throws \ReflectionException
 	 */
-	public function testDecodeJsonArrayEdgeCases() {
+	public function testUpdateGoogleFontsCheckerResultsParamsEdgeCases() {
 		$api = new AdminbarMenu();
 
-		// Use reflection to test the private method decode_json_array
+		// Use reflection to test private method update_google_fonts_checker_results
 		$reflection = new \ReflectionClass( $api );
-		$method     = $reflection->getMethod( 'decode_json_array' );
+		$method     = $reflection->getMethod( 'update_google_fonts_checker_results' );
 		$method->setAccessible( true );
 
-		// Case: input is not a string or is empty (covers line 278)
-		$this->assertEquals( [], $method->invoke( $api, null ) );
-		$this->assertEquals( [], $method->invoke( $api, '' ) );
-		$this->assertEquals( [], $method->invoke( $api, 123 ) );
+		// Case: params is a JSON string (covers lines 192-193)
+		try {
+			$params = [ 'test' => 1 ];
+			$post   = [
+				'path'   => '/params-json-test',
+				'params' => json_encode( $params ),
+				'urls'   => [ 'https://fonts.googleapis.com/css?family=Open+Sans' ],
+			];
 
-		// Case: input is valid array
-		$this->assertEquals( [ 'test' ], $method->invoke( $api, [ 'test' ] ) );
+			$method->invoke( $api, $post );
 
-		// Case: input is valid JSON string
-		$this->assertEquals( [ 'test' => 1 ], $method->invoke( $api, '{"test":1}' ) );
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Open+Sans', $results );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
 
-		// Case: input is an invalid JSON string
-		$this->assertEquals( [], $method->invoke( $api, '{invalid' ) );
+		// Case: params is neither string nor array (covers line 197)
+		try {
+			$post = [
+				'path'   => '/params-invalid-test',
+				'params' => 123, // Invalid type
+				'urls'   => [ 'https://fonts.googleapis.com/css?family=Roboto' ],
+			];
+
+			$method->invoke( $api, $post );
+
+			$results = OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto', $results );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
 	}
 }
