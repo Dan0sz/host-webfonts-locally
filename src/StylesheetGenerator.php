@@ -141,7 +141,7 @@ class StylesheetGenerator {
 
 			$end = $name === 'src' ? '' : ';';
 
-			$css .= "$name: $value${end}$n";
+			$css .= "$name: $value{$end}$n";
 		}
 
 		$css .= "}$n";
