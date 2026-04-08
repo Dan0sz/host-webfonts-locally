@@ -25,7 +25,7 @@ try {
 	// layout-shift not supported in this browser.
 }
 
-if (omgf_cls_supported) {
+if (omgf_cls_supported && typeof document.fonts !== 'undefined' && typeof document.fonts.ready !== 'undefined') {
 	try {
 		let omgf_cls_observer = new PerformanceObserver((list) => {
 			list.getEntries().forEach((entry) => {
