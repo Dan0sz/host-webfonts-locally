@@ -70,11 +70,11 @@ window.addEventListener('load', () => {
 				let google_fonts = this.filterGoogleFonts();
 				response = await this.getStatus(google_fonts);
 				let unused_fonts_analysis = response.unused_fonts_analysis || {};
+				unused_fonts = response.unused_fonts || [];
 				let preload_analysis = response.preload_analysis || {};
 				missing_preloads = response.missing_preloads || [];
-				unused_fonts = response.unused_fonts || [];
+				let cls_analysis = response.cls_analysis || {};
 				status = response.status || null;
-				font_cls = response?.font_cls || 0;
 
 				// menu_item only exists if the logged-in user has the manage_options cap.
 				if (this.menu_item === null) {
@@ -125,26 +125,10 @@ window.addEventListener('load', () => {
 					this.addInfoBox('preload_notice', preload_analysis, missing_preloads.length);
 				}
 
-				const MIN_CLS_THRESHOLD = 0.01;
-
-				if (font_cls > MIN_CLS_THRESHOLD) {
-					let impact = omgf_frontend_i18n.info_box_impact_low;
-
-					if (font_cls > 0.1) {
-						impact = omgf_frontend_i18n.info_box_impact_medium;
-					}
-
-					if (font_cls > 0.25) {
-						impact = omgf_frontend_i18n.info_box_impact_high;
-					}
-
-					let cls_notice = {
-						cls: Math.round(font_cls * 1000) / 1000,
-						impact: impact,
-					}
-
-					this.addInfoBox('cls_notice', cls_notice);
+				if (cls_analysis && cls_analysis.cls > 0.1) {
+					this.addInfoBox('cls_notice', cls_analysis);
 				}
+
 			} catch (error) {
 				console.error('OMGF - Error running Google Fonts Checker:', error);
 			} finally {
@@ -413,6 +397,7 @@ window.addEventListener('load', () => {
 
 			const unused_fonts_analysis = this.analyzeUnusedFonts(unused_fonts);
 			const preload_analysis = await this.analyzePreloadImpact(missing_preloads);
+			const cls_analysis = this.analyzeCLS(omgf_font_cls);
 
 			let data = new FormData();
 			data.append('path', document.location.pathname);
@@ -420,15 +405,15 @@ window.addEventListener('load', () => {
 			data.append('params', JSON.stringify(params));
 			data.append('unused_fonts_analysis', JSON.stringify(unused_fonts_analysis));
 			data.append('preload_analysis', JSON.stringify(preload_analysis));
-			data.append('font_cls', omgf_font_cls);
+			data.append('cls_analysis', JSON.stringify(cls_analysis));
 
 			return await omgf_frontend.ajax(data).then(response => {
 				if (response) {
 					response.unused_fonts_analysis = unused_fonts_analysis;
+					response.unused_fonts = unused_fonts;
 					response.preload_analysis = preload_analysis;
 					response.missing_preloads = missing_preloads;
-					response.unused_fonts = unused_fonts;
-					response.font_cls = omgf_font_cls;
+					response.cls_analysis = cls_analysis;
 				}
 
 				return response;
@@ -532,6 +517,28 @@ window.addEventListener('load', () => {
 				count: count,
 				impact: impact
 			};
+		},
+
+		analyzeCLS: function (cls) {
+			const MIN_CLS_THRESHOLD = 0.01;
+			let impact = omgf_frontend_i18n.info_box_impact_low;
+
+			if (cls < MIN_CLS_THRESHOLD) {
+				return {};
+			}
+
+			if (cls > 0.1) {
+				impact = omgf_frontend_i18n.info_box_impact_medium;
+			}
+
+			if (cls > 0.25) {
+				impact = omgf_frontend_i18n.info_box_impact_high;
+			}
+
+			return {
+				cls: Math.round(cls * 1000) / 1000,
+				impact: impact,
+			}
 		},
 
 		/**
@@ -676,10 +683,9 @@ window.addEventListener('load', () => {
 				info_box.id = 'wp-admin-bar-omgf-cls-info';
 				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_cls_text, data.cls, data.impact);
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
-				info_box.classList.add('info');
 			}
 
-			if (status === 'unload_notice' || status === 'preload_notice' || status === 'multilang_plugin') {
+			if (status === 'cls_notice' || status === 'unload_notice' || status === 'preload_notice' || status === 'multilang_plugin') {
 				info_box.classList.add('info');
 			}
 

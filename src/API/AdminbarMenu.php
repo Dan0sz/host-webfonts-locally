@@ -57,11 +57,11 @@ class AdminbarMenu {
 		$stored_results        = $this->update_google_fonts_checker_results( $params );
 		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
 		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
-		$font_cls              = isset( $params['font_cls'] ) ? (float) $params['font_cls'] : 0.0;
+		$cls_analysis          = $this->decode_json_array( $params['cls_analysis'] ?? [] );
 
-		$this->update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis, $font_cls );
+		$this->update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis, $cls_analysis );
 
-		$status = $this->calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis, $font_cls );
+		$status = $this->calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis, $cls_analysis );
 
 		return [ 'status' => apply_filters( 'omgf_ajax_admin_bar_status', $status ) ];
 	}
@@ -210,12 +210,12 @@ class AdminbarMenu {
 	 * @param array $params
 	 * @param array $unused_fonts_analysis
 	 * @param array $preload_analysis
-	 * @param float $font_cls
+	 * @param array $cls_analysis
 	 *
 	 * @return void
 	 */
-	private function update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis, $font_cls = 0.0 ) {
-		if ( empty( $unused_fonts_analysis ) && empty( $preload_analysis ) && ! Dashboard::has_multilang_plugin() && $font_cls <= 0.0 ) {
+	private function update_perf_metrics( $params, $unused_fonts_analysis, $preload_analysis, $cls_analysis ) {
+		if ( empty( $unused_fonts_analysis ) && empty( $preload_analysis ) && ! Dashboard::has_multilang_plugin() && empty( $cls_analysis ) ) {
 			return;
 		}
 
@@ -240,13 +240,10 @@ class AdminbarMenu {
 			$updated                                   = true;
 		}
 
-		// Store highest CLS score.
-		$rounded_font_cls = round( $font_cls, 3 );
-
-		if ( $path !== '' && $rounded_font_cls > 0.01 && ( empty( $stored_metrics['highest_cls'] ) || $rounded_font_cls > round( (float) $stored_metrics['highest_cls'], 3 ) ) ) {
-			$stored_metrics['highest_cls']           = $rounded_font_cls;
+		if ( $path !== '' && ! empty( $cls_analysis['cls'] ) && ( empty( $stored_metrics['highest_cls'] ) || round( $cls_analysis['cls'], 3 ) > $stored_metrics['highest_cls'] ) ) {
+			$stored_metrics['highest_cls']           = round( $cls_analysis['cls'], 3 );
 			$stored_metrics['highest_cls_path']      = $path;
-			$stored_metrics['highest_cls_impact']    = $this->calculate_cls_impact( $font_cls );
+			$stored_metrics['highest_cls_impact']    = $cls_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
 			$stored_metrics['highest_cls_timestamp'] = time();
 			$updated                                 = true;
 		}
@@ -254,25 +251,6 @@ class AdminbarMenu {
 		if ( $updated ) {
 			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, $stored_metrics );
 		}
-	}
-
-	/**
-	 * Calculate CLS impact label based on PageSpeed Insights thresholds.
-	 *
-	 * @param float $cls
-	 *
-	 * @return string
-	 */
-	private function calculate_cls_impact( $cls ) {
-		if ( $cls > 0.25 ) {
-			return __( 'High', 'host-webfonts-local' );
-		}
-
-		if ( $cls > 0.1 ) {
-			return __( 'Medium', 'host-webfonts-local' );
-		}
-
-		return __( 'Low', 'host-webfonts-local' );
 	}
 
 	/**
