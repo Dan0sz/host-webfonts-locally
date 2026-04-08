@@ -124,7 +124,7 @@ window.addEventListener('load', () => {
 					this.addInfoBox('preload_notice', preload_analysis, missing_preloads.length);
 				}
 
-				if (cls_analysis && cls_analysis.cls > 0.1) {
+				if (cls_analysis && cls_analysis.cls > 0.01) {
 					this.addInfoBox('cls_notice', cls_analysis);
 				}
 
