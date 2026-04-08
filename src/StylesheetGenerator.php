@@ -20,14 +20,14 @@ use OMGF\Helper as OMGF;
 use OMGF\Admin\Settings;
 
 class StylesheetGenerator {
+	/** @var int $timestamp */
+	private static $timestamp;
+
 	/** @var $fonts */
 	private $fonts;
 
 	/** @var string $plugin */
 	private $plugin;
-
-	/** @var int $timestamp */
-	private $timestamp;
 
 	/**
 	 * OMGF_GenerateStylesheet constructor.
@@ -38,7 +38,7 @@ class StylesheetGenerator {
 	) {
 		$this->fonts     = $fonts;
 		$this->plugin    = $plugin;
-		$this->timestamp = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
+		self::$timestamp = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
 	}
 
 	/**
@@ -76,7 +76,7 @@ class StylesheetGenerator {
 					'font-family'   => "'$font_family'",
 					'font-style'    => $variant->fontStyle,
 					'font-weight'   => $variant->fontWeight,
-					'src'           => $this->build_source_string( [ 'woff2' => $variant->woff2 ], 'url', false ),
+					'src'           => self::build_source_string( [ 'woff2' => $variant->woff2 ] ),
 					'unicode-range' => $variant->range ?? '',
 				];
 
@@ -88,23 +88,27 @@ class StylesheetGenerator {
 	}
 
 	/**
-	 * @param        $sources
-	 * @param string $type
+	 * @param array  $sources e.g. { 'woff2' => '/path/to/font.woff2' } or when $type is 'local' { 0 => 'FontFamilyName' }
+	 * @param string $type    url | local
 	 * @param bool   $end_semi_colon
 	 *
 	 * @return string
 	 */
-	private function build_source_string( $sources, $type = 'url', $end_semi_colon = true ) {
+	public static function build_source_string( $sources, $type = 'url', $end_semi_colon = true ) {
 		$last_src = end( $sources );
 		$source   = '';
 		$n        = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ? "\n" : '';
 
 		foreach ( $sources as $format => $url ) {
-			$source_url = $url . '?ver=' . $this->timestamp;
-			$source     .= "$type('$source_url')" . ( ! is_numeric( $format ) ? "format('$format')" : '' );
+			$source = $type === 'url' ? $url . '?ver=' . self::$timestamp : $url;
+			$source = "$type('$source')";
+
+			if ( $type !== 'local' ) {
+				$source .= ( ! is_numeric( $format ) ? "format('$format')" : '' );
+			}
 
 			if ( $url === $last_src && $end_semi_colon ) {
-				$source .= ";$n";
+				$source .= ";";
 			} else {
 				$source .= ",$n";
 			}
@@ -135,10 +139,12 @@ class StylesheetGenerator {
 				continue;
 			}
 
-			$css .= "{$name}:{$value};{$n}";
+			$end = $name === 'src' ? '' : ';';
+
+			$css .= "$name: $value${end}$n";
 		}
 
-		$css .= "}{$n}";
+		$css .= "}$n";
 
 		return apply_filters( 'omgf_stylesheet_generator_font_face', $css, $properties );
 	}
