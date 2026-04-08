@@ -64,7 +64,6 @@ window.addEventListener('load', () => {
 			let missing_preloads = [];
 			let unused_fonts = [];
 			let status = null;
-			let font_cls = 0;
 
 			try {
 				let google_fonts = this.filterGoogleFonts();
@@ -136,7 +135,6 @@ window.addEventListener('load', () => {
 					detail: {
 						missing_preloads: missing_preloads,
 						unused_fonts: unused_fonts,
-						cls: font_cls || 0,
 						status: status,
 					}
 				}));
