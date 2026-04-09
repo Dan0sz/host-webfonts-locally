@@ -438,7 +438,8 @@ class Optimize extends Builder {
 	public function do_promo_apply_font_display_globally() {
 		$this->do_checkbox(
 			__( 'Apply Font-Display Option Globally (Pro)', 'host-webfonts-local' ),
-			'force_font_display', ! empty( OMGF::get_option( 'force_font_display' ) ),
+			'force_font_display',
+			! empty( OMGF::get_option( 'force_font_display' ) ),
 			__(
 				'Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.',
 				'host-webfonts-local'
@@ -450,7 +451,8 @@ class Optimize extends Builder {
 	public function do_promo_magic_fallbacks() {
 		$this->do_checkbox(
 			__( 'Magic Fallbacks (Pro)', 'host-webfonts-local' ),
-			'magic_fallbacks', ! empty( OMGF::get_option( 'magic_fallbacks' ) ),
+			'magic_fallbacks',
+			! empty( OMGF::get_option( 'magic_fallbacks' ) ),
 			__(
 				'Magic Fallbacks keeps your layout rock-solid while Google Fonts load and automatically generates mathematically tuned system fonts that match your typography\'s exact proportions. <em>Requires Smart Optimize to be enabled.</em>',
 				'host-webfonts-local'
@@ -467,11 +469,13 @@ class Optimize extends Builder {
 	public function do_promo_smart_optimize() {
 		$this->do_checkbox(
 			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
-			'smart_optimize', ! empty( OMGF::get_option( 'smart_optimize' ) ),
+			'smart_optimize',
+			! empty( OMGF::get_option( 'smart_optimize' ) ),
 			__(
 				'Smart Optimize automatically detects which fonts, subsets and weights are actually used on each individual page and preloads the ones that matter and removes the ones that don\'t.',
 				'host-webfonts-local'
-			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
+			) . ' ' . $this->promo,
+			! defined( 'OMGF_PRO_ACTIVE' )
 		);
 	}
 
@@ -481,7 +485,8 @@ class Optimize extends Builder {
 	public function do_test_mode() {
 		$this->do_checkbox(
 			__( 'Test Mode', 'host-webfonts-local' ),
-			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE, ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ),
+			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE,
+			! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) ),
 			__(
 				'With this setting enabled, OMGF\'s optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend.',
 				'host-webfonts-local'
