@@ -49,8 +49,9 @@ class Optimize extends Builder {
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_display_option' ], 60 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_apply_font_display_globally' ], 70 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_smart_optimize' ], 80 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 90 );
-		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_contents' ], 100 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_promo_magic_fallbacks' ], 90 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_after' ], 100 );
+		add_action( 'omgf_optimize_settings_content', [ $this, 'do_optimize_fonts_contents' ], 110 );
 		add_action( 'omgf_optimize_settings_content', [ $this, 'close_optimize_fonts_container' ], 300 );
 
 	}
@@ -441,7 +442,20 @@ class Optimize extends Builder {
 			__(
 				'Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.',
 				'host-webfonts-local'
-			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
+			) . ' ' . $this->promo,
+			! defined( 'OMGF_PRO_ACTIVE' )
+		);
+	}
+
+	public function do_promo_magic_fallbacks() {
+		$this->do_checkbox(
+			__( 'Magic Fallbacks (Pro)', 'host-webfonts-local' ),
+			'magic_fallbacks', ! empty( OMGF::get_option( 'magic_fallbacks' ) ),
+			__(
+				'Magic Fallbacks keeps your layout rock-solid while Google Fonts load and automatically generates mathematically tuned system fonts that match your typography\'s exact proportions. <em>Requires Smart Optimize to be enabled.</em>',
+				'host-webfonts-local'
+			) . ' ' . $this->promo,
+			! defined( 'OMGF_PRO_ACTIVE' )
 		);
 	}
 
@@ -455,7 +469,7 @@ class Optimize extends Builder {
 			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
 			'smart_optimize', ! empty( OMGF::get_option( 'smart_optimize' ) ),
 			__(
-				'Let OMGF Pro figure it out! Smart Optimize automatically detects the right fonts, subsets, preloads and fallback font stacks for every individual page on your site — and removes the ones that don\'t belong. Set it once, forget it forever.',
+				'Smart Optimize automatically detects which fonts, subsets and weights are actually used on each individual page and preloads the ones that matter and removes the ones that don\'t.',
 				'host-webfonts-local'
 			) . ' ' . $this->promo, ! defined( 'OMGF_PRO_ACTIVE' )
 		);
