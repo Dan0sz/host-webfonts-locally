@@ -324,7 +324,7 @@ class Optimize extends Builder {
 								<?php do_action( 'omgf_optimize_local_fonts_replace', $handle, $font->id ); ?>
 								<input autocomplete="off" type="checkbox" class="replace"
 									<?php echo esc_attr( $checked ); ?>
-									<?php echo esc_attr( $disabled ? '' : 'disabled' ); ?>
+									<?php echo $disabled ? esc_attr( 'disabled' ) : ''; ?>
 									   name="omgf_pro_replace_font[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]"/>
 							</td>
 						</tr>
