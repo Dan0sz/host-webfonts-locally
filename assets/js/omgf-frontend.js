@@ -6,11 +6,13 @@
 let omgf_font_cls = 0;
 let omgf_fonts_ready = false;
 let omgf_dom_content_loaded = document.readyState !== 'loading';
+let omgf_dom_content_loaded_time = omgf_dom_content_loaded ? performance.now() : 0;
 let omgf_cls_supported = false;
 
 if (!omgf_dom_content_loaded) {
 	document.addEventListener('DOMContentLoaded', () => {
 		omgf_dom_content_loaded = true;
+		omgf_dom_content_loaded_time = performance.now();
 	});
 }
 
@@ -31,7 +33,7 @@ if (omgf_cls_supported && typeof document.fonts !== 'undefined' && typeof docume
 			list.getEntries().forEach((entry) => {
 				// Only count shifts during the font swap window:
 				// after DOMContentLoaded, before fonts.ready, without user input.
-				if (!entry.hadRecentInput && omgf_dom_content_loaded && !omgf_fonts_ready) {
+				if (!entry.hadRecentInput && omgf_dom_content_loaded && !omgf_fonts_ready && entry.startTime >= omgf_dom_content_loaded_time) {
 					omgf_font_cls += entry.value;
 				}
 			});
@@ -124,7 +126,7 @@ window.addEventListener('load', () => {
 					this.addInfoBox('preload_notice', preload_analysis, missing_preloads.length);
 				}
 
-				if (cls_analysis && cls_analysis.cls > 0.01) {
+				if (cls_analysis && cls_analysis.cls >= 0.01) {
 					this.addInfoBox('cls_notice', cls_analysis);
 				}
 
@@ -520,21 +522,22 @@ window.addEventListener('load', () => {
 		analyzeCLS: function (cls) {
 			const MIN_CLS_THRESHOLD = 0.01;
 			let impact = omgf_frontend_i18n.info_box_impact_low;
+			let rounded_cls = Math.round(cls * 1000) / 1000;
 
-			if (cls < MIN_CLS_THRESHOLD) {
+			if (rounded_cls < MIN_CLS_THRESHOLD) {
 				return {};
 			}
 
-			if (cls > 0.1) {
+			if (rounded_cls > 0.1) {
 				impact = omgf_frontend_i18n.info_box_impact_medium;
 			}
 
-			if (cls > 0.25) {
+			if (rounded_cls > 0.25) {
 				impact = omgf_frontend_i18n.info_box_impact_high;
 			}
 
 			return {
-				cls: Math.round(cls * 1000) / 1000,
+				cls: rounded_cls,
 				impact: impact,
 			}
 		},
