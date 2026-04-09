@@ -2,6 +2,54 @@
  * @package OMGF
  * @author Daan van den Bergh
  */
+// Start measuring CLS as early as possible, before the load event.
+let omgf_font_cls = 0;
+let omgf_fonts_ready = false;
+let omgf_dom_content_loaded = document.readyState !== 'loading';
+let omgf_dom_content_loaded_time = omgf_dom_content_loaded ? performance.now() : 0;
+let omgf_cls_supported = false;
+
+if (!omgf_dom_content_loaded) {
+	document.addEventListener('DOMContentLoaded', () => {
+		omgf_dom_content_loaded = true;
+		omgf_dom_content_loaded_time = performance.now();
+	});
+}
+
+// Feature detect layout-shift support before observing.
+try {
+	let test_observer = new PerformanceObserver(() => {
+	});
+	test_observer.observe({type: 'layout-shift', buffered: false});
+	test_observer.disconnect();
+	omgf_cls_supported = true;
+} catch (e) {
+	// layout-shift not supported in this browser.
+}
+
+if (omgf_cls_supported && typeof document.fonts !== 'undefined' && typeof document.fonts.ready !== 'undefined') {
+	try {
+		let omgf_cls_observer = new PerformanceObserver((list) => {
+			list.getEntries().forEach((entry) => {
+				// Only count shifts during the font swap window:
+				// after DOMContentLoaded, before fonts.ready, without user input.
+				if (!entry.hadRecentInput && omgf_dom_content_loaded && !omgf_fonts_ready && entry.startTime >= omgf_dom_content_loaded_time) {
+					omgf_font_cls += entry.value;
+				}
+			});
+		});
+		omgf_cls_observer.observe({type: 'layout-shift', buffered: true});
+
+		// Stop observer once fonts are ready.
+		document.fonts.ready.then(() => {
+			omgf_fonts_ready = true;
+			omgf_cls_observer.disconnect();
+		});
+	} catch (e) {
+		// Observer setup failed.
+	}
+}
+
 window.addEventListener('load', () => {
 	let omgf_frontend = {
 		menu_item: document.getElementById('wp-admin-bar-omgf'),
@@ -14,18 +62,20 @@ window.addEventListener('load', () => {
 		 * @return void
 		 */
 		init: async function () {
+			let response = null;
 			let missing_preloads = [];
 			let unused_fonts = [];
 			let status = null;
 
 			try {
 				let google_fonts = this.filterGoogleFonts();
-				let response = await this.getStatus(google_fonts);
+				response = await this.getStatus(google_fonts);
 				let unused_fonts_analysis = response.unused_fonts_analysis || {};
-				let preload_analysis = response.preload_analysis || {};
-				status = response.status || null;
-				missing_preloads = response.missing_preloads || [];
 				unused_fonts = response.unused_fonts || [];
+				let preload_analysis = response.preload_analysis || {};
+				missing_preloads = response.missing_preloads || [];
+				let cls_analysis = response.cls_analysis || {};
+				status = response.status || null;
 
 				// menu_item only exists if the logged-in user has the manage_options cap.
 				if (this.menu_item === null) {
@@ -74,6 +124,10 @@ window.addEventListener('load', () => {
 
 				if (preload_analysis && preload_analysis.potential_delay_ms > 0 && missing_preloads.length > 0) {
 					this.addInfoBox('preload_notice', preload_analysis, missing_preloads.length);
+				}
+
+				if (cls_analysis && cls_analysis.cls >= 0.01) {
+					this.addInfoBox('cls_notice', cls_analysis);
 				}
 
 			} catch (error) {
@@ -343,6 +397,7 @@ window.addEventListener('load', () => {
 
 			const unused_fonts_analysis = this.analyzeUnusedFonts(unused_fonts);
 			const preload_analysis = await this.analyzePreloadImpact(missing_preloads);
+			const cls_analysis = this.analyzeCLS(omgf_font_cls);
 
 			let data = new FormData();
 			data.append('path', document.location.pathname);
@@ -350,13 +405,15 @@ window.addEventListener('load', () => {
 			data.append('params', JSON.stringify(params));
 			data.append('unused_fonts_analysis', JSON.stringify(unused_fonts_analysis));
 			data.append('preload_analysis', JSON.stringify(preload_analysis));
+			data.append('cls_analysis', JSON.stringify(cls_analysis));
 
 			return await omgf_frontend.ajax(data).then(response => {
 				if (response) {
 					response.unused_fonts_analysis = unused_fonts_analysis;
+					response.unused_fonts = unused_fonts;
 					response.preload_analysis = preload_analysis;
 					response.missing_preloads = missing_preloads;
-					response.unused_fonts = unused_fonts;
+					response.cls_analysis = cls_analysis;
 				}
 
 				return response;
@@ -460,6 +517,29 @@ window.addEventListener('load', () => {
 				count: count,
 				impact: impact
 			};
+		},
+
+		analyzeCLS: function (cls) {
+			const MIN_CLS_THRESHOLD = 0.01;
+			let impact = omgf_frontend_i18n.info_box_impact_low;
+			let rounded_cls = Math.round(cls * 1000) / 1000;
+
+			if (rounded_cls < MIN_CLS_THRESHOLD) {
+				return {};
+			}
+
+			if (rounded_cls > 0.1) {
+				impact = omgf_frontend_i18n.info_box_impact_medium;
+			}
+
+			if (rounded_cls > 0.25) {
+				impact = omgf_frontend_i18n.info_box_impact_high;
+			}
+
+			return {
+				cls: rounded_cls,
+				impact: impact,
+			}
 		},
 
 		/**
@@ -600,7 +680,13 @@ window.addEventListener('load', () => {
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
 			}
 
-			if (status === 'unload_notice' || status === 'preload_notice' || status === 'multilang_plugin') {
+			if (status === 'cls_notice') {
+				info_box.id = 'wp-admin-bar-omgf-cls-info';
+				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_cls_text, data.cls, data.impact);
+				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
+			}
+
+			if (status === 'cls_notice' || status === 'unload_notice' || status === 'preload_notice' || status === 'multilang_plugin') {
 				info_box.classList.add('info');
 			}
 

@@ -33,13 +33,6 @@ class Actions {
 	}
 
 	/**
-	 * Initializes everything required to process frontend optimization.
-	 */
-	public function init_frontend() {
-		new Process();
-	}
-
-	/**
 	 * @param \WP_Admin_Bar $admin_bar
 	 *
 	 * @return void
@@ -97,6 +90,13 @@ class Actions {
 	}
 
 	/**
+	 * Initializes everything required to process frontend optimization.
+	 */
+	public function init_frontend() {
+		new Process();
+	}
+
+	/**
 	 * These scripts are only loaded for logged-in administrators unless:
 	 * - The Disable Admin Bar Menu option is enabled.
 	 * - The Enable Google Fonts checker option is enabled.
@@ -130,6 +130,7 @@ class Actions {
 				'info_box_notice_text'           => __( 'There are potential issues in your configuration that require your attention.', 'host-webfonts-local' ),
 				'info_box_preload_text'          => __( 'Preloading %s fonts could save ~%sms on your LCP · %s impact', 'host-webfonts-local' ),
 				'info_box_unload_text'           => __( '%s fonts loaded but unused · %s impact', 'host-webfonts-local' ),
+				'info_box_cls_text'              => __( 'Google Fonts are causing layout shifts · CLS: %s · %s impact', 'host-webfonts-local' ),
 				'info_box_multilang_plugin_text' => __( '%s detected · %d subsets loading on every page · %s impact', 'host-webfonts-local' ),
 				'info_box_impact_high'           => __( 'High', 'host-webfonts-local' ),
 				'info_box_impact_medium'         => __( 'Medium', 'host-webfonts-local' ),

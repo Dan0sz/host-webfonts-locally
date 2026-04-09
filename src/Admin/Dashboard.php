@@ -338,6 +338,22 @@ class Dashboard {
 									); ?>
 								</li>
 							<?php endif; ?>
+							<?php if ( ! empty( $performance_checker_results['highest_cls'] ) ) : ?>
+								<li>
+									<?php
+									$cls    = $performance_checker_results['highest_cls'];
+									$path   = $performance_checker_results['highest_cls_path'] ?? '';
+									$impact = $performance_checker_results['highest_cls_impact'] ?? __( 'Low', 'host-webfonts-local' );
+
+									printf(
+										__( 'Your fonts are causing layout shifts with a %2$s impact (<strong>CLS score: %1$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too. OMGF Pro\'s Magic Fallbacks fixes this automatically, on every page.', 'host-webfonts-local' ),
+										esc_html( $cls ),
+										strtolower( esc_html( $impact ) ),
+										esc_url( home_url( $path ) )
+									);
+									?>
+								</li>
+							<?php endif; ?>
 						</ol>
 						<p style="text-align: right; margin-bottom: 0;">
 							<small>
