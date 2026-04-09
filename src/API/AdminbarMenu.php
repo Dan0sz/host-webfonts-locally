@@ -240,8 +240,10 @@ class AdminbarMenu {
 			$updated                                   = true;
 		}
 
-		if ( $path !== '' && ! empty( $cls_analysis['cls'] ) && ( empty( $stored_metrics['highest_cls'] ) || round( $cls_analysis['cls'], 3 ) > $stored_metrics['highest_cls'] ) ) {
-			$stored_metrics['highest_cls']           = round( $cls_analysis['cls'], 3 );
+		$rounded_cls = isset( $cls_analysis['cls'] ) ? round( (float) $cls_analysis['cls'], 3 ) : 0.0;
+
+		if ( $path !== '' && $rounded_cls > 0.01 && ( empty( $stored_metrics['highest_cls'] ) || $rounded_cls > (float) $stored_metrics['highest_cls'] ) ) {
+			$stored_metrics['highest_cls']           = $rounded_cls;
 			$stored_metrics['highest_cls_path']      = $path;
 			$stored_metrics['highest_cls_impact']    = $cls_analysis['impact'] ?? __( 'Low', 'host-webfonts-local' );
 			$stored_metrics['highest_cls_timestamp'] = time();
