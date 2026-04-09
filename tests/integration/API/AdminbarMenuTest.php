@@ -293,7 +293,6 @@ class AdminbarMenuTest extends TestCase {
 
 	/**
 	 * @return void
-	 * @throws \ReflectionException
 	 */
 	public function testPerformanceMetricsCLS() {
 		$api = new AdminbarMenu();
@@ -316,7 +315,7 @@ class AdminbarMenuTest extends TestCase {
 			$this->assertEquals( 'Medium', $metrics['highest_cls_impact'] );
 			$this->assertNotNull( $metrics['highest_cls_timestamp'] );
 
-			// Case 2: Update with higher CLS value (should update).
+			// Case 2: Update with a higher CLS value (should update).
 			$request_higher = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_higher->set_param( 'path', '/cls-test-higher' );
 			$cls_analysis_higher = [
@@ -347,7 +346,7 @@ class AdminbarMenuTest extends TestCase {
 			$this->assertEquals( 0.235, $metrics['highest_cls'] );
 			$this->assertEquals( '/cls-test-higher', $metrics['highest_cls_path'] );
 
-			// Case 4: Exercise CLS boundary around 0.01 (e.g. cls = 0.0104).
+			// Case 4: Exercise CLS boundary around 0.01 (e.g., cls = 0.0104).
 			$request_boundary = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_boundary->set_param( 'path', '/cls-test-boundary' );
 			// 0.0104 should be rounded to 0.01 and thus pass the >= 0.01 threshold.
