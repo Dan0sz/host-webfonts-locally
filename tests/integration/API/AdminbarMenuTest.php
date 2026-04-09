@@ -346,10 +346,10 @@ class AdminbarMenuTest extends TestCase {
 			$this->assertEquals( 0.235, $metrics['highest_cls'] );
 			$this->assertEquals( '/cls-test-higher', $metrics['highest_cls_path'] );
 
-			// Case 4: Exercise CLS boundary around 0.01 (e.g., cls = 0.0104).
+			// Case 4a: 0.0104 rounds to 0.010 and should NOT persist because logic is > 0.01.
+			OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
 			$request_boundary = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request_boundary->set_param( 'path', '/cls-test-boundary' );
-			// 0.0104 should be rounded to 0.01 and thus pass the >= 0.01 threshold.
 			$cls_analysis_boundary = [
 				'cls'    => 0.0104,
 				'impact' => 'Low',
@@ -359,10 +359,17 @@ class AdminbarMenuTest extends TestCase {
 			$api->get_admin_bar_status( $request_boundary );
 			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
 
-			// Since 0.0104 < 0.235, it should NOT update highest_cls, but we've exercised the API logic with this value.
-			$this->assertEquals( 0.235, $metrics['highest_cls'] );
-			$this->assertEquals( '/cls-test-higher', $metrics['highest_cls_path'] );
-			$this->assertEquals( 'High', $metrics['highest_cls_impact'] );
+			$this->assertArrayNotHasKey( 'highest_cls', $metrics );
+
+			// Case 4b: 0.0106 rounds to 0.011 and SHOULD persist.
+			$request_boundary_pass = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request_boundary_pass->set_param( 'path', '/cls-test-boundary-pass' );
+			$request_boundary_pass->set_param( 'cls_analysis', json_encode( [ 'cls' => 0.0106, 'impact' => 'Low' ] ) );
+			$api->get_admin_bar_status( $request_boundary_pass );
+
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$this->assertEquals( 0.011, $metrics['highest_cls'] );
+			$this->assertEquals( '/cls-test-boundary-pass', $metrics['highest_cls_path'] );
 		} finally {
 			OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
 		}
