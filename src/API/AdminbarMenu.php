@@ -259,11 +259,11 @@ class AdminbarMenu {
 	 * @param array $stored_results
 	 * @param array $unused_fonts_analysis
 	 * @param array $preload_analysis
-	 * @param float $font_cls
+	 * @param array $cls_analysis
 	 *
 	 * @return string
 	 */
-	private function calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis, $font_cls = 0.0 ) {
+	private function calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis, $cls_analysis ) {
 		$status = 'success';
 
 		if ( ! OMGF::optimize_succeeded() ) {
@@ -278,7 +278,7 @@ class AdminbarMenu {
 			$status = 'notice';
 		}
 
-		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() || $font_cls > 0.01 ) {
+		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() || ! empty ( $cls_analysis ) ) {
 			// Alerts and notices should take precedence.
 			if ( $status !== 'alert' && $status !== 'notice' ) {
 				$status = 'info';
