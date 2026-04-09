@@ -97,6 +97,10 @@ class StylesheetGenerator {
 					$properties['src'] = self::build_source_string( [ 'woff2' => $variant->woff2 ] );
 				}
 
+				if ( empty( $properties['src'] ) ) {
+					continue;
+				}
+
 				$stylesheet .= self::generate_font_face( $properties );
 			}
 		}
