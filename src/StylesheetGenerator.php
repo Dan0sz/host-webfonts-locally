@@ -36,9 +36,23 @@ class StylesheetGenerator {
 		$fonts,
 		string $plugin
 	) {
-		$this->fonts     = $fonts;
-		$this->plugin    = $plugin;
-		self::$timestamp = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
+		$this->fonts  = $fonts;
+		$this->plugin = $plugin;
+
+		self::set_timestamp();
+	}
+
+	/**
+	 * Ensure the static timestamp is initialized for static contexts.
+	 *
+	 * This mirrors the constructor logic so static calls behave identically.
+	 *
+	 * @return void
+	 */
+	private static function set_timestamp() {
+		if ( self::$timestamp === null ) {
+			self::$timestamp = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
+		}
 	}
 
 	/**
@@ -98,6 +112,8 @@ class StylesheetGenerator {
 	 * @return string
 	 */
 	public static function build_source_string( $sources, $type = 'url', $end_semi_colon = true ) {
+		self::set_timestamp();
+
 		$source   = '';
 		$n        = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ? "\n" : '';
 		$last_src = array_key_last( $sources );
