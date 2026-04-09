@@ -346,9 +346,9 @@ class Dashboard {
 									$impact = $performance_checker_results['highest_cls_impact'] ?? __( 'Low', 'host-webfonts-local' );
 
 									printf(
-										__( 'Your fonts are causing layout shifts (CLS: <strong>%1$s</strong>, impact: <strong>%2$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too. OMGF Pro\'s Smart Optimize fixes this automatically, on every page.', 'host-webfonts-local' ),
+										__( 'Your fonts are causing layout shifts with a %2$s impact (<strong>CLS score: %1$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too. OMGF Pro\'s Smart Optimize fixes this automatically, on every page.', 'host-webfonts-local' ),
 										esc_html( $cls ),
-										esc_html( $impact ),
+										strtolower( esc_html( $impact ) ),
 										esc_url( home_url( $path ) )
 									);
 									?>
