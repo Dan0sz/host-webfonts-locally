@@ -184,7 +184,7 @@ class AdminbarMenuTest extends TestCase {
 			$request->set_param( 'preload_analysis', json_encode( $preload_analysis ) );
 
 			$response = $api->get_admin_bar_status( $request );
-			$metrics  = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$metrics  = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 			$this->assertEquals( 'info', $response['status'] );
 			$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
@@ -211,7 +211,7 @@ class AdminbarMenuTest extends TestCase {
 
 			$api->get_admin_bar_status( $request_lower );
 
-			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 			$this->assertEquals( '/performance-test', $metrics['highest_unused_path'] );
 			$this->assertEquals( 80, $metrics['highest_delay_ms'] );
@@ -232,7 +232,7 @@ class AdminbarMenuTest extends TestCase {
 
 			$api->get_admin_bar_status( $request_higher );
 
-			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 			$this->assertEquals( '/performance-test-higher', $metrics['highest_unused_path'] );
 			$this->assertEquals( 150, $metrics['highest_delay_ms'] );
@@ -278,7 +278,7 @@ class AdminbarMenuTest extends TestCase {
 
 				$api->get_admin_bar_status( $request_empty );
 
-				$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+				$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 				$this->assertEquals( 150, $metrics['highest_delay_ms'] );
 			} finally {
@@ -308,7 +308,7 @@ class AdminbarMenuTest extends TestCase {
 			$request->set_param( 'cls_analysis', json_encode( $cls_analysis ) );
 
 			$api->get_admin_bar_status( $request );
-			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 			$this->assertEquals( 0.123, $metrics['highest_cls'] );
 			$this->assertEquals( '/cls-test', $metrics['highest_cls_path'] );
@@ -325,7 +325,7 @@ class AdminbarMenuTest extends TestCase {
 			$request_higher->set_param( 'cls_analysis', json_encode( $cls_analysis_higher ) );
 
 			$api->get_admin_bar_status( $request_higher );
-			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 			$this->assertEquals( 0.235, $metrics['highest_cls'] );
 			$this->assertEquals( '/cls-test-higher', $metrics['highest_cls_path'] );
@@ -341,7 +341,7 @@ class AdminbarMenuTest extends TestCase {
 			$request_lower->set_param( 'cls_analysis', json_encode( $cls_analysis_lower ) );
 
 			$api->get_admin_bar_status( $request_lower );
-			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 			$this->assertEquals( 0.235, $metrics['highest_cls'] );
 			$this->assertEquals( '/cls-test-higher', $metrics['highest_cls_path'] );
@@ -357,7 +357,7 @@ class AdminbarMenuTest extends TestCase {
 			$request_boundary->set_param( 'cls_analysis', json_encode( $cls_analysis_boundary ) );
 
 			$api->get_admin_bar_status( $request_boundary );
-			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 
 			$this->assertArrayNotHasKey( 'highest_cls', $metrics );
 
@@ -367,7 +367,7 @@ class AdminbarMenuTest extends TestCase {
 			$request_boundary_pass->set_param( 'cls_analysis', json_encode( [ 'cls' => 0.0106, 'impact' => 'Low' ] ) );
 			$api->get_admin_bar_status( $request_boundary_pass );
 
-			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK );
+			$metrics = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
 			$this->assertEquals( 0.011, $metrics['highest_cls'] );
 			$this->assertEquals( '/cls-test-boundary-pass', $metrics['highest_cls_path'] );
 		} finally {
