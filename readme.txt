@@ -17,7 +17,7 @@ OMGF automagically caches the Google Fonts used by your theme/plugins locally. N
 > How could using fonts via Google's service possibly run afoul of GDPR? The fact of the matter is that, when a font is requested by the user's browser, their IP is logged by Google and used for analytics.
 > — Lifehacker
 
-**Leverage Browser Cache**, **reduce DNS lookups/requests**, **reduce Cumulative Layout Shift** and make your Google Fonts **100% GDPR compliant** with OMGF!
+**Leverage Browser Cache**, **reduce DNS lookups/requests**, **reduce Cumulative Layout Shift** and make your Google Fonts **100% GDPR-compliant** with OMGF!
 
 OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts API to automatically cache the fonts your theme and plugins use to **minimize DNS requests** and speed up your WordPress website.
 
@@ -35,7 +35,7 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 
 = Other Features include =
 
-- The **integrated Google Fonts checker** notifies you if a plugin or your theme has added Google Fonts (e.g. after an update) it can't process.
+- The **integrated Google Fonts checker** notifies you if a plugin or your theme has added Google Fonts (e.g., after an update) it can't process.
 - **Variable Fonts** support,
 - Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet up to 90%!
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or
@@ -46,8 +46,8 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 = Additional Features in OMGF Pro =
 
 - Run the **Google Fonts checker** in the frontend (for all users) to **organically check for present external Google Fonts** throughout your site.
-- **Smart Optimize** automatically detects which fonts, subsets, and weights are actually used on each individual page — preloading the ones that matter and removing the ones that don't, to **eliminate render-blocking resources** and **reduce unused CSS**.
-- **Magic Fallbacks** generates mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load. Requires Smart Optimize.
+- **Smart Optimize** automatically detects which fonts, subsets, and weights are actually used on each page — preloading the ones that matter and removing the ones that don't, to **eliminate render-blocking resources** and **reduce unused CSS**.
+- **Magic Fallbacks** generates mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load.
 - Automatically configures itself to make sure all externally hosted Google Fonts on your site are hosted locally. OMGF Pro supports:
 	- `@font-face` and `@import` statements inside **inline `<style>` blocks**,
 	- `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,

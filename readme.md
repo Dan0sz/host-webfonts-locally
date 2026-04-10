@@ -15,7 +15,7 @@ OMGF automagically caches the Google Fonts used by your theme/plugins locally. N
 > — Lifehacker
 
 **Leverage Browser Cache**, **reduce DNS lookups/requests**, **reduce Cumulative Layout Shift** and make your Google
-Fonts **100% GDPR compliant**
+Fonts **100% GDPR-compliant**
 with OMGF!
 
 OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts API to automatically cache the
@@ -53,10 +53,9 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 
 - Run the Google Fonts checker in the frontend (for all users) to organically check for present external Google Fonts
   throughout your site.
-- **Smart Optimize** automatically detects which fonts, subsets and weights are actually used on each individual page — preloading the ones that matter and removing the ones that don't, to **eliminate
+- **Smart Optimize** automatically detects which fonts, subsets and weights are actually used on each page — preloading the ones that matter and removing the ones that don't, to **eliminate
   render-blocking resources** and **reduce unused CSS**.
-- **Magic Fallbacks** generates mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load. Requires Smart Optimize.
-  and [Ensure Text Remains Visible During Webfont Load](https://daan.dev/blog/how-to/ensure-text-remains-visible-during-webfont-load/).
+- **Magic Fallbacks** generates mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load.
 - Automatically configures itself to make sure all externally hosted Google Fonts on your site are hosted locally. OMGF
   Pro supports:
 	- `@font-face` and `@import` statements inside **inline `<style>` blocks**,
@@ -70,7 +69,7 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 - Whitelabel stylesheets, which removes branding and comments from the stylesheets to further reduce the size.
 - Modify your fonts' `src: url()` attribute to fully integrate with your configuration,
 	- Use this to serve fonts and the stylesheets from your CDN, or
-	- To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide,
+	- To serve fonts from an alternative path (e.g., when you're using Security through Obscurity plugins like WP Hide,
 	  etc.), or
 	- Anything you like!
 - Dev Mode, which allows you to easily migrate between Development, Staging/Testing, Acceptance and Production
