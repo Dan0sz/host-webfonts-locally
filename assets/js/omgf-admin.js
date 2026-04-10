@@ -366,6 +366,11 @@ jQuery(document).ready(function ($) {
 			});
 		},
 
+		/**
+		 * Toggle the Modify Source URL option, based on the value of Developer Mode.
+		 *
+		 * @param e
+		 */
 		toggle_src_url: function (e) {
 			let src_url = document.getElementsByClassName('source-url')[0];
 
