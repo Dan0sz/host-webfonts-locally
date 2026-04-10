@@ -188,8 +188,10 @@ class Advanced extends Builder {
 
 		$this->do_checkbox(
 			__( 'Developer Mode (Pro)', 'host-webfonts-local' ),
-			'dtap', ! empty( OMGF::get_option( 'dtap', 'on' ) ),
-			$description, ! defined( 'OMGF_PRO_ACTIVE' ),
+			'dtap',
+			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'dtap', 'on' ) ),
+			$description,
+			! defined( 'OMGF_PRO_ACTIVE' ),
 			'task-manager-row'
 		);
 	}
@@ -214,8 +216,9 @@ class Advanced extends Builder {
 			__( 'Modify Source URL (Pro)', 'host-webfonts-local' ),
 			'source_url',
 			__( 'e.g. https://cdn.mydomain.com/alternate/relative-path', 'host-webfonts-local' ),
-			OMGF::get_option( 'source_url' ),
-			$description, ! defined( 'OMGF_PRO_ACTIVE' ) || OMGF::get_option( 'dtap' ) === 'on'
+			defined( 'OMGF_PRO_ACTIVE' ) && OMGF::get_option( 'source_url' ),
+			$description,
+			! defined( 'OMGF_PRO_ACTIVE' ) || OMGF::get_option( 'dtap' ) === 'on'
 		);
 	}
 
@@ -225,14 +228,16 @@ class Advanced extends Builder {
 	public function do_promo_white_label_css() {
 		$this->do_checkbox(
 			__( 'White-label Stylesheets (Pro)', 'host-webfonts-local' ),
-			'white_label', ! empty( OMGF::get_option( 'white_label', 'on' ) ),
+			'white_label',
+			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'white_label', 'on' ) ),
 			sprintf(
 				__(
 					'Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size. %s',
 					'host-webfonts-local'
 				),
 				$this->promo
-			), ! defined( 'OMGF_PRO_ACTIVE' )
+			),
+			! defined( 'OMGF_PRO_ACTIVE' )
 		);
 	}
 
@@ -242,7 +247,8 @@ class Advanced extends Builder {
 	public function do_uninstall() {
 		$this->do_checkbox(
 			__( 'Remove Settings/Files At Uninstall', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_UNINSTALL, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ),
+			Settings::OMGF_ADV_SETTING_UNINSTALL,
+			! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ),
 			__( 'Warning! This will remove all settings and cached fonts upon plugin deletion.', 'host-webfonts-local' )
 		);
 	}

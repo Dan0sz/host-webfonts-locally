@@ -434,7 +434,7 @@ class Optimize extends Builder {
 		$this->do_checkbox(
 			__( 'Apply Font-Display Option Globally (Pro)', 'host-webfonts-local' ),
 			'force_font_display',
-			! empty( OMGF::get_option( 'force_font_display' ) ),
+			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'force_font_display' ) ),
 			__(
 				'Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>.',
 				'host-webfonts-local'
@@ -447,7 +447,7 @@ class Optimize extends Builder {
 		$this->do_checkbox(
 			__( 'Magic Fallbacks (Pro)', 'host-webfonts-local' ),
 			'magic_fallbacks',
-			! empty( OMGF::get_option( 'magic_fallbacks' ) ),
+			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'magic_fallbacks' ) ),
 			__(
 				'Magic Fallbacks generates mathematically tuned system font fallbacks that match your Google Fonts\' exact proportions and <strong>eliminates Cumulative Layout Shift (CLS)</strong> while fonts load. <em>Requires Smart Optimize</em>.',
 				'host-webfonts-local'
@@ -465,7 +465,7 @@ class Optimize extends Builder {
 		$this->do_checkbox(
 			__( 'Smart Optimize (Pro)', 'host-webfonts-local' ),
 			'smart_optimize',
-			! empty( OMGF::get_option( 'smart_optimize' ) ),
+			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'smart_optimize' ) ),
 			__(
 				'Smart Optimize automatically detects which fonts, subsets and weights are actually used on each page and preloads the ones that matter and removes the ones that don\'t, to <strong>reduce unused CSS</strong> and <strong>eliminate render-blocking resources</strong>.',
 				'host-webfonts-local'
