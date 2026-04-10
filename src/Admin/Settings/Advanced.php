@@ -181,7 +181,6 @@ class Advanced extends Builder {
 					'Enable this option (on all instances) to make it easier to migrate between Development/Testing/Staging/Production environments. %s',
 					'host-webfonts-local'
 				),
-				apply_filters( 'omgf_settings_page_title', 'OMGF' ),
 				$this->promo
 			)
 		);
