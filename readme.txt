@@ -36,6 +36,11 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 = Other Features include =
 
 - The **integrated Google Fonts checker** notifies you if a plugin or your theme has added Google Fonts (e.g., after an update) it can't process.
+- The **Performance Checker** automatically monitors your Google Fonts' performance and notifies you about potential improvements in 4 areas:
+  - **Unused subsets** — subsets that are downloaded but never used, increasing **Total Blocking Time**,
+  - **Unused font styles/weights** — font variants that are loaded but not used, causing **unused CSS**,
+  - **Missing preloads** — fonts used above the fold that aren't preloaded, increasing **Largest Contentful Paint** and **First Contentful Paint**,
+  - **Cumulative Layout Shift** — layout shift caused by fonts loading after the page is rendered.
 - **Variable Fonts** support,
 - Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet up to 90%!
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or

@@ -32,7 +32,7 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 - _Preload_ fonts to **reduce Cumulative Layout Shift** above the fold,
 - _Unload_ fonts that're not used by you, your theme and/or plugins,
 - Set a *Fallback Font Stack* (OMGF Pro required), to further **reduce Cumulative Layout Shift**, or
-- Enable *Magic Fallbacks* (OMGF Pro required), to automatically generate mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while
+- Enable *Magic Fallbacks* (OMGF Pro required) to automatically generate mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while
   fonts load.
 - _Replace_ (OMGF Pro required) font-families with system fonts to **speed up page loading times**!
 
@@ -41,6 +41,11 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 - The **integrated Google Fonts checker** sniffs through the network requests on your website on each pageload. If it
   still finds externally hosted Google Fonts after optimization, it will notify you and provide solutions where
   possible.
+- The **Performance Checker** automatically monitors your Google Fonts' performance and notifies you about potential improvements in four areas:
+	- **Unused subsets** — subsets that are downloaded but never used, increasing **Total Blocking Time**,
+	- **Unused font styles/weights** — font variants that are loaded but not used, causing **unused CSS**,
+	- **Missing preloads** — fonts used above the fold that aren't preloaded, increasing **Largest Contentful Paint** and **First Contentful Paint**,
+	- **Cumulative Layout Shift** — layout shift caused by fonts loading after the page is rendered.
 - **Variable Fonts** support,
 - Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet up to 90%!
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or
