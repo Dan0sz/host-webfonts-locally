@@ -278,7 +278,9 @@ class AdminbarMenu {
 			$status = 'notice';
 		}
 
-		if ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || Dashboard::has_multilang_plugin() || ! empty ( $cls_analysis ) ) {
+		$transient = get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() );
+
+		if ( ! $transient && ( ! empty( $unused_fonts_analysis ) || ! empty( $preload_analysis ) || ! empty ( $cls_analysis ) || Dashboard::has_multilang_plugin() ) ) {
 			// Alerts and notices should take precedence.
 			if ( $status !== 'alert' && $status !== 'notice' ) {
 				$status = 'info';
