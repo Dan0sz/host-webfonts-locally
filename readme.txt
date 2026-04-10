@@ -27,9 +27,10 @@ After installing and configuring the plugin, OMGF will automatically start looki
 
 All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's settings screen. There, you can choose to:
 
-- *Preload* fonts to **reduce Cumulative Layout Shift** above the fold,
-- *Unload* fonts that're not used by you, your theme, and/or plugins,
+- *Preload* fonts to **reduce Cumulative Layout Shift** above the fold.
+- *Unload* fonts that're not used by you, your theme, and/or plugins.
 - Set a *Fallback Font Stack* (OMGF Pro required), to further **reduce Cumulative Layout Shift**, or
+- Enable *Magic Fallbacks* (OMGF Pro required), to automatically generate mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load.
 - *Replace* (OMGF Pro required) font-families with system fonts to **speed up loading times**!
 
 = Other Features include =
@@ -39,14 +40,14 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 - Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet up to 90%!
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or
   `fonts.gstatic.com`,
-- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to your Google Fonts,
-- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to all your other fonts! (
-  OMGF Pro required),
+	- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to your Google Fonts,
+- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to all your other fonts! (OMGF Pro required),
 
 = Additional Features in OMGF Pro =
 
 - Run the **Google Fonts checker** in the frontend (for all users) to **organically check for present external Google Fonts** throughout your site.
-- **Smart Preload** automatically configures which fonts should be preloaded i.e., loaded early to reduce Cumulative Layout Shift, Largest Contentful Paint and [Ensure Text Remains Visible During Webfont Load](https://daan.dev/blog/how-to/ensure-text-remains-visible-during-webfont-load/).
+- **Smart Optimize** automatically detects which fonts, subsets, and weights are actually used on each individual page — preloading the ones that matter and removing the ones that don't, to **eliminate render-blocking resources** and **reduce unused CSS**.
+- **Magic Fallbacks** generates mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load. Requires Smart Optimize.
 - Automatically configures itself to make sure all externally hosted Google Fonts on your site are hosted locally. OMGF Pro supports:
 	- `@font-face` and `@import` statements inside **inline `<style>` blocks**,
 	- `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,
