@@ -39,7 +39,12 @@ jQuery(document).ready(function ($) {
 			$('.omgf-optimize-fonts-manage .unload-italics').on('click', this.unload_italics);
 			$('.omgf-optimize-fonts-manage .unload-all').on('click', this.unload_all);
 			$('.omgf-optimize-fonts-manage .load-all').on('click', this.load_all);
-			document.getElementById('dtap').addEventListener('change', this.toggle_src_url);
+
+			const developer_mode = document.getElementById('dtap');
+
+			if (developer_mode !== null) {
+				developer_mode.addEventListener('change', this.toggle_src_url);
+			}
 
 			// Buttons (AJAX, etc.)
 			$('#omgf-save-optimize, #omgf-optimize-again').on('click', function () {
