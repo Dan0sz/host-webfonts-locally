@@ -47,7 +47,6 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 	- **Missing preloads** — fonts used above the fold that aren't preloaded, increasing **Largest Contentful Paint** and **First Contentful Paint**,
 	- **Cumulative Layout Shift** — layout shift caused by fonts loading after the page is rendered.
 - **Variable Fonts** support,
-- Automatically **Remove unused subsets** to reduce the size of the CSS stylesheet up to 90%!
 - **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or
   `fonts.gstatic.com`,
 - **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to your Google Fonts,
@@ -56,8 +55,6 @@ All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's se
 
 ### Additional Features in OMGF Pro
 
-- Run the Google Fonts checker in the frontend (for all users) to organically check for present external Google Fonts
-  throughout your site.
 - **Smart Optimize** automatically detects which fonts, subsets and weights are actually used on each page — preloading the ones that matter and removing the ones that don't, to **eliminate
   render-blocking resources** and **reduce unused CSS**.
 - **Magic Fallbacks** generates mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load.
