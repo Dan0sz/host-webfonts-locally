@@ -303,23 +303,18 @@ class Optimize extends Builder {
 										name="omgf_pro_fallback_font_stack[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]">
 									<option value=''><?php echo esc_attr__( 'None (default)', 'host-webfonts-local' ); ?></option>
 									<?php foreach ( apply_filters( 'omgf_pro_fallback_font_stacks', Settings::OMGF_FALLBACK_FONT_STACKS_OPTIONS ) as $value => $label ) : ?>
-										<option <?php echo esc_attr(
-											defined( 'OMGF_PRO_ACTIVE' ) &&
-											isset( OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] ) &&
-											OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] === $value ? 'selected' : ''
-										); ?> value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
+										<?php $selected = apply_filters( 'omgf_local_fonts_selected_fallback_font_stack', '', $handle, $font->id, $value ); ?>
+										<option <?php echo esc_attr( $selected ); ?> value="<?php echo esc_attr( $value ); ?>">
+											<?php echo esc_html( $label ); ?>
+										</option>
 									<?php endforeach; ?>
 								</select>
 								<?php do_action( 'omgf_optimize_local_fonts_fallback_font_stacks', $font->family, $font->id, $handle ); ?>
 							</td>
 							<td class="replace">
 								<?php
-								$checked  = defined( 'OMGF_PRO_ACTIVE' ) &&
-											isset( OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] ) &&
-											OMGF::get_option( 'omgf_pro_replace_font' )[ $handle ][ $font->id ] === 'on' ? 'checked' : '';
-								$disabled = apply_filters( 'omgf_local_fonts_disable_replace', defined( 'OMGF_PRO_ACTIVE' ) && isset(
-										OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ]
-									) && OMGF::get_option( 'omgf_pro_fallback_font_stack' )[ $handle ][ $font->id ] !== '' );
+								$checked  = apply_filters( 'omgf_local_fonts_check_replace', '', $handle, $font->id );
+								$disabled = apply_filters( 'omgf_local_fonts_disable_replace', ! defined( 'OMGF_PRO_ACTIVE' ), $handle, $font->id );
 								?>
 								<?php do_action( 'omgf_optimize_local_fonts_replace', $handle, $font->id ); ?>
 								<input autocomplete="off" type="checkbox" class="replace"
@@ -333,7 +328,7 @@ class Optimize extends Builder {
 							<?php
 							/**
 							 * @since v5.3.0: Variable Fonts are pulled directly from the Google Fonts API,
-							 *                which creates @font-face statements for each separate subset.
+							 *                which creates @font-face statements for each subset.
 							 *                This deals with the duplicate display of font styles. Which also
 							 *                means unloading and/or preloading will unload/preload all available
 							 *                subsets. It's a bit bloaty, but there's no alternative.
