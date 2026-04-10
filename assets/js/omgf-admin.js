@@ -39,6 +39,7 @@ jQuery(document).ready(function ($) {
 			$('.omgf-optimize-fonts-manage .unload-italics').on('click', this.unload_italics);
 			$('.omgf-optimize-fonts-manage .unload-all').on('click', this.unload_all);
 			$('.omgf-optimize-fonts-manage .load-all').on('click', this.load_all);
+			document.getElementById('dtap').addEventListener('change', this.toggle_src_url);
 
 			// Buttons (AJAX, etc.)
 			$('#omgf-save-optimize, #omgf-optimize-again').on('click', function () {
@@ -363,6 +364,20 @@ jQuery(document).ready(function ($) {
 					item.click();
 				}
 			});
+		},
+
+		toggle_src_url: function (e) {
+			let src_url = document.getElementsByClassName('source-url')[0];
+
+			if (e.target.checked === true) {
+				src_url.disabled = true;
+				document.getElementById('src-url-disabled-notice').style.display = 'block';
+				document.getElementById('src-url-description').style.display = 'none';
+			} else {
+				src_url.disabled = false;
+				document.getElementById('src-url-disabled-notice').style.display = 'none';
+				document.getElementById('src-url-description').style.display = 'block';
+			}
 		},
 
 		/**
