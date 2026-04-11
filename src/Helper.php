@@ -128,8 +128,10 @@ class Helper {
 
 		/**
 		 * Defaults are set in @see self::get_settings()
+		 *
+		 * If an option doesn't exist, because e.g., OMGF Pro is inactive, just return an empty string.
 		 */
-		$value = self::get_settings()[ $name ];
+		$value = self::get_settings()[ $name ] ?? '';
 
 		return apply_filters( "omgf_setting_$name", $value );
 	}
