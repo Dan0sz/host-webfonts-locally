@@ -188,7 +188,7 @@ class Advanced extends Builder {
 		$this->do_checkbox(
 			__( 'Developer Mode (Pro)', 'host-webfonts-local' ),
 			'dtap',
-			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'dtap', 'on' ) ),
+			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'dtap' ) ),
 			$description,
 			! defined( 'OMGF_PRO_ACTIVE' ),
 			'task-manager-row'
@@ -225,7 +225,7 @@ class Advanced extends Builder {
 		$this->do_checkbox(
 			__( 'White-label Stylesheets (Pro)', 'host-webfonts-local' ),
 			'white_label',
-			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'white_label', 'on' ) ),
+			defined( 'OMGF_PRO_ACTIVE' ) && ! empty( OMGF::get_option( 'white_label' ) ),
 			sprintf(
 				__(
 					'Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size. %s',
