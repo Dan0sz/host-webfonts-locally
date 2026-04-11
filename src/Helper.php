@@ -110,8 +110,7 @@ class Helper {
 	 * @since  v5.6.0
 	 *
 	 * @param string $name
-	 *
-	 * @param mixed  $default (optional)
+	 * @param mixed  $default (optional) Only to be used for options stored in their own row (prepended with omgf_)
 	 */
 	public static function get_option( $name, $default = null ) {
 		// If $name starts with 'omgf_' it means it is saved in a separate row.
@@ -127,15 +126,12 @@ class Helper {
 			return apply_filters( "omgf_setting_$name", $value );
 		}
 
-		$value = self::get_settings()[ $name ] ?? $default;
-
-		if ( empty( $value ) && ! $default && $name === Settings::OMGF_ADV_SETTING_SUBSETS ) {
-			$default = [ 'latin', 'latin-ext' ]; // @codeCoverageIgnore
-		}
-
-		if ( empty( $value ) && $value !== '0' && $default !== null ) {
-			$value = $default;
-		}
+		/**
+		 * Defaults are set in @see self::get_settings()
+		 *
+		 * If an option doesn't exist, because e.g., OMGF Pro is inactive, just return an empty string.
+		 */
+		$value = self::get_settings()[ $name ] ?? '';
 
 		return apply_filters( "omgf_setting_$name", $value );
 	}
@@ -400,7 +396,7 @@ class Helper {
 	public static function cache_keys( $force_refresh = false ) {
 		if ( empty( self::$cache_keys ) || $force_refresh ) {
 			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
-			self::$cache_keys = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' ) ) );
+			self::$cache_keys = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) ) );
 		}
 
 		/**
@@ -674,7 +670,7 @@ class Helper {
 	public static function unloaded_stylesheets() {
 		if ( empty( self::$unloaded_stylesheets ) ) {
 			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
-			self::$unloaded_stylesheets = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' ) ) );
+			self::$unloaded_stylesheets = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) ) );
 		}
 
 		return apply_filters( 'omgf_filter_unloaded_stylesheets', self::$unloaded_stylesheets );

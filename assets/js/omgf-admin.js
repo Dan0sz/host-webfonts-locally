@@ -40,6 +40,12 @@ jQuery(document).ready(function ($) {
 			$('.omgf-optimize-fonts-manage .unload-all').on('click', this.unload_all);
 			$('.omgf-optimize-fonts-manage .load-all').on('click', this.load_all);
 
+			const developer_mode = document.getElementById('dtap');
+
+			if (developer_mode !== null) {
+				developer_mode.addEventListener('change', this.toggle_src_url);
+			}
+
 			// Buttons (AJAX, etc.)
 			$('#omgf-save-optimize, #omgf-optimize-again').on('click', function () {
 				$('#omgf-optimize-settings-form #submit').click();
@@ -363,6 +369,27 @@ jQuery(document).ready(function ($) {
 					item.click();
 				}
 			});
+		},
+
+		/**
+		 * Toggle the Modify Source URL option, based on the value of Developer Mode.
+		 *
+		 * @param e
+		 */
+		toggle_src_url: function (e) {
+			const src_url = document.querySelector('.source-url');
+			const disabled_notice = document.getElementById('src-url-disabled-notice');
+			const description = document.getElementById('src-url-description');
+
+			if (!src_url || !disabled_notice || !description) {
+				return;
+			}
+
+			const developer_mode_enabled = e.target.checked === true;
+			src_url.disabled = developer_mode_enabled;
+			disabled_notice.style.display = developer_mode_enabled ? 'block' : 'none';
+			description.style.display = developer_mode_enabled ? 'none' : 'block';
+		}
 		},
 
 		/**
