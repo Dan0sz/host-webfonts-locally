@@ -463,13 +463,12 @@ class Helper {
 	 *
 	 * Used in:
 	 * - @see Uninstall::remove_db_entries()
-	 * - @see Ajax::empty_cache()
+	 * - @see Cache::flush()
 	 *
 	 * @param array $needles
 	 * @param array $ignore
 	 *
 	 * @return array
-	 * @throws \ReflectionException
 	 */
 	public static function get_db_rows_by( $needles = [], $ignore = [] ) {
 		$settings = ( new \ReflectionClass( Settings::class ) )->getConstants();
