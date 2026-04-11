@@ -389,7 +389,6 @@ jQuery(document).ready(function ($) {
 			src_url.disabled = developer_mode_enabled;
 			disabled_notice.style.display = developer_mode_enabled ? 'block' : 'none';
 			description.style.display = developer_mode_enabled ? 'none' : 'block';
-		}
 		},
 
 		/**
