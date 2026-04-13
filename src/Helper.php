@@ -131,7 +131,15 @@ class Helper {
 		 *
 		 * If an option doesn't exist, because e.g., OMGF Pro is inactive, just return an empty string.
 		 */
-		$value = self::get_settings()[ $name ] ?? '';
+		$value = self::get_settings()[ $name ] ?? $default;
+
+		if ( empty( $value ) && ! $default && $name === Settings::OMGF_ADV_SETTING_SUBSETS ) {
+			$default = [ 'latin', 'latin-ext' ]; // @codeCoverageIgnore
+		}
+
+		if ( empty( $value ) && $value !== '0' && $default !== null ) {
+			$value = $default;
+		}
 
 		return apply_filters( "omgf_setting_$name", $value );
 	}
@@ -143,7 +151,24 @@ class Helper {
 	 * @return array
 	 */
 	public static function get_settings() {
-		$defaults = apply_filters(
+		$defaults = self::get_default_settings();
+
+		if ( empty( self::$settings ) ) {
+			self::$settings = get_option( 'omgf_settings', [] ); // @codeCoverageIgnore
+		}
+
+		return apply_filters( 'omgf_settings', wp_parse_args( self::$settings, $defaults ) );
+	}
+
+	/**
+	 * Gets an array of the default settings.
+	 *
+	 * @filter omgf_settings_defaults
+	 *
+	 * @return mixed|null
+	 */
+	private static function get_default_settings() {
+		return apply_filters(
 			'omgf_settings_defaults',
 			[
 				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     => 'swap',
@@ -158,12 +183,6 @@ class Helper {
 				Settings::OMGF_ADV_SETTING_UNINSTALL               => '',
 			]
 		);
-
-		if ( empty( self::$settings ) ) {
-			self::$settings = get_option( 'omgf_settings', [] ); // @codeCoverageIgnore
-		}
-
-		return apply_filters( 'omgf_settings', wp_parse_args( self::$settings, $defaults ) );
 	}
 
 	/**
