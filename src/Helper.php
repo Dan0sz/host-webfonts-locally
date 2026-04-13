@@ -129,7 +129,7 @@ class Helper {
 		/**
 		 * Defaults are set in @see self::get_settings()
 		 *
-		 * If an option doesn't exist, because e.g., OMGF Pro is inactive, just return an empty string.
+		 * If an option doesn't exist, because e.g., OMGF Pro is inactive, return $default.
 		 */
 		$value = self::get_settings()[ $name ] ?? $default;
 
