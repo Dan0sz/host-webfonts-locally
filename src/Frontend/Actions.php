@@ -29,7 +29,7 @@ class Actions {
 	public function __construct() {
 		add_action( 'init', [ $this, 'init_frontend' ], 50 );
 		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_item' ], 1000 );
-		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_frontend_assets' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_admin_bar_assets' ] );
 	}
 
 	/**
@@ -105,8 +105,8 @@ class Actions {
 	 *
 	 * @return void
 	 */
-	public function maybe_add_frontend_assets() {
-		if ( apply_filters( 'omgf_do_not_load_frontend_assets', ! current_user_can( 'manage_options' ) ) ) {
+	public function maybe_add_admin_bar_assets() {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
@@ -150,7 +150,7 @@ class Actions {
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
 
 		// Even if the above filter forces the JS to load, we'll only need the CSS if the current user is an admin.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( apply_filters( 'omgf_do_not_load_frontend_assets', ! current_user_can( 'manage_options' ) ) ) {
 			return;
 		}
 

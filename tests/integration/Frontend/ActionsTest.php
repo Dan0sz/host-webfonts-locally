@@ -13,24 +13,15 @@ use OMGF\Tests\TestCase;
 
 class ActionsTest extends TestCase {
 	/**
-	 * @see Actions::init_frontend()
-	 * @return void
-	 */
-	public function testInitFrontend() {
-		new Actions();
-
-		do_action( 'init' );
-
-		$this->assertTrue( class_exists( '\OMGF\Frontend\Process' ) );
-	}
-
-	/**
 	 * @see Actions::add_admin_bar_item()
 	 * @return void
 	 */
 	public function testAddAdminBarItem() {
+		global $current_user;
+
+		$old_current_user = $current_user;
+
 		try {
-			global $current_user;
 
 			$current_user = new \WP_User( 1 );
 			$current_user->set_role( 'administrator' );
@@ -46,7 +37,43 @@ class ActionsTest extends TestCase {
 
 			$this->assertCount( 2, $nodes );
 		} finally {
-			$current_user = null;
+			$current_user = $old_current_user;
+		}
+	}
+
+	/**
+	 * This is an admin user, but the Disable Quick Access setting is enabled. No menu item should be added.
+	 *
+	 *
+	 * @return void
+	 */
+	public function testAddAdminBarItemWhenDisableQuickAccessEnabled() {
+		global $current_user;
+
+		$old_current_user = $current_user;
+
+		try {
+			$current_user = new \WP_User( 1 );
+			$current_user->set_role( 'administrator' );
+
+			$class     = new Actions();
+			$admin_bar = new \WP_Admin_Bar();
+
+			add_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+
+			$class->add_admin_bar_item( $admin_bar );
+
+			$nodes = $admin_bar->get_nodes();
+
+			if ( empty( $nodes ) ) {
+				$nodes = [];
+			}
+
+			$this->assertCount( 0, $nodes );
+		} finally {
+			remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+
+			$current_user = $old_current_user;
 		}
 	}
 
@@ -71,40 +98,7 @@ class ActionsTest extends TestCase {
 	}
 
 	/**
-	 * This is an admin user, but the Disable Quick Access setting is enabled. No menu item should be added.
-	 *
-	 *
-	 * @return void
-	 */
-	public function testAddAdminBarItemWhenDisableQuickAccessEnabled() {
-		global $current_user;
-
-		try {
-			$current_user = new \WP_User( 1 );
-			$current_user->set_role( 'administrator' );
-
-			$class     = new Actions();
-			$admin_bar = new \WP_Admin_Bar();
-
-			add_filter( 'omgf_setting_disable_quick_access', '__return_true' );
-
-			$class->add_admin_bar_item( $admin_bar );
-
-			$nodes = $admin_bar->get_nodes();
-
-			if ( empty( $nodes ) ) {
-				$nodes = [];
-			}
-
-			$this->assertCount( 0, $nodes );
-		} finally {
-			remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
-			$current_user = null;
-		}
-	}
-
-	/**
-	 * @see Actions::maybe_add_frontend_assets()
+	 * @see Actions::maybe_add_admin_bar_assets()
 	 *
 	 *
 	 * @return void
@@ -112,52 +106,22 @@ class ActionsTest extends TestCase {
 	public function testAddFrontendAssetsDefault() {
 		global $current_user;
 
+		$old_current_user = $current_user;
+
 		try {
 			$current_user = new \WP_User( 1 );
 			$current_user->set_role( 'administrator' );
 
 			$class = new Actions();
 
-			$class->maybe_add_frontend_assets();
+			$class->maybe_add_admin_bar_assets();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
 		} finally {
 			wp_dequeue_script( 'omgf-frontend' );
 			wp_dequeue_style( 'omgf-frontend' );
-			$current_user = null;
-		}
-
-		$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
-		$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
-	}
-
-	/**
-	 * When Disable Quick Access is enabled, the frontend assets should not be enqueued.
-	 *
-	 * @return void
-	 */
-	public function testAddFrontendAssetsWithDisableQuickAccessEnabled() {
-		global $current_user;
-
-		try {
-			$current_user = new \WP_User( 1 );
-			$current_user->set_role( 'administrator' );
-
-			$class = new Actions();
-
-			add_filter( 'omgf_setting_disable_quick_access', '__return_true' );
-
-			new Filters();
-
-			$class->maybe_add_frontend_assets();
-
-			$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
-			$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
-		} finally {
-			remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
-			wp_dequeue_script( 'omgf-frontend' );
-			wp_dequeue_style( 'omgf-frontend' );
+			$current_user = $old_current_user;
 		}
 
 		$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
@@ -174,6 +138,8 @@ class ActionsTest extends TestCase {
 		try {
 			global $current_user;
 
+			$old_current_user = $current_user;
+
 			$current_user = new \WP_User( 1 );
 			$current_user->set_role( 'administrator' );
 
@@ -186,17 +152,69 @@ class ActionsTest extends TestCase {
 			// OMGF Pro's Google Fonts Checker overwrites all other filters by running last.
 			add_filter( 'omgf_do_not_load_frontend_assets', '__return_false', 11 );
 
-			$class->maybe_add_frontend_assets();
+			$class->maybe_add_admin_bar_assets();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
+		} finally {
+			remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+			remove_filter( 'omgf_do_not_load_frontend_assets', '__return_false', 11 );
+			wp_dequeue_script( 'omgf-frontend' );
+			wp_dequeue_style( 'omgf-frontend' );
+			$current_user = $old_current_user;
+		}
+
+		$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
+		$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
+	}
+
+	/**
+	 * When Disable Quick Access is enabled, the frontend assets should not be enqueued.
+	 *
+	 * @return void
+	 */
+	public function testAddFrontendAssetsWithDisableQuickAccessEnabled() {
+		global $current_user;
+
+		$old_current_user = $current_user;
+
+		try {
+			$current_user = new \WP_User( 1 );
+			$current_user->set_role( 'administrator' );
+
+			$class = new Actions();
+
+			add_filter( 'omgf_setting_disable_quick_access', '__return_true' );
+
+			new Filters();
+
+			$class->maybe_add_admin_bar_assets();
+
+			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
+			$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
 		} finally {
 			remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
 			wp_dequeue_script( 'omgf-frontend' );
 			wp_dequeue_style( 'omgf-frontend' );
 		}
 
-		$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
-		$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
+		try {
+			$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
+			$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
+		} finally {
+			$current_user = $old_current_user;
+		}
+	}
+
+	/**
+	 * @see Actions::init_frontend()
+	 * @return void
+	 */
+	public function testInitFrontend() {
+		new Actions();
+
+		do_action( 'init' );
+
+		$this->assertTrue( class_exists( '\OMGF\Frontend\Process' ) );
 	}
 }
