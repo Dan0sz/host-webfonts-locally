@@ -86,7 +86,7 @@ window.addEventListener('load', () => {
 					}
 				}
 
-				if ((status !== 'success' && status !== 'warning') && this.sub_menu !== null) {
+				if ((status !== 'success' && status !== 'warning')) {
 					this.addInfoBox(status);
 				}
 
