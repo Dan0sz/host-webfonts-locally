@@ -29,7 +29,8 @@ class Actions {
 	public function __construct() {
 		add_action( 'init', [ $this, 'init_frontend' ], 50 );
 		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_item' ], 1000 );
-		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_admin_bar_assets' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_admin_bar_css' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'maybe_add_admin_bar_js' ] );
 	}
 
 	/**
@@ -73,7 +74,7 @@ class Actions {
 	}
 
 	/**
-	 * Top adminbar menu should be displayed when:
+	 * The top admin bar menu should be displayed when:
 	 *
 	 * - User is an administrator
 	 * - This is not an admin screen i.e., we're in the frontend
@@ -97,16 +98,32 @@ class Actions {
 	}
 
 	/**
+	 * These stylesheets are only loaded for logged-in administrators unless:
+	 *
+	 * @return void
+	 */
+	public function maybe_add_admin_bar_css() {
+		// Even if the above filter forces the JS to load, we'll only need the CSS if the current user is an admin.
+		if ( apply_filters( 'omgf_do_not_load_frontend_css', ! current_user_can( 'manage_options' ) ) ) {
+			return;
+		}
+
+		$file_ext = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
+		$css_path = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
+
+		wp_enqueue_style( self::FRONTEND_ASSET_HANDLE, $css_file, [], filemtime( $css_path ) );
+	}
+
+	/**
 	 * These scripts are only loaded for logged-in administrators unless:
-	 * - The Disable Admin Bar Menu option is enabled.
-	 * - The Enable Google Fonts checker option is enabled.
 	 * - OMGF shouldn't run.
 	 * - The current request directly points to a PHP file (some plugin's preview pages do that)
 	 *
 	 * @return void
 	 */
-	public function maybe_add_admin_bar_assets() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+	public function maybe_add_admin_bar_js() {
+		if ( apply_filters( 'omgf_do_not_load_frontend_js', ! current_user_can( 'manage_options' ) ) ) {
 			return;
 		}
 
@@ -147,16 +164,7 @@ class Actions {
 			'omgf_frontend_results',
 			[ 'skip' => ! OMGF::optimize_succeeded() ]
 		);
+
 		wp_enqueue_script( self::FRONTEND_ASSET_HANDLE );
-
-		// Even if the above filter forces the JS to load, we'll only need the CSS if the current user is an admin.
-		if ( apply_filters( 'omgf_do_not_load_frontend_assets', ! current_user_can( 'manage_options' ) ) ) {
-			return;
-		}
-
-		$css_file = plugin_dir_url( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
-		$css_path = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/css/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.css";
-
-		wp_enqueue_style( self::FRONTEND_ASSET_HANDLE, $css_file, [], filemtime( $css_path ) );
 	}
 }
