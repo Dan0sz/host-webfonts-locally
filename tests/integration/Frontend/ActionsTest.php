@@ -98,7 +98,7 @@ class ActionsTest extends TestCase {
 	}
 
 	/**
-	 * @see Actions::maybe_add_admin_bar_assets()
+	 * @see Actions::maybe_add_admin_bar_js()
 	 *
 	 *
 	 * @return void
@@ -114,7 +114,8 @@ class ActionsTest extends TestCase {
 
 			$class = new Actions();
 
-			$class->maybe_add_admin_bar_assets();
+			$class->maybe_add_admin_bar_js();
+			$class->maybe_add_admin_bar_css();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
@@ -150,15 +151,16 @@ class ActionsTest extends TestCase {
 			new Filters();
 
 			// OMGF Pro's Google Fonts Checker overwrites all other filters by running last.
-			add_filter( 'omgf_do_not_load_frontend_assets', '__return_false', 11 );
+			add_filter( 'omgf_do_not_load_frontend_css', '__return_false', 11 );
 
-			$class->maybe_add_admin_bar_assets();
+			$class->maybe_add_admin_bar_js();
+			$class->maybe_add_admin_bar_css();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
 		} finally {
 			remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
-			remove_filter( 'omgf_do_not_load_frontend_assets', '__return_false', 11 );
+			remove_filter( 'omgf_do_not_load_frontend_css', '__return_false', 11 );
 			wp_dequeue_script( 'omgf-frontend' );
 			wp_dequeue_style( 'omgf-frontend' );
 			$current_user = $old_current_user;
@@ -188,7 +190,8 @@ class ActionsTest extends TestCase {
 
 			new Filters();
 
-			$class->maybe_add_admin_bar_assets();
+			$class->maybe_add_admin_bar_js();
+			$class->maybe_add_admin_bar_css();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
