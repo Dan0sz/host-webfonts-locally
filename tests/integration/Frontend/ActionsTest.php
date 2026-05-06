@@ -92,7 +92,7 @@ class ActionsTest extends TestCase {
 	}
 
 	/**
-	 * @see Actions::maybe_add_admin_bar_css()
+	 * @see Actions::maybe_add_admin_bar_assets()
 	 *
 	 *
 	 * @return void
@@ -106,7 +106,7 @@ class ActionsTest extends TestCase {
 
 			$class = new Actions();
 
-			$class->maybe_add_admin_bar_css();
+			$class->maybe_add_admin_bar_assets();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
@@ -142,7 +142,7 @@ class ActionsTest extends TestCase {
 			// OMGF Pro's Google Fonts Checker overwrites all other filters by running last.
 			add_filter( 'omgf_do_not_load_frontend_assets', '__return_false', 11 );
 
-			$class->maybe_add_admin_bar_css();
+			$class->maybe_add_admin_bar_assets();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
@@ -174,7 +174,7 @@ class ActionsTest extends TestCase {
 
 			new Filters();
 
-			$class->maybe_add_admin_bar_css();
+			$class->maybe_add_admin_bar_assets();
 
 			$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
