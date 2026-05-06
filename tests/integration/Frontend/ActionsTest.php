@@ -17,8 +17,11 @@ class ActionsTest extends TestCase {
 	 * @return void
 	 */
 	public function testAddAdminBarItem() {
+		global $current_user;
+
+		$old_current_user = $current_user;
+
 		try {
-			global $current_user;
 
 			$current_user = new \WP_User( 1 );
 			$current_user->set_role( 'administrator' );
@@ -34,7 +37,7 @@ class ActionsTest extends TestCase {
 
 			$this->assertCount( 2, $nodes );
 		} finally {
-			$current_user = null;
+			$current_user = $old_current_user;
 		}
 	}
 
@@ -46,6 +49,8 @@ class ActionsTest extends TestCase {
 	 */
 	public function testAddAdminBarItemWhenDisableQuickAccessEnabled() {
 		global $current_user;
+
+		$old_current_user = $current_user;
 
 		try {
 			$current_user = new \WP_User( 1 );
@@ -67,7 +72,8 @@ class ActionsTest extends TestCase {
 			$this->assertCount( 0, $nodes );
 		} finally {
 			remove_filter( 'omgf_setting_disable_quick_access', '__return_true' );
-			$current_user = null;
+
+			$current_user = $old_current_user;
 		}
 	}
 
@@ -100,6 +106,8 @@ class ActionsTest extends TestCase {
 	public function testAddFrontendAssetsDefault() {
 		global $current_user;
 
+		$old_current_user = $current_user;
+
 		try {
 			$current_user = new \WP_User( 1 );
 			$current_user->set_role( 'administrator' );
@@ -113,7 +121,7 @@ class ActionsTest extends TestCase {
 		} finally {
 			wp_dequeue_script( 'omgf-frontend' );
 			wp_dequeue_style( 'omgf-frontend' );
-			$current_user = null;
+			$current_user = $old_current_user;
 		}
 
 		$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
@@ -129,6 +137,8 @@ class ActionsTest extends TestCase {
 	public function testAddFrontendAssetsWithDisableQuickAccessAndGFCEnabled() {
 		try {
 			global $current_user;
+
+			$old_current_user = $current_user;
 
 			$current_user = new \WP_User( 1 );
 			$current_user->set_role( 'administrator' );
@@ -151,6 +161,7 @@ class ActionsTest extends TestCase {
 			remove_filter( 'omgf_do_not_load_frontend_assets', '__return_false', 11 );
 			wp_dequeue_script( 'omgf-frontend' );
 			wp_dequeue_style( 'omgf-frontend' );
+			$current_user = $old_current_user;
 		}
 
 		$this->assertFalse( wp_script_is( 'omgf-frontend', 'enqueued' ) );
