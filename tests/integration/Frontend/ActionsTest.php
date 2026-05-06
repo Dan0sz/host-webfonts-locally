@@ -115,6 +115,7 @@ class ActionsTest extends TestCase {
 			$class = new Actions();
 
 			$class->maybe_add_admin_bar_js();
+			$class->maybe_add_admin_bar_css();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
@@ -153,6 +154,7 @@ class ActionsTest extends TestCase {
 			add_filter( 'omgf_do_not_load_frontend_css', '__return_false', 11 );
 
 			$class->maybe_add_admin_bar_js();
+			$class->maybe_add_admin_bar_css();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
@@ -189,6 +191,7 @@ class ActionsTest extends TestCase {
 			new Filters();
 
 			$class->maybe_add_admin_bar_js();
+			$class->maybe_add_admin_bar_css();
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertFalse( wp_style_is( 'omgf-frontend', 'enqueued' ) );
