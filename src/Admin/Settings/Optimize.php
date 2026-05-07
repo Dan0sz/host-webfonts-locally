@@ -452,7 +452,7 @@ class Optimize extends Builder {
 				'Magic Fallbacks generates mathematically tuned system font fallbacks that match your Google Fonts\' exact proportions and <strong>eliminates Cumulative Layout Shift (CLS)</strong> while fonts load. <em>Requires Smart Optimize</em>.',
 				'host-webfonts-local'
 			) . ' ' . $this->promo,
-			! defined( 'OMGF_PRO_ACTIVE' ) || empty( OMGF::get_option( 'smart_optimize' ) )
+			! defined( 'OMGF_PRO_ACTIVE' )
 		);
 	}
 
