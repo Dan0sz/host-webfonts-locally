@@ -1,0 +1,770 @@
+# Copyright (C) 2025 Daan from Daan.dev
+# This file is distributed under the GPL2v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: OMGF 6.0.10\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/host-webfonts-local\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-10-16T11:57:19+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: host-webfonts-local\n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#: src/Frontend/Actions.php:56
+msgid "OMGF"
+msgstr "OMGF"
+
+#. Plugin URI of the plugin
+msgid "https://daan.dev/wordpress/omgf/"
+msgstr "https://daan.dev/wordpress/omgf/"
+
+#. Description of the plugin
+msgid "Increase GDPR/DSGVO compliance and leverage browser cache by automatically self-hosting Google Fonts."
+msgstr "Növelje a GDPR/DSGVO megfelelőséget és használja ki a böngésző gyorsítótárát a Google Fonts automatikus helyi tárolásával."
+
+#. Author of the plugin
+msgid "Daan from Daan.dev"
+msgstr "Daan a daan.dev-től"
+
+#. Author URI of the plugin
+msgid "https://daan.dev"
+msgstr "https://daan.dev"
+
+#: src/Admin.php:255
+msgid "OMGF's cached stylesheets don't reflect the current settings. Refresh the cache from the <a href=\"%s\">Dashboard</a>."
+msgstr "Az OMGF gyorsítótárazott stíluslapjai nem tükrözik az aktuális beállításokat. Frissítse a gyorsítótárat a <a href=\"%s\">Irányítópultról</a>."
+
+#: src/Admin/Actions.php:171
+msgid "This update includes major changes, please <a href=\"%s\" target=\"_blank\">read this</a> before continuing."
+msgstr "Ez a frissítés jelentős változásokat tartalmaz, kérjük, <a href=\"%s\" target=\"_blank\">olvassa el ezt</a>, mielőtt folytatja."
+
+#: src/Admin/Ajax.php:44
+msgid "Hmmm, are you lost?"
+msgstr "Hmmm, eltévedt?"
+
+#: src/Admin/Ajax.php:70
+#: src/Admin/Ajax.php:128
+#: src/Admin/Ajax.php:206
+#: src/Admin/Ajax.php:234
+#: src/Admin/Ajax.php:279
+msgid "Hmmm, you're not supposed to be here."
+msgstr "Hmmm, nem kellene itt lennie."
+
+#: src/Admin/Ajax.php:214
+msgid "Cache directory successfully emptied."
+msgstr "A gyorsítótár könyvtár sikeresen kiürítve."
+
+#: src/Admin/Ajax.php:217
+msgid "OMGF encountered an error while emptying the cache directory: "
+msgstr "Az OMGF hibát észlelt a gyorsítótár könyvtár ürítése közben: "
+
+#: src/Admin/Ajax.php:290
+msgid "Log file successfully deleted"
+msgstr "A naplófájl sikeresen törölve"
+
+#: src/Admin/Dashboard.php:102
+msgid "Test Mode is Enabled"
+msgstr "A teszt üzemmód engedélyezve van"
+
+#: src/Admin/Dashboard.php:106
+msgid "All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone."
+msgstr "Az %s által végzett összes optimalizálás <strong>csak Önnek</strong> és azoknak a felhasználóknak látható, akik hozzáadják a <code>?omgf=1</code> paramétert az URL-hez. Kapcsolja ki a Teszt üzemmódot (az oldal alján), hogy az optimalizálások mindenki számára láthatóvá váljanak."
+
+#: src/Admin/Dashboard.php:137
+msgid "%1$s wasn't able to process all Google Fonts on your site. %2$s"
+msgstr "Az %1$s nem tudta feldolgozni az összes Google Fonts-ot az Ön webhelyén. %2$s"
+
+#: src/Admin/Dashboard.php:152
+msgid "OMGF's integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) that cannot be automatically processed."
+msgstr "Az OMGF integrált Google Fonts ellenőrzője (a v6-ban bevezetve) olyan Google Fonts implementációkat talált (amelyeket a témája vagy egy bővítmény adott hozzá), amelyeket nem lehet automatikusan feldolgozni."
+
+#: src/Admin/Dashboard.php:166
+msgid "You can read <a href=\"%s\" target=\"_blank\">this guide</a> and attempt to fix it manually or, <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> to fix it automatically."
+msgstr "<a href=\"%s\" target=\"_blank\">Ezt az útmutatót</a> elolvashatja, és megpróbálhatja manuálisan javítani, vagy <a href=\"%s\" target=\"_blank\">frissíthet az OMGF Pro verzióra</a> az automatikus javításhoz."
+
+#: src/Admin/Dashboard.php:180
+msgid "Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> might be required."
+msgstr "Az itt felsorolt bejegyzések némelyike (vagy mindegyike) egybeeshet az alábbi sárga dobozban felsorolt lehetséges problémák listájával. Először javítsa ki ezeket, majd látogassa meg az alábbi linkeket az eredmények frissítéséhez. Néhány esetben <a href=\"%s\" target=\"_blank\">frissítés az OMGF Pro verzióra</a> szükséges lehet."
+
+#: src/Admin/Dashboard.php:191
+msgid "was found on:"
+msgstr "található:"
+
+#: src/Admin/Dashboard.php:209
+msgid "This list is limited to 5 pages, because most entries will most likely be duplicates."
+msgstr "Ez a lista 5 oldalra korlátozódik, mert a legtöbb bejegyzés valószínűleg ismétlődés lesz."
+
+#: src/Admin/Dashboard.php:216
+msgid "Let's get started!"
+msgstr "Kezdjük is el!"
+
+#: src/Admin/Dashboard.php:220
+msgid "Hit the <strong>Save & Optimize</strong> at the bottom of this page to run a Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can't detect and optimize automatically."
+msgstr "Kattintson az oldal alján található <strong>Mentés és optimalizálás</strong> gombra a Google Fonts optimalizálás futtatásához a kezdőlapján. Ezt követően az %s csendesen futni fog a háttérben, és jelentést tesz Önnek ezen az Irányítópulton, ha olyan Google Fonts-ot talál, amelyet nem tud automatikusan észlelni és optimalizálni."
+
+#: src/Admin/Dashboard.php:231
+msgid "Google Fonts optimization seems to be failing."
+msgstr "Úgy tűnik, a Google Fonts optimalizálás sikertelen."
+
+#: src/Admin/Dashboard.php:235
+msgid "%s isn't detecting any Google Fonts on your homepage. This could be for several reasons. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Click here</a> to run a deeper investigation."
+msgstr "Az %s nem észlel Google Fonts-ot a kezdőlapján. Ennek több oka is lehet. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Kattintson ide</a> a mélyebb vizsgálat futtatásához."
+
+#: src/Admin/Dashboard.php:247
+msgid "No external Google Fonts found on your site."
+msgstr "Nem található külső Google Fonts a webhelyén."
+
+#: src/Admin/Dashboard.php:253
+msgid "Cool! %s is successfully hosting all Google Fonts locally."
+msgstr "Nagyszerű! Az %s sikeresen tárolja az összes Google Fonts-ot helyben."
+
+#: src/Admin/Dashboard.php:264
+msgid "No potential issues found in your configuration."
+msgstr "Nem található potenciális probléma a konfigurációjában."
+
+#: src/Admin/Dashboard.php:271
+msgid "Great job! Your configuration allows %s to run smoothly."
+msgstr "Remek munka! A konfigurációja lehetővé teszi az %s zökkenőmentes futását."
+
+#: src/Admin/Dashboard.php:284
+msgid "%s potential issue found in your configuration."
+msgid_plural "%s potential issues found in your configuration."
+msgstr[0] "%s potenciális probléma található a konfigurációjában."
+msgstr[1] "%s potenciális probléma található a konfigurációjában."
+
+#: src/Admin/Dashboard.php:300
+msgid "It seems like Multisite is enabled. OMGF doesn't natively support Multisite. If you're getting CORS related errors on any of your network's sites, consider <a href=\"%s\" target=\"_blank\">upgrading to OMGF Pro</a>."
+msgstr "Úgy tűnik, a Multisite engedélyezve van. Az OMGF natívan nem támogatja a Multisite-ot. Ha CORS-sel kapcsolatos hibákat tapasztal a hálózata bármelyik webhelyén, fontolja meg az <a href=\"%s\" target=\"_blank\">OMGF Pro verzióra való frissítést</a>."
+
+#: src/Admin/Dashboard.php:310
+msgid "Your WordPress configuration isn't setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">these steps</a> to fix it."
+msgstr "Az Ön WordPress konfigurációja nincs beállítva SSL (https://) használatára. Ha az optimalizálás után a frontend Rendszerbetűtípusokat mutat, ez vegyes tartalom és/vagy CORS figyelmeztetések miatt lehet. Kövesse <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">ezeket a lépéseket</a> a javításhoz."
+
+#: src/Admin/Dashboard.php:327
+msgid "Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> to fix it."
+msgstr "Az Ön (%1$s) témája további konfigurációt igényel, hogy kompatibilis legyen az %2$s-gyel, ellenőrizze az <a href=\"%3$s\" target=\"_blank\">ismert problémák</a> listáját a javításhoz."
+
+#: src/Admin/Dashboard.php:348
+msgid "The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> for more information."
+msgstr "A <strong>%1$s</strong> bővítmény nem kompatibilis az %2$s-gyel, és le kell tiltani ahhoz, hogy az %2$s megfelelően működjön. További információkért tekintse meg az <a href=\"%3$s\" target=\"_blank\">ismert problémák</a> listáját."
+
+#: src/Admin/Dashboard.php:370
+msgid "The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href=\"%3$s\" target=\"_blank\">list of known issues</a> to fix it."
+msgstr "A <strong>%1$s</strong> bővítmény további konfigurációt igényel, hogy kompatibilis legyen az %2$s-gyel. Ellenőrizze az <a href=\"%3$s\" target=\"_blank\">ismert problémák listáját</a> a javításhoz."
+
+#: src/Admin/Dashboard.php:385
+msgid "%1$s is loading an embedded iframe on your site. %2$s can't process Google Fonts inside iframes. <a href=\"%3$s\" target=\"_blank\">Click here</a> to find out why and what you can do about it."
+msgstr "Az %1$s beágyazott iframe-et tölt be az Ön webhelyén. Az %2$s nem tudja feldolgozni a Google Fonts-ot iframe-ekben. <a href=\"%3$s\" target=\"_blank\">Kattintson ide</a>, hogy megtudja, miért és mit tehet ellene."
+
+#: src/Admin/Dashboard.php:401
+msgid "Mark as fixed"
+msgstr "Jelölje meg javítottként"
+
+#: src/Admin/Dashboard.php:411
+msgid "After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won't disappear by itself."
+msgstr "Miután elvégezte a javasolt változtatásokat, ahol szükséges, kattintson a <strong>Jelölje meg javítottként</strong> gombra az értesítés eltávolításához. Magától nem fog eltűnni."
+
+#: src/Admin/Dashboard.php:544
+msgid "Cache Status"
+msgstr "Gyorsítótár állapota"
+
+#: src/Admin/Dashboard.php:561
+msgid "stored in %s"
+msgstr "tárolva az %s-ben"
+
+#: src/Admin/Dashboard.php:571
+msgid "Manage %s"
+msgstr "Kezelje a következőt: %s"
+
+#: src/Admin/Dashboard.php:573
+msgid "Configure"
+msgstr "Konfigurálás"
+
+#: src/Admin/Dashboard.php:573
+msgid "Remove"
+msgstr "Eltávolítás"
+
+#: src/Admin/Dashboard.php:578
+msgid "The stylesheets in the cache do not reflect the current settings. Either <a href=\"#\" id=\"omgf-cache-refresh\">refresh</a> the cache (and maintain settings) or <a href=\"#\" id=\"omgf-cache-flush\">flush</a> it and start over."
+msgstr "A gyorsítótárban lévő stíluslapok nem tükrözik az aktuális beállításokat. Vagy <a href=\"#\" id=\"omgf-cache-refresh\">frissítse</a> a gyorsítótárat (és tartsa meg a beállításokat), vagy <a href=\"#\" id=\"omgf-cache-flush\">ürítse</a> azt, és kezdje elölről."
+
+#: src/Admin/Dashboard.php:587
+msgid "No stylesheets in cache."
+msgstr "Nincsenek stíluslapok a gyorsítótárban."
+
+#: src/Admin/Dashboard.php:595
+msgid "Status Legend"
+msgstr "Állapotjelmagyarázat"
+
+#: src/Admin/Dashboard.php:598
+msgid "<span class=\"omgf-cache-legend-item-title\">Found</span> Stylesheet exists on your file system."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Találva</span> A stíluslap létezik a fájlrendszerén."
+
+#: src/Admin/Dashboard.php:604
+msgid "<span class=\"omgf-cache-legend-item-title\">Unloaded</span> Stylesheet exists but is not loaded in the frontend."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Betöltetlen</span> A stíluslap létezik, de nincs betöltve a frontendben."
+
+#: src/Admin/Dashboard.php:610
+msgid "<span class=\"omgf-cache-legend-item-title\">Stale</span> Settings were changed and the stylesheet's content does not reflect those changes."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Elavult</span> A beállítások megváltoztak, és a stíluslap tartalma nem tükrözi ezeket a változásokat."
+
+#: src/Admin/Dashboard.php:616
+msgid "<span class='omgf-cache-legend-item-title'>Pending / Not Found</span> Any changes you made to this stylesheet will be processed the next time the page it was found on is requested. If you didn't make any changes, it's probably orphaned and it's safe to remove it."
+msgstr "<span class='omgf-cache-legend-item-title'>Függőben / Nem található</span> Az ezen a stíluslapon végrehajtott bármely változtatás feldolgozásra kerül, amikor legközelebb lekérik azt az oldalt, amelyen megtalálták. Ha nem végzett semmilyen változtatást, valószínűleg árván maradt, és biztonságosan eltávolítható."
+
+#: src/Admin/Settings.php:212
+msgid "Save & Optimize"
+msgstr "Mentés és optimalizálás"
+
+#: src/Admin/Settings.php:252
+msgid "You're not cool enough to access this page."
+msgstr "Nem vagy elég menő ahhoz, hogy hozzáférj ehhez az oldalhoz."
+
+#: src/Admin/Settings.php:257
+msgid "OMGF | Optimize My Google Fonts"
+msgstr "OMGF | Google Fonts optimalizálása"
+
+#: src/Admin/Settings.php:338
+#: src/Admin/Settings/Optimize.php:288
+msgid "Local Fonts"
+msgstr "Helyi betűtípusok"
+
+#: src/Admin/Settings.php:372
+msgid "Advanced"
+msgstr "Haladó"
+
+#: src/Admin/Settings.php:385
+msgid "Help"
+msgstr "Súgó"
+
+#: src/Admin/Settings.php:480
+msgid "Coded with %s in The Netherlands @ <strong>Daan.dev</strong>."
+msgstr "Kódolva az %s-vel Hollandiában @ <strong>Daan.dev</strong>."
+
+#: src/Admin/Settings.php:543
+msgid "Recently tagged <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> on my blog:"
+msgstr "Legutóbb megjelölve <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> a blogomon:"
+
+#: src/Admin/Settings/Advanced.php:60
+msgid "Fonts Cache Directory"
+msgstr "Betűtípusok gyorsítótár könyvtára"
+
+#: src/Admin/Settings/Advanced.php:64
+msgid "Downloaded stylesheets and font files %1$s are stored in: <code>%2$s</code>."
+msgstr "A letöltött stíluslapok és betűtípusfájlok %1$s itt tárolódnak: <code>%2$s</code>."
+
+#: src/Admin/Settings/Advanced.php:68
+msgid "(for this site)"
+msgstr "(ehhez a webhelyhez)"
+
+#: src/Admin/Settings/Advanced.php:82
+msgid "White-label Stylesheets (Pro)"
+msgstr "Fehér címkés stíluslapok (pro)"
+
+#: src/Admin/Settings/Advanced.php:85
+msgid "Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size. %s"
+msgstr "Engedélyezze ezt az opciót az összes márkaépítés és megjegyzés eltávolításához a generált stíluslapokból, tovább csökkentve azok méretét. %s"
+
+#: src/Admin/Settings/Advanced.php:98
+msgid "Enable this option (on all instances) if you're planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production workflow. %s"
+msgstr "Engedélyezze ezt az opciót (minden példányon), ha az %s-et egy (változatában) Fejlesztés > Tesztelés > Elfogadás/Staging > Éles környezet munkafolyamatban kívánja használni. %s"
+
+#: src/Admin/Settings/Advanced.php:108
+msgid "Developer Mode (Pro)"
+msgstr "Fejlesztői mód (pro)"
+
+#: src/Admin/Settings/Advanced.php:119
+msgid "This option is disabled, because <strong>Developer Mode (Pro)</strong> is enabled."
+msgstr "Ez az opció le van tiltva, mert a <strong>Fejlesztői mód (Pro)</strong> engedélyezve van."
+
+#: src/Admin/Settings/Advanced.php:123
+msgid "Modify the <code>src</code> attribute for font files and stylesheets generated by OMGF Pro. This can be anything; from an absolute URL pointing to your CDN (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>) to work with <em>security thru obscurity</em> plugins. Enter the full path to OMGF's files. Default: (empty) %s"
+msgstr "Módosítsa az OMGF Pro által generált betűtípusfájlok és stíluslapok <code>src</code> attribútumát. Ez bármi lehet; egy abszolút URL-től, amely a CDN-jére mutat (pl. <code>%s</code>), egy alternatív relatív URL-ig (pl. <code>/átnevezett-wp-content-dir/alternatív/útvonal/betűtípus-fájlokhoz</code>), hogy működjön a <em>biztonság a homályon keresztül</em> bővítményekkel. Adja meg az OMGF fájljainak teljes elérési útját. Alapértelmezett: (üres) %s"
+
+#: src/Admin/Settings/Advanced.php:132
+msgid "Modify Source URL (Pro)"
+msgstr "Forrás URL módosítása (pro)"
+
+#: src/Admin/Settings/Advanced.php:134
+msgid "e.g. https://cdn.mydomain.com/alternate/relative-path"
+msgstr "pl. https://cdn.mydomain.com/alternate/relative-path"
+
+#: src/Admin/Settings/Advanced.php:145
+msgid "Legacy Browser Compatibility"
+msgstr "Régebbi böngésző kompatibilitás"
+
+#: src/Admin/Settings/Advanced.php:147
+msgid "Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Enabling this option negatively impacts file compression and disables Variable Fonts support. Default: off."
+msgstr "Engedélyezze ezt az opciót egy régebbi (Windows 7) User-Agent használatához a régebbi böngészők támogatásának hozzáadásához. Ennek az opciónak az engedélyezése negatívan befolyásolja a fájltömörítést és letiltja a változó betűtípusok támogatását. Alapértelmezett: kikapcsolva."
+
+#: src/Admin/Settings/Advanced.php:159
+msgid "Divi Compatibility"
+msgstr "Divi kompatibilitás"
+
+#: src/Admin/Settings/Advanced.php:161
+msgid "Divi uses the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off"
+msgstr "A Divi ugyanazt a kezelőfelületet használja a Google Fonts stíluslapokhoz különböző konfigurációkkal. Az OMGF kompatibilitási javításokat tartalmaz, hogy ezek a különböző stíluslapok helyesen legyenek feldolgozva. Engedélyezze ezt, ha azt látja, hogy egyes betűtípusok nem jelennek meg helyesen. Alapértelmezett: kikapcsolva"
+
+#: src/Admin/Settings/Advanced.php:170
+msgid "Auto-Configure Subsets"
+msgstr "Alcsoportok automatikus konfigurálása"
+
+#: src/Admin/Settings/Advanced.php:173
+msgid "When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that're available for <u>all</u> detected font families. Novice users are advised to leave this enabled."
+msgstr "Ha ez az opció be van jelölve, az %s beállítja a <strong>Használt alcsoport(ok)</strong> opciót, hogy csak azokat az alcsoportokat használja, amelyek <u>minden</u> észlelt betűtípus-családhoz elérhetők. A kezdő felhasználóknak javasolt ezt engedélyezve hagyni."
+
+#: src/Admin/Settings/Advanced.php:191
+msgid "Used Subset(s)"
+msgstr "Használt alcsoport(ok)"
+
+#: src/Admin/Settings/Advanced.php:195
+msgid "Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. Disable it if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn't change this setting</u>!"
+msgstr "Az ezen a beállításon végrehajtott bármely változtatás felülíródik, mert az <strong>Alcsoportok automatikus konfigurálása</strong> engedélyezve van. Tiltsa le, ha saját maga szeretné kezelni a <strong>Használt alcsoport(ok)</strong> beállítást. <u>A kezdő felhasználók ne változtassák meg ezt a beállítást</u>!"
+
+#: src/Admin/Settings/Advanced.php:198
+msgid "A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are an add-ons for Latin and can't be used by itself. Use CTRL + click to select multiple values.</em>"
+msgstr "A részhalmaz egy (korlátozott) karakterkészlet, amely egy ábécéhez tartozik. Alapértelmezett: <code>latin</code>, <code>latin-ext</code>. Korlátozza a kiválasztást azokra a részhalmazokra, amelyeket a webhelye ténylegesen használ. <u>Túl sok</u> részhalmaz kiválasztása negatívan befolyásolhatja a teljesítményt! <em>A Latin kiterjesztett és a vietnámi a Latin kiegészítői, és önmagukban nem használhatók. Használja a CTRL + kattintást több érték kiválasztásához.</em>"
+
+#: src/Admin/Settings/Advanced.php:209
+msgid "This disables the %s admin bar menu item and stops the Google Fonts checker from running in the frontend."
+msgstr "Ez letiltja az %s adminisztrációs sáv menüpontját, és leállítja a Google Fonts ellenőrző futását a frontendben."
+
+#: src/Admin/Settings/Advanced.php:217
+msgid "This setting will resume functioning once the Google Fonts checker has finished running."
+msgstr "Ez a beállítás akkor folytatja a működését, amint a Google Fonts ellenőrző befejezte a futását."
+
+#: src/Admin/Settings/Advanced.php:221
+msgid "Disable Admin Bar Menu"
+msgstr "Adminisztrációs sáv menü letiltása"
+
+#: src/Admin/Settings/Advanced.php:230
+msgid "Debug Mode"
+msgstr "Hibakeresési mód"
+
+#: src/Admin/Settings/Advanced.php:232
+msgid "Don't enable this option, unless when asked by me (Daan) or, if you know what you're doing."
+msgstr "Ne engedélyezze ezt az opciót, kivéve, ha én (Daan) kérem, vagy ha tudja, mit csinál."
+
+#: src/Admin/Settings/Advanced.php:256
+msgid "Download Log"
+msgstr "Napló letöltése"
+
+#: src/Admin/Settings/Advanced.php:261
+msgid "Delete log"
+msgstr "Napló törlése"
+
+#: src/Admin/Settings/Advanced.php:266
+msgid "Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again."
+msgstr "A naplófájl jelenleg nagyobb, mint 1 MB. A fájlrendszer védelme érdekében a hibakeresési naplózás leállt. Törölje a naplófájlt a hibakeresési naplózás újbóli engedélyezéséhez."
+
+#: src/Admin/Settings/Advanced.php:272
+msgid "No log file available for download."
+msgstr "Nincs letölthető naplófájl."
+
+#: src/Admin/Settings/Advanced.php:288
+msgid "Remove Settings/Files At Uninstall"
+msgstr "Beállítások/fájlok eltávolítása eltávolításkor"
+
+#: src/Admin/Settings/Advanced.php:290
+msgid "Warning! This will remove all settings and cached fonts upon plugin deletion."
+msgstr "Figyelem! Ez a bővítmény törlésekor eltávolítja az összes beállítást és gyorsítótárazott betűtípust."
+
+#: src/Admin/Settings/Builder.php:51
+msgid "<a href=\"%s\" target=\"_blank\">Upgrade to Pro</a> to unlock this option."
+msgstr "<a href=\"%s\" target=\"_blank\">Frissítsen Pro verzióra</a> az opció feloldásához."
+
+#: src/Admin/Settings/Help.php:27
+msgid "Help & Documentation"
+msgstr "Súgó és dokumentáció"
+
+#: src/Admin/Settings/Help.php:43
+msgid "Thank you for using %s!"
+msgstr "Köszönjük, hogy az %s-et használja!"
+
+#: src/Admin/Settings/Help.php:48
+msgid "Need help configuring %s? Please refer to the links below to get you started."
+msgstr "Segítségre van szüksége az %s konfigurálásához? Kérjük, tekintse meg az alábbi linkeket a kezdéshez."
+
+#: src/Admin/Settings/Help.php:58
+msgid "Need Help?"
+msgstr "Segítségre van szüksége?"
+
+#: src/Admin/Settings/Help.php:64
+msgid "Quick Start Guide"
+msgstr "Gyorsindítási útmutató"
+
+#: src/Admin/Settings/Help.php:68
+msgid "User Manual"
+msgstr "Felhasználói kézikönyv"
+
+#: src/Admin/Settings/Help.php:72
+msgid "FAQ"
+msgstr "GYIK"
+
+#: src/Admin/Settings/Help.php:76
+msgid "Troubleshooting Guide"
+msgstr "Hibaelhárítási útmutató"
+
+#: src/Admin/Settings/Help.php:80
+msgid "Get Support"
+msgstr "Támogatás kérése"
+
+#: src/Admin/Settings/Help.php:85
+msgid "Support %s & Spread the Word!"
+msgstr "Támogassa az %s-et és terjessze a hírt!"
+
+#: src/Admin/Settings/Help.php:92
+msgid "Write a 5-star Review or,"
+msgstr "Írjon egy 5 csillagos értékelést, vagy"
+
+#: src/Admin/Settings/Help.php:94
+msgid "Tweet about it!"
+msgstr "Tweeteljen róla!"
+
+#: src/Admin/Settings/Help.php:98
+msgid "Coded with %s by"
+msgstr "Kódolva az %s-vel"
+
+#: src/Admin/Settings/Help.php:100
+#: src/Admin/Settings/Help.php:101
+msgid "Visit Daan.dev"
+msgstr "Látogassa meg a daan.dev-et"
+
+#: src/Admin/Settings/Optimize.php:38
+msgid "Optimize Local Google Fonts"
+msgstr "Helyi Google Fonts optimalizálása"
+
+#: src/Admin/Settings/Optimize.php:69
+msgid "Dashboard"
+msgstr "Irányítópult"
+
+#: src/Admin/Settings/Optimize.php:73
+msgid "OMGF (Optimize My Google Fonts) automatically replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href=\"#omgf-manage-optimized-fonts\">Optimize Local Fonts</a>."
+msgstr "Az OMGF (Optimize My Google Fonts) automatikusan lecseréli a Google Fonts stíluslapokat (pl. https://fonts.googleapis.com/css?family=Open+Sans) helyben tárolt másolatokra. A Google Fonts teljes eltávolításához/betöltésének megszüntetéséhez, vagy stílus/súly szerint, lépjen az <a href=\"#omgf-manage-optimized-fonts\">Helyi betűtípusok optimalizálása</a> menüpontra."
+
+#: src/Admin/Settings/Optimize.php:87
+msgid "Run Google Fonts Checker in the background (Pro)"
+msgstr "Google Fonts ellenőrző futtatása a háttérben (Pro)"
+
+#: src/Admin/Settings/Optimize.php:90
+msgid "Normally, the Google Fonts Checker only runs for logged-in administrators. If you want to organically scan all your pages for Google Fonts, enable this option. %s"
+msgstr "Normális esetben a Google Fonts ellenőrző csak a bejelentkezett rendszergazdák számára fut. Ha organikusan szeretné átvizsgálni az összes oldalát Google Fonts-ok után, engedélyezze ezt az opciót. %s"
+
+#: src/Admin/Settings/Optimize.php:99
+msgid "Disable Google Fonts Checker after... (Pro)"
+msgstr "Google Fonts ellenőrző letiltása... (Pro)"
+
+#: src/Admin/Settings/Optimize.php:102
+msgid "7 Days (default)"
+msgstr "7 nap (alapértelmezett)"
+
+#: src/Admin/Settings/Optimize.php:103
+msgid "14 Days"
+msgstr "14 nap"
+
+#: src/Admin/Settings/Optimize.php:104
+msgid "1 Month"
+msgstr "1 hónap"
+
+#: src/Admin/Settings/Optimize.php:105
+msgid "Always"
+msgstr "Mindig"
+
+#: src/Admin/Settings/Optimize.php:109
+msgid "When enabled, the Google Fonts Checker loads a tiny snippet (<3KB) of JS code in your frontend. While the impact is barely noticeable, it's advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s"
+msgstr "Ha engedélyezve van, a Google Fonts ellenőrző egy apró JS kódrészletet (<3KB) tölt be a frontendbe. Bár a hatás alig észrevehető, javasolt csak meghatározott ideig futtatni, pl. az OMGF Pro első telepítése után, témaváltás vagy bővítmények telepítése után. %s"
+
+#: src/Admin/Settings/Optimize.php:127
+msgid "Manage Cache"
+msgstr "Gyorsítótár kezelése"
+
+#: src/Admin/Settings/Optimize.php:131
+msgid "Empty Cache"
+msgstr "Gyorsítótár ürítése"
+
+#: src/Admin/Settings/Optimize.php:137
+msgid "Refresh Cache (and maintain settings)"
+msgstr "Gyorsítótár frissítése (és beállítások megtartása)"
+
+#: src/Admin/Settings/Optimize.php:162
+msgid "recommended"
+msgstr "ajánlott"
+
+#: src/Admin/Settings/Optimize.php:165
+msgid "Font-Display Option"
+msgstr "Font-Display opció"
+
+#: src/Admin/Settings/Optimize.php:169
+msgid "Select which value to set the font-display attribute to. Defaults to Swap (recommended)."
+msgstr "Válassza ki, milyen értékre állítsa a font-display attribútumot. Alapértelmezés szerint Swap (ajánlott)."
+
+#: src/Admin/Settings/Optimize.php:181
+msgid "Apply Font-Display Option Globally (Pro)"
+msgstr "Font-Display opció globális alkalmazása (Pro)"
+
+#: src/Admin/Settings/Optimize.php:183
+msgid "Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>."
+msgstr "Alkalmazza a fenti <code>font-display</code> attribútum értékét a webhelyén található összes <code>@font-face</code> utasításra, hogy <strong>biztosítsa a szöveg láthatóságát a webfont betöltése során</strong>."
+
+#: src/Admin/Settings/Optimize.php:197
+msgid "Smart Preload (Pro)"
+msgstr "Intelligens előbetöltés (Pro)"
+
+#: src/Admin/Settings/Optimize.php:199
+msgid "When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them. Preload settings can be overwritten on a per-page level by clicking <strong>Auto-configure preload settings for this page</strong> in the top Admin Bar menu."
+msgstr "Ha engedélyezve van, az OMGF Pro automatikusan felismeri, mely Google Fonts-ok töltődnek be a hajtás felett, és előre betölti őket. Az előbetöltési beállítások felülírhatók oldalanként az <strong>Előbetöltési beállítások automatikus konfigurálása ehhez az oldalhoz</strong> gombra kattintva a felső Adminisztrációs sáv menüben."
+
+#: src/Admin/Settings/Optimize.php:213
+msgid "Optimize Local Fonts"
+msgstr "Helyi betűtípusok optimalizálása"
+
+#: src/Admin/Settings/Optimize.php:217
+msgid "The options below allow you to tweak the performance of all fonts detected by %s. Don't know where or how to start optimizing your Google Fonts? That's okay. <a href=\"%s\">This guide</a> will get you sorted."
+msgstr "Az alábbi opciók lehetővé teszik az %s által észlelt összes betűtípus teljesítményének finomhangolását. Nem tudja, hol vagy hogyan kezdje el a Google Fonts optimalizálását? Semmi gond. <a href=\"%s\">Ez az útmutató</a> segít Önnek."
+
+#: src/Admin/Settings/Optimize.php:256
+msgid "Wow! That's a lot of Preloads! 😲"
+msgstr "Hú! Ez rengeteg előbetöltés! 😲"
+
+#: src/Admin/Settings/Optimize.php:258
+msgid "You've selected 5 (!) font styles to load early. Selecting more font styles to preload will affect your site's performance. The <code>preload</code> attribute should only be used for font styles loaded above the fold i.e. <strong>The top portion of a web page that's visible without scrolling</strong>."
+msgstr "5 (!) betűtípus-stílust választott a korai betöltéshez. Több betűtípus-stílus előbetöltése befolyásolja a webhely teljesítményét. Az <code>preload</code> attribútumot csak a hajtás felett betöltött betűtípus-stílusokhoz szabad használni, azaz <strong>a weboldal felső része, amely görgetés nélkül látható</strong>."
+
+#: src/Admin/Settings/Optimize.php:265
+msgid "Refer to the <a href=\"%s\" target=\"_blank\">Plugin documentation</a> for more information."
+msgstr "További információkért tekintse meg a <a href=\"%s\" target=\"_blank\">Bővítmény dokumentációját</a>."
+
+#: src/Admin/Settings/Optimize.php:292
+msgid "This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically when other Google Fonts stylesheets are discovered."
+msgstr "Ez a lista az összes, a webhelyén rögzített és letöltött Google Fonts stíluslappal van feltöltve. Organikusan növekedni fog, ha más Google Fonts stíluslapokat fedeznek fel."
+
+#: src/Admin/Settings/Optimize.php:302
+msgid "Style"
+msgstr "Stílus"
+
+#: src/Admin/Settings/Optimize.php:303
+msgid "Weight"
+msgstr "Súly"
+
+#: src/Admin/Settings/Optimize.php:304
+msgid "Load Early"
+msgstr "Korai betöltés"
+
+#: src/Admin/Settings/Optimize.php:307
+msgid "<a href=\"%s\">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold."
+msgstr "<a href=\"%s\">Előre betölti a betűtípusfájlokat</a> az oldal renderelése előtt a érzékelt betöltési idők javítása érdekében. Csak azokat a betűtípusfájlokat használja előbetöltésre, amelyek a hajtás felett vannak használva."
+
+#: src/Admin/Settings/Optimize.php:314
+msgid "Don't Load"
+msgstr "Ne töltse be"
+
+#: src/Admin/Settings/Optimize.php:316
+msgid "Many themes/plugins load Google Fonts you're not using. Checking <strong>Don't Load</strong> will make sure they're not loaded in the frontend to save bandwidth."
+msgstr "Sok téma/bővítmény olyan Google Fonts-ot tölt be, amelyet Ön nem használ. A <strong>Ne töltse be</strong> bejelölésével biztosítja, hogy ezek ne töltődjenek be a frontendben, ezzel sávszélességet takarít meg."
+
+#: src/Admin/Settings/Optimize.php:320
+msgid "Fallback (Pro)"
+msgstr "Tartalék (Pro)"
+
+#: src/Admin/Settings/Optimize.php:323
+msgid "Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded. %s"
+msgstr "Csökkentse a kumulatív elrendezés eltolódását (CLS) azáltal, hogy biztosítja, hogy minden Google Fonts-ot használó szöveg hasonló rendszerbetűtípussal jelenjen meg, miközben a Google Fonts-ok letöltődnek. %s"
+
+#: src/Admin/Settings/Optimize.php:329
+msgid "Replace (Pro)"
+msgstr "Csere (pro)"
+
+#: src/Admin/Settings/Optimize.php:332
+msgid "When the <a href=\"%s\">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback. %s"
+msgstr "Ha a <a href=\"%s\">Csere opció</a> be van jelölve, a kiválasztott Tartalék betűtípus-halmaz felváltja a megfelelő Google Fonts családot, ahelyett, hogy tartalékként működne. %s"
+
+#: src/Admin/Settings/Optimize.php:354
+msgid "Stylesheet handle: %s"
+msgstr "Stíluslap kezelő: %s"
+
+#: src/Admin/Settings/Optimize.php:368
+msgid "Unload italics"
+msgstr "Dőlt betűtípusok betöltésének megszüntetése"
+
+#: src/Admin/Settings/Optimize.php:371
+msgid "In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles."
+msgstr "A legtöbb esetben biztonságosan megszüntetheti az összes dőlt betűtípus-stílus betöltését. A modern böngészők képesek utánozni a dőlt betűtípus-stílusokat."
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Unload all"
+msgstr "Összes betöltésének megszüntetése"
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Load all"
+msgstr "Összes betöltése"
+
+#: src/Admin/Settings/Optimize.php:382
+msgid "None (default)"
+msgstr "Nincs (alapértelmezett)"
+
+#: src/Admin/Settings/Optimize.php:514
+msgid "After clicking <strong>Save & Optimize</strong>, this section will be populated with any Google Fonts (along with requested styles and available options) requested on <code>%s</code>. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site."
+msgstr "A <strong>Mentés és optimalizálás</strong> gombra kattintás után ez a szakasz feltöltődik a <code>%s</code> oldalon kért Google Fonts betűtípusokkal (a kért stílusokkal és elérhető opciókkal együtt). A lista organikusan növekszik, ha más Google Fonts stíluslapokat fedeznek fel a webhelyén."
+
+#: src/Admin/Settings/Optimize.php:520
+msgid "Why aren't my Google Fonts showing up on this list?"
+msgstr "Miért nem jelennek meg a Google Fonts-aim ezen a listán?"
+
+#: src/Admin/Settings/Optimize.php:544
+msgid "Test Mode"
+msgstr "Teszt üzemmód"
+
+#: src/Admin/Settings/Optimize.php:546
+msgid "With this setting enabled, OMGF's optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend."
+msgstr "Ha ez a beállítás engedélyezve van, az OMGF optimalizálásai csak a bejelentkezett rendszergazdák számára lesznek láthatók, vagy ha a <code>?omgf=1</code> hozzáadásra kerül egy URL-hez a frontendben."
+
+#: src/DB/Migrate/V600.php:60
+msgid "Thanks for upgrading to OMGF v6! 🎉 <a href=\"%s\" target=\"_blank\">Click here to learn about all the exciting, new features in this release!</a>"
+msgstr "Köszönjük, hogy frissített az OMGF v6-ra! 🎉 <a href=\"%s\" target=\"_blank\">Kattintson ide, hogy megismerje az összes izgalmas, új funkciót ebben a kiadásban!</a>"
+
+#: src/Download.php:89
+msgid "OMGF encountered an error while downloading font files"
+msgstr "Az OMGF hibát észlelt a betűtípusfájlok letöltése közben"
+
+#: src/Download.php:107
+msgid "OMGF received a non-success HTTP status while downloading"
+msgstr "Az OMGF nem sikeres HTTP állapotot kapott a letöltés során"
+
+#: src/Download.php:120
+msgid "OMGF couldn't determine the mime-type for the downloaded font file"
+msgstr "Az OMGF nem tudta meghatározni a letöltött betűtípusfájl mime-típusát"
+
+#: src/Download.php:144
+msgid "OMGF couldn't determine the file extension for the downloaded font file"
+msgstr "Az OMGF nem tudta meghatározni a letöltött betűtípusfájl fájlkiterjesztését"
+
+#: src/Download.php:158
+msgid "OMGF failed to move downloaded file to final location"
+msgstr "Az OMGF nem tudta áthelyezni a letöltött fájlt a végső helyre"
+
+#: src/Frontend/Actions.php:65
+msgid "Run fonts optimization"
+msgstr "Betűtípusok optimalizálásának futtatása"
+
+#: src/Frontend/Actions.php:85
+msgid "Run fonts optimization for current page"
+msgstr "Betűtípusok optimalizálásának futtatása az aktuális oldalhoz"
+
+#: src/Frontend/Actions.php:135
+msgid "Google Fonts were found on this page. Click here for more information."
+msgstr "Google Fonts-ok találhatók ezen az oldalon. Kattintson ide további információkért."
+
+#: src/Frontend/Actions.php:136
+msgid "There are potential issues in your configuration that require your attention."
+msgstr "Potenciális problémák vannak a konfigurációjában, amelyek figyelmet igényelnek."
+
+#: src/Frontend/Process.php:717
+msgid "Google Fonts optimization completed. Return to the <a href=\"%s\">settings screen</a> to see the results."
+msgstr "A Google Fonts optimalizálás befejeződött. Térjen vissza a <a href=\"%s\">beállítások képernyőjére</a> az eredmények megtekintéséhez."
+
+#: src/Helper.php:361
+msgid "Filtered Subsets"
+msgstr "Szűrt alcsoportok"
+
+#: src/Helper.php:399
+msgid "Showing debug information for"
+msgstr "Hibakeresési információk megjelenítése ehhez:"
+
+#: src/Helper.php:404
+msgid "Subelement %s is array/object"
+msgstr "Az %s alcsoport tömb/objektum"
+
+#: src/Optimize.php:111
+msgid "OMGF couldn't find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%1$s</code> and <code>%2$s</code>."
+msgstr "Az OMGF nem találta a szükséges stíluslap kezelő paramétert, miközben megpróbált kommunikálni az API-val. Az elküldött értékek <code>%1$s</code> és <code>%2$s</code> voltak."
+
+#: src/Optimize.php:184
+msgid "Processing downloads for"
+msgstr "Letöltések feldolgozása ehhez:"
+
+#: src/Optimize.php:230
+msgid "Finished downloading for"
+msgstr "Letöltés befejezve ehhez:"
+
+#: src/Optimize.php:290
+msgid "Fetching stylesheet from: "
+msgstr "Stíluslap lekérése innen: "
+
+#: src/Optimize.php:334
+msgid "Stylesheet fetched. Parsing for font-families..."
+msgstr "Stíluslap lekérve. Betűtípus-családok elemzése..."
+
+#: src/Optimize.php:345
+msgid "Font-families found"
+msgstr "Betűtípus-családok találhatók"
+
+#: src/Optimize.php:369
+msgid "Stylesheet successfully converted to object."
+msgstr "Stíluslap sikeresen objektummá konvertálva."
+
+#: src/Optimize.php:383
+msgid "Parsing variants."
+msgstr "Változatok elemzése."
+
+#: src/Optimize.php:399
+msgid "Found %s @font-face statements."
+msgstr "%s @font-face utasítás található."
+
+#: src/Optimize.php:466
+msgid "Same file used for multiple @font-face statements. This is a variable font: "
+msgstr "Ugyanaz a fájl több @font-face utasításhoz is használatos. Ez egy változó betűtípus: "
+
+#: src/Optimize.php:474
+msgid "Generated @font-face objects"
+msgstr "Generált @font-face objektumok"
+
+#: src/Optimize.php:476
+msgid "All @font-face statements processed."
+msgstr "Minden @font-face utasítás feldolgozva."
+
+#: src/Optimize.php:486
+msgid "Parsing subsets."
+msgstr "Alcsoportok elemzése."
+
+#: src/Optimize.php:504
+msgid "Subset @font-face statements"
+msgstr "Alcsoport @font-face utasítások"
+
+#: src/Optimize.php:602
+msgid "Rewriting URLs for each font variant..."
+msgstr "URL-ek átírása minden betűtípus-változathoz..."
+
+#: src/Optimize/Run.php:84
+msgid "%s encountered an error while fetching this site's frontend HTML"
+msgstr "Az %s hibát észlelt a webhely frontend HTML-jének lekérése közben"
+
+#: src/Optimize/Run.php:93
+msgid "It looks like OMGF isn't allowed to fetch your frontend. Try <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">running the optimization manually</a> (you might have to allow pop-ups) and return here after the page has finished loading."
+msgstr "Úgy tűnik, az OMGF nem engedélyezett a frontend lekérésére. Próbálja meg <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">manuálisan futtatni az optimalizálást</a> (előfordulhat, hogy engedélyeznie kell a felugró ablakokat), majd térjen vissza ide, miután az oldal betöltődött."
+
+#: src/Optimize/Run.php:173
+msgid "%s is removed as a Used Subset, as not all detected font families are available in this subset. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "Az %s eltávolításra került a Használt alcsoportok közül, mivel nem minden észlelt betűtípus-család érhető el ebben az alcsoportban. <a href=\"#\" id=\"omgf-optimize-again\">Futtassa újra az optimalizálást</a> ezen változtatások feldolgozásához."
+msgstr[1] "Az %s eltávolításra került a Használt alcsoport(ok) közül, mivel nem minden észlelt betűtípus-család érhető el ezekben az alcsoportokban. <a href=\"#\" id=\"omgf-optimize-again\">Futtassa újra az optimalizálást</a> ezen változtatások feldolgozásához."
+
+#: src/Optimize/Run.php:201
+msgid "Used Subset(s) is set to Latin, since %s isn't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "Used Subset(s) is set to Latin, since %s aren't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "A Használt alcsoport(ok) Latinra van állítva, mivel az %s nem érhető el az észlelt betűtípus-családok egyikében sem. <a href=\"#\" id=\"omgf-optimize-again\">Futtassa újra az optimalizálást</a> ezen változtatások feldolgozásához."
+msgstr[1] "A Használt alcsoport(ok) Latinra van állítva, mivel az %s nem érhető el az észlelt betűtípus-családok egyikében sem. <a href=\"#\" id=\"omgf-optimize-again\">Futtassa újra az optimalizálást</a> ezen változtatások feldolgozásához."
+
+#: src/Optimize/Run.php:222
+msgid "Optimization completed successfully."
+msgstr "Az optimalizálás sikeresen befejeződött."
+
+#: src/Optimize/Run.php:228
+msgid "Make sure you flush any caches of 3rd party plugins you're using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s's optimizations to take effect. "
+msgstr "Győződjön meg róla, hogy üríti az összes harmadik féltől származó bővítmény gyorsítótárát (pl. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache stb.), hogy az %s optimalizálásai érvénybe léphessenek. "
