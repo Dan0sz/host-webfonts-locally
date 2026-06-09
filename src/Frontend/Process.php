@@ -171,6 +171,8 @@ class Process {
 	 * properly. When configured handle by handle, it works fine. PHP multi-threading issues?
 	 */
 	public function add_preloads() {
+		do_action( 'omgf_frontend_process_preloads' );
+
 		$preloaded_fonts = OMGF::preloaded_fonts();
 
 		if ( ! $preloaded_fonts ) {
