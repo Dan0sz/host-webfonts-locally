@@ -158,8 +158,14 @@ class Process {
 		add_filter( 'omgf_buffer_output', [ $this, 'remove_resource_hints' ], 11 );
 
 		/** Only hook into our own filter if Smart Slider 3 and Groovy Menu aren't active, as they have their own output filter. */
-		if ( ! function_exists( 'smart_slider_3_plugins_loaded' ) && ! function_exists( 'groovy_menu_init_classes' ) ) {
+		if ( ! function_exists( 'smart_slider_3_plugins_loaded' ) &&
+		     ! function_exists( 'groovy_menu_init_classes' ) &&
+		     ! defined( 'SiteGround_Optimizer\PLUGIN_SLUG' ) ) {
 			add_filter( 'omgf_buffer_output', [ $this, 'process' ] );
+		}
+
+		if ( defined( 'SiteGround_Optimizer\PLUGIN_SLUG' ) ) {
+			add_filter( 'sgo_optimized_html', [ $this, 'process' ] );
 		}
 
 		add_filter( 'omgf_buffer_output', [ $this, 'add_success_message' ] );
