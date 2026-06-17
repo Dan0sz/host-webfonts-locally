@@ -8,68 +8,63 @@ Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-OMGF automagically caches the Google Fonts used by your theme/plugins locally. No configuration (or brains) required!
+The original Google Fonts self-hosting plugin. Automagically caches your fonts locally — no configuration (or brains) required!
 
 == Description ==
 
-**OMGF can be downloaded for free without any paid subscription from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).**
+OMGF can be downloaded for free without any paid subscription from [the official WordPress repository](https://wordpress.org/plugins/host-webfonts-local/).
 
-> How could using fonts via Google's service possibly run afoul of GDPR? The fact of the matter is that, when a font is requested by the user's browser, their IP is logged by Google and used for analytics.
-> — Lifehacker
+**Trusted by 300,000+ WordPress sites. The original Google Fonts self-hosting plugin.**
 
-**Leverage Browser Cache**, **reduce DNS lookups/requests**, **reduce Cumulative Layout Shift** and make your Google Fonts **100% GDPR-compliant** with OMGF!
+OMGF removes the connection between your site and Google's font servers, eliminating the DNS lookups and render-blocking requests that slow down LCP and TTFB — while making your site GDPR/DSGVO-compliant in the process. German courts have ruled that loading Google Fonts directly violates GDPR, since visitor IPs get logged by Google. OMGF closes that gap entirely: nothing leaves your server.
 
-OMGF is written with performance and user-friendliness in mind. It uses the Google Fonts API to automatically cache the fonts your theme and plugins use to **minimize DNS requests** and speed up your WordPress website.
+Install it and it works immediately. No setup required, though there's plenty to fine-tune if you want to.
 
-= How Does It Work? =
+## Detection, Out of the Box
 
-After installing and configuring the plugin, OMGF will automatically start looking for Google Fonts whenever a page is requested on your website.
+OMGF scans your site for Google Fonts, Bunny Fonts (`fonts.bunny.net`), and Jetpack CDN (`fonts-api.wp.com`) and downloads them to your own server automatically. It even automatically detects and optimizes Google Fonts loaded by Elementor.
 
-All Google Fonts are listed in the **Optimize Local Fonts** section of OMGF's settings screen. There, you can choose to:
+## Free Features
 
-- *Preload* fonts to **reduce Cumulative Layout Shift** above the fold.
-- *Unload* fonts that're not used by you, your theme, and/or plugins.
-- Set a *Fallback Font Stack* (OMGF Pro required), to further **reduce Cumulative Layout Shift**, or
-- Enable *Magic Fallbacks* (OMGF Pro required), to automatically generate mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load.
-- *Replace* (OMGF Pro required) font-families with system fonts to **speed up loading times**!
+**Resource hints cleanup** — Strips leftover `preconnect`, `dns-prefetch`, and `preload` hints pointing at `fonts.googleapis.com` and `fonts.gstatic.com` — dead weight once your fonts are self-hosted.
 
-= Other Features include =
+**font-display control** — Force `font-display: swap` (or `block`, `fallback`, `optional`, `auto`) on your Google Fonts, fixing "Ensure text remains visible during webfont load" in Lighthouse and PageSpeed Insights.
 
-- The **integrated Google Fonts checker** notifies you if a plugin or your theme has added Google Fonts (e.g., after an update) it can't process.
-- The **Performance Checker** automatically monitors your Google Fonts' performance and notifies you about potential improvements in 4 areas:
-  - **Unused subsets** — subsets that are downloaded but never used, increasing **Total Blocking Time**,
-  - **Unused font styles/weights** — font variants that are loaded but not used, causing **unused CSS**,
-  - **Missing preloads** — fonts used above the fold that aren't preloaded, increasing **Largest Contentful Paint** and **First Contentful Paint**,
-  - **Cumulative Layout Shift** — layout shift caused by fonts loading after the page is rendered.
-- **Variable Fonts** support,
-- **Remove Resource Hints** (preload, preconnect, dns-prefetch) pointing to `fonts.googleapis.com` or
-  `fonts.gstatic.com`,
-	- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to your Google Fonts,
-- **Ensure text remains visible during webfont load** by forcing the _font-display_ attribute to all your other fonts! (OMGF Pro required),
+**Performance Checker** — Keeps an eye on your setup and flags what's costing you points: unused subsets, unused weights, missing preloads above the fold, and layout shift from fonts loading late.
 
-= Additional Features in OMGF Pro =
+**Google Fonts checker** — Pings you when a theme or plugin update introduces new Google Fonts that haven't been processed yet.
 
-- **Smart Optimize** automatically detects which fonts, subsets, and weights are actually used on each page — preloading the ones that matter and removing the ones that don't, to **eliminate render-blocking resources** and **reduce unused CSS**.
-- **Magic Fallbacks** generates mathematically tuned system font fallbacks that match your Google Fonts' exact proportions, eliminating **layout shift** while fonts load.
-- Automatically configures itself to make sure all externally hosted Google Fonts on your site are hosted locally. OMGF Pro supports:
-	- `@font-face` and `@import` statements inside **inline `<style>` blocks**,
-	- `@font-face` and `@import` statements inside **local stylesheets** loaded by e.g. your theme and/or plugins,
-	- `@font-face` and `@import` statements inside **externally hosted stylesheets** loaded by your theme and/or
-	  plugins,
-	- Web Font Loader (`webfont.js`),
-	- Async Google Fonts (loaded using JS)
-	- Material Icons.
-- **Multisite** and **WPML** support.
-- **Whitelabel stylesheets**, which removes branding and comments from the stylesheets to further reduce the size.
-- Modify your fonts' `src: url()` attribute to fully integrate with your configuration,
-	- Use this to serve fonts and the stylesheets from your CDN, or
-	- To serve fonts from an alternative path (e.g. when you're using Security through Obscurity plugins like WP Hide,
-	  etc.), or
-	- Anything you like!
-- **Developer Mode**, which allows you to easily migrate between Development, Staging/Testing, Acceptance and Production
-  environments.
+**Manual control** — Globally unload font families or weights you don't need. Preload the ones that matter above the fold.
 
-*[Purchase OMGF Pro](https://daan.dev/wordpress/omgf-pro/) | [Documentation](https://daan.dev/docs/omgf-pro/) | [Tested Plugins & Themes](https://daan.dev/docs/omgf-pro/tested-themes-plugins/)*
+**Integrates with your stack** — OMGF works alongside the optimization plugins and page builders you're already running, including Autoptimize, FlyingPress, Kinsta, LiteSpeed Cache, SiteGround Speed Optimizer, W3 Total Cache, WP Fastest Cache, WP-Optimize, WP Rocket, WP Super Cache, Elementor, Divi, Beaver Builder, Bricks, Oxygen, and Visual Composer.
+
+## OMGF Pro
+
+Where the free version covers the fundamentals, Pro removes the manual work entirely.
+
+**Smart Optimize** — Measures, on real visitor pageviews, exactly which fonts, subsets, and weights get used above the fold. Preloads what matters, strips what doesn't. No configuration, no guessing — just measured results.
+
+**Magic Fallbacks** — Generates system font fallbacks mathematically tuned to match each Google Font's real metrics (`size-adjust`, `ascent-override`), so text doesn't jump around while fonts load. Zero CLS, calculated automatically per font.
+
+**Deeper detection** — Pro reaches fonts the free version and competitors don't touch:
+- Inline `<style>` blocks with `@font-face` or `@import`
+- Local and externally hosted stylesheets using `@import`
+- Web Font Loader (`webfont.js`)
+- Async, JS-injected Google Fonts loaded at runtime
+- WordPress's Font Manager (or Font Library, since WP 7.0)
+- Variable Fonts (`fonts.googleapis.com/css2`)
+- Material Icons
+
+**Global font-display** — Extends `font-display` control to every font on your site, not just Google Fonts.
+
+**Everything else:**
+- Automatic Multisite and WPML support
+- Serve fonts and stylesheets from your own CDN or custom path
+- Replace font families with system fonts entirely
+- Whitelabel stylesheets — strip OMGF branding and comments for smaller file sizes
+- Developer Mode for safely migrating between dev, staging, and production
+
+[**Get OMGF Pro →**](https://daan.dev/wordpress/omgf-pro/) | [Documentation](https://daan.dev/docs/omgf-pro/) | [Tested Plugins & Themes](https://daan.dev/docs/omgf-pro/tested-themes-plugins/)
 
 == Installation ==
 
