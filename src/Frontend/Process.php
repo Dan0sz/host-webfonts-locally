@@ -134,16 +134,17 @@ class Process {
 	private function init() {
 		/**
 		 * Halt execution if:
-		 * * $break parameter is set.
 		 * * `nomgf` GET-parameter is set.
 		 * * Test Mode is enabled and the current user is not an admin.
 		 * * Test Mode is enabled and the `omgf` GET-parameter is not set.
 		 */
 		$test_mode_enabled = ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) );
+		$is_admin          = current_user_can( 'manage_options' );
+		$is_test_request   = isset( $_GET['omgf'] );
 
 		if ( $this->break ||
 		     isset( $_GET['nomgf'] ) ||
-		     ( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! OMGF::is_running_optimize() ) && ( ! current_user_can( 'manage_options' ) && ! isset( $_GET['omgf'] ) ) ) ) {
+		     ( $test_mode_enabled && ! $is_admin && ! $is_test_request && ! OMGF::is_running_optimize() ) ) {
 			return;
 		}
 
