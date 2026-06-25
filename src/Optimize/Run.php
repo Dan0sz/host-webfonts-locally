@@ -55,10 +55,24 @@ class Run {
 	 * @return array|WP_Error
 	 */
 	private function get_front_html( $url ) {
+		$cookies = [];
+
+		foreach ( [ LOGGED_IN_COOKIE, AUTH_COOKIE, SECURE_AUTH_COOKIE ] as $cookie_name ) {
+			if ( ! empty( $_COOKIE[ $cookie_name ] ) ) {
+				$cookies[] = new \WP_Http_Cookie(
+					[
+						'name'  => $cookie_name,
+						'value' => wp_unslash( $_COOKIE[ $cookie_name ] ),
+					]
+				);
+			}
+		}
+
 		return wp_remote_get(
 			OMGF::no_cache_optimize_url( $url ),
 			[
 				'timeout' => 60,
+				'cookies' => $cookies,
 			]
 		);
 	}
