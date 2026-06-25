@@ -134,16 +134,17 @@ class Process {
 	private function init() {
 		/**
 		 * Halt execution if:
-		 * * $break parameter is set.
 		 * * `nomgf` GET-parameter is set.
 		 * * Test Mode is enabled and the current user is not an admin.
 		 * * Test Mode is enabled and the `omgf` GET-parameter is not set.
 		 */
 		$test_mode_enabled = ! empty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE ) );
+		$is_admin          = current_user_can( 'manage_options' );
+		$is_test_request   = isset( $_GET['omgf'] );
 
 		if ( $this->break ||
 		     isset( $_GET['nomgf'] ) ||
-		     ( ( $test_mode_enabled && ! current_user_can( 'manage_options' ) && ! isset( $_GET['omgf_optimize'] ) ) && ( ! current_user_can( 'manage_options' ) && ! isset( $_GET['omgf'] ) ) ) ) {
+		     ( $test_mode_enabled && ! $is_admin && ! $is_test_request && ! OMGF::is_running_optimize() ) ) {
 			return;
 		}
 
@@ -257,7 +258,7 @@ class Process {
 	 * @return string
 	 */
 	public function add_success_message( $html ) {
-		if ( ! current_user_can( 'manage_options' ) || ! isset( $_GET['omgf_optimize'] ) || wp_doing_ajax() ) {
+		if ( ! current_user_can( 'manage_options' ) || ! OMGF::is_running_optimize() || wp_doing_ajax() ) {
 			return $html;
 		}
 
@@ -301,9 +302,9 @@ class Process {
 	 */
 	public static function should_start() {
 		/**
-		 * Always run if the omgf_optimize parameter (added by Save & Optimize) is set.
+		 * Always run if Save & Optimize is running.
 		 */
-		if ( self::query_param_exists( 'omgf_optimize' ) ) {
+		if ( OMGF::is_running_optimize() ) {
 			return true;
 		}
 
@@ -368,7 +369,7 @@ class Process {
 
 	/**
 	 * Sets the Optimize Has Run flag after the first run, i.e.,
-	 * - when the omgf_optimize parameter,
+	 * - when OMGF is running optimize;
 	 * - the flag isn't set yet, and,
 	 * - @see OMGF::admin_optimized_fonts() returns empty.
 	 *
@@ -377,7 +378,7 @@ class Process {
 	 * @return void
 	 */
 	public function maybe_set_optimize_has_run() {
-		if ( self::query_param_exists( 'omgf_optimize' ) && ! OMGF::optimize_succeeded() ) {
+		if ( OMGF::is_running_optimize() && ! OMGF::optimize_succeeded() ) {
 			update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
 		}
 	}
@@ -591,7 +592,7 @@ class Process {
 			/**
 			 * Regular requests (in the frontend) will end here if the file exists.
 			 */
-			if ( ! isset( $_GET['omgf_optimize'] ) && file_exists( OMGF_UPLOAD_DIR . "/$handle/$handle.css" ) ) {
+			if ( ! OMGF::is_running_optimize() && file_exists( OMGF_UPLOAD_DIR . "/$handle/$handle.css" ) ) {
 				$search[ $key ]  = $stack['href'];
 				$replace[ $key ] = OMGF_UPLOAD_URL . "/$handle/$handle.css?ver=" . $this->timestamp;
 

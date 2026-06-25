@@ -500,6 +500,8 @@ class Helper {
 	}
 
 	/**
+	 * @since v6.3.8 Added nonce and capability check to prevent unauthenticated exploitation.
+	 *
 	 * @param array $params
 	 *
 	 * @return bool
@@ -509,20 +511,33 @@ class Helper {
 	public static function is_running_optimize( $params = [] ) {
 		$is_running = false;
 
-		/**
-		 * If a dev did unset($_GET) somewhere, we can't assume that it exists.
-		 */
 		if ( ! empty( $_GET ) ) {
 			$is_running = array_key_exists( 'omgf_optimize', $_GET );
 		}
 
-		return apply_filters( 'omgf_is_running_optimize', ( array_key_exists( 'omgf_optimize', $params ) || $is_running ) );
+		$is_running = apply_filters( 'omgf_is_running_optimize', ( array_key_exists( 'omgf_optimize', $params ) || $is_running ) );
+
+		if ( ! $is_running ) {
+			return false;
+		}
+
+		/**
+		 * @since v6.x.x Non-filterable auth check — blocks unauthenticated optimize runs.
+		 */
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		$nonce = $_GET['omgf_optimize'] ?? $params['omgf_optimize'] ?? '';
+
+		return wp_verify_nonce( $nonce, 'omgf_optimize' ) !== false;
 	}
 
 	/**
 	 * Generate a request to $uri including the required parameters for OMGF to run in the frontend.
 	 *
 	 * @since v5.4.4 Added omgf_optimize_run_args filter so other plugins can add query parameters to the Save & Optimize routine.
+	 * @since v6.3.8 omgf_optimize now carries a nonce.
 	 *
 	 * @param string $url A (relative or absolute) URL, defaults to home URL.
 	 *
@@ -540,7 +555,7 @@ class Helper {
 		$args = apply_filters(
 			'omgf_optimize_run_args',
 			[
-				'omgf_optimize' => 1,
+				'omgf_optimize' => wp_create_nonce( 'omgf_optimize' ),
 				'nocache'       => substr(
 					md5( microtime() ),
 					wp_rand( 0, 26 ),

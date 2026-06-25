@@ -55,10 +55,37 @@ class Run {
 	 * @return array|WP_Error
 	 */
 	private function get_front_html( $url ) {
+		$cookies = [];
+
+		$parsed_url = parse_url( $url );
+		$home_url   = parse_url( get_home_url() );
+		$is_https   = true;
+
+		// Allow devs to override this behavior on e.g., local test environments.
+		if ( apply_filters( 'omgf_optimize_run_require_https', true ) ) {
+			$is_https = ( $parsed_url['scheme'] ?? '' ) === 'https';
+		}
+
+		if ( ( $parsed_url['host'] ?? '' ) === ( $home_url['host'] ?? '' ) && $is_https ) {
+			$cookie_name = LOGGED_IN_COOKIE;
+
+			if ( ! empty( $_COOKIE[ $cookie_name ] ) ) {
+				$cookies[] = new \WP_Http_Cookie(
+					[
+						'name'     => $cookie_name,
+						'value'    => wp_unslash( $_COOKIE[ $cookie_name ] ),
+						'secure'   => $is_https,
+						'httponly' => true,
+					]
+				);
+			}
+		}
+
 		return wp_remote_get(
 			OMGF::no_cache_optimize_url( $url ),
 			[
 				'timeout' => 60,
+				'cookies' => $cookies,
 			]
 		);
 	}
