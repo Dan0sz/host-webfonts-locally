@@ -13,13 +13,24 @@ use OMGF\Tests\TestCase;
 class AdminbarMenuTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
-		$user_id = wp_insert_user(
-			[
-				'user_login' => 'admin',
-				'user_pass'  => 'password',
-				'role'       => 'administrator',
-			]
-		);
+		$user = get_user_by( 'login', 'admin' );
+
+		if ( $user ) {
+			$user_id = $user->ID;
+		} else {
+			$user_id = wp_insert_user(
+				[
+					'user_login' => 'admin',
+					'user_pass'  => 'password',
+					'role'       => 'administrator',
+				]
+			);
+		}
+
+		if ( is_wp_error( $user_id ) ) {
+			throw new \Exception( 'Failed to create or retrieve admin user: ' . $user_id->get_error_message() );
+		}
+
 		wp_set_current_user( $user_id );
 		// Ensure we start with clean options
 		OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
