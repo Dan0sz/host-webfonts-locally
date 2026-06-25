@@ -74,6 +74,7 @@ class AdminbarMenuTest extends TestCase {
 
 		try {
 			$request->set_param( 'omgf_optimize', wp_create_nonce( 'omgf_optimize' ) );
+			$_GET['omgf_optimize'] = $request->get_param( 'omgf_optimize' );
 			$request->set_param( 'path', '/test' );
 			$request->set_param( 'urls', [ 'https://fonts.googleapis.com/css?family=Roboto:400,700' ] );
 			$api = new AdminbarMenu();
@@ -85,11 +86,13 @@ class AdminbarMenuTest extends TestCase {
 			$this->assertArrayHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
 		} finally {
 			$request->set_param( 'urls', [] );
+			unset( $_GET['omgf_optimize'] );
 		}
 
 		// We send over no URLs and no URLs should be saved.
 		try {
 			$request->set_param( 'omgf_optimize', wp_create_nonce( 'omgf_optimize' ) );
+			$_GET['omgf_optimize'] = $request->get_param( 'omgf_optimize' );
 			add_filter( 'omgf_is_running_optimize', '__return_true' );
 
 			$api = new AdminbarMenu();
@@ -100,14 +103,15 @@ class AdminbarMenuTest extends TestCase {
 
 			$this->assertArrayNotHasKey( 'https://fonts.googleapis.com/css?family=Roboto:400,700', $results );
 		} finally {
+			unset( $_GET['omgf_optimize'] );
 			remove_filter( 'omgf_is_running_optimize', '__return_true' );
 		}
 
 		// We send over 6 URLs, but only 5 should be saved.
 		try {
 			add_filter( 'omgf_is_running_optimize', '__return_true' );
-
 			$request->set_param( 'omgf_optimize', wp_create_nonce( 'omgf_optimize' ) );
+			$_GET['omgf_optimize'] = $request->get_param( 'omgf_optimize' );
 			$request->set_param(
 				'urls',
 				[
@@ -128,6 +132,7 @@ class AdminbarMenuTest extends TestCase {
 
 			$this->assertCount( 5, $results );
 		} finally {
+			unset( $_GET['omgf_optimize'] );
 			remove_filter( 'omgf_is_running_optimize', '__return_true' );
 
 			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
