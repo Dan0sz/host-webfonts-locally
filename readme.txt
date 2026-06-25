@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 6.3.7
+Stable tag: 6.3.8
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -86,6 +86,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.3.8 | June 25th, 2026 =
+* XSS: Hardened security by adding capability and nonce checks to Save & Optimize action.
 
 = 6.3.7 | June 16th, 2026 =
 * Added: omgf_frontend_process_preloads action, which is used by OMGF Pro for coming up Smart Optimize improvements.
