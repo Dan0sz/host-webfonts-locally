@@ -51,7 +51,7 @@ class ProcessTest extends TestCase {
 
 			// Usually the "ver" param contains a timestamp, but that's not really relevant to test here.
 			$this->expectOutputRegex(
-				"~<link id='omgf-preload-.?' rel='preload' href='/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-.*?\.woff2\?ver=.*?' as='font' type='font/woff2' crossorigin />~i"
+				"~<link id=['\"]omgf-preload-.?['\"] rel=['\"]preload['\"] href=['\"]/wp-content/uploads/omgf/astra-google-fonts-mod-jdm02/jost-normal-latin-.*?\.woff2\?ver=.*?['\"] as=['\"]font['\"] type=['\"]font/woff2['\"] crossorigin />~i"
 			);
 			$class->add_preloads();
 		} finally {
@@ -73,7 +73,7 @@ class ProcessTest extends TestCase {
 		$this->assertEmpty( $html );
 
 		try {
-			$_GET['omgf_optimize'] = 1;
+			$_GET['omgf_optimize'] = wp_create_nonce( 'omgf_optimize' );
 			add_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
 
 			$html = $class->add_success_message( '' );
@@ -101,13 +101,15 @@ class ProcessTest extends TestCase {
 
 		try {
 			// omgf_optimize is set and hasn't run yet.
-			$_GET['omgf_optimize'] = 1;
+			$_GET['omgf_optimize'] = wp_create_nonce( 'omgf_optimize' );
+			add_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
 
 			$class->maybe_set_optimize_has_run();
 
 			$this->assertTrue( (bool) get_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
 		} finally {
 			unset( $_GET['omgf_optimize'] );
+			remove_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
 
 			delete_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
 		}

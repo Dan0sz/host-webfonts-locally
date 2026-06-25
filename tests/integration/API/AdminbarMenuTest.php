@@ -13,6 +13,7 @@ use OMGF\Tests\TestCase;
 class AdminbarMenuTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
 		// Ensure we start with clean options
 		OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
@@ -54,6 +55,7 @@ class AdminbarMenuTest extends TestCase {
 		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 
 		try {
+			$request->set_param( 'omgf_optimize', wp_create_nonce( 'omgf_optimize' ) );
 			$request->set_param( 'path', '/test' );
 			$request->set_param( 'urls', [ 'https://fonts.googleapis.com/css?family=Roboto:400,700' ] );
 			$api = new AdminbarMenu();
@@ -69,6 +71,7 @@ class AdminbarMenuTest extends TestCase {
 
 		// We send over no URLs and no URLs should be saved.
 		try {
+			$request->set_param( 'omgf_optimize', wp_create_nonce( 'omgf_optimize' ) );
 			add_filter( 'omgf_is_running_optimize', '__return_true' );
 
 			$api = new AdminbarMenu();
@@ -86,6 +89,7 @@ class AdminbarMenuTest extends TestCase {
 		try {
 			add_filter( 'omgf_is_running_optimize', '__return_true' );
 
+			$request->set_param( 'omgf_optimize', wp_create_nonce( 'omgf_optimize' ) );
 			$request->set_param(
 				'urls',
 				[
