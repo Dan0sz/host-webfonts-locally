@@ -57,14 +57,27 @@ class Run {
 	private function get_front_html( $url ) {
 		$cookies = [];
 
-		foreach ( [ LOGGED_IN_COOKIE, AUTH_COOKIE, SECURE_AUTH_COOKIE ] as $cookie_name ) {
-			if ( ! empty( $_COOKIE[ $cookie_name ] ) ) {
-				$cookies[] = new \WP_Http_Cookie(
-					[
-						'name'  => $cookie_name,
-						'value' => wp_unslash( $_COOKIE[ $cookie_name ] ),
-					]
-				);
+		$parsed_url = parse_url( $url );
+		$home_url   = parse_url( get_home_url() );
+		$is_https   = true;
+
+		// Allow devs to override this behavior on e.g., local test environments.
+		if ( apply_filters( 'omgf_optimize_run_require_https', true ) ) {
+			$is_https = ( $parsed_url['scheme'] ?? '' ) === 'https';
+		}
+
+		if ( ( $parsed_url['host'] ?? '' ) === ( $home_url['host'] ?? '' ) && $is_https ) {
+			foreach ( [ LOGGED_IN_COOKIE ] as $cookie_name ) {
+				if ( ! empty( $_COOKIE[ $cookie_name ] ) ) {
+					$cookies[] = new \WP_Http_Cookie(
+						[
+							'name'     => $cookie_name,
+							'value'    => wp_unslash( $_COOKIE[ $cookie_name ] ),
+							'secure'   => $is_https,
+							'httponly' => true,
+						]
+					);
+				}
 			}
 		}
 
