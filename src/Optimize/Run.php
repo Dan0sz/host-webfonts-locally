@@ -67,17 +67,17 @@ class Run {
 		}
 
 		if ( ( $parsed_url['host'] ?? '' ) === ( $home_url['host'] ?? '' ) && $is_https ) {
-			foreach ( [ LOGGED_IN_COOKIE ] as $cookie_name ) {
-				if ( ! empty( $_COOKIE[ $cookie_name ] ) ) {
-					$cookies[] = new \WP_Http_Cookie(
-						[
-							'name'     => $cookie_name,
-							'value'    => wp_unslash( $_COOKIE[ $cookie_name ] ),
-							'secure'   => $is_https,
-							'httponly' => true,
-						]
-					);
-				}
+			$cookie_name = LOGGED_IN_COOKIE;
+
+			if ( ! empty( $_COOKIE[ $cookie_name ] ) ) {
+				$cookies[] = new \WP_Http_Cookie(
+					[
+						'name'     => $cookie_name,
+						'value'    => wp_unslash( $_COOKIE[ $cookie_name ] ),
+						'secure'   => $is_https,
+						'httponly' => true,
+					]
+				);
 			}
 		}
 
