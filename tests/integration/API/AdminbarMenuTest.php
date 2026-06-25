@@ -13,7 +13,14 @@ use OMGF\Tests\TestCase;
 class AdminbarMenuTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
-		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		$user_id = wp_insert_user(
+			[
+				'user_login' => 'admin',
+				'user_pass'  => 'password',
+				'role'       => 'administrator',
+			]
+		);
+		wp_set_current_user( $user_id );
 		// Ensure we start with clean options
 		OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
 		OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
