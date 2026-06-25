@@ -211,6 +211,13 @@ class RunTest extends TestCase {
 			};
 			add_filter( 'omgf_filter_optimize_url', $filter_home_url );
 
+			add_filter(
+				'pre_http_request',
+				$fail_http_request = function () {
+					return new \WP_Error( 'http_request_failed', 'A valid URL was not provided.' );
+				}
+			);
+
 			new Run();
 
 			global $wp_settings_errors;
@@ -220,6 +227,7 @@ class RunTest extends TestCase {
 			$this->assertEquals( 'omgf_frontend_fetch_failed', $wp_settings_errors[0]['code'] );
 		} finally {
 			remove_filter( 'omgf_filter_optimize_url', $filter_home_url );
+			remove_filter( 'pre_http_request', $fail_http_request );
 			delete_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
 		}
 	}
