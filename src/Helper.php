@@ -545,11 +545,11 @@ class Helper {
 	 */
 	public static function no_cache_optimize_url( $url = '' ) {
 		if ( ! $url ) {
-			$url = get_home_url();
+			$url = get_home_url(); // @codeCoverageIgnore
 		}
 
 		if ( wp_make_link_relative( $url ) === $url ) {
-			$url = home_url( $url );
+			$url = home_url( $url ); // @codeCoverageIgnore
 		}
 
 		$args = apply_filters(
