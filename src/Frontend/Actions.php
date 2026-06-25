@@ -68,7 +68,7 @@ class Actions {
 				'id'     => 'omgf-optimize-this',
 				'parent' => 'omgf',
 				'title'  => __( 'Optimize this page', 'host-webfonts-local' ),
-				'href'   => add_query_arg( 'omgf_optimize', '1', $site_url ),
+				'href'   => OMGF::no_cache_optimize_url( $site_url ),
 			]
 		);
 	}
