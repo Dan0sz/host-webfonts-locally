@@ -144,11 +144,30 @@ window.addEventListener('load', () => {
 		/**
 		 * Filter the list of entries for calls to the Google Fonts API for further processing.
 		 *
+		 * @since v6.3.9
+		 *
 		 * @return array
 		 */
 		filterGoogleFonts: () => {
 			let entries = window.performance.getEntries();
-			let google_fonts = entries.filter((entry) => entry.name.indexOf('/fonts.googleapis.com/css') > 0 || entry.name.indexOf('/fonts.googleapis.com/icon') > 0 || entry.name.indexOf('/fonts.gstatic.com/') > 0)
+			let google_fonts = entries.filter((entry) => {
+				let is_google_fonts_css = entry.name.indexOf('/fonts.googleapis.com/css') > 0 || entry.name.indexOf('/fonts.googleapis.com/icon') > 0;
+				let is_google_fonts_resource = entry.name.indexOf('/fonts.gstatic.com/') > 0;
+
+				if (is_google_fonts_resource) {
+					/**
+					 * Tighten the check for fonts.gstatic.com to only match actual font files.
+					 *
+					 * @since v6.3.9
+					 */
+					let is_font_file = /\.(woff2|woff|ttf|otf)(\?.*)?$/i.test(entry.name);
+					let is_valid_initiator = !entry.initiatorType || ['css', 'link', 'other'].includes(entry.initiatorType);
+
+					is_google_fonts_resource = is_font_file && is_valid_initiator;
+				}
+
+				return is_google_fonts_css || is_google_fonts_resource;
+			});
 
 			if (google_fonts.length === 0) {
 				return [];
