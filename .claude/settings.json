@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "deny": [
+      "Bash(git *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)"
+    ]
+  }
+}
