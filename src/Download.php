@@ -161,7 +161,7 @@ class Download {
 
 			if ( ! rename( $temp_filename, $final_path ) ) {
 				Notice::set_notice(
-					__( 'OMGF failed to move downloaded file to final location', 'host-webfonts-local' ) . ': ' . $this->filename,
+					__( 'OMGF failed to move downloaded file to final location', 'host-webfonts-local' ) . ': ' . $final_path,
 					'omgf-rename-failed',
 					'error',
 					500
