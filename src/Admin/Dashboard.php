@@ -60,6 +60,7 @@ class Dashboard {
 	 */
 	const IFRAMES_LOADING_FONTS = [
 		'active-campaign'             => '.activehosted.com/f/embed.php', // ActiveCampaign
+		'beehiiv'                     => '//subscribe-forms.beehiiv.com/v3/loader.js', // Beehiiv
 		'channext'                    => '//content.channext.com/js/', // Channext
 		'conversio'                   => '//app.conversiobot.com', // Conversio
 		'gastronovi'                  => '//services.gastronovi.com', // Gastronovi
