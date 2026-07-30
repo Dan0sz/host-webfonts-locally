@@ -88,7 +88,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 == Changelog ==
 
 = 6.3.9 =
-* Fixed: The settings save handler no longer stores a malformed (scalar) value for options that must be arrays (e.g. when a proxy or security plugin flattens the array parameters), and self-heals a previously corrupted option on the next save. This prevents a fatal 'Cannot access offset of type string on string' error on the Optimize Fonts screen. Add-ons can register their own array-based options via the omgf_settings_array_options filter.
+* Fixed: The settings save handler no longer stores a malformed (scalar) value for options that must be arrays (e.g., when a proxy or security plugin flattens the array parameters), and self-heals a previously corrupted option on the next save. This prevents a fatal 'Cannot access offset of type string on string' error on the Optimize Fonts screen. Add-ons can register their own array-based options via the omgf_settings_array_options filter.
 
 = 6.3.8 | June 25th, 2026 =
 * XSS: Hardened security by adding capability and nonce checks to Save & Optimize action.
