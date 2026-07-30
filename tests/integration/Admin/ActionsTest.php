@@ -53,6 +53,51 @@ class ActionsTest extends TestCase {
 	}
 
 	/**
+	 * A malformed (scalar) value for an option that must be a nested array - e.g. when a proxy or
+	 * security plugin flattens the array parameters - must be ignored, leaving the existing valid
+	 * setting untouched instead of corrupting it.
+	 *
+	 * @see Actions::update_settings()
+	 * @return void
+	 */
+	public function testUpdateSettingsIgnoresMalformedScalarForArrayOption() {
+		$existing = [ 'handle-1' => [ 'open-sans' => [ 'normal' => 'on' ] ] ];
+
+		OMGF::update_option( 'omgf_preload_fonts', $existing );
+
+		$_POST                        = [];
+		$_POST[ '_wpnonce' ]          = wp_create_nonce( 'omgf-optimize-settings-options' );
+		$_POST[ 'action' ]            = 'omgf-update';
+		$_POST[ 'omgf_preload_fonts' ] = 'on'; // Flattened array parameter.
+
+		( new Actions() )->update_settings();
+
+		$this->assertSame( $existing, OMGF::get_option( 'omgf_preload_fonts' ) );
+	}
+
+	/**
+	 * A valid save must overwrite a previously corrupted (string) value instead of throwing a
+	 * TypeError in array_replace(), so the option self-heals.
+	 *
+	 * @see Actions::update_settings()
+	 * @return void
+	 */
+	public function testUpdateSettingsSelfHealsCorruptedArrayOption() {
+		OMGF::update_option( 'omgf_unload_fonts', 'this-is-not-an-array' );
+
+		$expected = [ 'handle-1' => [ 'open-sans' => [ 'normal' => 'on' ] ] ];
+
+		$_POST                       = [];
+		$_POST[ '_wpnonce' ]         = wp_create_nonce( 'omgf-optimize-settings-options' );
+		$_POST[ 'action' ]           = 'omgf-update';
+		$_POST[ 'omgf_unload_fonts' ] = $expected;
+
+		( new Actions() )->update_settings();
+
+		$this->assertSame( $expected, OMGF::get_option( 'omgf_unload_fonts' ) );
+	}
+
+	/**
 	 * @see Actions::clean_stale_cache()
 	 * @return void
 	 */

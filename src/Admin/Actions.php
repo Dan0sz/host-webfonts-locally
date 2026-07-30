@@ -79,8 +79,32 @@ class Actions {
 
 		$updated_settings = $this->clean( $_POST );
 
+		/**
+		 * These options are always stored as (nested) arrays, keyed by font handle. A scalar value for
+		 * any of them means the request was malformed, e.g. a proxy or security plugin that flattened
+		 * the array parameters (foo[a][b]=x => foo=x). Persisting the scalar corrupts the option and,
+		 * because the read side subscripts it by handle, triggers a fatal
+		 * "Cannot access offset of type string on string" on PHP 8+ the next time the settings screen
+		 * is rendered. A reset ('0') is handled separately below and is always allowed.
+		 *
+		 * @filter omgf_settings_array_options
+		 */
+		$array_options = apply_filters(
+			'omgf_settings_array_options',
+			[
+				Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS,
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS,
+			]
+		);
+
 		foreach ( $updated_settings as $option_name => $option_value ) {
 			if ( ! str_starts_with( $option_name, 'omgf_' ) || ( empty( $option_value ) && $option_value !== '0' ) ) {
+				continue;
+			}
+
+			// Ignore a malformed (non-array, non-reset) value for an option that must be an array,
+			// rather than overwriting the existing, valid setting with corrupt data.
+			if ( $option_value !== '0' && ! is_array( $option_value ) && in_array( $option_name, $array_options, true ) ) {
 				continue;
 			}
 
@@ -90,13 +114,20 @@ class Actions {
 				}
 			}
 
-			if ( is_string( $option_value ) && $option_value !== '0' ) {
-				$merged = $option_value;
-			} elseif ( $option_value === '0' ) {
+			if ( $option_value === '0' ) {
 				$merged = [];
+			} elseif ( is_string( $option_value ) ) {
+				$merged = $option_value;
 			} else {
-				$current_options = ! empty( OMGF::get_option( $option_name, [] ) ) ? OMGF::get_option( $option_name ) : [];
-				$merged          = array_replace( $current_options, $option_value );
+				$current_options = OMGF::get_option( $option_name, [] );
+
+				// Coerce a previously corrupted (non-array) value back to an array, so a valid save
+				// self-heals the option instead of throwing a TypeError in array_replace().
+				if ( ! is_array( $current_options ) ) {
+					$current_options = [];
+				}
+
+				$merged = array_replace( $current_options, $option_value );
 			}
 
 			OMGF::update_option( $option_name, $merged );
