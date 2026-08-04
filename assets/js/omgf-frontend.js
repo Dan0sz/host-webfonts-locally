@@ -284,11 +284,16 @@ window.addEventListener('load', () => {
 				});
 
 				let used_faces_above_the_fold = new Set();
-				let used_faces_entire_document = new Set();
+				let used_faces_not_rendered = new Set();
 
 				/**
 				 * Both Missing Preloads and Unused Font Faces should detect font faces.
-				 * Missing Preloads only scans Above The Fold, and Unused Font Faces scans the entire document.
+				 *
+				 * Missing Preloads only scans Above The Fold. Unused Font Faces scans elements which aren't
+				 * laid out (e.g. inside a collapsed tab, accordion or modal): those never trigger a font
+				 * load, so the browser's font status can't tell us whether they'd need one. For elements
+				 * which are laid out, the font status is authoritative, and including those here would
+				 * keep every unused subset of a font that's used elsewhere on the page.
 				 */
 				const elements = document.querySelectorAll('body *:not(#wpadminbar):not(#wpadminbar *)');
 				const scan_limit = 1500; // keep analysis bounded on very large DOMs
@@ -303,6 +308,8 @@ window.addEventListener('load', () => {
 
 					// If the element is in the viewport.
 					let in_viewport = rect.top < window.innerHeight && rect.bottom > 0 && rect.left < window.innerWidth && rect.right > 0;
+					// An element without a box isn't laid out, so it never rendered any text.
+					let is_rendered = rect.width > 0 || rect.height > 0;
 
 					// Handle font-family stacks (e.g. "Open Sans", sans-serif).
 					family.split(',').forEach((font) => {
@@ -313,7 +320,9 @@ window.addEventListener('load', () => {
 							used_faces_above_the_fold.add(face_id);
 						}
 
-						used_faces_entire_document.add(face_id);
+						if (!is_rendered) {
+							used_faces_not_rendered.add(face_id);
+						}
 					});
 
 					['::before', '::after'].forEach((pseudo) => {
@@ -330,7 +339,9 @@ window.addEventListener('load', () => {
 								used_faces_above_the_fold.add(face_id);
 							}
 
-							used_faces_entire_document.add(face_id);
+							if (!is_rendered) {
+								used_faces_not_rendered.add(face_id);
+							}
 						});
 					});
 				}
@@ -363,14 +374,13 @@ window.addEventListener('load', () => {
 					let face_id = `${family}-${weight}-${style}`.toLowerCase();
 					let face_id_with_range = `${face_id}-${(font.unicodeRange || '')}`.toLowerCase();
 					let font_url = font_face_url_map.get(face_id_with_range) || font_face_url_map.get(face_id);
-					let effective_face_id = font_face_url_map.has(face_id_with_range) ? face_id_with_range : face_id;
 
 					/**
 					 * Scenario 2: Missing Preloads
 					 *
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
-					if (font.status === 'loaded' && font_url && (used_faces_above_the_fold.has(effective_face_id) || used_faces_above_the_fold.has(face_id))) {
+					if (font.status === 'loaded' && font_url && used_faces_above_the_fold.has(face_id)) {
 						let is_preloaded = preloaded_fonts.some((url) => {
 							// If we have the actual font URL, use it for exact matching.
 							if (font_url && url === font_url) {
@@ -399,8 +409,13 @@ window.addEventListener('load', () => {
 					 * Scenario 3: Unused Fonts
 					 *
 					 * A font face is considered unused if it's explicitly defined in the stylesheet, but the browser never loaded it (status === 'unloaded').
+					 *
+					 * The face IDs collected from computed styles never contain a unicode-range, so they're
+					 * compared against face_id (and not face_id_with_range). Otherwise this check would always
+					 * pass for font faces defining a unicode-range, and font faces which are referenced by
+					 * elements that aren't rendered yet (e.g. tabs, accordions and modals) would be unloaded.
 					 */
-					if (font.status === 'unloaded' && !used_faces_entire_document.has(effective_face_id) && font_url) {
+					if (font.status === 'unloaded' && !used_faces_not_rendered.has(face_id) && font_url) {
 						unused_fonts.push({
 							family: family,
 							weight: weight,
