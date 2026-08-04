@@ -33,14 +33,71 @@ class Actions {
 	}
 
 	/**
-	 * Needs to run before admin_menu and admin_init.
-	 *
-	 * @action _admin_menu
-	 *
-	 * @codeCoverageIgnore
+	 * Cleans up the old (unused) cache directories.
 	 */
-	public function init_admin() {
-		new Settings();
+	public function clean_stale_cache( $option_name, $option_value ) {
+		$old_keys = OMGF::cache_keys();
+		$new_keys = explode( ',', $option_value );
+		$diff     = array_diff( $new_keys, $old_keys );
+
+		foreach ( $diff as $new_cache_key ) {
+			$dir_to_remove = '';
+			$base_key      = preg_replace( '/-mod.*?$/', '', $new_cache_key );
+
+			foreach ( $old_keys as $old_cache_key ) {
+				if ( str_contains( $old_cache_key, $base_key ) ) {
+					$dir_to_remove = $old_cache_key;
+
+					break;
+				}
+			}
+
+			if ( ! $dir_to_remove ) {
+				continue; // @codeCoverageIgnore
+			}
+
+			$dir = OMGF_UPLOAD_DIR . '/' . $dir_to_remove;
+
+			if ( $dir !== realpath( $dir ) ) {
+				continue; // @codeCoverageIgnore
+			}
+
+			$this->delete_files( $dir );
+
+			if ( $this->dir_is_empty( $dir ) ) {
+				rmdir( OMGF_UPLOAD_DIR . '/' . $dir_to_remove );
+			}
+		}
+	}
+
+	/**
+	 * Delete files from $dir.
+	 *
+	 * @param mixed $dir
+	 *
+	 * @return void
+	 */
+	private function delete_files( $dir ) {
+		array_map( 'unlink', glob( $dir . '/*.*' ) );
+	}
+
+	/**
+	 * Check if directory is empty.
+	 * This works because a new FilesystemIterator will initially point to the first file in the folder -
+	 * if there are no files in the folder, valid() will return false
+	 *
+	 * @param mixed $dir
+	 *
+	 * @return bool
+	 */
+	private function dir_is_empty( $dir ) {
+		if ( ! file_exists( $dir ) ) {
+			return false; // @codeCoverageIgnore
+		}
+
+		$iterator = new \FilesystemIterator( $dir );
+
+		return ! $iterator->valid();
 	}
 
 	/**
@@ -55,6 +112,53 @@ class Actions {
 	}
 
 	/**
+	 * Needs to run before admin_menu and admin_init.
+	 *
+	 * @action _admin_menu
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function init_admin() {
+		new Settings();
+	}
+
+	/**
+	 * Render update notices if available.
+	 *
+	 * @param mixed $plugin
+	 * @param mixed $response
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function render_update_notice( $plugin ) {
+		$current_version = $plugin['Version'];
+		$new_version     = $plugin['new_version'];
+
+		if ( version_compare( $current_version, $new_version, '<' ) ) {
+			$response = wp_remote_get( 'https://daan.dev/omgf-update-notices.json?' . substr( uniqid( '', true ), - 5 ) );
+
+			if ( is_wp_error( $response ) ) {
+				return;
+			}
+
+			$update_notices = (array) json_decode( wp_remote_retrieve_body( $response ) );
+
+			if ( ! isset( $update_notices[ $new_version ] ) ) {
+				return;
+			}
+
+			echo wp_kses_post(
+				sprintf(
+					' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.', 'host-webfonts-local' ) . '</strong>',
+					$update_notices[ $new_version ]->url
+				)
+			);
+		}
+	}
+
+	/**
 	 * We use a custom update action, because we're storing multidimensional arrays upon form submit.
 	 * This prevents us from having to use AJAX, serialize(), stringify() and eventually having to json_decode() it, i.e.
 	 * a lot of headaches.
@@ -62,12 +166,12 @@ class Actions {
 	 * @since v5.6.0
 	 */
 	public function update_settings() {
-		if ( wp_doing_cron() || wp_doing_ajax() || empty( $_POST[ 'action' ] ) || $_POST[ 'action' ] !== 'omgf-update' ) {
+		if ( wp_doing_cron() || wp_doing_ajax() || empty( $_POST['action'] ) || $_POST['action'] !== 'omgf-update' ) {
 			return; // @codeCoverageIgnore
 		}
 
-		$action = array_key_exists( 'tab', $_GET ) ? $_GET[ 'tab' ] . '-options' : 'omgf-optimize-settings-options';
-		$nonce  = $_POST[ '_wpnonce' ] ?? '';
+		$action = array_key_exists( 'tab', $_GET ) ? $_GET['tab'] . '-options' : 'omgf-optimize-settings-options';
+		$nonce  = $_POST['_wpnonce'] ?? '';
 
 		if ( wp_verify_nonce( $nonce, $action ) < 1 ) {
 			return; // @codeCoverageIgnore
@@ -80,8 +184,8 @@ class Actions {
 		$updated_settings = $this->clean( $_POST );
 
 		/**
-		 * These options are always stored as (nested) arrays, keyed by font handle. A scalar value for
-		 * any of them means the request was malformed, e.g. a proxy or security plugin that flattened
+		 * These options are always stored as (nested) arrays, keyed by the font handle. A scalar value for
+		 * any of them means the request was malformed, e.g., a proxy or security plugin that flattened
 		 * the array parameters (foo[a][b]=x => foo=x). Persisting the scalar corrupts the option and,
 		 * because the read side subscripts it by handle, triggers a fatal
 		 * "Cannot access offset of type string on string" on PHP 8+ the next time the settings screen
@@ -168,109 +272,5 @@ class Actions {
 		}
 
 		return is_scalar( $var ) ? sanitize_text_field( wp_unslash( $var ) ) : $var;
-	}
-
-	/**
-	 * Render update notices if available.
-	 *
-	 * @param mixed $plugin
-	 * @param mixed $response
-	 *
-	 * @return void
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function render_update_notice( $plugin ) {
-		$current_version = $plugin[ 'Version' ];
-		$new_version     = $plugin[ 'new_version' ];
-
-		if ( version_compare( $current_version, $new_version, '<' ) ) {
-			$response = wp_remote_get( 'https://daan.dev/omgf-update-notices.json?' . substr( uniqid( '', true ), - 5 ) );
-
-			if ( is_wp_error( $response ) ) {
-				return;
-			}
-
-			$update_notices = (array) json_decode( wp_remote_retrieve_body( $response ) );
-
-			if ( ! isset( $update_notices[ $new_version ] ) ) {
-				return;
-			}
-
-			echo wp_kses_post(
-				sprintf(
-					' <strong>' . __( 'This update includes major changes, please <a href="%s" target="_blank">read this</a> before continuing.', 'host-webfonts-local' ) . '</strong>',
-					$update_notices[ $new_version ]->url
-				)
-			);
-		}
-	}
-
-	/**
-	 * Cleans up the old (unused) cache directories.
-	 */
-	public function clean_stale_cache( $option_name, $option_value ) {
-		$old_keys = OMGF::cache_keys();
-		$new_keys = explode( ',', $option_value );
-		$diff     = array_diff( $new_keys, $old_keys );
-
-		foreach ( $diff as $new_cache_key ) {
-			$dir_to_remove = '';
-			$base_key      = preg_replace( '/-mod.*?$/', '', $new_cache_key );
-
-			foreach ( $old_keys as $old_cache_key ) {
-				if ( str_contains( $old_cache_key, $base_key ) ) {
-					$dir_to_remove = $old_cache_key;
-
-					break;
-				}
-			}
-
-			if ( ! $dir_to_remove ) {
-				continue; // @codeCoverageIgnore
-			}
-
-			$dir = OMGF_UPLOAD_DIR . '/' . $dir_to_remove;
-
-			if ( $dir !== realpath( $dir ) ) {
-				continue; // @codeCoverageIgnore
-			}
-
-			$this->delete_files( $dir );
-
-			if ( $this->dir_is_empty( $dir ) ) {
-				rmdir( OMGF_UPLOAD_DIR . '/' . $dir_to_remove );
-			}
-		}
-	}
-
-	/**
-	 * Delete files from $dir.
-	 *
-	 * @param mixed $dir
-	 *
-	 * @return void
-	 */
-	private function delete_files( $dir ) {
-		array_map( 'unlink', glob( $dir . '/*.*' ) );
-	}
-
-	/**
-	 * Check if directory is empty.
-	 * This works because a new FilesystemIterator will initially point to the first file in the folder -
-	 * if there are no files in the folder, valid() will return false
-	 *
-	 * @param mixed $dir
-	 *
-	 * @return bool
-	 */
-	private function dir_is_empty( $dir ) {
-		if ( ! file_exists( $dir ) ) {
-			return false; // @codeCoverageIgnore
-		}
-
-		$iterator = new \FilesystemIterator( $dir );
-
-		return ! $iterator->valid();
 	}
 }
