@@ -88,7 +88,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 == Changelog ==
 
 = 6.3.10 =
-* Fixed: Google Fonts checker flagged font faces as unused even when an element on the page referenced them in its computed style. Font faces defining a unicode-range were compared against an identifier which the detected font faces never contain, so the check always passed. As a result, fonts used by elements which aren't rendered on page load (e.g. in tabs, accordions and modals) could be marked as unused.
+* Fixed: Google Fonts checker flagged font faces as unused even when an element on the page referenced them in its computed style. Font faces defining a unicode-range were compared against an identifier which the detected font faces never contain, so the check always passed. As a result, fonts used by elements which aren't rendered on page load (e.g. in tabs, accordions and modals) could be marked as unused. That check now only covers elements which aren't laid out, so unused subsets of a font used elsewhere on the page are still detected.
 
 = 6.3.9 =
 * Fixed: SVGs and other assets from fonts.gstatic.com would be flagged as false positives by Google Fonts checker.

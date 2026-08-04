@@ -284,11 +284,16 @@ window.addEventListener('load', () => {
 				});
 
 				let used_faces_above_the_fold = new Set();
-				let used_faces_entire_document = new Set();
+				let used_faces_not_rendered = new Set();
 
 				/**
 				 * Both Missing Preloads and Unused Font Faces should detect font faces.
-				 * Missing Preloads only scans Above The Fold, and Unused Font Faces scans the entire document.
+				 *
+				 * Missing Preloads only scans Above The Fold. Unused Font Faces scans elements which aren't
+				 * laid out (e.g. inside a collapsed tab, accordion or modal): those never trigger a font
+				 * load, so the browser's font status can't tell us whether they'd need one. For elements
+				 * which are laid out, the font status is authoritative, and including those here would
+				 * keep every unused subset of a font that's used elsewhere on the page.
 				 */
 				const elements = document.querySelectorAll('body *:not(#wpadminbar):not(#wpadminbar *)');
 				const scan_limit = 1500; // keep analysis bounded on very large DOMs
@@ -303,6 +308,8 @@ window.addEventListener('load', () => {
 
 					// If the element is in the viewport.
 					let in_viewport = rect.top < window.innerHeight && rect.bottom > 0 && rect.left < window.innerWidth && rect.right > 0;
+					// An element without a box isn't laid out, so it never rendered any text.
+					let is_rendered = rect.width > 0 || rect.height > 0;
 
 					// Handle font-family stacks (e.g. "Open Sans", sans-serif).
 					family.split(',').forEach((font) => {
@@ -313,7 +320,9 @@ window.addEventListener('load', () => {
 							used_faces_above_the_fold.add(face_id);
 						}
 
-						used_faces_entire_document.add(face_id);
+						if (!is_rendered) {
+							used_faces_not_rendered.add(face_id);
+						}
 					});
 
 					['::before', '::after'].forEach((pseudo) => {
@@ -330,7 +339,9 @@ window.addEventListener('load', () => {
 								used_faces_above_the_fold.add(face_id);
 							}
 
-							used_faces_entire_document.add(face_id);
+							if (!is_rendered) {
+								used_faces_not_rendered.add(face_id);
+							}
 						});
 					});
 				}
@@ -404,7 +415,7 @@ window.addEventListener('load', () => {
 					 * pass for font faces defining a unicode-range, and font faces which are referenced by
 					 * elements that aren't rendered yet (e.g. tabs, accordions and modals) would be unloaded.
 					 */
-					if (font.status === 'unloaded' && !used_faces_entire_document.has(face_id) && font_url) {
+					if (font.status === 'unloaded' && !used_faces_not_rendered.has(face_id) && font_url) {
 						unused_fonts.push({
 							family: family,
 							weight: weight,
