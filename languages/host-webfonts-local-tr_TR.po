@@ -1,0 +1,770 @@
+# Copyright (C) 2025 Daan from Daan.dev
+# This file is distributed under the GPL2v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: OMGF 6.0.10\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/host-webfonts-local\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-10-16T11:57:19+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: host-webfonts-local\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. Plugin Name of the plugin
+#: src/Frontend/Actions.php:56
+msgid "OMGF"
+msgstr "OMGF"
+
+#. Plugin URI of the plugin
+msgid "https://daan.dev/wordpress/omgf/"
+msgstr "https://daan.dev/wordpress/omgf/"
+
+#. Description of the plugin
+msgid "Increase GDPR/DSGVO compliance and leverage browser cache by automatically self-hosting Google Fonts."
+msgstr "Google Yazı Tiplerini otomatik olarak kendi sunucunuzda barındırarak GDPR/DSGVO uyumluluğunu artırın ve tarayıcı önbelleğinden yararlanın."
+
+#. Author of the plugin
+msgid "Daan from Daan.dev"
+msgstr "daan.dev'den Daan"
+
+#. Author URI of the plugin
+msgid "https://daan.dev"
+msgstr "https://daan.dev"
+
+#: src/Admin.php:255
+msgid "OMGF's cached stylesheets don't reflect the current settings. Refresh the cache from the <a href=\"%s\">Dashboard</a>."
+msgstr "OMGF'nin önbelleğe alınmış stil sayfaları mevcut ayarları yansıtmıyor. Önbelleği <a href=\"%s\">Kontrol Paneli</a>'nden yenileyin."
+
+#: src/Admin/Actions.php:171
+msgid "This update includes major changes, please <a href=\"%s\" target=\"_blank\">read this</a> before continuing."
+msgstr "Bu güncelleme önemli değişiklikler içeriyor, devam etmeden önce lütfen <a href=\"%s\" target=\"_blank\">bunu okuyun</a>."
+
+#: src/Admin/Ajax.php:44
+msgid "Hmmm, are you lost?"
+msgstr "Hmm, kayıp mı oldunuz?"
+
+#: src/Admin/Ajax.php:70
+#: src/Admin/Ajax.php:128
+#: src/Admin/Ajax.php:206
+#: src/Admin/Ajax.php:234
+#: src/Admin/Ajax.php:279
+msgid "Hmmm, you're not supposed to be here."
+msgstr "Hmm, burada olmamanız gerekiyor."
+
+#: src/Admin/Ajax.php:214
+msgid "Cache directory successfully emptied."
+msgstr "Önbellek dizini başarıyla boşaltıldı."
+
+#: src/Admin/Ajax.php:217
+msgid "OMGF encountered an error while emptying the cache directory: "
+msgstr "OMGF önbellek dizinini boşaltırken bir hatayla karşılaştı: "
+
+#: src/Admin/Ajax.php:290
+msgid "Log file successfully deleted"
+msgstr "Günlük dosyası başarıyla silindi"
+
+#: src/Admin/Dashboard.php:102
+msgid "Test Mode is Enabled"
+msgstr "Test modu etkin"
+
+#: src/Admin/Dashboard.php:106
+msgid "All optimizations made by %s are <strong>only visible to you</strong> and users who append <code>?omgf=1</code> to the URL. Disable Test Mode (at the bottom of this page) to make optimizations visible for everyone."
+msgstr "%s tarafından yapılan tüm optimizasyonlar <strong>yalnızca sizin</strong> ve URL'ye <code>?omgf=1</code> ekleyen kullanıcıların görebileceği şekilde ayarlanmıştır. Optimizasyonları herkes için görünür kılmak için Test Modu'nu (bu sayfanın altında) devre dışı bırakın."
+
+#: src/Admin/Dashboard.php:137
+msgid "%1$s wasn't able to process all Google Fonts on your site. %2$s"
+msgstr "%1$s sitenizdeki tüm Google Yazı Tiplerini işleyemedi. %2$s"
+
+#: src/Admin/Dashboard.php:152
+msgid "OMGF's integrated Google Fonts Checker (introduced in v6) found Google Fonts implementations (added by your theme or a plugin) that cannot be automatically processed."
+msgstr "OMGF'nin entegre Google Yazı Tipi Denetleyicisi (v6'da tanıtıldı) otomatik olarak işlenemeyen Google Yazı Tipi uygulamaları (temanız veya bir eklenti tarafından eklenen) buldu."
+
+#: src/Admin/Dashboard.php:166
+msgid "You can read <a href=\"%s\" target=\"_blank\">this guide</a> and attempt to fix it manually or, <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> to fix it automatically."
+msgstr "<a href=\"%s\" target=\"_blank\">Bu kılavuzu</a> okuyarak manuel olarak düzeltmeyi deneyebilir veya otomatik olarak düzeltmek için <a href=\"%s\" target=\"_blank\">OMGF Pro'ya yükseltebilirsiniz</a>."
+
+#: src/Admin/Dashboard.php:180
+msgid "Some (or all) of the entries listed here might coincide with the list of potential issues listed below in the yellow box. Fix them first and visit the links below, to refresh these results. In some cases, an <a href=\"%s\" target=\"_blank\">upgrade to OMGF Pro</a> might be required."
+msgstr "Burada listelenen bazı (veya tüm) girişler, aşağıdaki sarı kutuda listelenen potansiyel sorunlar listesiyle çakışabilir. Önce bunları düzeltin ve bu sonuçları yenilemek için aşağıdaki bağlantıları ziyaret edin. Bazı durumlarda, <a href=\"%s\" target=\"_blank\">OMGF Pro'ya yükseltme</a> gerekebilir."
+
+#: src/Admin/Dashboard.php:191
+msgid "was found on:"
+msgstr "şurada bulundu:"
+
+#: src/Admin/Dashboard.php:209
+msgid "This list is limited to 5 pages, because most entries will most likely be duplicates."
+msgstr "Bu liste 5 sayfayla sınırlıdır, çünkü çoğu giriş büyük olasılıkla kopyalar olacaktır."
+
+#: src/Admin/Dashboard.php:216
+msgid "Let's get started!"
+msgstr "Hadi başlayalım!"
+
+#: src/Admin/Dashboard.php:220
+msgid "Hit the <strong>Save & Optimize</strong> at the bottom of this page to run a Google Fonts optimization on your homepage. After doing so, %s will silently run in the background and report back to you on this Dashboard if it encounters Google Fonts it can't detect and optimize automatically."
+msgstr "Ana sayfanızda bir Google Yazı Tipi optimizasyonu çalıştırmak için bu sayfanın altındaki <strong>Kaydet ve Optimize Et</strong> düğmesine basın. Bunu yaptıktan sonra, %s arka planda sessizce çalışacak ve otomatik olarak algılayamadığı ve optimize edemediği Google Yazı Tipleriyle karşılaşırsa bu Kontrol Paneli'nde size rapor verecektir."
+
+#: src/Admin/Dashboard.php:231
+msgid "Google Fonts optimization seems to be failing."
+msgstr "Google Yazı Tipi optimizasyonu başarısız oluyor gibi görünüyor."
+
+#: src/Admin/Dashboard.php:235
+msgid "%s isn't detecting any Google Fonts on your homepage. This could be for several reasons. <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">Click here</a> to run a deeper investigation."
+msgstr "%s ana sayfanızda herhangi bir Google Yazı Tipi algılamıyor. Bunun birkaç nedeni olabilir. Daha derin bir araştırma yapmak için <a href=\"%s\" class=\"omgf-google-fonts-checker-result\">buraya tıklayın</a>."
+
+#: src/Admin/Dashboard.php:247
+msgid "No external Google Fonts found on your site."
+msgstr "Sitenizde harici Google Yazı Tipleri bulunamadı."
+
+#: src/Admin/Dashboard.php:253
+msgid "Cool! %s is successfully hosting all Google Fonts locally."
+msgstr "Harika! %s tüm Google Yazı Tiplerini başarıyla yerel olarak barındırıyor."
+
+#: src/Admin/Dashboard.php:264
+msgid "No potential issues found in your configuration."
+msgstr "Yapılandırmanızda potansiyel sorun bulunamadı."
+
+#: src/Admin/Dashboard.php:271
+msgid "Great job! Your configuration allows %s to run smoothly."
+msgstr "Harika iş! Yapılandırmanız %s'nın sorunsuz çalışmasını sağlıyor."
+
+#: src/Admin/Dashboard.php:284
+msgid "%s potential issue found in your configuration."
+msgid_plural "%s potential issues found in your configuration."
+msgstr[0] "Yapılandırmanızda %s potansiyel sorun bulundu."
+msgstr[1] "Yapılandırmanızda %s potansiyel sorun bulundu."
+
+#: src/Admin/Dashboard.php:300
+msgid "It seems like Multisite is enabled. OMGF doesn't natively support Multisite. If you're getting CORS related errors on any of your network's sites, consider <a href=\"%s\" target=\"_blank\">upgrading to OMGF Pro</a>."
+msgstr "Çoklu Site etkinleştirilmiş gibi görünüyor. OMGF, Çoklu Site'yi doğal olarak desteklemez. Ağınızdaki herhangi bir sitede CORS ile ilgili hatalar alıyorsanız, <a href=\"%s\" target=\"_blank\">OMGF Pro'ya yükseltmeyi</a> düşünün."
+
+#: src/Admin/Dashboard.php:310
+msgid "Your WordPress configuration isn't setup to use SSL (https://). If your frontend is showing System Fonts after optimization, this might be due to Mixed-Content and/or CORS warnings. Follow <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">these steps</a> to fix it."
+msgstr "WordPress yapılandırmanız SSL (https://) kullanacak şekilde ayarlanmamış. Optimizasyondan sonra ön uçta Sistem Yazı Tipleri görünüyorsa, bu Karışık İçerik ve/veya CORS uyarılarından kaynaklanıyor olabilir. Bunu düzeltmek için <a href=\"https://daan.dev/docs/omgf-pro-troubleshooting/system-fonts/\" target=\"_blank\">bu adımları</a> izleyin."
+
+#: src/Admin/Dashboard.php:327
+msgid "Your theme (%1$s) requires additional configuration to be compatible with %2$s, check the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> to fix it."
+msgstr "Temanız (%1$s), %2$s ile uyumlu olmak için ek yapılandırma gerektiriyor, düzeltmek için <a href=\"%3$s\" target=\"_blank\">bilinen sorunlar</a> listesini kontrol edin."
+
+#: src/Admin/Dashboard.php:348
+msgid "The plugin, <strong>%1$s</strong>, is incompatible with %2$s and needs to be disabled for %2$s to function properly. View the list of <a href=\"%3$s\" target=\"_blank\">known issues</a> for more information."
+msgstr "<strong>%1$s</strong> eklentisi %2$s ile uyumlu değil ve %2$s'in düzgün çalışması için devre dışı bırakılması gerekiyor. Daha fazla bilgi için <a href=\"%3$s\" target=\"_blank\">bilinen sorunlar</a> listesini görüntüleyin."
+
+#: src/Admin/Dashboard.php:370
+msgid "The plugin, <strong>%1$s</strong>, requires additional configuration to be compatible with %2$s. Check the <a href=\"%3$s\" target=\"_blank\">list of known issues</a> to fix it."
+msgstr "<strong>%1$s</strong> eklentisi, %2$s ile uyumlu olmak için ek yapılandırma gerektiriyor. Düzeltmek için <a href=\"%3$s\" target=\"_blank\">bilinen sorunlar listesini</a> kontrol edin."
+
+#: src/Admin/Dashboard.php:385
+msgid "%1$s is loading an embedded iframe on your site. %2$s can't process Google Fonts inside iframes. <a href=\"%3$s\" target=\"_blank\">Click here</a> to find out why and what you can do about it."
+msgstr "%1$s sitenizde gömülü bir iframe yüklüyor. %2$s, iframe'lerin içindeki Google Yazı Tiplerini işleyemez. Nedenini ve ne yapabileceğinizi öğrenmek için <a href=\"%3$s\" target=\"_blank\">buraya tıklayın</a>."
+
+#: src/Admin/Dashboard.php:401
+msgid "Mark as fixed"
+msgstr "Düzeltildi olarak işaretle"
+
+#: src/Admin/Dashboard.php:411
+msgid "After making the proposed changes where needed, click <strong>Mark as fixed</strong> to remove the notice. It won't disappear by itself."
+msgstr "Gerekli yerlerde önerilen değişiklikleri yaptıktan sonra, bildirimi kaldırmak için <strong>Düzeltildi olarak işaretle</strong>'ye tıklayın. Kendi kendine kaybolmayacaktır."
+
+#: src/Admin/Dashboard.php:544
+msgid "Cache Status"
+msgstr "Önbellek durumu"
+
+#: src/Admin/Dashboard.php:561
+msgid "stored in %s"
+msgstr "%s içinde depolanır"
+
+#: src/Admin/Dashboard.php:571
+msgid "Manage %s"
+msgstr "%s'yı yönet"
+
+#: src/Admin/Dashboard.php:573
+msgid "Configure"
+msgstr "Yapılandır"
+
+#: src/Admin/Dashboard.php:573
+msgid "Remove"
+msgstr "Kaldır"
+
+#: src/Admin/Dashboard.php:578
+msgid "The stylesheets in the cache do not reflect the current settings. Either <a href=\"#\" id=\"omgf-cache-refresh\">refresh</a> the cache (and maintain settings) or <a href=\"#\" id=\"omgf-cache-flush\">flush</a> it and start over."
+msgstr "Önbellekteki stil sayfaları mevcut ayarları yansıtmıyor. Önbelleği <a href=\"#\" id=\"omgf-cache-refresh\">yenileyin</a> (ve ayarları koruyun) veya <a href=\"#\" id=\"omgf-cache-flush\">boşaltın</a> ve baştan başlayın."
+
+#: src/Admin/Dashboard.php:587
+msgid "No stylesheets in cache."
+msgstr "Önbellekte stil sayfası yok."
+
+#: src/Admin/Dashboard.php:595
+msgid "Status Legend"
+msgstr "Durum açıklaması"
+
+#: src/Admin/Dashboard.php:598
+msgid "<span class=\"omgf-cache-legend-item-title\">Found</span> Stylesheet exists on your file system."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Bulundu</span> Stil sayfası dosya sisteminizde mevcut."
+
+#: src/Admin/Dashboard.php:604
+msgid "<span class=\"omgf-cache-legend-item-title\">Unloaded</span> Stylesheet exists but is not loaded in the frontend."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Yüklenmedi</span> Stil sayfası mevcut ancak ön uçta yüklenmiyor."
+
+#: src/Admin/Dashboard.php:610
+msgid "<span class=\"omgf-cache-legend-item-title\">Stale</span> Settings were changed and the stylesheet's content does not reflect those changes."
+msgstr "<span class=\"omgf-cache-legend-item-title\">Eski</span> Ayarlar değiştirildi ve stil sayfasının içeriği bu değişiklikleri yansıtmıyor."
+
+#: src/Admin/Dashboard.php:616
+msgid "<span class='omgf-cache-legend-item-title'>Pending / Not Found</span> Any changes you made to this stylesheet will be processed the next time the page it was found on is requested. If you didn't make any changes, it's probably orphaned and it's safe to remove it."
+msgstr "<span class='omgf-cache-legend-item-title'>Beklemede / Bulunamadı</span> Bu stil sayfasında yaptığınız tüm değişiklikler, bulunduğu sayfa bir sonraki istendiğinde işlenecektir. Herhangi bir değişiklik yapmadıysanız, muhtemelen yetim kalmıştır ve kaldırılması güvenlidir."
+
+#: src/Admin/Settings.php:212
+msgid "Save & Optimize"
+msgstr "Kaydet ve Optimize Et"
+
+#: src/Admin/Settings.php:252
+msgid "You're not cool enough to access this page."
+msgstr "Bu sayfaya erişmek için yeterince havalı değilsiniz."
+
+#: src/Admin/Settings.php:257
+msgid "OMGF | Optimize My Google Fonts"
+msgstr "OMGF | Google Yazı Tiplerimi Optimize Et"
+
+#: src/Admin/Settings.php:338
+#: src/Admin/Settings/Optimize.php:288
+msgid "Local Fonts"
+msgstr "Yerel yazı tipleri"
+
+#: src/Admin/Settings.php:372
+msgid "Advanced"
+msgstr "Gelişmiş"
+
+#: src/Admin/Settings.php:385
+msgid "Help"
+msgstr "Yardım"
+
+#: src/Admin/Settings.php:480
+msgid "Coded with %s in The Netherlands @ <strong>Daan.dev</strong>."
+msgstr "Hollanda'da %s ile kodlandı @ <strong>Daan.dev</strong>."
+
+#: src/Admin/Settings.php:543
+msgid "Recently tagged <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a> on my blog:"
+msgstr "Blogumda yakın zamanda etiketlenen <a target=\"_blank\" href=\"%s\"><strong>#OMGF</strong></a>:"
+
+#: src/Admin/Settings/Advanced.php:60
+msgid "Fonts Cache Directory"
+msgstr "Yazı tipleri önbellek dizini"
+
+#: src/Admin/Settings/Advanced.php:64
+msgid "Downloaded stylesheets and font files %1$s are stored in: <code>%2$s</code>."
+msgstr "İndirilen stil sayfaları ve yazı tipi dosyaları %1$s şurada depolanır: <code>%2$s</code>."
+
+#: src/Admin/Settings/Advanced.php:68
+msgid "(for this site)"
+msgstr "(bu site için)"
+
+#: src/Admin/Settings/Advanced.php:82
+msgid "White-label Stylesheets (Pro)"
+msgstr "Beyaz etiket stil sayfaları (pro)"
+
+#: src/Admin/Settings/Advanced.php:85
+msgid "Enable this option to remove all branding and comments from generated stylesheets, further decreasing their size. %s"
+msgstr "Oluşturulan stil sayfalarından tüm markalamayı ve yorumları kaldırarak boyutlarını daha da azaltmak için bu seçeneği etkinleştirin. %s"
+
+#: src/Admin/Settings/Advanced.php:98
+msgid "Enable this option (on all instances) if you're planning to use %s in a (variation of a) Development > Testing > Acceptance/Staging > Production workflow. %s"
+msgstr "Bir (çeşitli) Geliştirme > Test > Kabul/Hazırlık > Üretim iş akışında %s kullanmayı planlıyorsanız bu seçeneği (tüm örneklerde) etkinleştirin. %s"
+
+#: src/Admin/Settings/Advanced.php:108
+msgid "Developer Mode (Pro)"
+msgstr "Geliştirici modu (pro)"
+
+#: src/Admin/Settings/Advanced.php:119
+msgid "This option is disabled, because <strong>Developer Mode (Pro)</strong> is enabled."
+msgstr "Bu seçenek devre dışı bırakıldı, çünkü <strong>Geliştirici Modu (Pro)</strong> etkin."
+
+#: src/Admin/Settings/Advanced.php:123
+msgid "Modify the <code>src</code> attribute for font files and stylesheets generated by OMGF Pro. This can be anything; from an absolute URL pointing to your CDN (e.g. <code>%s</code>) to an alternate relative URL (e.g. <code>/renamed-wp-content-dir/alternate/path/to/font-files</code>) to work with <em>security thru obscurity</em> plugins. Enter the full path to OMGF's files. Default: (empty) %s"
+msgstr "OMGF Pro tarafından oluşturulan yazı tipi dosyaları ve stil sayfaları için <code>src</code> özniteliğini değiştirin. Bu, CDN'nize işaret eden mutlak bir URL'den (örn. <code>%s</code>) alternatif bir göreli URL'ye (örn. <code>/yeniden-adlandırılmış-wp-content-dizini/alternatif/yol/yazı-tipi-dosyalarına</code>) kadar her şey olabilir. <em>Gizlilik yoluyla güvenlik</em> eklentileriyle çalışmak için. OMGF dosyalarının tam yolunu girin. Varsayılan: (boş) %s"
+
+#: src/Admin/Settings/Advanced.php:132
+msgid "Modify Source URL (Pro)"
+msgstr "Kaynak URL'yi değiştir (pro)"
+
+#: src/Admin/Settings/Advanced.php:134
+msgid "e.g. https://cdn.mydomain.com/alternate/relative-path"
+msgstr "örn. https://cdn.mydomain.com/alternatif/göreli-yol"
+
+#: src/Admin/Settings/Advanced.php:145
+msgid "Legacy Browser Compatibility"
+msgstr "Eski tarayıcı uyumluluğu"
+
+#: src/Admin/Settings/Advanced.php:147
+msgid "Enable this option to use an older (Windows 7) User-Agent to add support for legacy browsers. Enabling this option negatively impacts file compression and disables Variable Fonts support. Default: off."
+msgstr "Eski tarayıcılar için destek eklemek amacıyla daha eski bir (Windows 7) Kullanıcı Aracısı kullanmak için bu seçeneği etkinleştirin. Bu seçeneğin etkinleştirilmesi dosya sıkıştırmayı olumsuz etkiler ve Değişken Yazı Tipleri desteğini devre dışı bırakır. Varsayılan: kapalı."
+
+#: src/Admin/Settings/Advanced.php:159
+msgid "Divi Compatibility"
+msgstr "Divi uyumluluğu"
+
+#: src/Admin/Settings/Advanced.php:161
+msgid "Divi uses the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off"
+msgstr "Divi, farklı yapılandırmalara sahip Google Yazı Tipleri stil sayfaları için aynı tanıtıcıyı kullanır. OMGF, bu farklı stil sayfalarının doğru şekilde işlenmesini sağlamak için uyumluluk düzeltmeleri içerir. Bazı yazı tiplerinin doğru görünmediğini fark ederseniz bunu etkinleştirin. Varsayılan: kapalı"
+
+#: src/Admin/Settings/Advanced.php:170
+msgid "Auto-Configure Subsets"
+msgstr "Alt kümeleri otomatik yapılandır"
+
+#: src/Admin/Settings/Advanced.php:173
+msgid "When this option is checked, %s will set the <strong>Used Subset(s)</strong> option to only use subsets that're available for <u>all</u> detected font families. Novice users are advised to leave this enabled."
+msgstr "Bu seçenek işaretlendiğinde, %s <strong>Kullanılan Alt Küme(ler)</strong> seçeneğini yalnızca algılanan <u>tüm</u> yazı tipi aileleri için kullanılabilen alt kümeleri kullanacak şekilde ayarlayacaktır. Acemi kullanıcıların bunu etkin bırakmaları tavsiye edilir."
+
+#: src/Admin/Settings/Advanced.php:191
+msgid "Used Subset(s)"
+msgstr "Kullanılan alt küme(ler)"
+
+#: src/Admin/Settings/Advanced.php:195
+msgid "Any changes made to this setting will be overwritten, because <strong>Auto-configure Subsets</strong> is enabled. Disable it if you wish to manage <strong>Used Subset(s)</strong> yourself. <u>Novice users shouldn't change this setting</u>!"
+msgstr "Bu ayarda yapılan tüm değişiklikler üzerine yazılacaktır, çünkü <strong>Alt Kümeleri Otomatik Yapılandır</strong> etkin. <strong>Kullanılan Alt Küme(ler)</strong>'i kendiniz yönetmek isterseniz bunu devre dışı bırakın. <u>Acemi kullanıcılar bu ayarı değiştirmemelidir</u>!"
+
+#: src/Admin/Settings/Advanced.php:198
+msgid "A subset is a (limited) set of characters belonging to an alphabet. Default: <code>latin</code>, <code>latin-ext</code>. Limit the selection to subsets your site actually uses. Selecting <u>too many</u> subsets can negatively impact performance! <em>Latin Extended and Vietnamese are an add-ons for Latin and can't be used by itself. Use CTRL + click to select multiple values.</em>"
+msgstr "Bir alt küme, bir alfabeye ait (sınırlı) bir karakter kümesidir. Varsayılan: <code>latin</code>, <code>latin-ext</code>. Seçimi, sitenizin gerçekten kullandığı alt kümelerle sınırlayın. <u>Çok fazla</u> alt küme seçmek performansı olumsuz etkileyebilir! <em>Latin Extended ve Vietnamese, Latin için eklentilerdir ve tek başına kullanılamaz. Birden fazla değer seçmek için CTRL + tıklama kullanın.</em>"
+
+#: src/Admin/Settings/Advanced.php:209
+msgid "This disables the %s admin bar menu item and stops the Google Fonts checker from running in the frontend."
+msgstr "Bu, %s yönetici çubuğu menü öğesini devre dışı bırakır ve Google Yazı Tipi denetleyicisinin ön uçta çalışmasını durdurur."
+
+#: src/Admin/Settings/Advanced.php:217
+msgid "This setting will resume functioning once the Google Fonts checker has finished running."
+msgstr "Bu ayar, Google Yazı Tipi denetleyicisi çalışmayı bitirdikten sonra işlevine devam edecektir."
+
+#: src/Admin/Settings/Advanced.php:221
+msgid "Disable Admin Bar Menu"
+msgstr "Yönetici çubuğu menüsünü devre dışı bırak"
+
+#: src/Admin/Settings/Advanced.php:230
+msgid "Debug Mode"
+msgstr "Hata ayıklama modu"
+
+#: src/Admin/Settings/Advanced.php:232
+msgid "Don't enable this option, unless when asked by me (Daan) or, if you know what you're doing."
+msgstr "Bu seçeneği, ben (Daan) istemedikçe veya ne yaptığınızı bilmiyorsanız etkinleştirmeyin."
+
+#: src/Admin/Settings/Advanced.php:256
+msgid "Download Log"
+msgstr "Günlüğü indir"
+
+#: src/Admin/Settings/Advanced.php:261
+msgid "Delete log"
+msgstr "Günlüğü sil"
+
+#: src/Admin/Settings/Advanced.php:266
+msgid "Your log file is currently larger than 1MB. To protect your filesystem, debug logging has stopped. Delete the log file to enable debug logging again."
+msgstr "Günlük dosyanız şu anda 1MB'tan büyük. Dosya sisteminizi korumak için hata ayıklama günlüğü durduruldu. Hata ayıklama günlüğünü tekrar etkinleştirmek için günlük dosyasını silin."
+
+#: src/Admin/Settings/Advanced.php:272
+msgid "No log file available for download."
+msgstr "İndirilebilecek günlük dosyası yok."
+
+#: src/Admin/Settings/Advanced.php:288
+msgid "Remove Settings/Files At Uninstall"
+msgstr "Kaldırırken ayarları/dosyaları kaldır"
+
+#: src/Admin/Settings/Advanced.php:290
+msgid "Warning! This will remove all settings and cached fonts upon plugin deletion."
+msgstr "Uyarı! Bu, eklenti silindiğinde tüm ayarları ve önbelleğe alınmış yazı tiplerini kaldıracaktır."
+
+#: src/Admin/Settings/Builder.php:51
+msgid "<a href=\"%s\" target=\"_blank\">Upgrade to Pro</a> to unlock this option."
+msgstr "Bu seçeneğin kilidini açmak için <a href=\"%s\" target=\"_blank\">Pro'ya yükseltin</a>."
+
+#: src/Admin/Settings/Help.php:27
+msgid "Help & Documentation"
+msgstr "Yardım ve Belgeler"
+
+#: src/Admin/Settings/Help.php:43
+msgid "Thank you for using %s!"
+msgstr "%s'yı kullandığınız için teşekkür ederiz!"
+
+#: src/Admin/Settings/Help.php:48
+msgid "Need help configuring %s? Please refer to the links below to get you started."
+msgstr "%s'yı yapılandırmak için yardıma mı ihtiyacınız var? Başlamak için lütfen aşağıdaki bağlantılara bakın."
+
+#: src/Admin/Settings/Help.php:58
+msgid "Need Help?"
+msgstr "Yardıma mı ihtiyacınız var?"
+
+#: src/Admin/Settings/Help.php:64
+msgid "Quick Start Guide"
+msgstr "Hızlı başlangıç kılavuzu"
+
+#: src/Admin/Settings/Help.php:68
+msgid "User Manual"
+msgstr "Kullanım kılavuzu"
+
+#: src/Admin/Settings/Help.php:72
+msgid "FAQ"
+msgstr "SSS"
+
+#: src/Admin/Settings/Help.php:76
+msgid "Troubleshooting Guide"
+msgstr "Sorun giderme kılavuzu"
+
+#: src/Admin/Settings/Help.php:80
+msgid "Get Support"
+msgstr "Destek alın"
+
+#: src/Admin/Settings/Help.php:85
+msgid "Support %s & Spread the Word!"
+msgstr "%s'yı Destekleyin ve Duyurun!"
+
+#: src/Admin/Settings/Help.php:92
+msgid "Write a 5-star Review or,"
+msgstr "5 yıldızlı bir yorum yazın veya,"
+
+#: src/Admin/Settings/Help.php:94
+msgid "Tweet about it!"
+msgstr "Tweet atın!"
+
+#: src/Admin/Settings/Help.php:98
+msgid "Coded with %s by"
+msgstr "%s tarafından kodlandı"
+
+#: src/Admin/Settings/Help.php:100
+#: src/Admin/Settings/Help.php:101
+msgid "Visit Daan.dev"
+msgstr "daan.dev'i ziyaret edin"
+
+#: src/Admin/Settings/Optimize.php:38
+msgid "Optimize Local Google Fonts"
+msgstr "Yerel Google Yazı Tiplerini optimize et"
+
+#: src/Admin/Settings/Optimize.php:69
+msgid "Dashboard"
+msgstr "Kontrol Paneli"
+
+#: src/Admin/Settings/Optimize.php:73
+msgid "OMGF (Optimize My Google Fonts) automatically replaces Google Fonts stylesheets (e.g. https://fonts.googleapis.com/css?family=Open+Sans) with locally hosted copies. To remove/unload Google Fonts entirely or by style/weight, go to <a href=\"#omgf-manage-optimized-fonts\">Optimize Local Fonts</a>."
+msgstr "OMGF (Optimize My Google Fonts) otomatik olarak Google Yazı Tipleri stil sayfalarını (örn. https://fonts.googleapis.com/css?family=Open+Sans) yerel olarak barındırılan kopyalarla değiştirir. Google Yazı Tiplerini tamamen veya stil/ağırlığa göre kaldırmak/yüklememek için <a href=\"#omgf-manage-optimized-fonts\">Yerel Yazı Tiplerini Optimize Et</a>'e gidin."
+
+#: src/Admin/Settings/Optimize.php:87
+msgid "Run Google Fonts Checker in the background (Pro)"
+msgstr "Google Yazı Tipi Denetleyicisini arka planda çalıştır (Pro)"
+
+#: src/Admin/Settings/Optimize.php:90
+msgid "Normally, the Google Fonts Checker only runs for logged-in administrators. If you want to organically scan all your pages for Google Fonts, enable this option. %s"
+msgstr "Normalde, Google Yazı Tipi Denetleyicisi yalnızca oturum açmış yöneticiler için çalışır. Tüm sayfalarınızı Google Yazı Tipleri için organik olarak taramak istiyorsanız, bu seçeneği etkinleştirin. %s"
+
+#: src/Admin/Settings/Optimize.php:99
+msgid "Disable Google Fonts Checker after... (Pro)"
+msgstr "Google Yazı Tipi Denetleyicisini şundan sonra devre dışı bırak... (Pro)"
+
+#: src/Admin/Settings/Optimize.php:102
+msgid "7 Days (default)"
+msgstr "7 Gün (varsayılan)"
+
+#: src/Admin/Settings/Optimize.php:103
+msgid "14 Days"
+msgstr "14 gün"
+
+#: src/Admin/Settings/Optimize.php:104
+msgid "1 Month"
+msgstr "1 ay"
+
+#: src/Admin/Settings/Optimize.php:105
+msgid "Always"
+msgstr "Her zaman"
+
+#: src/Admin/Settings/Optimize.php:109
+msgid "When enabled, the Google Fonts Checker loads a tiny snippet (<3KB) of JS code in your frontend. While the impact is barely noticeable, it's advised to run it only for a set period of time e.g. after you first installed OMGF Pro, switched themes or installed plugins. %s"
+msgstr "Etkinleştirildiğinde, Google Yazı Tipi Denetleyicisi ön ucunuzda küçük bir JS kodu parçacığı (<3KB) yükler. Etkisi zar zor fark edilse de, yalnızca belirli bir süre boyunca çalıştırmanız tavsiye edilir, örneğin OMGF Pro'yu ilk kurduktan, temaları değiştirdikten veya eklentileri yükledikten sonra. %s"
+
+#: src/Admin/Settings/Optimize.php:127
+msgid "Manage Cache"
+msgstr "Önbelleği yönet"
+
+#: src/Admin/Settings/Optimize.php:131
+msgid "Empty Cache"
+msgstr "Önbelleği boşalt"
+
+#: src/Admin/Settings/Optimize.php:137
+msgid "Refresh Cache (and maintain settings)"
+msgstr "Önbelleği Yenile (ve ayarları koru)"
+
+#: src/Admin/Settings/Optimize.php:162
+msgid "recommended"
+msgstr "önerilen"
+
+#: src/Admin/Settings/Optimize.php:165
+msgid "Font-Display Option"
+msgstr "Font-Display Seçeneği"
+
+#: src/Admin/Settings/Optimize.php:169
+msgid "Select which value to set the font-display attribute to. Defaults to Swap (recommended)."
+msgstr "Font-display özniteliğini hangi değere ayarlayacağınızı seçin. Varsayılan olarak Swap (önerilen) olarak ayarlanır."
+
+#: src/Admin/Settings/Optimize.php:181
+msgid "Apply Font-Display Option Globally (Pro)"
+msgstr "Font-Display Seçeneğini Küresel Olarak Uygula (Pro)"
+
+#: src/Admin/Settings/Optimize.php:183
+msgid "Apply the above <code>font-display</code> attribute value to all <code>@font-face</code> statements found on your site to <strong>ensure text remains visible during webfont load</strong>."
+msgstr "Yukarıdaki <code>font-display</code> öznitelik değerini sitenizde bulunan tüm <code>@font-face</code> ifadelerine uygulayarak <strong>web yazı tipi yüklenirken metnin görünür kalmasını sağlayın</strong>."
+
+#: src/Admin/Settings/Optimize.php:197
+msgid "Smart Preload (Pro)"
+msgstr "Akıllı Ön Yükleme (Pro)"
+
+#: src/Admin/Settings/Optimize.php:199
+msgid "When enabled, OMGF Pro will automatically detect which Google Fonts are loaded above the fold and preload them. Preload settings can be overwritten on a per-page level by clicking <strong>Auto-configure preload settings for this page</strong> in the top Admin Bar menu."
+msgstr "Etkinleştirildiğinde, OMGF Pro, sayfanın üst kısmında yüklenen Google Yazı Tiplerini otomatik olarak algılar ve ön yükler. Ön yükleme ayarları, üst Yönetici Çubuğu menüsündeki <strong>Bu sayfa için ön yükleme ayarlarını otomatik yapılandır</strong>'a tıklanarak sayfa bazında geçersiz kılınabilir."
+
+#: src/Admin/Settings/Optimize.php:213
+msgid "Optimize Local Fonts"
+msgstr "Yerel yazı tiplerini optimize et"
+
+#: src/Admin/Settings/Optimize.php:217
+msgid "The options below allow you to tweak the performance of all fonts detected by %s. Don't know where or how to start optimizing your Google Fonts? That's okay. <a href=\"%s\">This guide</a> will get you sorted."
+msgstr "Aşağıdaki seçenekler, %s tarafından algılanan tüm yazı tiplerinin performansını ayarlamanıza olanak tanır. Google Yazı Tiplerinizi optimize etmeye nereden veya nasıl başlayacağınızı bilmiyor musunuz? Sorun değil. <a href=\"%s\">Bu kılavuz</a> size yardımcı olacaktır."
+
+#: src/Admin/Settings/Optimize.php:256
+msgid "Wow! That's a lot of Preloads! 😲"
+msgstr "Vay canına! Ne kadar çok Ön Yükleme var! 😲"
+
+#: src/Admin/Settings/Optimize.php:258
+msgid "You've selected 5 (!) font styles to load early. Selecting more font styles to preload will affect your site's performance. The <code>preload</code> attribute should only be used for font styles loaded above the fold i.e. <strong>The top portion of a web page that's visible without scrolling</strong>."
+msgstr "Erken yüklemek için 5 (!) yazı tipi stili seçtiniz. Ön yüklemek için daha fazla yazı tipi stili seçmek sitenizin performansını etkileyecektir. <code>preload</code> özniteliği yalnızca sayfanın üst kısmında yüklenen yazı tipi stilleri için kullanılmalıdır, yani <strong>kaydırma yapmadan görünen bir web sayfasının üst kısmı</strong>."
+
+#: src/Admin/Settings/Optimize.php:265
+msgid "Refer to the <a href=\"%s\" target=\"_blank\">Plugin documentation</a> for more information."
+msgstr "Daha fazla bilgi için <a href=\"%s\" target=\"_blank\">Eklenti belgelerine</a> bakın."
+
+#: src/Admin/Settings/Optimize.php:292
+msgid "This list is populated with all Google Fonts stylesheets captured and downloaded throughout your site. It will grow organically when other Google Fonts stylesheets are discovered."
+msgstr "Bu liste, siteniz boyunca yakalanan ve indirilen tüm Google Yazı Tipleri stil sayfalarıyla doldurulur. Diğer Google Yazı Tipleri stil sayfaları keşfedildikçe organik olarak büyüyecektir."
+
+#: src/Admin/Settings/Optimize.php:302
+msgid "Style"
+msgstr "Stil"
+
+#: src/Admin/Settings/Optimize.php:303
+msgid "Weight"
+msgstr "Ağırlık"
+
+#: src/Admin/Settings/Optimize.php:304
+msgid "Load Early"
+msgstr "Erken yükle"
+
+#: src/Admin/Settings/Optimize.php:307
+msgid "<a href=\"%s\">Preload font files</a> prior to page rendering to improve perceived loading times. Only use preload for font files that are used above the fold."
+msgstr "Algılanan yükleme sürelerini iyileştirmek için sayfa oluşturmadan önce <a href=\"%s\">yazı tipi dosyalarını ön yükleyin</a>. Ön yüklemeyi yalnızca sayfanın üst kısmında kullanılan yazı tipi dosyaları için kullanın."
+
+#: src/Admin/Settings/Optimize.php:314
+msgid "Don't Load"
+msgstr "Yükleme"
+
+#: src/Admin/Settings/Optimize.php:316
+msgid "Many themes/plugins load Google Fonts you're not using. Checking <strong>Don't Load</strong> will make sure they're not loaded in the frontend to save bandwidth."
+msgstr "Birçok tema/eklenti kullanmadığınız Google Yazı Tiplerini yükler. <strong>Yükleme</strong>'yi işaretlemek, bant genişliğinden tasarruf etmek için ön uçta yüklenmemelerini sağlayacaktır."
+
+#: src/Admin/Settings/Optimize.php:320
+msgid "Fallback (Pro)"
+msgstr "Geri Dönüş (Pro)"
+
+#: src/Admin/Settings/Optimize.php:323
+msgid "Reduce Cumulative Layout Shift (CLS) by making sure all text using Google Fonts has a similar system font to display while the Google Fonts are being downloaded. %s"
+msgstr "Google Yazı Tipleri indirilirken, Google Yazı Tiplerini kullanan tüm metinlerin benzer bir sistem yazı tipine sahip olmasını sağlayarak Kümülatif Düzen Kaymasını (CLS) azaltın. %s"
+
+#: src/Admin/Settings/Optimize.php:329
+msgid "Replace (Pro)"
+msgstr "Değiştir (pro)"
+
+#: src/Admin/Settings/Optimize.php:332
+msgid "When the <a href=\"%s\">Replace option</a> is checked, the selected Fallback Font Stack will replace the corresponding Google Font family, instead of functioning as a fallback. %s"
+msgstr "<a href=\"%s\">Değiştir seçeneği</a> işaretlendiğinde, seçilen Geri Dönüş Yazı Tipi Yığını, geri dönüş olarak işlev görmek yerine ilgili Google Yazı Tipi ailesini değiştirecektir. %s"
+
+#: src/Admin/Settings/Optimize.php:354
+msgid "Stylesheet handle: %s"
+msgstr "Stil sayfası tanıtıcısı: %s"
+
+#: src/Admin/Settings/Optimize.php:368
+msgid "Unload italics"
+msgstr "İtalikleri boşalt"
+
+#: src/Admin/Settings/Optimize.php:371
+msgid "In most situations you can safely unload all Italic font styles. Modern browsers are capable of mimicking Italic font styles."
+msgstr "Çoğu durumda tüm İtalik yazı tipi stillerini güvenle boşaltabilirsiniz. Modern tarayıcılar İtalik yazı tipi stillerini taklit edebilir."
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Unload all"
+msgstr "Tümünü boşalt"
+
+#: src/Admin/Settings/Optimize.php:374
+msgid "Load all"
+msgstr "Tümünü yükle"
+
+#: src/Admin/Settings/Optimize.php:382
+msgid "None (default)"
+msgstr "Yok (varsayılan)"
+
+#: src/Admin/Settings/Optimize.php:514
+msgid "After clicking <strong>Save & Optimize</strong>, this section will be populated with any Google Fonts (along with requested styles and available options) requested on <code>%s</code>. The list will grow organically if other Google Fonts stylesheets are discovered throughout your site."
+msgstr "<strong>Kaydet ve Optimize Et</strong>'e tıkladıktan sonra, bu bölüm <code>%s</code> üzerinde istenen tüm Google Yazı Tipleri (istenen stiller ve mevcut seçeneklerle birlikte) ile doldurulacaktır. Siteniz boyunca başka Google Yazı Tipleri stil sayfaları keşfedildikçe liste organik olarak büyüyecektir."
+
+#: src/Admin/Settings/Optimize.php:520
+msgid "Why aren't my Google Fonts showing up on this list?"
+msgstr "Google Yazı Tiplerim neden bu listede görünmüyor?"
+
+#: src/Admin/Settings/Optimize.php:544
+msgid "Test Mode"
+msgstr "Test modu"
+
+#: src/Admin/Settings/Optimize.php:546
+msgid "With this setting enabled, OMGF's optimizations will only be visible to logged in administrators or when <code>?omgf=1</code> is added to an URL in the frontend."
+msgstr "Bu ayar etkinleştirildiğinde, OMGF'nin optimizasyonları yalnızca oturum açmış yöneticiler tarafından veya ön uçtaki bir URL'ye <code>?omgf=1</code> eklendiğinde görünür olacaktır."
+
+#: src/DB/Migrate/V600.php:60
+msgid "Thanks for upgrading to OMGF v6! 🎉 <a href=\"%s\" target=\"_blank\">Click here to learn about all the exciting, new features in this release!</a>"
+msgstr "OMGF v6'ya yükselttiğiniz için teşekkürler! 🎉 <a href=\"%s\" target=\"_blank\">Bu sürümdeki tüm heyecan verici, yeni özellikler hakkında bilgi edinmek için buraya tıklayın!</a>"
+
+#: src/Download.php:89
+msgid "OMGF encountered an error while downloading font files"
+msgstr "OMGF yazı tipi dosyalarını indirirken bir hatayla karşılaştı"
+
+#: src/Download.php:107
+msgid "OMGF received a non-success HTTP status while downloading"
+msgstr "OMGF indirirken başarılı olmayan bir HTTP durumu aldı"
+
+#: src/Download.php:120
+msgid "OMGF couldn't determine the mime-type for the downloaded font file"
+msgstr "OMGF indirilen yazı tipi dosyası için mime-türünü belirleyemedi"
+
+#: src/Download.php:144
+msgid "OMGF couldn't determine the file extension for the downloaded font file"
+msgstr "OMGF indirilen yazı tipi dosyası için dosya uzantısını belirleyemedi"
+
+#: src/Download.php:158
+msgid "OMGF failed to move downloaded file to final location"
+msgstr "OMGF indirilen dosyayı son konuma taşıyamadı"
+
+#: src/Frontend/Actions.php:65
+msgid "Run fonts optimization"
+msgstr "Yazı tipi optimizasyonunu çalıştır"
+
+#: src/Frontend/Actions.php:85
+msgid "Run fonts optimization for current page"
+msgstr "Geçerli sayfa için yazı tipi optimizasyonunu çalıştır"
+
+#: src/Frontend/Actions.php:135
+msgid "Google Fonts were found on this page. Click here for more information."
+msgstr "Bu sayfada Google Yazı Tipleri bulundu. Daha fazla bilgi için buraya tıklayın."
+
+#: src/Frontend/Actions.php:136
+msgid "There are potential issues in your configuration that require your attention."
+msgstr "Yapılandırmanızda dikkat gerektiren potansiyel sorunlar var."
+
+#: src/Frontend/Process.php:717
+msgid "Google Fonts optimization completed. Return to the <a href=\"%s\">settings screen</a> to see the results."
+msgstr "Google Yazı Tipi optimizasyonu tamamlandı. Sonuçları görmek için <a href=\"%s\">ayarlar ekranına</a> geri dönün."
+
+#: src/Helper.php:361
+msgid "Filtered Subsets"
+msgstr "Filtrelenmiş alt kümeler"
+
+#: src/Helper.php:399
+msgid "Showing debug information for"
+msgstr "Hata ayıklama bilgileri gösteriliyor"
+
+#: src/Helper.php:404
+msgid "Subelement %s is array/object"
+msgstr "Alt öğe %s dizi/nesne"
+
+#: src/Optimize.php:111
+msgid "OMGF couldn't find required stylesheet handle parameter while attempting to talk to API. Values sent were <code>%1$s</code> and <code>%2$s</code>."
+msgstr "OMGF, API ile iletişim kurmaya çalışırken gerekli stil sayfası tanıtıcı parametresini bulamadı. Gönderilen değerler <code>%1$s</code> ve <code>%2$s</code> idi."
+
+#: src/Optimize.php:184
+msgid "Processing downloads for"
+msgstr "İndirmeler işleniyor"
+
+#: src/Optimize.php:230
+msgid "Finished downloading for"
+msgstr "İndirme tamamlandı"
+
+#: src/Optimize.php:290
+msgid "Fetching stylesheet from: "
+msgstr "Stil sayfası şuradan getiriliyor: "
+
+#: src/Optimize.php:334
+msgid "Stylesheet fetched. Parsing for font-families..."
+msgstr "Stil sayfası getirildi. Yazı tipi aileleri için ayrıştırılıyor..."
+
+#: src/Optimize.php:345
+msgid "Font-families found"
+msgstr "Yazı tipi aileleri bulundu"
+
+#: src/Optimize.php:369
+msgid "Stylesheet successfully converted to object."
+msgstr "Stil sayfası başarıyla nesneye dönüştürüldü."
+
+#: src/Optimize.php:383
+msgid "Parsing variants."
+msgstr "Varyantlar ayrıştırılıyor."
+
+#: src/Optimize.php:399
+msgid "Found %s @font-face statements."
+msgstr "%s @font-face ifadesi bulundu."
+
+#: src/Optimize.php:466
+msgid "Same file used for multiple @font-face statements. This is a variable font: "
+msgstr "Birden fazla @font-face ifadesi için aynı dosya kullanıldı. Bu bir değişken yazı tipidir: "
+
+#: src/Optimize.php:474
+msgid "Generated @font-face objects"
+msgstr "Oluşturulan @font-face nesneleri"
+
+#: src/Optimize.php:476
+msgid "All @font-face statements processed."
+msgstr "Tüm @font-face ifadeleri işlendi."
+
+#: src/Optimize.php:486
+msgid "Parsing subsets."
+msgstr "Alt kümeler ayrıştırılıyor."
+
+#: src/Optimize.php:504
+msgid "Subset @font-face statements"
+msgstr "Alt küme @font-face ifadeleri"
+
+#: src/Optimize.php:602
+msgid "Rewriting URLs for each font variant..."
+msgstr "Her yazı tipi varyantı için URL'ler yeniden yazılıyor..."
+
+#: src/Optimize/Run.php:84
+msgid "%s encountered an error while fetching this site's frontend HTML"
+msgstr "%s bu sitenin ön uç HTML'sini getirirken bir hatayla karşılaştı"
+
+#: src/Optimize/Run.php:93
+msgid "It looks like OMGF isn't allowed to fetch your frontend. Try <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">running the optimization manually</a> (you might have to allow pop-ups) and return here after the page has finished loading."
+msgstr "Görünüşe göre OMGF'nin ön ucunuzu getirmesine izin verilmiyor. <a class=\"omgf-optimize-forbidden\" href=\"%s\" target=\"_blank\">Optimizasyonu manuel olarak çalıştırmayı</a> deneyin (açılır pencerelere izin vermeniz gerekebilir) ve sayfa yüklenmeyi bitirdikten sonra buraya geri dönün."
+
+#: src/Optimize/Run.php:173
+msgid "%s is removed as a Used Subset, as not all detected font families are available in this subset. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "%s are removed as Used Subset(s), as not all detected font families are available in these subsets. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "%s, tüm algılanan yazı tipi aileleri bu alt kümede mevcut olmadığından Kullanılan Alt Küme olarak kaldırıldı. Bu değişiklikleri işlemek için <a href=\"#\" id=\"omgf-optimize-again\">optimizasyonu tekrar çalıştırın</a>."
+msgstr[1] "%s, tüm algılanan yazı tipi aileleri bu alt kümelerde mevcut olmadığından Kullanılan Alt Küme(ler) olarak kaldırıldı. Bu değişiklikleri işlemek için <a href=\"#\" id=\"omgf-optimize-again\">optimizasyonu tekrar çalıştırın</a>."
+
+#: src/Optimize/Run.php:201
+msgid "Used Subset(s) is set to Latin, since %s isn't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgid_plural "Used Subset(s) is set to Latin, since %s aren't available in any of the detected font-families. <a href=\"#\" id=\"omgf-optimize-again\">Run optimization again</a> to process these changes."
+msgstr[0] "Kullanılan Alt Küme(ler) Latin olarak ayarlandı, çünkü %s algılanan yazı tipi ailelerinin hiçbirinde mevcut değil. Bu değişiklikleri işlemek için <a href=\"#\" id=\"omgf-optimize-again\">optimizasyonu tekrar çalıştırın</a>."
+msgstr[1] "Kullanılan Alt Küme(ler) Latin olarak ayarlandı, çünkü %s algılanan yazı tipi ailelerinin hiçbirinde mevcut değil. Bu değişiklikleri işlemek için <a href=\"#\" id=\"omgf-optimize-again\">optimizasyonu tekrar çalıştırın</a>."
+
+#: src/Optimize/Run.php:222
+msgid "Optimization completed successfully."
+msgstr "Optimizasyon başarıyla tamamlandı."
+
+#: src/Optimize/Run.php:228
+msgid "Make sure you flush any caches of 3rd party plugins you're using (e.g. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache, etc.) to allow %s's optimizations to take effect. "
+msgstr "%s'nın optimizasyonlarının etkili olmasını sağlamak için kullandığınız 3. taraf eklentilerinin (örn. Revolution Slider, WP Rocket, Autoptimize, W3 Total Cache vb.) tüm önbelleklerini boşalttığınızdan emin olun. "
