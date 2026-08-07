@@ -151,6 +151,79 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * A href attribute containing line breaks is valid HTML and loaded just fine by browsers, because they
+	 * strip tabs and line breaks from URLs before requesting them. Is such a stylesheet detected and replaced?
+	 *
+	 * @see Process::process()
+	 * @return void
+	 */
+	public function testParseWithLineBreaks() {
+		$class     = new Process( true );
+		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/line-breaks.html' );
+
+		$html = $class->process( $test_html );
+
+		$this->assertStringContainsString(
+			'//example.org/wp-content/uploads/omgf/line-breaks/line-breaks.css',
+			$html
+		);
+
+		/**
+		 * A line break can also split the string used to detect Google Fonts stylesheets.
+		 */
+		$this->assertStringContainsString(
+			'//example.org/wp-content/uploads/omgf/domain-break/domain-break.css',
+			$html
+		);
+		$this->assertStringNotContainsString( 'fonts.googleapis.com', $html );
+	}
+
+	/**
+	 * The href element is used for search/replace and should match the HTML verbatim, while the url element
+	 * is used to request the stylesheet and shouldn't contain any characters browsers strip from URLs.
+	 *
+	 * @see Process::build_fonts_set()
+	 * @return void
+	 */
+	public function testBuildFontsSetSanitizesUrl() {
+		$class = new Process( true );
+		$href  = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=\n\tac_unit,wifi\n&display=block";
+		$link  = "<link href=\"$href\" id=\"line-breaks-css\" rel=\"stylesheet\"/>";
+
+		$fonts_set = $class->build_fonts_set( [ $link ] );
+
+		$this->assertCount( 1, $fonts_set );
+		$this->assertEquals( 'line-breaks', $fonts_set[ 0 ][ 'id' ] );
+		$this->assertEquals( $href, $fonts_set[ 0 ][ 'href' ] );
+		$this->assertEquals(
+			'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=ac_unit,wifi&display=block',
+			$fonts_set[ 0 ][ 'url' ]
+		);
+	}
+
+	/**
+	 * A regular (single line) href attribute should be processed exactly like it was before line breaks
+	 * were taken into account.
+	 *
+	 * @see Process::build_fonts_set()
+	 * @return void
+	 */
+	public function testBuildFontsSetLeavesRegularUrlsAlone() {
+		$class = new Process( true );
+		$href  = 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&#038;display=swap';
+		$links = [
+			"<link rel=\"stylesheet\" id=\"open-sans-css\" href=\"$href\" media=\"all\"/>",
+			"<link rel='stylesheet' id='open-sans-css' href='$href' media='all'/>",
+		];
+
+		foreach ( $class->build_fonts_set( $links ) as $font ) {
+			$this->assertEquals( 'open-sans', $font[ 'id' ] );
+			$this->assertEquals( $href, $font[ 'href' ] );
+			$this->assertEquals( $href, $font[ 'url' ] );
+		}
+	}
+
+	/**
 	 * Are resource hints properly removed from HTML?
 	 * @see Process::remove_resource_hints()
 	 * @return void
