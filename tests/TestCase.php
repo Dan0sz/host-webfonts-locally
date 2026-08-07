@@ -266,5 +266,16 @@ class TestCase extends YoastTestCase {
 		parent::tear_down();
 
 		remove_filter( 'pre_http_request', [ $this, 'mockGoogleFontsRequests' ], 10 );
+
+		/**
+		 * This class doesn't extend WP_UnitTestCase, which means WordPress' own clean up never runs. Tests
+		 * which log a user in would leave that user logged in for every test after it, so let's log out.
+		 *
+		 * @see   \WP_UnitTestCase_Base::tear_down() Which does the same.
+		 * @since v6.3.10
+		 */
+		if ( function_exists( 'wp_set_current_user' ) ) {
+			wp_set_current_user( 0 );
+		}
 	}
 }

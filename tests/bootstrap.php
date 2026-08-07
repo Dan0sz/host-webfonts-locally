@@ -36,3 +36,8 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
+
+// Load WP_Admin_Bar manually, because it's required for some tests.
+if ( ! class_exists( 'WP_Admin_Bar' ) ) {
+	require_once ABSPATH . 'wp-includes/class-wp-admin-bar.php';
+}
