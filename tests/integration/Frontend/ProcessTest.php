@@ -167,6 +167,14 @@ class ProcessTest extends TestCase {
 			'//example.org/wp-content/uploads/omgf/line-breaks/line-breaks.css',
 			$html
 		);
+
+		/**
+		 * A line break can also split the string used to detect Google Fonts stylesheets.
+		 */
+		$this->assertStringContainsString(
+			'//example.org/wp-content/uploads/omgf/domain-break/domain-break.css',
+			$html
+		);
 		$this->assertStringNotContainsString( 'fonts.googleapis.com', $html );
 	}
 

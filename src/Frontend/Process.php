@@ -426,9 +426,17 @@ class Process {
 		$links = array_filter(
 			$links[0],
 			function ( $link ) {
+				/**
+				 * @since v6.3.10 Run the detection against a sanitized copy of the element, because a line break
+				 *                (or tab) inside the href attribute could split the string we're looking for.
+				 *                $link itself is left untouched, because it's passed to the filter below and
+				 *                used for search/replace later on.
+				 */
+				$sanitized = $this->sanitize_url( $link );
+
 				return apply_filters(
 					'omgf_frontend_process_parse_links',
-					str_contains( $link, 'fonts.googleapis.com/css' ) || str_contains( $link, 'fonts.bunny.net/css' ) || str_contains( $link, 'fonts-api.wp.com/css' ),
+					str_contains( $sanitized, 'fonts.googleapis.com/css' ) || str_contains( $sanitized, 'fonts.bunny.net/css' ) || str_contains( $sanitized, 'fonts-api.wp.com/css' ),
 					$link
 				);
 			}
@@ -611,8 +619,10 @@ class Process {
 			 * search/replace and should always match the HTML verbatim.
 			 *
 			 * @since v6.3.10 Fallback to href, for font sets built by 3rd parties (or older versions of Pro.)
+			 *                That fallback is sanitized here, because those sets don't contain a sanitized URL.
+			 *                Sanitizing $stack['url'] again is a no-op.
 			 */
-			$url = $stack['url'] ?? $stack['href'];
+			$url = $this->sanitize_url( $stack['url'] ?? $stack['href'] );
 
 			/**
 			 * If the stylesheet with $handle is completely marked for unloading, just remove the element
