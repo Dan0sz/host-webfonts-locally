@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 6.3.9
+Stable tag: 6.3.10
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -90,7 +90,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 = 6.3.10 =
 * Note: this release detects stylesheets which were skipped before, so optionally run Save & Optimize once after updating to add them to your cache. Nothing breaks if you don't.
 * Fixed: Google Fonts stylesheets whose href attribute contains a line break (or tab) weren't detected during Save & Optimize, while browsers loaded them just fine, because they strip those characters from URLs before requesting them. OMGF now does the same, so these stylesheets are detected and optimized like any other.
-* Fixed: Google Fonts checker flagged font faces as unused even when an element on the page referenced them in its computed style. Font faces defining a unicode-range were compared against an identifier which the detected font faces never contain, so the check always passed. As a result, fonts used by elements which aren't rendered on page load (e.g. in tabs, accordions and modals) could be marked as unused. That check now only covers elements which aren't laid out, so unused subsets of a font used elsewhere on the page are still detected.
+* Fixed: Google Fonts checker flagged font faces as unused even when an element on the page referenced them in its computed style. Font faces defining a unicode-range were compared against an identifier which the detected font faces never contain, so the check always passed. As a result, fonts used by elements which aren't rendered on page load (e.g., in tabs, accordions, and modals) could be marked as unused. That check now only covers elements which aren't laid out, so unused subsets of a font used elsewhere on the page are still detected.
 
 = 6.3.9 =
 * Fixed: SVGs and other assets from fonts.gstatic.com would be flagged as false positives by Google Fonts checker.
