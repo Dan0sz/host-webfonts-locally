@@ -1,0 +1,58 @@
+/**
+ * A stylesheet which isn't a Google Fonts API response, e.g. a theme's stylesheet: it contains
+ * @font-face statements, but also plenty of regular font-family declarations, which are no
+ * font families at all.
+ */
+@font-face {
+    font-family: 'Nunito Sans 12pt ExtraLight 12pt';
+    font-style: normal;
+    font-weight: 200;
+    src: url(https://example.com/fonts/nunito-sans-12pt-extralight.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Mulish';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/mulish/mulish-regular.woff2) format('woff2');
+}
+
+body {
+    font-family: Arial,Helvetica,sans-serif !important;
+}
+
+.tve-block {
+    font-family: var(--tve-font-family,Arial,Helvetica,sans-serif);
+}
+
+.tve-block-alt {
+    font-family: var(--tve-font-family,Mulish);
+}
+
+.wp-block-heading {
+    font-family: var(--wp--preset--font-family--nunito-sans-12-pt-extralight-12-pt) !important;
+}
+
+h1 {
+    font-family: "Times New Roman", Times, serif;
+}
+
+h2 {
+    font-family: Times New Roman,Times,serif !important;
+}
+
+code {
+    font-family: "Courier New",Courier,monospace;
+}
+
+.inherited {
+    font-family: inherit;
+}
+
+.generic {
+    font-family: sans-serif;
+}
+
+.emphasized {
+    font-family: Mulish !important;
+}

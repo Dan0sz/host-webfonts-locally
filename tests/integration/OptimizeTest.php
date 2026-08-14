@@ -62,4 +62,40 @@ class OptimizeTest extends TestCase {
 			$this->assertTrue( count( $font_object->variants ) > 0 );
 		}
 	}
+
+	/**
+	 * Test @see \OMGF\Optimize::process() with a stylesheet which isn't a Google Fonts API
+	 * response. Only the font families defined in its @font-face statements may be stored;
+	 * the values of its regular font-family declarations may not.
+	 *
+	 * Those values used to be stored as font families, which is what filled up the Optimized
+	 * Fonts table with entries like 'Arial,Helvetica,sans-serif !important' and 'inherit'.
+	 *
+	 * @return void
+	 */
+	public function testProcessSkipsInvalidFontFamilies() {
+		$css = file_get_contents( OMGF_TESTS_ROOT . 'assets/non-google-fonts.css' );
+
+		HttpClientMock::activate();
+		HttpClientMock::mockCssContent( $css );
+
+		$url       = 'https://daan.dev/tests/non-google-fonts.css';
+		$handle    = 'test-non-google-fonts';
+		$class     = new Optimize( $url, $handle, $handle, 'object' );
+		$processed = $class->process();
+
+		HttpClientMock::deactivate();
+
+		$this->assertArrayHasKey( $handle, $processed );
+
+		// Both @font-face statements are processed, incl. the locally installed (non-Google) font.
+		$this->assertArrayHasKey( 'mulish', $processed[ $handle ] );
+		$this->assertArrayHasKey( 'nunito-sans-12pt-extralight-12pt', $processed[ $handle ] );
+
+		// Nothing else is.
+		$this->assertCount( 2, $processed[ $handle ] );
+		$this->assertArrayNotHasKey( 'inherit', $processed[ $handle ] );
+		$this->assertArrayNotHasKey( 'sans-serif', $processed[ $handle ] );
+		$this->assertArrayNotHasKey( 'mulish-!important', $processed[ $handle ] );
+	}
 }

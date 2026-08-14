@@ -334,7 +334,31 @@ class Optimize {
 		}
 
 		$font_families = array_unique( $font_families[1] );
-		$object        = [];
+
+		/**
+		 * @since v6.3.11 Only keep values which are (or could be) the name of an actual font.
+		 *                A stylesheet which isn't a Google Fonts API response contains font-family
+		 *                declarations outside @font-face statements, e.g. 'Arial,Helvetica,sans-serif
+		 *                !important' or 'inherit'. Those can't be downloaded, and there's no font to
+		 *                match them to, but they were stored as font families all the same. They were
+		 *                also interpolated (unescaped) into a pattern in self::parse_variants(), where
+		 *                any character with a special meaning in a regular expression is interpreted
+		 *                as such.
+		 */
+		$valid_families   = array_filter( $font_families, [ OMGF::class, 'is_valid_font_family' ] );
+		$invalid_families = array_diff( $font_families, $valid_families );
+
+		if ( ! empty( $invalid_families ) ) {
+			OMGF::debug_array( __( 'Skipped invalid font-families', 'host-webfonts-local' ), $invalid_families );
+		}
+
+		$font_families = $valid_families;
+
+		if ( empty( $font_families ) ) {
+			return [];
+		}
+
+		$object = [];
 
 		OMGF::debug_array( __( 'Font-families found', 'host-webfonts-local' ), $font_families );
 
