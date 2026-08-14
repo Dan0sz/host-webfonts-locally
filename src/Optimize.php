@@ -421,9 +421,12 @@ class Optimize {
 
 		foreach ( $font_faces[0] as $font_face ) {
 			/**
-			 * @since v5.3.3 Exact match for font-family attribute, to prevent similar font names from falling through, e.g., Roboto and Roboto Slab.
+			 * @since v5.3.3  Exact match for font-family attribute, to prevent similar font names from falling through, e.g., Roboto and Roboto Slab.
+			 * @since v6.3.11 Escape the font family, so a name containing a character with a special meaning in a
+			 *                regular expression (e.g., '.*') is matched literally, instead of matching (and claiming
+			 *                the variants of) every other @font-face statement in the stylesheet.
 			 */
-			if ( ! preg_match( '/font-family:[\s\'"]*?' . $font_family . '[\'"]?;/', $font_face ) ) {
+			if ( ! preg_match( '/font-family:[\s\'"]*?' . preg_quote( $font_family, '/' ) . '[\'"]?;/', $font_face ) ) {
 				continue; // @codeCoverageIgnore
 			}
 

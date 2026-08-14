@@ -98,4 +98,36 @@ class OptimizeTest extends TestCase {
 		$this->assertArrayNotHasKey( 'sans-serif', $processed[ $handle ] );
 		$this->assertArrayNotHasKey( 'mulish-!important', $processed[ $handle ] );
 	}
+
+	/**
+	 * Test @see \OMGF\Optimize::process() with a font family whose name has a special meaning in
+	 * a regular expression. It's interpolated into the pattern which matches a font family to its
+	 * @font-face statements, so it must be escaped: '.*' used to match every @font-face statement
+	 * in the stylesheet, and claimed the variants (and downloads) of every other font in it.
+	 *
+	 * @return void
+	 */
+	public function testProcessMatchesFontFamiliesLiterally() {
+		$css = file_get_contents( OMGF_TESTS_ROOT . 'assets/regex-injection.css' );
+
+		HttpClientMock::activate();
+		HttpClientMock::mockCssContent( $css );
+
+		$url       = 'https://daan.dev/tests/regex-injection.css';
+		$handle    = 'test-regex-injection';
+		$class     = new Optimize( $url, $handle, $handle, 'object' );
+		$processed = $class->process();
+
+		HttpClientMock::deactivate();
+
+		$this->assertArrayHasKey( $handle, $processed );
+
+		// Each @font-face statement belongs to exactly one font family.
+		$this->assertCount( 1, $processed[ $handle ][ 'roboto' ]->variants );
+		$this->assertCount( 1, $processed[ $handle ][ 'lato' ]->variants );
+
+		// The wildcard matches neither of them, so there's nothing to download for it.
+		$this->assertArrayHasKey( '.*', $processed[ $handle ] );
+		$this->assertCount( 0, $processed[ $handle ][ '.*' ]->variants );
+	}
 }

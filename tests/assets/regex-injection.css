@@ -1,0 +1,22 @@
+/**
+ * A stylesheet containing a font-family declaration whose value has a special meaning in a
+ * regular expression. It must be matched literally, so it can't claim the variants defined by
+ * the @font-face statements of other fonts.
+ */
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/roboto/roboto-regular.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    src: url(https://fonts.gstatic.com/s/lato/lato-bold.woff2) format('woff2');
+}
+
+.wildcard {
+    font-family: .*;
+}
