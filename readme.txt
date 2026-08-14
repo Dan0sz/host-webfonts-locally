@@ -87,6 +87,13 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.3.11 =
+* Fixed: a font family whose name contains a character with a special meaning in a regular expression (e.g., a dot or an asterisk) claimed the @font-face statements — and the downloads — of every
+  other font in the same stylesheet. The name is now escaped before it's matched.
+* Improved: values which can't be the name of a font are no longer stored as font families, e.g. 'Arial, Helvetica, sans-serif !important', 'var(--tve-font-family,Mulish)', 'inherit' and 'sans-serif.'
+  A stylesheet which isn't a Google Fonts API response (e.g., a theme's stylesheet, which is only processed by OMGF Pro) contains font-family declarations outside its @font-face statements, and each
+  of those was stored as a font family. They can't be downloaded, so they only cluttered the Optimize Fonts screen. Enable Debug Mode to log which values were skipped.
+
 = 6.3.10 =
 * Note: this release detects stylesheets which were skipped before, so optionally run Save & Optimize once after updating to add them to your cache. Nothing breaks if you don't.
 * Fixed: Google Fonts stylesheets whose href attribute contains a line break (or tab) weren't detected during Save & Optimize, while browsers loaded them just fine, because they strip those characters from URLs before requesting them. OMGF now does the same, so these stylesheets are detected and optimized like any other.

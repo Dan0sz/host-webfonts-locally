@@ -85,6 +85,60 @@ class HelperTest extends TestCase {
 	}
 
 	/**
+	 * Values which are a complete font-family declaration value, a CSS-wide keyword or a
+	 * generic family are never the name of a font we can download.
+	 *
+	 * @see Helper::is_valid_font_family()
+	 * @return void
+	 */
+	public function testIsValidFontFamilyRejectsInvalidValues() {
+		$invalid = [
+			'Arial,Helvetica,sans-serif !important',
+			'var(--tve-font-family,Arial,Helvetica,sans-serif)',
+			'var(--wp--preset--font-family--nunito-sans-12-pt-extralight-12-pt) !important',
+			'Courier New",Courier,monospace',
+			'Times New Roman", Times, serif',
+			'Open Sans" !important',
+			'Mulish !important',
+			'inherit',
+			'INITIAL',
+			' unset ',
+			'sans-serif',
+			'monospace',
+			'--tve-font-family',
+			'',
+			'   ',
+		];
+
+		foreach ( $invalid as $family ) {
+			$this->assertFalse( OMGF::is_valid_font_family( $family ), "'$family' should be invalid" );
+		}
+
+		$this->assertFalse( OMGF::is_valid_font_family( null ) );
+		$this->assertFalse( OMGF::is_valid_font_family( [ 'Roboto' ] ) );
+	}
+
+	/**
+	 * @see Helper::is_valid_font_family()
+	 * @return void
+	 */
+	public function testIsValidFontFamilyAcceptsFontFamilyNames() {
+		$valid = [
+			'Roboto',
+			'Open Sans',
+			'Nunito Sans 12pt ExtraLight 12pt',
+			'Source Sans 3',
+			'Material Symbols Outlined',
+			'Helvetica Neue',
+			'思源黑體',
+		];
+
+		foreach ( $valid as $family ) {
+			$this->assertTrue( OMGF::is_valid_font_family( $family ), "'$family' should be valid" );
+		}
+	}
+
+	/**
 	 * @see Helper::get_db_rows_by()
 	 * @return void
 	 */

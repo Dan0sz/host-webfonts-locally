@@ -20,6 +20,36 @@ use OMGF\Admin\Settings;
 
 class Helper {
 	/**
+	 * CSS-wide keywords and generic font families. They're valid values for a font-family
+	 * declaration, but they're never the name of an actual font.
+	 *
+	 * @see   self::is_valid_font_family()
+	 * @since v6.3.11
+	 */
+	const OMGF_INVALID_FONT_FAMILIES = [
+		'cursive',
+		'default',
+		'emoji',
+		'fangsong',
+		'fantasy',
+		'inherit',
+		'initial',
+		'math',
+		'monospace',
+		'none',
+		'revert',
+		'revert-layer',
+		'sans-serif',
+		'serif',
+		'system-ui',
+		'ui-monospace',
+		'ui-rounded',
+		'ui-sans-serif',
+		'ui-serif',
+		'unset',
+	];
+
+	/**
 	 * Property to hold all settings.
 	 * @var array
 	 */
@@ -223,6 +253,50 @@ class Helper {
 			3,
 			self::log_file()
 		); // @codeCoverageIgnore
+	}
+
+	/**
+	 * Check if $family is (or could be) the name of an actual font.
+	 *
+	 * A font-family name is a single name. Any value which is a complete declaration value
+	 * (e.g., 'Arial,Helvetica,sans-serif !important' or 'var(--wp--preset--font-family--foo)'),
+	 * a CSS-wide keyword (e.g., 'inherit') or a generic family (e.g., 'sans-serif') is never a
+	 * font we can download, and should never be stored as one.
+	 *
+	 * This can't be an allow list of characters, because font family names are free-form and
+	 * can contain (non-Latin) letters, digits, spaces, dots and dashes.
+	 *
+	 * @since v6.3.11
+	 *
+	 * @param string $family
+	 *
+	 * @return bool
+	 */
+	public static function is_valid_font_family( $family ) {
+		if ( ! is_string( $family ) ) {
+			return false;
+		}
+
+		$family = trim( $family );
+
+		if ( $family === '' ) {
+			return false;
+		}
+
+		/**
+		 * Any of these characters means this isn't a name, but (a leftover of) a complete
+		 * declaration value: a font stack, a CSS function, an !important flag, or CSS syntax.
+		 */
+		if ( preg_match( '/[,!(){};:"\']/', $family ) ) {
+			return false;
+		}
+
+		// A CSS custom property, e.g. --wp--preset--font-family--foo.
+		if ( str_starts_with( $family, '--' ) ) {
+			return false;
+		}
+
+		return ! in_array( strtolower( $family ), self::OMGF_INVALID_FONT_FAMILIES, true );
 	}
 
 	/**

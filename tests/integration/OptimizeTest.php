@@ -62,4 +62,72 @@ class OptimizeTest extends TestCase {
 			$this->assertTrue( count( $font_object->variants ) > 0 );
 		}
 	}
+
+	/**
+	 * Test @see \OMGF\Optimize::process() with a stylesheet which isn't a Google Fonts API
+	 * response. Only the font families defined in its @font-face statements may be stored;
+	 * the values of its regular font-family declarations may not.
+	 *
+	 * Those values used to be stored as font families, which is what filled up the Optimized
+	 * Fonts table with entries like 'Arial,Helvetica,sans-serif !important' and 'inherit'.
+	 *
+	 * @return void
+	 */
+	public function testProcessSkipsInvalidFontFamilies() {
+		$css = file_get_contents( OMGF_TESTS_ROOT . 'assets/non-google-fonts.css' );
+
+		HttpClientMock::activate();
+		HttpClientMock::mockCssContent( $css );
+
+		$url       = 'https://daan.dev/tests/non-google-fonts.css';
+		$handle    = 'test-non-google-fonts';
+		$class     = new Optimize( $url, $handle, $handle, 'object' );
+		$processed = $class->process();
+
+		HttpClientMock::deactivate();
+
+		$this->assertArrayHasKey( $handle, $processed );
+
+		// Both @font-face statements are processed, incl. the locally installed (non-Google) font.
+		$this->assertArrayHasKey( 'mulish', $processed[ $handle ] );
+		$this->assertArrayHasKey( 'nunito-sans-12pt-extralight-12pt', $processed[ $handle ] );
+
+		// Nothing else is.
+		$this->assertCount( 2, $processed[ $handle ] );
+		$this->assertArrayNotHasKey( 'inherit', $processed[ $handle ] );
+		$this->assertArrayNotHasKey( 'sans-serif', $processed[ $handle ] );
+		$this->assertArrayNotHasKey( 'mulish-!important', $processed[ $handle ] );
+	}
+
+	/**
+	 * Test @see \OMGF\Optimize::process() with a font family whose name has a special meaning in
+	 * a regular expression. It's interpolated into the pattern which matches a font family to its
+	 * @font-face statements, so it must be escaped: '.*' used to match every @font-face statement
+	 * in the stylesheet, and claimed the variants (and downloads) of every other font in it.
+	 *
+	 * @return void
+	 */
+	public function testProcessMatchesFontFamiliesLiterally() {
+		$css = file_get_contents( OMGF_TESTS_ROOT . 'assets/regex-injection.css' );
+
+		HttpClientMock::activate();
+		HttpClientMock::mockCssContent( $css );
+
+		$url       = 'https://daan.dev/tests/regex-injection.css';
+		$handle    = 'test-regex-injection';
+		$class     = new Optimize( $url, $handle, $handle, 'object' );
+		$processed = $class->process();
+
+		HttpClientMock::deactivate();
+
+		$this->assertArrayHasKey( $handle, $processed );
+
+		// Each @font-face statement belongs to exactly one font family.
+		$this->assertCount( 1, $processed[ $handle ][ 'roboto' ]->variants );
+		$this->assertCount( 1, $processed[ $handle ][ 'lato' ]->variants );
+
+		// The wildcard matches neither of them, so there's nothing to download for it.
+		$this->assertArrayHasKey( '.*', $processed[ $handle ] );
+		$this->assertCount( 0, $processed[ $handle ][ '.*' ]->variants );
+	}
 }
