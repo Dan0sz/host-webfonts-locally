@@ -320,7 +320,7 @@ class Optimize {
 		 *                shouldn't be parsed.
 		 */
 		if ( ! $this->is_stylesheet_response( $response ) ) {
-			return '';
+			return ''; // @codeCoverageIgnore
 		}
 
 		return wp_remote_retrieve_body( $response );
@@ -349,7 +349,7 @@ class Optimize {
 		}
 
 		// Normalize before lookup, i.e. strip the parameters (e.g. charset) and lowercase it.
-		$content_type = strtolower( trim( explode( ';', (string) $content_type )[ 0 ] ) );
+		$content_type = strtolower( trim( explode( ';', (string) $content_type )[0] ) );
 
 		/**
 		 * @filter omgf_optimize_stylesheet_content_types Allows adding Content-Types used by servers which
@@ -364,6 +364,7 @@ class Optimize {
 			return true;
 		}
 
+		// @codeCoverageIgnoreStart
 		OMGF::debug(
 			sprintf(
 				__( 'The response for %1$s was ignored, because it isn\'t a stylesheet: %2$s.', 'host-webfonts-local' ),
@@ -373,6 +374,7 @@ class Optimize {
 		);
 
 		return false;
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**

@@ -502,6 +502,107 @@ class Process {
 	}
 
 	/**
+	 * Returns the (sanitized, non-empty) values of all quoted attributes in a HTML element.
+	 *
+	 * Which attribute holds the stylesheet's URL isn't set in stone: themes and plugins are known to
+	 * park it in e.g. a data-href attribute and fill the href attribute in later on.
+	 *
+	 * @see   self::sanitize_url()
+	 * @since v6.3.11
+	 *
+	 * @param string $element A serialized HTML element, e.g. <link href="..." rel="stylesheet" />.
+	 *
+	 * @return array
+	 */
+	public function get_element_urls( $element ) {
+		preg_match_all( '/[a-zA-Z0-9_:.-]+=([\'"])(?P<value>[^\'"]*)\1/', (string) $element, $attributes );
+
+		if ( empty( $attributes['value'] ) ) {
+			return []; // @codeCoverageIgnore
+		}
+
+		return array_values( array_filter( array_map( [ $this, 'sanitize_url' ], $attributes['value'] ) ) );
+	}
+
+	/**
+	 * Is $url a request to one of the Google Fonts API (compatible) endpoints OMGF processes?
+	 *
+	 * The host is matched in full (never as a substring) and the path has to be the endpoint serving
+	 * the stylesheets.
+	 *
+	 * @see   self::FONT_API_HOSTS
+	 * @since v6.3.11
+	 *
+	 * @param string $url
+	 *
+	 * @return bool
+	 */
+	public function is_font_api_url( $url ) {
+		if ( ! is_string( $url ) || $url === '' ) {
+			return false;
+		}
+
+		/**
+		 * Validate the URL in the same shape it's requested in later on.
+		 *
+		 * @see \OMGF\Frontend\Filters::decode_url()
+		 */
+		$url = $this->sanitize_url( html_entity_decode( $url ) );
+
+		/**
+		 * A scheme less URL (e.g. fonts.googleapis.com/css?family=Roboto) isn't parsed into a host by
+		 * wp_parse_url(), while a scheme relative URL (//fonts.googleapis.com/css?family=Roboto) is.
+		 */
+		if ( ! preg_match( '~^(https?:)?//~i', $url ) ) {
+			$url = '//' . ltrim( $url, '/' );
+		}
+
+		$parts = wp_parse_url( $url );
+
+		if ( empty( $parts['host'] ) ) {
+			return false; // @codeCoverageIgnore
+		}
+
+		/**
+		 * @filter omgf_font_api_hosts Allows add-ons to process additional endpoints, e.g. Material Icons.
+		 */
+		$hosts = apply_filters( 'omgf_font_api_hosts', self::FONT_API_HOSTS );
+		$host  = strtolower( rtrim( $parts['host'], '.' ) );
+
+		if ( ! isset( $hosts[ $host ] ) ) {
+			return false;
+		}
+
+		$path = strtolower( $parts['path'] ?? '' );
+
+		foreach ( (array) $hosts[ $host ] as $prefix ) {
+			if ( str_starts_with( $path, $prefix ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Strips characters from a URL which browsers ignore when requesting it.
+	 *
+	 * HTML allows line breaks (and tabs) inside attribute values, e.g., to keep a long Google Fonts API request
+	 * readable in the editor. Browsers remove those characters before requesting the URL, which means the
+	 * stylesheet loads just fine, while the same URL would be rejected when used as-is in a HTTP request.
+	 *
+	 * @see   https://url.spec.whatwg.org/#concept-basic-url-parser (tab/newline removal)
+	 * @since v6.3.10
+	 *
+	 * @param string $url
+	 *
+	 * @return string
+	 */
+	private function sanitize_url( $url ) {
+		return trim( str_replace( [ "\r", "\n", "\t" ], '', $url ) );
+	}
+
+	/**
 	 * Builds a processable array of Google Fonts' ID and (external) URL.
 	 *
 	 * @param array  $links
@@ -596,107 +697,6 @@ class Process {
 		}
 
 		return $handle;
-	}
-
-	/**
-	 * Strips characters from a URL which browsers ignore when requesting it.
-	 *
-	 * HTML allows line breaks (and tabs) inside attribute values, e.g., to keep a long Google Fonts API request
-	 * readable in the editor. Browsers remove those characters before requesting the URL, which means the
-	 * stylesheet loads just fine, while the same URL would be rejected when used as-is in a HTTP request.
-	 *
-	 * @see   https://url.spec.whatwg.org/#concept-basic-url-parser (tab/newline removal)
-	 * @since v6.3.10
-	 *
-	 * @param string $url
-	 *
-	 * @return string
-	 */
-	private function sanitize_url( $url ) {
-		return trim( str_replace( [ "\r", "\n", "\t" ], '', $url ) );
-	}
-
-	/**
-	 * Returns the (sanitized, non-empty) values of all quoted attributes in a HTML element.
-	 *
-	 * Which attribute holds the stylesheet's URL isn't set in stone: themes and plugins are known to
-	 * park it in e.g. a data-href attribute and fill the href attribute in later on.
-	 *
-	 * @see   self::sanitize_url()
-	 * @since v6.3.11
-	 *
-	 * @param string $element A serialized HTML element, e.g. <link href="..." rel="stylesheet" />.
-	 *
-	 * @return array
-	 */
-	public function get_element_urls( $element ) {
-		preg_match_all( '/[a-zA-Z0-9_:.-]+=([\'"])(?P<value>[^\'"]*)\1/', (string) $element, $attributes );
-
-		if ( empty( $attributes[ 'value' ] ) ) {
-			return []; // @codeCoverageIgnore
-		}
-
-		return array_values( array_filter( array_map( [ $this, 'sanitize_url' ], $attributes[ 'value' ] ) ) );
-	}
-
-	/**
-	 * Is $url a request to one of the Google Fonts API (compatible) endpoints OMGF processes?
-	 *
-	 * The host is matched in full (never as a substring) and the path has to be the endpoint serving
-	 * the stylesheets.
-	 *
-	 * @see   self::FONT_API_HOSTS
-	 * @since v6.3.11
-	 *
-	 * @param string $url
-	 *
-	 * @return bool
-	 */
-	public function is_font_api_url( $url ) {
-		if ( ! is_string( $url ) || $url === '' ) {
-			return false;
-		}
-
-		/**
-		 * Validate the URL in the same shape it's requested in later on.
-		 *
-		 * @see \OMGF\Frontend\Filters::decode_url()
-		 */
-		$url = $this->sanitize_url( html_entity_decode( $url ) );
-
-		/**
-		 * A scheme less URL (e.g. fonts.googleapis.com/css?family=Roboto) isn't parsed into a host by
-		 * wp_parse_url(), while a scheme relative URL (//fonts.googleapis.com/css?family=Roboto) is.
-		 */
-		if ( ! preg_match( '~^(https?:)?//~i', $url ) ) {
-			$url = '//' . ltrim( $url, '/' );
-		}
-
-		$parts = wp_parse_url( $url );
-
-		if ( empty( $parts[ 'host' ] ) ) {
-			return false;
-		}
-
-		/**
-		 * @filter omgf_font_api_hosts Allows add-ons to process additional endpoints, e.g. Material Icons.
-		 */
-		$hosts = apply_filters( 'omgf_font_api_hosts', self::FONT_API_HOSTS );
-		$host  = strtolower( rtrim( $parts[ 'host' ], '.' ) );
-
-		if ( ! isset( $hosts[ $host ] ) ) {
-			return false;
-		}
-
-		$path = strtolower( $parts[ 'path' ] ?? '' );
-
-		foreach ( (array) $hosts[ $host ] as $prefix ) {
-			if ( str_starts_with( $path, $prefix ) ) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	/**
