@@ -220,6 +220,40 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * A link element carrying the URL in a data-href attribute (and an empty href) should still be detected as
+	 * a Google Fonts stylesheet by process(), and the URL should be among the values handed to 3rd parties.
+	 *
+	 * @see Process::process()
+	 * @return void
+	 */
+	public function testParseDetectsDataHref() {
+		$class     = new Process( true );
+		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/mesmerize.html' );
+		$captured  = [];
+		$capture   = function ( $found, $link, $urls ) use ( &$captured ) {
+			$captured[] = [ 'found' => $found, 'urls' => $urls ];
+
+			// Don't process anything, we're only interested in the detection.
+			return false;
+		};
+
+		try {
+			add_filter( 'omgf_frontend_process_parse_links', $capture, 10, 3 );
+
+			$class->process( $test_html );
+		} finally {
+			remove_filter( 'omgf_frontend_process_parse_links', $capture, 10 );
+		}
+
+		$this->assertCount( 1, $captured );
+		$this->assertTrue( $captured[ 0 ][ 'found' ] );
+		$this->assertContains(
+			'https://fonts.googleapis.com/css?family=Jost%3A600%2C500%2Cnormal%2C400&#038;display=fallback&#038;ver=4.6.4',
+			$captured[ 0 ][ 'urls' ]
+		);
+	}
+
+	/**
 	 * Tests the omgf_optimize_url filter.
 	 * @see Filters::decode_url()
 	 * @return void
