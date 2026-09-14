@@ -75,7 +75,11 @@ class Download {
 			$this->url = 'https:' . $this->url;
 		}
 
-		$temp_filename = $this->path . '/' . $this->filename . '.tmp';
+		/**
+		 * @since v6.3.11 Use an unguessable name for the temporary file, because $this->path is inside the
+		 *                uploads directory, i.e. it's publicly accessible.
+		 */
+		$temp_filename = $this->path . '/' . $this->filename . '-' . wp_generate_password( 12, false ) . '.tmp';
 
 		$response = wp_safe_remote_get(
 			$this->url,
@@ -87,9 +91,7 @@ class Download {
 		);
 
 		if ( is_wp_error( $response ) ) {
-			if ( file_exists( $temp_filename ) ) {
-				unlink( $temp_filename );
-			}
+			$this->delete_temp_file( $temp_filename );
 
 			Notice::set_notice(
 				__( 'OMGF encountered an error while downloading font files', 'host-webfonts-local' ) . ': ' . $response->get_error_message(),
@@ -105,9 +107,7 @@ class Download {
 
 		// Handle non-success HTTP status codes.
 		if ( $code < 200 || $code >= 300 ) {
-			if ( file_exists( $temp_filename ) ) {
-				unlink( $temp_filename );
-			}
+			$this->delete_temp_file( $temp_filename );
 
 			Notice::set_notice(
 				__( 'OMGF received a non-success HTTP status while downloading', 'host-webfonts-local' ) . ': ' . $code . ' ' . $this->url,
@@ -122,6 +122,8 @@ class Download {
 		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
 
 		if ( ! $content_type ) {
+			$this->delete_temp_file( $temp_filename );
+
 			Notice::set_notice(
 				__( 'OMGF couldn\'t determine the mime-type for the downloaded font file', 'host-webfonts-local' ) . ': ' . $this->filename,
 				'omgf-download-mime-type-failed',
@@ -137,6 +139,8 @@ class Download {
 		$extension    = self::MIME_MAP[ $content_type ] ?? '';
 
 		if ( ! $extension ) {
+			$this->delete_temp_file( $temp_filename );
+
 			OMGF::debug(
 				sprintf(
 					'Unexpected Content-Type "%s" for font file "%s" from URL "%s"',
@@ -168,14 +172,28 @@ class Download {
 				);
 
 				// Clean up the temp file
-				if ( file_exists( $temp_filename ) ) {
-					unlink( $temp_filename );
-				}
+				$this->delete_temp_file( $temp_filename );
 
 				return '';
 			}
 		}
 
 		return OMGF_UPLOAD_URL . str_replace( OMGF_UPLOAD_DIR, '', $this->path ) . '/' . $this->filename . '.' . $extension;
+	}
+
+	/**
+	 * Removes the temporary file the response was streamed to.
+	 *
+	 * @since v6.3.11 The temporary file lives inside the uploads directory, which is publicly accessible, so
+	 *                it should never be left behind, no matter why the download was aborted.
+	 *
+	 * @param string $temp_filename
+	 *
+	 * @return void
+	 */
+	private function delete_temp_file( $temp_filename ) {
+		if ( file_exists( $temp_filename ) ) {
+			unlink( $temp_filename );
+		}
 	}
 }

@@ -134,6 +134,126 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * A link element whose URL merely mentions the Google Fonts API — inside its query string, for example —
+	 * points somewhere else entirely and should be left alone.
+	 *
+	 * @see Process::process()
+	 * @return void
+	 */
+	public function testParseIgnoresUrlsMentioningTheApi() {
+		$class = new Process( true );
+		$links = [
+			// The API inside the query string of a URL on the site itself, encoded and decoded.
+			'<link rel="alternate" type="text/html" href="//example.org/?q=fonts.googleapis.com%2Fcss&#038;family=Gate" />',
+			'<link rel="alternate" type="text/html" href="//example.org/?q=fonts.googleapis.com/css&#038;family=Gate" />',
+			// The API as a subdomain of, or a path on, a host which isn't the API.
+			'<link rel="stylesheet" href="https://fonts.googleapis.com.example.net/css?family=Gate" />',
+			'<link rel="stylesheet" href="https://example.net/fonts.googleapis.com/css?family=Gate" />',
+			// The API as the userinfo part of a URL.
+			'<link rel="stylesheet" href="https://fonts.googleapis.com@example.net/css?family=Gate" />',
+		];
+
+		foreach ( $links as $link ) {
+			$this->assertEquals( $link, $class->process( $link ), "Processed: $link" );
+		}
+	}
+
+	/**
+	 * @see Process::is_font_api_url()
+	 * @return void
+	 */
+	public function testIsFontApiUrl() {
+		$class = new Process( true );
+
+		$valid = [
+			'https://fonts.googleapis.com/css?family=Roboto',
+			'http://fonts.googleapis.com/css2?family=Roboto',
+			'//fonts.googleapis.com/css?family=Roboto',
+			'fonts.googleapis.com/css?family=Roboto',
+			'https://FONTS.GOOGLEAPIS.COM/css?family=Roboto',
+			'https://fonts.bunny.net/css?family=Roboto',
+			'https://fonts-api.wp.com/css?family=Roboto',
+			// Browsers strip line breaks from URLs before requesting them, so OMGF does too.
+			"https://fonts.googleapis.com/\ncss2?family=Roboto",
+			'https://fonts.googleapis.com/css?family=Open+Sans&#038;display=swap',
+		];
+
+		foreach ( $valid as $url ) {
+			$this->assertTrue( $class->is_font_api_url( $url ), "Rejected: $url" );
+		}
+
+		$invalid = [
+			'',
+			'/wp-content/themes/twentytwentyfive/style.css',
+			'//example.org/?q=fonts.googleapis.com/css&family=Gate',
+			'https://example.org/?q=fonts.googleapis.com%2Fcss&family=Gate',
+			'https://fonts.googleapis.com.example.net/css?family=Gate',
+			'https://example.net/fonts.googleapis.com/css?family=Gate',
+			'https://fonts.googleapis.com@example.net/css?family=Gate',
+			'https://example.net/css?family=Gate',
+			// Only the API's stylesheet endpoint is processed by OMGF itself.
+			'https://fonts.googleapis.com/icon?family=Material+Icons',
+		];
+
+		foreach ( $invalid as $url ) {
+			$this->assertFalse( $class->is_font_api_url( $url ), "Accepted: $url" );
+		}
+	}
+
+	/**
+	 * The URL doesn't have to live in the href attribute: some themes park it in a data-href attribute and
+	 * fill in the href attribute later on.
+	 *
+	 * @see Process::get_element_urls()
+	 * @return void
+	 */
+	public function testGetElementUrls() {
+		$class = new Process( true );
+		$urls  = $class->get_element_urls(
+			"<link href=\"\" data-href='https://fonts.googleapis.com/css?family=Jost' id='astra-google-fonts-css' media='all' rel='stylesheet'/>"
+		);
+
+		$this->assertEquals(
+			[ 'https://fonts.googleapis.com/css?family=Jost', 'astra-google-fonts-css', 'all', 'stylesheet' ],
+			$urls
+		);
+	}
+
+	/**
+	 * A link element carrying the URL in a data-href attribute (and an empty href) should still be detected as
+	 * a Google Fonts stylesheet by process(), and the URL should be among the values handed to 3rd parties.
+	 *
+	 * @see Process::process()
+	 * @return void
+	 */
+	public function testParseDetectsDataHref() {
+		$class     = new Process( true );
+		$test_html = file_get_contents( OMGF_TESTS_ROOT . 'assets/mesmerize.html' );
+		$captured  = [];
+		$capture   = function ( $found, $link, $urls ) use ( &$captured ) {
+			$captured[] = [ 'found' => $found, 'urls' => $urls ];
+
+			// Don't process anything, we're only interested in the detection.
+			return false;
+		};
+
+		try {
+			add_filter( 'omgf_frontend_process_parse_links', $capture, 10, 3 );
+
+			$class->process( $test_html );
+		} finally {
+			remove_filter( 'omgf_frontend_process_parse_links', $capture, 10 );
+		}
+
+		$this->assertCount( 1, $captured );
+		$this->assertTrue( $captured[ 0 ][ 'found' ] );
+		$this->assertContains(
+			'https://fonts.googleapis.com/css?family=Jost%3A600%2C500%2Cnormal%2C400&#038;display=fallback&#038;ver=4.6.4',
+			$captured[ 0 ][ 'urls' ]
+		);
+	}
+
+	/**
 	 * Tests the omgf_optimize_url filter.
 	 * @see Filters::decode_url()
 	 * @return void

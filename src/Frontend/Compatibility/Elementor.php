@@ -37,7 +37,7 @@ class Elementor {
 	 */
 	public function init() {
 		add_filter( 'omgf_frontend_process_fonts_set', [ $this, 'maybe_modify_id' ], 10, 2 );
-		add_filter( 'omgf_frontend_process_parse_links', [ $this, 'validate_link_element' ], 10, 2 );
+		add_filter( 'omgf_frontend_process_parse_links', [ $this, 'validate_link_element' ], 10, 3 );
 		add_filter( 'omgf_frontend_process_invalid_request', [ $this, 'validate_request' ], 10, 2 );
 	}
 
@@ -67,13 +67,42 @@ class Elementor {
 	 * @filter omgf_frontend_process_parse_links
 	 * @see    \OMGF\Frontend\Process::process()
 	 *
+	 * @since  v6.3.11 Validate the element's attribute values, instead of matching its markup, so only
+	 *                 elements which actually point to the stylesheet are included.
+	 *
 	 * @param $is_valid
 	 * @param $link
+	 * @param $urls     The element's attribute values, sanitized by @see \OMGF\Frontend\Process::get_element_urls()
 	 *
 	 * @return bool
 	 */
-	public function validate_link_element( $is_valid, $link ) {
-		return $is_valid || str_contains( $link, '/uploads/elementor/google-fonts' );
+	public function validate_link_element( $is_valid, $link, $urls = [] ) {
+		if ( $is_valid ) {
+			return true;
+		}
+
+		foreach ( (array) $urls as $url ) {
+			if ( $this->is_google_fonts_stylesheet( $url ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Does $url point to a Google Fonts stylesheet Elementor stored locally?
+	 *
+	 * @since v6.3.11
+	 *
+	 * @param string $url
+	 *
+	 * @return bool
+	 */
+	private function is_google_fonts_stylesheet( $url ) {
+		$path = wp_parse_url( html_entity_decode( (string) $url ), PHP_URL_PATH );
+
+		return is_string( $path ) && str_contains( $path, '/uploads/elementor/google-fonts' );
 	}
 
 	/**
@@ -88,6 +117,6 @@ class Elementor {
 	 * @return bool
 	 */
 	public function validate_request( $is_invalid, $url ) {
-		return $is_invalid && ! str_contains( $url, '/uploads/elementor/google-fonts' );
+		return $is_invalid && ! $this->is_google_fonts_stylesheet( $url );
 	}
 }

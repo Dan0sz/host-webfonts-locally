@@ -314,7 +314,67 @@ class Optimize {
 			return ''; // @codeCoverageIgnore
 		}
 
+		/**
+		 * @since v6.3.11 Make sure the response is a stylesheet before it's parsed as one. The Google Fonts
+		 *                API (and any locally hosted stylesheet) is served as text/css, so anything else
+		 *                shouldn't be parsed.
+		 */
+		if ( ! $this->is_stylesheet_response( $response ) ) {
+			return ''; // @codeCoverageIgnore
+		}
+
 		return wp_remote_retrieve_body( $response );
+	}
+
+	/**
+	 * Does $response contain a stylesheet?
+	 *
+	 * A response without a Content-Type is accepted, because not every (proxy) server sets one.
+	 *
+	 * @since v6.3.11
+	 *
+	 * @param array $response A response as returned by wp_remote_get().
+	 *
+	 * @return bool
+	 */
+	private function is_stylesheet_response( $response ) {
+		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+
+		if ( is_array( $content_type ) ) {
+			$content_type = reset( $content_type ); // @codeCoverageIgnore
+		}
+
+		if ( ! $content_type ) {
+			return true;
+		}
+
+		// Normalize before lookup, i.e. strip the parameters (e.g. charset) and lowercase it.
+		$content_type = strtolower( trim( explode( ';', (string) $content_type )[0] ) );
+
+		/**
+		 * @filter omgf_optimize_stylesheet_content_types Allows adding Content-Types used by servers which
+		 *                                               don't serve stylesheets as text/css.
+		 */
+		$allowed = apply_filters(
+			'omgf_optimize_stylesheet_content_types',
+			[ 'text/css', 'text/x-css', 'application/css', 'application/x-css' ]
+		);
+
+		if ( in_array( $content_type, $allowed, true ) ) {
+			return true;
+		}
+
+		// @codeCoverageIgnoreStart
+		OMGF::debug(
+			sprintf(
+				__( 'The response for %1$s was ignored, because it isn\'t a stylesheet: %2$s.', 'host-webfonts-local' ),
+				$this->url,
+				$content_type
+			)
+		);
+
+		return false;
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**
