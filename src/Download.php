@@ -76,10 +76,8 @@ class Download {
 		}
 
 		/**
-		 * @since v6.3.11 Use an unguessable name for the temporary file. The response has to be streamed to
-		 *                disk before its Content-Type can be validated, and $this->path is inside the uploads
-		 *                directory, i.e. it's publicly accessible. With a predictable name, a response which
-		 *                isn't a font file could be requested (and rendered) by a visitor while it's there.
+		 * @since v6.3.11 Use an unguessable name for the temporary file, because $this->path is inside the
+		 *                uploads directory, i.e. it's publicly accessible.
 		 */
 		$temp_filename = $this->path . '/' . $this->filename . '-' . wp_generate_password( 12, false ) . '.tmp';
 
@@ -187,9 +185,7 @@ class Download {
 	 * Removes the temporary file the response was streamed to.
 	 *
 	 * @since v6.3.11 The temporary file lives inside the uploads directory, which is publicly accessible, so
-	 *                it should never be left behind, no matter why the download was aborted. Before this,
-	 *                aborting on a missing (or unsupported) Content-Type left the downloaded response in
-	 *                place, which meant its contents stayed available to visitors.
+	 *                it should never be left behind, no matter why the download was aborted.
 	 *
 	 * @param string $temp_filename
 	 *

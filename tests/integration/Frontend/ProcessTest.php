@@ -135,8 +135,7 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * A link element whose URL merely mentions the Google Fonts API — inside its query string, for example —
-	 * points somewhere else entirely and should be left alone. Requesting it means OMGF parses whatever comes
-	 * back as a stylesheet, and downloads whatever that response tells it to.
+	 * points somewhere else entirely and should be left alone.
 	 *
 	 * @see Process::process()
 	 * @return void
@@ -144,15 +143,14 @@ class ProcessTest extends TestCase {
 	public function testParseIgnoresUrlsMentioningTheApi() {
 		$class = new Process( true );
 		$links = [
-			// A search query reflected in the alternate link of a feed.
-			'<link rel="alternate" type="text/html" href="//example.org/?s=fonts.googleapis.com%2Fcss%3B%20%40font-face%20%7B%20src%3A%20url%28http%3A%2F%2Fevil.example%2Fpayload.bin%29%3B%20%7D&#038;family=Gate" />',
-			// The same, undecoded.
-			'<link rel="alternate" type="text/html" href="//example.org/?s=fonts.googleapis.com/css&#038;family=Gate" />',
+			// The API inside the query string of a URL on the site itself, encoded and decoded.
+			'<link rel="alternate" type="text/html" href="//example.org/?q=fonts.googleapis.com%2Fcss&#038;family=Gate" />',
+			'<link rel="alternate" type="text/html" href="//example.org/?q=fonts.googleapis.com/css&#038;family=Gate" />',
 			// The API as a subdomain of, or a path on, a host which isn't the API.
-			'<link rel="stylesheet" href="https://fonts.googleapis.com.evil.example/css?family=Gate" />',
-			'<link rel="stylesheet" href="https://evil.example/fonts.googleapis.com/css?family=Gate" />',
+			'<link rel="stylesheet" href="https://fonts.googleapis.com.example.net/css?family=Gate" />',
+			'<link rel="stylesheet" href="https://example.net/fonts.googleapis.com/css?family=Gate" />',
 			// The API as the userinfo part of a URL.
-			'<link rel="stylesheet" href="https://fonts.googleapis.com@evil.example/css?family=Gate" />',
+			'<link rel="stylesheet" href="https://fonts.googleapis.com@example.net/css?family=Gate" />',
 		];
 
 		foreach ( $links as $link ) {
@@ -187,12 +185,12 @@ class ProcessTest extends TestCase {
 		$invalid = [
 			'',
 			'/wp-content/themes/twentytwentyfive/style.css',
-			'//example.org/?s=fonts.googleapis.com/css&family=Gate',
-			'https://example.org/?s=fonts.googleapis.com%2Fcss&family=Gate',
-			'https://fonts.googleapis.com.evil.example/css?family=Gate',
-			'https://evil.example/fonts.googleapis.com/css?family=Gate',
-			'https://fonts.googleapis.com@evil.example/css?family=Gate',
-			'https://evil.example/css?family=Gate',
+			'//example.org/?q=fonts.googleapis.com/css&family=Gate',
+			'https://example.org/?q=fonts.googleapis.com%2Fcss&family=Gate',
+			'https://fonts.googleapis.com.example.net/css?family=Gate',
+			'https://example.net/fonts.googleapis.com/css?family=Gate',
+			'https://fonts.googleapis.com@example.net/css?family=Gate',
+			'https://example.net/css?family=Gate',
 			// Only the API's stylesheet endpoint is processed by OMGF itself.
 			'https://fonts.googleapis.com/icon?family=Material+Icons',
 		];

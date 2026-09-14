@@ -445,11 +445,8 @@ class Process {
 				 *                $link itself is left untouched, because it's passed to the filter below and
 				 *                used for search/replace later on.
 				 * @since v6.3.11 Detect the API by parsing the element's attribute values, instead of running a
-				 *                substring match against the serialized element. An element can contain a URL
-				 *                which merely mentions the API inside its query string, while pointing somewhere
-				 *                else entirely, e.g. when a search query is reflected in the alternate link of a
-				 *                feed. Matching the element as a whole made OMGF request such a URL and parse
-				 *                whatever came back as though it were a stylesheet.
+				 *                substring match against the serialized element. Only elements which actually
+				 *                point at the API should be processed, not elements which merely mention it.
 				 */
 				$urls  = $this->get_element_urls( $link );
 				$found = false;
@@ -646,8 +643,7 @@ class Process {
 	 * Is $url a request to one of the Google Fonts API (compatible) endpoints OMGF processes?
 	 *
 	 * The host is matched in full (never as a substring) and the path has to be the endpoint serving
-	 * the stylesheets, because any other URL can contain the API's URL in e.g. its query string, while
-	 * pointing somewhere else entirely.
+	 * the stylesheets.
 	 *
 	 * @see   self::FONT_API_HOSTS
 	 * @since v6.3.11

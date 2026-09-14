@@ -317,9 +317,7 @@ class Optimize {
 		/**
 		 * @since v6.3.11 Make sure the response is a stylesheet before it's parsed as one. The Google Fonts
 		 *                API (and any locally hosted stylesheet) is served as text/css, so anything else
-		 *                ended up here by accident, e.g. because a URL was mistaken for an API request.
-		 *                Parsing a response which isn't CSS means its contents decide which files OMGF
-		 *                downloads, and where it downloads them from.
+		 *                shouldn't be parsed.
 		 */
 		if ( ! $this->is_stylesheet_response( $response ) ) {
 			return '';

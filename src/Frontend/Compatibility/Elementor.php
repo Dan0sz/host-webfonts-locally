@@ -67,9 +67,8 @@ class Elementor {
 	 * @filter omgf_frontend_process_parse_links
 	 * @see    \OMGF\Frontend\Process::process()
 	 *
-	 * @since  v6.3.11 Validate the element's attribute values, instead of matching its markup. Any URL can
-	 *                 contain the path we're looking for in e.g. its query string, while pointing somewhere
-	 *                 else entirely, which made OMGF request that URL and parse the response as a stylesheet.
+	 * @since  v6.3.11 Validate the element's attribute values, instead of matching its markup, so only
+	 *                 elements which actually point to the stylesheet are included.
 	 *
 	 * @param $is_valid
 	 * @param $link
