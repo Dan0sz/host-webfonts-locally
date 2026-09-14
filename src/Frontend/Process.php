@@ -43,6 +43,19 @@ class Process {
 	const RESOURCE_HINTS_ATTR = [ 'dns-prefetch', 'preconnect', 'preload' ];
 
 	/**
+	 * The hosts of the Google Fonts API (and its GDPR compliant alternatives) OMGF processes, along with
+	 * the path(s) a stylesheet request to each of them starts with.
+	 *
+	 * @see   self::is_font_api_url()
+	 * @since v6.3.11
+	 */
+	const FONT_API_HOSTS = [
+		'fonts.googleapis.com' => [ '/css' ],
+		'fonts.bunny.net'      => [ '/css' ],
+		'fonts-api.wp.com'     => [ '/css' ],
+	];
+
+	/**
 	 * Post types that still trigger template_redirect.
 	 *
 	 * @var array
@@ -431,14 +444,29 @@ class Process {
 				 *                (or tab) inside the href attribute could split the string we're looking for.
 				 *                $link itself is left untouched, because it's passed to the filter below and
 				 *                used for search/replace later on.
+				 * @since v6.3.11 Detect the API by parsing the element's attribute values, instead of running a
+				 *                substring match against the serialized element. An element can contain a URL
+				 *                which merely mentions the API inside its query string, while pointing somewhere
+				 *                else entirely, e.g. when a search query is reflected in the alternate link of a
+				 *                feed. Matching the element as a whole made OMGF request such a URL and parse
+				 *                whatever came back as though it were a stylesheet.
 				 */
-				$sanitized = $this->sanitize_url( $link );
+				$urls  = $this->get_element_urls( $link );
+				$found = false;
 
-				return apply_filters(
-					'omgf_frontend_process_parse_links',
-					str_contains( $sanitized, 'fonts.googleapis.com/css' ) || str_contains( $sanitized, 'fonts.bunny.net/css' ) || str_contains( $sanitized, 'fonts-api.wp.com/css' ),
-					$link
-				);
+				foreach ( $urls as $url ) {
+					if ( $this->is_font_api_url( $url ) ) {
+						$found = true;
+
+						break;
+					}
+				}
+
+				/**
+				 * @since v6.3.11 The element's (sanitized) attribute values are passed along, so 3rd parties can
+				 *                validate the URLs themselves, instead of matching the element's markup.
+				 */
+				return apply_filters( 'omgf_frontend_process_parse_links', $found, $link, $urls );
 			}
 		);
 
@@ -589,6 +617,90 @@ class Process {
 	 */
 	private function sanitize_url( $url ) {
 		return trim( str_replace( [ "\r", "\n", "\t" ], '', $url ) );
+	}
+
+	/**
+	 * Returns the (sanitized, non-empty) values of all quoted attributes in a HTML element.
+	 *
+	 * Which attribute holds the stylesheet's URL isn't set in stone: themes and plugins are known to
+	 * park it in e.g. a data-href attribute and fill the href attribute in later on.
+	 *
+	 * @see   self::sanitize_url()
+	 * @since v6.3.11
+	 *
+	 * @param string $element A serialized HTML element, e.g. <link href="..." rel="stylesheet" />.
+	 *
+	 * @return array
+	 */
+	public function get_element_urls( $element ) {
+		preg_match_all( '/[a-zA-Z0-9_:.-]+=([\'"])(?P<value>[^\'"]*)\1/', (string) $element, $attributes );
+
+		if ( empty( $attributes[ 'value' ] ) ) {
+			return []; // @codeCoverageIgnore
+		}
+
+		return array_values( array_filter( array_map( [ $this, 'sanitize_url' ], $attributes[ 'value' ] ) ) );
+	}
+
+	/**
+	 * Is $url a request to one of the Google Fonts API (compatible) endpoints OMGF processes?
+	 *
+	 * The host is matched in full (never as a substring) and the path has to be the endpoint serving
+	 * the stylesheets, because any other URL can contain the API's URL in e.g. its query string, while
+	 * pointing somewhere else entirely.
+	 *
+	 * @see   self::FONT_API_HOSTS
+	 * @since v6.3.11
+	 *
+	 * @param string $url
+	 *
+	 * @return bool
+	 */
+	public function is_font_api_url( $url ) {
+		if ( ! is_string( $url ) || $url === '' ) {
+			return false;
+		}
+
+		/**
+		 * Validate the URL in the same shape it's requested in later on.
+		 *
+		 * @see \OMGF\Frontend\Filters::decode_url()
+		 */
+		$url = $this->sanitize_url( html_entity_decode( $url ) );
+
+		/**
+		 * A scheme less URL (e.g. fonts.googleapis.com/css?family=Roboto) isn't parsed into a host by
+		 * wp_parse_url(), while a scheme relative URL (//fonts.googleapis.com/css?family=Roboto) is.
+		 */
+		if ( ! preg_match( '~^(https?:)?//~i', $url ) ) {
+			$url = '//' . ltrim( $url, '/' );
+		}
+
+		$parts = wp_parse_url( $url );
+
+		if ( empty( $parts[ 'host' ] ) ) {
+			return false;
+		}
+
+		/**
+		 * @filter omgf_font_api_hosts Allows add-ons to process additional endpoints, e.g. Material Icons.
+		 */
+		$hosts = apply_filters( 'omgf_font_api_hosts', self::FONT_API_HOSTS );
+		$host  = strtolower( rtrim( $parts[ 'host' ], '.' ) );
+
+		if ( ! isset( $hosts[ $host ] ) ) {
+			return false;
+		}
+
+		$path = strtolower( $parts[ 'path' ] ?? '' );
+
+		foreach ( (array) $hosts[ $host ] as $prefix ) {
+			if ( str_starts_with( $path, $prefix ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
