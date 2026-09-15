@@ -20,6 +20,12 @@ use OMGF\Admin\Settings;
 use OMGF\Optimize\Run;
 
 class Optimize {
+	/**
+	 * Nonce action which authorizes a Save & Optimize run. It's added to the redirect URL after
+	 * the settings are saved, so it's only present on a request that follows a form submit.
+	 */
+	const NONCE_ACTION = 'omgf-optimize';
+
 	/** @var string */
 	private $settings_page = '';
 
@@ -29,15 +35,17 @@ class Optimize {
 	/** @var bool */
 	private $settings_updated = false;
 
+	/** @var string */
+	private $nonce = '';
+
 	/**
 	 * OMGF\Admin\Optimize constructor.
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function __construct() {
 		$this->settings_page    = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 		$this->settings_tab     = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : Settings::OMGF_SETTINGS_FIELD_OPTIMIZE;
 		$this->settings_updated = isset( $_GET['settings-updated'] );
+		$this->nonce            = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( $_GET['_wpnonce'] ) : '';
 
 		$this->init();
 	}
@@ -58,6 +66,19 @@ class Optimize {
 
 		if ( ! $this->settings_updated ) {
 			return; // @codeCoverageIgnore
+		}
+
+		/**
+		 * A run has to be authorized by a capable user and the nonce that's issued when the settings are saved.
+		 *
+		 * @see Actions::update_settings()
+		 */
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if ( wp_verify_nonce( $this->nonce, self::NONCE_ACTION ) < 1 ) {
+			return;
 		}
 
 		add_filter( 'http_request_args', [ $this, 'verify_ssl' ] );
