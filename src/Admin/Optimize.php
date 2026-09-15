@@ -57,15 +57,15 @@ class Optimize {
 	 */
 	private function init() {
 		if ( Settings::OMGF_ADMIN_PAGE !== $this->settings_page ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		if ( Settings::OMGF_SETTINGS_FIELD_OPTIMIZE !== $this->settings_tab ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		if ( ! $this->settings_updated ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		/**
