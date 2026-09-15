@@ -247,8 +247,14 @@ class Actions {
 		// Display settings errors.
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
-		// Redirect back to the settings page that was submitted.
-		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+		// Redirect back to the settings page that was submitted. The nonce authorizes the Save & Optimize run.
+		$goback = add_query_arg(
+			[
+				'settings-updated' => 'true',
+				'_wpnonce'         => wp_create_nonce( Optimize::NONCE_ACTION ),
+			],
+			wp_get_referer()
+		);
 
 		if ( ! defined( 'DAAN_DOING_TESTS' ) ) {
 			wp_redirect( $goback ); // @codeCoverageIgnore

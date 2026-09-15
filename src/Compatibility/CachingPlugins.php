@@ -36,9 +36,9 @@ class CachingPlugins {
 		 * We will only reach this point if:
 		 * - The `admin_init` action is triggered,
 		 * - This is OMGF's settings page,
-		 * - Settings are updated.
+		 * - Settings are updated by an administrator.
 		 *
-		 * So, finally, we need to check if this is an administrator.
+		 * The capability is checked again here, because the action can be triggered from elsewhere.
 		 *
 		 * @see \OMGF\Admin\Optimize::init()
 		 */
