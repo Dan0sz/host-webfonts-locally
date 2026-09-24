@@ -88,6 +88,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 == Changelog ==
 
 = 6.3.12 =
+* Security: admin notices are escaped on output.
 * Security: the redirect after saving settings is restricted to the site's own host.
 * Security: the stylesheet handle is escaped on the Optimize Fonts screen.
 
