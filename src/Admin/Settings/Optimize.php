@@ -268,11 +268,11 @@ class Optimize extends Builder {
 						$cache_handles[] = $handle;
 					}
 					?>
-					<tbody class="stylesheet" id="<?php echo $handle; ?>">
+					<tbody class="stylesheet" id="<?php echo esc_attr( $handle ); ?>">
 					<tr>
 						<th colspan="6"><?php echo sprintf(
 								__( 'Stylesheet handle: %s', 'host-webfonts-local' ),
-								$handle
+								esc_html( $handle )
 							); ?></th>
 					</tr>
 					<?php foreach ( $fonts as $font ) : ?>
