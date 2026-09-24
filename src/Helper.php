@@ -291,6 +291,16 @@ class Helper {
 			return false;
 		}
 
+		/**
+		 * @since v6.3.12 A font family is used to build the filename its files are stored under, so reject any
+		 *                path separator to make sure a crafted name can't traverse out of the fonts directory.
+		 *                Dots are left alone: a font family can legitimately contain them, and without a
+		 *                separator they can't traverse (the download filename is sanitized regardless).
+		 */
+		if ( preg_match( '#[/\\\\]#', $family ) ) {
+			return false; // @codeCoverageIgnore
+		}
+
 		// A CSS custom property, e.g. --wp--preset--font-family--foo.
 		if ( str_starts_with( $family, '--' ) ) {
 			return false;
