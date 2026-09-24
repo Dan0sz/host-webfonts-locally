@@ -733,6 +733,18 @@ class Process {
 			$url = $this->sanitize_url( $stack['url'] ?? $stack['href'] );
 
 			/**
+			 * @since v6.3.12 Only process (and request) stylesheets whose URL is actually hosted on the Google
+			 *                Fonts API (or a compatible endpoint). The element was kept because one of its
+			 *                attribute values points at the API (see get_element_urls()), but the href used
+			 *                here could point at a different — e.g. internal — host. Checking here, before the
+			 *                branches below, leaves a non-API link untouched (not removed, not swapped for a
+			 *                cached file) and makes sure it's never requested, which prevents SSRF.
+			 */
+			if ( ! $this->is_font_api_url( $url ) ) {
+				continue;
+			}
+
+			/**
 			 * If the stylesheet with $handle is completely marked for unloading, just remove the element
 			 * to prevent it from loading.
 			 */
@@ -786,7 +798,7 @@ class Process {
 				continue; // @codeCoverageIgnore
 			}
 
-			$optimize = new Optimize( $url, $handle, $original_handle );
+			$optimize = new Optimize( $url, $handle, $original_handle, 'url', false, '', true );
 
 			/**
 			 * @var string $cached_url Absolute URL or empty string.
@@ -794,7 +806,12 @@ class Process {
 			$cached_url = $optimize->process();
 
 			$search[ $key ]  = $stack['href'];
-			$replace[ $key ] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : '';
+			/**
+			 * @since v6.3.12 If optimization produced no URL (e.g. the request was blocked or redirected, the
+			 *                fetch failed, or the response wasn't a stylesheet), leave the original link
+			 *                untouched instead of removing it, so the fonts keep loading.
+			 */
+			$replace[ $key ] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : $stack['href'];
 		}
 
 		return apply_filters( 'omgf_process_search_replace', [

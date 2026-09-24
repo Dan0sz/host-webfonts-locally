@@ -344,6 +344,32 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * A link element is kept for processing when any of its attributes points at the font API, but the URL
+	 * actually requested is taken from its href. If that href points at another host, the stylesheet must not
+	 * be processed (or requested), leaving the element untouched. This prevents the request from being pointed
+	 * at an arbitrary (e.g. internal) host.
+	 *
+	 * @see Process::build_search_replace()
+	 * @return void
+	 */
+	public function testBuildSearchReplaceSkipsNonApiUrls() {
+		$class        = new Process( true );
+		$google_fonts = [
+			[
+				'id'   => 'evil',
+				'link' => '<link rel="stylesheet" id="evil-css" data-href="//fonts.googleapis.com/css?family=Roboto" href="//169.254.169.254/latest/meta-data/?family=Roboto"/>',
+				'href' => '//169.254.169.254/latest/meta-data/?family=Roboto',
+				'url'  => '//169.254.169.254/latest/meta-data/?family=Roboto',
+			],
+		];
+
+		$result = $class->build_search_replace( $google_fonts );
+
+		$this->assertEmpty( $result[ 'search' ] );
+		$this->assertEmpty( $result[ 'replace' ] );
+	}
+
+	/**
 	 * Are resource hints properly removed from HTML?
 	 * @see Process::remove_resource_hints()
 	 * @return void

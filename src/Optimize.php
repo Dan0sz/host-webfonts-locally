@@ -19,6 +19,7 @@ namespace OMGF;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
+use OMGF\Frontend\Process;
 
 class Optimize {
 	/**
@@ -69,6 +70,13 @@ class Optimize {
 	private $variable_fonts = [];
 
 	/**
+	 * @var bool $reject_redirects When true, the requested URL is re-validated against the font API allow-list
+	 *                             and redirects aren't followed. Set for frontend stylesheet requests.
+	 * @since v6.3.12
+	 */
+	private $reject_redirects = false;
+
+	/**
 	 * @param string $url             Google Fonts API URL, e.g. "fonts.googleapis.com/css?family="Lato:100,200,300,etc."
 	 * @param string $handle          The cache handle, generated using $handle + 5 random chars. Used for storing the fonts and stylesheet.
 	 * @param string $original_handle The stylesheet handle, present in the ID attribute.
@@ -83,15 +91,17 @@ class Optimize {
 		string $original_handle,
 		string $return = 'url',
 		bool $return_early = false,
-		string $stylesheet = ''
+		string $stylesheet = '',
+		bool $reject_redirects = false
 	) {
 		$this->url             = apply_filters( 'omgf_optimize_url', $url );
 		$this->handle          = sanitize_title_with_dashes( $handle );
 		$this->original_handle = sanitize_title_with_dashes( $original_handle );
 		$this->path            = OMGF_UPLOAD_DIR . '/' . $this->handle;
-		$this->return          = $return;
-		$this->return_early    = $return_early;
-		$this->stylesheet      = $stylesheet;
+		$this->return           = $return;
+		$this->return_early     = $return_early;
+		$this->stylesheet       = $stylesheet;
+		$this->reject_redirects = $reject_redirects;
 	}
 
 	/**
@@ -297,9 +307,28 @@ class Optimize {
 		}
 		/** @codeCoverageIgnoreEnd */
 
-		$response = wp_remote_get(
+		/**
+		 * @since v6.3.12 On the frontend Google Fonts path, re-validate the URL that's actually requested —
+		 *                after the omgf_optimize_url filter has run — so it can't be pointed at a host outside
+		 *                the allow-list. Direct callers (e.g. locally hosted stylesheets) keep the previous
+		 *                behaviour.
+		 */
+		if ( $this->reject_redirects && ! ( new Process( true ) )->is_font_api_url( $url ) ) {
+			return ''; // @codeCoverageIgnore
+		}
+
+		/**
+		 * @since v6.3.12 Use wp_safe_remote_get() so internal/private hosts are rejected even if the host
+		 *                allow-list is ever bypassed. Belt-and-braces against SSRF.
+		 */
+		$response = wp_safe_remote_get(
 			$url,
 			[
+				/**
+				 * @since v6.3.12 Don't follow redirects for frontend stylesheet requests, so an allow-listed
+				 *                host can't redirect the request to one that isn't.
+				 */
+				'redirection' => $this->reject_redirects ? 0 : 5,
 				/**
 				 * Allow WP devs to use a different User-Agent, e.g. for compatibility with older browsers/OSes.
 				 *
