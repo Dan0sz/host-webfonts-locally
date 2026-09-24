@@ -370,6 +370,24 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * The URL to request is taken from the href attribute. An attribute whose name ends in "href"
+	 * (e.g. data-href) must not be captured as the href, even when it appears first in the element.
+	 *
+	 * @see Process::build_fonts_set()
+	 * @return void
+	 */
+	public function testBuildFontsSetIgnoresDataHref() {
+		$class = new Process( true );
+		$link  = '<link rel="stylesheet" id="x-css" data-href="//fonts.googleapis.com/css?family=Roboto" href="//example.org/theme.css"/>';
+
+		$set = $class->build_fonts_set( [ $link ] );
+
+		$this->assertCount( 1, $set );
+		$this->assertEquals( '//example.org/theme.css', $set[ 0 ][ 'href' ] );
+		$this->assertEquals( '//example.org/theme.css', $set[ 0 ][ 'url' ] );
+	}
+
+	/**
 	 * Are resource hints properly removed from HTML?
 	 * @see Process::remove_resource_hints()
 	 * @return void
