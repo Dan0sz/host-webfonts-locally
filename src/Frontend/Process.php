@@ -628,10 +628,11 @@ class Process {
 			 *                never matched at all and the entire link element was skipped, while browsers loaded it
 			 *                just fine. Using a negated character class (instead of adding the /s modifier) makes
 			 *                sure the match can never run past a quote character.
-			 * @since v6.3.12 Only match the href attribute at a name boundary, so an attribute whose name ends
-			 *                in "href" (e.g. data-href) isn't captured as the href.
+			 * @since v6.3.12 Only match the href attribute when it starts a new attribute (after whitespace or the
+			 *                tag opener), so an attribute whose name ends in "href" (e.g. data-href, x:href,
+			 *                x.href) isn't captured as the href.
 			 */
-			preg_match( '/(?<![-\w])href=([\'"])(?P<href>[^\'"]*)\1/', $link, $href );
+			preg_match( '/(?:^|[\s<])href=([\'"])(?P<href>[^\'"]*)\1/', $link, $href );
 
 			/**
 			 * No valid href attribute provide in link element.

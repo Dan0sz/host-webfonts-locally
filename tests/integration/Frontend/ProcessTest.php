@@ -378,13 +378,24 @@ class ProcessTest extends TestCase {
 	 */
 	public function testBuildFontsSetIgnoresDataHref() {
 		$class = new Process( true );
-		$link  = '<link rel="stylesheet" id="x-css" data-href="//fonts.googleapis.com/css?family=Roboto" href="//example.org/theme.css"/>';
 
-		$set = $class->build_fonts_set( [ $link ] );
+		/**
+		 * An attribute whose name ends in "href" — separated by a dash, colon or dot — must not be captured
+		 * as the href, even when it appears first and holds a Google Fonts URL.
+		 */
+		$links = [
+			'<link rel="stylesheet" id="x-css" data-href="//fonts.googleapis.com/css?family=Roboto" href="//example.org/theme.css"/>',
+			'<link rel="stylesheet" id="x-css" x:href="//fonts.googleapis.com/css?family=Roboto" href="//example.org/theme.css"/>',
+			'<link rel="stylesheet" id="x-css" x.href="//fonts.googleapis.com/css?family=Roboto" href="//example.org/theme.css"/>',
+		];
 
-		$this->assertCount( 1, $set );
-		$this->assertEquals( '//example.org/theme.css', $set[ 0 ][ 'href' ] );
-		$this->assertEquals( '//example.org/theme.css', $set[ 0 ][ 'url' ] );
+		foreach ( $links as $link ) {
+			$set = $class->build_fonts_set( [ $link ] );
+
+			$this->assertCount( 1, $set );
+			$this->assertEquals( '//example.org/theme.css', $set[ 0 ][ 'href' ], "href for: $link" );
+			$this->assertEquals( '//example.org/theme.css', $set[ 0 ][ 'url' ], "url for: $link" );
+		}
 	}
 
 	/**
