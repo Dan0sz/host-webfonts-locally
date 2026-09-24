@@ -257,7 +257,7 @@ class Actions {
 		);
 
 		if ( ! defined( 'DAAN_DOING_TESTS' ) ) {
-			wp_redirect( $goback ); // @codeCoverageIgnore
+			wp_safe_redirect( $goback ); // @codeCoverageIgnore
 			exit; // @codeCoverageIgnore
 		}
 	}
