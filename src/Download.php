@@ -56,8 +56,12 @@ class Download {
 		string $filename,
 		string $path
 	) {
-		$this->url      = $url;
-		$this->filename = $filename;
+		$this->url = $url;
+		/**
+		 * @since v6.3.12 Sanitize the filename so a font family (which it's partly built from) can't contain a
+		 *                path separator and write the downloaded file outside of $path.
+		 */
+		$this->filename = sanitize_file_name( $filename );
 		$this->path     = $path;
 	}
 

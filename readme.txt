@@ -87,6 +87,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.3.12 =
+* Security: hardened the handling of downloaded font files.
+
 = 6.3.11 =
 * Security: hardened the detection of Google Fonts stylesheets and the handling of downloaded files. Thanks to Wordfence for responsibly disclosing this issue.
 * Security: Save & Optimize can now only be started by an authorized request. Thanks to Ángel Santana (via WPScan) for responsibly disclosing this issue.
