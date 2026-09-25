@@ -89,6 +89,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 = 6.3.12 =
 * Security: hardened the handling of Google Fonts stylesheet requests.
+* Security: hardened the handling of downloaded font files.
+* Security: admin notices are escaped on output.
+* Security: the redirect after saving settings is restricted to the site's own host.
+* Security: the stylesheet handle is escaped on the Optimize Fonts screen.
 
 = 6.3.11 =
 * Security: hardened the detection of Google Fonts stylesheets and the handling of downloaded files. Thanks to Wordfence for responsibly disclosing this issue.
