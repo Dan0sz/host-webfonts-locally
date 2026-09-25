@@ -297,9 +297,18 @@ class Optimize {
 		}
 		/** @codeCoverageIgnoreEnd */
 
-		$response = wp_remote_get(
+		/**
+		 * @since v6.3.12 Use wp_safe_remote_get() so internal/private hosts are rejected even if the host
+		 *                allow-list is ever bypassed. Belt-and-braces against SSRF.
+		 */
+		$response = wp_safe_remote_get(
 			$url,
 			[
+				/**
+				 * @since v6.3.12 Never follow redirects: the Google Fonts API (and compatible CDNs) serve the
+				 *                stylesheet directly, so a redirect would only point the request somewhere else.
+				 */
+				'redirection' => 0,
 				/**
 				 * Allow WP devs to use a different User-Agent, e.g. for compatibility with older browsers/OSes.
 				 *

@@ -628,8 +628,11 @@ class Process {
 			 *                never matched at all and the entire link element was skipped, while browsers loaded it
 			 *                just fine. Using a negated character class (instead of adding the /s modifier) makes
 			 *                sure the match can never run past a quote character.
+			 * @since v6.3.12 Only match the href attribute when it starts a new attribute (after whitespace or the
+			 *                tag opener), so an attribute whose name ends in "href" (e.g. data-href, x:href,
+			 *                x.href) isn't captured as the href.
 			 */
-			preg_match( '/href=([\'"])(?P<href>[^\'"]*)\1/', $link, $href );
+			preg_match( '/(?:^|[\s<])href=([\'"])(?P<href>[^\'"]*)\1/', $link, $href );
 
 			/**
 			 * No valid href attribute provide in link element.
@@ -733,6 +736,18 @@ class Process {
 			$url = $this->sanitize_url( $stack['url'] ?? $stack['href'] );
 
 			/**
+			 * @since v6.3.12 Only process (and request) stylesheets whose URL is actually hosted on the Google
+			 *                Fonts API (or a compatible endpoint). The element was kept because one of its
+			 *                attribute values points at the API (see get_element_urls()), but the href used
+			 *                here could point at a different — e.g. internal — host. Checking here, before the
+			 *                branches below, leaves a non-API link untouched (not removed, not swapped for a
+			 *                cached file) and makes sure it's never requested, which prevents SSRF.
+			 */
+			if ( ! $this->is_font_api_url( $url ) ) {
+				continue;
+			}
+
+			/**
 			 * If the stylesheet with $handle is completely marked for unloading, just remove the element
 			 * to prevent it from loading.
 			 */
@@ -794,7 +809,12 @@ class Process {
 			$cached_url = $optimize->process();
 
 			$search[ $key ]  = $stack['href'];
-			$replace[ $key ] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : '';
+			/**
+			 * @since v6.3.12 If optimization produced no URL (e.g. the request was blocked or redirected, the
+			 *                fetch failed, or the response wasn't a stylesheet), leave the original link
+			 *                untouched instead of removing it, so the fonts keep loading.
+			 */
+			$replace[ $key ] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : $stack['href'];
 		}
 
 		return apply_filters( 'omgf_process_search_replace', [

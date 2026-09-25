@@ -344,6 +344,61 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * A link element is kept for processing when any of its attributes points at the font API, but the URL
+	 * actually requested is taken from its href. If that href points at another host, the stylesheet must not
+	 * be processed (or requested), leaving the element untouched. This prevents the request from being pointed
+	 * at an arbitrary (e.g. internal) host.
+	 *
+	 * @see Process::build_search_replace()
+	 * @return void
+	 */
+	public function testBuildSearchReplaceSkipsNonApiUrls() {
+		$class        = new Process( true );
+		$google_fonts = [
+			[
+				'id'   => 'evil',
+				'link' => '<link rel="stylesheet" id="evil-css" data-href="//fonts.googleapis.com/css?family=Roboto" href="//169.254.169.254/latest/meta-data/?family=Roboto"/>',
+				'href' => '//169.254.169.254/latest/meta-data/?family=Roboto',
+				'url'  => '//169.254.169.254/latest/meta-data/?family=Roboto',
+			],
+		];
+
+		$result = $class->build_search_replace( $google_fonts );
+
+		$this->assertEmpty( $result[ 'search' ] );
+		$this->assertEmpty( $result[ 'replace' ] );
+	}
+
+	/**
+	 * The URL to request is taken from the href attribute. An attribute whose name ends in "href"
+	 * (e.g. data-href) must not be captured as the href, even when it appears first in the element.
+	 *
+	 * @see Process::build_fonts_set()
+	 * @return void
+	 */
+	public function testBuildFontsSetIgnoresDataHref() {
+		$class = new Process( true );
+
+		/**
+		 * An attribute whose name ends in "href" — separated by a dash, colon or dot — must not be captured
+		 * as the href, even when it appears first and holds a Google Fonts URL.
+		 */
+		$links = [
+			'<link rel="stylesheet" id="x-css" data-href="//fonts.googleapis.com/css?family=Roboto" href="//example.org/theme.css"/>',
+			'<link rel="stylesheet" id="x-css" x:href="//fonts.googleapis.com/css?family=Roboto" href="//example.org/theme.css"/>',
+			'<link rel="stylesheet" id="x-css" x.href="//fonts.googleapis.com/css?family=Roboto" href="//example.org/theme.css"/>',
+		];
+
+		foreach ( $links as $link ) {
+			$set = $class->build_fonts_set( [ $link ] );
+
+			$this->assertCount( 1, $set );
+			$this->assertEquals( '//example.org/theme.css', $set[ 0 ][ 'href' ], "href for: $link" );
+			$this->assertEquals( '//example.org/theme.css', $set[ 0 ][ 'url' ], "url for: $link" );
+		}
+	}
+
+	/**
 	 * Are resource hints properly removed from HTML?
 	 * @see Process::remove_resource_hints()
 	 * @return void
