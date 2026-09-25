@@ -70,13 +70,6 @@ class Optimize {
 	private $variable_fonts = [];
 
 	/**
-	 * @var bool $reject_redirects When true, the requested URL is re-validated against the font API allow-list
-	 *                             and redirects aren't followed. Set for frontend stylesheet requests.
-	 * @since v6.3.12
-	 */
-	private $reject_redirects = false;
-
-	/**
 	 * @param string $url             Google Fonts API URL, e.g. "fonts.googleapis.com/css?family="Lato:100,200,300,etc."
 	 * @param string $handle          The cache handle, generated using $handle + 5 random chars. Used for storing the fonts and stylesheet.
 	 * @param string $original_handle The stylesheet handle, present in the ID attribute.
@@ -91,17 +84,15 @@ class Optimize {
 		string $original_handle,
 		string $return = 'url',
 		bool $return_early = false,
-		string $stylesheet = '',
-		bool $reject_redirects = false
+		string $stylesheet = ''
 	) {
 		$this->url             = apply_filters( 'omgf_optimize_url', $url );
 		$this->handle          = sanitize_title_with_dashes( $handle );
 		$this->original_handle = sanitize_title_with_dashes( $original_handle );
 		$this->path            = OMGF_UPLOAD_DIR . '/' . $this->handle;
-		$this->return           = $return;
-		$this->return_early     = $return_early;
-		$this->stylesheet       = $stylesheet;
-		$this->reject_redirects = $reject_redirects;
+		$this->return          = $return;
+		$this->return_early    = $return_early;
+		$this->stylesheet      = $stylesheet;
 	}
 
 	/**
@@ -308,12 +299,10 @@ class Optimize {
 		/** @codeCoverageIgnoreEnd */
 
 		/**
-		 * @since v6.3.12 On the frontend Google Fonts path, re-validate the URL that's actually requested —
-		 *                after the omgf_optimize_url filter has run — so it can't be pointed at a host outside
-		 *                the allow-list. Direct callers (e.g. locally hosted stylesheets) keep the previous
-		 *                behaviour.
+		 * @since v6.3.12 Re-validate the URL that's actually requested — after the omgf_optimize_url filter has
+		 *                run — so it can't be pointed at a host outside the allow-list (e.g. by a filter).
 		 */
-		if ( $this->reject_redirects && ! ( new Process( true ) )->is_font_api_url( $url ) ) {
+		if ( ! ( new Process( true ) )->is_font_api_url( $url ) ) {
 			return ''; // @codeCoverageIgnore
 		}
 
@@ -325,10 +314,10 @@ class Optimize {
 			$url,
 			[
 				/**
-				 * @since v6.3.12 Don't follow redirects for frontend stylesheet requests, so an allow-listed
-				 *                host can't redirect the request to one that isn't.
+				 * @since v6.3.12 Never follow redirects: the Google Fonts API (and compatible CDNs) serve the
+				 *                stylesheet directly, so a redirect would only point the request somewhere else.
 				 */
-				'redirection' => $this->reject_redirects ? 0 : 5,
+				'redirection' => 0,
 				/**
 				 * Allow WP devs to use a different User-Agent, e.g. for compatibility with older browsers/OSes.
 				 *

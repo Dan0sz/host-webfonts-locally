@@ -801,7 +801,7 @@ class Process {
 				continue; // @codeCoverageIgnore
 			}
 
-			$optimize = new Optimize( $url, $handle, $original_handle, 'url', false, '', true );
+			$optimize = new Optimize( $url, $handle, $original_handle );
 
 			/**
 			 * @var string $cached_url Absolute URL or empty string.
