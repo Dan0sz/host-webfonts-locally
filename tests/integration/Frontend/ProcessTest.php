@@ -370,6 +370,40 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * The URL is validated as it will be requested — after the omgf_optimize_url filter Optimize applies —
+	 * so a filter that rewrites a valid API URL to another host can't make it fetch (or rewrite) the link.
+	 *
+	 * @see Process::build_search_replace()
+	 * @return void
+	 */
+	public function testBuildSearchReplaceValidatesFilteredUrl() {
+		$class        = new Process( true );
+		$google_fonts = [
+			[
+				'id'   => 'jost',
+				'link' => '<link rel="stylesheet" id="jost-css" href="//fonts.googleapis.com/css?family=Jost"/>',
+				'href' => '//fonts.googleapis.com/css?family=Jost',
+				'url'  => '//fonts.googleapis.com/css?family=Jost',
+			],
+		];
+
+		$rewrite = function () {
+			return '//169.254.169.254/latest/meta-data/?family=Jost';
+		};
+
+		try {
+			add_filter( 'omgf_optimize_url', $rewrite );
+
+			$result = $class->build_search_replace( $google_fonts );
+		} finally {
+			remove_filter( 'omgf_optimize_url', $rewrite );
+		}
+
+		$this->assertEmpty( $result[ 'search' ] );
+		$this->assertEmpty( $result[ 'replace' ] );
+	}
+
+	/**
 	 * The URL to request is taken from the href attribute. An attribute whose name ends in "href"
 	 * (e.g. data-href) must not be captured as the href, even when it appears first in the element.
 	 *

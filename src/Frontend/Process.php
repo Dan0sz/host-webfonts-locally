@@ -739,11 +739,13 @@ class Process {
 			 * @since v6.3.12 Only process (and request) stylesheets whose URL is actually hosted on the Google
 			 *                Fonts API (or a compatible endpoint). The element was kept because one of its
 			 *                attribute values points at the API (see get_element_urls()), but the href used
-			 *                here could point at a different — e.g. internal — host. Checking here, before the
-			 *                branches below, leaves a non-API link untouched (not removed, not swapped for a
-			 *                cached file) and makes sure it's never requested, which prevents SSRF.
+			 *                here could point at a different — e.g. internal — host. Validate the URL as it
+			 *                will be requested, i.e. after the omgf_optimize_url filter Optimize applies, so a
+			 *                filter can't rewrite it to another host either. Checking here, before the branches
+			 *                below, leaves a non-API link untouched (not removed, not swapped for a cached file)
+			 *                and makes sure it's never requested, which prevents SSRF.
 			 */
-			if ( ! $this->is_font_api_url( $url ) ) {
+			if ( ! $this->is_font_api_url( apply_filters( 'omgf_optimize_url', $url ) ) ) {
 				continue;
 			}
 
