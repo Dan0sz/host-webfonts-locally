@@ -19,7 +19,6 @@ namespace OMGF;
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
 use OMGF\Admin\Settings;
-use OMGF\Frontend\Process;
 
 class Optimize {
 	/**
@@ -297,14 +296,6 @@ class Optimize {
 			}
 		}
 		/** @codeCoverageIgnoreEnd */
-
-		/**
-		 * @since v6.3.12 Re-validate the URL that's actually requested — after the omgf_optimize_url filter has
-		 *                run — so it can't be pointed at a host outside the allow-list (e.g. by a filter).
-		 */
-		if ( ! ( new Process( true ) )->is_font_api_url( $url ) ) {
-			return ''; // @codeCoverageIgnore
-		}
 
 		/**
 		 * @since v6.3.12 Use wp_safe_remote_get() so internal/private hosts are rejected even if the host
