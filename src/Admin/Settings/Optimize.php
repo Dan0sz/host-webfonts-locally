@@ -389,8 +389,6 @@ class Optimize extends Builder {
 					</tbody>
 				<?php endforeach; ?>
 			</table>
-			<input type="hidden" name="<?php echo Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS; ?>"
-				   value="<?php echo base64_encode( serialize( $this->optimized_fonts ) ); ?>"/>
 			<input id="<?php echo Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>" type="hidden"
 				   name="omgf_settings[<?php echo Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS; ?>]"
 				   value="<?php echo esc_attr( implode( ',', OMGF::unloaded_stylesheets() ) ); ?>"/>

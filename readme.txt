@@ -93,6 +93,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 * Security: admin notices are escaped on output.
 * Security: the redirect after saving settings is restricted to the site's own host.
 * Security: the stylesheet handle is escaped on the Optimize Fonts screen.
+* Security: the Optimized Fonts are no longer sent along with (and can't be updated using) the settings form, and serialized values stored in OMGF's options can only contain plain objects.
 * Tested with WP 7.1.
 
 = 6.3.11 =

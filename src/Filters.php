@@ -27,25 +27,7 @@ class Filters {
 		add_filter( 'content_url', [ $this, 'force_ssl' ], 1000 );
 		add_filter( 'home_url', [ $this, 'force_ssl' ], 1000, 2 );
 		add_filter( 'omgf_optimize_user_agent', [ $this, 'maybe_do_legacy_mode' ] );
-		add_filter( 'pre_update_option_omgf_optimized_fonts', [ $this, 'base64_decode_optimized_fonts' ] );
 		add_filter( 'omgf_do_not_load_frontend_css', [ $this, 'maybe_load_frontend_assets' ] );
-	}
-
-	/**
-	 * @since v5.0.5 omgf_optimized_fonts is base64_encoded in the frontend, to bypass firewall restrictions on
-	 * some servers.
-	 *
-	 * @param $old_value
-	 * @param $value
-	 *
-	 * @return bool|array
-	 */
-	public function base64_decode_optimized_fonts( $value ) {
-		if ( is_string( $value ) && base64_encode( base64_decode( $value, true ) ) === $value ) {
-			return base64_decode( $value );
-		}
-
-		return $value;
 	}
 
 	/**
