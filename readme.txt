@@ -93,6 +93,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 * Security: admin notices are escaped on output.
 * Security: the redirect after saving settings is restricted to the site's own host.
 * Security: the stylesheet handle is escaped on the Optimize Fonts screen.
+* Security: only administrators can store results or trigger processing through the Admin Bar Menu's status endpoint, even when its permission is widened by a filter. URLs are validated before they're processed.
 * Tested with WP 7.1.
 
 = 6.3.11 =
