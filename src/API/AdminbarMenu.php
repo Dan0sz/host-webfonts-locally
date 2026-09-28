@@ -21,11 +21,6 @@ use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
 class AdminbarMenu {
-	/**
-	 * Maximum number of URLs processed per request.
-	 */
-	const MAX_URLS = 20;
-
 	private $namespace = 'omgf/v1';
 
 	private $base = 'adminbar-menu';
@@ -152,22 +147,18 @@ class AdminbarMenu {
 		}
 
 		/**
-		 * @since v6.3.12 Validate the URLs before they're passed to any filter, and limit their number.
+		 * @since v6.3.12 Validate the URLs before they're passed to any filter.
 		 */
-		$validated_urls = array_filter(
+		$urls = array_filter(
 			$urls,
 			function ( $url ) {
 				return is_string( $url ) && filter_var( $url, FILTER_VALIDATE_URL );
 			}
 		);
-		$urls           = array_slice( $validated_urls, 0, self::MAX_URLS, true );
 
 		$urls        = apply_filters( 'omgf_ajax_results', $urls, $params, $path );
 		$result_keys = array_keys( $stored_results );
-		/**
-		 * If URLs were left out because of the limit, we can't tell which stored results were solved.
-		 */
-		$solved = count( $validated_urls ) > self::MAX_URLS ? [] : array_diff( $result_keys, $urls );
+		$solved      = array_diff( $result_keys, $urls );
 
 		/**
 		 * We only filter $stored_results if we're running the optimization routine because that's the only point we can actually resolve things.
