@@ -140,6 +140,82 @@ class AdminbarMenuTest extends TestCase {
 	}
 
 	/**
+	 * Visitors which were allowed to request the status (e.g. by widening the permission using the
+	 * omgf_api_adminbar_menu_permission filter) should only get a read-only status.
+	 *
+	 * @see AdminbarMenu::get_admin_bar_status()
+	 * @return void
+	 */
+	public function testGetAdminBarStatusIsReadOnlyForNonAdmins() {
+		$filter_called = false;
+		$filter        = function ( $urls ) use ( &$filter_called ) {
+			$filter_called = true;
+
+			return $urls;
+		};
+
+		try {
+			wp_set_current_user( 0 );
+			add_filter( 'omgf_ajax_results', $filter );
+
+			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request->set_param( 'path', '/read-only-test' );
+			$request->set_param( 'urls', [ 'https://fonts.googleapis.com/css?family=Roboto' ] );
+			$request->set_param( 'params', json_encode( [ 'omgf_optimize' => '1', 'omgf_pro_auto_config' => '1' ] ) );
+			$request->set_param( 'unused_fonts_analysis', json_encode( [ 'count' => 10, 'impact' => 'High' ] ) );
+
+			$response = ( new AdminbarMenu() )->get_admin_bar_status( $request );
+
+			$this->assertArrayHasKey( 'status', $response );
+			$this->assertFalse( $filter_called );
+			$this->assertEmpty( OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS ) );
+			$this->assertEmpty( OMGF::get_option( Settings::OMGF_DB_PERF_CHECK ) );
+		} finally {
+			remove_filter( 'omgf_ajax_results', $filter );
+		}
+	}
+
+	/**
+	 * Invalid URLs should never be passed to the omgf_ajax_results filter, and their number is limited.
+	 *
+	 * @see AdminbarMenu::update_google_fonts_checker_results()
+	 * @return void
+	 */
+	public function testUrlsAreValidatedBeforeFilter() {
+		$received = [];
+		$filter   = function ( $urls ) use ( &$received ) {
+			$received = $urls;
+
+			return $urls;
+		};
+
+		try {
+			add_filter( 'omgf_ajax_results', $filter );
+
+			$urls = [ 'not a url', 'javascript:alert(1)' ];
+
+			for ( $i = 0; $i < AdminbarMenu::MAX_URLS + 5; $i++ ) {
+				$urls[] = "https://fonts.googleapis.com/css?family=Test$i";
+			}
+
+			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request->set_param( 'path', '/validate-test' );
+			$request->set_param( 'urls', $urls );
+
+			( new AdminbarMenu() )->get_admin_bar_status( $request );
+
+			$this->assertCount( AdminbarMenu::MAX_URLS, $received );
+
+			foreach ( $received as $url ) {
+				$this->assertStringStartsWith( 'https://fonts.googleapis.com/', $url );
+			}
+		} finally {
+			remove_filter( 'omgf_ajax_results', $filter );
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
+	}
+
+	/**
 	 * @return void
 	 */
 	public function testMultilingualPluginDetection() {
