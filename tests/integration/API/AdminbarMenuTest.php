@@ -161,7 +161,7 @@ class AdminbarMenuTest extends TestCase {
 			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
 			$request->set_param( 'path', '/read-only-test' );
 			$request->set_param( 'urls', [ 'https://fonts.googleapis.com/css?family=Roboto' ] );
-			$request->set_param( 'params', json_encode( [ 'omgf_optimize' => '1', 'omgf_pro_auto_config' => '1' ] ) );
+			$request->set_param( 'params', json_encode( [ 'omgf_optimize' => '1', 'foo' => 'bar' ] ) );
 			$request->set_param( 'unused_fonts_analysis', json_encode( [ 'count' => 10, 'impact' => 'High' ] ) );
 
 			$response = ( new AdminbarMenu() )->get_admin_bar_status( $request );
