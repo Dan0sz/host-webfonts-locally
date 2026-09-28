@@ -62,6 +62,25 @@ class TestCase extends YoastTestCase {
 	}
 
 	/**
+	 * The signature (magic bytes) a font file with $extension starts with.
+	 *
+	 * @param string $extension
+	 *
+	 * @return string
+	 */
+	public function getFontSignature( $extension ) {
+		$signatures = [
+			'woff2' => 'wOF2',
+			'woff'  => 'wOFF',
+			'ttf'   => "\x00\x01\x00\x00",
+			'otf'   => 'OTTO',
+			'eot'   => str_repeat( "\x00", 34 ) . 'LP',
+		];
+
+		return $signatures[ $extension ] ?? $signatures['woff2'];
+	}
+
+	/**
 	 * Mock Google Fonts requests.
 	 *
 	 * @param $pre
@@ -80,7 +99,8 @@ class TestCase extends YoastTestCase {
 
 		if ( strpos( $url, 'fonts.gstatic.com' ) !== false ) {
 			$extension = pathinfo( $url, PATHINFO_EXTENSION );
-			$content   = 'mock-font-content';
+			// Start with a valid font signature, because downloaded files are validated before they're stored.
+			$content = $this->getFontSignature( $extension ) . 'mock-font-content';
 
 			if ( ! empty( $args['stream'] ) && ! empty( $args['filename'] ) ) {
 				file_put_contents( $args['filename'], $content );

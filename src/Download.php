@@ -38,6 +38,13 @@ class Download {
 		'application/vnd.ms-fontobject' => 'eot',
 	];
 
+	/**
+	 * Default maximum size (in bytes) of a downloaded font file.
+	 *
+	 * @since v6.3.12
+	 */
+	const MAX_FILE_SIZE = 25 * MB_IN_BYTES;
+
 
 	/** @var string $url */
 	private $url;
@@ -85,12 +92,18 @@ class Download {
 		 */
 		$temp_filename = $this->path . '/' . $this->filename . '-' . wp_generate_password( 12, false ) . '.tmp';
 
-		$response = wp_safe_remote_get(
+		$max_file_size = self::get_max_file_size();
+		$response      = wp_safe_remote_get(
 			$this->url,
 			[
-				'timeout'  => 300,
-				'stream'   => true,
-				'filename' => $temp_filename,
+				'timeout'             => 300,
+				'stream'              => true,
+				'filename'            => $temp_filename,
+				/**
+				 * @since v6.3.12 Stop downloading once the file exceeds the maximum size. One extra byte is requested, so
+				 *                a file which was cut off can be told apart from a file of exactly the maximum size.
+				 */
+				'limit_response_size' => $max_file_size + 1,
 			]
 		);
 
@@ -164,6 +177,24 @@ class Download {
 			return '';
 		}
 
+		/**
+		 * @since v6.3.12 Validate the downloaded file before it's stored.
+		 */
+		$error = $this->validate_file( $temp_filename, $max_file_size );
+
+		if ( $error ) {
+			$this->delete_temp_file( $temp_filename );
+
+			Notice::set_notice(
+				$error . ': ' . $this->url,
+				'omgf-download-validation-failed',
+				'error',
+				500
+			);
+
+			return '';
+		}
+
 		if ( file_exists( $temp_filename ) ) {
 			$final_path = $this->path . '/' . $this->filename . '.' . $extension;
 
@@ -183,6 +214,80 @@ class Download {
 		}
 
 		return OMGF_UPLOAD_URL . str_replace( OMGF_UPLOAD_DIR, '', $this->path ) . '/' . $this->filename . '.' . $extension;
+	}
+
+	/**
+	 * Maximum size (in bytes) of a downloaded font file.
+	 *
+	 * @since  v6.3.12
+	 * @filter omgf_download_max_file_size
+	 *
+	 * @return int
+	 */
+	public static function get_max_file_size() {
+		return max( 1, (int) apply_filters( 'omgf_download_max_file_size', self::MAX_FILE_SIZE ) );
+	}
+
+	/**
+	 * Checks if $file is a complete font file, i.e. not empty, not cut off because it exceeds the maximum size, and
+	 * starting with the signature of a font format.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $file
+	 * @param int    $max_file_size
+	 *
+	 * @return string An error message if the file is invalid, an empty string if it's valid.
+	 */
+	private function validate_file( $file, $max_file_size ) {
+		$size = file_exists( $file ) ? filesize( $file ) : 0;
+
+		if ( ! $size ) {
+			return __( 'OMGF downloaded an empty font file', 'host-webfonts-local' );
+		}
+
+		if ( $size > $max_file_size ) {
+			return sprintf(
+				/* translators: %s: maximum file size, e.g. 25 MB */
+				__( 'OMGF skipped a font file, because it exceeds the maximum file size of %s', 'host-webfonts-local' ),
+				size_format( $max_file_size )
+			);
+		}
+
+		if ( ! self::is_font_file( $file ) ) {
+			return __( 'OMGF skipped a downloaded file, because it isn\'t a font file', 'host-webfonts-local' );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Checks if $file starts with the signature (magic bytes) of a WOFF2, WOFF, TrueType, OpenType or EOT file.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $file
+	 *
+	 * @return bool
+	 */
+	public static function is_font_file( $file ) {
+		$handle = @fopen( $file, 'rb' ); // phpcs:ignore
+
+		if ( ! $handle ) {
+			return false; // @codeCoverageIgnore
+		}
+
+		$header = (string) fread( $handle, 36 );
+
+		fclose( $handle );
+
+		// WOFF2, WOFF, OpenType (CFF), TrueType, TrueType (Apple), TrueType Collection.
+		if ( in_array( substr( $header, 0, 4 ), [ 'wOF2', 'wOFF', 'OTTO', "\x00\x01\x00\x00", 'true', 'ttcf' ], true ) ) {
+			return true;
+		}
+
+		// EOT: magic number 0x504C at offset 34.
+		return strlen( $header ) >= 36 && substr( $header, 34, 2 ) === 'LP';
 	}
 
 	/**

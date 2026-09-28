@@ -93,6 +93,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 * Security: admin notices are escaped on output.
 * Security: the redirect after saving settings is restricted to the site's own host.
 * Security: the stylesheet handle is escaped on the Optimize Fonts screen.
+* Security: downloaded font files are validated before they're stored: files which are empty, exceed the maximum file size (25 MB, filterable with omgf_download_max_file_size) or don't start with the signature of a font format are discarded.
 * Tested with WP 7.1.
 
 = 6.3.11 =
