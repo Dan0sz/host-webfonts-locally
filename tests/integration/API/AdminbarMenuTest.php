@@ -216,6 +216,46 @@ class AdminbarMenuTest extends TestCase {
 	}
 
 	/**
+	 * Stored results shouldn't be removed as solved when URLs were left out because of the limit.
+	 *
+	 * @see AdminbarMenu::update_google_fonts_checker_results()
+	 * @return void
+	 */
+	public function testStoredResultsAreKeptWhenUrlsExceedLimit() {
+		$stored = 'https://fonts.googleapis.com/css?family=Stored';
+
+		try {
+			OMGF::update_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS, [ $stored => [ '/' ] ], false );
+			add_filter( 'omgf_is_running_optimize', '__return_true' );
+
+			$urls = [];
+
+			for ( $i = 0; $i < AdminbarMenu::MAX_URLS; $i++ ) {
+				$urls[] = "https://fonts.googleapis.com/css?family=Test$i";
+			}
+
+			// The stored URL is reported, but after the limit.
+			$urls[] = $stored;
+
+			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request->set_param( 'omgf_optimize', wp_create_nonce( 'omgf_optimize' ) );
+			$request->set_param( 'path', '/limit-test' );
+			$request->set_param( 'urls', $urls );
+
+			// Run as an authorized optimization, i.e. solved results would be removed.
+			$_GET['omgf_optimize'] = $request->get_param( 'omgf_optimize' );
+
+			( new AdminbarMenu() )->get_admin_bar_status( $request );
+
+			$this->assertArrayHasKey( $stored, OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS ) );
+		} finally {
+			unset( $_GET['omgf_optimize'] );
+			remove_filter( 'omgf_is_running_optimize', '__return_true' );
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
+	}
+
+	/**
 	 * @return void
 	 */
 	public function testMultilingualPluginDetection() {
