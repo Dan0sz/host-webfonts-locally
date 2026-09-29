@@ -163,15 +163,24 @@ class AdminbarMenuTest extends TestCase {
 			$request->set_param( 'urls', [ 'https://fonts.googleapis.com/css?family=Roboto' ] );
 			$request->set_param( 'params', json_encode( [ 'omgf_optimize' => '1', 'foo' => 'bar' ] ) );
 			$request->set_param( 'unused_fonts_analysis', json_encode( [ 'count' => 10, 'impact' => 'High' ] ) );
+			$request->set_header( 'X-WP-Nonce', wp_create_nonce( 'wp_rest' ) );
 
-			$response = ( new AdminbarMenu() )->get_admin_bar_status( $request );
+			// Without a widened permission, visitors can't use the route at all.
+			$this->assertGreaterThanOrEqual( 400, rest_do_request( $request )->get_status() );
 
-			$this->assertArrayHasKey( 'status', $response );
+			// With a widened permission (e.g. by OMGF Pro's Smart Optimize), visitors get a read-only status.
+			add_filter( 'omgf_api_adminbar_menu_permission', '__return_true' );
+
+			$response = rest_do_request( $request );
+
+			$this->assertSame( 200, $response->get_status() );
+			$this->assertArrayHasKey( 'status', $response->get_data() );
 			$this->assertFalse( $filter_called );
 			$this->assertEmpty( OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS ) );
 			$this->assertEmpty( OMGF::get_option( Settings::OMGF_DB_PERF_CHECK ) );
 		} finally {
 			remove_filter( 'omgf_ajax_results', $filter );
+			remove_filter( 'omgf_api_adminbar_menu_permission', '__return_true' );
 		}
 	}
 
