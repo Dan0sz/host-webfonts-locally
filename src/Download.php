@@ -349,8 +349,11 @@ class Download {
 	 * @return void
 	 */
 	public static function remove_failure( $url ) {
-		// This runs after every successful download, so only lock when there's something to remove.
-		if ( ! isset( self::get_failures()[ $url ] ) ) {
+		/**
+		 * This runs after every successful download, so only lock when there's something to remove. The check reads the
+		 * database, because a cached copy might not contain a failure stored by another request.
+		 */
+		if ( ! isset( self::read_stored_failures()[ $url ] ) ) {
 			return;
 		}
 
@@ -379,6 +382,23 @@ class Download {
 	}
 
 	/**
+	 * Reads the failed downloads from the database, instead of a (possibly outdated) cached copy.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @return array
+	 */
+	private static function read_stored_failures() {
+		global $wpdb;
+
+		$stored = $wpdb->get_var(
+			$wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s", Settings::OMGF_DB_DOWNLOAD_FAILURES )
+		);
+
+		return self::normalize_failures( $stored === null ? [] : maybe_unserialize( $stored ) );
+	}
+
+	/**
 	 * Updates the failed downloads while holding a (MySQL) lock, based on the value currently stored in the database,
 	 * so concurrent downloads can't overwrite each other's changes.
 	 *
@@ -396,15 +416,10 @@ class Download {
 		$locked = (bool) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $lock_name, 5 ) );
 
 		try {
-			// Read the current value from the database, instead of a (possibly outdated) cached copy.
-			$stored = $wpdb->get_var(
-				$wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s", Settings::OMGF_DB_DOWNLOAD_FAILURES )
-			);
+			$failures = $callback( self::read_stored_failures() );
 
 			wp_cache_delete( Settings::OMGF_DB_DOWNLOAD_FAILURES, 'options' );
 			wp_cache_delete( 'notoptions', 'options' );
-
-			$failures = $callback( self::normalize_failures( $stored === null ? [] : maybe_unserialize( $stored ) ) );
 
 			if ( empty( $failures ) ) {
 				delete_option( Settings::OMGF_DB_DOWNLOAD_FAILURES );

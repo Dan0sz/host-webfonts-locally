@@ -216,6 +216,21 @@ class DownloadTest extends TestCase {
 
 			$this->assertArrayNotHasKey( 'https://fonts.example/b.woff2', Download::get_failures() );
 
+			// Another request stores a failure this request's cached copy doesn't contain, which is then removed.
+			$this->assertArrayNotHasKey( 'https://fonts.example/d.woff2', Download::get_failures() );
+
+			$concurrent                                  = Download::get_failures();
+			$concurrent['https://fonts.example/d.woff2'] = [ 'reason' => Download::FAILURE_EMPTY, 'time' => time() ];
+			$wpdb->update( $wpdb->options, [ 'option_value' => maybe_serialize( $concurrent ) ], [ 'option_name' => $option ] );
+
+			Download::remove_failure( 'https://fonts.example/d.woff2' );
+
+			$this->assertArrayNotHasKey( 'https://fonts.example/d.woff2', Download::get_failures() );
+			$this->assertStringNotContainsString(
+				'd.woff2',
+				(string) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s", $option ) )
+			);
+
 			Download::clear_failures();
 
 			$this->assertSame( [], Download::get_failures() );
