@@ -25,6 +25,35 @@ class HelperTest extends TestCase {
 	}
 
 	/**
+	 * Serialized strings stored in OMGF's options may only contain stdClass objects.
+	 *
+	 * @see Helper::maybe_unserialize()
+	 * @see Helper::get_option()
+	 * @return void
+	 */
+	public function testMaybeUnserializeOnlyAllowsStdClass() {
+		$fonts = [ 'handle' => (object) [ 'id' => 'open-sans' ] ];
+
+		$this->assertEquals( $fonts, OMGF::maybe_unserialize( serialize( $fonts ) ) );
+		$this->assertSame( 'not serialized', OMGF::maybe_unserialize( 'not serialized' ) );
+		$this->assertSame( [ 'array' ], OMGF::maybe_unserialize( [ 'array' ] ) );
+		$this->assertInstanceOf( '__PHP_Incomplete_Class', OMGF::maybe_unserialize( serialize( new \ArrayObject( [] ) ) ) );
+
+		try {
+			// A serialized string, i.e. stored double serialized by WordPress.
+			update_option( 'omgf_test_serialized', serialize( new \ArrayObject( [] ) ) );
+
+			$this->assertNotInstanceOf( \ArrayObject::class, OMGF::get_option( 'omgf_test_serialized' ) );
+
+			update_option( 'omgf_test_serialized', serialize( $fonts ) );
+
+			$this->assertEquals( $fonts, OMGF::get_option( 'omgf_test_serialized' ) );
+		} finally {
+			delete_option( 'omgf_test_serialized' );
+		}
+	}
+
+	/**
 	 * @see Helper::delete_option()
 	 * @return void
 	 */

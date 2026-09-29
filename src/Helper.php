@@ -132,6 +132,24 @@ class Helper {
 	}
 
 	/**
+	 * Unserializes $value if it's serialized, like maybe_unserialize(), but only allows stdClass objects, because
+	 * OMGF never stores any other objects.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param mixed $value
+	 *
+	 * @return mixed
+	 */
+	public static function maybe_unserialize( $value ) {
+		if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
+			return $value;
+		}
+
+		return @unserialize( trim( $value ), [ 'allowed_classes' => [ 'stdClass' ] ] ); // phpcs:ignore
+	}
+
+	/**
 	 * Method to retrieve OMGF's settings from database.
 	 * WARNING: DO NOT ATTEMPT TO RETRIEVE WP CORE SETTINGS USING THIS METHOD. IT WILL FAIL.
 	 *
@@ -150,7 +168,7 @@ class Helper {
 
 			// get_option() should take care of this, but sometimes it doesn't.
 			if ( is_string( $value ) ) {
-				$value = maybe_unserialize( $value );
+				$value = self::maybe_unserialize( $value );
 			}
 
 			return apply_filters( "omgf_setting_$name", $value );
@@ -543,7 +561,7 @@ class Helper {
 		 * @since v4.5.6
 		 */
 		if ( is_string( self::$admin_optimized_fonts ) && self::$admin_optimized_fonts !== '' ) {
-			self::$admin_optimized_fonts = maybe_unserialize( self::$admin_optimized_fonts ); // @codeCoverageIgnore
+			self::$admin_optimized_fonts = self::maybe_unserialize( self::$admin_optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
@@ -707,7 +725,7 @@ class Helper {
 		 * @since v4.5.6
 		 */
 		if ( is_string( self::$optimized_fonts ) && self::$optimized_fonts !== '' ) {
-			self::$optimized_fonts = maybe_unserialize( self::$optimized_fonts ); // @codeCoverageIgnore
+			self::$optimized_fonts = self::maybe_unserialize( self::$optimized_fonts ); // @codeCoverageIgnore
 		}
 
 		/**
