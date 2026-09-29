@@ -187,6 +187,66 @@ window.addEventListener('load', () => {
 		},
 
 		/**
+		 * Normalizes a font-weight to the numeric value computed styles use, e.g. 'normal' => '400' and 'bold' => '700'.
+		 * Ranges (e.g. '100 900' for variable fonts) are returned as-is.
+		 *
+		 * @param {string} weight
+		 * @returns {string}
+		 */
+		normalizeFontWeight: function (weight) {
+			weight = String(weight || '400').trim().toLowerCase();
+
+			if (weight === 'normal') {
+				return '400';
+			}
+
+			if (weight === 'bold') {
+				return '700';
+			}
+
+			return weight;
+		},
+
+		/**
+		 * Checks if a font face is in a set of face IDs collected from computed styles (which always have a single,
+		 * numeric weight). A font face with a weight range (i.e. a variable font) is used if any weight within the range is.
+		 *
+		 * @param {Set} face_ids
+		 * @param {string} family
+		 * @param {string} weight Normalized font-weight.
+		 * @param {string} style
+		 * @returns {boolean}
+		 */
+		isFaceUsed: function (face_ids, family, weight, style) {
+			if (face_ids.has(`${family}-${weight}-${style}`.toLowerCase())) {
+				return true;
+			}
+
+			let range = weight.split(/\s+/).map(Number);
+
+			if (range.length !== 2 || range.some(isNaN)) {
+				return false;
+			}
+
+			for (let face_id of face_ids) {
+				let prefix = `${family}-`.toLowerCase();
+				let suffix = `-${style}`.toLowerCase();
+
+				if (!face_id.startsWith(prefix) || !face_id.endsWith(suffix)) {
+					continue;
+				}
+
+				let used_weight = Number(face_id.slice(prefix.length, face_id.length - suffix.length));
+
+				if (used_weight >= range[0] && used_weight <= range[1]) {
+					return true;
+				}
+			}
+
+			return false;
+		},
+
+		/**
 		 * Helper to get property value from a CSSRule, with fallback for Firefox.
 		 *
 		 * @param {CSSRule} rule
@@ -229,8 +289,7 @@ window.addEventListener('load', () => {
 					let rule_weight = this.getFontFaceProperty(rule, 'font-weight') || '400';
 					let rule_style = this.getFontFaceProperty(rule, 'font-style') || 'normal';
 
-					if (rule_weight === 'normal') rule_weight = '400';
-					if (rule_weight === 'bold') rule_weight = '700';
+					rule_weight = this.normalizeFontWeight(rule_weight);
 
 					let src = rule.style.getPropertyValue('src') || rule.style.src;
 					if (!src) src = this.getFontFaceProperty(rule, 'src');
@@ -369,7 +428,8 @@ window.addEventListener('load', () => {
 
 				document.fonts.forEach((font) => {
 					let family = font.family.replace(/["']/g, '');
-					let weight = font.weight;
+					// Font faces often define keywords (e.g. icon fonts use 'normal'), while computed styles are always numeric.
+					let weight = this.normalizeFontWeight(font.weight);
 					let style = font.style;
 					let face_id = `${family}-${weight}-${style}`.toLowerCase();
 					let face_id_with_range = `${face_id}-${(font.unicodeRange || '')}`.toLowerCase();
@@ -380,7 +440,7 @@ window.addEventListener('load', () => {
 					 *
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
-					if (font.status === 'loaded' && font_url && used_faces_above_the_fold.has(face_id)) {
+					if (font.status === 'loaded' && font_url && this.isFaceUsed(used_faces_above_the_fold, family, weight, style)) {
 						let is_preloaded = preloaded_fonts.some((url) => {
 							// If we have the actual font URL, use it for exact matching.
 							if (font_url && url === font_url) {
@@ -415,7 +475,7 @@ window.addEventListener('load', () => {
 					 * pass for font faces defining a unicode-range, and font faces which are referenced by
 					 * elements that aren't rendered yet (e.g. tabs, accordions and modals) would be unloaded.
 					 */
-					if (font.status === 'unloaded' && !used_faces_not_rendered.has(face_id) && font_url) {
+					if (font.status === 'unloaded' && !this.isFaceUsed(used_faces_not_rendered, family, weight, style) && font_url) {
 						unused_fonts.push({
 							family: family,
 							weight: weight,
