@@ -17,6 +17,7 @@
 namespace OMGF\API;
 
 use OMGF\Admin\Settings;
+use OMGF\Download;
 
 class Dashboard {
 	/** @var string */
@@ -66,6 +67,19 @@ class Dashboard {
 				'schema' => null,
 			]
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->base . '/dismiss-download-failures',
+			[
+				[
+					'methods'             => 'POST',
+					'callback'            => [ $this, 'dismiss_download_failures' ],
+					'permission_callback' => [ $this, 'get_permission' ],
+				],
+				'schema' => null,
+			]
+		);
 	}
 
 	/**
@@ -86,6 +100,19 @@ class Dashboard {
 	 */
 	public function dismiss_notice() {
 		set_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id(), true, 30 * DAY_IN_SECONDS );
+
+		return new \WP_REST_Response( [ 'success' => true ] );
+	}
+
+	/**
+	 * Dismiss the font files which couldn't be downloaded correctly.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function dismiss_download_failures() {
+		Download::clear_failures();
 
 		return new \WP_REST_Response( [ 'success' => true ] );
 	}

@@ -7,6 +7,7 @@ namespace OMGF\Tests\Integration\API;
 
 use OMGF\Admin\Settings;
 use OMGF\API\AdminbarMenu;
+use OMGF\Download;
 use OMGF\Helper as OMGF;
 use OMGF\Tests\TestCase;
 
@@ -222,6 +223,42 @@ class AdminbarMenuTest extends TestCase {
 		} finally {
 			remove_filter( 'omgf_ajax_results', $filter );
 			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
+	}
+
+	/**
+	 * Font files which couldn't be downloaded correctly turn the status into an alert, for administrators only.
+	 *
+	 * @see AdminbarMenu::get_admin_bar_status()
+	 * @return void
+	 */
+	public function testDownloadFailuresTurnStatusIntoAlert() {
+		$admin_id = get_current_user_id();
+
+		try {
+			Download::add_failure( 'https://fonts.example/font.woff2', Download::FAILURE_EMPTY );
+
+			$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+			$request->set_param( 'path', '/' );
+			$request->set_param( 'urls', [] );
+
+			$response = ( new AdminbarMenu() )->get_admin_bar_status( $request );
+
+			$this->assertSame( 'alert', $response['status'] );
+			$this->assertSame( 1, $response['download_failures'] );
+			$this->assertSame( "1 font file couldn't be downloaded correctly", $response['download_failures_text'] );
+			$this->assertFalse( $response['google_fonts_checker_alert'] );
+
+			// Visitors get the regular status.
+			wp_set_current_user( 0 );
+
+			$response = ( new AdminbarMenu() )->get_admin_bar_status( $request );
+
+			$this->assertNotSame( 'alert', $response['status'] );
+			$this->assertArrayNotHasKey( 'download_failures', $response );
+		} finally {
+			wp_set_current_user( $admin_id );
+			delete_option( Settings::OMGF_DB_DOWNLOAD_FAILURES );
 		}
 	}
 

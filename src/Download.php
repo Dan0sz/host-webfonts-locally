@@ -18,6 +18,7 @@ namespace OMGF;
 
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
+use OMGF\Admin\Settings;
 
 class Download {
 	/**
@@ -37,6 +38,29 @@ class Download {
 		'application/x-font-opentype'   => 'otf',
 		'application/vnd.ms-fontobject' => 'eot',
 	];
+
+	/**
+	 * Default maximum size (in bytes) of a downloaded font file.
+	 *
+	 * @since v6.3.12
+	 */
+	const MAX_FILE_SIZE = 25 * MB_IN_BYTES;
+
+	/**
+	 * Maximum number of failed downloads reported on the Dashboard.
+	 *
+	 * @since v6.3.12
+	 */
+	const MAX_FAILURES = 20;
+
+	/**
+	 * Reasons why a downloaded file was discarded.
+	 */
+	const FAILURE_EMPTY = 'empty';
+
+	const FAILURE_TOO_LARGE = 'too_large';
+
+	const FAILURE_INVALID = 'invalid';
 
 
 	/** @var string $url */
@@ -85,12 +109,18 @@ class Download {
 		 */
 		$temp_filename = $this->path . '/' . $this->filename . '-' . wp_generate_password( 12, false ) . '.tmp';
 
-		$response = wp_safe_remote_get(
+		$max_file_size = self::get_max_file_size();
+		$response      = wp_safe_remote_get(
 			$this->url,
 			[
-				'timeout'  => 300,
-				'stream'   => true,
-				'filename' => $temp_filename,
+				'timeout'             => 300,
+				'stream'              => true,
+				'filename'            => $temp_filename,
+				/**
+				 * @since v6.3.12 Stop downloading once the file exceeds the maximum size. One extra byte is requested, so
+				 *                a file which was cut off can be told apart from a file of exactly the maximum size.
+				 */
+				'limit_response_size' => $max_file_size + 1,
 			]
 		);
 
@@ -164,6 +194,24 @@ class Download {
 			return '';
 		}
 
+		/**
+		 * @since v6.3.12 Validate the downloaded file before it's stored.
+		 */
+		$reason = $this->validate_file( $temp_filename, $max_file_size );
+
+		if ( $reason ) {
+			$this->delete_temp_file( $temp_filename );
+
+			/**
+			 * Reported on the Dashboard (and in the Admin Bar), because downloads often run during a visitor's request.
+			 *
+			 * @see \OMGF\Admin\Dashboard::render_download_failures()
+			 */
+			self::add_failure( $this->url, $reason );
+
+			return '';
+		}
+
 		if ( file_exists( $temp_filename ) ) {
 			$final_path = $this->path . '/' . $this->filename . '.' . $extension;
 
@@ -182,7 +230,269 @@ class Download {
 			}
 		}
 
+		self::remove_failure( $this->url );
+
 		return OMGF_UPLOAD_URL . str_replace( OMGF_UPLOAD_DIR, '', $this->path ) . '/' . $this->filename . '.' . $extension;
+	}
+
+	/**
+	 * Maximum size (in bytes) of a downloaded font file.
+	 *
+	 * @since  v6.3.12
+	 * @filter omgf_download_max_file_size
+	 *
+	 * @return int
+	 */
+	public static function get_max_file_size() {
+		return max( 1, (int) apply_filters( 'omgf_download_max_file_size', self::MAX_FILE_SIZE ) );
+	}
+
+	/**
+	 * Checks if $file is a complete font file, i.e. not empty, not cut off because it exceeds the maximum size, and
+	 * starting with the signature of a font format.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $file
+	 * @param int    $max_file_size
+	 *
+	 * @return string An error message if the file is invalid, an empty string if it's valid.
+	 */
+	private function validate_file( $file, $max_file_size ) {
+		$size = file_exists( $file ) ? filesize( $file ) : 0;
+
+		if ( ! $size ) {
+			return self::FAILURE_EMPTY;
+		}
+
+		if ( $size > $max_file_size ) {
+			return self::FAILURE_TOO_LARGE;
+		}
+
+		if ( ! self::is_font_file( $file ) ) {
+			return self::FAILURE_INVALID;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Failed downloads, most recent first.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @return array [ url => [ 'reason' => string, 'time' => int ] ]
+	 */
+	public static function get_failures() {
+		return self::normalize_failures( get_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, [] ) );
+	}
+
+	/**
+	 * Removes invalid entries and sorts the failed downloads, most recent first.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param mixed $failures
+	 *
+	 * @return array
+	 */
+	private static function normalize_failures( $failures ) {
+		if ( ! is_array( $failures ) ) {
+			return []; // @codeCoverageIgnore
+		}
+
+		$failures = array_filter(
+			$failures,
+			function ( $failure, $url ) {
+				return is_string( $url ) && is_array( $failure ) && in_array( $failure['reason'] ?? '', self::get_failure_reasons(), true );
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
+
+		uasort(
+			$failures,
+			function ( $a, $b ) {
+				return ( $b['time'] ?? 0 ) <=> ( $a['time'] ?? 0 );
+			}
+		);
+
+		return $failures;
+	}
+
+	/**
+	 * Stores a failed download, keeping at most MAX_FAILURES (the most recent ones).
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $url
+	 * @param string $reason One of the FAILURE_* constants.
+	 *
+	 * @return void
+	 */
+	public static function add_failure( $url, $reason ) {
+		self::update_failures(
+			function ( $failures ) use ( $url, $reason ) {
+				unset( $failures[ $url ] );
+
+				return array_slice( [ $url => [ 'reason' => $reason, 'time' => time() ] ] + $failures, 0, self::MAX_FAILURES, true );
+			}
+		);
+	}
+
+	/**
+	 * Removes a failed download, e.g. once it succeeds.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $url
+	 *
+	 * @return void
+	 */
+	public static function remove_failure( $url ) {
+		/**
+		 * This runs after every successful download, so only lock when there's something to remove. The check reads the
+		 * database, because a cached copy might not contain a failure stored by another request.
+		 */
+		if ( ! isset( self::read_stored_failures()[ $url ] ) ) {
+			return;
+		}
+
+		self::update_failures(
+			function ( $failures ) use ( $url ) {
+				unset( $failures[ $url ] );
+
+				return $failures;
+			}
+		);
+	}
+
+	/**
+	 * Removes all failed downloads, i.e. when they're dismissed.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @return void
+	 */
+	public static function clear_failures() {
+		self::update_failures(
+			function () {
+				return [];
+			}
+		);
+	}
+
+	/**
+	 * Reads the failed downloads from the database, instead of a (possibly outdated) cached copy.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @return array
+	 */
+	private static function read_stored_failures() {
+		global $wpdb;
+
+		$stored = $wpdb->get_var(
+			$wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s", Settings::OMGF_DB_DOWNLOAD_FAILURES )
+		);
+
+		return self::normalize_failures( $stored === null ? [] : maybe_unserialize( $stored ) );
+	}
+
+	/**
+	 * Updates the failed downloads while holding a (MySQL) lock, based on the value currently stored in the database,
+	 * so concurrent downloads can't overwrite each other's changes.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param callable $callback Receives the current failed downloads and returns the new ones.
+	 *
+	 * @return void
+	 */
+	private static function update_failures( $callback ) {
+		global $wpdb;
+
+		$lock_name = $wpdb->prefix . Settings::OMGF_DB_DOWNLOAD_FAILURES;
+		// Databases which don't support locks (e.g. SQLite) return null, in which case we proceed without one.
+		$locked = (bool) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $lock_name, 5 ) );
+
+		try {
+			$failures = $callback( self::read_stored_failures() );
+
+			wp_cache_delete( Settings::OMGF_DB_DOWNLOAD_FAILURES, 'options' );
+			wp_cache_delete( 'notoptions', 'options' );
+
+			if ( empty( $failures ) ) {
+				delete_option( Settings::OMGF_DB_DOWNLOAD_FAILURES );
+			} else {
+				update_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, $failures, false );
+			}
+		} finally {
+			if ( $locked ) {
+				$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
+			}
+		}
+	}
+
+	/**
+	 * @since v6.3.12
+	 *
+	 * @return string[]
+	 */
+	private static function get_failure_reasons() {
+		return [ self::FAILURE_EMPTY, self::FAILURE_TOO_LARGE, self::FAILURE_INVALID ];
+	}
+
+	/**
+	 * A human-readable description of why a download failed, and what the user can do about it.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $reason One of the FAILURE_* constants.
+	 *
+	 * @return string
+	 */
+	public static function get_failure_message( $reason ) {
+		switch ( $reason ) {
+			case self::FAILURE_TOO_LARGE:
+				return sprintf(
+				/* translators: %s: maximum file size, e.g. 25 MB */
+					__( 'The file exceeds the maximum file size of %s, so it isn\'t used and a fallback font is shown instead.', 'host-webfonts-local' ),
+					size_format( self::get_max_file_size() )
+				);
+			case self::FAILURE_INVALID:
+				return __( 'The downloaded file isn\'t a font file (e.g. an error page), so a fallback font is shown until it\'s downloaded successfully. Click Save & Optimize to try again.', 'host-webfonts-local' );
+			default:
+				return __( 'The downloaded file was empty, so a fallback font is shown until it\'s downloaded successfully. Click Save & Optimize to try again.', 'host-webfonts-local' );
+		}
+	}
+
+	/**
+	 * Checks if $file starts with the signature (magic bytes) of a WOFF2, WOFF, TrueType, OpenType or EOT file.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $file
+	 *
+	 * @return bool
+	 */
+	public static function is_font_file( $file ) {
+		$handle = @fopen( $file, 'rb' ); // phpcs:ignore
+
+		if ( ! $handle ) {
+			return false; // @codeCoverageIgnore
+		}
+
+		$header = (string) fread( $handle, 36 );
+
+		fclose( $handle );
+
+		// WOFF2, WOFF, OpenType (CFF), TrueType, TrueType (Apple), TrueType Collection.
+		if ( in_array( substr( $header, 0, 4 ), [ 'wOF2', 'wOFF', 'OTTO', "\x00\x01\x00\x00", 'true', 'ttcf' ], true ) ) {
+			return true;
+		}
+
+		// EOT: magic number 0x504C at offset 34.
+		return strlen( $header ) >= 36 && substr( $header, 34, 2 ) === 'LP';
 	}
 
 	/**
