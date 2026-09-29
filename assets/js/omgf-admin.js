@@ -53,6 +53,7 @@ jQuery(document).ready(function ($) {
 			$('.omgf-optimize-preload-warning-close').on('click', this.hide_preload_warning);
 			$('.omgf-optimize-forbidden').on('click', this.wait_for_page_reload);
 			$(document).on('click', '#omgf-dismiss-performance-checker-notice', this.dismiss_performance_checker_notice);
+			$(document).on('click', '#omgf-dismiss-download-failures', this.dismiss_download_failures);
 			// Ticker
 			setInterval(this.loop_ticker_items, 4000);
 		},
@@ -469,6 +470,31 @@ jQuery(document).ready(function ($) {
 				complete: function (result) {
 					if (result.responseJSON !== undefined && result.responseJSON.success) {
 						$('#omgf-performance-checker-notice').fadeOut(300, function () {
+							$(this).remove();
+						});
+					}
+
+					omgf_admin.hide_loader();
+				}
+			});
+		},
+
+		/**
+		 * Dismiss the font files which couldn't be downloaded correctly.
+		 */
+		dismiss_download_failures: function (e) {
+			e.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: omgf_admin_i18n.rest_url + '/dashboard/dismiss-download-failures',
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', omgf_admin_i18n.nonce);
+					omgf_admin.show_loader();
+				},
+				complete: function (result) {
+					if (result.responseJSON !== undefined && result.responseJSON.success) {
+						$('#omgf-download-failures-notice').fadeOut(300, function () {
 							$(this).remove();
 						});
 					}

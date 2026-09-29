@@ -18,6 +18,7 @@ namespace OMGF\API;
 
 use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
+use OMGF\Download;
 use OMGF\Helper as OMGF;
 
 class AdminbarMenu {
@@ -74,7 +75,34 @@ class AdminbarMenu {
 
 		$status = $this->calculate_status( $stored_results, $unused_fonts_analysis, $preload_analysis, $cls_analysis );
 
-		return [ 'status' => apply_filters( 'omgf_ajax_admin_bar_status', $status ) ];
+		/**
+		 * @since v6.3.12 Font files which couldn't be downloaded correctly are reported to administrators only, because
+		 *                visitors requesting the status (e.g. for Smart Optimize) need the regular status.
+		 */
+		$download_failures = current_user_can( 'manage_options' ) ? count( Download::get_failures() ) : 0;
+
+		if ( $download_failures > 0 ) {
+			$status = 'alert';
+		}
+
+		$response = [ 'status' => apply_filters( 'omgf_ajax_admin_bar_status', $status ) ];
+
+		if ( $download_failures > 0 ) {
+			$response['download_failures']          = $download_failures;
+			$response['download_failures_text']     = sprintf(
+			/* translators: %d: number of font files */
+				_n(
+					'%d font file couldn\'t be downloaded correctly',
+					'%d font files couldn\'t be downloaded correctly',
+					$download_failures,
+					'host-webfonts-local'
+				),
+				$download_failures
+			);
+			$response['google_fonts_checker_alert'] = ! empty( $stored_results );
+		}
+
+		return $response;
 	}
 
 	/**

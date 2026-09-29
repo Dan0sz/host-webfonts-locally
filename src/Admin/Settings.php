@@ -35,6 +35,8 @@ class Settings extends Admin {
 
 	const OMGF_DB_PERF_CHECK = 'omgf_perf_check';
 
+	const OMGF_DB_DOWNLOAD_FAILURES = 'omgf_download_failures';
+
 	const OMGF_DB_CACHE_TIMESTAMP = 'omgf_cache_timestamp';
 
 	const OMGF_DB_FOUND_IFRAMES = 'omgf_found_iframes';

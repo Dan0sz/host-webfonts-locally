@@ -5,6 +5,7 @@
 
 namespace OMGF\Tests\Integration;
 
+use OMGF\Admin\Settings;
 use OMGF\Download;
 use OMGF\Tests\TestCase;
 
@@ -72,10 +73,11 @@ class DownloadTest extends TestCase {
 	public function testDownloadValidatesFile() {
 		$path  = OMGF_UPLOAD_DIR . '/download-validation-test';
 		$cases = [
-			'not-a-font' => [ '<?php echo "not a font";', '' ],
-			'empty'      => [ '', '' ],
-			'too-large'  => [ 'wOF2' . str_repeat( "\x00", 100 ), '' ],
-			'valid'      => [ 'wOF2' . str_repeat( "\x00", 10 ), '//example.org/wp-content/uploads/omgf/download-validation-test/valid.woff2' ],
+			// filename => [ body, expected return value, expected failure reason (or null) ].
+			'not-a-font' => [ '<?php echo "not a font";', '', Download::FAILURE_INVALID ],
+			'empty'      => [ '', '', Download::FAILURE_EMPTY ],
+			'too-large'  => [ 'wOF2' . str_repeat( "\x00", 100 ), '', Download::FAILURE_TOO_LARGE ],
+			'valid'      => [ 'wOF2' . str_repeat( "\x00", 10 ), '//example.org/wp-content/uploads/omgf/download-validation-test/valid.woff2', null ],
 		];
 
 		$max_file_size = function () {
@@ -86,7 +88,7 @@ class DownloadTest extends TestCase {
 
 		try {
 			foreach ( $cases as $filename => $case ) {
-				list( $body, $expected ) = $case;
+				list( $body, $expected, $reason ) = $case;
 
 				$mock = function ( $response, $args ) use ( $body ) {
 					// Mimic the streaming transport, which writes the body to $args['filename'].
@@ -103,18 +105,76 @@ class DownloadTest extends TestCase {
 
 				add_filter( 'pre_http_request', $mock, 10, 2 );
 
-				$file = ( new Download( 'https://fonts.gstatic.com/s/test/test.woff2', $filename, $path ) )->download();
+				$url  = "https://fonts.gstatic.com/s/test/$filename.woff2";
+				$file = ( new Download( $url, $filename, $path ) )->download();
 
 				remove_filter( 'pre_http_request', $mock );
 
 				$this->assertSame( $expected, $file, $filename );
 				$this->assertSame( $expected !== '', file_exists( "$path/$filename.woff2" ), $filename );
 				$this->assertEmpty( glob( "$path/*.tmp" ), $filename );
+				// Failed downloads are stored with their reason, to be reported on the Dashboard.
+				$this->assertSame( $reason, Download::get_failures()[ $url ]['reason'] ?? null, $filename );
 			}
+
+			// A failed download which succeeds later on is removed.
+			$retry = function ( $response, $args ) {
+				file_put_contents( $args['filename'], 'wOF2' . str_repeat( "\x00", 10 ) );
+
+				return [
+					'headers'  => [ 'content-type' => 'font/woff2' ],
+					'body'     => '',
+					'response' => [ 'code' => 200, 'message' => 'OK' ],
+					'cookies'  => [],
+					'filename' => $args['filename'],
+				];
+			};
+
+			add_filter( 'pre_http_request', $retry, 10, 2 );
+
+			( new Download( 'https://fonts.gstatic.com/s/test/empty.woff2', 'empty', $path ) )->download();
+
+			remove_filter( 'pre_http_request', $retry );
+
+			$this->assertArrayNotHasKey( 'https://fonts.gstatic.com/s/test/empty.woff2', Download::get_failures() );
 		} finally {
 			remove_filter( 'omgf_download_max_file_size', $max_file_size );
+			delete_option( Settings::OMGF_DB_DOWNLOAD_FAILURES );
 			array_map( 'unlink', glob( "$path/*" ) );
 			rmdir( $path );
+		}
+	}
+
+	/**
+	 * At most MAX_FAILURES failed downloads are kept, most recent first, each with a message.
+	 *
+	 * @see Download::add_failure()
+	 * @see Download::get_failure_message()
+	 * @return void
+	 */
+	public function testFailuresAreLimitedAndDescribed() {
+		try {
+			for ( $i = 0; $i < Download::MAX_FAILURES + 5; $i++ ) {
+				Download::add_failure( "https://fonts.example/font-$i.woff2", Download::FAILURE_EMPTY );
+			}
+
+			$failures = Download::get_failures();
+
+			$this->assertCount( Download::MAX_FAILURES, $failures );
+			$this->assertSame( 'https://fonts.example/font-' . ( Download::MAX_FAILURES + 4 ) . '.woff2', array_key_first( $failures ) );
+
+			// Invalid entries are ignored.
+			update_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, [ 'https://fonts.example/x.woff2' => [ 'reason' => '<script>' ], 0 => 'invalid' ], false );
+
+			$this->assertSame( [], Download::get_failures() );
+
+			foreach ( [ Download::FAILURE_EMPTY, Download::FAILURE_TOO_LARGE, Download::FAILURE_INVALID ] as $reason ) {
+				$this->assertNotEmpty( Download::get_failure_message( $reason ) );
+			}
+
+			$this->assertStringContainsString( '25 MB', Download::get_failure_message( Download::FAILURE_TOO_LARGE ) );
+		} finally {
+			delete_option( Settings::OMGF_DB_DOWNLOAD_FAILURES );
 		}
 	}
 }

@@ -562,3 +562,13 @@
 #footer-thankyou .signature-image {
 	width: 96px;
 }
+
+/* Font files which couldn't be downloaded correctly. */
+.omgf form .omgf-task-manager #omgf-download-failures-notice ul {
+	margin-left: 0;
+}
+
+.omgf form .omgf-task-manager #omgf-download-failures-notice ul li {
+	text-indent: 0;
+	margin-bottom: 0.5em;
+}

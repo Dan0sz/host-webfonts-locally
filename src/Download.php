@@ -18,6 +18,7 @@ namespace OMGF;
 
 use OMGF\Helper as OMGF;
 use OMGF\Admin\Notice;
+use OMGF\Admin\Settings;
 
 class Download {
 	/**
@@ -44,6 +45,22 @@ class Download {
 	 * @since v6.3.12
 	 */
 	const MAX_FILE_SIZE = 25 * MB_IN_BYTES;
+
+	/**
+	 * Maximum number of failed downloads reported on the Dashboard.
+	 *
+	 * @since v6.3.12
+	 */
+	const MAX_FAILURES = 20;
+
+	/**
+	 * Reasons why a downloaded file was discarded.
+	 */
+	const FAILURE_EMPTY = 'empty';
+
+	const FAILURE_TOO_LARGE = 'too_large';
+
+	const FAILURE_INVALID = 'invalid';
 
 
 	/** @var string $url */
@@ -180,17 +197,17 @@ class Download {
 		/**
 		 * @since v6.3.12 Validate the downloaded file before it's stored.
 		 */
-		$error = $this->validate_file( $temp_filename, $max_file_size );
+		$reason = $this->validate_file( $temp_filename, $max_file_size );
 
-		if ( $error ) {
+		if ( $reason ) {
 			$this->delete_temp_file( $temp_filename );
 
-			Notice::set_notice(
-				$error . ': ' . $this->url,
-				'omgf-download-validation-failed',
-				'error',
-				500
-			);
+			/**
+			 * Reported on the Dashboard (and in the Admin Bar), because downloads often run during a visitor's request.
+			 *
+			 * @see \OMGF\Admin\Dashboard::render_download_failures()
+			 */
+			self::add_failure( $this->url, $reason );
 
 			return '';
 		}
@@ -212,6 +229,8 @@ class Download {
 				return '';
 			}
 		}
+
+		self::remove_failure( $this->url );
 
 		return OMGF_UPLOAD_URL . str_replace( OMGF_UPLOAD_DIR, '', $this->path ) . '/' . $this->filename . '.' . $extension;
 	}
@@ -243,22 +262,124 @@ class Download {
 		$size = file_exists( $file ) ? filesize( $file ) : 0;
 
 		if ( ! $size ) {
-			return __( 'OMGF downloaded an empty font file', 'host-webfonts-local' );
+			return self::FAILURE_EMPTY;
 		}
 
 		if ( $size > $max_file_size ) {
-			return sprintf(
-				/* translators: %s: maximum file size, e.g. 25 MB */
-				__( 'OMGF skipped a font file, because it exceeds the maximum file size of %s', 'host-webfonts-local' ),
-				size_format( $max_file_size )
-			);
+			return self::FAILURE_TOO_LARGE;
 		}
 
 		if ( ! self::is_font_file( $file ) ) {
-			return __( 'OMGF skipped a downloaded file, because it isn\'t a font file', 'host-webfonts-local' );
+			return self::FAILURE_INVALID;
 		}
 
 		return '';
+	}
+
+	/**
+	 * Failed downloads, most recent first.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @return array [ url => [ 'reason' => string, 'time' => int ] ]
+	 */
+	public static function get_failures() {
+		$failures = get_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, [] );
+
+		if ( ! is_array( $failures ) ) {
+			return []; // @codeCoverageIgnore
+		}
+
+		$failures = array_filter(
+			$failures,
+			function ( $failure, $url ) {
+				return is_string( $url ) && is_array( $failure ) && in_array( $failure['reason'] ?? '', self::get_failure_reasons(), true );
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
+
+		uasort(
+			$failures,
+			function ( $a, $b ) {
+				return ( $b['time'] ?? 0 ) <=> ( $a['time'] ?? 0 );
+			}
+		);
+
+		return $failures;
+	}
+
+	/**
+	 * Stores a failed download, keeping at most MAX_FAILURES (the most recent ones).
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $url
+	 * @param string $reason One of the FAILURE_* constants.
+	 *
+	 * @return void
+	 */
+	public static function add_failure( $url, $reason ) {
+		$failures = self::get_failures();
+
+		unset( $failures[ $url ] );
+
+		$failures = array_slice( [ $url => [ 'reason' => $reason, 'time' => time() ] ] + $failures, 0, self::MAX_FAILURES, true );
+
+		update_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, $failures, false );
+	}
+
+	/**
+	 * Removes a failed download, e.g. once it succeeds.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $url
+	 *
+	 * @return void
+	 */
+	public static function remove_failure( $url ) {
+		$failures = self::get_failures();
+
+		if ( ! isset( $failures[ $url ] ) ) {
+			return;
+		}
+
+		unset( $failures[ $url ] );
+
+		update_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, $failures, false );
+	}
+
+	/**
+	 * @since v6.3.12
+	 *
+	 * @return string[]
+	 */
+	private static function get_failure_reasons() {
+		return [ self::FAILURE_EMPTY, self::FAILURE_TOO_LARGE, self::FAILURE_INVALID ];
+	}
+
+	/**
+	 * A human-readable description of why a download failed, and what the user can do about it.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param string $reason One of the FAILURE_* constants.
+	 *
+	 * @return string
+	 */
+	public static function get_failure_message( $reason ) {
+		switch ( $reason ) {
+			case self::FAILURE_TOO_LARGE:
+				return sprintf(
+				/* translators: %s: maximum file size, e.g. 25 MB */
+					__( 'The file exceeds the maximum file size of %s, so it isn\'t used and a fallback font is shown instead.', 'host-webfonts-local' ),
+					size_format( self::get_max_file_size() )
+				);
+			case self::FAILURE_INVALID:
+				return __( 'The downloaded file isn\'t a font file (e.g. an error page), so a fallback font is shown until it\'s downloaded successfully. Click Save & Optimize to try again.', 'host-webfonts-local' );
+			default:
+				return __( 'The downloaded file was empty, so a fallback font is shown until it\'s downloaded successfully. Click Save & Optimize to try again.', 'host-webfonts-local' );
+		}
 	}
 
 	/**

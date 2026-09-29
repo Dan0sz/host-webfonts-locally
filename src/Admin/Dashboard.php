@@ -16,6 +16,7 @@
 
 namespace OMGF\Admin;
 
+use OMGF\Download;
 use OMGF\Helper as OMGF;
 
 class Dashboard {
@@ -103,6 +104,49 @@ class Dashboard {
 	}
 
 	/**
+	 * Renders the font files which couldn't be downloaded correctly.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @return void
+	 */
+	public static function render_download_failures() {
+		$failures = Download::get_failures();
+
+		if ( empty( $failures ) ) {
+			return;
+		}
+		?>
+		<div class="task-manager-notice alert" id="omgf-download-failures-notice">
+			<h4><?php echo wp_kses_post(
+					sprintf(
+					/* translators: %1$s: plugin name, %2$d: number of font files */
+						_n(
+							'%1$s couldn\'t download %2$d font file correctly.',
+							'%1$s couldn\'t download %2$d font files correctly.',
+							count( $failures ),
+							'host-webfonts-local'
+						),
+						apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+						count( $failures )
+					)
+				); ?></h4>
+			<ul>
+				<?php foreach ( $failures as $url => $failure ) : ?>
+					<li>
+						<strong><?php echo esc_html( $url ); ?></strong><br/>
+						<?php echo esc_html( Download::get_failure_message( $failure['reason'] ) ); ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<p>
+				[ <a href="#" id="omgf-dismiss-download-failures"><?php echo esc_html__( 'Dismiss', 'host-webfonts-local' ); ?></a> ]
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Renders the Dashboard Warnings boxes.
 	 *
 	 * @codeCoverageIgnore
@@ -140,6 +184,8 @@ class Dashboard {
 				if ( ! empty( $google_fonts_checker_results ) ) {
 					unset( $warnings['google_fonts_checker'] );
 				}
+
+				self::render_download_failures();
 				?>
 				<?php if ( ! empty( $google_fonts_checker_results ) ): ?>
 					<div class="task-manager-notice <?php echo apply_filters( 'omgf_task_manager_notice_class', 'alert' ); ?>">

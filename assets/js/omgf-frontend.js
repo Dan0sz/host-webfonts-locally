@@ -86,8 +86,15 @@ window.addEventListener('load', () => {
 					}
 				}
 
-				if ((status !== 'success' && status !== 'warning')) {
+				// If the alert is only caused by failed downloads, the Google Fonts Checker's alert text doesn't apply.
+				let download_failures_only = status === 'alert' && response.download_failures && !response.google_fonts_checker_alert;
+
+				if (status !== 'success' && status !== 'warning' && !download_failures_only) {
 					this.addInfoBox(status);
+				}
+
+				if (response.download_failures) {
+					this.addInfoBox('download_failures', response);
 				}
 
 				if (omgf_frontend.skip_results) {
@@ -830,6 +837,17 @@ window.addEventListener('load', () => {
 				info_box.id = 'wp-admin-bar-omgf-preload-info';
 				let text = omgf_frontend.sprintf(omgf_frontend_i18n.info_box_preload_text, count || 0, data.potential_delay_ms || 0, data.impact || omgf_frontend_i18n.info_box_impact_low);
 				info_box.innerHTML = `<a class="ab-item" href="${omgf_frontend_i18n.info_box_admin_url}">${text}</a>`;
+			}
+
+			if (status === 'download_failures') {
+				info_box.id = 'wp-admin-bar-omgf-download-failures';
+				info_box.classList.add('alert');
+
+				let link = document.createElement('a');
+				link.className = 'ab-item';
+				link.href = omgf_frontend_i18n.info_box_admin_url;
+				link.textContent = data.download_failures_text || '';
+				info_box.appendChild(link);
 			}
 
 			if (status === 'cls_notice') {
