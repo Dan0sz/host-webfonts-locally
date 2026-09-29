@@ -17,6 +17,7 @@
 namespace OMGF\API;
 
 use OMGF\Admin\Settings;
+use OMGF\Download;
 
 class Dashboard {
 	/** @var string */
@@ -111,7 +112,7 @@ class Dashboard {
 	 * @return \WP_REST_Response
 	 */
 	public function dismiss_download_failures() {
-		delete_option( Settings::OMGF_DB_DOWNLOAD_FAILURES );
+		Download::clear_failures();
 
 		return new \WP_REST_Response( [ 'success' => true ] );
 	}

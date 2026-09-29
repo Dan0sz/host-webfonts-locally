@@ -284,8 +284,19 @@ class Download {
 	 * @return array [ url => [ 'reason' => string, 'time' => int ] ]
 	 */
 	public static function get_failures() {
-		$failures = get_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, [] );
+		return self::normalize_failures( get_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, [] ) );
+	}
 
+	/**
+	 * Removes invalid entries and sorts the failed downloads, most recent first.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param mixed $failures
+	 *
+	 * @return array
+	 */
+	private static function normalize_failures( $failures ) {
 		if ( ! is_array( $failures ) ) {
 			return []; // @codeCoverageIgnore
 		}
@@ -319,13 +330,13 @@ class Download {
 	 * @return void
 	 */
 	public static function add_failure( $url, $reason ) {
-		$failures = self::get_failures();
+		self::update_failures(
+			function ( $failures ) use ( $url, $reason ) {
+				unset( $failures[ $url ] );
 
-		unset( $failures[ $url ] );
-
-		$failures = array_slice( [ $url => [ 'reason' => $reason, 'time' => time() ] ] + $failures, 0, self::MAX_FAILURES, true );
-
-		update_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, $failures, false );
+				return array_slice( [ $url => [ 'reason' => $reason, 'time' => time() ] ] + $failures, 0, self::MAX_FAILURES, true );
+			}
+		);
 	}
 
 	/**
@@ -338,15 +349,73 @@ class Download {
 	 * @return void
 	 */
 	public static function remove_failure( $url ) {
-		$failures = self::get_failures();
-
-		if ( ! isset( $failures[ $url ] ) ) {
+		// This runs after every successful download, so only lock when there's something to remove.
+		if ( ! isset( self::get_failures()[ $url ] ) ) {
 			return;
 		}
 
-		unset( $failures[ $url ] );
+		self::update_failures(
+			function ( $failures ) use ( $url ) {
+				unset( $failures[ $url ] );
 
-		update_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, $failures, false );
+				return $failures;
+			}
+		);
+	}
+
+	/**
+	 * Removes all failed downloads, i.e. when they're dismissed.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @return void
+	 */
+	public static function clear_failures() {
+		self::update_failures(
+			function () {
+				return [];
+			}
+		);
+	}
+
+	/**
+	 * Updates the failed downloads while holding a (MySQL) lock, based on the value currently stored in the database,
+	 * so concurrent downloads can't overwrite each other's changes.
+	 *
+	 * @since v6.3.12
+	 *
+	 * @param callable $callback Receives the current failed downloads and returns the new ones.
+	 *
+	 * @return void
+	 */
+	private static function update_failures( $callback ) {
+		global $wpdb;
+
+		$lock_name = $wpdb->prefix . Settings::OMGF_DB_DOWNLOAD_FAILURES;
+		// Databases which don't support locks (e.g. SQLite) return null, in which case we proceed without one.
+		$locked = (bool) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $lock_name, 5 ) );
+
+		try {
+			// Read the current value from the database, instead of a (possibly outdated) cached copy.
+			$stored = $wpdb->get_var(
+				$wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s", Settings::OMGF_DB_DOWNLOAD_FAILURES )
+			);
+
+			wp_cache_delete( Settings::OMGF_DB_DOWNLOAD_FAILURES, 'options' );
+			wp_cache_delete( 'notoptions', 'options' );
+
+			$failures = $callback( self::normalize_failures( $stored === null ? [] : maybe_unserialize( $stored ) ) );
+
+			if ( empty( $failures ) ) {
+				delete_option( Settings::OMGF_DB_DOWNLOAD_FAILURES );
+			} else {
+				update_option( Settings::OMGF_DB_DOWNLOAD_FAILURES, $failures, false );
+			}
+		} finally {
+			if ( $locked ) {
+				$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
+			}
+		}
 	}
 
 	/**

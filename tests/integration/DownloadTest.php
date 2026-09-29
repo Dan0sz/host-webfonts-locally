@@ -177,4 +177,51 @@ class DownloadTest extends TestCase {
 			delete_option( Settings::OMGF_DB_DOWNLOAD_FAILURES );
 		}
 	}
+
+	/**
+	 * Changes made by concurrent requests (i.e. written to the database after this request cached the option) aren't
+	 * overwritten.
+	 *
+	 * @see Download::add_failure()
+	 * @see Download::remove_failure()
+	 * @see Download::clear_failures()
+	 * @return void
+	 */
+	public function testFailuresAreUpdatedBasedOnTheDatabase() {
+		global $wpdb;
+
+		$option = Settings::OMGF_DB_DOWNLOAD_FAILURES;
+
+		try {
+			Download::add_failure( 'https://fonts.example/a.woff2', Download::FAILURE_EMPTY );
+
+			// Cache the current value, like any request reading the option would.
+			$this->assertCount( 1, Download::get_failures() );
+
+			// Another request adds a failure, i.e. directly in the database.
+			$concurrent = [
+				'https://fonts.example/b.woff2' => [ 'reason' => Download::FAILURE_INVALID, 'time' => time() - 10 ],
+				'https://fonts.example/a.woff2' => [ 'reason' => Download::FAILURE_EMPTY, 'time' => time() - 20 ],
+			];
+			$wpdb->update( $wpdb->options, [ 'option_value' => maybe_serialize( $concurrent ) ], [ 'option_name' => $option ] );
+
+			Download::add_failure( 'https://fonts.example/c.woff2', Download::FAILURE_TOO_LARGE );
+
+			$this->assertEqualsCanonicalizing(
+				[ 'https://fonts.example/a.woff2', 'https://fonts.example/b.woff2', 'https://fonts.example/c.woff2' ],
+				array_keys( Download::get_failures() )
+			);
+
+			Download::remove_failure( 'https://fonts.example/b.woff2' );
+
+			$this->assertArrayNotHasKey( 'https://fonts.example/b.woff2', Download::get_failures() );
+
+			Download::clear_failures();
+
+			$this->assertSame( [], Download::get_failures() );
+			$this->assertNull( $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s", $option ) ) );
+		} finally {
+			delete_option( $option );
+		}
+	}
 }
