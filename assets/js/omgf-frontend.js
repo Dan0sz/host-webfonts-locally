@@ -247,6 +247,58 @@ window.addEventListener('load', () => {
 		},
 
 		/**
+		 * The rules of cross-origin stylesheets can't be read, unless they were loaded with the crossorigin attribute. Most
+		 * font CDNs send CORS headers though, so these stylesheets are fetched again (usually from the browser's cache)
+		 * and parsed separately to find their @font-face rules.
+		 *
+		 * @param {string[]} hrefs
+		 * @param {Map} font_face_url_map
+		 * @param {Set} loaded_font_urls
+		 * @returns {Promise<void>}
+		 */
+		extractCrossOriginFontFaceRules: async function (hrefs, font_face_url_map, loaded_font_urls) {
+			if (typeof CSSStyleSheet === 'undefined' || typeof CSSStyleSheet.prototype.replaceSync !== 'function') {
+				return;
+			}
+
+			// Keep the analysis bounded.
+			const max_sheets = 10;
+			const timeout_ms = 3000;
+
+			let unique_hrefs = [...new Set(hrefs)].slice(0, max_sheets);
+
+			await Promise.all(unique_hrefs.map(async (href) => {
+				let controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+				let timeout = controller ? setTimeout(() => controller.abort(), timeout_ms) : null;
+
+				try {
+					let response = await fetch(href, {
+						mode: 'cors',
+						credentials: 'omit',
+						signal: controller ? controller.signal : undefined
+					});
+
+					if (!response.ok) {
+						return;
+					}
+
+					let sheet = new CSSStyleSheet();
+
+					// @import rules aren't supported (and ignored) in constructed stylesheets.
+					sheet.replaceSync(await response.text());
+
+					this.extractFontFaceRules(sheet.cssRules, { href: href }, font_face_url_map, loaded_font_urls);
+				} catch (e) {
+					// No CORS headers, a network error or a timeout: nothing we can do.
+				} finally {
+					if (timeout) {
+						clearTimeout(timeout);
+					}
+				}
+			}));
+		},
+
+		/**
 		 * Helper to get property value from a CSSRule, with fallback for Firefox.
 		 *
 		 * @param {CSSRule} rule
@@ -414,17 +466,25 @@ window.addEventListener('load', () => {
 				// Build font face URL map once.
 				let font_face_url_map = new Map();
 
+				let cross_origin_sheets = [];
+
 				for (let i = 0; i < document.styleSheets.length; i++) {
+					let sheet = document.styleSheets[i];
+
 					try {
-						let sheet = document.styleSheets[i];
 						let rules = sheet.cssRules || sheet.rules;
 						if (!rules) continue;
 
 						this.extractFontFaceRules(rules, sheet, font_face_url_map, loaded_font_urls);
 					} catch (e) {
-						// Ignore cross-origin stylesheet errors.
+						// The rules of cross-origin stylesheets (loaded without the crossorigin attribute) can't be read.
+						if (sheet.href) {
+							cross_origin_sheets.push(sheet.href);
+						}
 					}
 				}
+
+				await this.extractCrossOriginFontFaceRules(cross_origin_sheets, font_face_url_map, loaded_font_urls);
 
 				document.fonts.forEach((font) => {
 					let family = font.family.replace(/["']/g, '');

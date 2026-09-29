@@ -95,6 +95,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 * Security: the stylesheet handle is escaped on the Optimize Fonts screen.
 * Security: only administrators can store results or trigger processing through the Admin Bar Menu's status endpoint, even when its permission is widened by a filter. URLs are validated before they're processed.
 * Fixed: the Font Performance Checker didn't detect fonts which should be preloaded if their @font-face statement used a keyword (e.g. font-weight: normal, which most icon fonts use) or a weight range (i.e. variable fonts).
+* Improved: the Font Performance Checker now also detects fonts which should be preloaded in cross-origin stylesheets loaded without the crossorigin attribute, if the stylesheet's host allows it (most font CDNs do).
 * Tested with WP 7.1.
 
 = 6.3.11 =
