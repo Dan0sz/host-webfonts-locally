@@ -187,6 +187,118 @@ window.addEventListener('load', () => {
 		},
 
 		/**
+		 * Normalizes a font-weight to the numeric value computed styles use, e.g. 'normal' => '400' and 'bold' => '700'.
+		 * Ranges (e.g. '100 900' for variable fonts) are returned as-is.
+		 *
+		 * @param {string} weight
+		 * @returns {string}
+		 */
+		normalizeFontWeight: function (weight) {
+			weight = String(weight || '400').trim().toLowerCase();
+
+			if (weight === 'normal') {
+				return '400';
+			}
+
+			if (weight === 'bold') {
+				return '700';
+			}
+
+			return weight;
+		},
+
+		/**
+		 * Checks if a font face is in a set of face IDs collected from computed styles (which always have a single,
+		 * numeric weight). A font face with a weight range (i.e. a variable font) is used if any weight within the range is.
+		 *
+		 * @param {Set} face_ids
+		 * @param {string} family
+		 * @param {string} weight Normalized font-weight.
+		 * @param {string} style
+		 * @returns {boolean}
+		 */
+		isFaceUsed: function (face_ids, family, weight, style) {
+			if (face_ids.has(`${family}-${weight}-${style}`.toLowerCase())) {
+				return true;
+			}
+
+			let range = weight.split(/\s+/).map(Number);
+
+			if (range.length !== 2 || range.some(isNaN)) {
+				return false;
+			}
+
+			for (let face_id of face_ids) {
+				let prefix = `${family}-`.toLowerCase();
+				let suffix = `-${style}`.toLowerCase();
+
+				if (!face_id.startsWith(prefix) || !face_id.endsWith(suffix)) {
+					continue;
+				}
+
+				let used_weight = Number(face_id.slice(prefix.length, face_id.length - suffix.length));
+
+				if (used_weight >= range[0] && used_weight <= range[1]) {
+					return true;
+				}
+			}
+
+			return false;
+		},
+
+		/**
+		 * The rules of cross-origin stylesheets can't be read, unless they were loaded with the crossorigin attribute. Most
+		 * font CDNs send CORS headers though, so these stylesheets are fetched again (usually from the browser's cache)
+		 * and parsed separately to find their @font-face rules.
+		 *
+		 * @param {string[]} hrefs
+		 * @param {Map} font_face_url_map
+		 * @param {Set} loaded_font_urls
+		 * @returns {Promise<void>}
+		 */
+		extractCrossOriginFontFaceRules: async function (hrefs, font_face_url_map, loaded_font_urls) {
+			if (typeof CSSStyleSheet === 'undefined' || typeof CSSStyleSheet.prototype.replaceSync !== 'function') {
+				return;
+			}
+
+			// Keep the analysis bounded.
+			const max_sheets = 10;
+			const timeout_ms = 3000;
+
+			let unique_hrefs = [...new Set(hrefs)].slice(0, max_sheets);
+
+			await Promise.all(unique_hrefs.map(async (href) => {
+				let controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+				let timeout = controller ? setTimeout(() => controller.abort(), timeout_ms) : null;
+
+				try {
+					let response = await fetch(href, {
+						mode: 'cors',
+						credentials: 'omit',
+						signal: controller ? controller.signal : undefined
+					});
+
+					if (!response.ok) {
+						return;
+					}
+
+					let sheet = new CSSStyleSheet();
+
+					// @import rules aren't supported (and ignored) in constructed stylesheets.
+					sheet.replaceSync(await response.text());
+
+					this.extractFontFaceRules(sheet.cssRules, { href: href }, font_face_url_map, loaded_font_urls);
+				} catch (e) {
+					// No CORS headers, a network error or a timeout: nothing we can do.
+				} finally {
+					if (timeout) {
+						clearTimeout(timeout);
+					}
+				}
+			}));
+		},
+
+		/**
 		 * Helper to get property value from a CSSRule, with fallback for Firefox.
 		 *
 		 * @param {CSSRule} rule
@@ -229,8 +341,7 @@ window.addEventListener('load', () => {
 					let rule_weight = this.getFontFaceProperty(rule, 'font-weight') || '400';
 					let rule_style = this.getFontFaceProperty(rule, 'font-style') || 'normal';
 
-					if (rule_weight === 'normal') rule_weight = '400';
-					if (rule_weight === 'bold') rule_weight = '700';
+					rule_weight = this.normalizeFontWeight(rule_weight);
 
 					let src = rule.style.getPropertyValue('src') || rule.style.src;
 					if (!src) src = this.getFontFaceProperty(rule, 'src');
@@ -355,21 +466,30 @@ window.addEventListener('load', () => {
 				// Build font face URL map once.
 				let font_face_url_map = new Map();
 
+				let cross_origin_sheets = [];
+
 				for (let i = 0; i < document.styleSheets.length; i++) {
+					let sheet = document.styleSheets[i];
+
 					try {
-						let sheet = document.styleSheets[i];
 						let rules = sheet.cssRules || sheet.rules;
 						if (!rules) continue;
 
 						this.extractFontFaceRules(rules, sheet, font_face_url_map, loaded_font_urls);
 					} catch (e) {
-						// Ignore cross-origin stylesheet errors.
+						// The rules of cross-origin stylesheets (loaded without the crossorigin attribute) can't be read.
+						if (sheet.href) {
+							cross_origin_sheets.push(sheet.href);
+						}
 					}
 				}
 
+				await this.extractCrossOriginFontFaceRules(cross_origin_sheets, font_face_url_map, loaded_font_urls);
+
 				document.fonts.forEach((font) => {
 					let family = font.family.replace(/["']/g, '');
-					let weight = font.weight;
+					// Font faces often define keywords (e.g. icon fonts use 'normal'), while computed styles are always numeric.
+					let weight = this.normalizeFontWeight(font.weight);
 					let style = font.style;
 					let face_id = `${family}-${weight}-${style}`.toLowerCase();
 					let face_id_with_range = `${face_id}-${(font.unicodeRange || '')}`.toLowerCase();
@@ -380,7 +500,7 @@ window.addEventListener('load', () => {
 					 *
 					 * Check if any loaded fonts that are used above the fold are not preloaded.
 					 */
-					if (font.status === 'loaded' && font_url && used_faces_above_the_fold.has(face_id)) {
+					if (font.status === 'loaded' && font_url && this.isFaceUsed(used_faces_above_the_fold, family, weight, style)) {
 						let is_preloaded = preloaded_fonts.some((url) => {
 							// If we have the actual font URL, use it for exact matching.
 							if (font_url && url === font_url) {
@@ -415,7 +535,7 @@ window.addEventListener('load', () => {
 					 * pass for font faces defining a unicode-range, and font faces which are referenced by
 					 * elements that aren't rendered yet (e.g. tabs, accordions and modals) would be unloaded.
 					 */
-					if (font.status === 'unloaded' && !used_faces_not_rendered.has(face_id) && font_url) {
+					if (font.status === 'unloaded' && !this.isFaceUsed(used_faces_not_rendered, family, weight, style) && font_url) {
 						unused_fonts.push({
 							family: family,
 							weight: weight,
