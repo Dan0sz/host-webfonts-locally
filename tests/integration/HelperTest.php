@@ -54,6 +54,36 @@ class HelperTest extends TestCase {
 	}
 
 	/**
+	 * A corrupted Optimized Fonts option (e.g. a string which can't be unserialized) shouldn't cause a fatal error.
+	 *
+	 * @see Helper::admin_optimized_fonts()
+	 * @see Helper::optimized_fonts()
+	 * @return void
+	 */
+	public function testOptimizedFontsAreAlwaysAnArray() {
+		$fonts = [ 'handle' => (object) [ 'id' => 'open-sans' ] ];
+
+		try {
+			foreach ( [ 'not serialized', 'a:1:{s:6:"handle";corrupt', serialize( new \ArrayObject( [] ) ) ] as $corrupt ) {
+				update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $corrupt );
+				update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND, $corrupt );
+				OMGF::reset_cache();
+
+				$this->assertSame( [], OMGF::admin_optimized_fonts() );
+				$this->assertEquals( $fonts, OMGF::admin_optimized_fonts( $fonts, true ) );
+
+				OMGF::reset_cache();
+
+				$this->assertEquals( $fonts, OMGF::optimized_fonts( $fonts, true ) );
+			}
+		} finally {
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND );
+			OMGF::reset_cache();
+		}
+	}
+
+	/**
 	 * @see Helper::delete_option()
 	 * @return void
 	 */
