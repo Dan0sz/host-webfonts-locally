@@ -87,6 +87,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.3.13 =
+* Fixed: pages served from a page cache for longer than 12 to 24 hours couldn't be analyzed by OMGF Pro's Smart Optimize, because their (expired) nonce made WordPress reject the request. Logged-out visitors no longer get a nonce, because it's the same for everyone and doesn't protect anything.
+
 = 6.3.12 =
 * Security: hardened the handling of Google Fonts stylesheet requests.
 * Security: hardened the handling of downloaded font files.
