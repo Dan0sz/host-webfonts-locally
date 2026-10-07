@@ -88,6 +88,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 == Changelog ==
 
 = 6.3.13 =
+* Fixed: a fatal error ("array_merge(): Argument #1 must be of type array") during Save & Optimize when the stored optimized fonts were corrupted, e.g. by older versions.
 * Fixed: the description of OMGF Pro's Magic Fallbacks option no longer says it requires Smart Optimize; they've worked independently since OMGF Pro v5.2.2.
 
 = 6.3.12 =
