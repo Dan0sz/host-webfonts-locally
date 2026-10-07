@@ -39,6 +39,41 @@ class AdminbarMenuTest extends TestCase {
 	}
 
 	/**
+	 * Logged-in users need a valid nonce. Logged-out visitors don't (and don't get one), but only if a plugin (i.e. OMGF
+	 * Pro) allows them to use the API.
+	 *
+	 * @since v6.3.13
+	 * @see   AdminbarMenu::get_permission()
+	 */
+	public function testGetPermission() {
+		$class   = new AdminbarMenu();
+		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+		$allow   = function () {
+			return true;
+		};
+
+		// The administrator from setUp(), without and with a valid nonce.
+		$this->assertFalse( $class->get_permission( $request ) );
+
+		$request->set_header( 'X-WP-Nonce', wp_create_nonce( 'wp_rest' ) );
+
+		$this->assertTrue( $class->get_permission( $request ) );
+
+		// A logged-out visitor, which isn't allowed by default, with or without a nonce.
+		wp_set_current_user( 0 );
+
+		$this->assertFalse( $class->get_permission( $request ) );
+
+		try {
+			add_filter( 'omgf_api_adminbar_menu_permission', $allow );
+
+			$this->assertTrue( $class->get_permission( new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' ) ) );
+		} finally {
+			remove_filter( 'omgf_api_adminbar_menu_permission', $allow );
+		}
+	}
+
+	/**
 	 * @return void
 	 * @throws \ReflectionException
 	 */
