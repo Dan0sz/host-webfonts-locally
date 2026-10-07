@@ -130,6 +130,45 @@ class ActionsTest extends TestCase {
 	}
 
 	/**
+	 * Logged-in users get a nonce for the API. Logged-out visitors (if a plugin, i.e. OMGF Pro, loads the script for
+	 * them) don't, because it's the same for everyone and expires in pages served from a page cache.
+	 *
+	 * @since v6.3.13
+	 * @see   Actions::maybe_add_admin_bar_js()
+	 *
+	 * @return void
+	 */
+	public function testNonceIsOnlyAddedForLoggedInUsers() {
+		$current_user_id = get_current_user_id();
+		$class           = new Actions();
+		$nonce           = function () {
+			preg_match( '/"nonce":"([^"]*)"/', (string) wp_scripts()->get_data( 'omgf-frontend', 'data' ), $matches );
+
+			return $matches[1] ?? null;
+		};
+
+		try {
+			wp_set_current_user( 1 );
+			get_userdata( 1 )->set_role( 'administrator' );
+			$class->maybe_add_admin_bar_js();
+
+			$this->assertNotEmpty( $nonce() );
+
+			wp_deregister_script( 'omgf-frontend' );
+			wp_set_current_user( 0 );
+			add_filter( 'omgf_do_not_load_frontend_js', '__return_false' );
+			$class->maybe_add_admin_bar_js();
+
+			$this->assertSame( '', $nonce() );
+		} finally {
+			remove_filter( 'omgf_do_not_load_frontend_js', '__return_false' );
+			wp_dequeue_script( 'omgf-frontend' );
+			wp_deregister_script( 'omgf-frontend' );
+			wp_set_current_user( $current_user_id );
+		}
+	}
+
+	/**
 	 * When Disable Quick Access and Run Google Fonts Checker in Background are both enabled,
 	 * the frontend assets should still be enqueued.
 	 *

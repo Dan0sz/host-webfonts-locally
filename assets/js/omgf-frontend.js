@@ -798,9 +798,8 @@ window.addEventListener('load', () => {
 				{
 					method: 'POST',
 					credentials: 'same-origin',
-					headers: {
-						'X-WP-Nonce': omgf_frontend_i18n.nonce,
-					},
+					// Logged-out visitors don't get a nonce. An (expired) nonce would make WordPress reject the request.
+					headers: omgf_frontend_i18n.nonce ? {'X-WP-Nonce': omgf_frontend_i18n.nonce} : {},
 					body: data,
 				}
 			).then(response => response.ok ? response.json() : false);

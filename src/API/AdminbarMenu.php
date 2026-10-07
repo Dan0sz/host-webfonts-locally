@@ -351,19 +351,26 @@ class AdminbarMenu {
 	}
 
 	/**
-	 * Only logged-in administrators should be allowed to use the API.
+	 * Only logged-in administrators should be allowed to use the API, unless a plugin (i.e. OMGF Pro) allows it.
+	 *
+	 * @since v6.3.13 Requests by logged-out visitors (only allowed through the filter) don't require a nonce: it's the
+	 *                same for everyone and public, so it doesn't protect anything, but it does expire in pages served
+	 *                from a page cache. Without a (valid) nonce, WordPress treats a request as logged out, so logged-in
+	 *                users still need one.
 	 *
 	 * @filter omgf_api_adminbar_menu_permission
 	 *
 	 * @return mixed|null
-	 *
-	 * @codeCoverageIgnore
 	 */
 	public function get_permission( \WP_REST_Request $request ) {
 		$is_allowed = apply_filters( 'omgf_api_adminbar_menu_permission', current_user_can( 'manage_options' ), $request );
 
 		if ( true !== $is_allowed ) {
 			return $is_allowed;
+		}
+
+		if ( ! is_user_logged_in() ) {
+			return true;
 		}
 
 		return (bool) wp_verify_nonce( $request->get_header( 'X-WP-Nonce' ), 'wp_rest' );

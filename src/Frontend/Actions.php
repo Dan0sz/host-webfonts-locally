@@ -155,7 +155,12 @@ class Actions {
 				'info_box_admin_url'             => admin_url( 'options-general.php?page=' . Settings::OMGF_ADMIN_PAGE ),
 				'multilang_plugin_used'          => Dashboard::has_multilang_plugin(),
 				'multilang_plugin_name'          => Dashboard::get_multilang_plugin(),
-				'nonce'                          => wp_create_nonce( 'wp_rest' ),
+				/**
+				 * @since v6.3.13 No nonce for logged-out visitors: it's the same for everyone and public (in the HTML),
+				 *                so it doesn't protect anything, but it does expire in pages served from a page cache.
+				 * @see   \OMGF\API\AdminbarMenu::get_permission()
+				 */
+				'nonce'                          => is_user_logged_in() ? wp_create_nonce( 'wp_rest' ) : '',
 				'subsets_count'                  => is_countable( $subsets ) ? count( $subsets ) : 0,
 			]
 		);
