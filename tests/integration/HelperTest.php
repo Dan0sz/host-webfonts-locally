@@ -75,6 +75,12 @@ class HelperTest extends TestCase {
 				OMGF::reset_cache();
 
 				$this->assertEquals( $fonts, OMGF::optimized_fonts( $fonts, true ) );
+
+				// A corrupted frontend option should fall back to the (valid) admin Optimized Fonts.
+				update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, $fonts );
+				OMGF::reset_cache();
+
+				$this->assertEquals( $fonts, OMGF::optimized_fonts() );
 			}
 		} finally {
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );

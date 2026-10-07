@@ -722,13 +722,6 @@ class Helper {
 		}
 
 		/**
-		 * Fallback to the original Optimized Fonts table.
-		 */
-		if ( empty( self::$optimized_fonts ) ) {
-			self::$optimized_fonts = self::admin_optimized_fonts();
-		}
-
-		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 * @since v4.5.6
 		 */
@@ -742,6 +735,13 @@ class Helper {
 		 */
 		if ( ! is_array( self::$optimized_fonts ) ) {
 			self::$optimized_fonts = [];
+		}
+
+		/**
+		 * Fallback to the original Optimized Fonts table.
+		 */
+		if ( empty( self::$optimized_fonts ) ) {
+			self::$optimized_fonts = self::admin_optimized_fonts();
 		}
 
 		/**
