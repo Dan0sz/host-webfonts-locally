@@ -87,6 +87,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.3.13 =
+* Fixed: the description of OMGF Pro's Magic Fallbacks option no longer says it requires Smart Optimize; they've worked independently since OMGF Pro v5.2.2.
+
 = 6.3.12 =
 * Security: hardened the handling of Google Fonts stylesheet requests.
 * Security: hardened the handling of downloaded font files.
