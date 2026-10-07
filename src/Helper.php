@@ -565,6 +565,14 @@ class Helper {
 		}
 
 		/**
+		 * A corrupted value in the database (e.g. a string that can't be unserialized) makes get_option() return
+		 * false or a string, which would cause a fatal error in array_merge() below. Treat it as empty instead.
+		 */
+		if ( ! is_array( self::$admin_optimized_fonts ) ) {
+			self::$admin_optimized_fonts = [];
+		}
+
+		/**
 		 * If $maybe_add doesn't exist in the cache layer yet, add it.
 		 * @since v4.5.7
 		 */
@@ -714,18 +722,26 @@ class Helper {
 		}
 
 		/**
-		 * Fallback to the original Optimized Fonts table.
-		 */
-		if ( empty( self::$optimized_fonts ) ) {
-			self::$optimized_fonts = self::admin_optimized_fonts();
-		}
-
-		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
 		 * @since v4.5.6
 		 */
 		if ( is_string( self::$optimized_fonts ) && self::$optimized_fonts !== '' ) {
 			self::$optimized_fonts = self::maybe_unserialize( self::$optimized_fonts ); // @codeCoverageIgnore
+		}
+
+		/**
+		 * A corrupted value in the database (e.g. a string that can't be unserialized) makes get_option() return
+		 * false or a string, which would cause a fatal error in array_merge() below. Treat it as empty instead.
+		 */
+		if ( ! is_array( self::$optimized_fonts ) ) {
+			self::$optimized_fonts = [];
+		}
+
+		/**
+		 * Fallback to the original Optimized Fonts table.
+		 */
+		if ( empty( self::$optimized_fonts ) ) {
+			self::$optimized_fonts = self::admin_optimized_fonts();
 		}
 
 		/**
