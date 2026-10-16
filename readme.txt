@@ -87,6 +87,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.3.14 =
+* Fixed: after emptying OMGF's cache, or updating a theme or plugin (which removes OMGF's cached copies of 3rd party stylesheets), pages served from a page cache kept referring to the removed stylesheets and fonts, so they loaded without (some of) their fonts until the page cache expired. OMGF now flushes the page caches it supports (e.g. WP Fastest Cache, WP Rocket, LiteSpeed Cache) whenever it removes cached files.
+
 = 6.3.13 =
 * Fixed: pages served from a page cache for longer than 12 to 24 hours couldn't be analyzed by OMGF Pro's Smart Optimize, because their (expired) nonce made WordPress reject the request. Logged-out visitors no longer get a nonce, because it's the same for everyone and doesn't protect anything.
 * Fixed: a fatal error ("array_merge(): Argument #1 must be of type array") during Save & Optimize when the stored optimized fonts were corrupted, e.g. by older versions.
