@@ -22,6 +22,7 @@ class CachingPlugins {
 	 */
 	public function __construct() {
 		add_action( 'omgf_optimize_succeeded', [ $this, 'maybe_flush_cache' ] );
+		add_action( 'omgf_cache_files_deleted', [ $this, 'flush_page_caches' ] );
 	}
 
 	/**
@@ -46,6 +47,24 @@ class CachingPlugins {
 			return;
 		}
 
+		$this->flush_page_caches();
+	}
+
+	/**
+	 * Flush the entire cache of popular caching plugins.
+	 *
+	 * @since              v6.3.14 Also when OMGF deleted (some of) its cached files, e.g. by Empty Cache, or after updating
+	 *                     a theme or plugin (which flushes 3rd party stylesheets), because pages cached before that still
+	 *                     refer to them. These run on the server (e.g. by an administrator, or WordPress' auto-updates),
+	 *                     so no capability is checked.
+	 *
+	 * @see                \OMGF\Cache::files_deleted()
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore Because it relies on 3rd party plugins.
+	 */
+	public function flush_page_caches() {
 		// Autoptimize
 		if ( class_exists( 'autoptimizeCache' ) ) {
 			\autoptimizeCache::clearall();

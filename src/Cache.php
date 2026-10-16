@@ -39,12 +39,16 @@ class Cache {
 			]
 		);
 
+		$deleted = false;
+
 		foreach ( $entries as $entry ) {
 			if ( in_array( $entry, $instructions['exclude'] ) ) {
 				continue; // @codeCoverageIgnore
 			}
 
 			OMGF::delete( $entry );
+
+			$deleted = true;
 		}
 
 		foreach ( $instructions['queue'] as $option ) {
@@ -52,6 +56,10 @@ class Cache {
 		}
 
 		do_action( 'omgf_after_clean_up' );
+
+		if ( $deleted ) {
+			$this->files_deleted();
+		}
 	}
 
 	/**
@@ -63,6 +71,7 @@ class Cache {
 	public function flush_third_party() {
 		$cache_keys = array_values( OMGF::cache_keys( true ) );
 		$entries    = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*', GLOB_ONLYDIR ) );
+		$deleted    = false;
 
 		foreach ( $entries as $entry ) {
 			$folder_name = basename( $entry );
@@ -72,6 +81,25 @@ class Cache {
 			}
 
 			OMGF::delete( $entry );
+
+			$deleted = true;
 		}
+
+		if ( $deleted ) {
+			$this->files_deleted();
+		}
+	}
+
+	/**
+	 * Pages cached (by a page cache) before OMGF deleted its cached files still refer to them, so their stylesheets
+	 * and fonts would return a 404 until the page cache expires.
+	 *
+	 * @see   \OMGF\Compatibility\CachingPlugins::flush_page_caches()
+	 * @since v6.3.14
+	 *
+	 * @return void
+	 */
+	private function files_deleted() {
+		do_action( 'omgf_cache_files_deleted' );
 	}
 }
