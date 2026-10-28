@@ -315,6 +315,13 @@ class Process {
 	 */
 	public static function should_start() {
 		/**
+		 * @since v6.3.15 OMGF is disabled, so its (and OMGF Pro's) frontend scripts shouldn't analyze the unprocessed page.
+		 */
+		if ( self::query_param_exists( 'nomgf' ) ) {
+			return false;
+		}
+		
+		/**
 		 * Always run if Save & Optimize is running.
 		 */
 		if ( OMGF::is_running_optimize() ) {

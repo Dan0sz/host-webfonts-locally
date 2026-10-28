@@ -428,6 +428,16 @@ class ProcessTest extends TestCase {
 		}
 
 		try {
+			// OMGF is disabled, even while Save & Optimize is running.
+			$_GET['nomgf']         = 1;
+			$_GET['omgf_optimize'] = 1;
+
+			$this->assertFalse( Process::should_start() );
+		} finally {
+			unset( $_GET['nomgf'], $_GET['omgf_optimize'] );
+		}
+
+		try {
 			// Pagebuilders and Frontend Asset Managers.
 			$_GET['perfmatters'] = 1;
 
