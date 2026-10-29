@@ -325,7 +325,7 @@ class Dashboard {
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
-				<?php if ( apply_filters( 'omgf_performance_checker_notice', ! empty( $performance_checker_results ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) ): ?>
+				<?php if ( apply_filters( 'omgf_performance_checker_notice', ( ! empty( $performance_checker_results['highest_unused_count'] ) || ! empty( $performance_checker_results['highest_delay_ms'] ) || ! empty( $performance_checker_results['highest_cls'] ) ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) ): ?>
 					<div class="task-manager-notice info" id="omgf-performance-checker-notice">
 						<h4><?php echo esc_html__( 'Your fonts are slowing down this site.', 'host-webfonts-local' ); ?></h4>
 						<p>
