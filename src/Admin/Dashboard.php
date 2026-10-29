@@ -179,7 +179,12 @@ class Dashboard {
 				$plugins                      = self::get_active_plugins();
 				$warnings                     = self::get_warnings();
 				$google_fonts_checker_results = $warnings['google_fonts_checker'] ?? [];
-				$performance_checker_results  = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
+				/**
+				 * Allows add-ons to remove results that don't apply to the current configuration.
+				 *
+				 * @since v6.3.15
+				 */
+				$performance_checker_results = apply_filters( 'omgf_performance_checker_results', OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] ) );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
 					unset( $warnings['google_fonts_checker'] );
@@ -347,7 +352,7 @@ class Dashboard {
 						<ol>
 							<?php
 							$count_subsets = (int) count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
-							if ( self::has_multilang_plugin() && $count_subsets > 1 ) : ?>
+							if ( apply_filters( 'omgf_performance_checker_show_multilang', self::has_multilang_plugin() && $count_subsets > 1 ) ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
