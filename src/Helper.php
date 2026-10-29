@@ -215,7 +215,7 @@ class Helper {
 	 *
 	 * @return mixed|null
 	 */
-	private static function get_default_settings() {
+	public static function get_default_settings() {
 		return apply_filters(
 			'omgf_settings_defaults',
 			[

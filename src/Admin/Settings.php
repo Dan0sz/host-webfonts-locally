@@ -228,6 +228,8 @@ class Settings extends Admin {
 		add_action( 'omgf_settings_content', [ $this, 'optimize_fonts_content' ], 0 );
 		add_action( 'omgf_settings_content', [ $this, 'advanced_settings_content' ], 2 );
 		add_action( 'omgf_settings_content', [ $this, 'help_content' ], 3 );
+		// Rendered outside the Help tab's form, because it contains forms of its own.
+		add_action( 'omgf_settings_content', [ $this, 'import_export_content' ], 4 );
 	}
 
 	/**
@@ -532,6 +534,62 @@ class Settings extends Admin {
 	 */
 	public function help_content() {
 		$this->do_settings_content( self::OMGF_SETTINGS_FIELD_HELP );
+	}
+
+	/**
+	 * Render the Import/Export section on the Help tab.
+	 *
+	 * @since v6.3.15
+	 *
+	 * @return void
+	 */
+	public function import_export_content() {
+		if ( $this->active_tab !== self::OMGF_SETTINGS_FIELD_HELP ) {
+			return;
+		}
+		?>
+		<div id="omgf-import-export" class="omgf-help-section postbox">
+			<div class="content">
+				<h2><?php esc_html_e( 'Import/Export Settings', 'host-webfonts-local' ); ?></h2>
+				<p class="about">
+					<?php esc_html_e( 'Export your settings to migrate them to another site, or to send them along with a support request. License keys are never included.', 'host-webfonts-local' ); ?>
+				</p>
+				<div class="column-container">
+					<div class="column">
+						<h3><?php esc_html_e( 'Export', 'host-webfonts-local' ); ?></h3>
+						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+							<input type="hidden" name="action" value="<?php echo esc_attr( ImportExport::ACTION_EXPORT ); ?>"/>
+							<?php wp_nonce_field( ImportExport::ACTION_EXPORT ); ?>
+							<p>
+								<label>
+									<input type="checkbox" name="<?php echo esc_attr( ImportExport::FIELD_INCLUDE_FONTS ); ?>" value="1"/>
+									<?php esc_html_e( 'Include Optimize Local Fonts data', 'host-webfonts-local' ); ?>
+								</label>
+							</p>
+							<p class="description">
+								<?php esc_html_e( 'The optimized fonts and their preload/unload settings are specific to this site. Only include them when asked for support.', 'host-webfonts-local' ); ?>
+							</p>
+							<?php submit_button( __( 'Download Export File', 'host-webfonts-local' ), 'secondary', 'submit', false ); ?>
+						</form>
+					</div>
+					<div class="column">
+						<h3><?php esc_html_e( 'Import', 'host-webfonts-local' ); ?></h3>
+						<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+							<input type="hidden" name="action" value="<?php echo esc_attr( ImportExport::ACTION_IMPORT ); ?>"/>
+							<?php wp_nonce_field( ImportExport::ACTION_IMPORT ); ?>
+							<p>
+								<input type="file" name="<?php echo esc_attr( ImportExport::FIELD_FILE ); ?>" accept=".json,application/json" required/>
+							</p>
+							<p class="description">
+								<?php esc_html_e( 'Select a file exported by OMGF. Imported settings overwrite the current settings.', 'host-webfonts-local' ); ?>
+							</p>
+							<?php submit_button( __( 'Import Settings', 'host-webfonts-local' ), 'secondary', 'submit', false ); ?>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
