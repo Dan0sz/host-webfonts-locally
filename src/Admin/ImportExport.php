@@ -272,7 +272,7 @@ class ImportExport {
 	private static function sanitize_option( $option_name, $value, $schema, $include_fonts, $strict = true ) {
 		switch ( $schema['type'] ?? '' ) {
 			case 'settings':
-				$value = self::sanitize_settings( $value, $include_fonts );
+				$value = self::sanitize_settings( $value, $include_fonts, $strict );
 				break;
 			case 'map':
 				$value = self::sanitize_map( $value, (int) ( $schema['depth'] ?? 1 ) );
@@ -303,10 +303,11 @@ class ImportExport {
 	 *
 	 * @param mixed $settings
 	 * @param bool  $include_fonts
+	 * @param bool  $strict Reject invalid values, instead of dropping them.
 	 *
 	 * @return array|false|\WP_Error
 	 */
-	private static function sanitize_settings( $settings, $include_fonts ) {
+	private static function sanitize_settings( $settings, $include_fonts, $strict = true ) {
 		if ( ! is_array( $settings ) ) {
 			return false;
 		}
@@ -321,36 +322,48 @@ class ImportExport {
 		$sanitized = [];
 
 		foreach ( $settings as $key => $value ) {
-			if ( is_array( $value ) ) {
-				$list = [];
+			$value = self::sanitize_setting( $key, $value );
 
-				foreach ( $value as $item ) {
-					$item = self::sanitize_scalar( $item );
-
-					if ( $item === false ) {
-						return false;
-					}
-
-					$list[] = $item;
-				}
-
-				$value = $list;
-			} else {
-				$value = self::sanitize_scalar( $value );
-
-				if ( $value === false ) {
+			if ( $value === false ) {
+				if ( $strict ) {
 					return false;
 				}
-			}
 
-			if ( ! self::is_valid_setting( $key, $value ) ) {
-				return false;
+				continue;
 			}
 
 			$sanitized[ $key ] = $value;
 		}
 
 		return $sanitized;
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixed  $value A scalar, or a list of scalars.
+	 *
+	 * @return string|array|false
+	 */
+	private static function sanitize_setting( $key, $value ) {
+		if ( is_array( $value ) ) {
+			$list = [];
+
+			foreach ( $value as $item ) {
+				$item = self::sanitize_scalar( $item );
+
+				if ( $item === false ) {
+					return false;
+				}
+
+				$list[] = $item;
+			}
+
+			$value = $list;
+		} else {
+			$value = self::sanitize_scalar( $value );
+		}
+
+		return $value !== false && self::is_valid_setting( $key, $value ) ? $value : false;
 	}
 
 	/**

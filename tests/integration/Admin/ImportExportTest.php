@@ -195,6 +195,21 @@ class ImportExportTest extends TestCase {
 	}
 
 	/**
+	 * An invalid stored setting is left out of the export, instead of the entire settings row.
+	 *
+	 * @see ImportExport::export()
+	 */
+	public function testExportDropsInvalidSettings() {
+		update_option( 'omgf_settings', [ 'display_option' => 'invalid', 'test_mode' => 'on' ] );
+		OMGF::reset_cache();
+
+		$settings = ImportExport::export()['options']['omgf_settings'];
+
+		$this->assertArrayNotHasKey( 'display_option', $settings );
+		$this->assertSame( 'on', $settings['test_mode'] );
+	}
+
+	/**
 	 * @see ImportExport::parse()
 	 * @see ImportExport::import()
 	 */
