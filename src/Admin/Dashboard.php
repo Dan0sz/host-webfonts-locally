@@ -188,6 +188,7 @@ class Dashboard {
 				$show_unused                 = isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0;
 				$show_delay                  = isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0;
 				$show_cls                    = ! empty( $performance_checker_results['highest_cls'] );
+				$promote_pro                 = apply_filters( 'omgf_performance_checker_show_cta', ! defined( 'OMGF_PRO_ACTIVE' ) );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
 					unset( $warnings['google_fonts_checker'] );
@@ -342,7 +343,7 @@ class Dashboard {
 								)
 							); ?>
 						</p>
-						<?php if ( apply_filters( 'omgf_performance_checker_show_cta', ! defined( 'OMGF_PRO_ACTIVE' ) ) ) : ?>
+						<?php if ( $promote_pro ) : ?>
 							<p>
 								<?php echo wp_kses_post( sprintf(
 									__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">manually adjust global font settings</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize fonts per page.', 'host-webfonts-local' ),
@@ -400,8 +401,13 @@ class Dashboard {
 									$path   = $performance_checker_results['highest_cls_path'] ?? '';
 									$impact = $performance_checker_results['highest_cls_impact'] ?? __( 'Low', 'host-webfonts-local' );
 
+									// OMGF Pro adds its own call to action to the notice's intro (@since v6.4.0).
+									$cls_text = $promote_pro ?
+										__( 'Your fonts are causing layout shifts with a %2$s impact (<strong>CLS score: %1$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too. OMGF Pro\'s Magic Fallbacks fixes this automatically, on every page.', 'host-webfonts-local' ) :
+										__( 'Your fonts are causing layout shifts with a %2$s impact (<strong>CLS score: %1$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too.', 'host-webfonts-local' );
+
 									printf(
-										__( 'Your fonts are causing layout shifts with a %2$s impact (<strong>CLS score: %1$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too. OMGF Pro\'s Magic Fallbacks fixes this automatically, on every page.', 'host-webfonts-local' ),
+										$cls_text,
 										esc_html( $cls ),
 										strtolower( esc_html( $impact ) ),
 										esc_url( home_url( $path ) )

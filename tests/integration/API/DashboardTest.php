@@ -135,6 +135,18 @@ class DashboardTest extends TestCase {
 			$this->assertStringNotContainsString( 'loads only the right font subsets', $html );
 			$this->assertStringContainsString( 'CLS score: 0.2', $html );
 
+			// With Pro active (no CTA), the CLS item doesn't promote Magic Fallbacks.
+			$this->assertStringContainsString( 'Magic Fallbacks fixes this automatically', $html );
+
+			add_filter( 'omgf_performance_checker_show_cta', '__return_false' );
+
+			$html = $render();
+
+			$this->assertStringContainsString( 'CLS score: 0.2', $html );
+			$this->assertStringNotContainsString( 'Magic Fallbacks fixes this automatically', $html );
+
+			remove_filter( 'omgf_performance_checker_show_cta', '__return_false' );
+
 			// Only metadata (or a metric without its path) left, no notice.
 			$metadata = function () {
 				return [ 'highest_unused_count' => 2, 'highest_unused_impact' => 'Low', 'highest_unused_timestamp' => time() ];
@@ -155,6 +167,7 @@ class DashboardTest extends TestCase {
 			remove_filter( 'omgf_performance_checker_results', $only_cls );
 			remove_filter( 'omgf_performance_checker_results', $none, 11 );
 			remove_filter( 'omgf_performance_checker_show_multilang', '__return_false' );
+			remove_filter( 'omgf_performance_checker_show_cta', '__return_false' );
 			OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
 			wp_set_current_user( $current_user );
 		}
