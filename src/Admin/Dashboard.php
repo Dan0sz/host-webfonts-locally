@@ -187,7 +187,7 @@ class Dashboard {
 				$performance_checker_results = apply_filters( 'omgf_performance_checker_results', OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] ) );
 				$show_unused                 = isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0;
 				$show_delay                  = isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0;
-				$show_cls                    = ! empty( $performance_checker_results['highest_cls'] );
+				$show_cls                    = isset( $performance_checker_results['highest_cls'], $performance_checker_results['highest_cls_path'] ) && (float) $performance_checker_results['highest_cls'] > 0;
 				$promote_pro                 = apply_filters( 'omgf_performance_checker_show_cta', ! defined( 'OMGF_PRO_ACTIVE' ) );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
@@ -398,7 +398,7 @@ class Dashboard {
 								<li>
 									<?php
 									$cls    = $performance_checker_results['highest_cls'];
-									$path   = $performance_checker_results['highest_cls_path'] ?? '';
+									$path   = $performance_checker_results['highest_cls_path'];
 									$impact = $performance_checker_results['highest_cls_impact'] ?? __( 'Low', 'host-webfonts-local' );
 
 									// OMGF Pro adds its own call to action to the notice's intro (@since v6.4.0).

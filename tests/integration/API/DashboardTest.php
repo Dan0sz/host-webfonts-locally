@@ -149,7 +149,7 @@ class DashboardTest extends TestCase {
 
 			// Only metadata (or a metric without its path) left, no notice.
 			$metadata = function () {
-				return [ 'highest_unused_count' => 2, 'highest_unused_impact' => 'Low', 'highest_unused_timestamp' => time() ];
+				return [ 'highest_unused_count' => 2, 'highest_unused_impact' => 'Low', 'highest_unused_timestamp' => time(), 'highest_cls' => 0.2 ];
 			};
 			add_filter( 'omgf_performance_checker_results', $metadata, 11 );
 
