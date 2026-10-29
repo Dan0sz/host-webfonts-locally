@@ -39,6 +39,10 @@ class ImportExportTest extends TestCase {
 
 		remove_filter( 'wp_die_handler', [ $this, 'getDieHandler' ] );
 		remove_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
+		remove_all_filters( 'omgf_settings_defaults' );
+		remove_all_filters( 'omgf_import_export_options' );
+		remove_all_filters( 'omgf_import_export_meta' );
+		delete_option( 'omgf_addon_option' );
 
 		unset( $_REQUEST['_wpnonce'], $_POST['_wpnonce'], $_POST[ ImportExport::FIELD_INCLUDE_FONTS ], $_FILES[ ImportExport::FIELD_FILE ] );
 
@@ -393,6 +397,148 @@ class ImportExportTest extends TestCase {
 		$this->assertSame( 'on', $options['omgf_settings']['debug'] );
 		$this->assertSame( '', $options['omgf_settings']['legacy'] );
 		$this->assertSame( '', $options['omgf_preload_fonts']['handle']['font'][400] );
+	}
+
+	/**
+	 * Keys added by add-ons are listed in the export's metadata.
+	 *
+	 * @see ImportExport::export()
+	 */
+	public function testExportListsAddonKeys() {
+		$this->addAddon();
+
+		$export = ImportExport::export( true );
+
+		remove_all_filters( 'omgf_settings_defaults' );
+		remove_all_filters( 'omgf_import_export_options' );
+		remove_all_filters( 'omgf_import_export_meta' );
+
+		$this->assertSame( '1.0.0', $export['meta']['versions']['omgf-addon'] );
+		$this->assertSame( [ 'omgf_addon_option' ], $export['meta']['addon_keys']['options'] );
+		$this->assertSame( [ 'addon_setting' ], $export['meta']['addon_keys']['settings'] );
+	}
+
+	/**
+	 * Settings of an add-on which isn't active are skipped, the rest is imported.
+	 *
+	 * @see ImportExport::validate()
+	 * @see ImportExport::get_skipped_message()
+	 */
+	public function testImportSkipsSettingsOfInactiveAddons() {
+		$this->addAddon();
+		update_option( 'omgf_settings', [ 'addon_setting' => 'on', 'display_option' => 'block' ] );
+		update_option( 'omgf_addon_option', [ 'handle' => 'on' ] );
+		OMGF::reset_cache();
+
+		$json = ImportExport::export_json( true );
+
+		// The add-on is deactivated.
+		remove_all_filters( 'omgf_settings_defaults' );
+		remove_all_filters( 'omgf_import_export_options' );
+		remove_all_filters( 'omgf_import_export_meta' );
+		delete_option( 'omgf_addon_option' );
+		update_option( 'omgf_settings', [] );
+		OMGF::reset_cache();
+
+		$skipped = [];
+		$options = ImportExport::parse( $json, $skipped );
+
+		$this->assertIsArray( $options );
+		$this->assertSame( [ 'omgf-addon' ], $skipped['addons'] );
+		$this->assertSame( [ 'omgf_addon_option' ], $skipped['options'] );
+		$this->assertSame( [ 'addon_setting' ], $skipped['settings'] );
+		$this->assertArrayNotHasKey( 'omgf_addon_option', $options );
+		$this->assertArrayNotHasKey( 'addon_setting', $options['omgf_settings'] );
+
+		ImportExport::import( $options );
+		OMGF::reset_cache();
+
+		$this->assertSame( 'block', OMGF::get_option( 'display_option' ) );
+		$this->assertFalse( get_option( 'omgf_addon_option' ) );
+
+		$message = ImportExport::get_skipped_message( $skipped );
+
+		$this->assertStringContainsString( 'omgf-addon', $message );
+		$this->assertStringContainsString( '<code>addon_setting</code>', $message );
+		$this->assertStringContainsString( '<code>omgf_addon_option</code>', $message );
+		$this->assertSame( '', ImportExport::get_skipped_message( [ 'addons' => [], 'options' => [], 'settings' => [] ] ) );
+
+		delete_option( 'omgf_addon_option' );
+	}
+
+	/**
+	 * Only keys attributed to an inactive add-on are skipped. Anything else still rejects the import.
+	 *
+	 * @see ImportExport::validate()
+	 */
+	public function testImportOnlySkipsKeysOfInactiveAddons() {
+		$meta = [
+			'versions'   => [ 'omgf' => '6.4.0', 'omgf-addon' => '1.0.0' ],
+			'addon_keys' => [ 'options' => [ 'omgf_addon_option', 'siteurl' ], 'settings' => [ 'addon_setting' ] ],
+		];
+
+		// Not attributed to the add-on.
+		$import = array_merge( $this->getImport( [ 'omgf_settings' => [ 'unknown' => 'on' ] ] ), [ 'meta' => $meta ] );
+		$this->assertWPError( ImportExport::validate( $import ), 'omgf_import_unknown_keys' );
+
+		// Attributed, but add-ons never store options without OMGF's prefix.
+		$import = array_merge( $this->getImport( [ 'siteurl' => 'https://evil.example' ] ), [ 'meta' => $meta ] );
+		$this->assertWPError( ImportExport::validate( $import ), 'omgf_import_unknown_keys' );
+
+		// Attributed, but the add-on is active.
+		$this->addAddon();
+		$import = array_merge( $this->getImport( [ 'omgf_settings' => [ 'addon_setting' => [ 'not', 'a', 'scalar' ] ] ] ), [ 'meta' => $meta ] );
+		$this->assertWPError( ImportExport::validate( $import ), 'omgf_import_invalid_value' );
+		remove_all_filters( 'omgf_settings_defaults' );
+		remove_all_filters( 'omgf_import_export_options' );
+		remove_all_filters( 'omgf_import_export_meta' );
+
+		// No add-on missing from this site.
+		$no_addons            = $meta;
+		$no_addons['versions'] = [ 'omgf' => '6.4.0' ];
+		$import               = array_merge( $this->getImport( [ 'omgf_settings' => [ 'addon_setting' => 'on' ] ] ), [ 'meta' => $no_addons ] );
+		$this->assertWPError( ImportExport::validate( $import ), 'omgf_import_unknown_keys' );
+
+		// Malformed metadata.
+		$import = array_merge( $this->getImport( [ 'omgf_settings' => [ 'addon_setting' => 'on' ] ] ), [ 'meta' => 'string' ] );
+		$this->assertWPError( ImportExport::validate( $import ), 'omgf_import_unknown_keys' );
+
+		// Skipped keys are never validated, but the rest still is.
+		$import = array_merge( $this->getImport( [ 'omgf_settings' => [ 'addon_setting' => 'on', 'display_option' => 'invalid' ] ] ), [ 'meta' => $meta ] );
+		$this->assertWPError( ImportExport::validate( $import ), 'omgf_import_invalid_value' );
+
+		$import = array_merge( $this->getImport( [ 'omgf_settings' => [ 'addon_setting' => [ 'nested' ] ] ] ), [ 'meta' => $meta ] );
+		$this->assertSame( [ 'omgf_settings' => [] ], ImportExport::validate( $import ) );
+	}
+
+	/**
+	 * Simulate an active add-on.
+	 */
+	private function addAddon() {
+		add_filter(
+			'omgf_settings_defaults',
+			function ( $defaults ) {
+				$defaults['addon_setting'] = '';
+
+				return $defaults;
+			}
+		);
+		add_filter(
+			'omgf_import_export_options',
+			function ( $options ) {
+				$options['omgf_addon_option'] = [ 'type' => 'map', 'depth' => 1 ];
+
+				return $options;
+			}
+		);
+		add_filter(
+			'omgf_import_export_meta',
+			function ( $meta ) {
+				$meta['versions']['omgf-addon'] = '1.0.0';
+
+				return $meta;
+			}
+		);
 	}
 
 	/**

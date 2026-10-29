@@ -58,17 +58,48 @@ class ImportExport {
 	 *
 	 * @filter omgf_import_export_options
 	 *
+	 * @param bool $include_addons Include the options added by add-ons, e.g. OMGF Pro.
+	 *
 	 * @return array [ option_name => [ 'type' => settings|map|fonts, 'depth' => int, 'fonts' => bool, 'autoload' => bool ] ]
 	 */
-	public static function get_options() {
+	public static function get_options( $include_addons = true ) {
+		$options = [
+			'omgf_settings'                                          => [ 'type' => 'settings' ],
+			Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS            => [ 'type' => 'map', 'depth' => 3, 'fonts' => true ],
+			Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS             => [ 'type' => 'map', 'depth' => 3, 'fonts' => true ],
+			Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS          => [ 'type' => 'fonts', 'fonts' => true, 'autoload' => false ],
+			Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND => [ 'type' => 'fonts', 'fonts' => true ],
+		];
+
+		return $include_addons ? apply_filters( 'omgf_import_export_options', $options ) : $options;
+	}
+
+	/**
+	 * Slugs of the add-ons active on this site, as listed in the export's metadata.
+	 *
+	 * @return array
+	 */
+	public static function get_active_addons() {
+		$versions = self::get_meta()['versions'] ?? [];
+
+		return array_values( array_diff( array_keys( is_array( $versions ) ? $versions : [] ), [ 'omgf' ] ) );
+	}
+
+	/**
+	 * @param bool $include_fonts
+	 *
+	 * @return array
+	 */
+	private static function get_meta( $include_fonts = false ) {
 		return apply_filters(
-			'omgf_import_export_options',
+			'omgf_import_export_meta',
 			[
-				'omgf_settings'                                          => [ 'type' => 'settings' ],
-				Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS            => [ 'type' => 'map', 'depth' => 3, 'fonts' => true ],
-				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS             => [ 'type' => 'map', 'depth' => 3, 'fonts' => true ],
-				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS          => [ 'type' => 'fonts', 'fonts' => true, 'autoload' => false ],
-				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND => [ 'type' => 'fonts', 'fonts' => true ],
+				'exported_at'    => gmdate( 'c' ),
+				'site_url'       => get_site_url(),
+				'includes_fonts' => (bool) $include_fonts,
+				'versions'       => [
+					'omgf' => get_file_data( OMGF_PLUGIN_FILE, [ 'Version' => 'Version' ] )['Version'],
+				],
 			]
 		);
 	}
@@ -133,20 +164,24 @@ class ImportExport {
 			$options[ $option_name ] = $value;
 		}
 
+		$meta = self::get_meta( $include_fonts );
+
+		/**
+		 * Keys added by add-ons, so an import on a site without those add-ons can skip them.
+		 *
+		 * @since v6.4.0
+		 */
+		$meta['addon_keys'] = [
+			'options'  => array_values( array_diff( array_keys( $options ), array_keys( self::get_options( false ) ) ) ),
+			'settings' => array_values(
+				array_diff( array_keys( $options['omgf_settings'] ?? [] ), array_keys( OMGF::get_default_settings( false ) ) )
+			),
+		];
+
 		return [
 			'plugin'  => 'omgf',
 			'format'  => self::FORMAT_VERSION,
-			'meta'    => apply_filters(
-				'omgf_import_export_meta',
-				[
-					'exported_at'    => gmdate( 'c' ),
-					'site_url'       => get_site_url(),
-					'includes_fonts' => (bool) $include_fonts,
-					'versions'       => [
-						'omgf' => get_file_data( OMGF_PLUGIN_FILE, [ 'Version' => 'Version' ] )['Version'],
-					],
-				]
-			),
+			'meta'    => $meta,
 			'options' => $options,
 		];
 	}
@@ -166,10 +201,11 @@ class ImportExport {
 	 * Decode and validate a JSON string. Never unserializes anything; objects are decoded as arrays.
 	 *
 	 * @param string $json
+	 * @param array  $skipped Populated with the keys skipped, because they belong to inactive add-ons.
 	 *
 	 * @return array|\WP_Error Validated options, ready to be stored.
 	 */
-	public static function parse( $json ) {
+	public static function parse( $json, &$skipped = [] ) {
 		if ( ! is_string( $json ) || $json === '' ) {
 			return new \WP_Error( 'omgf_import_empty', __( 'The uploaded file is empty.', 'host-webfonts-local' ) );
 		}
@@ -184,17 +220,20 @@ class ImportExport {
 			return new \WP_Error( 'omgf_import_invalid_json', __( 'The uploaded file isn\'t a valid JSON file.', 'host-webfonts-local' ) );
 		}
 
-		return self::validate( $data );
+		return self::validate( $data, $skipped );
 	}
 
 	/**
 	 * Validate decoded import data.
 	 *
 	 * @param array $data
+	 * @param array $skipped Populated with the keys skipped, because they belong to inactive add-ons.
 	 *
 	 * @return array|\WP_Error
 	 */
-	public static function validate( $data ) {
+	public static function validate( $data, &$skipped = [] ) {
+		$skipped = [ 'addons' => [], 'options' => [], 'settings' => [] ];
+
 		if ( ! is_array( $data ) ||
 			( $data['plugin'] ?? '' ) !== 'omgf' ||
 			! is_int( $data['format'] ?? null ) ||
@@ -205,11 +244,36 @@ class ImportExport {
 			return new \WP_Error( 'omgf_import_invalid_format', __( 'The uploaded file isn\'t an OMGF settings export.', 'host-webfonts-local' ) );
 		}
 
-		$schemas = self::get_options();
-		$unknown = array_diff( array_keys( $data['options'] ), array_keys( $schemas ) );
+		$schemas   = self::get_options();
+		$skippable = self::get_skippable_keys( $data['meta'] ?? [] );
+		$unknown   = array_diff( array_keys( $data['options'] ), array_keys( $schemas ) );
+
+		foreach ( $unknown as $i => $option_name ) {
+			if ( in_array( $option_name, $skippable['options'], true ) ) {
+				$skipped['options'][] = $option_name;
+
+				unset( $unknown[ $i ], $data['options'][ $option_name ] );
+			}
+		}
 
 		if ( ! empty( $unknown ) ) {
 			return self::unknown_keys_error( $unknown );
+		}
+
+		if ( isset( $data['options']['omgf_settings'] ) && is_array( $data['options']['omgf_settings'] ) ) {
+			$known = self::get_setting_keys( true );
+
+			foreach ( array_keys( $data['options']['omgf_settings'] ) as $key ) {
+				if ( ! in_array( $key, $known, true ) && in_array( $key, $skippable['settings'], true ) ) {
+					$skipped['settings'][] = $key;
+
+					unset( $data['options']['omgf_settings'][ $key ] );
+				}
+			}
+		}
+
+		if ( ! empty( $skipped['options'] ) || ! empty( $skipped['settings'] ) ) {
+			$skipped['addons'] = $skippable['addons'];
 		}
 
 		$options = [];
@@ -225,6 +289,70 @@ class ImportExport {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Keys an import may skip: those the export attributes to add-ons, if any of the add-ons listed in the export
+	 * isn't active on this site. Everything else is validated as usual.
+	 *
+	 * @param mixed $meta The export's metadata.
+	 *
+	 * @return array [ 'addons' => string[], 'options' => string[], 'settings' => string[] ]
+	 */
+	private static function get_skippable_keys( $meta ) {
+		$skippable = [ 'addons' => [], 'options' => [], 'settings' => [] ];
+
+		if ( ! is_array( $meta ) || ! is_array( $meta['versions'] ?? null ) || ! is_array( $meta['addon_keys'] ?? null ) ) {
+			return $skippable;
+		}
+
+		$addons = array_diff( array_keys( $meta['versions'] ), [ 'omgf' ], self::get_active_addons() );
+		$addons = array_values( array_filter( $addons, [ __CLASS__, 'is_safe_key' ] ) );
+
+		if ( empty( $addons ) ) {
+			return $skippable;
+		}
+
+		$skippable['addons'] = $addons;
+
+		foreach ( [ 'options', 'settings' ] as $type ) {
+			$keys = $meta['addon_keys'][ $type ] ?? [];
+
+			if ( ! is_array( $keys ) ) {
+				continue;
+			}
+
+			$skippable[ $type ] = array_values( array_filter( $keys, function ( $key ) use ( $type ) {
+				// Add-ons store their options with OMGF's prefix.
+				return self::is_safe_key( $key ) && is_string( $key ) && ( $type === 'settings' || str_starts_with( $key, 'omgf_' ) );
+			} ) );
+		}
+
+		return $skippable;
+	}
+
+	/**
+	 * A warning listing the skipped keys, or an empty string if nothing was skipped.
+	 *
+	 * @param array $skipped As populated by self::validate().
+	 *
+	 * @return string
+	 */
+	public static function get_skipped_message( $skipped ) {
+		$keys = array_merge( $skipped['options'] ?? [], $skipped['settings'] ?? [] );
+
+		if ( empty( $keys ) ) {
+			return '';
+		}
+
+		return sprintf(
+			/* translators: 1: comma separated list of plugin slugs, 2: comma separated list of setting names. */
+			__( 'These settings were skipped, because they belong to add-ons which aren\'t active on this site (%1$s): %2$s.', 'host-webfonts-local' ),
+			esc_html( implode( ', ', $skipped['addons'] ?? [] ) ),
+			implode( ', ', array_map( function ( $key ) {
+				return '<code>' . esc_html( $key ) . '</code>';
+			}, $keys ) )
+		);
 	}
 
 	/**
@@ -717,10 +845,11 @@ class ImportExport {
 
 		check_admin_referer( self::ACTION_IMPORT );
 
-		$result = self::read_upload( $_FILES[ self::FIELD_FILE ] ?? null ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$result  = self::read_upload( $_FILES[ self::FIELD_FILE ] ?? null ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$skipped = [];
 
 		if ( ! is_wp_error( $result ) ) {
-			$result = self::parse( $result );
+			$result = self::parse( $result, $skipped );
 		}
 
 		if ( is_wp_error( $result ) ) {
@@ -740,6 +869,12 @@ class ImportExport {
 				),
 				'omgf-import-export'
 			);
+
+			$warning = self::get_skipped_message( $skipped );
+
+			if ( $warning ) {
+				Notice::set_notice( $warning, 'omgf-import-export-skipped', 'warning' );
+			}
 		}
 
 		if ( defined( 'DAAN_DOING_TESTS' ) ) {

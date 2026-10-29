@@ -87,13 +87,20 @@ class CLI {
 			\WP_CLI::error( sprintf( __( 'File %s doesn\'t exist or isn\'t readable.', 'host-webfonts-local' ), $file ) );
 		}
 
-		$options = ImportExport::parse( (string) file_get_contents( $file, false, null, 0, ImportExport::MAX_FILE_SIZE + 1 ) ); // phpcs:ignore
+		$skipped = [];
+		$options = ImportExport::parse( (string) file_get_contents( $file, false, null, 0, ImportExport::MAX_FILE_SIZE + 1 ), $skipped ); // phpcs:ignore
 
 		if ( is_wp_error( $options ) ) {
 			\WP_CLI::error( wp_strip_all_tags( $options->get_error_message() ) );
 		}
 
 		ImportExport::import( $options );
+
+		$warning = ImportExport::get_skipped_message( $skipped );
+
+		if ( $warning ) {
+			\WP_CLI::warning( wp_strip_all_tags( $warning ) );
+		}
 
 		\WP_CLI::success( __( 'Settings imported. Run Save & Optimize to apply them.', 'host-webfonts-local' ) );
 	}
