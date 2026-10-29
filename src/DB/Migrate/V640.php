@@ -43,8 +43,17 @@ class V640 {
 
 		if ( function_exists( 'wp_set_options_autoload' ) ) {
 			wp_set_options_autoload( $options, false );
+
+			$success = ! $this->has_autoloaded_options( $options );
 		} else {
-			$this->set_options_autoload_legacy( $options ); // @codeCoverageIgnore
+			$success = $this->set_options_autoload_legacy( $options ); // @codeCoverageIgnore
+		}
+
+		/**
+		 * If autoload couldn't be disabled, we bail without storing the version number, so we try again on the next load.
+		 */
+		if ( ! $success ) {
+			return;
 		}
 
 		/**
@@ -54,28 +63,54 @@ class V640 {
 	}
 
 	/**
+	 * wp_set_options_autoload() returns false for both unchanged and failed options, so we check the result ourselves.
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public function has_autoloaded_options( $options ) {
+		global $wpdb;
+
+		if ( empty( $options ) ) {
+			return false;
+		}
+
+		$values       = function_exists( 'wp_autoload_values_to_autoload' ) ? wp_autoload_values_to_autoload() : [ 'yes' ];
+		$placeholders = implode( ',', array_fill( 0, count( $options ), '%s' ) );
+		$value_holder = implode( ',', array_fill( 0, count( $values ), '%s' ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->options WHERE option_name IN ($placeholders) AND autoload IN ($value_holder)", array_merge( $options, $values ) ) );
+
+		return $count === null || (int) $count > 0;
+	}
+
+	/**
 	 * Fallback for WordPress < 6.4, which doesn't have wp_set_options_autoload().
 	 *
 	 * @param array $options
 	 *
-	 * @return void
+	 * @return bool False if the query failed.
 	 */
 	public function set_options_autoload_legacy( $options ) {
 		global $wpdb;
 
 		if ( empty( $options ) ) {
-			return;
+			return true;
 		}
 
 		$placeholders = implode( ',', array_fill( 0, count( $options ), '%s' ) );
 
 		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-		$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->options SET autoload = 'no' WHERE option_name IN ($placeholders)", $options ) );
+		$result = $wpdb->query( $wpdb->prepare( "UPDATE $wpdb->options SET autoload = 'no' WHERE option_name IN ($placeholders)", $options ) );
 
 		wp_cache_delete( 'alloptions', 'options' );
 
 		foreach ( $options as $option ) {
 			wp_cache_delete( $option, 'options' );
 		}
+
+		return $result !== false;
 	}
 }
