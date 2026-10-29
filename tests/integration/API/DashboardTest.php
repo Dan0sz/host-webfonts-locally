@@ -135,9 +135,9 @@ class DashboardTest extends TestCase {
 			$this->assertStringNotContainsString( 'loads only the right font subsets', $html );
 			$this->assertStringContainsString( 'CLS score: 0.2', $html );
 
-			// Only metadata left, no notice.
+			// Only metadata (or a metric without its path) left, no notice.
 			$metadata = function () {
-				return [ 'highest_unused_impact' => 'Low', 'highest_unused_timestamp' => time() ];
+				return [ 'highest_unused_count' => 2, 'highest_unused_impact' => 'Low', 'highest_unused_timestamp' => time() ];
 			};
 			add_filter( 'omgf_performance_checker_results', $metadata, 11 );
 

@@ -185,6 +185,9 @@ class Dashboard {
 				 * @since v6.3.15
 				 */
 				$performance_checker_results = apply_filters( 'omgf_performance_checker_results', OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] ) );
+				$show_unused                 = isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0;
+				$show_delay                  = isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0;
+				$show_cls                    = ! empty( $performance_checker_results['highest_cls'] );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
 					unset( $warnings['google_fonts_checker'] );
@@ -325,7 +328,7 @@ class Dashboard {
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
-				<?php if ( apply_filters( 'omgf_performance_checker_notice', ( ! empty( $performance_checker_results['highest_unused_count'] ) || ! empty( $performance_checker_results['highest_delay_ms'] ) || ! empty( $performance_checker_results['highest_cls'] ) ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) ): ?>
+				<?php if ( apply_filters( 'omgf_performance_checker_notice', ( $show_unused || $show_delay || $show_cls ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) ): ?>
 					<div class="task-manager-notice info" id="omgf-performance-checker-notice">
 						<h4><?php echo esc_html__( 'Your fonts are slowing down this site.', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -363,7 +366,7 @@ class Dashboard {
 									); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0 ) : ?>
+							<?php if ( $show_unused ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
@@ -379,7 +382,7 @@ class Dashboard {
 									); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0 ) : ?>
+							<?php if ( $show_delay ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
@@ -390,7 +393,7 @@ class Dashboard {
 									); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( ! empty( $performance_checker_results['highest_cls'] ) ) : ?>
+							<?php if ( $show_cls ) : ?>
 								<li>
 									<?php
 									$cls    = $performance_checker_results['highest_cls'];
