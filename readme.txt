@@ -87,7 +87,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
-= 6.3.15 =
+= 6.4.0 =
 * Added: Import/Export settings on the Help tab and through WP-CLI (`wp omgf export`/`wp omgf import`).
 * Fixed: OMGF's frontend scripts (and OMGF Pro's Smart Optimize) still ran on pages loaded with ?nomgf=1.
 

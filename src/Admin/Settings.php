@@ -539,7 +539,7 @@ class Settings extends Admin {
 	/**
 	 * Render the Import/Export section on the Help tab.
 	 *
-	 * @since v6.3.15
+	 * @since v6.4.0
 	 *
 	 * @return void
 	 */

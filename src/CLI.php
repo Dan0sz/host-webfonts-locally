@@ -21,7 +21,7 @@ use OMGF\Admin\ImportExport;
 /**
  * Export and import OMGF's settings.
  *
- * @since v6.3.15
+ * @since v6.4.0
  *
  * @codeCoverageIgnore Thin wrapper around ImportExport, which requires WP-CLI to run.
  */
