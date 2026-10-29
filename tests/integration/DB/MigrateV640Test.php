@@ -1,16 +1,16 @@
 <?php
 /**
- * @package OMGF Integration Test - DB Migration V6.3.15
+ * @package OMGF Integration Test - DB Migration V6.4.0
  */
 
 namespace OMGF\Tests\Integration\DB;
 
 use OMGF\Admin\Settings;
-use OMGF\DB\Migrate\V6315;
+use OMGF\DB\Migrate\V640;
 use OMGF\Helper as OMGF;
 use OMGF\Tests\TestCase;
 
-class MigrateV6315Test extends TestCase {
+class MigrateV640Test extends TestCase {
 	/**
 	 * Get the raw autoload value from the database.
 	 *
@@ -27,7 +27,7 @@ class MigrateV6315Test extends TestCase {
 	/**
 	 * Existing options are switched to non-autoloaded, and frontend options are left alone.
 	 *
-	 * @see V6315::init()
+	 * @see V640::init()
 	 * @return void
 	 */
 	public function testMigrationDisablesAutoload() {
@@ -42,7 +42,7 @@ class MigrateV6315Test extends TestCase {
 
 			add_option( 'omgf_test_autoloaded', 'test', '', true );
 
-			new V6315();
+			new V640();
 
 			foreach ( $options as $option ) {
 				$this->assertContains( $this->get_autoload( $option ), [ 'off', 'no' ], $option );
@@ -50,7 +50,7 @@ class MigrateV6315Test extends TestCase {
 			}
 
 			$this->assertContains( $this->get_autoload( 'omgf_test_autoloaded' ), [ 'on', 'yes' ] );
-			$this->assertSame( '6.3.15', get_option( Settings::OMGF_CURRENT_DB_VERSION ) );
+			$this->assertSame( '6.4.0', get_option( Settings::OMGF_CURRENT_DB_VERSION ) );
 		} finally {
 			foreach ( $options as $option ) {
 				delete_option( $option );
@@ -64,7 +64,7 @@ class MigrateV6315Test extends TestCase {
 	/**
 	 * The fallback for WordPress < 6.4 sets autoload to 'no'.
 	 *
-	 * @see V6315::set_options_autoload_legacy()
+	 * @see V640::set_options_autoload_legacy()
 	 * @return void
 	 */
 	public function testSetOptionsAutoloadLegacy() {
@@ -73,7 +73,7 @@ class MigrateV6315Test extends TestCase {
 		try {
 			add_option( 'omgf_test_legacy', 'test', '', true );
 
-			$migration = new V6315();
+			$migration = new V640();
 			$migration->set_options_autoload_legacy( [] );
 
 			$this->assertContains( $this->get_autoload( 'omgf_test_legacy' ), [ 'on', 'yes' ] );

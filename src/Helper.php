@@ -52,7 +52,7 @@ class Helper {
 	/**
 	 * Options stored in their own row, which aren't needed on (most) frontend requests, so they shouldn't be autoloaded.
 	 *
-	 * @since v6.3.15
+	 * @since v6.4.0
 	 */
 	const OMGF_NON_AUTOLOADED_OPTIONS = [
 		Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN,
@@ -845,7 +845,7 @@ class Helper {
 	 * Options which shouldn't be autoloaded.
 	 *
 	 * @filter omgf_non_autoloaded_options
-	 * @since  v6.3.15
+	 * @since  v6.4.0
 	 *
 	 * @return array
 	 */
@@ -862,7 +862,7 @@ class Helper {
 	 * @param string $setting
 	 *
 	 * @param mixed  $value
-	 * @param bool|null $autoload @since v6.3.15 Defaults to null, which disables autoload for non-autoloaded options
+	 * @param bool|null $autoload @since v6.4.0 Defaults to null, which disables autoload for non-autoloaded options
 	 *                            and otherwise leaves it to WordPress.
 	 *
 	 * @return bool

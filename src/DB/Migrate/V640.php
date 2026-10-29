@@ -20,11 +20,11 @@ use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
 /**
- * @since v6.3.15
+ * @since v6.4.0
  */
-class V6315 {
+class V640 {
 	/** @var $version string The version number this migration script was introduced with. */
-	private $version = '6.3.15';
+	private $version = '6.4.0';
 
 	/**
 	 * Build class.
