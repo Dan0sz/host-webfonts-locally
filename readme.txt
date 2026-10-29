@@ -87,7 +87,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
-= 6.3.15 =
+= 6.4.0 =
 * Added: filters that let add-ons hide Font Performance Checker items that don't apply.
 * Fixed: OMGF's frontend scripts (and OMGF Pro's Smart Optimize) still ran on pages loaded with ?nomgf=1.
 

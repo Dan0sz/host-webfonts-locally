@@ -182,7 +182,7 @@ class Dashboard {
 				/**
 				 * Allows add-ons to remove results that don't apply to the current configuration.
 				 *
-				 * @since v6.3.15
+				 * @since v6.4.0
 				 */
 				$performance_checker_results = apply_filters( 'omgf_performance_checker_results', OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] ) );
 				$show_unused                 = isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0;

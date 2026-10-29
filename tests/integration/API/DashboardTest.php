@@ -89,7 +89,7 @@ class DashboardTest extends TestCase {
 	/**
 	 * Add-ons can remove Performance Checker results and the multilingual item, e.g. when they don't apply.
 	 *
-	 * @since v6.3.15
+	 * @since v6.4.0
 	 * @see   Dashboard::render_notices()
 	 * @return void
 	 */
