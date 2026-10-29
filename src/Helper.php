@@ -50,6 +50,13 @@ class Helper {
 	];
 
 	/**
+	 * Optimized stylesheets which weren't seen in the frontend for this many seconds (30 days) are marked as unused.
+	 *
+	 * @since v6.3.15
+	 */
+	const OMGF_UNUSED_STYLESHEET_THRESHOLD = 2592000;
+
+	/**
 	 * Property to hold all settings.
 	 * @var array
 	 */
@@ -697,6 +704,89 @@ class Helper {
 	 */
 	public static function optimize_succeeded() {
 		return ! empty( self::admin_optimized_fonts() ) && self::get_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN );
+	}
+
+	/**
+	 * Stores when the stylesheets with $handles were last seen in the frontend. To keep this cheap, a handle's
+	 * timestamp is updated at most once a day.
+	 *
+	 * @since v6.3.15
+	 *
+	 * @param array|string $handles
+	 *
+	 * @return void
+	 */
+	public static function mark_stylesheets_seen( $handles ) {
+		if ( empty( $handles ) ) {
+			return;
+		}
+
+		$last_seen = self::stylesheets_last_seen();
+		$now       = time();
+		$updated   = false;
+
+		foreach ( (array) $handles as $handle ) {
+			$handle = sanitize_title_with_dashes( $handle );
+
+			if ( ! $handle || ( isset( $last_seen[ $handle ] ) && $now - $last_seen[ $handle ] < DAY_IN_SECONDS ) ) {
+				continue;
+			}
+
+			$last_seen[ $handle ] = $now;
+			$updated              = true;
+		}
+
+		if ( $updated ) {
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen, true );
+		}
+	}
+
+	/**
+	 * @since v6.3.15
+	 *
+	 * @return array [ handle => timestamp ]
+	 */
+	public static function stylesheets_last_seen() {
+		$last_seen = get_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [] );
+
+		return is_array( $last_seen ) ? $last_seen : [];
+	}
+
+	/**
+	 * Returns the handles of optimized stylesheets which weren't seen in the frontend for a while. Handles without a
+	 * timestamp (e.g. optimized before tracking started) start being tracked now.
+	 *
+	 * @since v6.3.15
+	 *
+	 * @return array
+	 */
+	public static function unused_stylesheets() {
+		$handles   = array_keys( self::admin_optimized_fonts() );
+		$last_seen = self::stylesheets_last_seen();
+		$threshold = (int) apply_filters( 'omgf_unused_stylesheet_threshold', self::OMGF_UNUSED_STYLESHEET_THRESHOLD );
+		$now       = time();
+		$tracked   = array_intersect_key( $last_seen, array_flip( $handles ) );
+		$updated   = count( $tracked ) !== count( $last_seen );
+		$unused    = [];
+
+		foreach ( $handles as $handle ) {
+			if ( ! isset( $tracked[ $handle ] ) ) {
+				$tracked[ $handle ] = $now;
+				$updated            = true;
+
+				continue;
+			}
+
+			if ( $now - $tracked[ $handle ] > $threshold ) {
+				$unused[] = $handle;
+			}
+		}
+
+		if ( $updated ) {
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $tracked, true );
+		}
+
+		return $unused;
 	}
 
 	/**

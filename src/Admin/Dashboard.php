@@ -714,6 +714,7 @@ class Dashboard {
 	public static function render_status() {
 		$stylesheets          = OMGF::admin_optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
+		$unused_stylesheets   = OMGF::unused_stylesheets();
 		?>
 		<tr>
 			<th class="omgf-align-row-header" scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
@@ -730,8 +731,9 @@ class Dashboard {
 
 							$downloaded = file_exists( OMGF_UPLOAD_DIR . "/$cache_key/$cache_key.css" );
 							$unloaded   = in_array( $handle, $unloaded_stylesheets );
+							$unused     = in_array( $handle, $unused_stylesheets, true );
 							?>
-							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ); ?>">
+							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unused ? 'unused' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ) ); ?>">
 								<strong><?php echo $handle; ?></strong> <em>(<?php echo sprintf(
 										__( 'stored in %s', 'host-webfonts-local' ),
 										str_replace( ABSPATH, '', OMGF_UPLOAD_DIR . "/$cache_key" )
@@ -746,6 +748,9 @@ class Dashboard {
 										   __( 'Manage %s', 'host-webfonts-local' ),
 										   $cache_key
 									   ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) : _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
+								<?php if ( $unused && ( $downloaded || $unloaded ) ) : ?>
+									<a href="#" data-handle="<?php echo esc_attr( $handle ); ?>"
+									   class="omgf-remove-stylesheet"><?php _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
 							</li>
 						<?php endforeach; ?>
 						<?php if ( OMGF_CACHE_IS_STALE ) : ?>
@@ -785,6 +790,15 @@ class Dashboard {
 							__(
 								'<span class="omgf-cache-legend-item-title">Stale</span> Settings were changed and the stylesheet\'s content does not reflect those changes.',
 								'host-webfonts-local'
+							)
+						); ?></li>
+					<li class="omgf-cache-legend-item unused"> <?php echo wp_kses_post(
+							sprintf(
+								__(
+									'<span class="omgf-cache-legend-item-title">Unused</span> Stylesheet wasn\'t found on your site for over %d days. If you removed it from your site, it\'s safe to remove it here. Visits to pages served from a page cache aren\'t noticed.',
+									'host-webfonts-local'
+								),
+								(int) round( apply_filters( 'omgf_unused_stylesheet_threshold', OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD ) / DAY_IN_SECONDS )
 							)
 						); ?></li>
 					<li class="omgf-cache-legend-item not-found"> <?php echo wp_kses_post(
