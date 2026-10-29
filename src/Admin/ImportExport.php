@@ -565,11 +565,12 @@ class ImportExport {
 
 		$value = (string) $value;
 
-		if ( preg_match( self::UNSAFE_CHARS_REGEX, $value ) ) {
+		// Not sanitize_text_field(), because it strips the URL encoding font families are stored with.
+		if ( preg_match( self::UNSAFE_CHARS_REGEX, $value ) || wp_check_invalid_utf8( $value ) !== $value ) {
 			return false;
 		}
 
-		return sanitize_text_field( $value );
+		return trim( $value );
 	}
 
 	/**

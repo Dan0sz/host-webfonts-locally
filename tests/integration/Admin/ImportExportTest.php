@@ -95,7 +95,7 @@ class ImportExportTest extends TestCase {
 	private function getFonts() {
 		$variant             = new \stdClass();
 		$variant->id         = '400';
-		$variant->fontFamily = 'Roboto';
+		$variant->fontFamily = 'Roboto%20Flex';
 		$variant->fontStyle  = 'normal';
 		$variant->fontWeight = '400';
 		$variant->woff2      = '/wp-content/uploads/omgf/roboto-mod-abc12/roboto-normal-latin.woff2';
@@ -104,7 +104,7 @@ class ImportExportTest extends TestCase {
 
 		$font           = new \stdClass();
 		$font->id       = 'roboto';
-		$font->family   = 'Roboto';
+		$font->family   = 'Roboto%20Flex';
 		$font->variants = [ 'latin-400' => $variant ];
 		$font->subsets  = [ 'latin', 'latin-ext' ];
 
