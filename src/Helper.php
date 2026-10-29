@@ -52,7 +52,7 @@ class Helper {
 	/**
 	 * Optimized stylesheets which weren't seen in the frontend for this many seconds (30 days) are marked as unused.
 	 *
-	 * @since v6.3.15
+	 * @since v6.4.0
 	 */
 	const OMGF_UNUSED_STYLESHEET_THRESHOLD = 2592000;
 
@@ -710,7 +710,7 @@ class Helper {
 	 * Stores when the stylesheets with $handles were last seen in the frontend. To keep this cheap, a handle's
 	 * timestamp is updated at most once a day.
 	 *
-	 * @since v6.3.15
+	 * @since v6.4.0
 	 *
 	 * @param array|string $handles
 	 *
@@ -742,7 +742,7 @@ class Helper {
 	}
 
 	/**
-	 * @since v6.3.15
+	 * @since v6.4.0
 	 *
 	 * @return array [ handle => timestamp ]
 	 */
@@ -756,7 +756,7 @@ class Helper {
 	 * Returns the handles of optimized stylesheets which weren't seen in the frontend for a while. Handles without a
 	 * timestamp (e.g. optimized before tracking started) start being tracked now.
 	 *
-	 * @since v6.3.15
+	 * @since v6.4.0
 	 *
 	 * @return array
 	 */

@@ -315,7 +315,7 @@ class Process {
 	 */
 	public static function should_start() {
 		/**
-		 * @since v6.3.15 OMGF is disabled, so its (and OMGF Pro's) frontend scripts shouldn't analyze the unprocessed page.
+		 * @since v6.4.0 OMGF is disabled, so its (and OMGF Pro's) frontend scripts shouldn't analyze the unprocessed page.
 		 */
 		if ( self::query_param_exists( 'nomgf' ) ) {
 			return false;
@@ -828,7 +828,7 @@ class Process {
 		}
 
 		/**
-		 * @since v6.3.15 Stylesheets which are (re-)optimized are marked in Optimize::process().
+		 * @since v6.4.0 Stylesheets which are (re-)optimized are marked in Optimize::process().
 		 */
 		OMGF::mark_stylesheets_seen( $seen );
 

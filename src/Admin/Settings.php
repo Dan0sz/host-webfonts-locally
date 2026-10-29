@@ -41,7 +41,7 @@ class Settings extends Admin {
 
 	const OMGF_DB_FOUND_IFRAMES = 'omgf_found_iframes';
 
-	/** @since v6.3.15 */
+	/** @since v6.4.0 */
 	const OMGF_DB_STYLESHEETS_LAST_SEEN = 'omgf_stylesheets_last_seen';
 
 	/**
