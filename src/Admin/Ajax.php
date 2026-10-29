@@ -52,7 +52,7 @@ class Ajax {
 			$hidden_notices[] = $warning_id;
 		}
 
-		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices, 'off' );
+		OMGF::update_option( Settings::OMGF_HIDDEN_NOTICES, $hidden_notices );
 
 		$result = Dashboard::get_dashboard_html();
 

@@ -50,6 +50,20 @@ class Helper {
 	];
 
 	/**
+	 * Options stored in their own row, which aren't needed on (most) frontend requests, so they shouldn't be autoloaded.
+	 *
+	 * @since v6.3.15
+	 */
+	const OMGF_NON_AUTOLOADED_OPTIONS = [
+		Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN,
+		Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS,
+		Settings::OMGF_DB_PERF_CHECK,
+		Settings::OMGF_DB_DOWNLOAD_FAILURES,
+		Settings::OMGF_HIDDEN_NOTICES,
+		Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS,
+	];
+
+	/**
 	 * Property to hold all settings.
 	 * @var array
 	 */
@@ -828,6 +842,18 @@ class Helper {
 	}
 
 	/**
+	 * Options which shouldn't be autoloaded.
+	 *
+	 * @filter omgf_non_autoloaded_options
+	 * @since  v6.3.15
+	 *
+	 * @return array
+	 */
+	public static function non_autoloaded_options() {
+		return apply_filters( 'omgf_non_autoloaded_options', self::OMGF_NON_AUTOLOADED_OPTIONS );
+	}
+
+	/**
 	 * This is basically a wrapper around update_option() to offer a centralized interface for
 	 * storing OMGF's settings in the wp_options table.
 	 *
@@ -836,12 +862,18 @@ class Helper {
 	 * @param string $setting
 	 *
 	 * @param mixed  $value
+	 * @param bool|null $autoload @since v6.3.15 Defaults to null, which disables autoload for non-autoloaded options
+	 *                            and otherwise leaves it to WordPress.
 	 *
 	 * @return bool
 	 */
-	public static function update_option( $setting, $value, $autoload = true ) {
+	public static function update_option( $setting, $value, $autoload = null ) {
 		// If $setting starts with 'omgf_' it should be saved in a separate row.
 		if ( str_starts_with( $setting, 'omgf_' ) ) {
+			if ( $autoload === null && in_array( $setting, self::non_autoloaded_options(), true ) ) {
+				$autoload = false;
+			}
+
 			$updated = update_option( $setting, $value, $autoload );
 
 			if ( $updated ) {
