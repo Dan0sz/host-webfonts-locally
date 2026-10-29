@@ -21,7 +21,7 @@ use OMGF\Helper as OMGF;
 /**
  * Exports OMGF's settings to, and imports them from, a JSON file.
  *
- * @since v6.3.15
+ * @since v6.4.0
  */
 class ImportExport {
 	const ACTION_EXPORT = 'omgf_export_settings';
@@ -345,6 +345,13 @@ class ImportExport {
 	 * @return string|array|false
 	 */
 	private static function sanitize_setting( $key, $value ) {
+		$defaults = OMGF::get_default_settings();
+
+		// A setting's shape (list or scalar) must match its default value.
+		if ( is_array( $value ) !== is_array( $defaults[ $key ] ?? null ) ) {
+			return false;
+		}
+
 		if ( is_array( $value ) ) {
 			$list = [];
 

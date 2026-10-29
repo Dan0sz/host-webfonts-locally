@@ -313,6 +313,7 @@ class ImportExportTest extends TestCase {
 			[ 'omgf_settings' => [ 'subsets' => [ 'klingon' ] ] ],
 			[ 'omgf_settings' => [ 'subsets' => [ [ 'latin' ] ] ] ],
 			[ 'omgf_settings' => [ 'test_mode' => [ 'nested' => [ 'array' ] ] ] ],
+			[ 'omgf_settings' => [ 'test_mode' => [ '0' ] ] ],
 			[ 'omgf_preload_fonts' => 'on' ],
 			[ 'omgf_preload_fonts' => [ 'handle' => 'on' ] ],
 			[ 'omgf_preload_fonts' => [ 'handle' => [ 'font' => [ '400' => [ 'too-deep' ] ] ] ] ],
