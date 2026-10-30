@@ -30,6 +30,8 @@ class Actions {
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
 		add_action( 'in_plugin_update_message-' . OMGF_PLUGIN_BASENAME, [ $this, 'render_update_notice' ], 11 );
 		add_action( 'omgf_pre_update_setting_cache_keys', [ $this, 'clean_stale_cache' ], 10, 2 );
+
+		new ImportExport();
 	}
 
 	/**

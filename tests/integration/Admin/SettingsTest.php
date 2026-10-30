@@ -5,6 +5,7 @@
 
 namespace OMGF\Tests\Integration\Admin;
 
+use OMGF\Admin\ImportExport;
 use OMGF\Admin\Settings;
 use OMGF\Tests\TestCase;
 
@@ -61,5 +62,37 @@ class SettingsTest extends TestCase {
 		$this->expectOutputContains( Settings::OMGF_SETTINGS_FIELD_ADVANCED );
 
 		do_action( 'omgf_settings_tab' );
+	}
+
+	/**
+	 * The Import/Export section is only rendered on the Help tab, outside its settings form.
+	 *
+	 * @see Settings::import_export_content()
+	 * @return void
+	 */
+	public function testImportExportContent() {
+		$_GET['page'] = Settings::OMGF_ADMIN_PAGE;
+		$_GET['tab']  = Settings::OMGF_SETTINGS_FIELD_HELP;
+
+		new Settings();
+
+		ob_start();
+		do_action( 'omgf_settings_content' );
+		$html = ob_get_clean();
+
+		unset( $_GET['page'], $_GET['tab'] );
+
+		$this->assertStringContainsString( 'name="action" value="' . ImportExport::ACTION_EXPORT . '"', $html );
+		$this->assertStringContainsString( 'name="action" value="' . ImportExport::ACTION_IMPORT . '"', $html );
+		$this->assertStringContainsString( 'enctype="multipart/form-data"', $html );
+		$this->assertStringContainsString( 'name="' . ImportExport::FIELD_INCLUDE_FONTS . '"', $html );
+		// The section starts after the Help tab's form is closed, i.e. forms aren't nested.
+		$this->assertGreaterThan( strpos( $html, '</form>' ), strpos( $html, 'id="omgf-import-export"' ) );
+
+		$settings = new Settings();
+
+		ob_start();
+		$settings->import_export_content();
+		$this->assertSame( '', ob_get_clean() );
 	}
 }

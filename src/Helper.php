@@ -234,24 +234,27 @@ class Helper {
 	 *
 	 * @filter omgf_settings_defaults
 	 *
+	 * @since v6.4.0 Added $include_addons parameter.
+	 *
+	 * @param bool $include_addons Include the defaults added by add-ons, e.g. OMGF Pro.
+	 *
 	 * @return mixed|null
 	 */
-	private static function get_default_settings() {
-		return apply_filters(
-			'omgf_settings_defaults',
-			[
-				Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     => 'swap',
-				Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE          => '',
-				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => '',
-				Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
-				Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
-				Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
-				Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
-				Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
-				Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
-				Settings::OMGF_ADV_SETTING_UNINSTALL               => '',
-			]
-		);
+	public static function get_default_settings( $include_addons = true ) {
+		$defaults = [
+			Settings::OMGF_OPTIMIZE_SETTING_DISPLAY_OPTION     => 'swap',
+			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE          => '',
+			Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => '',
+			Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
+			Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
+			Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
+			Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
+			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
+			Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
+			Settings::OMGF_ADV_SETTING_UNINSTALL               => '',
+		];
+
+		return $include_addons ? apply_filters( 'omgf_settings_defaults', $defaults ) : $defaults;
 	}
 
 	/**
