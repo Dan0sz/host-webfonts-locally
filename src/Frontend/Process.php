@@ -399,7 +399,7 @@ class Process {
 	 */
 	public function maybe_set_optimize_has_run() {
 		if ( OMGF::is_running_optimize() && ! OMGF::optimize_succeeded() ) {
-			update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
+			OMGF::update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
 		}
 	}
 

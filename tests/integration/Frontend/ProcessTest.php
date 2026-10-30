@@ -108,6 +108,7 @@ class ProcessTest extends TestCase {
 			$class->maybe_set_optimize_has_run();
 
 			$this->assertTrue( (bool) get_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ) );
+			$this->assertFalse( wp_load_alloptions()[ Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN ] ?? false );
 		} finally {
 			unset( $_GET['omgf_optimize'] );
 			remove_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );

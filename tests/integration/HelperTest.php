@@ -25,6 +25,60 @@ class HelperTest extends TestCase {
 	}
 
 	/**
+	 * Options which aren't needed in the frontend aren't autoloaded, other options are.
+	 *
+	 * @see Helper::update_option()
+	 * @see Helper::non_autoloaded_options()
+	 * @return void
+	 */
+	public function testUpdateOptionAutoload() {
+		global $wpdb;
+
+		$get_autoload = function ( $option ) use ( $wpdb ) {
+			return $wpdb->get_var( $wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name = %s", $option ) );
+		};
+		$filter       = function ( $options ) {
+			$options[] = 'omgf_test_filtered';
+
+			return $options;
+		};
+
+		try {
+			delete_option( Settings::OMGF_DB_PERF_CHECK );
+
+			// New row.
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_cls' => 1 ] );
+			$this->assertContains( $get_autoload( Settings::OMGF_DB_PERF_CHECK ), [ 'off', 'no' ] );
+
+			// Existing row, which was autoloaded before.
+			delete_option( Settings::OMGF_DB_PERF_CHECK );
+			add_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_cls' => 1 ], '', true );
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_cls' => 2 ] );
+			$this->assertContains( $get_autoload( Settings::OMGF_DB_PERF_CHECK ), [ 'off', 'no' ] );
+			$this->assertArrayNotHasKey( Settings::OMGF_DB_PERF_CHECK, wp_load_alloptions() );
+
+			// An explicit $autoload still wins.
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_cls' => 3 ], true );
+			$this->assertContains( $get_autoload( Settings::OMGF_DB_PERF_CHECK ), [ 'on', 'yes' ] );
+
+			// Options read in the frontend are still autoloaded.
+			OMGF::update_option( 'omgf_test_autoload', 'test' );
+			$this->assertContains( $get_autoload( 'omgf_test_autoload' ), [ 'on', 'yes', 'auto' ] );
+
+			// Filterable.
+			add_filter( 'omgf_non_autoloaded_options', $filter );
+			$this->assertContains( 'omgf_test_filtered', OMGF::non_autoloaded_options() );
+			OMGF::update_option( 'omgf_test_filtered', 'test' );
+			$this->assertContains( $get_autoload( 'omgf_test_filtered' ), [ 'off', 'no' ] );
+		} finally {
+			remove_filter( 'omgf_non_autoloaded_options', $filter );
+			delete_option( Settings::OMGF_DB_PERF_CHECK );
+			delete_option( 'omgf_test_autoload' );
+			delete_option( 'omgf_test_filtered' );
+		}
+	}
+
+	/**
 	 * Serialized strings stored in OMGF's options may only contain stdClass objects.
 	 *
 	 * @see Helper::maybe_unserialize()
