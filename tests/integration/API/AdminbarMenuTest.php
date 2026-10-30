@@ -83,7 +83,6 @@ class AdminbarMenuTest extends TestCase {
 		// Use reflection to test the private method decode_json_array
 		$reflection = new \ReflectionClass( $api );
 		$method     = $reflection->getMethod( 'decode_json_array' );
-		$method->setAccessible( true );
 
 		// Case: input is not a string or is empty (covers line 278)
 		$this->assertEquals( [], $method->invoke( $api, null ) );
@@ -572,7 +571,6 @@ class AdminbarMenuTest extends TestCase {
 			// Use reflection to test private method update_google_fonts_checker_results
 			$reflection = new \ReflectionClass( $api );
 			$method     = $reflection->getMethod( 'update_google_fonts_checker_results' );
-			$method->setAccessible( true );
 
 			$urls = [ 'https://fonts.googleapis.com/css?family=Open+Sans' ];
 			$post = [
@@ -614,7 +612,6 @@ class AdminbarMenuTest extends TestCase {
 		// Use reflection to test private method update_google_fonts_checker_results
 		$reflection = new \ReflectionClass( $api );
 		$method     = $reflection->getMethod( 'update_google_fonts_checker_results' );
-		$method->setAccessible( true );
 
 		// Case: params is a JSON string (covers lines 192-193)
 		try {
