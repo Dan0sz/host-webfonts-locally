@@ -89,13 +89,15 @@
 	border-color: #FF851B;
 }
 
-.omgf #submit {
+.omgf #submit,
+#omgf-import-export .button-primary {
 	background: #00adda;
 	border: 0;
 	padding: 7px 20px;
 }
 
-.omgf #submit:hover {
+.omgf #submit:hover,
+#omgf-import-export .button-primary:hover {
 	background-color: #0099cc;
 }
 
