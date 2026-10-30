@@ -188,6 +188,7 @@ class ImportExportTest extends TestCase {
 	public function testExportDropsUnknownFontProperties() {
 		$fonts                             = $this->getFonts();
 		$fonts['roboto']['roboto']->additional_css = [ '.icon { color: red; }' ];
+		$fonts['roboto']['roboto']->variants['latin-400']->unknown = 'value';
 
 		update_option( 'omgf_optimized_fonts', $fonts );
 		OMGF::reset_cache();
@@ -195,6 +196,7 @@ class ImportExportTest extends TestCase {
 		$export = ImportExport::export( true );
 
 		$this->assertFalse( property_exists( $export['options']['omgf_optimized_fonts']['roboto']['roboto'], 'additional_css' ) );
+		$this->assertFalse( property_exists( $export['options']['omgf_optimized_fonts']['roboto']['roboto']->variants['latin-400'], 'unknown' ) );
 		$this->assertIsArray( ImportExport::parse( wp_json_encode( $export ) ) );
 	}
 
@@ -600,6 +602,42 @@ class ImportExportTest extends TestCase {
 
 		$this->assertArrayHasKey( 'omgf-import-export', $notices['all']['error'] );
 		$this->assertFalse( get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
+	}
+
+	/**
+	 * @see ImportExport::handle_import()
+	 */
+	public function testHandleImport() {
+		$this->addAddon();
+		update_option( 'omgf_settings', [ 'addon_setting' => 'on', 'display_option' => 'block' ] );
+		OMGF::reset_cache();
+
+		$file = wp_tempnam( 'omgf-import' );
+
+		file_put_contents( $file, ImportExport::export_json() );
+
+		// The add-on is deactivated.
+		remove_all_filters( 'omgf_settings_defaults' );
+		remove_all_filters( 'omgf_import_export_options' );
+		remove_all_filters( 'omgf_import_export_meta' );
+		update_option( 'omgf_settings', [] );
+		OMGF::reset_cache();
+
+		add_filter( 'user_has_cap', [ $this, 'addManageOptionsCap' ] );
+
+		$_REQUEST['_wpnonce']               = wp_create_nonce( ImportExport::ACTION_IMPORT );
+		$_FILES[ ImportExport::FIELD_FILE ] = [ 'name' => 'export.json', 'tmp_name' => $file, 'size' => filesize( $file ), 'error' => UPLOAD_ERR_OK ];
+
+		( new ImportExport() )->handle_import();
+
+		unlink( $file );
+		OMGF::reset_cache();
+
+		$notices = get_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
+
+		$this->assertArrayHasKey( 'omgf-import-export', $notices['all']['success'] );
+		$this->assertStringContainsString( '<code>addon_setting</code>', $notices['all']['warning']['omgf-import-export-skipped'] );
+		$this->assertSame( 'block', OMGF::get_option( 'display_option' ) );
 	}
 
 	/**

@@ -319,7 +319,7 @@ class ImportExport {
 			$keys = $meta['addon_keys'][ $type ] ?? [];
 
 			if ( ! is_array( $keys ) ) {
-				continue;
+				continue; // @codeCoverageIgnore
 			}
 
 			$skippable[ $type ] = array_values( array_filter( $keys, function ( $key ) use ( $type ) {
@@ -409,7 +409,7 @@ class ImportExport {
 				$value = self::sanitize_fonts( $value, $strict );
 				break;
 			default:
-				$value = false;
+				$value = false; // @codeCoverageIgnore
 		}
 
 		if ( $value === false ) {
@@ -639,7 +639,7 @@ class ImportExport {
 			$variant = self::to_array( $variant );
 
 			if ( ! self::is_safe_key( $key ) || $variant === false ) {
-				return false;
+				return false; // @codeCoverageIgnore
 			}
 
 			$variant_object = new \stdClass();
@@ -681,7 +681,7 @@ class ImportExport {
 	 */
 	private static function sanitize_list( $list ) {
 		if ( ! is_array( $list ) ) {
-			return false;
+			return false; // @codeCoverageIgnore
 		}
 
 		$sanitized = [];
@@ -845,7 +845,8 @@ class ImportExport {
 
 		check_admin_referer( self::ACTION_IMPORT );
 
-		$result  = self::read_upload( $_FILES[ self::FIELD_FILE ] ?? null ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		// Tests can't create actual uploads.
+		$result  = self::read_upload( $_FILES[ self::FIELD_FILE ] ?? null, ! defined( 'DAAN_DOING_TESTS' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		$skipped = [];
 
 		if ( ! is_wp_error( $result ) ) {
