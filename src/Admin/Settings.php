@@ -555,11 +555,14 @@ class Settings extends Admin {
 			<div class="content">
 				<h2><?php esc_html_e( 'Import/Export Settings', 'host-webfonts-local' ); ?></h2>
 				<p class="about">
-					<?php esc_html_e( 'Export your settings to migrate them to another site, or to send them along with a support request. License keys are never included.', 'host-webfonts-local' ); ?>
+					<?php esc_html_e( 'Export your settings to migrate them to another site, or to keep a backup.', 'host-webfonts-local' ); ?>
 				</p>
 				<div class="column-container">
 					<div class="column">
 						<h3><?php esc_html_e( 'Export', 'host-webfonts-local' ); ?></h3>
+						<p class="description">
+							<?php esc_html_e( 'The optimized fonts and their preload/unload settings are specific to this site.', 'host-webfonts-local' ); ?>
+						</p>
 						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 							<input type="hidden" name="action" value="<?php echo esc_attr( ImportExport::ACTION_EXPORT ); ?>"/>
 							<?php wp_nonce_field( ImportExport::ACTION_EXPORT ); ?>
@@ -569,24 +572,21 @@ class Settings extends Admin {
 									<?php esc_html_e( 'Include Optimize Local Fonts data', 'host-webfonts-local' ); ?>
 								</label>
 							</p>
-							<p class="description">
-								<?php esc_html_e( 'The optimized fonts and their preload/unload settings are specific to this site. Only include them when asked for support.', 'host-webfonts-local' ); ?>
-							</p>
-							<?php submit_button( __( 'Download Export File', 'host-webfonts-local' ), 'secondary', 'submit', false ); ?>
+							<?php submit_button( __( 'Download Export File', 'host-webfonts-local' ), 'primary', 'omgf-export', false ); ?>
 						</form>
 					</div>
 					<div class="column">
 						<h3><?php esc_html_e( 'Import', 'host-webfonts-local' ); ?></h3>
+						<p class="description">
+							<?php esc_html_e( 'Select a file exported by OMGF. Imported settings overwrite the current settings.', 'host-webfonts-local' ); ?>
+						</p>
 						<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 							<input type="hidden" name="action" value="<?php echo esc_attr( ImportExport::ACTION_IMPORT ); ?>"/>
 							<?php wp_nonce_field( ImportExport::ACTION_IMPORT ); ?>
 							<p>
 								<input type="file" name="<?php echo esc_attr( ImportExport::FIELD_FILE ); ?>" accept=".json,application/json" required/>
 							</p>
-							<p class="description">
-								<?php esc_html_e( 'Select a file exported by OMGF. Imported settings overwrite the current settings.', 'host-webfonts-local' ); ?>
-							</p>
-							<?php submit_button( __( 'Import Settings', 'host-webfonts-local' ), 'secondary', 'submit', false ); ?>
+							<?php submit_button( __( 'Import Settings', 'host-webfonts-local' ), 'primary', 'omgf-import', false ); ?>
 						</form>
 					</div>
 				</div>

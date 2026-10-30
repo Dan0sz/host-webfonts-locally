@@ -89,13 +89,15 @@
 	border-color: #FF851B;
 }
 
-.omgf #submit {
+.omgf #submit,
+#omgf-import-export .button-primary {
 	background: #00adda;
 	border: 0;
 	padding: 7px 20px;
 }
 
-.omgf #submit:hover {
+.omgf #submit:hover,
+#omgf-import-export .button-primary:hover {
 	background-color: #0099cc;
 }
 
@@ -485,9 +487,27 @@
 	margin-top: 20px;
 }
 
+#omgf-import-export.postbox {
+	padding-bottom: 20px;
+}
+
 #omgf-import-export .column-container .column {
+	display: flex;
+	flex-direction: column;
 	flex: 1 1 300px;
 	margin-right: 25px;
+}
+
+/* Align both buttons at the bottom. */
+#omgf-import-export .column-container .column form {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+#omgf-import-export .column-container .column form .button-primary {
+	margin-top: auto;
 }
 
 #omgf-help-form .postbox .column-container .column ul li {
