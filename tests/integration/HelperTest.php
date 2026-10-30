@@ -272,4 +272,82 @@ class HelperTest extends TestCase {
 		$this->assertArrayNotHasKey( 'OMGF_FLAG_OPTIMIZE_HAS_RUN', $db_rows );
 		$this->assertArrayHasKey( 'OMGF_FLAG_CACHE_IS_STALE', $db_rows );
 	}
+
+	/**
+	 * A stylesheet's last seen timestamp is stored, but updated at most once a day.
+	 *
+	 * @see Helper::mark_stylesheets_seen()
+	 * @return void
+	 */
+	public function testMarkStylesheetsSeen() {
+		delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+
+		try {
+			OMGF::mark_stylesheets_seen( [ 'New-Handle', '' ] );
+
+			$last_seen = OMGF::stylesheets_last_seen();
+
+			$this->assertArrayHasKey( 'new-handle', $last_seen );
+			$this->assertCount( 1, $last_seen );
+			$this->assertEqualsWithDelta( time(), $last_seen[ 'new-handle' ], 5 );
+
+			// Seen less than a day ago: left alone.
+			$hour_ago = time() - HOUR_IN_SECONDS;
+			$days_ago = time() - 2 * DAY_IN_SECONDS;
+
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'recent' => $hour_ago, 'old' => $days_ago ] );
+
+			OMGF::mark_stylesheets_seen( [ 'recent', 'old' ] );
+
+			$last_seen = OMGF::stylesheets_last_seen();
+
+			$this->assertSame( $hour_ago, $last_seen[ 'recent' ] );
+			$this->assertGreaterThan( $days_ago, $last_seen[ 'old' ] );
+		} finally {
+			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+		}
+	}
+
+	/**
+	 * Stylesheets not seen for longer than the threshold are unused. Untracked stylesheets start being tracked and
+	 * timestamps of stylesheets which are no longer optimized are removed.
+	 *
+	 * @see Helper::unused_stylesheets()
+	 * @return void
+	 */
+	public function testUnusedStylesheets() {
+		$fonts = function () {
+			return [ 'used' => [], 'unused' => [], 'untracked' => [] ];
+		};
+
+		add_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
+
+		try {
+			$old = time() - OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD - DAY_IN_SECONDS;
+
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'used' => time(), 'unused' => $old, 'removed' => $old ] );
+
+			$this->assertSame( [ 'unused' ], OMGF::unused_stylesheets() );
+
+			$last_seen = OMGF::stylesheets_last_seen();
+
+			$this->assertArrayNotHasKey( 'removed', $last_seen );
+			$this->assertArrayHasKey( 'untracked', $last_seen );
+			$this->assertSame( $old, $last_seen[ 'unused' ] );
+
+			// The threshold is filterable.
+			$threshold = function () {
+				return 10 * YEAR_IN_SECONDS;
+			};
+
+			add_filter( 'omgf_unused_stylesheet_threshold', $threshold );
+
+			$this->assertEmpty( OMGF::unused_stylesheets() );
+
+			remove_filter( 'omgf_unused_stylesheet_threshold', $threshold );
+		} finally {
+			remove_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
+			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+		}
+	}
 }

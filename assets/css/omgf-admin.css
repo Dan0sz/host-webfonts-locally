@@ -268,6 +268,11 @@
 	color: #0074D9;
 }
 
+.omgf form .omgf-task-manager ul li.unused:before {
+	content: "\f469";
+	color: #999;
+}
+
 .omgf form .advanced-processing-notice,
 .omgf form .used-subsets-notice {
 	display: block;
