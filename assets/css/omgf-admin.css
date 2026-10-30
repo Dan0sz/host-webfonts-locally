@@ -487,6 +487,10 @@
 	margin-top: 20px;
 }
 
+#omgf-import-export.postbox {
+	padding-bottom: 20px;
+}
+
 #omgf-import-export .column-container .column {
 	display: flex;
 	flex-direction: column;
