@@ -87,8 +87,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
-= 6.3.15 =
+= 6.4.0 =
 * Fixed: OMGF's frontend scripts (and OMGF Pro's Smart Optimize) still ran on pages loaded with ?nomgf=1.
+* Improved: options that are only used in the admin area are no longer loaded on every page request.
 
 = 6.3.14 =
 * Fixed: after emptying OMGF's cache, or updating a theme or plugin (which removes OMGF's cached copies of 3rd party stylesheets), pages served from a page cache kept referring to the removed stylesheets and fonts, so they loaded without (some of) their fonts until the page cache expired. OMGF now flushes the page caches it supports (e.g. WP Fastest Cache, WP Rocket, LiteSpeed Cache) whenever it removes cached files.

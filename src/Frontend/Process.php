@@ -315,7 +315,7 @@ class Process {
 	 */
 	public static function should_start() {
 		/**
-		 * @since v6.3.15 OMGF is disabled, so its (and OMGF Pro's) frontend scripts shouldn't analyze the unprocessed page.
+		 * @since v6.4.0 OMGF is disabled, so its (and OMGF Pro's) frontend scripts shouldn't analyze the unprocessed page.
 		 */
 		if ( self::query_param_exists( 'nomgf' ) ) {
 			return false;
@@ -399,7 +399,7 @@ class Process {
 	 */
 	public function maybe_set_optimize_has_run() {
 		if ( OMGF::is_running_optimize() && ! OMGF::optimize_succeeded() ) {
-			update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
+			OMGF::update_option( Settings::OMGF_FLAG_OPTIMIZE_HAS_RUN, true );
 		}
 	}
 

@@ -66,6 +66,10 @@ class Migrate {
 		if ( $this->should_run_migration( '6.3.1' ) ) {
 			new Migrate\V631();
 		}
+
+		if ( $this->should_run_migration( '6.4.0' ) ) {
+			new Migrate\V640();
+		}
 	}
 
 	/**
