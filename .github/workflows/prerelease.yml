@@ -32,7 +32,8 @@ jobs:
 
       - name: Generate plugin asset
         run: |
-          rsync -rc --exclude-from="$GITHUB_WORKSPACE/.distignore" "$GITHUB_WORKSPACE/" release/ --delete --delete-excluded
+          mkdir -p release/host-webfonts-local
+          rsync -rc --exclude-from="$GITHUB_WORKSPACE/.distignore" "$GITHUB_WORKSPACE/" release/host-webfonts-local/ --delete --delete-excluded
           cd "${GITHUB_WORKSPACE}/release" || exit
           zip -r "${GITHUB_WORKSPACE}/host-webfonts-local.zip" .
 
