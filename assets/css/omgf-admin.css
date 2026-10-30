@@ -488,8 +488,22 @@
 }
 
 #omgf-import-export .column-container .column {
+	display: flex;
+	flex-direction: column;
 	flex: 1 1 300px;
 	margin-right: 25px;
+}
+
+/* Align both buttons at the bottom. */
+#omgf-import-export .column-container .column form {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+#omgf-import-export .column-container .column form .button-primary {
+	margin-top: auto;
 }
 
 #omgf-help-form .postbox .column-container .column ul li {
