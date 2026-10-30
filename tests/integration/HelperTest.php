@@ -25,6 +25,60 @@ class HelperTest extends TestCase {
 	}
 
 	/**
+	 * Options which aren't needed in the frontend aren't autoloaded, other options are.
+	 *
+	 * @see Helper::update_option()
+	 * @see Helper::non_autoloaded_options()
+	 * @return void
+	 */
+	public function testUpdateOptionAutoload() {
+		global $wpdb;
+
+		$get_autoload = function ( $option ) use ( $wpdb ) {
+			return $wpdb->get_var( $wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name = %s", $option ) );
+		};
+		$filter       = function ( $options ) {
+			$options[] = 'omgf_test_filtered';
+
+			return $options;
+		};
+
+		try {
+			delete_option( Settings::OMGF_DB_PERF_CHECK );
+
+			// New row.
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_cls' => 1 ] );
+			$this->assertContains( $get_autoload( Settings::OMGF_DB_PERF_CHECK ), [ 'off', 'no' ] );
+
+			// Existing row, which was autoloaded before.
+			delete_option( Settings::OMGF_DB_PERF_CHECK );
+			add_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_cls' => 1 ], '', true );
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_cls' => 2 ] );
+			$this->assertContains( $get_autoload( Settings::OMGF_DB_PERF_CHECK ), [ 'off', 'no' ] );
+			$this->assertArrayNotHasKey( Settings::OMGF_DB_PERF_CHECK, wp_load_alloptions() );
+
+			// An explicit $autoload still wins.
+			OMGF::update_option( Settings::OMGF_DB_PERF_CHECK, [ 'highest_cls' => 3 ], true );
+			$this->assertContains( $get_autoload( Settings::OMGF_DB_PERF_CHECK ), [ 'on', 'yes' ] );
+
+			// Options read in the frontend are still autoloaded.
+			OMGF::update_option( 'omgf_test_autoload', 'test' );
+			$this->assertContains( $get_autoload( 'omgf_test_autoload' ), [ 'on', 'yes', 'auto' ] );
+
+			// Filterable.
+			add_filter( 'omgf_non_autoloaded_options', $filter );
+			$this->assertContains( 'omgf_test_filtered', OMGF::non_autoloaded_options() );
+			OMGF::update_option( 'omgf_test_filtered', 'test' );
+			$this->assertContains( $get_autoload( 'omgf_test_filtered' ), [ 'off', 'no' ] );
+		} finally {
+			remove_filter( 'omgf_non_autoloaded_options', $filter );
+			delete_option( Settings::OMGF_DB_PERF_CHECK );
+			delete_option( 'omgf_test_autoload' );
+			delete_option( 'omgf_test_filtered' );
+		}
+	}
+
+	/**
 	 * Serialized strings stored in OMGF's options may only contain stdClass objects.
 	 *
 	 * @see Helper::maybe_unserialize()
@@ -217,5 +271,83 @@ class HelperTest extends TestCase {
 
 		$this->assertArrayNotHasKey( 'OMGF_FLAG_OPTIMIZE_HAS_RUN', $db_rows );
 		$this->assertArrayHasKey( 'OMGF_FLAG_CACHE_IS_STALE', $db_rows );
+	}
+
+	/**
+	 * A stylesheet's last seen timestamp is stored, but updated at most once a day.
+	 *
+	 * @see Helper::mark_stylesheets_seen()
+	 * @return void
+	 */
+	public function testMarkStylesheetsSeen() {
+		delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+
+		try {
+			OMGF::mark_stylesheets_seen( [ 'New-Handle', '' ] );
+
+			$last_seen = OMGF::stylesheets_last_seen();
+
+			$this->assertArrayHasKey( 'new-handle', $last_seen );
+			$this->assertCount( 1, $last_seen );
+			$this->assertEqualsWithDelta( time(), $last_seen[ 'new-handle' ], 5 );
+
+			// Seen less than a day ago: left alone.
+			$hour_ago = time() - HOUR_IN_SECONDS;
+			$days_ago = time() - 2 * DAY_IN_SECONDS;
+
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'recent' => $hour_ago, 'old' => $days_ago ] );
+
+			OMGF::mark_stylesheets_seen( [ 'recent', 'old' ] );
+
+			$last_seen = OMGF::stylesheets_last_seen();
+
+			$this->assertSame( $hour_ago, $last_seen[ 'recent' ] );
+			$this->assertGreaterThan( $days_ago, $last_seen[ 'old' ] );
+		} finally {
+			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+		}
+	}
+
+	/**
+	 * Stylesheets not seen for longer than the threshold are unused. Untracked stylesheets start being tracked and
+	 * timestamps of stylesheets which are no longer optimized are removed.
+	 *
+	 * @see Helper::unused_stylesheets()
+	 * @return void
+	 */
+	public function testUnusedStylesheets() {
+		$fonts = function () {
+			return [ 'used' => [], 'unused' => [], 'untracked' => [] ];
+		};
+
+		add_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
+
+		try {
+			$old = time() - OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD - DAY_IN_SECONDS;
+
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'used' => time(), 'unused' => $old, 'removed' => $old ] );
+
+			$this->assertSame( [ 'unused' ], OMGF::unused_stylesheets() );
+
+			$last_seen = OMGF::stylesheets_last_seen();
+
+			$this->assertArrayNotHasKey( 'removed', $last_seen );
+			$this->assertArrayHasKey( 'untracked', $last_seen );
+			$this->assertSame( $old, $last_seen[ 'unused' ] );
+
+			// The threshold is filterable.
+			$threshold = function () {
+				return 10 * YEAR_IN_SECONDS;
+			};
+
+			add_filter( 'omgf_unused_stylesheet_threshold', $threshold );
+
+			$this->assertEmpty( OMGF::unused_stylesheets() );
+
+			remove_filter( 'omgf_unused_stylesheet_threshold', $threshold );
+		} finally {
+			remove_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
+			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+		}
 	}
 }

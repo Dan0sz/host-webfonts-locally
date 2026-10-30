@@ -87,6 +87,100 @@ class DashboardTest extends TestCase {
 	}
 
 	/**
+	 * Add-ons can remove Performance Checker results and the multilingual item, e.g. when they don't apply.
+	 *
+	 * @since v6.4.0
+	 * @see   Dashboard::render_notices()
+	 * @return void
+	 */
+	public function testPerformanceCheckerFilters() {
+		$current_user = get_current_user_id();
+		$only_cls     = function ( $results ) {
+			unset( $results['highest_unused_count'], $results['highest_unused_path'] );
+
+			return $results;
+		};
+		$none         = function () {
+			return [];
+		};
+		$render       = function () {
+			ob_start();
+			Dashboard::render_notices();
+
+			return ob_get_clean();
+		};
+
+		try {
+			wp_set_current_user( 0 );
+			add_filter( 'omgf_has_multilang_plugin', '__return_true' );
+			add_filter( 'omgf_setting_subsets', [ $this, 'return_subsets' ] );
+			OMGF::update_option(
+				Settings::OMGF_DB_PERF_CHECK,
+				[ 'highest_unused_count' => 2, 'highest_unused_path' => '/', 'highest_cls' => 0.2, 'highest_cls_path' => '/' ]
+			);
+
+			$html = $render();
+
+			$this->assertStringContainsString( 'font faces it doesn', $html );
+			$this->assertStringContainsString( 'CLS score: 0.2', $html );
+			$this->assertStringContainsString( 'loads only the right font subsets', $html );
+
+			add_filter( 'omgf_performance_checker_results', $only_cls );
+			add_filter( 'omgf_performance_checker_show_multilang', '__return_false' );
+
+			$html = $render();
+
+			$this->assertStringContainsString( 'id="omgf-performance-checker-notice"', $html );
+			$this->assertStringNotContainsString( 'font faces it doesn', $html );
+			$this->assertStringNotContainsString( 'loads only the right font subsets', $html );
+			$this->assertStringContainsString( 'CLS score: 0.2', $html );
+
+			// With Pro active (no CTA), the CLS item doesn't promote Magic Fallbacks.
+			$this->assertStringContainsString( 'Magic Fallbacks fixes this automatically', $html );
+
+			add_filter( 'omgf_performance_checker_show_cta', '__return_false' );
+
+			$html = $render();
+
+			$this->assertStringContainsString( 'CLS score: 0.2', $html );
+			$this->assertStringNotContainsString( 'Magic Fallbacks fixes this automatically', $html );
+
+			remove_filter( 'omgf_performance_checker_show_cta', '__return_false' );
+
+			// Only metadata (or a metric without its path) left, no notice.
+			$metadata = function () {
+				return [ 'highest_unused_count' => 2, 'highest_unused_impact' => 'Low', 'highest_unused_timestamp' => time(), 'highest_cls' => 0.2 ];
+			};
+			add_filter( 'omgf_performance_checker_results', $metadata, 11 );
+
+			$this->assertStringNotContainsString( 'id="omgf-performance-checker-notice"', $render() );
+
+			remove_filter( 'omgf_performance_checker_results', $metadata, 11 );
+
+			// No results left, no notice.
+			add_filter( 'omgf_performance_checker_results', $none, 11 );
+
+			$this->assertStringNotContainsString( 'id="omgf-performance-checker-notice"', $render() );
+		} finally {
+			remove_filter( 'omgf_has_multilang_plugin', '__return_true' );
+			remove_filter( 'omgf_setting_subsets', [ $this, 'return_subsets' ] );
+			remove_filter( 'omgf_performance_checker_results', $only_cls );
+			remove_filter( 'omgf_performance_checker_results', $none, 11 );
+			remove_filter( 'omgf_performance_checker_show_multilang', '__return_false' );
+			remove_filter( 'omgf_performance_checker_show_cta', '__return_false' );
+			OMGF::delete_option( Settings::OMGF_DB_PERF_CHECK );
+			wp_set_current_user( $current_user );
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function return_subsets() {
+		return [ 'latin', 'latin-ext' ];
+	}
+
+	/**
 	 * @see DashboardAPI::dismiss_download_failures()
 	 * @see DashboardAPI::get_permission()
 	 * @return void

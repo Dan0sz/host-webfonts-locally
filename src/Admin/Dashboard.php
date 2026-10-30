@@ -179,7 +179,16 @@ class Dashboard {
 				$plugins                      = self::get_active_plugins();
 				$warnings                     = self::get_warnings();
 				$google_fonts_checker_results = $warnings['google_fonts_checker'] ?? [];
-				$performance_checker_results  = OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] );
+				/**
+				 * Allows add-ons to remove results that don't apply to the current configuration.
+				 *
+				 * @since v6.4.0
+				 */
+				$performance_checker_results = apply_filters( 'omgf_performance_checker_results', OMGF::get_option( Settings::OMGF_DB_PERF_CHECK, [] ) );
+				$show_unused                 = isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0;
+				$show_delay                  = isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0;
+				$show_cls                    = isset( $performance_checker_results['highest_cls'], $performance_checker_results['highest_cls_path'] ) && (float) $performance_checker_results['highest_cls'] > 0;
+				$promote_pro                 = apply_filters( 'omgf_performance_checker_show_cta', ! defined( 'OMGF_PRO_ACTIVE' ) );
 
 				if ( ! empty( $google_fonts_checker_results ) ) {
 					unset( $warnings['google_fonts_checker'] );
@@ -320,7 +329,7 @@ class Dashboard {
 						<?php do_action( 'omgf_dashboard_after_success_message' ); ?>
 					</div>
 				<?php endif; ?>
-				<?php if ( apply_filters( 'omgf_performance_checker_notice', ! empty( $performance_checker_results ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) ): ?>
+				<?php if ( apply_filters( 'omgf_performance_checker_notice', ( $show_unused || $show_delay || $show_cls ) && ! get_transient( Settings::OMGF_DISMISS_NOTICE_TRANSIENT . get_current_user_id() ) ) ): ?>
 					<div class="task-manager-notice info" id="omgf-performance-checker-notice">
 						<h4><?php echo esc_html__( 'Your fonts are slowing down this site.', 'host-webfonts-local' ); ?></h4>
 						<p>
@@ -334,7 +343,7 @@ class Dashboard {
 								)
 							); ?>
 						</p>
-						<?php if ( apply_filters( 'omgf_performance_checker_show_cta', ! defined( 'OMGF_PRO_ACTIVE' ) ) ) : ?>
+						<?php if ( $promote_pro ) : ?>
 							<p>
 								<?php echo wp_kses_post( sprintf(
 									__( 'You can <a href="%s" rel="noopener noreferrer" target="_blank">manually adjust global font settings</a> in OMGF, or <a href="%s" rel="noopener noreferrer" target="_blank">Upgrade to OMGF Pro</a> and let Smart Optimize automatically optimize fonts per page.', 'host-webfonts-local' ),
@@ -347,7 +356,7 @@ class Dashboard {
 						<ol>
 							<?php
 							$count_subsets = (int) count( OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS ) );
-							if ( self::has_multilang_plugin() && $count_subsets > 1 ) : ?>
+							if ( apply_filters( 'omgf_performance_checker_show_multilang', self::has_multilang_plugin() && $count_subsets > 1 ) ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
@@ -358,7 +367,7 @@ class Dashboard {
 									); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( isset( $performance_checker_results['highest_unused_count'], $performance_checker_results['highest_unused_path'] ) && (int) $performance_checker_results['highest_unused_count'] > 0 ) : ?>
+							<?php if ( $show_unused ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
@@ -374,7 +383,7 @@ class Dashboard {
 									); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( isset( $performance_checker_results['highest_delay_ms'], $performance_checker_results['highest_delay_path'] ) && (int) $performance_checker_results['highest_delay_ms'] > 0 ) : ?>
+							<?php if ( $show_delay ) : ?>
 								<li>
 									<?php echo wp_kses_post(
 										sprintf(
@@ -385,15 +394,20 @@ class Dashboard {
 									); ?>
 								</li>
 							<?php endif; ?>
-							<?php if ( ! empty( $performance_checker_results['highest_cls'] ) ) : ?>
+							<?php if ( $show_cls ) : ?>
 								<li>
 									<?php
 									$cls    = $performance_checker_results['highest_cls'];
-									$path   = $performance_checker_results['highest_cls_path'] ?? '';
+									$path   = $performance_checker_results['highest_cls_path'];
 									$impact = $performance_checker_results['highest_cls_impact'] ?? __( 'Low', 'host-webfonts-local' );
 
+									// OMGF Pro adds its own call to action to the notice's intro (@since v6.4.0).
+									$cls_text = $promote_pro ?
+										__( 'Your fonts are causing layout shifts with a %2$s impact (<strong>CLS score: %1$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too. OMGF Pro\'s Magic Fallbacks fixes this automatically, on every page.', 'host-webfonts-local' ) :
+										__( 'Your fonts are causing layout shifts with a %2$s impact (<strong>CLS score: %1$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too.', 'host-webfonts-local' );
+
 									printf(
-										__( 'Your fonts are causing layout shifts with a %2$s impact (<strong>CLS score: %1$s</strong>) on <a href="%3$s" target="_blank" rel="noopener noreferrer">this page</a>—and chances are, other pages are affected too. OMGF Pro\'s Magic Fallbacks fixes this automatically, on every page.', 'host-webfonts-local' ),
+										$cls_text,
 										esc_html( $cls ),
 										strtolower( esc_html( $impact ) ),
 										esc_url( home_url( $path ) )
@@ -714,6 +728,7 @@ class Dashboard {
 	public static function render_status() {
 		$stylesheets          = OMGF::admin_optimized_fonts();
 		$unloaded_stylesheets = OMGF::unloaded_stylesheets();
+		$unused_stylesheets   = OMGF::unused_stylesheets();
 		?>
 		<tr>
 			<th class="omgf-align-row-header" scope="row"><?php echo __( 'Cache Status', 'host-webfonts-local' ); ?></th>
@@ -730,8 +745,9 @@ class Dashboard {
 
 							$downloaded = file_exists( OMGF_UPLOAD_DIR . "/$cache_key/$cache_key.css" );
 							$unloaded   = in_array( $handle, $unloaded_stylesheets );
+							$unused     = in_array( $handle, $unused_stylesheets, true );
 							?>
-							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ); ?>">
+							<li class="<?php echo OMGF_CACHE_IS_STALE ? 'stale' : ( $unused ? 'unused' : ( $unloaded ? 'unloaded' : ( $downloaded ? 'found' : 'not-found' ) ) ); ?>">
 								<strong><?php echo $handle; ?></strong> <em>(<?php echo sprintf(
 										__( 'stored in %s', 'host-webfonts-local' ),
 										str_replace( ABSPATH, '', OMGF_UPLOAD_DIR . "/$cache_key" )
@@ -746,6 +762,9 @@ class Dashboard {
 										   __( 'Manage %s', 'host-webfonts-local' ),
 										   $cache_key
 									   ); ?>"><?php $downloaded ? _e( 'Configure', 'host-webfonts-local' ) : _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
+								<?php if ( $unused && ( $downloaded || $unloaded ) ) : ?>
+									<a href="#" data-handle="<?php echo esc_attr( $handle ); ?>"
+									   class="omgf-remove-stylesheet"><?php _e( 'Remove', 'host-webfonts-local' ); ?></a><?php endif; ?>
 							</li>
 						<?php endforeach; ?>
 						<?php if ( OMGF_CACHE_IS_STALE ) : ?>
@@ -785,6 +804,15 @@ class Dashboard {
 							__(
 								'<span class="omgf-cache-legend-item-title">Stale</span> Settings were changed and the stylesheet\'s content does not reflect those changes.',
 								'host-webfonts-local'
+							)
+						); ?></li>
+					<li class="omgf-cache-legend-item unused"> <?php echo wp_kses_post(
+							sprintf(
+								__(
+									'<span class="omgf-cache-legend-item-title">Unused</span> Stylesheet wasn\'t found on your site for over %d days. If you removed it from your site, it\'s safe to remove it here. Visits to pages served from a page cache aren\'t noticed.',
+									'host-webfonts-local'
+								),
+								(int) round( apply_filters( 'omgf_unused_stylesheet_threshold', OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD ) / DAY_IN_SECONDS )
 							)
 						); ?></li>
 					<li class="omgf-cache-legend-item not-found"> <?php echo wp_kses_post(

@@ -118,6 +118,8 @@ class Optimize {
 			// @codeCoverageIgnoreEnd
 		}
 
+		OMGF::mark_stylesheets_seen( $this->original_handle );
+
 		/**
 		 * Convert protocol relative URLs.
 		 */
