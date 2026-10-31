@@ -19,7 +19,7 @@
   "devDependencies": {
     "chokidar-cli": "^3.0.0",
     "clean-css": "^5.3.3",
-    "glob": "^13.0.6",
+    "glob": "^14.0.3",
     "uglify-js": "^3.19.3"
   }
 }
