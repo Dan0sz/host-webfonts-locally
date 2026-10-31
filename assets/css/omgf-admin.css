@@ -176,6 +176,8 @@
 	border-left: 4px solid #ececec;
 	border-radius: 3px;
 	margin-bottom: 1em;
+	/* Other plugins/themes may color .warning text. */
+	color: #3c434a;
 }
 
 .omgf form .omgf-task-manager .task-manager-row.omgf-cache-legend {
