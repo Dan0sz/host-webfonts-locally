@@ -156,4 +156,51 @@ class OptimizeTest extends TestCase {
 			delete_option( \OMGF\Admin\Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
 		}
 	}
+	/**
+	 * A variable font uses the same file for each font weight, so it should only be downloaded once.
+	 *
+	 * @see \OMGF\Optimize::process()
+	 * @return void
+	 */
+	public function testProcessDownloadsVariableFontOnce() {
+		$url = 'https://daan.dev/tests/variable-font.css';
+		$css = '';
+
+		foreach ( [ 300, 400, 700 ] as $weight ) {
+			$css .= "/* latin */\n@font-face {\n  font-family: 'Nunito Sans';\n  font-style: italic;\n  font-weight: $weight;\n  src: url(https://fonts.gstatic.com/s/nunitosans/v19/variable-italic.woff2) format('woff2');\n}\n";
+		}
+
+		$requests = 0;
+		// Font files are mocked by TestCase::mockGoogleFontsRequests().
+		$mock = function ( $pre, $args, $request_url ) use ( $url, $css, &$requests ) {
+			if ( $request_url === $url ) {
+				return [ 'body' => $css, 'response' => [ 'code' => 200 ] ];
+			}
+
+			if ( str_contains( $request_url, 'fonts.gstatic.com' ) ) {
+				$requests++;
+			}
+
+			return $pre;
+		};
+
+		add_filter( 'pre_http_request', $mock, 1, 3 );
+
+		try {
+			$class     = new Optimize( $url, 'test-variable-font', 'test-variable-font', 'object' );
+			$processed = $class->process();
+		} finally {
+			remove_filter( 'pre_http_request', $mock, 1 );
+		}
+
+		$this->assertSame( 1, $requests );
+
+		$variants = $processed['test-variable-font']['nunito-sans']->variants;
+
+		$this->assertCount( 3, $variants );
+
+		foreach ( $variants as $variant ) {
+			$this->assertStringEndsWith( '/nunito-sans-italic-latin.woff2', $variant->woff2 );
+		}
+	}
 }

@@ -87,6 +87,10 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.4.1 =
+* Fixed: some font weights could be missing after optimization, e.g. italics showing as Light.
+* Improved: variable fonts are downloaded only once, which makes optimization a lot faster.
+
 = 6.4.0 =
 * Added: Import/Export settings on the Help tab and through WP-CLI (`wp omgf export`/`wp omgf import`).
 * Added: Cache Status now marks stylesheets that weren't found on your site for 30 days as Unused, so you can remove them.

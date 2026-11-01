@@ -110,19 +110,27 @@ class Download {
 		$temp_filename = $this->path . '/' . $this->filename . '-' . wp_generate_password( 12, false ) . '.tmp';
 
 		$max_file_size = self::get_max_file_size();
-		$response      = wp_safe_remote_get(
-			$this->url,
-			[
-				'timeout'             => 300,
-				'stream'              => true,
-				'filename'            => $temp_filename,
-				/**
-				 * @since v6.3.12 Stop downloading once the file exceeds the maximum size. One extra byte is requested, so
-				 *                a file which was cut off can be told apart from a file of exactly the maximum size.
-				 */
-				'limit_response_size' => $max_file_size + 1,
-			]
-		);
+		$args          = [
+			'timeout'             => 300,
+			'stream'              => true,
+			'filename'            => $temp_filename,
+			/**
+			 * @since v6.3.12 Stop downloading once the file exceeds the maximum size. One extra byte is requested, so
+			 *                a file which was cut off can be told apart from a file of exactly the maximum size.
+			 */
+			'limit_response_size' => $max_file_size + 1,
+		];
+		$response      = wp_safe_remote_get( $this->url, $args );
+
+		/**
+		 * @since v6.4.1 Retry once, because connections fail every now and then. Otherwise the font is missing from
+		 *               the stylesheet until the cache is flushed.
+		 */
+		if ( is_wp_error( $response ) ) {
+			$this->delete_temp_file( $temp_filename );
+
+			$response = wp_safe_remote_get( $this->url, $args );
+		}
 
 		if ( is_wp_error( $response ) ) {
 			$this->delete_temp_file( $temp_filename );
