@@ -169,6 +169,8 @@ class Optimize {
 			return ''; // @codeCoverageIgnore
 		}
 
+		$downloads = [];
+
 		foreach ( $fonts as $id => &$font ) {
 			/**
 			 * Sanitize the font-family because it may contain spaces.
@@ -212,14 +214,20 @@ class Optimize {
 				$variant->fontFamily = rawurlencode( $variant->fontFamily );
 
 				if ( isset( $variant->woff2 ) ) {
-					OMGF::debug(
-						sprintf( __( 'Downloading %1$s to %2$s from %3$s.' ), $filename, $this->path, $variant->woff2 )
-					);
-
 					/**
-					 * If the file already exists, the OMGF_Download class will bail early.
+					 * @since v6.4.1 Variable fonts use the same file for each font weight, so download it only once.
+					 *               Downloading it again for each weight slowed down optimization and every failed
+					 *               download dropped that weight from the stylesheet.
 					 */
-					$variant->woff2 = OMGF::download( $variant->woff2, $filename, $this->path );
+					if ( ! isset( $downloads[ $variant->woff2 ] ) ) {
+						OMGF::debug(
+							sprintf( __( 'Downloading %1$s to %2$s from %3$s.' ), $filename, $this->path, $variant->woff2 )
+						);
+
+						$downloads[ $variant->woff2 ] = OMGF::download( $variant->woff2, $filename, $this->path );
+					}
+
+					$variant->woff2 = $downloads[ $variant->woff2 ];
 				}
 			}
 

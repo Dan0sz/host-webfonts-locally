@@ -146,6 +146,47 @@ class DownloadTest extends TestCase {
 	}
 
 	/**
+	 * A download which fails to connect is retried once.
+	 *
+	 * @see Download::download()
+	 * @return void
+	 */
+	public function testDownloadRetriesFailedConnection() {
+		$path     = OMGF_UPLOAD_DIR . '/download-retry-test';
+		$requests = 0;
+		$mock     = function ( $response, $args ) use ( &$requests ) {
+			if ( ++$requests === 1 ) {
+				return new \WP_Error( 'http_request_failed', 'cURL error 7: Failed to connect' );
+			}
+
+			file_put_contents( $args['filename'], 'wOF2' . str_repeat( "\x00", 10 ) );
+
+			return [
+				'headers'  => [ 'content-type' => 'font/woff2' ],
+				'body'     => '',
+				'response' => [ 'code' => 200, 'message' => 'OK' ],
+				'cookies'  => [],
+				'filename' => $args['filename'],
+			];
+		};
+
+		// Runs after TestCase::mockGoogleFontsRequests().
+		add_filter( 'pre_http_request', $mock, 11, 2 );
+
+		try {
+			$file = ( new Download( 'https://fonts.gstatic.com/s/test/retry.woff2', 'retry', $path ) )->download();
+
+			$this->assertSame( 2, $requests );
+			$this->assertSame( '//example.org/wp-content/uploads/omgf/download-retry-test/retry.woff2', $file );
+			$this->assertEmpty( glob( "$path/*.tmp" ) );
+		} finally {
+			remove_filter( 'pre_http_request', $mock, 11 );
+			array_map( 'unlink', glob( "$path/*" ) );
+			rmdir( $path );
+		}
+	}
+
+	/**
 	 * At most MAX_FAILURES failed downloads are kept, most recent first, each with a message.
 	 *
 	 * @see Download::add_failure()
