@@ -46,6 +46,8 @@ class OptimizeTest extends TestCase {
 		$class     = new Optimize( $url, $handle, $handle, 'object' );
 		$processed = $class->process();
 
+		HttpClientMock::deactivate();
+
 		$this->assertArrayHasKey( 'test-crazy-syntaxes', $processed );
 		$this->assertArrayHasKey( 'roboto', $processed[ 'test-crazy-syntaxes' ] );
 		$this->assertArrayHasKey( 'open-sans', $processed[ 'test-crazy-syntaxes' ] );
@@ -171,7 +173,7 @@ class OptimizeTest extends TestCase {
 		}
 
 		$requests = 0;
-		// Font files are mocked by TestCase::mockGoogleFontsRequests().
+		// Font files are mocked by TestCase::mockGoogleFontsRequests(), this runs after it.
 		$mock = function ( $pre, $args, $request_url ) use ( $url, $css, &$requests ) {
 			if ( $request_url === $url ) {
 				return [ 'body' => $css, 'response' => [ 'code' => 200 ] ];
@@ -184,13 +186,13 @@ class OptimizeTest extends TestCase {
 			return $pre;
 		};
 
-		add_filter( 'pre_http_request', $mock, 1, 3 );
+		add_filter( 'pre_http_request', $mock, 11, 3 );
 
 		try {
 			$class     = new Optimize( $url, 'test-variable-font', 'test-variable-font', 'object' );
 			$processed = $class->process();
 		} finally {
-			remove_filter( 'pre_http_request', $mock, 1 );
+			remove_filter( 'pre_http_request', $mock, 11 );
 		}
 
 		$this->assertSame( 1, $requests );
