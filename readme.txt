@@ -3,7 +3,7 @@ Contributors: DaanvandenBergh
 Tags: google, fonts, gdpr, dsgvo, cache
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 6.4.0
+Stable tag: 6.4.1
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -90,6 +90,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 = 6.4.1 =
 * Fixed: some font weights could be missing after optimization, e.g. italics showing as Light.
 * Improved: variable fonts are downloaded only once, which makes optimization a lot faster.
+* Fixed: other plugins or themes could change the text color of notices on the Dashboard.
 
 = 6.4.0 =
 * Added: Import/Export settings on the Help tab and through WP-CLI (`wp omgf export`/`wp omgf import`).
