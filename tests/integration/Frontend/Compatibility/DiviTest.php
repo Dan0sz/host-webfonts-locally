@@ -31,6 +31,8 @@ class DiviTest extends TestCase {
 			$this->assertMatchesRegularExpression( '/^et-builder-googlefonts-[0-9a-f]{8}$/', $id );
 			$this->assertSame( $id, $class->maybe_modify_id( 'et-builder-googlefonts', $lato ) );
 			$this->assertNotSame( $id, $class->maybe_modify_id( 'et-builder-googlefonts', $lora ) );
+			// Line breaks and tabs don't change the requested URL, so they don't change the identifier either.
+			$this->assertSame( $id, $class->maybe_modify_id( 'et-builder-googlefonts', [ 'href' => "https://fonts.googleapis.com/css?family=Lato:400|\n\tNunito+Sans:400\n" ] ) );
 			// Other stylesheets are left alone.
 			$this->assertSame( 'roboto', $class->maybe_modify_id( 'roboto', $lato ) );
 		} finally {
