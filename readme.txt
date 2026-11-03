@@ -88,6 +88,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 == Changelog ==
 
 = 6.4.2 =
+* Fixed: the Google Fonts Checker ignored Google Fonts URLs with multiple families or spaces, e.g. loaded by the WebFont Loader.
 * Fixed: with Divi Compatibility enabled, changing fonts in Divi could load a stylesheet with other fonts.
 
 = 6.4.1 =
