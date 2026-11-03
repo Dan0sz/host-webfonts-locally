@@ -49,12 +49,17 @@ class Divi {
 	 * @since v5.2.0 Allow Divi/Elementor compatibility fixes to be disabled, for those who have too
 	 *               many different Google Fonts stylesheets configured throughout their pages and
 	 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
+	 * @since v6.4.2 Use a hash of the URL instead of its length, because different configurations with the same URL
+	 *               length got the same identifier, so a cached stylesheet with other fonts was loaded.
 	 */
 	public function maybe_modify_id( $id, $href ) {
 		if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && str_contains( $id, 'et-builder-googlefonts' ) ) {
 			$href_attr = is_array( $href ) && isset( $href[ 'href' ] ) ? $href[ 'href' ] : '';
 
-			return $id . '-' . strlen( $href_attr ); // @codeCoverageIgnore
+			// Ignore line breaks and tabs, like Process::sanitize_url() does before requesting the URL.
+			$href_attr = trim( str_replace( [ "\r", "\n", "\t" ], '', $href_attr ) );
+
+			return $id . '-' . substr( md5( $href_attr ), 0, 8 );
 		}
 
 		return $id;
