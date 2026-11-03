@@ -175,6 +175,29 @@ class AdminbarMenuTest extends TestCase {
 	}
 
 	/**
+	 * The frontend sends the URLs as a JSON string. Google Fonts URLs with multiple families or spaces in a family name
+	 * should be stored as-is.
+	 *
+	 * @see AdminbarMenu::get_admin_bar_status()
+	 * @return void
+	 */
+	public function testGetAdminBarStatusKeepsEncodedUrls() {
+		$request = new \WP_REST_Request( 'POST', '/omgf/v1/adminbar-menu/status' );
+		$url     = 'https://fonts.googleapis.com/css?family=Roboto%7CNoto+Serif';
+
+		try {
+			$request->set_param( 'path', '/test' );
+			$request->set_param( 'urls', wp_json_encode( [ $url ] ) );
+
+			( new AdminbarMenu() )->get_admin_bar_status( $request );
+
+			$this->assertArrayHasKey( $url, OMGF::get_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS ) );
+		} finally {
+			OMGF::delete_option( Settings::OMGF_DB_GOOGLE_FONTS_CHECKER_RESULTS );
+		}
+	}
+
+	/**
 	 * Visitors which were allowed to request the status (e.g. by widening the permission using the
 	 * omgf_api_adminbar_menu_permission filter) should only get a read-only status.
 	 *
