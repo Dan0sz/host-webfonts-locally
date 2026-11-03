@@ -87,6 +87,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.4.2 =
+* Fixed: with Divi Compatibility enabled, changing fonts in Divi could load a stylesheet with other fonts.
+
 = 6.4.1 =
 * Fixed: some font weights could be missing after optimization, e.g. italics showing as Light.
 * Improved: variable fonts are downloaded only once, which makes optimization a lot faster.
