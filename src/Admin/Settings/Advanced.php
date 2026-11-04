@@ -38,7 +38,6 @@ class Advanced extends Builder {
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_dtap' ], 70 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_promo_fonts_source_url' ], 80 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_legacy_mode' ], 90 );
-		add_action( 'omgf_advanced_settings_content', [ $this, 'do_compatibility' ], 100 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_used_subsets' ], 120 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_disable_admin_bar_menu' ], 130 );
 		add_action( 'omgf_advanced_settings_content', [ $this, 'do_debug_mode' ], 140 );
@@ -70,20 +69,6 @@ class Advanced extends Builder {
 			</td>
 		</tr>
 		<?php
-	}
-
-	/**
-	 *
-	 */
-	public function do_compatibility() {
-		$this->do_checkbox(
-			__( 'Divi Compatibility', 'host-webfonts-local' ),
-			Settings::OMGF_ADV_SETTING_COMPATIBILITY, ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) ),
-			__(
-				'Divi uses the same handle for Google Fonts stylesheets with different configurations. OMGF includes compatibility fixes to make sure these different stylesheets are processed correctly. Enable this if you see some fonts not appearing correctly. Default: off',
-				'host-webfonts-local'
-			)
-		);
 	}
 
 	public function do_debug_mode() {

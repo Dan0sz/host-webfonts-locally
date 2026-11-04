@@ -45,6 +45,7 @@ class Admin {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
 		add_action( 'admin_notices', [ $this, 'print_notices' ] );
+		add_action( 'admin_notices', [ $this, 'print_removed_stylesheets_notice' ] );
 
 		$this->do_optimize_settings();
 		$this->do_advanced_settings();
@@ -304,5 +305,54 @@ class Admin {
 	 */
 	public function print_notices() {
 		Notice::print_notices();
+	}
+
+	/**
+	 * Show which stylesheets were removed automatically, until the notice is dismissed.
+	 *
+	 * @see   OMGF::remove_unused_stylesheets()
+	 * @since v6.4.2
+	 *
+	 * @return void
+	 */
+	public function print_removed_stylesheets_notice() {
+		$removed = get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [] );
+
+		if ( empty( $removed ) || ! is_array( $removed ) || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$days = (int) round( apply_filters( 'omgf_unused_stylesheet_threshold', OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD ) / DAY_IN_SECONDS );
+		?>
+		<div id="omgf-removed-stylesheets-notice" class="notice notice-info is-dismissible">
+			<p>
+				<?php echo wp_kses_post(
+					sprintf(
+						_n(
+							'%1$s automatically removed this stylesheet from its cache, because it wasn\'t found on your site for over %2$d days: %3$s',
+							'%1$s automatically removed these stylesheets from its cache, because they weren\'t found on your site for over %2$d days: %3$s',
+							count( $removed ),
+							'host-webfonts-local'
+						),
+						apply_filters( 'omgf_settings_page_title', 'OMGF' ),
+						$days,
+						'<code>' . implode( '</code>, <code>', array_map( 'esc_html', $removed ) ) . '</code>'
+					)
+				); ?>
+			</p>
+		</div>
+		<script>
+			document.getElementById('omgf-removed-stylesheets-notice').addEventListener('click', function (e) {
+				if (!e.target.classList.contains('notice-dismiss')) {
+					return;
+				}
+
+				fetch(<?php echo wp_json_encode( get_rest_url( null, 'omgf/v1/dashboard/dismiss-removed-stylesheets' ) ); ?>, {
+					method: 'POST',
+					headers: {'X-WP-Nonce': <?php echo wp_json_encode( wp_create_nonce( 'wp_rest' ) ); ?>}
+				});
+			});
+		</script>
+		<?php
 	}
 }

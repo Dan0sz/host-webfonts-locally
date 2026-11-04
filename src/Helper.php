@@ -247,7 +247,6 @@ class Helper {
 			Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => '',
 			Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
 			Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
-			Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
 			Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
 			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
 			Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
@@ -804,6 +803,168 @@ class Helper {
 		}
 
 		return $unused;
+	}
+
+	/**
+	 * Options containing settings per stylesheet handle.
+	 *
+	 * @filter omgf_stylesheet_settings
+	 * @since  v6.4.2
+	 *
+	 * @return array [ option name => (bool) whether it's stored as a comma-separated string ]
+	 */
+	public static function stylesheet_settings() {
+		return apply_filters(
+			'omgf_stylesheet_settings',
+			[
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS       => false,
+				Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      => false,
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => true,
+			]
+		);
+	}
+
+	/**
+	 * Copies the settings of the first legacy handle which has them to $handle, if $handle wasn't optimized and doesn't
+	 * have settings yet, e.g. when an update changed the way handles are generated.
+	 *
+	 * @since v6.4.2
+	 *
+	 * @param array  $legacy_handles
+	 * @param string $handle
+	 *
+	 * @return void
+	 */
+	public static function inherit_stylesheet_settings( $legacy_handles, $handle ) {
+		$handle         = strtolower( $handle );
+		$legacy_handles = array_diff( array_map( 'strtolower', $legacy_handles ), [ $handle ] );
+
+		if ( empty( $legacy_handles ) || isset( self::optimized_fonts()[ $handle ] ) ) {
+			return;
+		}
+
+		foreach ( self::stylesheet_settings() as $option => $comma_separated ) {
+			$value = self::get_option( $option, $comma_separated ? '' : [] );
+
+			if ( $comma_separated ) {
+				$handles = array_filter( explode( ',', (string) $value ) );
+
+				if ( ! in_array( $handle, $handles, true ) && array_intersect( $legacy_handles, $handles ) ) {
+					$handles[] = $handle;
+
+					self::update_option( $option, implode( ',', $handles ) );
+				}
+
+				continue;
+			}
+
+			if ( ! is_array( $value ) || isset( $value[ $handle ] ) ) {
+				continue;
+			}
+
+			foreach ( $legacy_handles as $legacy_handle ) {
+				if ( ! empty( $value[ $legacy_handle ] ) ) {
+					$value[ $handle ] = $value[ $legacy_handle ];
+
+					self::update_option( $option, $value );
+
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Removes stylesheets which weren't seen in the frontend for a while from the cache and the database.
+	 *
+	 * @action omgf_remove_unused_stylesheets
+	 * @since  v6.4.2
+	 *
+	 * @return array The removed handles.
+	 */
+	public static function remove_unused_stylesheets() {
+		$unused = self::unused_stylesheets();
+
+		foreach ( $unused as $handle ) {
+			self::remove_stylesheet( $handle );
+		}
+
+		if ( ! empty( $unused ) ) {
+			$removed = get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [] );
+
+			update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, array_values( array_unique( array_merge( (array) $removed, $unused ) ) ), false );
+		}
+
+		return $unused;
+	}
+
+	/**
+	 * Removes the stylesheet with $handle from the cache directory and the database.
+	 *
+	 * @since v6.4.2
+	 *
+	 * @param string $handle
+	 *
+	 * @return void
+	 */
+	public static function remove_stylesheet( $handle ) {
+		$handle = sanitize_title_with_dashes( $handle );
+
+		if ( ! $handle ) {
+			return;
+		}
+
+		/**
+		 * Don't use cache_keys(), because it falls back to all handles if no cache keys are saved. Don't use
+		 * get_cache_key() either, because it would also match e.g. the cache key of handle-12 for handle-1.
+		 */
+		$cache_keys     = array_filter( explode( ',', (string) self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) ) );
+		$own_cache_keys = array_filter(
+			$cache_keys,
+			function ( $cache_key ) use ( $handle ) {
+				return $cache_key === $handle || str_starts_with( $cache_key, "$handle-mod-" );
+			}
+		);
+
+		foreach ( array_merge( [ $handle ], $own_cache_keys ) as $dir ) {
+			$dir = sanitize_title_with_dashes( $dir );
+
+			if ( $dir ) {
+				self::delete( OMGF_UPLOAD_DIR . '/' . $dir );
+			}
+		}
+
+		if ( ! empty( $own_cache_keys ) ) {
+			self::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, implode( ',', array_diff( $cache_keys, $own_cache_keys ) ) );
+		}
+
+		$settings = array_merge(
+			[
+				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS          => false,
+				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND => false,
+			],
+			self::stylesheet_settings()
+		);
+
+		foreach ( $settings as $option => $comma_separated ) {
+			$value = self::get_option( $option, $comma_separated ? '' : [] );
+
+			if ( $comma_separated ) {
+				$handles = array_filter( explode( ',', (string) $value ) );
+
+				if ( in_array( $handle, $handles, true ) ) {
+					self::update_option( $option, implode( ',', array_diff( $handles, [ $handle ] ) ) );
+				}
+
+				continue;
+			}
+
+			if ( is_array( $value ) && isset( $value[ $handle ] ) ) {
+				unset( $value[ $handle ] );
+
+				self::update_option( $option, $value );
+			}
+		}
 	}
 
 	/**

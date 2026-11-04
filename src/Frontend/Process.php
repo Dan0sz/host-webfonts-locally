@@ -648,26 +648,35 @@ class Process {
 				continue; // @codeCoverageIgnore
 			}
 
+			$legacy_ids = [];
+
 			/**
 			 * If no valid id attribute was found, then this means that this stylesheet wasn't enqueued
-			 * using proper WordPress conventions. We generate our own using the length of the href attribute
-			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
+			 * using proper WordPress conventions. We generate our own using the href attribute to serve as a UID.
+			 * This prevents clashes with other non-properly enqueued stylesheets on other pages.
 			 *
 			 * @var string $id
 			 * @since v5.1.4
-			 *
+			 * @since v6.3.10 Use the sanitized URL to make sure the generated handle doesn't change when
+			 *                insignificant whitespace is added to (or removed from) the href attribute.
+			 * @since v6.4.2  Use a hash of the URL instead of its length, because different stylesheets with the same
+			 *                URL length got the same handle, so a cached stylesheet with other fonts was loaded.
 			 */
 			if ( ! $id ) {
-				// @codeCoverageIgnoreStart
-				/**
-				 * @since v6.3.10 Use the sanitized URL's length to make sure the generated handle doesn't change
-				 *                when insignificant whitespace is added to (or removed from) the href attribute.
-				 */
-				$id = "$handle-" . strlen( $this->sanitize_url( $href['href'] ) );
-				// @codeCoverageIgnoreEnd
+				$url        = $this->sanitize_url( $href['href'] );
+				$id         = "$handle-" . substr( md5( $url ), 0, 8 );
+				$legacy_ids = [ "$handle-" . strlen( $url ), "$handle-" . strlen( $href['href'] ) ];
 			}
 
-			$google_fonts[ $key ]['id']   = apply_filters( 'omgf_frontend_process_fonts_set', $id, $href );
+			/**
+			 * @filter omgf_frontend_process_legacy_ids Handles this stylesheet was stored under by older versions, so
+			 *                                          its settings can be inherited.
+			 * @since  v6.4.2
+			 */
+			$google_fonts[ $key ]['legacy_ids'] = array_values(
+				array_unique( apply_filters( 'omgf_frontend_process_legacy_ids', $legacy_ids, $id, $href ) )
+			);
+			$google_fonts[ $key ]['id']         = apply_filters( 'omgf_frontend_process_fonts_set', $id, $href );
 			$google_fonts[ $key ]['link'] = $link;
 			/**
 			 * This is used for search/replace later on. This shouldn't be tampered with.
@@ -756,6 +765,13 @@ class Process {
 			}
 
 			/**
+			 * @since v6.4.2 Stylesheets which got a new handle inherit the settings of their old handle.
+			 */
+			if ( ! empty( $stack['legacy_ids'] ) ) {
+				OMGF::inherit_stylesheet_settings( $stack['legacy_ids'], $handle );
+			}
+
+			/**
 			 * If the stylesheet with $handle is completely marked for unloading, just remove the element
 			 * to prevent it from loading.
 			 */
@@ -763,6 +779,14 @@ class Process {
 				'omgf_unloaded_stylesheets',
 				OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() )
 			) ) {
+				/**
+				 * @since v6.4.2 Optimize an unloaded stylesheet once if it wasn't optimized before (e.g. because it
+				 *               inherited its settings), so it's listed in the admin and can be loaded again.
+				 */
+				if ( ! isset( OMGF::optimized_fonts()[ $handle ] ) ) {
+					( new Optimize( $url, $handle, $original_handle ) )->process();
+				}
+
 				$search[ $key ]  = $stack['link']; // @codeCoverageIgnore
 				$replace[ $key ] = ''; // @codeCoverageIgnore
 				$seen[]          = $original_handle; // @codeCoverageIgnore

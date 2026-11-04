@@ -68,6 +68,11 @@ class Plugin {
 
 		// Load globally.
 		new API\AdminbarMenu();
+
+		/**
+		 * @since v6.4.2 Scheduled in @see Admin\Actions::schedule_remove_unused_stylesheets()
+		 */
+		add_action( 'omgf_remove_unused_stylesheets', [ '\OMGF\Helper', 'remove_unused_stylesheets' ] );
 		new API\Dashboard();
 		new Compatibility();
 		new Filters();
@@ -82,6 +87,16 @@ class Plugin {
 
 		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'maybe_install_mu_plugin' ] );
 		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'uninstall_mu_plugin' ] );
+		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'unschedule_events' ] );
+	}
+
+	/**
+	 * @since v6.4.2
+	 *
+	 * @return void
+	 */
+	public static function unschedule_events() {
+		wp_clear_scheduled_hook( 'omgf_remove_unused_stylesheets' );
 	}
 
 	/**

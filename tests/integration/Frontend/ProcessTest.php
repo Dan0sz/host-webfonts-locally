@@ -365,6 +365,63 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * Stylesheets without an id get a handle based on a hash of their URL, so different stylesheets with the same URL
+	 * length don't share a handle. The handles used before v6.4.2 are passed along as legacy ids.
+	 *
+	 * @see Process::build_fonts_set()
+	 * @return void
+	 */
+	public function testBuildFontsSetHashesIdLessStylesheets() {
+		$class = new Process( true );
+		$lato  = 'https://fonts.googleapis.com/css?family=Lato:400';
+		$lora  = 'https://fonts.googleapis.com/css?family=Lora:400';
+		$set   = $class->build_fonts_set( [ "<link rel='stylesheet' href='$lato'/>", "<link rel='stylesheet' href='$lora'/>" ] );
+
+		$this->assertMatchesRegularExpression( '/^omgf-stylesheet-[0-9a-f]{8}$/', $set[0]['id'] );
+		$this->assertNotSame( $set[0]['id'], $set[1]['id'] );
+		$this->assertSame( [ 'omgf-stylesheet-' . strlen( $lato ) ], $set[0]['legacy_ids'] );
+
+		// Stylesheets with an id don't have legacy ids.
+		$set = $class->build_fonts_set( [ "<link rel='stylesheet' id='lato-css' href='$lato'/>" ] );
+
+		$this->assertSame( 'lato', $set[0]['id'] );
+		$this->assertSame( [], $set[0]['legacy_ids'] );
+	}
+
+	/**
+	 * A stylesheet with a new handle inherits the settings of its legacy handle before it's processed.
+	 *
+	 * @see Process::build_search_replace()
+	 * @return void
+	 */
+	public function testBuildSearchReplaceInheritsLegacySettings() {
+		$url = 'https://fonts.googleapis.com/css?family=Lato:400';
+
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'omgf-stylesheet-48' );
+
+		try {
+			$class  = new Process( true );
+			$result = $class->build_search_replace(
+				[
+					[
+						'id'         => 'omgf-stylesheet-abcdef12',
+						'link'       => "<link rel='stylesheet' href='$url'/>",
+						'href'       => $url,
+						'url'        => $url,
+						'legacy_ids' => [ 'omgf-stylesheet-48' ],
+					],
+				]
+			);
+
+			$this->assertContains( 'omgf-stylesheet-abcdef12', OMGF::unloaded_stylesheets() );
+			// The stylesheet is unloaded, so it's removed.
+			$this->assertSame( [ '' ], array_values( $result['replace'] ) );
+		} finally {
+			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
+		}
+	}
+
+	/**
 	 * A link element is kept for processing when any of its attributes points at the font API, but the URL
 	 * actually requested is taken from its href. If that href points at another host, the stylesheet must not
 	 * be processed (or requested), leaving the element untouched. This prevents the request from being pointed

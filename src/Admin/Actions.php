@@ -28,10 +28,25 @@ class Actions {
 		add_action( '_admin_menu', [ $this, 'init_admin' ] );
 		add_action( 'admin_init', [ $this, 'do_optimize' ] );
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
+		add_action( 'admin_init', [ $this, 'schedule_remove_unused_stylesheets' ] );
 		add_action( 'in_plugin_update_message-' . OMGF_PLUGIN_BASENAME, [ $this, 'render_update_notice' ], 11 );
 		add_action( 'omgf_pre_update_setting_cache_keys', [ $this, 'clean_stale_cache' ], 10, 2 );
 
 		new ImportExport();
+	}
+
+	/**
+	 * Daily removal of stylesheets which weren't found on the site for a while.
+	 *
+	 * @see   OMGF::remove_unused_stylesheets()
+	 * @since v6.4.2
+	 *
+	 * @return void
+	 */
+	public function schedule_remove_unused_stylesheets() {
+		if ( ! wp_next_scheduled( 'omgf_remove_unused_stylesheets' ) ) {
+			wp_schedule_event( time(), 'daily', 'omgf_remove_unused_stylesheets' );
+		}
 	}
 
 	/**

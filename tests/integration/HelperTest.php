@@ -350,4 +350,98 @@ class HelperTest extends TestCase {
 			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
 		}
 	}
+
+	/**
+	 * A new handle inherits the settings of the first legacy handle which has them, unless it has its own settings.
+	 *
+	 * @see Helper::inherit_stylesheet_settings()
+	 * @return void
+	 */
+	public function testInheritStylesheetSettings() {
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'legacy' => [ 'lato' => [ '400' ] ] ] );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [ 'new' => [ 'lato' => [ '700' => '700' ] ], 'legacy' => [ 'lato' => [ '400' => '400' ] ] ] );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'other,legacy' );
+
+		try {
+			OMGF::inherit_stylesheet_settings( [ 'Older', 'Legacy' ], 'new' );
+
+			$this->assertSame( [ 'lato' => [ '400' ] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )['new'] );
+			// Existing settings aren't overwritten.
+			$this->assertSame( [ 'lato' => [ '700' => '700' ] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS )['new'] );
+			$this->assertSame( 'other,legacy,new', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) );
+		} finally {
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
+			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
+		}
+	}
+
+	/**
+	 * Removing a stylesheet removes its files and settings, but leaves other stylesheets alone, even if their handle
+	 * starts with the same string.
+	 *
+	 * @see Helper::remove_stylesheet()
+	 * @return void
+	 */
+	public function testRemoveStylesheet() {
+		foreach ( [ 'sheet-1', 'sheet-1-mod-abc', 'sheet-12' ] as $dir ) {
+			wp_mkdir_p( OMGF_UPLOAD_DIR . "/$dir" );
+			file_put_contents( OMGF_UPLOAD_DIR . "/$dir/$dir.css", '' );
+		}
+
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [ 'sheet-1' => [], 'sheet-12' => [] ] );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'sheet-1' => [ 'lato' => [ '400' ] ], 'sheet-12' => [ 'lato' => [ '400' ] ] ] );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'sheet-1,sheet-12' );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, 'sheet-1-mod-abc,sheet-12' );
+
+		try {
+			OMGF::remove_stylesheet( 'sheet-1' );
+
+			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/sheet-1' );
+			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/sheet-1-mod-abc' );
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-12' );
+			$this->assertSame( [ 'sheet-12' => [] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
+			$this->assertArrayNotHasKey( 'sheet-1', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ) );
+			$this->assertSame( 'sheet-12', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) );
+			$this->assertSame( 'sheet-12', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) );
+
+			// An empty handle doesn't remove anything.
+			OMGF::remove_stylesheet( '' );
+
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-12' );
+		} finally {
+			OMGF::delete( OMGF_UPLOAD_DIR . '/sheet-12' );
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
+			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
+			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' );
+		}
+	}
+
+	/**
+	 * Unused stylesheets are removed and remembered for the admin notice.
+	 *
+	 * @see Helper::remove_unused_stylesheets()
+	 * @return void
+	 */
+	public function testRemoveUnusedStylesheets() {
+		$old = time() - OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD - DAY_IN_SECONDS;
+
+		wp_mkdir_p( OMGF_UPLOAD_DIR . '/unused' );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [ 'used' => [], 'unused' => [] ] );
+		update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'used' => time(), 'unused' => $old ] );
+		update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [ 'earlier' ] );
+
+		try {
+			$this->assertSame( [ 'unused' ], OMGF::remove_unused_stylesheets() );
+			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/unused' );
+			$this->assertSame( [ 'used' => [] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
+			$this->assertSame( [ 'earlier', 'unused' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
+			$this->assertSame( [], OMGF::remove_unused_stylesheets() );
+		} finally {
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
+			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
+		}
+	}
 }

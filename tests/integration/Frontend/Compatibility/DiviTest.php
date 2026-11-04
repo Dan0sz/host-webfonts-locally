@@ -21,11 +21,6 @@ class DiviTest extends TestCase {
 		$lora  = [ 'href' => 'https://fonts.googleapis.com/css?family=Lora:400|Nunito+Sans:400' ];
 
 		try {
-			// Compatibility fixes are disabled by default.
-			$this->assertSame( 'et-builder-googlefonts', $class->maybe_modify_id( 'et-builder-googlefonts', $lato ) );
-
-			add_filter( 'omgf_setting_compatibility', [ $this, 'return_on' ] );
-
 			$id = $class->maybe_modify_id( 'et-builder-googlefonts', $lato );
 
 			$this->assertMatchesRegularExpression( '/^et-builder-googlefonts-[0-9a-f]{8}$/', $id );
@@ -36,15 +31,30 @@ class DiviTest extends TestCase {
 			// Other stylesheets are left alone.
 			$this->assertSame( 'roboto', $class->maybe_modify_id( 'roboto', $lato ) );
 		} finally {
-			remove_filter( 'omgf_setting_compatibility', [ $this, 'return_on' ] );
 			remove_filter( 'omgf_frontend_process_fonts_set', [ $class, 'maybe_modify_id' ] );
+			remove_filter( 'omgf_frontend_process_legacy_ids', [ $class, 'add_legacy_ids' ] );
 		}
 	}
 
 	/**
-	 * @return string
+	 * The handles used before v6.4.2 are returned, so their settings can be inherited.
+	 *
+	 * @see Divi::add_legacy_ids()
+	 * @return void
 	 */
-	public function return_on() {
-		return 'on';
+	public function testAddLegacyIds() {
+		$class = new Divi();
+		$lato  = [ 'href' => 'https://fonts.googleapis.com/css?family=Lato:400|Nunito+Sans:400' ];
+
+		try {
+			$this->assertSame(
+				[ 'et-builder-googlefonts-' . strlen( $lato['href'] ), 'et-builder-googlefonts' ],
+				$class->add_legacy_ids( [], 'et-builder-googlefonts', $lato )
+			);
+			$this->assertSame( [], $class->add_legacy_ids( [], 'roboto', $lato ) );
+		} finally {
+			remove_filter( 'omgf_frontend_process_fonts_set', [ $class, 'maybe_modify_id' ] );
+			remove_filter( 'omgf_frontend_process_legacy_ids', [ $class, 'add_legacy_ids' ] );
+		}
 	}
 }
