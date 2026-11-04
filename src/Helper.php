@@ -1017,10 +1017,13 @@ class Helper {
 		 * get_cache_key() either, because it would also match e.g. the cache key of handle-12 for handle-1.
 		 */
 		$cache_keys     = array_filter( explode( ',', (string) self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) ) );
+		$other_handles  = array_diff( array_keys( self::admin_optimized_fonts() ), [ $handle ] );
 		$own_cache_keys = array_filter(
 			$cache_keys,
-			function ( $cache_key ) use ( $handle ) {
-				return $cache_key === $handle || str_starts_with( $cache_key, "$handle-mod-" );
+			function ( $cache_key ) use ( $handle, $other_handles ) {
+				// A handle can contain -mod- too, e.g. theme-mod-dark, which isn't a cache key of theme.
+				return $cache_key === $handle ||
+				       ( str_starts_with( $cache_key, "$handle-mod-" ) && ! in_array( $cache_key, $other_handles, true ) );
 			}
 		);
 
@@ -1079,8 +1082,9 @@ class Helper {
 		 * @since  v6.5.0
 		 *
 		 * @param string $handle
+		 * @param array  $cache_keys Its modified cache keys, e.g. "$handle-mod-xxxxx".
 		 */
-		do_action( 'omgf_stylesheet_removed', $handle );
+		do_action( 'omgf_stylesheet_removed', $handle, array_values( array_diff( $own_cache_keys, [ $handle ] ) ) );
 
 		return $deleted;
 	}
