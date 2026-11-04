@@ -362,16 +362,27 @@ class HelperTest extends TestCase {
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [ 'new' => [ 'lato' => [ '700' => '700' ] ], 'legacy' => [ 'lato' => [ '400' => '400' ] ] ] );
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'other,legacy' );
 
+		$fonts = function () {
+			return [ 'legacy' => [], 'other' => [] ];
+		};
+
+		add_filter( 'omgf_filter_optimized_fonts', $fonts );
+
 		try {
 			OMGF::inherit_stylesheet_settings( [ 'Older', 'Legacy' ], 'new' );
+
+			// Optimized legacy handles are marked as superseded.
+			$this->assertSame( [ 'legacy' ], OMGF::superseded_stylesheets() );
 
 			$this->assertSame( [ 'lato' => [ '400' ] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )['new'] );
 			// Existing settings aren't overwritten.
 			$this->assertSame( [ 'lato' => [ '700' => '700' ] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS )['new'] );
 			$this->assertSame( 'other,legacy,new', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) );
 		} finally {
+			remove_filter( 'omgf_filter_optimized_fonts', $fonts );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
 			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
 		}
 	}
@@ -393,9 +404,12 @@ class HelperTest extends TestCase {
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'sheet-1' => [ 'lato' => [ '400' ] ], 'sheet-12' => [ 'lato' => [ '400' ] ] ] );
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'sheet-1,sheet-12' );
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, 'sheet-1-mod-abc,sheet-12' );
+		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'sheet-1', 'sheet-12' ] );
 
 		try {
 			OMGF::remove_stylesheet( 'sheet-1' );
+
+			$this->assertSame( [ 'sheet-12' ], OMGF::superseded_stylesheets() );
 
 			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/sheet-1' );
 			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/sheet-1-mod-abc' );
@@ -415,6 +429,7 @@ class HelperTest extends TestCase {
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
 			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
 			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
 		}
 	}
 

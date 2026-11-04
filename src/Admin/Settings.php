@@ -47,6 +47,9 @@ class Settings extends Admin {
 	/** @since v6.4.2 */
 	const OMGF_DB_REMOVED_STYLESHEETS = 'omgf_removed_stylesheets';
 
+	/** @since v6.4.2 */
+	const OMGF_DB_SUPERSEDED_STYLESHEETS = 'omgf_superseded_stylesheets';
+
 	/**
 	 * Transients
 	 */

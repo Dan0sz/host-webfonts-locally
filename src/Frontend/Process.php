@@ -194,9 +194,18 @@ class Process {
 		}
 
 		$optimized_fonts = OMGF::optimized_fonts();
+		$superseded      = OMGF::superseded_stylesheets();
+		$preloaded_files = [];
 		$i               = 0;
 
 		foreach ( $optimized_fonts as $stylesheet_handle => $font_faces ) {
+			/**
+			 * @since v6.4.2 Stylesheets which got a new handle aren't used anymore, so their fonts aren't preloaded.
+			 */
+			if ( in_array( $stylesheet_handle, $superseded, true ) ) {
+				continue;
+			}
+
 			foreach ( $font_faces as $font_face ) {
 				$preloads_stylesheet = $preloaded_fonts[ $stylesheet_handle ] ?? [];
 
@@ -245,7 +254,18 @@ class Process {
 						continue; // @codeCoverageIgnore
 					}
 
-					$preloaded[] = $url;
+					/**
+					 * @since v6.4.2 Stylesheets with different handles can contain the same font file, e.g. when they
+					 *               inherited their settings from the same handle. Preload each file only once.
+					 */
+					$file_key = basename( $file_path ) . ':' . ( file_exists( $file_path ) ? filesize( $file_path ) : '' );
+
+					if ( in_array( $file_key, $preloaded_files, true ) ) {
+						continue;
+					}
+
+					$preloaded[]       = $url;
+					$preloaded_files[] = $file_key;
 					$timestamp   = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
 					$url         .= str_contains( $url, '?' ) ? "&ver=$timestamp" : "?ver=$timestamp";
 

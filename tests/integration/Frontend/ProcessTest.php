@@ -62,6 +62,59 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * Fonts of superseded stylesheets aren't preloaded, and the same font file is preloaded only once, even if
+	 * multiple stylesheets contain it.
+	 *
+	 * @see Process::add_preloads()
+	 * @return void
+	 */
+	public function testAddPreloadsSkipsSupersededAndDuplicateFiles() {
+		$fonts    = function () {
+			$fonts = $this->addOptimizedFonts();
+
+			return [ 'legacy' => $fonts['astra-google-fonts'], 'new-1' => $fonts['astra-google-fonts'], 'new-2' => $fonts['astra-google-fonts'] ];
+		};
+		$preloads = function () {
+			$preloads = $this->addPreloads()['astra-google-fonts'];
+
+			return [ 'legacy' => $preloads, 'new-1' => $preloads, 'new-2' => $preloads ];
+		};
+
+		add_filter( 'omgf_filter_optimized_fonts', $fonts );
+		add_filter( 'omgf_filter_preloaded_fonts', $preloads );
+		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'legacy' ] );
+
+		try {
+			ob_start();
+			( new Process( true ) )->add_preloads();
+			$output = ob_get_clean();
+
+			// Jost 400 and 600 are preloaded once.
+			$this->assertSame( 2, preg_match_all( '~rel=[\'"]preload~', $output ) );
+
+			// Only the superseded stylesheet has preloads.
+			remove_filter( 'omgf_filter_preloaded_fonts', $preloads );
+
+			$legacy_only = function () {
+				return [ 'legacy' => $this->addPreloads()['astra-google-fonts'] ];
+			};
+
+			add_filter( 'omgf_filter_preloaded_fonts', $legacy_only );
+
+			ob_start();
+			( new Process( true ) )->add_preloads();
+
+			$this->assertSame( 0, preg_match_all( '~rel=[\'"]preload~', ob_get_clean() ) );
+
+			remove_filter( 'omgf_filter_preloaded_fonts', $legacy_only );
+		} finally {
+			remove_filter( 'omgf_filter_optimized_fonts', $fonts );
+			remove_filter( 'omgf_filter_preloaded_fonts', $preloads );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
+		}
+	}
+
+	/**
 	 * Is the Success-message added properly?
 	 *
 	 * @see Process::add_success_message()

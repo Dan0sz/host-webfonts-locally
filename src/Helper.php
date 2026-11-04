@@ -825,6 +825,20 @@ class Helper {
 	}
 
 	/**
+	 * Handles of stylesheets which were replaced by a stylesheet with a new handle.
+	 *
+	 * @see   self::inherit_stylesheet_settings()
+	 * @since v6.4.2
+	 *
+	 * @return array
+	 */
+	public static function superseded_stylesheets() {
+		$superseded = get_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [] );
+
+		return is_array( $superseded ) ? $superseded : [];
+	}
+
+	/**
 	 * Copies the settings of the first legacy handle which has them to $handle, if $handle wasn't optimized and doesn't
 	 * have settings yet, e.g. when an update changed the way handles are generated.
 	 *
@@ -841,6 +855,17 @@ class Helper {
 
 		if ( empty( $legacy_handles ) || isset( self::optimized_fonts()[ $handle ] ) ) {
 			return;
+		}
+
+		/**
+		 * Legacy handles aren't generated anymore. Their files are kept until they're removed as unused, because
+		 * pages in a page cache might still use them.
+		 */
+		$superseded = self::superseded_stylesheets();
+		$legacy     = array_diff( array_intersect( $legacy_handles, array_keys( self::optimized_fonts() ) ), $superseded );
+
+		if ( ! empty( $legacy ) ) {
+			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, array_values( array_merge( $superseded, $legacy ) ) );
 		}
 
 		foreach ( self::stylesheet_settings() as $option => $comma_separated ) {
@@ -936,6 +961,12 @@ class Helper {
 
 		if ( ! empty( $own_cache_keys ) ) {
 			self::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, implode( ',', array_diff( $cache_keys, $own_cache_keys ) ) );
+		}
+
+		$superseded = self::superseded_stylesheets();
+
+		if ( in_array( $handle, $superseded, true ) ) {
+			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, array_values( array_diff( $superseded, [ $handle ] ) ) );
 		}
 
 		$settings = array_merge(
