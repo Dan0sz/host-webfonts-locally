@@ -407,8 +407,18 @@ class HelperTest extends TestCase {
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, 'sheet-1-mod-abc,sheet-12' );
 		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'sheet-1', 'sheet-12' ] );
 
+		$removed = [];
+		$record  = function ( $handle ) use ( &$removed ) {
+			$removed[] = $handle;
+		};
+
+		add_action( 'omgf_stylesheet_removed', $record );
+
 		try {
 			OMGF::remove_stylesheet( 'sheet-1' );
+
+			// Add-ons are told, so they can clean up their own files.
+			$this->assertSame( [ 'sheet-1' ], $removed );
 
 			$this->assertSame( [ 'sheet-12' ], OMGF::superseded_stylesheets() );
 
@@ -424,7 +434,9 @@ class HelperTest extends TestCase {
 			OMGF::remove_stylesheet( '' );
 
 			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-12' );
+			$this->assertSame( [ 'sheet-1' ], $removed );
 		} finally {
+			remove_action( 'omgf_stylesheet_removed', $record );
 			OMGF::delete( OMGF_UPLOAD_DIR . '/sheet-12' );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
@@ -469,6 +481,21 @@ class HelperTest extends TestCase {
 			$this->assertEmpty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ) );
 			$this->assertEmpty( OMGF::superseded_stylesheets() );
 			$this->assertSame( [ 'earlier', 'unused' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
+
+			// Add-ons can keep stylesheets which are used, but aren't seen in the frontend.
+			$last_seen         = OMGF::stylesheets_last_seen();
+			$last_seen['used'] = $old;
+			$keep              = function ( $unused ) {
+				return array_diff( $unused, [ 'used' ] );
+			};
+
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen );
+			add_filter( 'omgf_unused_stylesheets', $keep );
+
+			$this->assertSame( [], OMGF::remove_unused_stylesheets() );
+			$this->assertArrayHasKey( 'used', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
+
+			remove_filter( 'omgf_unused_stylesheets', $keep );
 		} finally {
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
 			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );

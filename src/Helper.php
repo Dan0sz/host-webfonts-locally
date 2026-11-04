@@ -958,7 +958,16 @@ class Helper {
 	 * @return array The removed handles.
 	 */
 	public static function remove_unused_stylesheets() {
-		$unused = self::unused_stylesheets();
+		/**
+		 * Allows add-ons to keep stylesheets which are used, but aren't seen in the frontend, e.g. because they're
+		 * loaded asynchronously.
+		 *
+		 * @filter omgf_unused_stylesheets
+		 * @since  v6.5.0
+		 *
+		 * @param array $unused The handles of stylesheets which weren't seen for a while.
+		 */
+		$unused = array_values( (array) apply_filters( 'omgf_unused_stylesheets', self::unused_stylesheets() ) );
 
 		/**
 		 * Superseded handles which only had settings left weren't in the cache, so they're not worth a notice.
@@ -1051,6 +1060,16 @@ class Helper {
 				self::update_option( $option, $value );
 			}
 		}
+
+		/**
+		 * Allows add-ons to clean up their own files and data for this stylesheet.
+		 *
+		 * @action omgf_stylesheet_removed
+		 * @since  v6.5.0
+		 *
+		 * @param string $handle
+		 */
+		do_action( 'omgf_stylesheet_removed', $handle );
 	}
 
 	/**
