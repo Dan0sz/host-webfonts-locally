@@ -16,6 +16,8 @@
 
 namespace OMGF\Frontend\Compatibility;
 
+use OMGF\Helper as OMGF;
+
 /**
  * @codeCoverageIgnore Because it depends on a 3rd party plugin.
  */
@@ -60,10 +62,7 @@ class Elementor {
 
 		$href_attr = is_array( $href ) && isset( $href['href'] ) ? $href['href'] : '';
 
-		// Ignore line breaks and tabs, like Process::sanitize_url() does before requesting the URL.
-		$href_attr = trim( str_replace( [ "\r", "\n", "\t" ], '', $href_attr ) );
-
-		return 'google-fonts-' . substr( md5( $href_attr ), 0, 8 );
+		return 'google-fonts-' . OMGF::stylesheet_hash( $href_attr );
 	}
 
 	/**

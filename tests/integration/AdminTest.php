@@ -128,16 +128,73 @@ class AdminTest extends TestCase {
 		 * Make sure it's empty.
 		 */
 		$wp_settings_errors = [];
+		$original_get       = $_GET;
 
-		$class = new Admin();
+		try {
+			$class = new Admin();
 
-		$_GET['page'] = Settings::OMGF_ADMIN_PAGE;
-		$_GET['tab']  = 'test';
+			$_GET['page'] = Settings::OMGF_ADMIN_PAGE;
+			$_GET['tab']  = 'test';
 
-		$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin-ext' ] ], [ 'subsets' => [ 'latin' ] ] );
+			$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin-ext' ] ], [ 'subsets' => [ 'latin' ] ] );
 
-		$this->assertTrue( OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
+			$this->assertTrue( OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
+		} finally {
+			// Other tests (e.g. Actions::update_settings()) use the tab parameter, too.
+			$_GET = $original_get;
 
-		OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
+			OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
+		}
+	}
+
+	/**
+	 * The notice lists the removed stylesheets for administrators, and isn't shown when nothing was removed.
+	 *
+	 * @see Admin::print_removed_stylesheets_notice()
+	 * @return void
+	 */
+	public function testPrintRemovedStylesheetsNotice() {
+		$admin   = new Admin();
+		$user_id = wp_insert_user( [ 'user_login' => 'removed_notice_admin', 'user_pass' => 'test_pass', 'role' => 'administrator' ] );
+
+		try {
+			if ( is_wp_error( $user_id ) ) {
+				$this->fail( $user_id->get_error_message() );
+			}
+
+			wp_set_current_user( $user_id );
+
+			ob_start();
+			$admin->print_removed_stylesheets_notice();
+
+			$this->assertEmpty( ob_get_clean() );
+
+			update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [ 'old-sheet', 'other-sheet' ] );
+
+			ob_start();
+			$admin->print_removed_stylesheets_notice();
+			$output = ob_get_clean();
+
+			$this->assertStringContainsString( 'automatically removed these stylesheets', $output );
+			$this->assertStringContainsString( '<code>old-sheet</code>, <code>other-sheet</code>', $output );
+			$this->assertStringContainsString( 'omgf_dismiss_removed_stylesheets', $output );
+
+			// Only administrators see it.
+			wp_set_current_user( 0 );
+
+			ob_start();
+			$admin->print_removed_stylesheets_notice();
+
+			$this->assertEmpty( ob_get_clean() );
+		} finally {
+			wp_set_current_user( 0 );
+			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
+
+			if ( ! is_wp_error( $user_id ) ) {
+				require_once ABSPATH . 'wp-admin/includes/user.php';
+
+				wp_delete_user( $user_id );
+			}
+		}
 	}
 }

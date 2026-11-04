@@ -70,19 +70,6 @@ class Dashboard {
 
 		register_rest_route(
 			$this->namespace,
-			'/' . $this->base . '/dismiss-removed-stylesheets',
-			[
-				[
-					'methods'             => 'POST',
-					'callback'            => [ $this, 'dismiss_removed_stylesheets' ],
-					'permission_callback' => [ $this, 'get_permission' ],
-				],
-				'schema' => null,
-			]
-		);
-
-		register_rest_route(
-			$this->namespace,
 			'/' . $this->base . '/dismiss-download-failures',
 			[
 				[
@@ -126,19 +113,6 @@ class Dashboard {
 	 */
 	public function dismiss_download_failures() {
 		Download::clear_failures();
-
-		return new \WP_REST_Response( [ 'success' => true ] );
-	}
-
-	/**
-	 * Mark the notice about automatically removed stylesheets as read.
-	 *
-	 * @since v6.4.2
-	 *
-	 * @return \WP_REST_Response
-	 */
-	public function dismiss_removed_stylesheets() {
-		delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
 
 		return new \WP_REST_Response( [ 'success' => true ] );
 	}

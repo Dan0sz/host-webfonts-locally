@@ -28,6 +28,8 @@ class DiviTest extends TestCase {
 			$this->assertNotSame( $id, $class->maybe_modify_id( 'et-builder-googlefonts', $lora ) );
 			// Line breaks and tabs don't change the requested URL, so they don't change the identifier either.
 			$this->assertSame( $id, $class->maybe_modify_id( 'et-builder-googlefonts', [ 'href' => "https://fonts.googleapis.com/css?family=Lato:400|\n\tNunito+Sans:400\n" ] ) );
+			// A version bump doesn't change the identifier.
+			$this->assertSame( $id, $class->maybe_modify_id( 'et-builder-googlefonts', [ 'href' => $lato['href'] . '&#038;ver=4.27.4' ] ) );
 			// Other stylesheets are left alone.
 			$this->assertSame( 'roboto', $class->maybe_modify_id( 'roboto', $lato ) );
 		} finally {

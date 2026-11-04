@@ -825,6 +825,47 @@ class Helper {
 	}
 
 	/**
+	 * Generates a short identifier for a stylesheet URL, used to give stylesheets which share a handle (or don't have
+	 * one) a unique handle per configuration.
+	 *
+	 * @since v6.4.2
+	 *
+	 * @param string $href
+	 *
+	 * @return string
+	 */
+	public static function stylesheet_hash( $href ) {
+		// Ignore line breaks and tabs, like Process::sanitize_url() does before requesting the URL.
+		$href = trim( str_replace( [ "\r", "\n", "\t" ], '', (string) $href ) );
+		// Ignore the version, so the handle doesn't change (and lose its settings) when it's bumped.
+		$href = preg_replace( '/(\?)ver=[^&#]*(?:&amp;|&#0?38;|&)?|(?:&amp;|&#0?38;|&)ver=[^&#]*/i', '$1', $href );
+
+		return substr( md5( $href ), 0, 8 );
+	}
+
+	/**
+	 * Marks the notice about automatically removed stylesheets as read for $handles. Stylesheets removed after the
+	 * notice was displayed are kept, so they're shown next time.
+	 *
+	 * @since v6.4.2
+	 *
+	 * @param array $handles
+	 *
+	 * @return void
+	 */
+	public static function dismiss_removed_stylesheets( $handles ) {
+		$removed = array_values( array_diff( (array) get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [] ), (array) $handles ) );
+
+		if ( empty( $removed ) ) {
+			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
+
+			return;
+		}
+
+		update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, $removed, false );
+	}
+
+	/**
 	 * Handles of stylesheets which were replaced by a stylesheet with a new handle.
 	 *
 	 * @see   self::inherit_stylesheet_settings()

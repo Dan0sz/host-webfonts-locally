@@ -684,7 +684,7 @@ class Process {
 			 */
 			if ( ! $id ) {
 				$url        = $this->sanitize_url( $href['href'] );
-				$id         = "$handle-" . substr( md5( $url ), 0, 8 );
+				$id         = "$handle-" . OMGF::stylesheet_hash( $url );
 				$legacy_ids = [ "$handle-" . strlen( $url ), "$handle-" . strlen( $href['href'] ) ];
 			}
 

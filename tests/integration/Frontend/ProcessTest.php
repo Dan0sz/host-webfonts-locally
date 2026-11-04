@@ -471,6 +471,12 @@ class ProcessTest extends TestCase {
 			$this->assertSame( [ '' ], array_values( $result['replace'] ) );
 		} finally {
 			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
+			OMGF::remove_stylesheet( 'omgf-stylesheet-abcdef12' );
+
+			$last_seen = OMGF::stylesheets_last_seen();
+
+			unset( $last_seen['omgf-stylesheet-abcdef12'] );
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen );
 		}
 	}
 

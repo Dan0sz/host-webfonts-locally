@@ -347,10 +347,16 @@ class Admin {
 					return;
 				}
 
-				fetch(<?php echo wp_json_encode( get_rest_url( null, 'omgf/v1/dashboard/dismiss-removed-stylesheets' ) ); ?>, {
-					method: 'POST',
-					headers: {'X-WP-Nonce': <?php echo wp_json_encode( wp_create_nonce( 'wp_rest' ) ); ?>}
+				var data = new URLSearchParams({
+					action: 'omgf_dismiss_removed_stylesheets',
+					nonce: <?php echo wp_json_encode( wp_create_nonce( 'omgf_dismiss_removed_stylesheets' ) ); ?>
 				});
+
+				<?php echo wp_json_encode( array_values( $removed ) ); ?>.forEach(function (handle) {
+					data.append('handles[]', handle);
+				});
+
+				fetch(<?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>, {method: 'POST', credentials: 'same-origin', body: data});
 			});
 		</script>
 		<?php

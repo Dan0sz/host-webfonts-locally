@@ -459,4 +459,49 @@ class HelperTest extends TestCase {
 			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
 		}
 	}
+
+	/**
+	 * The hash ignores line breaks, tabs and the version parameter, but not other parameters.
+	 *
+	 * @see Helper::stylesheet_hash()
+	 * @return void
+	 */
+	public function testStylesheetHash() {
+		$hash = OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap' );
+
+		$this->assertMatchesRegularExpression( '/^[0-9a-f]{8}$/', $hash );
+		$this->assertSame( $hash, OMGF::stylesheet_hash( "https://fonts.googleapis.com/css?family=Lato:400\n\t&display=swap" ) );
+		$this->assertSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&ver=4.6.4' ) );
+		$this->assertSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&#038;ver=6.9' ) );
+		$this->assertSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&amp;ver=6.9' ) );
+		$this->assertSame(
+			OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400' ),
+			OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?ver=1&family=Lato:400' )
+		);
+		$this->assertNotSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lora:400&display=swap' ) );
+		// Parameters which merely end in "ver" aren't ignored.
+		$this->assertNotSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&server=1' ) );
+	}
+
+	/**
+	 * Only the stylesheets shown in the notice are marked as read.
+	 *
+	 * @see Helper::dismiss_removed_stylesheets()
+	 * @return void
+	 */
+	public function testDismissRemovedStylesheets() {
+		update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [ 'shown', 'removed-later' ] );
+
+		try {
+			OMGF::dismiss_removed_stylesheets( [ 'shown' ] );
+
+			$this->assertSame( [ 'removed-later' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
+
+			OMGF::dismiss_removed_stylesheets( [ 'removed-later' ] );
+
+			$this->assertFalse( get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
+		} finally {
+			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
+		}
+	}
 }

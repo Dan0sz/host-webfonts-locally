@@ -145,4 +145,28 @@ class ActionsTest extends TestCase {
 
 		$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/test_cache_key' );
 	}
+
+	/**
+	 * The removal of unused stylesheets is scheduled daily, and unscheduled when OMGF is deactivated.
+	 *
+	 * @see Actions::schedule_remove_unused_stylesheets()
+	 * @see \OMGF\Plugin::unschedule_events()
+	 * @return void
+	 */
+	public function testScheduleRemoveUnusedStylesheets() {
+		wp_clear_scheduled_hook( 'omgf_remove_unused_stylesheets' );
+
+		try {
+			( new Actions() )->schedule_remove_unused_stylesheets();
+
+			$this->assertNotFalse( wp_next_scheduled( 'omgf_remove_unused_stylesheets' ) );
+			$this->assertSame( 'daily', wp_get_schedule( 'omgf_remove_unused_stylesheets' ) );
+
+			\OMGF\Plugin::unschedule_events();
+
+			$this->assertFalse( wp_next_scheduled( 'omgf_remove_unused_stylesheets' ) );
+		} finally {
+			wp_clear_scheduled_hook( 'omgf_remove_unused_stylesheets' );
+		}
+	}
 }

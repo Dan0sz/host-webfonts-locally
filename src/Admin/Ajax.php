@@ -26,6 +26,7 @@ class Ajax {
 	public function __construct() {
 		add_action( 'wp_ajax_omgf_hide_notice', [ $this, 'hide_notice' ] );
 		add_action( 'wp_ajax_omgf_remove_stylesheet_from_db', [ $this, 'remove_stylesheet_from_db' ] );
+		add_action( 'wp_ajax_omgf_dismiss_removed_stylesheets', [ $this, 'dismiss_removed_stylesheets' ] );
 		add_action( 'wp_ajax_omgf_refresh_cache', [ $this, 'refresh_cache' ] );
 		add_action( 'wp_ajax_omgf_empty_dir', [ $this, 'empty_directory' ] );
 		add_action( 'wp_ajax_omgf_download_log', [ $this, 'download_log' ] );
@@ -72,6 +73,27 @@ class Ajax {
 		}
 
 		OMGF::remove_stylesheet( sanitize_text_field( wp_unslash( $_POST['handle'] ?? '' ) ) );
+	}
+
+	/**
+	 * Mark the notice about automatically removed stylesheets as read.
+	 *
+	 * @since v6.4.2 Uses admin-ajax.php, because it's on the same origin as the admin, unlike the REST API.
+	 *
+	 * @codeCoverageIgnore Because code execution is killed at the end.
+	 */
+	public function dismiss_removed_stylesheets() {
+		check_ajax_referer( 'omgf_dismiss_removed_stylesheets', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
+		}
+
+		$handles = array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['handles'] ?? [] ) );
+
+		OMGF::dismiss_removed_stylesheets( $handles );
+
+		wp_send_json_success();
 	}
 
 	/**
