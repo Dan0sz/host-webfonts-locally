@@ -348,8 +348,8 @@ class Admin {
 				}
 
 				var data = new URLSearchParams({
-					action: 'omgf_dismiss_removed_stylesheets',
-					nonce: <?php echo wp_json_encode( wp_create_nonce( 'omgf_dismiss_removed_stylesheets' ) ); ?>
+					action: 'omgf_dismiss_removed_stylesheets_notice',
+					nonce: <?php echo wp_json_encode( wp_create_nonce( 'omgf_dismiss_removed_stylesheets_notice' ) ); ?>
 				});
 
 				<?php echo wp_json_encode( array_values( $removed ), JSON_HEX_TAG ); ?>.forEach(function (handle) {

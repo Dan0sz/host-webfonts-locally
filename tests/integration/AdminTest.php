@@ -177,7 +177,7 @@ class AdminTest extends TestCase {
 
 			$this->assertStringContainsString( 'automatically removed these stylesheets', $output );
 			$this->assertStringContainsString( '<code>old-sheet</code>, <code>other-sheet</code>', $output );
-			$this->assertStringContainsString( 'omgf_dismiss_removed_stylesheets', $output );
+			$this->assertStringContainsString( 'omgf_dismiss_removed_stylesheets_notice', $output );
 
 			// Only administrators see it.
 			wp_set_current_user( 0 );

@@ -26,7 +26,7 @@ class Ajax {
 	public function __construct() {
 		add_action( 'wp_ajax_omgf_hide_notice', [ $this, 'hide_notice' ] );
 		add_action( 'wp_ajax_omgf_remove_stylesheet_from_db', [ $this, 'remove_stylesheet_from_db' ] );
-		add_action( 'wp_ajax_omgf_dismiss_removed_stylesheets', [ $this, 'dismiss_removed_stylesheets' ] );
+		add_action( 'wp_ajax_omgf_dismiss_removed_stylesheets_notice', [ $this, 'dismiss_removed_stylesheets_notice' ] );
 		add_action( 'wp_ajax_omgf_refresh_cache', [ $this, 'refresh_cache' ] );
 		add_action( 'wp_ajax_omgf_empty_dir', [ $this, 'empty_directory' ] );
 		add_action( 'wp_ajax_omgf_download_log', [ $this, 'download_log' ] );
@@ -82,8 +82,8 @@ class Ajax {
 	 *
 	 * @codeCoverageIgnore Because code execution is killed at the end.
 	 */
-	public function dismiss_removed_stylesheets() {
-		check_ajax_referer( 'omgf_dismiss_removed_stylesheets', 'nonce' );
+	public function dismiss_removed_stylesheets_notice() {
+		check_ajax_referer( 'omgf_dismiss_removed_stylesheets_notice', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) );
@@ -91,7 +91,7 @@ class Ajax {
 
 		$handles = array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['handles'] ?? [] ) );
 
-		OMGF::dismiss_removed_stylesheets( $handles );
+		OMGF::dismiss_removed_stylesheets_notice( $handles );
 
 		wp_send_json_success();
 	}

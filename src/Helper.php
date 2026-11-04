@@ -853,7 +853,7 @@ class Helper {
 	 *
 	 * @return void
 	 */
-	public static function dismiss_removed_stylesheets( $handles ) {
+	public static function dismiss_removed_stylesheets_notice( $handles ) {
 		$removed = array_values( array_diff( (array) get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [] ), (array) $handles ) );
 
 		if ( empty( $removed ) ) {

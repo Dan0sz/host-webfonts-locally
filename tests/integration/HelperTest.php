@@ -504,18 +504,18 @@ class HelperTest extends TestCase {
 	/**
 	 * Only the stylesheets shown in the notice are marked as read.
 	 *
-	 * @see Helper::dismiss_removed_stylesheets()
+	 * @see Helper::dismiss_removed_stylesheets_notice()
 	 * @return void
 	 */
 	public function testDismissRemovedStylesheets() {
 		update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [ 'shown', 'removed-later' ] );
 
 		try {
-			OMGF::dismiss_removed_stylesheets( [ 'shown' ] );
+			OMGF::dismiss_removed_stylesheets_notice( [ 'shown' ] );
 
 			$this->assertSame( [ 'removed-later' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
 
-			OMGF::dismiss_removed_stylesheets( [ 'removed-later' ] );
+			OMGF::dismiss_removed_stylesheets_notice( [ 'removed-later' ] );
 
 			$this->assertFalse( get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
 		} finally {
