@@ -471,8 +471,11 @@ class ProcessTest extends TestCase {
 			$this->assertSame( [ '' ], array_values( $result['replace'] ) );
 			// It's optimized once, so it's listed in the admin. If that fails, it isn't retried for a while.
 			$this->assertTrue( get_transient( 'omgf_optimize_unloaded_' . md5( 'omgf-stylesheet-abcdef12' ) ) );
+			// The legacy handle has settings, so it's cleaned up when it's unused.
+			$this->assertContains( 'omgf-stylesheet-48', OMGF::superseded_stylesheets() );
 		} finally {
 			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
 			OMGF::remove_stylesheet( 'omgf-stylesheet-abcdef12' );
 			delete_transient( 'omgf_optimize_unloaded_' . md5( 'omgf-stylesheet-abcdef12' ) );
 

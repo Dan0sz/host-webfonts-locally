@@ -769,15 +769,15 @@ class Helper {
 	}
 
 	/**
-	 * Returns the handles of optimized stylesheets which weren't seen in the frontend for a while. Handles without a
-	 * timestamp (e.g. optimized before tracking started) start being tracked now.
+	 * Returns the handles of optimized (or superseded) stylesheets which weren't seen in the frontend for a while.
+	 * Handles without a timestamp (e.g. optimized before tracking started) start being tracked now.
 	 *
 	 * @since v6.4.0
 	 *
 	 * @return array
 	 */
 	public static function unused_stylesheets() {
-		$handles   = array_keys( self::admin_optimized_fonts() );
+		$handles   = array_unique( array_merge( array_keys( self::admin_optimized_fonts() ), self::superseded_stylesheets() ) );
 		$last_seen = self::stylesheets_last_seen();
 		$threshold = (int) apply_filters( 'omgf_unused_stylesheet_threshold', self::OMGF_UNUSED_STYLESHEET_THRESHOLD );
 		$now       = time();
@@ -898,22 +898,14 @@ class Helper {
 			return;
 		}
 
-		/**
-		 * Legacy handles aren't generated anymore. Their files are kept until they're removed as unused, because
-		 * pages in a page cache might still use them.
-		 */
-		$superseded = self::superseded_stylesheets();
-		$legacy     = array_diff( array_intersect( $legacy_handles, array_keys( self::optimized_fonts() ) ), $superseded );
-
-		if ( ! empty( $legacy ) ) {
-			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, array_values( array_merge( $superseded, $legacy ) ) );
-		}
+		$legacy = array_intersect( $legacy_handles, array_keys( self::optimized_fonts() ) );
 
 		foreach ( self::stylesheet_settings() as $option => $comma_separated ) {
 			$value = self::get_option( $option, $comma_separated ? '' : [] );
 
 			if ( $comma_separated ) {
 				$handles = array_filter( explode( ',', (string) $value ) );
+				$legacy  = array_merge( $legacy, array_intersect( $legacy_handles, $handles ) );
 
 				if ( ! in_array( $handle, $handles, true ) && array_intersect( $legacy_handles, $handles ) ) {
 					$handles[] = $handle;
@@ -924,7 +916,13 @@ class Helper {
 				continue;
 			}
 
-			if ( ! is_array( $value ) || isset( $value[ $handle ] ) ) {
+			if ( ! is_array( $value ) ) {
+				continue;
+			}
+
+			$legacy = array_merge( $legacy, array_keys( array_intersect_key( $value, array_flip( $legacy_handles ) ) ) );
+
+			if ( isset( $value[ $handle ] ) ) {
 				continue;
 			}
 
@@ -937,6 +935,17 @@ class Helper {
 					break;
 				}
 			}
+		}
+
+		/**
+		 * Legacy handles aren't generated anymore. Their files and settings are kept until they're removed as unused,
+		 * because pages in a page cache might still use them.
+		 */
+		$superseded = self::superseded_stylesheets();
+		$legacy     = array_diff( array_unique( $legacy ), $superseded );
+
+		if ( ! empty( $legacy ) ) {
+			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, array_values( array_merge( $superseded, $legacy ) ) );
 		}
 	}
 
@@ -951,14 +960,19 @@ class Helper {
 	public static function remove_unused_stylesheets() {
 		$unused = self::unused_stylesheets();
 
+		/**
+		 * Superseded handles which only had settings left weren't in the cache, so they're not worth a notice.
+		 */
+		$cached = array_values( array_intersect( $unused, array_keys( self::admin_optimized_fonts() ) ) );
+
 		foreach ( $unused as $handle ) {
 			self::remove_stylesheet( $handle );
 		}
 
-		if ( ! empty( $unused ) ) {
+		if ( ! empty( $cached ) ) {
 			$removed = get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [] );
 
-			update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, array_values( array_unique( array_merge( (array) $removed, $unused ) ) ), false );
+			update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, array_values( array_unique( array_merge( (array) $removed, $cached ) ) ), false );
 		}
 
 		return $unused;

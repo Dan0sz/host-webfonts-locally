@@ -359,7 +359,8 @@ class HelperTest extends TestCase {
 	 */
 	public function testInheritStylesheetSettings() {
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'legacy' => [ 'lato' => [ '400' ] ] ] );
-		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [ 'new' => [ 'lato' => [ '700' => '700' ] ], 'legacy' => [ 'lato' => [ '400' => '400' ] ] ] );
+		// Older isn't optimized anymore, but still has settings.
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [ 'new' => [ 'lato' => [ '700' => '700' ] ], 'legacy' => [ 'lato' => [ '400' => '400' ] ], 'older' => [ 'lato' => [ '400' => '400' ] ] ] );
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'other,legacy' );
 
 		$fonts = function () {
@@ -371,8 +372,8 @@ class HelperTest extends TestCase {
 		try {
 			OMGF::inherit_stylesheet_settings( [ 'Older', 'Legacy' ], 'new' );
 
-			// Optimized legacy handles are marked as superseded.
-			$this->assertSame( [ 'legacy' ], OMGF::superseded_stylesheets() );
+			// Legacy handles which are optimized or have settings are marked as superseded, so they're cleaned up later.
+			$this->assertSame( [ 'legacy', 'older' ], OMGF::superseded_stylesheets() );
 
 			$this->assertSame( [ 'lato' => [ '400' ] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )['new'] );
 			// Existing settings aren't overwritten.
@@ -446,14 +447,31 @@ class HelperTest extends TestCase {
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [ 'used' => [], 'unused' => [] ] );
 		update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'used' => time(), 'unused' => $old ] );
 		update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [ 'earlier' ] );
+		// A superseded handle which only has settings left.
+		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'settings-only' ] );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'settings-only' => [ 'lato' => [ '400' ] ] ] );
 
 		try {
+			// The superseded handle starts being tracked now.
 			$this->assertSame( [ 'unused' ], OMGF::remove_unused_stylesheets() );
 			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/unused' );
 			$this->assertSame( [ 'used' => [] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
 			$this->assertSame( [ 'earlier', 'unused' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
 			$this->assertSame( [], OMGF::remove_unused_stylesheets() );
+
+			$last_seen                    = OMGF::stylesheets_last_seen();
+			$last_seen[ 'settings-only' ] = $old;
+
+			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen );
+
+			// Its settings are removed, but it wasn't cached, so it isn't added to the notice.
+			$this->assertSame( [ 'settings-only' ], OMGF::remove_unused_stylesheets() );
+			$this->assertEmpty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ) );
+			$this->assertEmpty( OMGF::superseded_stylesheets() );
+			$this->assertSame( [ 'earlier', 'unused' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
 		} finally {
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
 			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
 			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
