@@ -274,84 +274,6 @@ class HelperTest extends TestCase {
 	}
 
 	/**
-	 * A stylesheet's last seen timestamp is stored, but updated at most once a day.
-	 *
-	 * @see Helper::mark_stylesheets_seen()
-	 * @return void
-	 */
-	public function testMarkStylesheetsSeen() {
-		delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-
-		try {
-			OMGF::mark_stylesheets_seen( [ 'New-Handle', '' ] );
-
-			$last_seen = OMGF::stylesheets_last_seen();
-
-			$this->assertArrayHasKey( 'new-handle', $last_seen );
-			$this->assertCount( 1, $last_seen );
-			$this->assertEqualsWithDelta( time(), $last_seen[ 'new-handle' ], 5 );
-
-			// Seen less than a day ago: left alone.
-			$hour_ago = time() - HOUR_IN_SECONDS;
-			$days_ago = time() - 2 * DAY_IN_SECONDS;
-
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'recent' => $hour_ago, 'old' => $days_ago ] );
-
-			OMGF::mark_stylesheets_seen( [ 'recent', 'old' ] );
-
-			$last_seen = OMGF::stylesheets_last_seen();
-
-			$this->assertSame( $hour_ago, $last_seen[ 'recent' ] );
-			$this->assertGreaterThan( $days_ago, $last_seen[ 'old' ] );
-		} finally {
-			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-		}
-	}
-
-	/**
-	 * Stylesheets not seen for longer than the threshold are unused. Untracked stylesheets start being tracked and
-	 * timestamps of stylesheets which are no longer optimized are removed.
-	 *
-	 * @see Helper::unused_stylesheets()
-	 * @return void
-	 */
-	public function testUnusedStylesheets() {
-		$fonts = function () {
-			return [ 'used' => [], 'unused' => [], 'untracked' => [] ];
-		};
-
-		add_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
-
-		try {
-			$old = time() - OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD - DAY_IN_SECONDS;
-
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'used' => time(), 'unused' => $old, 'removed' => $old ] );
-
-			$this->assertSame( [ 'unused' ], OMGF::unused_stylesheets() );
-
-			$last_seen = OMGF::stylesheets_last_seen();
-
-			$this->assertArrayNotHasKey( 'removed', $last_seen );
-			$this->assertArrayHasKey( 'untracked', $last_seen );
-			$this->assertSame( $old, $last_seen[ 'unused' ] );
-
-			// The threshold is filterable.
-			$threshold = function () {
-				return 10 * YEAR_IN_SECONDS;
-			};
-
-			add_filter( 'omgf_unused_stylesheet_threshold', $threshold );
-
-			$this->assertEmpty( OMGF::unused_stylesheets() );
-
-			remove_filter( 'omgf_unused_stylesheet_threshold', $threshold );
-		} finally {
-			remove_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
-			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-		}
-	}
-
-	/**
 	 * A new handle inherits the settings of the first legacy handle which has them, unless it has its own settings.
 	 *
 	 * @see Helper::inherit_stylesheet_settings()
@@ -452,77 +374,6 @@ class HelperTest extends TestCase {
 	}
 
 	/**
-	 * Unused stylesheets are removed and remembered for the admin notice.
-	 *
-	 * @see Helper::remove_unused_stylesheets()
-	 * @return void
-	 */
-	public function testRemoveUnusedStylesheets() {
-		$old = time() - OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD - DAY_IN_SECONDS;
-
-		wp_mkdir_p( OMGF_UPLOAD_DIR . '/unused' );
-		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [ 'used' => [], 'unused' => [] ] );
-		update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'used' => time(), 'unused' => $old ] );
-		update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [ 'earlier' ] );
-		// A superseded handle which only has settings left.
-		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'settings-only' ] );
-		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'settings-only' => [ 'lato' => [ '400' ] ] ] );
-
-		$purges = 0;
-		$purge  = function () use ( &$purges ) {
-			$purges ++;
-		};
-
-		add_action( 'omgf_cache_files_deleted', $purge );
-
-		try {
-			// The superseded handle starts being tracked now.
-			$this->assertSame( [ 'unused' ], OMGF::remove_unused_stylesheets() );
-			// Pages in a page cache might still refer to the deleted files.
-			$this->assertSame( 1, $purges );
-			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/unused' );
-			$this->assertSame( [ 'used' => [] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
-			$this->assertSame( [ 'earlier', 'unused' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
-			$this->assertSame( [], OMGF::remove_unused_stylesheets() );
-
-			$last_seen                    = OMGF::stylesheets_last_seen();
-			$last_seen[ 'settings-only' ] = $old;
-
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen );
-
-			// Its settings are removed, but it wasn't cached, so it isn't added to the notice.
-			$this->assertSame( [ 'settings-only' ], OMGF::remove_unused_stylesheets() );
-			$this->assertEmpty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ) );
-			$this->assertEmpty( OMGF::superseded_stylesheets() );
-			$this->assertSame( [ 'earlier', 'unused' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
-			// No files were deleted, so page caches aren't flushed.
-			$this->assertSame( 1, $purges );
-
-			// Add-ons can keep stylesheets which are used, but aren't seen in the frontend.
-			$last_seen         = OMGF::stylesheets_last_seen();
-			$last_seen['used'] = $old;
-			$keep              = function ( $unused ) {
-				return array_diff( $unused, [ 'used' ] );
-			};
-
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen );
-			add_filter( 'omgf_unused_stylesheets', $keep );
-
-			$this->assertSame( [], OMGF::remove_unused_stylesheets() );
-			$this->assertArrayHasKey( 'used', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
-
-			remove_filter( 'omgf_unused_stylesheets', $keep );
-		} finally {
-			remove_action( 'omgf_cache_files_deleted', $purge );
-			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
-			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
-			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
-			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
-		}
-	}
-
-	/**
 	 * The hash ignores line breaks, tabs and the version parameter, but not other parameters.
 	 *
 	 * @see Helper::stylesheet_hash()
@@ -545,25 +396,4 @@ class HelperTest extends TestCase {
 		$this->assertNotSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&server=1' ) );
 	}
 
-	/**
-	 * Only the stylesheets shown in the notice are marked as read.
-	 *
-	 * @see Helper::dismiss_removed_stylesheets_notice()
-	 * @return void
-	 */
-	public function testDismissRemovedStylesheets() {
-		update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [ 'shown', 'removed-later' ] );
-
-		try {
-			OMGF::dismiss_removed_stylesheets_notice( [ 'shown' ] );
-
-			$this->assertSame( [ 'removed-later' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
-
-			OMGF::dismiss_removed_stylesheets_notice( [ 'removed-later' ] );
-
-			$this->assertFalse( get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
-		} finally {
-			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
-		}
-	}
 }

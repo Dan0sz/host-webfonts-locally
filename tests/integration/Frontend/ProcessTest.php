@@ -189,25 +189,6 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
-	 * Stylesheets found on the page are marked as seen.
-	 *
-	 * @see Process::build_search_replace()
-	 * @return void
-	 */
-	public function testProcessMarksStylesheetsSeen() {
-		delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-
-		try {
-			$class = new Process( true );
-			$class->process( file_get_contents( OMGF_TESTS_ROOT . 'assets/google-fonts.html' ) );
-
-			$this->assertArrayHasKey( 'astra-google-fonts', OMGF::stylesheets_last_seen() );
-		} finally {
-			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-		}
-	}
-
-	/**
 	 * A link element whose URL merely mentions the Google Fonts API — inside its query string, for example —
 	 * points somewhere else entirely and should be left alone.
 	 *
@@ -479,10 +460,6 @@ class ProcessTest extends TestCase {
 			OMGF::remove_stylesheet( 'omgf-stylesheet-abcdef12' );
 			delete_transient( 'omgf_optimize_unloaded_' . md5( 'omgf-stylesheet-abcdef12' ) );
 
-			$last_seen = OMGF::stylesheets_last_seen();
-
-			unset( $last_seen['omgf-stylesheet-abcdef12'] );
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen );
 		}
 	}
 

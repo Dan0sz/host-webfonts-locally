@@ -70,6 +70,10 @@ class Migrate {
 		if ( $this->should_run_migration( '6.4.0' ) ) {
 			new Migrate\V640();
 		}
+
+		if ( $this->should_run_migration( '6.5.0' ) ) {
+			new Migrate\V650();
+		}
 	}
 
 	/**

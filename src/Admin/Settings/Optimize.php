@@ -153,7 +153,7 @@ class Optimize extends Builder {
 
 		/**
 		 * @since v6.5.0 Stylesheets which got a new handle aren't used anymore, and their settings were copied to the new
-		 *               handle, so they're not listed. They're removed when they weren't found for a while.
+		 *               handle, so they're not listed.
 		 */
 		$this->optimized_fonts = array_diff_key( $this->optimized_fonts, array_flip( OMGF::superseded_stylesheets() ) );
 		?>

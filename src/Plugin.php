@@ -71,7 +71,6 @@ class Plugin {
 
 		new API\Dashboard();
 		new Compatibility();
-		new Cron();
 		new Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
@@ -83,9 +82,7 @@ class Plugin {
 		}
 
 		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'maybe_install_mu_plugin' ] );
-		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Cron', 'schedule' ] );
 		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'uninstall_mu_plugin' ] );
-		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Cron', 'unschedule' ] );
 	}
 
 	/**

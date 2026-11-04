@@ -50,13 +50,6 @@ class Helper {
 	];
 
 	/**
-	 * Optimized stylesheets which weren't seen in the frontend for this many seconds (30 days) are marked as unused.
-	 *
-	 * @since v6.4.0
-	 */
-	const OMGF_UNUSED_STYLESHEET_THRESHOLD = 2592000;
-
-	/**
 	 * Options stored in their own row, which aren't needed on (most) frontend requests, so they shouldn't be autoloaded.
 	 *
 	 * @since v6.4.0
@@ -723,89 +716,6 @@ class Helper {
 	}
 
 	/**
-	 * Stores when the stylesheets with $handles were last seen in the frontend. To keep this cheap, a handle's
-	 * timestamp is updated at most once a day.
-	 *
-	 * @since v6.4.0
-	 *
-	 * @param array|string $handles
-	 *
-	 * @return void
-	 */
-	public static function mark_stylesheets_seen( $handles ) {
-		if ( empty( $handles ) ) {
-			return;
-		}
-
-		$last_seen = self::stylesheets_last_seen();
-		$now       = time();
-		$updated   = false;
-
-		foreach ( (array) $handles as $handle ) {
-			$handle = sanitize_title_with_dashes( $handle );
-
-			if ( ! $handle || ( isset( $last_seen[ $handle ] ) && $now - $last_seen[ $handle ] < DAY_IN_SECONDS ) ) {
-				continue;
-			}
-
-			$last_seen[ $handle ] = $now;
-			$updated              = true;
-		}
-
-		if ( $updated ) {
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen, true );
-		}
-	}
-
-	/**
-	 * @since v6.4.0
-	 *
-	 * @return array [ handle => timestamp ]
-	 */
-	public static function stylesheets_last_seen() {
-		$last_seen = get_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [] );
-
-		return is_array( $last_seen ) ? $last_seen : [];
-	}
-
-	/**
-	 * Returns the handles of optimized (or superseded) stylesheets which weren't seen in the frontend for a while.
-	 * Handles without a timestamp (e.g. optimized before tracking started) start being tracked now.
-	 *
-	 * @since v6.4.0
-	 *
-	 * @return array
-	 */
-	public static function unused_stylesheets() {
-		$handles   = array_unique( array_merge( array_keys( self::admin_optimized_fonts() ), self::superseded_stylesheets() ) );
-		$last_seen = self::stylesheets_last_seen();
-		$threshold = (int) apply_filters( 'omgf_unused_stylesheet_threshold', self::OMGF_UNUSED_STYLESHEET_THRESHOLD );
-		$now       = time();
-		$tracked   = array_intersect_key( $last_seen, array_flip( $handles ) );
-		$updated   = count( $tracked ) !== count( $last_seen );
-		$unused    = [];
-
-		foreach ( $handles as $handle ) {
-			if ( ! isset( $tracked[ $handle ] ) ) {
-				$tracked[ $handle ] = $now;
-				$updated            = true;
-
-				continue;
-			}
-
-			if ( $now - $tracked[ $handle ] > $threshold ) {
-				$unused[] = $handle;
-			}
-		}
-
-		if ( $updated ) {
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $tracked, true );
-		}
-
-		return $unused;
-	}
-
-	/**
 	 * Options containing settings per stylesheet handle.
 	 *
 	 * @filter omgf_stylesheet_settings
@@ -841,28 +751,6 @@ class Helper {
 		$href = preg_replace( '/(\?)ver=[^&#]*(?:&amp;|&#0?38;|&)?|(?:&amp;|&#0?38;|&)ver=[^&#]*/i', '$1', $href );
 
 		return substr( md5( $href ), 0, 8 );
-	}
-
-	/**
-	 * Marks the notice about automatically removed stylesheets as read for $handles. Stylesheets removed after the
-	 * notice was displayed are kept, so they're shown next time.
-	 *
-	 * @since v6.5.0
-	 *
-	 * @param array $handles
-	 *
-	 * @return void
-	 */
-	public static function dismiss_removed_stylesheets_notice( $handles ) {
-		$removed = array_values( array_diff( (array) get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [] ), (array) $handles ) );
-
-		if ( empty( $removed ) ) {
-			delete_option( Settings::OMGF_DB_REMOVED_STYLESHEETS );
-
-			return;
-		}
-
-		update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, $removed, false );
 	}
 
 	/**
@@ -938,8 +826,8 @@ class Helper {
 		}
 
 		/**
-		 * Legacy handles aren't generated anymore. Their files and settings are kept until they're removed as unused,
-		 * because pages in a page cache might still use them.
+		 * Legacy handles aren't generated anymore. Their files and settings are kept, because pages in a page cache might
+		 * still use them.
 		 */
 		$superseded = self::superseded_stylesheets();
 		$legacy     = array_diff( array_unique( $legacy ), $superseded );
@@ -947,53 +835,6 @@ class Helper {
 		if ( ! empty( $legacy ) ) {
 			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, array_values( array_merge( $superseded, $legacy ) ) );
 		}
-	}
-
-	/**
-	 * Removes stylesheets which weren't seen in the frontend for a while from the cache and the database.
-	 *
-	 * @action omgf_remove_unused_stylesheets @see Cron::REMOVE_UNUSED_STYLESHEETS
-	 * @since  v6.5.0
-	 *
-	 * @return array The removed handles.
-	 */
-	public static function remove_unused_stylesheets() {
-		/**
-		 * Allows add-ons to keep stylesheets which are used, but aren't seen in the frontend, e.g. because they're
-		 * loaded asynchronously.
-		 *
-		 * @filter omgf_unused_stylesheets
-		 * @since  v6.5.0
-		 *
-		 * @param array $unused The handles of stylesheets which weren't seen for a while.
-		 */
-		$unused = array_values( (array) apply_filters( 'omgf_unused_stylesheets', self::unused_stylesheets() ) );
-
-		/**
-		 * Superseded handles which only had settings left weren't in the cache, so they're not worth a notice.
-		 */
-		$cached = array_values( array_intersect( $unused, array_keys( self::admin_optimized_fonts() ) ) );
-
-		$deleted = false;
-
-		foreach ( $unused as $handle ) {
-			$deleted = self::remove_stylesheet( $handle ) || $deleted;
-		}
-
-		/**
-		 * Pages in a page cache might still refer to the deleted files.
-		 */
-		if ( $deleted ) {
-			do_action( 'omgf_cache_files_deleted' );
-		}
-
-		if ( ! empty( $cached ) ) {
-			$removed = get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, [] );
-
-			update_option( Settings::OMGF_DB_REMOVED_STYLESHEETS, array_values( array_unique( array_merge( (array) $removed, $cached ) ) ), false );
-		}
-
-		return $unused;
 	}
 
 	/**

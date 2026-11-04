@@ -753,7 +753,6 @@ class Process {
 	public function build_search_replace( $google_fonts ) {
 		$search  = [];
 		$replace = [];
-		$seen    = [];
 
 		foreach ( $google_fonts as $key => $stack ) {
 			/**
@@ -814,7 +813,6 @@ class Process {
 
 				$search[ $key ]  = $stack['link']; // @codeCoverageIgnore
 				$replace[ $key ] = ''; // @codeCoverageIgnore
-				$seen[]          = $original_handle; // @codeCoverageIgnore
 
 				continue; // @codeCoverageIgnore
 			}
@@ -834,7 +832,6 @@ class Process {
 			if ( ! OMGF::is_running_optimize() && file_exists( OMGF_UPLOAD_DIR . "/$handle/$handle.css" ) ) {
 				$search[ $key ]  = $stack['href'];
 				$replace[ $key ] = OMGF_UPLOAD_URL . "/$handle/$handle.css?ver=" . $this->timestamp;
-				$seen[]          = $original_handle;
 
 				continue;
 			}
@@ -875,11 +872,6 @@ class Process {
 			 */
 			$replace[ $key ] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : $stack['href'];
 		}
-
-		/**
-		 * @since v6.4.0 Stylesheets which are (re-)optimized are marked in Optimize::process().
-		 */
-		OMGF::mark_stylesheets_seen( $seen );
 
 		return apply_filters( 'omgf_process_search_replace', [
 			'search'  => $search,
