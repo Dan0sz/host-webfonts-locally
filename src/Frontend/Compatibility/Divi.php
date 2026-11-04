@@ -85,6 +85,7 @@ class Divi {
 
 		$beta_hash = substr( md5( trim( str_replace( [ "\r", "\n", "\t" ], '', $href_attr ) ) ), 0, 8 );
 
-		return array_merge( $legacy_ids, [ $id . '-' . strlen( $href_attr ), $id . '-' . $beta_hash, $id ] );
+		// Most recent first, because the settings of the first legacy handle which has them are inherited.
+		return array_merge( $legacy_ids, [ $id . '-' . $beta_hash, $id . '-' . strlen( $href_attr ), $id ] );
 	}
 }
