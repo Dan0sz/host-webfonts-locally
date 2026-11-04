@@ -69,12 +69,9 @@ class Plugin {
 		// Load globally.
 		new API\AdminbarMenu();
 
-		/**
-		 * @since v6.5.0 Scheduled in @see Admin\Actions::schedule_remove_unused_stylesheets()
-		 */
-		add_action( 'omgf_remove_unused_stylesheets', [ '\OMGF\Helper', 'remove_unused_stylesheets' ] );
 		new API\Dashboard();
 		new Compatibility();
+		new Cron();
 		new Filters();
 
 		if ( ! empty( OMGF::get_option( Settings::OMGF_ADV_SETTING_UNINSTALL ) ) ) {
@@ -86,32 +83,9 @@ class Plugin {
 		}
 
 		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'maybe_install_mu_plugin' ] );
-		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'schedule_events' ] );
+		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Cron', 'schedule' ] );
 		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'uninstall_mu_plugin' ] );
-		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'unschedule_events' ] );
-	}
-
-	/**
-	 * Daily removal of stylesheets which weren't found on the site for a while.
-	 *
-	 * @see   OMGF::remove_unused_stylesheets()
-	 * @since v6.5.0
-	 *
-	 * @return void
-	 */
-	public static function schedule_events() {
-		if ( ! wp_next_scheduled( 'omgf_remove_unused_stylesheets' ) ) {
-			wp_schedule_event( time(), 'daily', 'omgf_remove_unused_stylesheets' );
-		}
-	}
-
-	/**
-	 * @since v6.5.0
-	 *
-	 * @return void
-	 */
-	public static function unschedule_events() {
-		wp_clear_scheduled_hook( 'omgf_remove_unused_stylesheets' );
+		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Cron', 'unschedule' ] );
 	}
 
 	/**

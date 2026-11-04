@@ -28,23 +28,10 @@ class Actions {
 		add_action( '_admin_menu', [ $this, 'init_admin' ] );
 		add_action( 'admin_init', [ $this, 'do_optimize' ] );
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
-		add_action( 'admin_init', [ $this, 'schedule_remove_unused_stylesheets' ] );
 		add_action( 'in_plugin_update_message-' . OMGF_PLUGIN_BASENAME, [ $this, 'render_update_notice' ], 11 );
 		add_action( 'omgf_pre_update_setting_cache_keys', [ $this, 'clean_stale_cache' ], 10, 2 );
 
 		new ImportExport();
-	}
-
-	/**
-	 * Makes sure the daily cleanup is scheduled for existing installs, too. New installs schedule it on activation.
-	 *
-	 * @see   \OMGF\Plugin::schedule_events()
-	 * @since v6.5.0
-	 *
-	 * @return void
-	 */
-	public function schedule_remove_unused_stylesheets() {
-		\OMGF\Plugin::schedule_events();
 	}
 
 	/**

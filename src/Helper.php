@@ -952,7 +952,7 @@ class Helper {
 	/**
 	 * Removes stylesheets which weren't seen in the frontend for a while from the cache and the database.
 	 *
-	 * @action omgf_remove_unused_stylesheets
+	 * @action omgf_remove_unused_stylesheets @see Cron::REMOVE_UNUSED_STYLESHEETS
 	 * @since  v6.5.0
 	 *
 	 * @return array The removed handles.
