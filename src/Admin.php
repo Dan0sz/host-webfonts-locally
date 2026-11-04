@@ -352,7 +352,7 @@ class Admin {
 					nonce: <?php echo wp_json_encode( wp_create_nonce( 'omgf_dismiss_removed_stylesheets' ) ); ?>
 				});
 
-				<?php echo wp_json_encode( array_values( $removed ) ); ?>.forEach(function (handle) {
+				<?php echo wp_json_encode( array_values( $removed ), JSON_HEX_TAG ); ?>.forEach(function (handle) {
 					data.append('handles[]', handle);
 				});
 

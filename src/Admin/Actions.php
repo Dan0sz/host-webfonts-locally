@@ -36,17 +36,15 @@ class Actions {
 	}
 
 	/**
-	 * Daily removal of stylesheets which weren't found on the site for a while.
+	 * Makes sure the daily cleanup is scheduled for existing installs, too. New installs schedule it on activation.
 	 *
-	 * @see   OMGF::remove_unused_stylesheets()
+	 * @see   \OMGF\Plugin::schedule_events()
 	 * @since v6.4.2
 	 *
 	 * @return void
 	 */
 	public function schedule_remove_unused_stylesheets() {
-		if ( ! wp_next_scheduled( 'omgf_remove_unused_stylesheets' ) ) {
-			wp_schedule_event( time(), 'daily', 'omgf_remove_unused_stylesheets' );
-		}
+		\OMGF\Plugin::schedule_events();
 	}
 
 	/**

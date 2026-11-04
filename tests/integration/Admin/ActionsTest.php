@@ -165,6 +165,11 @@ class ActionsTest extends TestCase {
 			\OMGF\Plugin::unschedule_events();
 
 			$this->assertFalse( wp_next_scheduled( 'omgf_remove_unused_stylesheets' ) );
+
+			// Activating OMGF schedules it, too, so it doesn't depend on an admin request.
+			do_action( 'activate_' . plugin_basename( OMGF_PLUGIN_FILE ) );
+
+			$this->assertNotFalse( wp_next_scheduled( 'omgf_remove_unused_stylesheets' ) );
 		} finally {
 			wp_clear_scheduled_hook( 'omgf_remove_unused_stylesheets' );
 		}

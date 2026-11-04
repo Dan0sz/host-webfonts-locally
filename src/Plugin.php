@@ -86,8 +86,23 @@ class Plugin {
 		}
 
 		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'maybe_install_mu_plugin' ] );
+		register_activation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'schedule_events' ] );
 		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Compatibility\Cloudflare', 'uninstall_mu_plugin' ] );
 		register_deactivation_hook( OMGF_PLUGIN_FILE, [ '\OMGF\Plugin', 'unschedule_events' ] );
+	}
+
+	/**
+	 * Daily removal of stylesheets which weren't found on the site for a while.
+	 *
+	 * @see   OMGF::remove_unused_stylesheets()
+	 * @since v6.4.2
+	 *
+	 * @return void
+	 */
+	public static function schedule_events() {
+		if ( ! wp_next_scheduled( 'omgf_remove_unused_stylesheets' ) ) {
+			wp_schedule_event( time(), 'daily', 'omgf_remove_unused_stylesheets' );
+		}
 	}
 
 	/**
