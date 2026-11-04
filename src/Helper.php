@@ -974,8 +974,17 @@ class Helper {
 		 */
 		$cached = array_values( array_intersect( $unused, array_keys( self::admin_optimized_fonts() ) ) );
 
+		$deleted = false;
+
 		foreach ( $unused as $handle ) {
-			self::remove_stylesheet( $handle );
+			$deleted = self::remove_stylesheet( $handle ) || $deleted;
+		}
+
+		/**
+		 * Pages in a page cache might still refer to the deleted files.
+		 */
+		if ( $deleted ) {
+			do_action( 'omgf_cache_files_deleted' );
 		}
 
 		if ( ! empty( $cached ) ) {
@@ -994,13 +1003,13 @@ class Helper {
 	 *
 	 * @param string $handle
 	 *
-	 * @return void
+	 * @return bool Whether files were deleted.
 	 */
 	public static function remove_stylesheet( $handle ) {
 		$handle = sanitize_title_with_dashes( $handle );
 
 		if ( ! $handle ) {
-			return;
+			return false;
 		}
 
 		/**
@@ -1015,11 +1024,13 @@ class Helper {
 			}
 		);
 
+		$deleted = false;
+
 		foreach ( array_merge( [ $handle ], $own_cache_keys ) as $dir ) {
 			$dir = sanitize_title_with_dashes( $dir );
 
-			if ( $dir ) {
-				self::delete( OMGF_UPLOAD_DIR . '/' . $dir );
+			if ( $dir && file_exists( OMGF_UPLOAD_DIR . '/' . $dir ) ) {
+				$deleted = self::delete( OMGF_UPLOAD_DIR . '/' . $dir ) || $deleted;
 			}
 		}
 
@@ -1070,6 +1081,8 @@ class Helper {
 		 * @param string $handle
 		 */
 		do_action( 'omgf_stylesheet_removed', $handle );
+
+		return $deleted;
 	}
 
 	/**

@@ -415,7 +415,7 @@ class HelperTest extends TestCase {
 		add_action( 'omgf_stylesheet_removed', $record );
 
 		try {
-			OMGF::remove_stylesheet( 'sheet-1' );
+			$this->assertTrue( OMGF::remove_stylesheet( 'sheet-1' ) );
 
 			// Add-ons are told, so they can clean up their own files.
 			$this->assertSame( [ 'sheet-1' ], $removed );
@@ -431,7 +431,7 @@ class HelperTest extends TestCase {
 			$this->assertSame( 'sheet-12', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) );
 
 			// An empty handle doesn't remove anything.
-			OMGF::remove_stylesheet( '' );
+			$this->assertFalse( OMGF::remove_stylesheet( '' ) );
 
 			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-12' );
 			$this->assertSame( [ 'sheet-1' ], $removed );
@@ -463,9 +463,18 @@ class HelperTest extends TestCase {
 		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'settings-only' ] );
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'settings-only' => [ 'lato' => [ '400' ] ] ] );
 
+		$purges = 0;
+		$purge  = function () use ( &$purges ) {
+			$purges ++;
+		};
+
+		add_action( 'omgf_cache_files_deleted', $purge );
+
 		try {
 			// The superseded handle starts being tracked now.
 			$this->assertSame( [ 'unused' ], OMGF::remove_unused_stylesheets() );
+			// Pages in a page cache might still refer to the deleted files.
+			$this->assertSame( 1, $purges );
 			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/unused' );
 			$this->assertSame( [ 'used' => [] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
 			$this->assertSame( [ 'earlier', 'unused' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
@@ -481,6 +490,8 @@ class HelperTest extends TestCase {
 			$this->assertEmpty( OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ) );
 			$this->assertEmpty( OMGF::superseded_stylesheets() );
 			$this->assertSame( [ 'earlier', 'unused' ], get_option( Settings::OMGF_DB_REMOVED_STYLESHEETS ) );
+			// No files were deleted, so page caches aren't flushed.
+			$this->assertSame( 1, $purges );
 
 			// Add-ons can keep stylesheets which are used, but aren't seen in the frontend.
 			$last_seen         = OMGF::stylesheets_last_seen();
@@ -497,6 +508,7 @@ class HelperTest extends TestCase {
 
 			remove_filter( 'omgf_unused_stylesheets', $keep );
 		} finally {
+			remove_action( 'omgf_cache_files_deleted', $purge );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
 			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );

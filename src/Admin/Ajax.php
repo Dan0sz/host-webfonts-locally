@@ -72,7 +72,9 @@ class Ajax {
 			wp_die( __( "Hmmm, you're not supposed to be here.", 'host-webfonts-local' ) ); // @codeCoverageIgnore
 		}
 
-		OMGF::remove_stylesheet( sanitize_text_field( wp_unslash( $_POST['handle'] ?? '' ) ) );
+		if ( OMGF::remove_stylesheet( sanitize_text_field( wp_unslash( $_POST['handle'] ?? '' ) ) ) ) {
+			do_action( 'omgf_cache_files_deleted' );
+		}
 	}
 
 	/**
