@@ -469,9 +469,12 @@ class ProcessTest extends TestCase {
 			$this->assertContains( 'omgf-stylesheet-abcdef12', OMGF::unloaded_stylesheets() );
 			// The stylesheet is unloaded, so it's removed.
 			$this->assertSame( [ '' ], array_values( $result['replace'] ) );
+			// It's optimized once, so it's listed in the admin. If that fails, it isn't retried for a while.
+			$this->assertTrue( get_transient( 'omgf_optimize_unloaded_' . md5( 'omgf-stylesheet-abcdef12' ) ) );
 		} finally {
 			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
 			OMGF::remove_stylesheet( 'omgf-stylesheet-abcdef12' );
+			delete_transient( 'omgf_optimize_unloaded_' . md5( 'omgf-stylesheet-abcdef12' ) );
 
 			$last_seen = OMGF::stylesheets_last_seen();
 

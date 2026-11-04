@@ -801,9 +801,14 @@ class Process {
 			) ) {
 				/**
 				 * @since v6.4.2 Optimize an unloaded stylesheet once if it wasn't optimized before (e.g. because it
-				 *               inherited its settings), so it's listed in the admin and can be loaded again.
+				 *               inherited its settings), so it's listed in the admin and can be loaded again. If that
+				 *               fails, don't try again for an hour, because the request blocks the page.
 				 */
-				if ( ! isset( OMGF::optimized_fonts()[ $handle ] ) ) {
+				$attempt = 'omgf_optimize_unloaded_' . md5( $handle );
+
+				if ( ! isset( OMGF::optimized_fonts()[ $handle ] ) && ! get_transient( $attempt ) ) {
+					set_transient( $attempt, true, HOUR_IN_SECONDS );
+
 					( new Optimize( $url, $handle, $original_handle ) )->process();
 				}
 

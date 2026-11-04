@@ -65,7 +65,7 @@ class Divi {
 
 	/**
 	 * The handles Divi's stylesheets were stored under before v6.4.2: without an identifier (if Divi Compatibility
-	 * was disabled) or with the length of the URL.
+	 * was disabled), with the length of the URL or (in v6.4.2 betas) with a hash of the URL including its version.
 	 *
 	 * @filter omgf_frontend_process_legacy_ids
 	 * @since  v6.4.2
@@ -83,6 +83,8 @@ class Divi {
 
 		$href_attr = is_array( $href ) && isset( $href['href'] ) ? $href['href'] : '';
 
-		return array_merge( $legacy_ids, [ $id . '-' . strlen( $href_attr ), $id ] );
+		$beta_hash = substr( md5( trim( str_replace( [ "\r", "\n", "\t" ], '', $href_attr ) ) ), 0, 8 );
+
+		return array_merge( $legacy_ids, [ $id . '-' . strlen( $href_attr ), $id . '-' . $beta_hash, $id ] );
 	}
 }

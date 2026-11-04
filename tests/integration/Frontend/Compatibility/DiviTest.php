@@ -50,7 +50,11 @@ class DiviTest extends TestCase {
 
 		try {
 			$this->assertSame(
-				[ 'et-builder-googlefonts-' . strlen( $lato['href'] ), 'et-builder-googlefonts' ],
+				[
+					'et-builder-googlefonts-' . strlen( $lato['href'] ),
+					'et-builder-googlefonts-' . substr( md5( $lato['href'] ), 0, 8 ),
+					'et-builder-googlefonts',
+				],
 				$class->add_legacy_ids( [], 'et-builder-googlefonts', $lato )
 			);
 			$this->assertSame( [], $class->add_legacy_ids( [], 'roboto', $lato ) );
