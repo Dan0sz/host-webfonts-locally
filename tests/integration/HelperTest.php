@@ -397,7 +397,7 @@ class HelperTest extends TestCase {
 	 */
 	public function testRemoveStylesheet() {
 		// sheet-1-mod-dark is another stylesheet, not a cache key of sheet-1.
-		foreach ( [ 'sheet-1', 'sheet-1-mod-abc', 'sheet-12', 'sheet-1-mod-dark' ] as $dir ) {
+		foreach ( [ 'sheet-1', 'sheet-1-mod-abc', 'sheet-12', 'sheet-1-mod-dark', 'sheet-1-mod-dark-mod-def' ] as $dir ) {
 			wp_mkdir_p( OMGF_UPLOAD_DIR . "/$dir" );
 			file_put_contents( OMGF_UPLOAD_DIR . "/$dir/$dir.css", '' );
 		}
@@ -405,7 +405,7 @@ class HelperTest extends TestCase {
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [ 'sheet-1' => [], 'sheet-12' => [], 'sheet-1-mod-dark' => [] ] );
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'sheet-1' => [ 'lato' => [ '400' ] ], 'sheet-12' => [ 'lato' => [ '400' ] ] ] );
 		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'sheet-1,sheet-12' );
-		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, 'sheet-1-mod-abc,sheet-12,sheet-1-mod-dark' );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, 'sheet-1-mod-abc,sheet-12,sheet-1-mod-dark-mod-def' );
 		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'sheet-1', 'sheet-12' ] );
 
 		$removed = [];
@@ -427,10 +427,11 @@ class HelperTest extends TestCase {
 			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/sheet-1-mod-abc' );
 			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-12' );
 			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-1-mod-dark' );
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-1-mod-dark-mod-def' );
 			$this->assertSame( [ 'sheet-12' => [], 'sheet-1-mod-dark' => [] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
 			$this->assertArrayNotHasKey( 'sheet-1', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ) );
 			$this->assertSame( 'sheet-12', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) );
-			$this->assertSame( 'sheet-12,sheet-1-mod-dark', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) );
+			$this->assertSame( 'sheet-12,sheet-1-mod-dark-mod-def', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) );
 
 			// An empty handle doesn't remove anything.
 			$this->assertFalse( OMGF::remove_stylesheet( '' ) );
@@ -441,6 +442,7 @@ class HelperTest extends TestCase {
 			remove_action( 'omgf_stylesheet_removed', $record, 10 );
 			OMGF::delete( OMGF_UPLOAD_DIR . '/sheet-12' );
 			OMGF::delete( OMGF_UPLOAD_DIR . '/sheet-1-mod-dark' );
+			OMGF::delete( OMGF_UPLOAD_DIR . '/sheet-1-mod-dark-mod-def' );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
 			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );

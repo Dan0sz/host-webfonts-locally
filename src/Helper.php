@@ -1017,13 +1017,23 @@ class Helper {
 		 * get_cache_key() either, because it would also match e.g. the cache key of handle-12 for handle-1.
 		 */
 		$cache_keys     = array_filter( explode( ',', (string) self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) ) );
-		$other_handles  = array_diff( array_keys( self::admin_optimized_fonts() ), [ $handle ] );
+		$handles        = array_unique( array_merge( [ $handle ], array_map( 'strval', array_keys( self::admin_optimized_fonts() ) ) ) );
 		$own_cache_keys = array_filter(
 			$cache_keys,
-			function ( $cache_key ) use ( $handle, $other_handles ) {
-				// A handle can contain -mod- too, e.g. theme-mod-dark, which isn't a cache key of theme.
-				return $cache_key === $handle ||
-				       ( str_starts_with( $cache_key, "$handle-mod-" ) && ! in_array( $cache_key, $other_handles, true ) );
+			function ( $cache_key ) use ( $handle, $handles ) {
+				/**
+				 * A handle can contain -mod- too, e.g. theme-mod-dark, so a cache key belongs to the longest handle it
+				 * starts with: theme-mod-dark-mod-xxxxx belongs to theme-mod-dark, not to theme.
+				 */
+				$owner = '';
+
+				foreach ( $handles as $candidate ) {
+					if ( ( $cache_key === $candidate || str_starts_with( $cache_key, "$candidate-mod-" ) ) && strlen( $candidate ) > strlen( $owner ) ) {
+						$owner = $candidate;
+					}
+				}
+
+				return $owner === $handle;
 			}
 		);
 
