@@ -289,10 +289,20 @@ class HelperTest extends TestCase {
 			return [ 'legacy' => [], 'other' => [] ];
 		};
 
+		// An add-on's setting which was stored as something other than an array.
+		$settings = function ( $settings ) {
+			return $settings + [ 'omgf_test_invalid_setting' => false ];
+		};
+
+		update_option( 'omgf_test_invalid_setting', 'invalid' );
+
 		add_filter( 'omgf_filter_optimized_fonts', $fonts );
+		add_filter( 'omgf_stylesheet_settings', $settings );
 
 		try {
 			OMGF::inherit_stylesheet_settings( [ 'Older', 'Legacy' ], 'new' );
+
+			$this->assertSame( 'invalid', get_option( 'omgf_test_invalid_setting' ) );
 
 			// Legacy handles which are optimized or have settings are marked as superseded, so they're cleaned up later.
 			$this->assertSame( [ 'legacy', 'older' ], OMGF::superseded_stylesheets() );
@@ -303,6 +313,8 @@ class HelperTest extends TestCase {
 			$this->assertSame( 'other,legacy,new', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) );
 		} finally {
 			remove_filter( 'omgf_filter_optimized_fonts', $fonts );
+			remove_filter( 'omgf_stylesheet_settings', $settings );
+			delete_option( 'omgf_test_invalid_setting' );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
 			delete_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
 			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );

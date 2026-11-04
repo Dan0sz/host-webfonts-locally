@@ -147,4 +147,34 @@ class AdminTest extends TestCase {
 		}
 	}
 
+
+	/**
+	 * Unchanged settings don't mark the cache as stale, also when a setting is an array.
+	 *
+	 * @see Admin::maybe_show_stale_cache_notice()
+	 * @return void
+	 */
+	public function testUnchangedSettingsDontMarkCacheStale() {
+		global $wp_settings_errors;
+
+		$wp_settings_errors = [];
+		$original_get       = $_GET;
+
+		try {
+			$class = new Admin();
+
+			$_GET['page'] = Settings::OMGF_ADMIN_PAGE;
+			$_GET['tab']  = 'test';
+
+			OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
+
+			$class->maybe_show_stale_cache_notice( [ 'subsets' => [ 'latin' ] ], [ 'subsets' => [ 'latin' ] ] );
+
+			$this->assertNull( OMGF::get_option( Settings::OMGF_FLAG_CACHE_IS_STALE ) );
+		} finally {
+			$_GET = $original_get;
+
+			OMGF::delete_option( Settings::OMGF_FLAG_CACHE_IS_STALE );
+		}
+	}
 }
