@@ -809,7 +809,7 @@ class Helper {
 	 * Options containing settings per stylesheet handle.
 	 *
 	 * @filter omgf_stylesheet_settings
-	 * @since  v6.4.2
+	 * @since  v6.5.0
 	 *
 	 * @return array [ option name => (bool) whether it's stored as a comma-separated string ]
 	 */
@@ -828,7 +828,7 @@ class Helper {
 	 * Generates a short identifier for a stylesheet URL, used to give stylesheets which share a handle (or don't have
 	 * one) a unique handle per configuration.
 	 *
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @param string $href
 	 *
@@ -847,7 +847,7 @@ class Helper {
 	 * Marks the notice about automatically removed stylesheets as read for $handles. Stylesheets removed after the
 	 * notice was displayed are kept, so they're shown next time.
 	 *
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @param array $handles
 	 *
@@ -869,7 +869,7 @@ class Helper {
 	 * Handles of stylesheets which were replaced by a stylesheet with a new handle.
 	 *
 	 * @see   self::inherit_stylesheet_settings()
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @return array
 	 */
@@ -883,7 +883,7 @@ class Helper {
 	 * Copies the settings of the first legacy handle which has them to $handle, if $handle wasn't optimized and doesn't
 	 * have settings yet, e.g. when an update changed the way handles are generated.
 	 *
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @param array  $legacy_handles
 	 * @param string $handle
@@ -953,7 +953,7 @@ class Helper {
 	 * Removes stylesheets which weren't seen in the frontend for a while from the cache and the database.
 	 *
 	 * @action omgf_remove_unused_stylesheets
-	 * @since  v6.4.2
+	 * @since  v6.5.0
 	 *
 	 * @return array The removed handles.
 	 */
@@ -981,7 +981,7 @@ class Helper {
 	/**
 	 * Removes the stylesheet with $handle from the cache directory and the database.
 	 *
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @param string $handle
 	 *

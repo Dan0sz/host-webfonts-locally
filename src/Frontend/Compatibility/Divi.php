@@ -49,9 +49,9 @@ class Divi {
 	 * @since v5.2.0 Allow Divi/Elementor compatibility fixes to be disabled, for those who have too
 	 *               many different Google Fonts stylesheets configured throughout their pages and
 	 *               blame OMGF for the fact that it detects all those different stylesheets. :-/
-	 * @since v6.4.2 Use a hash of the URL instead of its length, because different configurations with the same URL
+	 * @since v6.5.0 Use a hash of the URL instead of its length, because different configurations with the same URL
 	 *               length got the same identifier, so a cached stylesheet with other fonts was loaded.
-	 * @since v6.4.2 Always enabled, because without it a stylesheet with other fonts was loaded after changing fonts.
+	 * @since v6.5.0 Always enabled, because without it a stylesheet with other fonts was loaded after changing fonts.
 	 */
 	public function maybe_modify_id( $id, $href ) {
 		if ( ! str_contains( $id, 'et-builder-googlefonts' ) ) {
@@ -64,11 +64,11 @@ class Divi {
 	}
 
 	/**
-	 * The handles Divi's stylesheets were stored under before v6.4.2: without an identifier (if Divi Compatibility
-	 * was disabled), with the length of the URL or (in v6.4.2 betas) with a hash of the URL including its version.
+	 * The handles Divi's stylesheets were stored under before v6.5.0: without an identifier (if Divi Compatibility
+	 * was disabled), with the length of the URL or (in the v6.4.2 beta) with a hash of the URL including its version.
 	 *
 	 * @filter omgf_frontend_process_legacy_ids
-	 * @since  v6.4.2
+	 * @since  v6.5.0
 	 *
 	 * @param array  $legacy_ids
 	 * @param string $id

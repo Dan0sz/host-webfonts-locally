@@ -419,7 +419,7 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * Stylesheets without an id get a handle based on a hash of their URL, so different stylesheets with the same URL
-	 * length don't share a handle. The handles used before v6.4.2 are passed along as legacy ids.
+	 * length don't share a handle. The handles used before v6.5.0 are passed along as legacy ids.
 	 *
 	 * @see Process::build_fonts_set()
 	 * @return void

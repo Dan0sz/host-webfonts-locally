@@ -44,7 +44,11 @@ class V560 {
 			Settings::OMGF_OPTIMIZE_SETTING_TEST_MODE,
 			Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS,
 			Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS,
-			Settings::OMGF_ADV_SETTING_COMPATIBILITY,
+			/**
+			 * @since v6.5.0 Settings::OMGF_ADV_SETTING_COMPATIBILITY doesn't exist anymore, because Divi/Elementor
+			 *               compatibility is always enabled. Its value is used here, so this migration keeps working.
+			 */
+			'compatibility',
 			Settings::OMGF_ADV_SETTING_SUBSETS,
 			Settings::OMGF_ADV_SETTING_DEBUG_MODE,
 			Settings::OMGF_ADV_SETTING_UNINSTALL,

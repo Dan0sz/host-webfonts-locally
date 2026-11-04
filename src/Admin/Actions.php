@@ -39,7 +39,7 @@ class Actions {
 	 * Makes sure the daily cleanup is scheduled for existing installs, too. New installs schedule it on activation.
 	 *
 	 * @see   \OMGF\Plugin::schedule_events()
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @return void
 	 */

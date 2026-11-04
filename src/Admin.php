@@ -311,7 +311,7 @@ class Admin {
 	 * Show which stylesheets were removed automatically, until the notice is dismissed.
 	 *
 	 * @see   OMGF::remove_unused_stylesheets()
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @return void
 	 */

@@ -78,7 +78,7 @@ class Ajax {
 	/**
 	 * Mark the notice about automatically removed stylesheets as read.
 	 *
-	 * @since v6.4.2 Uses admin-ajax.php, because it's on the same origin as the admin, unlike the REST API.
+	 * @since v6.5.0 Uses admin-ajax.php, because it's on the same origin as the admin, unlike the REST API.
 	 *
 	 * @codeCoverageIgnore Because code execution is killed at the end.
 	 */

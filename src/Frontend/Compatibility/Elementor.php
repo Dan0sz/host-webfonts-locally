@@ -49,9 +49,9 @@ class Elementor {
 	 *               other pages, let's append a (kind of) unique identifier to the string, to make
 	 *               sure we can make a difference between different Google Fonts configurations.
 	 *
-	 * @since v6.4.2 Use a hash of the URL instead of its length, because different configurations with the same URL
+	 * @since v6.5.0 Use a hash of the URL instead of its length, because different configurations with the same URL
 	 *               length got the same identifier, so a cached stylesheet with other fonts was loaded.
-	 * @since v6.4.2 Always enabled, because without it a stylesheet with other fonts was loaded after changing fonts.
+	 * @since v6.5.0 Always enabled, because without it a stylesheet with other fonts was loaded after changing fonts.
 	 *
 	 * TODO: check if this is still needed in Elementor 3.30.
 	 */
@@ -66,11 +66,11 @@ class Elementor {
 	}
 
 	/**
-	 * The handles Elementor's stylesheets were stored under before v6.4.2: unmodified (if Divi Compatibility was
+	 * The handles Elementor's stylesheets were stored under before v6.5.0: unmodified (if Divi Compatibility was
 	 * disabled) or with the length of the URL.
 	 *
 	 * @filter omgf_frontend_process_legacy_ids
-	 * @since  v6.4.2
+	 * @since  v6.5.0
 	 *
 	 * @param array  $legacy_ids
 	 * @param string $id

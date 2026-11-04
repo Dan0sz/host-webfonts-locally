@@ -44,10 +44,10 @@ class Settings extends Admin {
 	/** @since v6.4.0 */
 	const OMGF_DB_STYLESHEETS_LAST_SEEN = 'omgf_stylesheets_last_seen';
 
-	/** @since v6.4.2 */
+	/** @since v6.5.0 */
 	const OMGF_DB_REMOVED_STYLESHEETS = 'omgf_removed_stylesheets';
 
-	/** @since v6.4.2 */
+	/** @since v6.5.0 */
 	const OMGF_DB_SUPERSEDED_STYLESHEETS = 'omgf_superseded_stylesheets';
 
 	/**
@@ -174,9 +174,6 @@ class Settings extends Admin {
 	 * Advanced Settings
 	 */
 	const OMGF_ADV_SETTING_LEGACY_MODE = 'legacy';
-
-	/** @deprecated v6.4.2 Divi/Elementor compatibility is always enabled. */
-	const OMGF_ADV_SETTING_COMPATIBILITY = 'compatibility';
 
 	const OMGF_ADV_SETTING_SUBSETS = 'subsets';
 

@@ -70,7 +70,7 @@ class Plugin {
 		new API\AdminbarMenu();
 
 		/**
-		 * @since v6.4.2 Scheduled in @see Admin\Actions::schedule_remove_unused_stylesheets()
+		 * @since v6.5.0 Scheduled in @see Admin\Actions::schedule_remove_unused_stylesheets()
 		 */
 		add_action( 'omgf_remove_unused_stylesheets', [ '\OMGF\Helper', 'remove_unused_stylesheets' ] );
 		new API\Dashboard();
@@ -95,7 +95,7 @@ class Plugin {
 	 * Daily removal of stylesheets which weren't found on the site for a while.
 	 *
 	 * @see   OMGF::remove_unused_stylesheets()
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @return void
 	 */
@@ -106,7 +106,7 @@ class Plugin {
 	}
 
 	/**
-	 * @since v6.4.2
+	 * @since v6.5.0
 	 *
 	 * @return void
 	 */

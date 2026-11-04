@@ -200,7 +200,7 @@ class Process {
 
 		foreach ( $optimized_fonts as $stylesheet_handle => $font_faces ) {
 			/**
-			 * @since v6.4.2 Stylesheets which got a new handle aren't used anymore, so their fonts aren't preloaded.
+			 * @since v6.5.0 Stylesheets which got a new handle aren't used anymore, so their fonts aren't preloaded.
 			 */
 			if ( in_array( $stylesheet_handle, $superseded, true ) ) {
 				continue;
@@ -255,7 +255,7 @@ class Process {
 					}
 
 					/**
-					 * @since v6.4.2 Stylesheets with different handles can contain the same font file, e.g. when they
+					 * @since v6.5.0 Stylesheets with different handles can contain the same font file, e.g. when they
 					 *               inherited their settings from the same handle. Preload each file only once.
 					 */
 					$file_key = basename( $file_path ) . ':' . ( file_exists( $file_path ) ? filesize( $file_path ) : '' );
@@ -679,7 +679,7 @@ class Process {
 			 * @since v5.1.4
 			 * @since v6.3.10 Use the sanitized URL to make sure the generated handle doesn't change when
 			 *                insignificant whitespace is added to (or removed from) the href attribute.
-			 * @since v6.4.2  Use a hash of the URL instead of its length, because different stylesheets with the same
+			 * @since v6.5.0  Use a hash of the URL instead of its length, because different stylesheets with the same
 			 *                URL length got the same handle, so a cached stylesheet with other fonts was loaded.
 			 */
 			if ( ! $id ) {
@@ -691,7 +691,7 @@ class Process {
 			/**
 			 * @filter omgf_frontend_process_legacy_ids Handles this stylesheet was stored under by older versions, so
 			 *                                          its settings can be inherited.
-			 * @since  v6.4.2
+			 * @since  v6.5.0
 			 */
 			$google_fonts[ $key ]['legacy_ids'] = array_values(
 				array_unique( apply_filters( 'omgf_frontend_process_legacy_ids', $legacy_ids, $id, $href ) )
@@ -785,7 +785,7 @@ class Process {
 			}
 
 			/**
-			 * @since v6.4.2 Stylesheets which got a new handle inherit the settings of their old handle.
+			 * @since v6.5.0 Stylesheets which got a new handle inherit the settings of their old handle.
 			 */
 			if ( ! empty( $stack['legacy_ids'] ) ) {
 				OMGF::inherit_stylesheet_settings( $stack['legacy_ids'], $handle );
@@ -800,7 +800,7 @@ class Process {
 				OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() )
 			) ) {
 				/**
-				 * @since v6.4.2 Optimize an unloaded stylesheet once if it wasn't optimized before (e.g. because it
+				 * @since v6.5.0 Optimize an unloaded stylesheet once if it wasn't optimized before (e.g. because it
 				 *               inherited its settings), so it's listed in the admin and can be loaded again. If that
 				 *               fails, don't try again for an hour, because the request blocks the page.
 				 */

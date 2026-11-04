@@ -45,7 +45,9 @@ class SettingsTest extends TestCase {
 		$class = new Settings();
 		$class->register_settings();
 
-		$this->assertNotEmpty( $wp_registered_settings[ 'omgf_settings[compatibility]' ] );
+		$this->assertNotEmpty( $wp_registered_settings[ 'omgf_settings[subsets]' ] );
+		// Removed in v6.5.0, because Divi/Elementor compatibility is always enabled.
+		$this->assertArrayNotHasKey( 'omgf_settings[compatibility]', $wp_registered_settings );
 	}
 
 	/**

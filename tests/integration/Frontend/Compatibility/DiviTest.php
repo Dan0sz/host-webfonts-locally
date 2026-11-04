@@ -39,7 +39,7 @@ class DiviTest extends TestCase {
 	}
 
 	/**
-	 * The handles used before v6.4.2 are returned, so their settings can be inherited.
+	 * The handles used before v6.5.0 are returned, so their settings can be inherited.
 	 *
 	 * @see Divi::add_legacy_ids()
 	 * @return void
