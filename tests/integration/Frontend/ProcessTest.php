@@ -62,6 +62,59 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * Fonts of superseded stylesheets aren't preloaded, and the same font file is preloaded only once, even if
+	 * multiple stylesheets contain it.
+	 *
+	 * @see Process::add_preloads()
+	 * @return void
+	 */
+	public function testAddPreloadsSkipsSupersededAndDuplicateFiles() {
+		$fonts    = function () {
+			$fonts = $this->addOptimizedFonts();
+
+			return [ 'legacy' => $fonts['astra-google-fonts'], 'new-1' => $fonts['astra-google-fonts'], 'new-2' => $fonts['astra-google-fonts'] ];
+		};
+		$preloads = function () {
+			$preloads = $this->addPreloads()['astra-google-fonts'];
+
+			return [ 'legacy' => $preloads, 'new-1' => $preloads, 'new-2' => $preloads ];
+		};
+
+		add_filter( 'omgf_filter_optimized_fonts', $fonts );
+		add_filter( 'omgf_filter_preloaded_fonts', $preloads );
+		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'legacy' ] );
+
+		try {
+			ob_start();
+			( new Process( true ) )->add_preloads();
+			$output = ob_get_clean();
+
+			// Jost 400 and 600 are preloaded once.
+			$this->assertSame( 2, preg_match_all( '~rel=[\'"]preload~', $output ) );
+
+			// Only the superseded stylesheet has preloads.
+			remove_filter( 'omgf_filter_preloaded_fonts', $preloads );
+
+			$legacy_only = function () {
+				return [ 'legacy' => $this->addPreloads()['astra-google-fonts'] ];
+			};
+
+			add_filter( 'omgf_filter_preloaded_fonts', $legacy_only );
+
+			ob_start();
+			( new Process( true ) )->add_preloads();
+
+			$this->assertSame( 0, preg_match_all( '~rel=[\'"]preload~', ob_get_clean() ) );
+
+			remove_filter( 'omgf_filter_preloaded_fonts', $legacy_only );
+		} finally {
+			remove_filter( 'omgf_filter_optimized_fonts', $fonts );
+			remove_filter( 'omgf_filter_preloaded_fonts', $preloads );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
+		}
+	}
+
+	/**
 	 * Is the Success-message added properly?
 	 *
 	 * @see Process::add_success_message()
@@ -133,25 +186,6 @@ class ProcessTest extends TestCase {
 			'//example.org/wp-content/uploads/omgf/astra-google-fonts/astra-google-fonts.css',
 			$html
 		);
-	}
-
-	/**
-	 * Stylesheets found on the page are marked as seen.
-	 *
-	 * @see Process::build_search_replace()
-	 * @return void
-	 */
-	public function testProcessMarksStylesheetsSeen() {
-		delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-
-		try {
-			$class = new Process( true );
-			$class->process( file_get_contents( OMGF_TESTS_ROOT . 'assets/google-fonts.html' ) );
-
-			$this->assertArrayHasKey( 'astra-google-fonts', OMGF::stylesheets_last_seen() );
-		} finally {
-			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-		}
 	}
 
 	/**
@@ -361,6 +395,71 @@ class ProcessTest extends TestCase {
 			$this->assertEquals( 'open-sans', $font[ 'id' ] );
 			$this->assertEquals( $href, $font[ 'href' ] );
 			$this->assertEquals( $href, $font[ 'url' ] );
+		}
+	}
+
+	/**
+	 * Stylesheets without an id get a handle based on a hash of their URL, so different stylesheets with the same URL
+	 * length don't share a handle. The handles used before v6.5.0 are passed along as legacy ids.
+	 *
+	 * @see Process::build_fonts_set()
+	 * @return void
+	 */
+	public function testBuildFontsSetHashesIdLessStylesheets() {
+		$class = new Process( true );
+		$lato  = 'https://fonts.googleapis.com/css?family=Lato:400';
+		$lora  = 'https://fonts.googleapis.com/css?family=Lora:400';
+		$set   = $class->build_fonts_set( [ "<link rel='stylesheet' href='$lato'/>", "<link rel='stylesheet' href='$lora'/>" ] );
+
+		$this->assertMatchesRegularExpression( '/^omgf-stylesheet-[0-9a-f]{8}$/', $set[0]['id'] );
+		$this->assertNotSame( $set[0]['id'], $set[1]['id'] );
+		$this->assertSame( [ 'omgf-stylesheet-' . strlen( $lato ) ], $set[0]['legacy_ids'] );
+
+		// Stylesheets with an id don't have legacy ids.
+		$set = $class->build_fonts_set( [ "<link rel='stylesheet' id='lato-css' href='$lato'/>" ] );
+
+		$this->assertSame( 'lato', $set[0]['id'] );
+		$this->assertSame( [], $set[0]['legacy_ids'] );
+	}
+
+	/**
+	 * A stylesheet with a new handle inherits the settings of its legacy handle before it's processed.
+	 *
+	 * @see Process::build_search_replace()
+	 * @return void
+	 */
+	public function testBuildSearchReplaceInheritsLegacySettings() {
+		$url = 'https://fonts.googleapis.com/css?family=Lato:400';
+
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'omgf-stylesheet-48' );
+
+		try {
+			$class  = new Process( true );
+			$result = $class->build_search_replace(
+				[
+					[
+						'id'         => 'omgf-stylesheet-abcdef12',
+						'link'       => "<link rel='stylesheet' href='$url'/>",
+						'href'       => $url,
+						'url'        => $url,
+						'legacy_ids' => [ 'omgf-stylesheet-48' ],
+					],
+				]
+			);
+
+			$this->assertContains( 'omgf-stylesheet-abcdef12', OMGF::unloaded_stylesheets() );
+			// The stylesheet is unloaded, so it's removed.
+			$this->assertSame( [ '' ], array_values( $result['replace'] ) );
+			// It's optimized once, so it's listed in the admin. If that fails, it isn't retried for a while.
+			$this->assertTrue( get_transient( 'omgf_optimize_unloaded_' . md5( 'omgf-stylesheet-abcdef12' ) ) );
+			// The legacy handle has settings, so it's cleaned up when it's unused.
+			$this->assertContains( 'omgf-stylesheet-48', OMGF::superseded_stylesheets() );
+		} finally {
+			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
+			OMGF::remove_stylesheet( 'omgf-stylesheet-abcdef12' );
+			delete_transient( 'omgf_optimize_unloaded_' . md5( 'omgf-stylesheet-abcdef12' ) );
+
 		}
 	}
 

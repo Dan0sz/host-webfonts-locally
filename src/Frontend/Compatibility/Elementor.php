@@ -16,7 +16,6 @@
 
 namespace OMGF\Frontend\Compatibility;
 
-use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 
 /**
@@ -37,6 +36,7 @@ class Elementor {
 	 */
 	public function init() {
 		add_filter( 'omgf_frontend_process_fonts_set', [ $this, 'maybe_modify_id' ], 10, 2 );
+		add_filter( 'omgf_frontend_process_legacy_ids', [ $this, 'add_legacy_ids' ], 10, 3 );
 		add_filter( 'omgf_frontend_process_parse_links', [ $this, 'validate_link_element' ], 10, 3 );
 		add_filter( 'omgf_frontend_process_invalid_request', [ $this, 'validate_request' ], 10, 2 );
 	}
@@ -49,16 +49,43 @@ class Elementor {
 	 *               other pages, let's append a (kind of) unique identifier to the string, to make
 	 *               sure we can make a difference between different Google Fonts configurations.
 	 *
+	 * @since v6.5.0 Use a hash of the URL instead of its length, because different configurations with the same URL
+	 *               length got the same identifier, so a cached stylesheet with other fonts was loaded.
+	 * @since v6.5.0 Always enabled, because without it a stylesheet with other fonts was loaded after changing fonts.
+	 *
 	 * TODO: check if this is still needed in Elementor 3.30.
 	 */
 	public function maybe_modify_id( $id, $href ) {
-		if ( OMGF::get_option( Settings::OMGF_ADV_SETTING_COMPATIBILITY ) && $id === 'google-fonts-1' ) {
-			$href_attr = is_array( $href ) && isset( $href['href'] ) ? $href['href'] : '';
-
-			return str_replace( '-1', '-' . strlen( $href_attr ), $id ); // @codeCoverageIgnore
+		if ( $id !== 'google-fonts-1' ) {
+			return $id;
 		}
 
-		return $id;
+		$href_attr = is_array( $href ) && isset( $href['href'] ) ? $href['href'] : '';
+
+		return 'google-fonts-' . OMGF::stylesheet_hash( $href_attr );
+	}
+
+	/**
+	 * The handles Elementor's stylesheets were stored under before v6.5.0: unmodified (if Divi Compatibility was
+	 * disabled) or with the length of the URL.
+	 *
+	 * @filter omgf_frontend_process_legacy_ids
+	 * @since  v6.5.0
+	 *
+	 * @param array  $legacy_ids
+	 * @param string $id
+	 * @param array  $href
+	 *
+	 * @return array
+	 */
+	public function add_legacy_ids( $legacy_ids, $id, $href ) {
+		if ( $id !== 'google-fonts-1' ) {
+			return $legacy_ids;
+		}
+
+		$href_attr = is_array( $href ) && isset( $href['href'] ) ? $href['href'] : '';
+
+		return array_merge( $legacy_ids, [ 'google-fonts-' . strlen( $href_attr ), $id ] );
 	}
 
 	/**

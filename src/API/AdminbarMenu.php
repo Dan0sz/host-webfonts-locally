@@ -56,7 +56,7 @@ class AdminbarMenu {
 	public function get_admin_bar_status( $request ) {
 		$params                = $this->clean( $request->get_params() );
 		/**
-		 * @since v6.4.2 Decode the URLs before cleaning them, because clean() urldecodes strings without a scheme (like
+		 * @since v6.5.0 Decode the URLs before cleaning them, because clean() urldecodes strings without a scheme (like
 		 *               this JSON string), which turned e.g. family=Roboto%7CNoto+Serif into the invalid URL
 		 *               family=Roboto|Noto Serif. Those URLs were then dropped.
 		 */

@@ -274,80 +274,138 @@ class HelperTest extends TestCase {
 	}
 
 	/**
-	 * A stylesheet's last seen timestamp is stored, but updated at most once a day.
+	 * A new handle inherits the settings of the first legacy handle which has them, unless it has its own settings.
 	 *
-	 * @see Helper::mark_stylesheets_seen()
+	 * @see Helper::inherit_stylesheet_settings()
 	 * @return void
 	 */
-	public function testMarkStylesheetsSeen() {
-		delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+	public function testInheritStylesheetSettings() {
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'legacy' => [ 'lato' => [ '400' ] ] ] );
+		// Older isn't optimized anymore, but still has settings.
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, [ 'new' => [ 'lato' => [ '700' => '700' ] ], 'legacy' => [ 'lato' => [ '400' => '400' ] ], 'older' => [ 'lato' => [ '400' => '400' ] ] ] );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'other,legacy' );
+
+		$fonts = function () {
+			return [ 'legacy' => [], 'other' => [] ];
+		};
+
+		// An add-on's setting which was stored as something other than an array.
+		$settings = function ( $settings ) {
+			return $settings + [ 'omgf_test_invalid_setting' => false ];
+		};
+
+		update_option( 'omgf_test_invalid_setting', 'invalid' );
+
+		add_filter( 'omgf_filter_optimized_fonts', $fonts );
+		add_filter( 'omgf_stylesheet_settings', $settings );
 
 		try {
-			OMGF::mark_stylesheets_seen( [ 'New-Handle', '' ] );
+			OMGF::inherit_stylesheet_settings( [ 'Older', 'Legacy' ], 'new' );
 
-			$last_seen = OMGF::stylesheets_last_seen();
+			$this->assertSame( 'invalid', get_option( 'omgf_test_invalid_setting' ) );
 
-			$this->assertArrayHasKey( 'new-handle', $last_seen );
-			$this->assertCount( 1, $last_seen );
-			$this->assertEqualsWithDelta( time(), $last_seen[ 'new-handle' ], 5 );
+			// Legacy handles which are optimized or have settings are marked as superseded, so they're cleaned up later.
+			$this->assertSame( [ 'legacy', 'older' ], OMGF::superseded_stylesheets() );
 
-			// Seen less than a day ago: left alone.
-			$hour_ago = time() - HOUR_IN_SECONDS;
-			$days_ago = time() - 2 * DAY_IN_SECONDS;
-
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'recent' => $hour_ago, 'old' => $days_ago ] );
-
-			OMGF::mark_stylesheets_seen( [ 'recent', 'old' ] );
-
-			$last_seen = OMGF::stylesheets_last_seen();
-
-			$this->assertSame( $hour_ago, $last_seen[ 'recent' ] );
-			$this->assertGreaterThan( $days_ago, $last_seen[ 'old' ] );
+			$this->assertSame( [ 'lato' => [ '400' ] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS )['new'] );
+			// Existing settings aren't overwritten.
+			$this->assertSame( [ 'lato' => [ '700' => '700' ] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS )['new'] );
+			$this->assertSame( 'other,legacy,new', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) );
 		} finally {
-			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+			remove_filter( 'omgf_filter_optimized_fonts', $fonts );
+			remove_filter( 'omgf_stylesheet_settings', $settings );
+			delete_option( 'omgf_test_invalid_setting' );
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
+			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
 		}
 	}
 
 	/**
-	 * Stylesheets not seen for longer than the threshold are unused. Untracked stylesheets start being tracked and
-	 * timestamps of stylesheets which are no longer optimized are removed.
+	 * Removing a stylesheet removes its files and settings, but leaves other stylesheets alone, even if their handle
+	 * starts with the same string.
 	 *
-	 * @see Helper::unused_stylesheets()
+	 * @see Helper::remove_stylesheet()
 	 * @return void
 	 */
-	public function testUnusedStylesheets() {
-		$fonts = function () {
-			return [ 'used' => [], 'unused' => [], 'untracked' => [] ];
+	public function testRemoveStylesheet() {
+		// sheet-1-mod-dark is another stylesheet, not a cache key of sheet-1.
+		foreach ( [ 'sheet-1', 'sheet-1-mod-abc', 'sheet-12', 'sheet-1-mod-dark', 'sheet-1-mod-dark-mod-def' ] as $dir ) {
+			wp_mkdir_p( OMGF_UPLOAD_DIR . "/$dir" );
+			file_put_contents( OMGF_UPLOAD_DIR . "/$dir/$dir.css", '' );
+		}
+
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [ 'sheet-1' => [], 'sheet-12' => [], 'sheet-1-mod-dark' => [] ] );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, [ 'sheet-1' => [ 'lato' => [ '400' ] ], 'sheet-12' => [ 'lato' => [ '400' ] ] ] );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, 'sheet-1,sheet-12' );
+		OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, 'sheet-1-mod-abc,sheet-12,sheet-1-mod-dark-mod-def' );
+		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'sheet-1', 'sheet-12' ] );
+
+		$removed = [];
+		$record  = function ( $handle, $cache_keys ) use ( &$removed ) {
+			$removed[] = [ $handle, $cache_keys ];
 		};
 
-		add_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
+		add_action( 'omgf_stylesheet_removed', $record, 10, 2 );
 
 		try {
-			$old = time() - OMGF::OMGF_UNUSED_STYLESHEET_THRESHOLD - DAY_IN_SECONDS;
+			$this->assertTrue( OMGF::remove_stylesheet( 'sheet-1' ) );
 
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [ 'used' => time(), 'unused' => $old, 'removed' => $old ] );
+			// Add-ons are told, so they can clean up their own files.
+			$this->assertSame( [ [ 'sheet-1', [ 'sheet-1-mod-abc' ] ] ], $removed );
 
-			$this->assertSame( [ 'unused' ], OMGF::unused_stylesheets() );
+			$this->assertSame( [ 'sheet-12' ], OMGF::superseded_stylesheets() );
 
-			$last_seen = OMGF::stylesheets_last_seen();
+			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/sheet-1' );
+			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/sheet-1-mod-abc' );
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-12' );
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-1-mod-dark' );
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-1-mod-dark-mod-def' );
+			$this->assertSame( [ 'sheet-12' => [], 'sheet-1-mod-dark' => [] ], OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS ) );
+			$this->assertArrayNotHasKey( 'sheet-1', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ) );
+			$this->assertSame( 'sheet-12', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) );
+			$this->assertSame( 'sheet-12,sheet-1-mod-dark-mod-def', OMGF::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) );
 
-			$this->assertArrayNotHasKey( 'removed', $last_seen );
-			$this->assertArrayHasKey( 'untracked', $last_seen );
-			$this->assertSame( $old, $last_seen[ 'unused' ] );
+			// An empty handle doesn't remove anything.
+			$this->assertFalse( OMGF::remove_stylesheet( '' ) );
 
-			// The threshold is filterable.
-			$threshold = function () {
-				return 10 * YEAR_IN_SECONDS;
-			};
-
-			add_filter( 'omgf_unused_stylesheet_threshold', $threshold );
-
-			$this->assertEmpty( OMGF::unused_stylesheets() );
-
-			remove_filter( 'omgf_unused_stylesheet_threshold', $threshold );
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/sheet-12' );
+			$this->assertSame( [ [ 'sheet-1', [ 'sheet-1-mod-abc' ] ] ], $removed );
 		} finally {
-			remove_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
-			delete_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
+			remove_action( 'omgf_stylesheet_removed', $record, 10 );
+			OMGF::delete( OMGF_UPLOAD_DIR . '/sheet-12' );
+			OMGF::delete( OMGF_UPLOAD_DIR . '/sheet-1-mod-dark' );
+			OMGF::delete( OMGF_UPLOAD_DIR . '/sheet-1-mod-dark-mod-def' );
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
+			delete_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS );
+			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS, '' );
+			OMGF::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, '' );
+			delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
 		}
 	}
+
+	/**
+	 * The hash ignores line breaks, tabs and the version parameter, but not other parameters.
+	 *
+	 * @see Helper::stylesheet_hash()
+	 * @return void
+	 */
+	public function testStylesheetHash() {
+		$hash = OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap' );
+
+		$this->assertMatchesRegularExpression( '/^[0-9a-f]{8}$/', $hash );
+		$this->assertSame( $hash, OMGF::stylesheet_hash( "https://fonts.googleapis.com/css?family=Lato:400\n\t&display=swap" ) );
+		$this->assertSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&ver=4.6.4' ) );
+		$this->assertSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&#038;ver=6.9' ) );
+		$this->assertSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&amp;ver=6.9' ) );
+		$this->assertSame(
+			OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400' ),
+			OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?ver=1&family=Lato:400' )
+		);
+		$this->assertNotSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lora:400&display=swap' ) );
+		// Parameters which merely end in "ver" aren't ignored.
+		$this->assertNotSame( $hash, OMGF::stylesheet_hash( 'https://fonts.googleapis.com/css?family=Lato:400&display=swap&server=1' ) );
+	}
+
 }

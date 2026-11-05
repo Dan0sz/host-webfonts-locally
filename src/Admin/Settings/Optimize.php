@@ -150,6 +150,12 @@ class Optimize extends Builder {
 		 * Note: moving this to the constructor doesn't get it properly refreshed after a page reload.
 		 */
 		$this->optimized_fonts = OMGF::admin_optimized_fonts();
+
+		/**
+		 * @since v6.5.0 Stylesheets which got a new handle aren't used anymore, and their settings were copied to the new
+		 *               handle, so they're not listed.
+		 */
+		$this->optimized_fonts = array_diff_key( $this->optimized_fonts, array_flip( OMGF::superseded_stylesheets() ) );
 		?>
 		<?php if ( ! empty( $this->optimized_fonts ) ) : ?>
 			<?php $this->do_optimized_fonts_manager(); ?>

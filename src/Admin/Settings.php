@@ -41,8 +41,8 @@ class Settings extends Admin {
 
 	const OMGF_DB_FOUND_IFRAMES = 'omgf_found_iframes';
 
-	/** @since v6.4.0 */
-	const OMGF_DB_STYLESHEETS_LAST_SEEN = 'omgf_stylesheets_last_seen';
+	/** @since v6.5.0 */
+	const OMGF_DB_SUPERSEDED_STYLESHEETS = 'omgf_superseded_stylesheets';
 
 	/**
 	 * Transients
@@ -168,8 +168,6 @@ class Settings extends Admin {
 	 * Advanced Settings
 	 */
 	const OMGF_ADV_SETTING_LEGACY_MODE = 'legacy';
-
-	const OMGF_ADV_SETTING_COMPATIBILITY = 'compatibility';
 
 	const OMGF_ADV_SETTING_SUBSETS = 'subsets';
 

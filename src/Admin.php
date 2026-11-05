@@ -305,4 +305,5 @@ class Admin {
 	public function print_notices() {
 		Notice::print_notices();
 	}
+
 }

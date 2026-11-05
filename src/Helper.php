@@ -50,13 +50,6 @@ class Helper {
 	];
 
 	/**
-	 * Optimized stylesheets which weren't seen in the frontend for this many seconds (30 days) are marked as unused.
-	 *
-	 * @since v6.4.0
-	 */
-	const OMGF_UNUSED_STYLESHEET_THRESHOLD = 2592000;
-
-	/**
 	 * Options stored in their own row, which aren't needed on (most) frontend requests, so they shouldn't be autoloaded.
 	 *
 	 * @since v6.4.0
@@ -247,7 +240,6 @@ class Helper {
 			Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => '',
 			Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS         => '',
 			Settings::OMGF_ADV_SETTING_LEGACY_MODE             => '',
-			Settings::OMGF_ADV_SETTING_COMPATIBILITY           => '',
 			Settings::OMGF_ADV_SETTING_SUBSETS                 => [ 'latin', 'latin-ext' ],
 			Settings::OMGF_ADV_SETTING_DISABLE_ADMIN_BAR_MENU  => '',
 			Settings::OMGF_ADV_SETTING_DEBUG_MODE              => '',
@@ -724,86 +716,228 @@ class Helper {
 	}
 
 	/**
-	 * Stores when the stylesheets with $handles were last seen in the frontend. To keep this cheap, a handle's
-	 * timestamp is updated at most once a day.
+	 * Options containing settings per stylesheet handle.
 	 *
-	 * @since v6.4.0
+	 * @filter omgf_stylesheet_settings
+	 * @since  v6.5.0
 	 *
-	 * @param array|string $handles
-	 *
-	 * @return void
+	 * @return array [ option name => (bool) whether it's stored as a comma-separated string ]
 	 */
-	public static function mark_stylesheets_seen( $handles ) {
-		if ( empty( $handles ) ) {
-			return;
-		}
-
-		$last_seen = self::stylesheets_last_seen();
-		$now       = time();
-		$updated   = false;
-
-		foreach ( (array) $handles as $handle ) {
-			$handle = sanitize_title_with_dashes( $handle );
-
-			if ( ! $handle || ( isset( $last_seen[ $handle ] ) && $now - $last_seen[ $handle ] < DAY_IN_SECONDS ) ) {
-				continue;
-			}
-
-			$last_seen[ $handle ] = $now;
-			$updated              = true;
-		}
-
-		if ( $updated ) {
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $last_seen, true );
-		}
+	public static function stylesheet_settings() {
+		return apply_filters(
+			'omgf_stylesheet_settings',
+			[
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS       => false,
+				Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS      => false,
+				Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS => true,
+			]
+		);
 	}
 
 	/**
-	 * @since v6.4.0
+	 * Generates a short identifier for a stylesheet URL, used to give stylesheets which share a handle (or don't have
+	 * one) a unique handle per configuration.
 	 *
-	 * @return array [ handle => timestamp ]
+	 * @since v6.5.0
+	 *
+	 * @param string $href
+	 *
+	 * @return string
 	 */
-	public static function stylesheets_last_seen() {
-		$last_seen = get_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, [] );
+	public static function stylesheet_hash( $href ) {
+		// Ignore line breaks and tabs, like Process::sanitize_url() does before requesting the URL.
+		$href = trim( str_replace( [ "\r", "\n", "\t" ], '', (string) $href ) );
+		// Ignore the version, so the handle doesn't change (and lose its settings) when it's bumped.
+		$href = preg_replace( '/(\?)ver=[^&#]*(?:&amp;|&#0?38;|&)?|(?:&amp;|&#0?38;|&)ver=[^&#]*/i', '$1', $href );
 
-		return is_array( $last_seen ) ? $last_seen : [];
+		return substr( md5( $href ), 0, 8 );
 	}
 
 	/**
-	 * Returns the handles of optimized stylesheets which weren't seen in the frontend for a while. Handles without a
-	 * timestamp (e.g. optimized before tracking started) start being tracked now.
+	 * Handles of stylesheets which were replaced by a stylesheet with a new handle.
 	 *
-	 * @since v6.4.0
+	 * @see   self::inherit_stylesheet_settings()
+	 * @since v6.5.0
 	 *
 	 * @return array
 	 */
-	public static function unused_stylesheets() {
-		$handles   = array_keys( self::admin_optimized_fonts() );
-		$last_seen = self::stylesheets_last_seen();
-		$threshold = (int) apply_filters( 'omgf_unused_stylesheet_threshold', self::OMGF_UNUSED_STYLESHEET_THRESHOLD );
-		$now       = time();
-		$tracked   = array_intersect_key( $last_seen, array_flip( $handles ) );
-		$updated   = count( $tracked ) !== count( $last_seen );
-		$unused    = [];
+	public static function superseded_stylesheets() {
+		$superseded = get_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [] );
 
-		foreach ( $handles as $handle ) {
-			if ( ! isset( $tracked[ $handle ] ) ) {
-				$tracked[ $handle ] = $now;
-				$updated            = true;
+		return is_array( $superseded ) ? $superseded : [];
+	}
+
+	/**
+	 * Copies the settings of the first legacy handle which has them to $handle, if $handle wasn't optimized and doesn't
+	 * have settings yet, e.g. when an update changed the way handles are generated.
+	 *
+	 * @since v6.5.0
+	 *
+	 * @param array  $legacy_handles
+	 * @param string $handle
+	 *
+	 * @return void
+	 */
+	public static function inherit_stylesheet_settings( $legacy_handles, $handle ) {
+		$handle         = strtolower( $handle );
+		$legacy_handles = array_diff( array_map( 'strtolower', $legacy_handles ), [ $handle ] );
+
+		if ( empty( $legacy_handles ) || isset( self::optimized_fonts()[ $handle ] ) ) {
+			return;
+		}
+
+		$legacy = array_intersect( $legacy_handles, array_keys( self::optimized_fonts() ) );
+
+		foreach ( self::stylesheet_settings() as $option => $comma_separated ) {
+			$value = self::get_option( $option, $comma_separated ? '' : [] );
+
+			if ( $comma_separated ) {
+				$handles = array_filter( explode( ',', (string) $value ) );
+				$legacy  = array_merge( $legacy, array_intersect( $legacy_handles, $handles ) );
+
+				if ( ! in_array( $handle, $handles, true ) && array_intersect( $legacy_handles, $handles ) ) {
+					$handles[] = $handle;
+
+					self::update_option( $option, implode( ',', $handles ) );
+				}
 
 				continue;
 			}
 
-			if ( $now - $tracked[ $handle ] > $threshold ) {
-				$unused[] = $handle;
+			if ( ! is_array( $value ) ) {
+				continue;
+			}
+
+			$legacy = array_merge( $legacy, array_keys( array_intersect_key( $value, array_flip( $legacy_handles ) ) ) );
+
+			if ( isset( $value[ $handle ] ) ) {
+				continue;
+			}
+
+			foreach ( $legacy_handles as $legacy_handle ) {
+				if ( ! empty( $value[ $legacy_handle ] ) ) {
+					$value[ $handle ] = $value[ $legacy_handle ];
+
+					self::update_option( $option, $value );
+
+					break;
+				}
 			}
 		}
 
-		if ( $updated ) {
-			update_option( Settings::OMGF_DB_STYLESHEETS_LAST_SEEN, $tracked, true );
+		/**
+		 * Legacy handles aren't generated anymore. Their files and settings are kept, because pages in a page cache might
+		 * still use them.
+		 */
+		$superseded = self::superseded_stylesheets();
+		$legacy     = array_diff( array_unique( $legacy ), $superseded );
+
+		if ( ! empty( $legacy ) ) {
+			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, array_values( array_merge( $superseded, $legacy ) ) );
+		}
+	}
+
+	/**
+	 * Removes the stylesheet with $handle from the cache directory and the database.
+	 *
+	 * @since v6.5.0
+	 *
+	 * @param string $handle
+	 *
+	 * @return bool Whether files were deleted.
+	 */
+	public static function remove_stylesheet( $handle ) {
+		$handle = sanitize_title_with_dashes( $handle );
+
+		if ( ! $handle ) {
+			return false;
 		}
 
-		return $unused;
+		/**
+		 * Don't use cache_keys(), because it falls back to all handles if no cache keys are saved. Don't use
+		 * get_cache_key() either, because it would also match e.g. the cache key of handle-12 for handle-1.
+		 */
+		$cache_keys     = array_filter( explode( ',', (string) self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) ) );
+		$handles        = array_unique( array_merge( [ $handle ], array_map( 'strval', array_keys( self::admin_optimized_fonts() ) ) ) );
+		$own_cache_keys = array_filter(
+			$cache_keys,
+			function ( $cache_key ) use ( $handle, $handles ) {
+				/**
+				 * A handle can contain -mod- too, e.g. theme-mod-dark, so a cache key belongs to the longest handle it
+				 * starts with: theme-mod-dark-mod-xxxxx belongs to theme-mod-dark, not to theme.
+				 */
+				$owner = '';
+
+				foreach ( $handles as $candidate ) {
+					if ( ( $cache_key === $candidate || str_starts_with( $cache_key, "$candidate-mod-" ) ) && strlen( $candidate ) > strlen( $owner ) ) {
+						$owner = $candidate;
+					}
+				}
+
+				return $owner === $handle;
+			}
+		);
+
+		$deleted = false;
+
+		foreach ( array_merge( [ $handle ], $own_cache_keys ) as $dir ) {
+			$dir = sanitize_title_with_dashes( $dir );
+
+			if ( $dir && file_exists( OMGF_UPLOAD_DIR . '/' . $dir ) ) {
+				$deleted = self::delete( OMGF_UPLOAD_DIR . '/' . $dir ) || $deleted;
+			}
+		}
+
+		if ( ! empty( $own_cache_keys ) ) {
+			self::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, implode( ',', array_diff( $cache_keys, $own_cache_keys ) ) );
+		}
+
+		$superseded = self::superseded_stylesheets();
+
+		if ( in_array( $handle, $superseded, true ) ) {
+			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, array_values( array_diff( $superseded, [ $handle ] ) ) );
+		}
+
+		$settings = array_merge(
+			[
+				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS          => false,
+				Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND => false,
+			],
+			self::stylesheet_settings()
+		);
+
+		foreach ( $settings as $option => $comma_separated ) {
+			$value = self::get_option( $option, $comma_separated ? '' : [] );
+
+			if ( $comma_separated ) {
+				$handles = array_filter( explode( ',', (string) $value ) );
+
+				if ( in_array( $handle, $handles, true ) ) {
+					self::update_option( $option, implode( ',', array_diff( $handles, [ $handle ] ) ) );
+				}
+
+				continue;
+			}
+
+			if ( is_array( $value ) && isset( $value[ $handle ] ) ) {
+				unset( $value[ $handle ] );
+
+				self::update_option( $option, $value );
+			}
+		}
+
+		/**
+		 * Allows add-ons to clean up their own files and data for this stylesheet.
+		 *
+		 * @action omgf_stylesheet_removed
+		 * @since  v6.5.0
+		 *
+		 * @param string $handle
+		 * @param array  $cache_keys Its modified cache keys, e.g. "$handle-mod-xxxxx".
+		 */
+		do_action( 'omgf_stylesheet_removed', $handle, array_values( array_diff( $own_cache_keys, [ $handle ] ) ) );
+
+		return $deleted;
 	}
 
 	/**

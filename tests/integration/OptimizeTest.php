@@ -134,31 +134,6 @@ class OptimizeTest extends TestCase {
 	}
 
 	/**
-	 * Optimizing a stylesheet marks it as seen.
-	 *
-	 * @see \OMGF\Optimize::process()
-	 * @return void
-	 */
-	public function testProcessMarksStylesheetSeen() {
-		$css = file_get_contents( OMGF_TESTS_ROOT . 'assets/regex-injection.css' );
-
-		HttpClientMock::activate();
-		HttpClientMock::mockCssContent( $css );
-
-		try {
-			$class = new Optimize( 'https://daan.dev/tests/regex-injection.css', 'test-seen-mod-abcde', 'test-seen', 'object' );
-			$class->process();
-
-			$last_seen = \OMGF\Helper::stylesheets_last_seen();
-
-			$this->assertArrayHasKey( 'test-seen', $last_seen );
-			$this->assertArrayNotHasKey( 'test-seen-mod-abcde', $last_seen );
-		} finally {
-			HttpClientMock::deactivate();
-			delete_option( \OMGF\Admin\Settings::OMGF_DB_STYLESHEETS_LAST_SEEN );
-		}
-	}
-	/**
 	 * A variable font uses the same file for each font weight, so it should only be downloaded once.
 	 *
 	 * @see \OMGF\Optimize::process()

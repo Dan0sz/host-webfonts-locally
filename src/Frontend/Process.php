@@ -194,9 +194,18 @@ class Process {
 		}
 
 		$optimized_fonts = OMGF::optimized_fonts();
+		$superseded      = OMGF::superseded_stylesheets();
+		$preloaded_files = [];
 		$i               = 0;
 
 		foreach ( $optimized_fonts as $stylesheet_handle => $font_faces ) {
+			/**
+			 * @since v6.5.0 Stylesheets which got a new handle aren't used anymore, so their fonts aren't preloaded.
+			 */
+			if ( in_array( $stylesheet_handle, $superseded, true ) ) {
+				continue;
+			}
+
 			foreach ( $font_faces as $font_face ) {
 				$preloads_stylesheet = $preloaded_fonts[ $stylesheet_handle ] ?? [];
 
@@ -245,7 +254,18 @@ class Process {
 						continue; // @codeCoverageIgnore
 					}
 
-					$preloaded[] = $url;
+					/**
+					 * @since v6.5.0 Stylesheets with different handles can contain the same font file, e.g. when they
+					 *               inherited their settings from the same handle. Preload each file only once.
+					 */
+					$file_key = basename( $file_path ) . ':' . ( file_exists( $file_path ) ? filesize( $file_path ) : '' );
+
+					if ( in_array( $file_key, $preloaded_files, true ) ) {
+						continue;
+					}
+
+					$preloaded[]       = $url;
+					$preloaded_files[] = $file_key;
 					$timestamp   = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
 					$url         .= str_contains( $url, '?' ) ? "&ver=$timestamp" : "?ver=$timestamp";
 
@@ -648,26 +668,35 @@ class Process {
 				continue; // @codeCoverageIgnore
 			}
 
+			$legacy_ids = [];
+
 			/**
 			 * If no valid id attribute was found, then this means that this stylesheet wasn't enqueued
-			 * using proper WordPress conventions. We generate our own using the length of the href attribute
-			 * to serve as a UID. This prevents clashes with other non-properly enqueued stylesheets on other pages.
+			 * using proper WordPress conventions. We generate our own using the href attribute to serve as a UID.
+			 * This prevents clashes with other non-properly enqueued stylesheets on other pages.
 			 *
 			 * @var string $id
 			 * @since v5.1.4
-			 *
+			 * @since v6.3.10 Use the sanitized URL to make sure the generated handle doesn't change when
+			 *                insignificant whitespace is added to (or removed from) the href attribute.
+			 * @since v6.5.0  Use a hash of the URL instead of its length, because different stylesheets with the same
+			 *                URL length got the same handle, so a cached stylesheet with other fonts was loaded.
 			 */
 			if ( ! $id ) {
-				// @codeCoverageIgnoreStart
-				/**
-				 * @since v6.3.10 Use the sanitized URL's length to make sure the generated handle doesn't change
-				 *                when insignificant whitespace is added to (or removed from) the href attribute.
-				 */
-				$id = "$handle-" . strlen( $this->sanitize_url( $href['href'] ) );
-				// @codeCoverageIgnoreEnd
+				$url        = $this->sanitize_url( $href['href'] );
+				$id         = "$handle-" . OMGF::stylesheet_hash( $url );
+				$legacy_ids = [ "$handle-" . strlen( $url ), "$handle-" . strlen( $href['href'] ) ];
 			}
 
-			$google_fonts[ $key ]['id']   = apply_filters( 'omgf_frontend_process_fonts_set', $id, $href );
+			/**
+			 * @filter omgf_frontend_process_legacy_ids Handles this stylesheet was stored under by older versions, so
+			 *                                          its settings can be inherited.
+			 * @since  v6.5.0
+			 */
+			$google_fonts[ $key ]['legacy_ids'] = array_values(
+				array_unique( apply_filters( 'omgf_frontend_process_legacy_ids', $legacy_ids, $id, $href ) )
+			);
+			$google_fonts[ $key ]['id']         = apply_filters( 'omgf_frontend_process_fonts_set', $id, $href );
 			$google_fonts[ $key ]['link'] = $link;
 			/**
 			 * This is used for search/replace later on. This shouldn't be tampered with.
@@ -724,7 +753,6 @@ class Process {
 	public function build_search_replace( $google_fonts ) {
 		$search  = [];
 		$replace = [];
-		$seen    = [];
 
 		foreach ( $google_fonts as $key => $stack ) {
 			/**
@@ -756,6 +784,13 @@ class Process {
 			}
 
 			/**
+			 * @since v6.5.0 Stylesheets which got a new handle inherit the settings of their old handle.
+			 */
+			if ( ! empty( $stack['legacy_ids'] ) ) {
+				OMGF::inherit_stylesheet_settings( $stack['legacy_ids'], $handle );
+			}
+
+			/**
 			 * If the stylesheet with $handle is completely marked for unloading, just remove the element
 			 * to prevent it from loading.
 			 */
@@ -763,9 +798,21 @@ class Process {
 				'omgf_unloaded_stylesheets',
 				OMGF::unloaded_stylesheets() && in_array( $handle, OMGF::unloaded_stylesheets() )
 			) ) {
+				/**
+				 * @since v6.5.0 Optimize an unloaded stylesheet once if it wasn't optimized before (e.g. because it
+				 *               inherited its settings), so it's listed in the admin and can be loaded again. If that
+				 *               fails, don't try again for an hour, because the request blocks the page.
+				 */
+				$attempt = 'omgf_optimize_unloaded_' . md5( $handle );
+
+				if ( ! isset( OMGF::optimized_fonts()[ $handle ] ) && ! get_transient( $attempt ) ) {
+					set_transient( $attempt, true, HOUR_IN_SECONDS );
+
+					( new Optimize( $url, $handle, $original_handle ) )->process();
+				}
+
 				$search[ $key ]  = $stack['link']; // @codeCoverageIgnore
 				$replace[ $key ] = ''; // @codeCoverageIgnore
-				$seen[]          = $original_handle; // @codeCoverageIgnore
 
 				continue; // @codeCoverageIgnore
 			}
@@ -785,7 +832,6 @@ class Process {
 			if ( ! OMGF::is_running_optimize() && file_exists( OMGF_UPLOAD_DIR . "/$handle/$handle.css" ) ) {
 				$search[ $key ]  = $stack['href'];
 				$replace[ $key ] = OMGF_UPLOAD_URL . "/$handle/$handle.css?ver=" . $this->timestamp;
-				$seen[]          = $original_handle;
 
 				continue;
 			}
@@ -826,11 +872,6 @@ class Process {
 			 */
 			$replace[ $key ] = $cached_url ? $cached_url . '?ver=' . $this->timestamp : $stack['href'];
 		}
-
-		/**
-		 * @since v6.4.0 Stylesheets which are (re-)optimized are marked in Optimize::process().
-		 */
-		OMGF::mark_stylesheets_seen( $seen );
 
 		return apply_filters( 'omgf_process_search_replace', [
 			'search'  => $search,
