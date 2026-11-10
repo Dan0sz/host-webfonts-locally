@@ -158,8 +158,11 @@ window.addEventListener('load', () => {
 		filterGoogleFonts: () => {
 			let entries = window.performance.getEntries();
 			let google_fonts = entries.filter((entry) => {
-				let is_google_fonts_css = entry.name.indexOf('/fonts.googleapis.com/css') > 0 || entry.name.indexOf('/fonts.googleapis.com/icon') > 0;
-				let is_google_fonts_resource = entry.name.indexOf('/fonts.gstatic.com/') > 0;
+				/**
+				 * @since v6.5.0 Bunny Fonts and WordPress.com Fonts, too, because OMGF processes those as well.
+				 */
+				let is_google_fonts_css = ['/fonts.googleapis.com/css', '/fonts.googleapis.com/icon', '/fonts.bunny.net/css', '/fonts-api.wp.com/css'].some((api) => entry.name.indexOf(api) > 0);
+				let is_google_fonts_resource = ['/fonts.gstatic.com/', '/fonts.bunny.net/', '/fonts.wp.com/'].some((host) => entry.name.indexOf(host) > 0);
 
 				if (is_google_fonts_resource) {
 					/**
