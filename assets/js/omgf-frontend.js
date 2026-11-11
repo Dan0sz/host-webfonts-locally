@@ -158,8 +158,21 @@ window.addEventListener('load', () => {
 		filterGoogleFonts: () => {
 			let entries = window.performance.getEntries();
 			let google_fonts = entries.filter((entry) => {
-				let is_google_fonts_css = entry.name.indexOf('/fonts.googleapis.com/css') > 0 || entry.name.indexOf('/fonts.googleapis.com/icon') > 0;
-				let is_google_fonts_resource = entry.name.indexOf('/fonts.gstatic.com/') > 0;
+				let url;
+
+				try {
+					url = new URL(entry.name);
+				} catch (e) {
+					return false;
+				}
+
+				/**
+				 * @since v6.5.0 Bunny Fonts and WordPress.com Fonts, too, because OMGF processes those as well. The host
+				 *               is matched exactly, so e.g. a local file in a folder named after one isn't matched.
+				 */
+				let is_google_fonts_css = (url.hostname === 'fonts.googleapis.com' && /^\/(css|icon)/.test(url.pathname)) ||
+					(['fonts.bunny.net', 'fonts-api.wp.com'].includes(url.hostname) && url.pathname.startsWith('/css'));
+				let is_google_fonts_resource = ['fonts.gstatic.com', 'fonts.bunny.net', 'fonts.wp.com'].includes(url.hostname);
 
 				if (is_google_fonts_resource) {
 					/**
@@ -167,7 +180,7 @@ window.addEventListener('load', () => {
 					 *
 					 * @since v6.3.9
 					 */
-					let is_font_file = /\.(woff2|woff|ttf|otf)(\?.*)?$/i.test(entry.name);
+					let is_font_file = /\.(woff2|woff|ttf|otf)$/i.test(url.pathname);
 					let is_valid_initiator = !entry.initiatorType || ['css', 'link', 'other'].includes(entry.initiatorType);
 
 					is_google_fonts_resource = is_font_file && is_valid_initiator;
