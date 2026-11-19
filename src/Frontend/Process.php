@@ -756,9 +756,12 @@ class Process {
 
 		foreach ( $google_fonts as $key => $stack ) {
 			/**
-			 * Handles should be all lowercase to prevent duplication issues on some filesystems.
+			 * Handles are sanitized (and lowercased) the same way Optimize does, so the cached stylesheet and the
+			 * settings of e.g. "brizy-asset-google-10-" (stored as "brizy-asset-google-10") are found.
+			 *
+			 * @since v6.5.0
 			 */
-			$handle          = strtolower( $stack['id'] );
+			$handle          = sanitize_title_with_dashes( $stack['id'] );
 			$original_handle = $handle;
 
 			/**
@@ -817,7 +820,7 @@ class Process {
 				continue; // @codeCoverageIgnore
 			}
 
-			$cache_key = OMGF::get_cache_key( $stack['id'] );
+			$cache_key = OMGF::get_cache_key( $handle );
 
 			/**
 			 * $cache_key is used for caching. $handle contains the original handle.

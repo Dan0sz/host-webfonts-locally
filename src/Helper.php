@@ -498,26 +498,64 @@ class Helper {
 	}
 
 	/**
+	 * Returns the cache key of $handle: the handle itself, or the handle followed by "-mod-" and a random string.
+	 *
+	 * @since v6.5.0 Only keys of $handle itself match, so e.g. handle-1 doesn't get the cache key of handle-12, and
+	 *               theme doesn't get the key of a stylesheet with the handle theme-mod-dark.
+	 *
 	 * @param $handle
 	 *
 	 * @return string
 	 */
 	public static function get_cache_key( $handle ) {
-		$cache_keys = self::cache_keys();
-		$cache_key  = '';
+		$cache_key = '';
+		/**
+		 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
+		 */
+		$handle  = strtolower( $handle );
+		$prefix  = "$handle-mod-";
+		$handles = null;
 
-		foreach ( $cache_keys as $key ) {
-			/**
-			 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
-			 */
-			if ( str_contains( $key, strtolower( $handle ) ) ) {
+		foreach ( self::cache_keys() as $key ) {
+			if ( $key === $handle ) {
 				$cache_key = $key;
 
 				break;
 			}
+
+			if ( $cache_key || ! str_starts_with( $key, $prefix ) || ! preg_match( '/^[a-z0-9]+$/', substr( $key, strlen( $prefix ) ) ) ) {
+				continue;
+			}
+
+			// The handles are only loaded when needed, to keep this cheap for stylesheets without modifications.
+			if ( $handles === null ) {
+				$handles = self::known_handles();
+			}
+
+			// A key which is a handle itself belongs to that stylesheet.
+			if ( ! in_array( $key, $handles, true ) ) {
+				$cache_key = $key;
+			}
 		}
 
 		return apply_filters( 'omgf_cache_key', $cache_key, $handle );
+	}
+
+	/**
+	 * All stylesheet handles OMGF knows, to tell them apart from cache keys.
+	 *
+	 * @since v6.5.0
+	 *
+	 * @return string[]
+	 */
+	public static function known_handles() {
+		$handles = array_merge(
+			array_keys( self::optimized_fonts() ),
+			array_keys( self::admin_optimized_fonts() ),
+			self::superseded_stylesheets()
+		);
+
+		return array_values( array_unique( array_map( 'strval', $handles ) ) );
 	}
 
 	/**

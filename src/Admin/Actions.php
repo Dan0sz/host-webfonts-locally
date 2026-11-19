@@ -42,19 +42,14 @@ class Actions {
 		$new_keys = explode( ',', $option_value );
 		$diff     = array_diff( $new_keys, $old_keys );
 
+		$handles  = OMGF::known_handles();
+
 		foreach ( $diff as $new_cache_key ) {
-			$dir_to_remove = '';
-			$base_key      = preg_replace( '/-mod.*?$/', '', $new_cache_key );
+			// The old cache key of the same stylesheet. A key which is a handle itself belongs to that stylesheet.
+			$handle        = in_array( $new_cache_key, $handles, true ) ? $new_cache_key : preg_replace( '/-mod-[a-z0-9]+$/', '', $new_cache_key );
+			$dir_to_remove = OMGF::get_cache_key( $handle );
 
-			foreach ( $old_keys as $old_cache_key ) {
-				if ( str_contains( $old_cache_key, $base_key ) ) {
-					$dir_to_remove = $old_cache_key;
-
-					break;
-				}
-			}
-
-			if ( ! $dir_to_remove ) {
+			if ( ! $dir_to_remove || ! in_array( $dir_to_remove, $old_keys, true ) ) {
 				continue; // @codeCoverageIgnore
 			}
 
