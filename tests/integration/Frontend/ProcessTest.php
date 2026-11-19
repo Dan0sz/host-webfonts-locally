@@ -468,10 +468,11 @@ class ProcessTest extends TestCase {
 	 * under its sanitized handle, instead of optimizing it again on every request. It never uses the cache key of
 	 * another handle which starts with the same characters.
 	 *
+	 * @dataProvider sanitizedCacheHandles
 	 * @see Process::build_search_replace()
 	 * @return void
 	 */
-	public function testBuildSearchReplaceUsesCacheOfSanitizedHandle() {
+	public function testBuildSearchReplaceUsesCacheOfSanitizedHandle( $raw_handle ) {
 		$url        = 'https://fonts.bunny.net/css?family=Lato:400';
 		$dir        = OMGF_UPLOAD_DIR . '/brizy-asset-google-10-mod-own12';
 		$file       = "$dir/brizy-asset-google-10-mod-own12.css";
@@ -502,8 +503,8 @@ class ProcessTest extends TestCase {
 			$result = $class->build_search_replace(
 				[
 					[
-						'id'   => 'brizy-asset-google-10-',
-						'link' => "<link rel='stylesheet' id='brizy-asset-google-10--css' href='$url'/>",
+						'id'   => $raw_handle,
+						'link' => "<link rel='stylesheet' id='$raw_handle-css' href='$url'/>",
 						'href' => $url,
 						'url'  => $url,
 					],
@@ -523,6 +524,15 @@ class ProcessTest extends TestCase {
 			unlink( $file );
 			rmdir( $dir );
 		}
+	}
+
+	public static function sanitizedCacheHandles() {
+		return [
+			'trailing dash' => [ 'brizy-asset-google-10-' ],
+			'mixed case'    => [ 'BRIZY-Asset-Google-10-' ],
+			'leading dash'  => [ '-brizy-asset-google-10' ],
+			'spaces'        => [ 'brizy asset google 10' ],
+		];
 	}
 
 	/**
@@ -668,4 +678,45 @@ class ProcessTest extends TestCase {
 
 		$this->assertTrue( $should_start );
 	}
+	/**
+	 * Sanitized unload settings remove the original element without fetching an already optimized font.
+	 * @see Process::build_search_replace()
+	 */
+	public function testBuildSearchReplaceUnloadsSanitizedHandle() {
+		$handle = 'sanitized-unload-font';
+		$fonts = function () use ( $handle ) {
+			return [ $handle => [] ];
+		};
+		$unloads = function () use ( $handle ) {
+			return $handle;
+		};
+		$requests = 0;
+		$count = function () use ( &$requests ) {
+			$requests++;
+			return new \WP_Error( 'unexpected_request', 'An unloaded cached stylesheet must not be requested.' );
+		};
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+		add_filter( 'omgf_setting_unload_stylesheets', $unloads );
+		add_filter( 'pre_http_request', $count, 1 );
+		OMGF::reset_cache();
+
+		try {
+			$url = 'https://fonts.googleapis.com/css?family=Lato:400';
+			$link = "<link id='SANITIZED-UNLOAD-FONT--css' rel='stylesheet' href='$url'/>";
+			$result = ( new Process( true ) )->build_search_replace( [
+				[ 'id' => 'SANITIZED-UNLOAD-FONT-', 'link' => $link, 'href' => $url, 'url' => $url ],
+			] );
+
+			$this->assertSame( [ $link ], $result['search'] );
+			$this->assertSame( [ '' ], $result['replace'] );
+			$this->assertSame( 0, $requests );
+		} finally {
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+			remove_filter( 'omgf_setting_unload_stylesheets', $unloads );
+			remove_filter( 'pre_http_request', $count, 1 );
+			delete_transient( 'omgf_optimize_unloaded_' . md5( $handle ) );
+			OMGF::reset_cache();
+		}
+	}
+
 }
