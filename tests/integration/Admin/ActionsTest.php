@@ -190,4 +190,56 @@ class ActionsTest extends TestCase {
 			}
 		}
 	}
+	/**
+	 * Resetting a modified key removes its old files and preserves similarly named stylesheets.
+	 *
+	 * @dataProvider staleCacheKeyProvider
+	 * @see Actions::clean_stale_cache()
+	 */
+	public function testCleanStaleCacheKeyTransitions( $old_key, $new_key, $removed ) {
+		$dirs = [ 'boundary-mod-dark-mod-old12', 'boundary-mod-dark', 'boundary-mod-darkx', 'boundary' ];
+		$keys = function () use ( $old_key ) {
+			return $old_key . ',boundary-mod-darkx,boundary';
+		};
+		$fonts = function () {
+			return array_fill_keys( [ 'boundary', 'boundary-mod-dark', 'boundary-mod-darkx' ], [] );
+		};
+		add_filter( 'omgf_setting_cache_keys', $keys );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+		OMGF::reset_cache();
+
+		try {
+			foreach ( $dirs as $dir ) {
+				wp_mkdir_p( OMGF_UPLOAD_DIR . "/$dir" );
+				file_put_contents( OMGF_UPLOAD_DIR . "/$dir/test.css", '/* cached */' );
+			}
+
+			( new Actions() )->clean_stale_cache( '', $new_key . ',boundary-mod-darkx,boundary' );
+
+			foreach ( $dirs as $dir ) {
+				if ( $dir === $removed ) {
+					$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . "/$dir" );
+				} else {
+					$this->assertFileExists( OMGF_UPLOAD_DIR . "/$dir/test.css" );
+				}
+			}
+		} finally {
+			remove_filter( 'omgf_setting_cache_keys', $keys );
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+			OMGF::reset_cache();
+			foreach ( $dirs as $dir ) {
+				OMGF::delete( OMGF_UPLOAD_DIR . "/$dir" );
+			}
+		}
+	}
+
+	public function staleCacheKeyProvider() {
+		return [
+			'reset to original' => [ 'boundary-mod-dark-mod-old12', 'boundary-mod-dark', 'boundary-mod-dark-mod-old12' ],
+			'rotate suffix'     => [ 'boundary-mod-dark-mod-old12', 'boundary-mod-dark-mod-new34', 'boundary-mod-dark-mod-old12' ],
+			'unchanged keys'    => [ 'boundary-mod-dark-mod-old12', 'boundary-mod-dark-mod-old12', null ],
+			'unknown handle'    => [ 'boundary-mod-dark-mod-old12', 'boundary-missing-mod-new34', null ],
+		];
+	}
+
 }

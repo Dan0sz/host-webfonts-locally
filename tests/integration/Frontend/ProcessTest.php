@@ -470,8 +470,9 @@ class ProcessTest extends TestCase {
 	 *
 	 * @see Process::build_search_replace()
 	 * @return void
+	 * @dataProvider sanitizedCacheHandleProvider
 	 */
-	public function testBuildSearchReplaceUsesCacheOfSanitizedHandle() {
+	public function testBuildSearchReplaceUsesCacheOfSanitizedHandle( $raw_handle ) {
 		$url        = 'https://fonts.bunny.net/css?family=Lato:400';
 		$dir        = OMGF_UPLOAD_DIR . '/brizy-asset-google-10-mod-own12';
 		$file       = "$dir/brizy-asset-google-10-mod-own12.css";
@@ -502,7 +503,7 @@ class ProcessTest extends TestCase {
 			$result = $class->build_search_replace(
 				[
 					[
-						'id'   => 'brizy-asset-google-10-',
+						'id'   => $raw_handle,
 						'link' => "<link rel='stylesheet' id='brizy-asset-google-10--css' href='$url'/>",
 						'href' => $url,
 						'url'  => $url,
@@ -511,6 +512,8 @@ class ProcessTest extends TestCase {
 			);
 
 			$this->assertSame( 0, $requests );
+			$this->assertSame( [ $url ], $result['search'] );
+			$this->assertCount( 1, $result['replace'] );
 			$this->assertStringStartsWith(
 				OMGF_UPLOAD_URL . '/brizy-asset-google-10-mod-own12/brizy-asset-google-10-mod-own12.css?ver=',
 				$result['replace'][0]
@@ -523,6 +526,14 @@ class ProcessTest extends TestCase {
 			unlink( $file );
 			rmdir( $dir );
 		}
+	}
+
+	public function sanitizedCacheHandleProvider() {
+		return [
+			'trailing dash' => [ 'brizy-asset-google-10-' ],
+			'uppercase and repeated dashes' => [ 'Brizy-Asset-Google-10---' ],
+			'already sanitized' => [ 'brizy-asset-google-10' ],
+		];
 	}
 
 	/**

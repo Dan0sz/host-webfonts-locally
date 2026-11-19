@@ -192,6 +192,85 @@ class HelperTest extends TestCase {
 	}
 
 	/**
+	 * Exact keys win regardless of order; malformed suffixes and substring matches never win.
+	 *
+	 * @dataProvider cacheKeyBoundaryProvider
+	 * @see Helper::get_cache_key()
+	 */
+	public function testGetCacheKeyBoundaries( $keys, $handle, $expected ) {
+		$cache_keys = function () use ( $keys ) {
+			return $keys;
+		};
+
+		add_filter( 'omgf_setting_cache_keys', $cache_keys );
+		OMGF::reset_cache();
+
+		try {
+			$this->assertSame( $expected, OMGF::get_cache_key( $handle ) );
+		} finally {
+			remove_filter( 'omgf_setting_cache_keys', $cache_keys );
+			OMGF::reset_cache();
+		}
+	}
+
+	public function cacheKeyBoundaryProvider() {
+		return [
+			'exact after modified'  => [ 'boundary-mod-abc12,boundary', 'boundary', 'boundary' ],
+			'exact before modified' => [ 'boundary,boundary-mod-abc12', 'BOUNDARY', 'boundary' ],
+			'first modified wins'   => [ 'boundary-mod-abc12,boundary-mod-def34', 'boundary', 'boundary-mod-abc12' ],
+			'empty suffix'          => [ 'boundary-mod-', 'boundary', '' ],
+			'uppercase suffix'      => [ 'boundary-mod-ABC12', 'boundary', '' ],
+			'dashed suffix'         => [ 'boundary-mod-abc-12', 'boundary', '' ],
+			'underscored suffix'    => [ 'boundary-mod-abc_12', 'boundary', '' ],
+			'trailing newline'      => [ "boundary-mod-abc12\nextra", 'boundary', '' ],
+			'embedded handle'       => [ 'other-boundary-mod-abc12', 'boundary', '' ],
+			'longer handle'         => [ 'boundary1-mod-abc12', 'boundary', '' ],
+			'single digit suffix'   => [ 'boundary-mod-0', 'boundary', 'boundary-mod-0' ],
+			'handle contains mod'   => [ 'boundary-mod-dark-mod-abc12', 'boundary-mod-dark', 'boundary-mod-dark-mod-abc12' ],
+		];
+	}
+
+	/**
+	 * Admin-only and superseded handles also own their keys, even if they look like modifications.
+	 * The list sent to JavaScript contains unique strings with consecutive numeric indexes.
+	 *
+	 * @see Helper::known_handles()
+	 */
+	public function testKnownHandlesIncludesAllSources() {
+		$frontend = function () {
+			return [ 'boundary' => [], 'shared' => [], 123 => [] ];
+		};
+		$admin = function () {
+			return [ 'boundary-mod-admin' => [], 'shared' => [] ];
+		};
+		$keys = function () {
+			return 'boundary-mod-admin,boundary-mod-old,boundary-mod-own12';
+		};
+		$previous = get_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, null );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $frontend );
+		add_filter( 'omgf_setting_optimized_fonts', $admin );
+		add_filter( 'omgf_setting_cache_keys', $keys );
+		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'boundary-mod-old', 'shared', 123 ] );
+		OMGF::reset_cache();
+
+		try {
+			$this->assertSame( [ 'boundary', 'shared', '123', 'boundary-mod-admin', 'boundary-mod-old' ], OMGF::known_handles() );
+			$this->assertSame( 'boundary-mod-own12', OMGF::get_cache_key( 'boundary' ) );
+			$this->assertSame( 'boundary-mod-admin', OMGF::get_cache_key( 'boundary-mod-admin' ) );
+		} finally {
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $frontend );
+			remove_filter( 'omgf_setting_optimized_fonts', $admin );
+			remove_filter( 'omgf_setting_cache_keys', $keys );
+			if ( $previous === null ) {
+				delete_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS );
+			} else {
+				update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, $previous );
+			}
+			OMGF::reset_cache();
+		}
+	}
+
+	/**
 	 * @see Helper::delete()
 	 * @return void
 	 */
