@@ -231,8 +231,18 @@ jQuery(document).ready(function ($) {
 				cache_keys = cache_keys_input.val().split(','),
 				checked = $('#' + current_handle + ' input.unload:checked').length,
 				total = $('#' + current_handle + ' input.unload').length,
-				cache_key_index = cache_keys.findIndex((key) => omgf_admin.is_cache_key_of(key, current_handle)),
+				cache_key_index = omgf_admin.get_cache_key_index(cache_keys, current_handle),
 				no_cache_key = false;
+
+			/**
+			 * Keep only the key PHP uses for this stylesheet, so the key that's changed below is the one in use.
+			 */
+			if (cache_key_index !== -1) {
+				var own_key = cache_keys[cache_key_index];
+
+				cache_keys = cache_keys.filter((key) => key === own_key || !omgf_admin.is_cache_key_of(key, current_handle));
+				cache_key_index = cache_keys.indexOf(own_key);
+			}
 
 			/**
 			 * If no or all boxes are checked, (re-)set cache key to default (without random string).
@@ -366,6 +376,24 @@ jQuery(document).ready(function ($) {
 			} else {
 				other_option.attr('disabled', false);
 			}
+		},
+
+		/**
+		 * The index of handle's cache key, chosen like OMGF::get_cache_key() does: the handle itself if it's there,
+		 * otherwise the first modified key of handle.
+		 *
+		 * @param cache_keys
+		 * @param handle
+		 * @returns {number}
+		 */
+		get_cache_key_index: function (cache_keys, handle) {
+			var index = cache_keys.indexOf(handle);
+
+			if (index !== -1) {
+				return index;
+			}
+
+			return cache_keys.findIndex((key) => omgf_admin.is_cache_key_of(key, handle));
 		},
 
 		/**
