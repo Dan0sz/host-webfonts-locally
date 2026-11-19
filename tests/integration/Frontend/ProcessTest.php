@@ -464,6 +464,55 @@ class ProcessTest extends TestCase {
 	}
 
 	/**
+	 * A handle which changes when it's sanitized (e.g. Brizy's "brizy-asset-google-10-") uses the stylesheet cached
+	 * under its sanitized handle, instead of optimizing it again on every request.
+	 *
+	 * @see Process::build_search_replace()
+	 * @return void
+	 */
+	public function testBuildSearchReplaceUsesCacheOfSanitizedHandle() {
+		$url  = 'https://fonts.bunny.net/css?family=Lato:400';
+		$dir  = OMGF_UPLOAD_DIR . '/brizy-asset-google-10';
+		$file = "$dir/brizy-asset-google-10.css";
+
+		wp_mkdir_p( $dir );
+		file_put_contents( $file, '/* cached */' );
+
+		$requests = 0;
+		$count    = function ( $pre ) use ( &$requests ) {
+			$requests++;
+
+			return $pre;
+		};
+
+		add_filter( 'pre_http_request', $count );
+
+		try {
+			$class  = new Process( true );
+			$result = $class->build_search_replace(
+				[
+					[
+						'id'   => 'brizy-asset-google-10-',
+						'link' => "<link rel='stylesheet' id='brizy-asset-google-10--css' href='$url'/>",
+						'href' => $url,
+						'url'  => $url,
+					],
+				]
+			);
+
+			$this->assertSame( 0, $requests );
+			$this->assertStringStartsWith(
+				OMGF_UPLOAD_URL . '/brizy-asset-google-10/brizy-asset-google-10.css?ver=',
+				$result['replace'][0]
+			);
+		} finally {
+			remove_filter( 'pre_http_request', $count );
+			unlink( $file );
+			rmdir( $dir );
+		}
+	}
+
+	/**
 	 * A link element is kept for processing when any of its attributes points at the font API, but the URL
 	 * actually requested is taken from its href. If that href points at another host, the stylesheet must not
 	 * be processed (or requested), leaving the element untouched. This prevents the request from being pointed
