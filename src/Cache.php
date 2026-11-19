@@ -64,19 +64,22 @@ class Cache {
 
 	/**
 	 * Flush only 3rd party stylesheet cache directories — i.e., all directories
-	 * in OMGF_UPLOAD_DIR that are NOT present in OMGF::cache_keys().
+	 * in OMGF_UPLOAD_DIR that don't belong to a Google Fonts stylesheet optimized by OMGF.
+	 *
+	 * @since v6.5.0 Stylesheets which were optimized after the settings were last saved, e.g. Divi's (one for each
+	 *               configuration of fonts), aren't in OMGF::cache_keys(), so known handles are kept as well.
 	 *
 	 * @return void
 	 */
 	public function flush_third_party() {
-		$cache_keys = array_values( OMGF::cache_keys( true ) );
+		$cache_keys = array_merge( array_values( OMGF::cache_keys( true ) ), OMGF::known_handles() );
 		$entries    = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*', GLOB_ONLYDIR ) );
 		$deleted    = false;
 
 		foreach ( $entries as $entry ) {
 			$folder_name = basename( $entry );
 
-			if ( in_array( $folder_name, $cache_keys ) ) {
+			if ( in_array( $folder_name, $cache_keys, true ) ) {
 				continue;
 			}
 
