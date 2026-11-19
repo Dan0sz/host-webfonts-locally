@@ -52,7 +52,6 @@ class Admin {
 		$this->maybe_handle_failed_premium_plugin_updates();
 
 		add_filter( 'alloptions', [ $this, 'force_optimized_fonts_from_db' ] );
-		add_action( 'update_option_omgf_cache_keys', [ $this, 'clean_up_cache' ], 10, 2 );
 		add_action( 'update_option_omgf_settings', [ $this, 'maybe_show_stale_cache_notice' ], 10, 2 );
 	}
 
@@ -101,30 +100,6 @@ class Admin {
 				],
 			], 'host-webfonts-local', 'omgf'
 		);
-	}
-
-	/**
-	 * Triggered when unload settings is changed, cleans up old cache files.
-	 * TODO: Clean up doesn't work on 2nd run?
-	 */
-	public function clean_up_cache( $value, $old_value ) {
-		if ( $old_value == $value ) {
-			return; // @codeCoverageIgnore
-		}
-
-		if ( $old_value == null ) {
-			return; // @codeCoverageIgnore
-		}
-
-		$cache_keys = explode( ',', $old_value );
-
-		foreach ( $cache_keys as $key ) {
-			$entries = array_filter( (array) glob( OMGF_UPLOAD_DIR . "/*$key" ) );
-
-			foreach ( $entries as $entry ) {
-				OMGF::delete( $entry );
-			}
-		}
 	}
 
 	/**
