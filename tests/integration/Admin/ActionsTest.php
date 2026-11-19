@@ -139,10 +139,55 @@ class ActionsTest extends TestCase {
 
 		add_filter( 'omgf_setting_cache_keys', [ $this, 'addTestCacheKey' ] );
 
-		do_action( 'omgf_pre_update_setting_cache_keys', '', 'test_cache_key-mod123' );
+		do_action( 'omgf_pre_update_setting_cache_keys', '', 'test_cache_key-mod-abc12' );
 
 		remove_filter( 'omgf_setting_cache_keys', [ $this, 'addTestCacheKey' ] );
 
 		$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/test_cache_key' );
+	}
+
+	/**
+	 * Only the old cache directory of the modified stylesheet is removed, not that of a stylesheet whose handle starts
+	 * with the same characters, or of a new stylesheet whose handle looks like a modified cache key.
+	 *
+	 * @see Actions::clean_stale_cache()
+	 * @return void
+	 */
+	public function testCleanStaleCacheKeepsOtherStylesheets() {
+		new Actions();
+
+		$dirs = [ 'handle-12', 'handle-1', 'theme' ];
+
+		foreach ( $dirs as $dir ) {
+			wp_mkdir_p( OMGF_UPLOAD_DIR . "/$dir" );
+			file_put_contents( OMGF_UPLOAD_DIR . "/$dir/dummy.file", 'test' );
+		}
+
+		$cache_keys      = function () {
+			return 'handle-12,handle-1,theme';
+		};
+		$optimized_fonts = function () {
+			return array_fill_keys( [ 'handle-12', 'handle-1', 'theme', 'theme-mod-darkx' ], [] );
+		};
+
+		add_filter( 'omgf_setting_cache_keys', $cache_keys );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $optimized_fonts );
+		OMGF::reset_cache();
+
+		try {
+			do_action( 'omgf_pre_update_setting_cache_keys', '', 'handle-12,handle-1-mod-abc12,theme,theme-mod-darkx' );
+
+			$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . '/handle-1' );
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/handle-12' );
+			$this->assertDirectoryExists( OMGF_UPLOAD_DIR . '/theme' );
+		} finally {
+			remove_filter( 'omgf_setting_cache_keys', $cache_keys );
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $optimized_fonts );
+			OMGF::reset_cache();
+
+			foreach ( $dirs as $dir ) {
+				OMGF::delete( OMGF_UPLOAD_DIR . "/$dir" );
+			}
+		}
 	}
 }

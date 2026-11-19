@@ -158,7 +158,7 @@ class Admin {
 					'nonce'                => wp_create_nonce( 'wp_rest' ),
 					'remind_me_in_30_days' => __( 'Remind me in 30 days', 'host-webfonts-local' ),
 					// Used to tell cache keys apart from stylesheet handles, like OMGF::get_cache_key() does.
-					'handles'              => array_map( 'strval', array_keys( OMGF::optimized_fonts() ) ),
+					'handles'              => OMGF::known_handles(),
 				]
 			);
 		}
