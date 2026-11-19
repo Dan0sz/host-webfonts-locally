@@ -231,11 +231,7 @@ jQuery(document).ready(function ($) {
 				cache_keys = cache_keys_input.val().split(','),
 				checked = $('#' + current_handle + ' input.unload:checked').length,
 				total = $('#' + current_handle + ' input.unload').length,
-				cache_key_index = cache_keys.findIndex((key, index) => {
-					if (key.indexOf(current_handle) !== -1) {
-						return true;
-					}
-				}),
+				cache_key_index = cache_keys.findIndex((key) => omgf_admin.is_cache_key_of(key, current_handle)),
 				no_cache_key = false;
 
 			/**
@@ -257,18 +253,7 @@ jQuery(document).ready(function ($) {
 			 * Generate a unique cache key if some of this stylesheet's fonts are unloaded.
 			 */
 			if (cache_key_index !== -1) {
-				var current_cache_key = cache_keys[cache_key_index],
-					cache_key = omgf_admin.cache_prefix + Math.random().toString(36).substring(2, 7);
-
-				if (current_cache_key.indexOf(omgf_admin.cache_prefix) !== -1) {
-					var parts = current_cache_key.split(omgf_admin.cache_prefix),
-						last_part = omgf_admin.get_last_element_index(parts);
-					parts[last_part] = Math.random().toString(36).substring(2, 7);
-					current_cache_key = parts[0];
-					cache_key = omgf_admin.cache_prefix + parts[last_part];
-				}
-
-				cache_keys[cache_key_index] = current_cache_key + cache_key;
+				cache_keys[cache_key_index] = current_handle + omgf_admin.cache_prefix + Math.random().toString(36).substring(2, 7);
 			}
 
 			cache_keys_input.val(cache_keys.join());
@@ -384,12 +369,21 @@ jQuery(document).ready(function ($) {
 		},
 
 		/**
+		 * Whether key is the cache key of handle: the handle itself, or the handle followed by the cache prefix and
+		 * a random string. So e.g. handle-1 doesn't match the cache key of handle-12.
 		 *
-		 * @param array
-		 * @returns {number}
+		 * @param key
+		 * @param handle
+		 * @returns {boolean}
 		 */
-		get_last_element_index: function (array) {
-			return array.length - 1;
+		is_cache_key_of: function (key, handle) {
+			if (key === handle) {
+				return true;
+			}
+
+			var prefix = handle + omgf_admin.cache_prefix;
+
+			return key.indexOf(prefix) === 0 && /^[a-z0-9]+$/.test(key.substring(prefix.length));
 		},
 
 		/**

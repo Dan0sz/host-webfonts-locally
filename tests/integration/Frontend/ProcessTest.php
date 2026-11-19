@@ -465,18 +465,28 @@ class ProcessTest extends TestCase {
 
 	/**
 	 * A handle which changes when it's sanitized (e.g. Brizy's "brizy-asset-google-10-") uses the stylesheet cached
-	 * under its sanitized handle, instead of optimizing it again on every request.
+	 * under its sanitized handle, instead of optimizing it again on every request. It never uses the cache key of
+	 * another handle which starts with the same characters.
 	 *
 	 * @see Process::build_search_replace()
 	 * @return void
 	 */
 	public function testBuildSearchReplaceUsesCacheOfSanitizedHandle() {
-		$url  = 'https://fonts.bunny.net/css?family=Lato:400';
-		$dir  = OMGF_UPLOAD_DIR . '/brizy-asset-google-10';
-		$file = "$dir/brizy-asset-google-10.css";
+		$url        = 'https://fonts.bunny.net/css?family=Lato:400';
+		$dir        = OMGF_UPLOAD_DIR . '/brizy-asset-google-10-mod-own12';
+		$file       = "$dir/brizy-asset-google-10-mod-own12.css";
+		$cache_keys = function () {
+			return 'brizy-asset-google-100-mod-other,brizy-asset-google-10-mod-own12';
+		};
+		$unloads    = function () {
+			return [ 'brizy-asset-google-10' => [ 'lato' => [ '700' ] ] ];
+		};
 
 		wp_mkdir_p( $dir );
 		file_put_contents( $file, '/* cached */' );
+		add_filter( 'omgf_setting_cache_keys', $cache_keys );
+		add_filter( 'omgf_setting_unload_fonts', $unloads );
+		OMGF::reset_cache();
 
 		$requests = 0;
 		$count    = function ( $pre ) use ( &$requests ) {
@@ -502,11 +512,14 @@ class ProcessTest extends TestCase {
 
 			$this->assertSame( 0, $requests );
 			$this->assertStringStartsWith(
-				OMGF_UPLOAD_URL . '/brizy-asset-google-10/brizy-asset-google-10.css?ver=',
+				OMGF_UPLOAD_URL . '/brizy-asset-google-10-mod-own12/brizy-asset-google-10-mod-own12.css?ver=',
 				$result['replace'][0]
 			);
 		} finally {
 			remove_filter( 'pre_http_request', $count );
+			remove_filter( 'omgf_setting_cache_keys', $cache_keys );
+			remove_filter( 'omgf_setting_unload_fonts', $unloads );
+			OMGF::reset_cache();
 			unlink( $file );
 			rmdir( $dir );
 		}

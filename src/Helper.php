@@ -498,6 +498,10 @@ class Helper {
 	}
 
 	/**
+	 * Returns the cache key of $handle: the handle itself, or the handle followed by "-mod-" and a random string.
+	 *
+	 * @since v6.5.0 Only keys of $handle itself match, so e.g. handle-1 doesn't get the cache key of handle-12.
+	 *
 	 * @param $handle
 	 *
 	 * @return string
@@ -505,12 +509,13 @@ class Helper {
 	public static function get_cache_key( $handle ) {
 		$cache_keys = self::cache_keys();
 		$cache_key  = '';
+		/**
+		 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
+		 */
+		$pattern = '/^' . preg_quote( strtolower( $handle ), '/' ) . '(-mod-[a-z0-9]+)?$/';
 
 		foreach ( $cache_keys as $key ) {
-			/**
-			 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
-			 */
-			if ( str_contains( $key, strtolower( $handle ) ) ) {
+			if ( preg_match( $pattern, $key ) ) {
 				$cache_key = $key;
 
 				break;
