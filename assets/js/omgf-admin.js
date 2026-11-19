@@ -384,9 +384,7 @@ jQuery(document).ready(function ($) {
 
 			var prefix = handle + omgf_admin.cache_prefix;
 
-			return key.indexOf(prefix) === 0 && /^[a-z0-9]+$/.test(key.substring(prefix.length)) && $('tbody.stylesheet').filter(function () {
-				return this.id === key;
-			}).length === 0;
+			return key.indexOf(prefix) === 0 && /^[a-z0-9]+$/.test(key.substring(prefix.length)) && (omgf_admin_i18n.handles || []).indexOf(key) === -1;
 		},
 
 		/**

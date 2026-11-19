@@ -157,6 +157,8 @@ class Admin {
 					'rest_url'             => get_rest_url( null, 'omgf/v1' ),
 					'nonce'                => wp_create_nonce( 'wp_rest' ),
 					'remind_me_in_30_days' => __( 'Remind me in 30 days', 'host-webfonts-local' ),
+					// Used to tell cache keys apart from stylesheet handles, like OMGF::get_cache_key() does.
+					'handles'              => array_map( 'strval', array_keys( OMGF::optimized_fonts() ) ),
 				]
 			);
 		}
