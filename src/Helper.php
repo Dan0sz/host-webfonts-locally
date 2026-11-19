@@ -500,7 +500,8 @@ class Helper {
 	/**
 	 * Returns the cache key of $handle: the handle itself, or the handle followed by "-mod-" and a random string.
 	 *
-	 * @since v6.5.0 Only keys of $handle itself match, so e.g. handle-1 doesn't get the cache key of handle-12.
+	 * @since v6.5.0 Only keys of $handle itself match, so e.g. handle-1 doesn't get the cache key of handle-12, and
+	 *               theme doesn't get the key of a stylesheet with the handle theme-mod-dark.
 	 *
 	 * @param $handle
 	 *
@@ -512,10 +513,28 @@ class Helper {
 		/**
 		 * @since v4.5.16 Convert $handle to lowercase, because $key is saved lowercase, too.
 		 */
-		$pattern = '/^' . preg_quote( strtolower( $handle ), '/' ) . '(-mod-[a-z0-9]+)?$/';
+		$handle  = strtolower( $handle );
+		$prefix  = "$handle-mod-";
+		$handles = null;
 
 		foreach ( $cache_keys as $key ) {
-			if ( preg_match( $pattern, $key ) ) {
+			if ( $key === $handle ) {
+				$cache_key = $key;
+
+				break;
+			}
+
+			if ( ! str_starts_with( $key, $prefix ) || ! preg_match( '/^[a-z0-9]+$/', substr( $key, strlen( $prefix ) ) ) ) {
+				continue;
+			}
+
+			// The handles are only loaded when needed, to keep this cheap for stylesheets without modifications.
+			if ( $handles === null ) {
+				$handles = array_map( 'strval', array_keys( self::optimized_fonts() ) );
+			}
+
+			// A key which is a handle itself belongs to that stylesheet.
+			if ( ! in_array( $key, $handles, true ) ) {
 				$cache_key = $key;
 
 				break;

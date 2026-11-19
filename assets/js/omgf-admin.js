@@ -370,7 +370,8 @@ jQuery(document).ready(function ($) {
 
 		/**
 		 * Whether key is the cache key of handle: the handle itself, or the handle followed by the cache prefix and
-		 * a random string. So e.g. handle-1 doesn't match the cache key of handle-12.
+		 * a random string. So e.g. handle-1 doesn't match the cache key of handle-12, and theme doesn't match the
+		 * key of a stylesheet with the handle theme-mod-dark.
 		 *
 		 * @param key
 		 * @param handle
@@ -383,7 +384,9 @@ jQuery(document).ready(function ($) {
 
 			var prefix = handle + omgf_admin.cache_prefix;
 
-			return key.indexOf(prefix) === 0 && /^[a-z0-9]+$/.test(key.substring(prefix.length));
+			return key.indexOf(prefix) === 0 && /^[a-z0-9]+$/.test(key.substring(prefix.length)) && $('tbody.stylesheet').filter(function () {
+				return this.id === key;
+			}).length === 0;
 		},
 
 		/**

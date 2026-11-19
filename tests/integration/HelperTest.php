@@ -163,21 +163,28 @@ class HelperTest extends TestCase {
 	 */
 	public function testGetCacheKey() {
 		$cache_keys = function () {
-			return 'handle-12-mod-abc12,theme-mod-dark-mod-def34,theme,handle-1-mod-xyz98,handle-2';
+			return 'handle-12-mod-abc12,theme-mod-darkx,theme-mod-dark-mod-def34,theme-mod-own12,handle-1-mod-xyz98,handle-2';
+		};
+		// theme-mod-darkx is the (unmodified) handle of another stylesheet.
+		$optimized_fonts = function () {
+			return array_fill_keys( [ 'handle-1', 'handle-12', 'handle-2', 'theme', 'theme-mod-dark', 'theme-mod-darkx' ], [] );
 		};
 
 		add_filter( 'omgf_setting_cache_keys', $cache_keys );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $optimized_fonts );
 		OMGF::reset_cache();
 
 		try {
 			$this->assertSame( 'handle-1-mod-xyz98', OMGF::get_cache_key( 'handle-1' ) );
 			$this->assertSame( 'handle-12-mod-abc12', OMGF::get_cache_key( 'Handle-12' ) );
 			$this->assertSame( 'handle-2', OMGF::get_cache_key( 'handle-2' ) );
-			$this->assertSame( 'theme', OMGF::get_cache_key( 'theme' ) );
+			$this->assertSame( 'theme-mod-own12', OMGF::get_cache_key( 'theme' ) );
 			$this->assertSame( 'theme-mod-dark-mod-def34', OMGF::get_cache_key( 'theme-mod-dark' ) );
+			$this->assertSame( 'theme-mod-darkx', OMGF::get_cache_key( 'theme-mod-darkx' ) );
 			$this->assertSame( '', OMGF::get_cache_key( 'handle' ) );
 		} finally {
 			remove_filter( 'omgf_setting_cache_keys', $cache_keys );
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $optimized_fonts );
 			OMGF::reset_cache();
 		}
 	}
