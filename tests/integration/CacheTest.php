@@ -139,4 +139,45 @@ class CacheTest extends TestCase {
 		$this->assertDirectoryDoesNotExist( $this->dir );
 		$this->assertSame( $deleted + 1, did_action( 'omgf_cache_files_deleted' ) );
 	}
+
+	/**
+	 * Stylesheets optimized after the settings were last saved (e.g. Divi's, one for each configuration of fonts)
+	 * aren't in the cache keys, but aren't 3rd party stylesheets either, so they're kept.
+	 *
+	 * @see Cache::flush_third_party()
+	 */
+	public function testFlushThirdPartyKeepsOptimizedStylesheets() {
+		$handle    = 'et-builder-googlefonts-cache-test';
+		$own_dir   = OMGF_UPLOAD_DIR . "/$handle";
+		$optimized = function ( $fonts ) use ( $handle ) {
+			return array_merge( $fonts, [ $handle => [] ] );
+		};
+
+		// Not a cache key, like a stylesheet optimized after the settings were saved.
+		$not_saved = function ( $cache_keys ) use ( $handle ) {
+			return array_values( array_diff( $cache_keys, [ $handle ] ) );
+		};
+
+		add_filter( 'omgf_filter_optimized_fonts', $optimized );
+		add_filter( 'omgf_cache_keys', $not_saved, 11 );
+
+		try {
+			wp_mkdir_p( $own_dir );
+			file_put_contents( "$own_dir/$handle.css", 'x' );
+			wp_mkdir_p( $this->dir );
+			file_put_contents( "$this->dir/style.css", 'x' );
+
+			( new Cache() )->flush_third_party();
+
+			$this->assertFileExists( "$own_dir/$handle.css" );
+			$this->assertDirectoryDoesNotExist( $this->dir );
+		} finally {
+			remove_filter( 'omgf_filter_optimized_fonts', $optimized );
+			remove_filter( 'omgf_cache_keys', $not_saved, 11 );
+
+			if ( is_dir( $own_dir ) ) {
+				\OMGF\Helper::delete( $own_dir );
+			}
+		}
+	}
 }
