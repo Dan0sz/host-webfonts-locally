@@ -14,6 +14,49 @@ use OMGF\Helper as OMGF;
 use OMGF\Tests\TestCase;
 
 class ProcessTest extends TestCase {
+
+	/**
+	 * Unload settings use the sanitized handle and remove the entire original link without HTTP requests.
+	 *
+	 * @see Process::build_search_replace()
+	 */
+	public function testBuildSearchReplaceUnloadsSanitizedHandles() {
+		$unloads = function () {
+			return 'brizy-asset-google-10';
+		};
+		$fonts = function () {
+			return [ 'brizy-asset-google-10' => [] ];
+		};
+		$requests = 0;
+		$block_http = function () use ( &$requests ) {
+			$requests++;
+
+			return new \WP_Error( 'unexpected_request', 'Unloaded stylesheets must not be downloaded.' );
+		};
+		add_filter( 'omgf_setting_unload_stylesheets', $unloads );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+		add_filter( 'pre_http_request', $block_http, 99 );
+		OMGF::reset_cache();
+
+		try {
+			foreach ( [ 'brizy-asset-google-10-', 'BRIZY-ASSET-GOOGLE-10-', '--brizy-asset-google-10--' ] as $handle ) {
+				$url = 'https://fonts.bunny.net/css?family=Lato:400';
+				$link = "<link id='$handle-css' rel='stylesheet' href='$url'/>";
+				$result = ( new Process( true ) )->build_search_replace(
+					[ [ 'id' => $handle, 'link' => $link, 'href' => $url, 'url' => $url ] ]
+				);
+
+				$this->assertSame( [ 'search' => [ $link ], 'replace' => [ '' ] ], $result, $handle );
+			}
+			$this->assertSame( 0, $requests );
+		} finally {
+			remove_filter( 'omgf_setting_unload_stylesheets', $unloads );
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+			remove_filter( 'pre_http_request', $block_http, 99 );
+			OMGF::reset_cache();
+		}
+	}
+
 	/**
 	 * @return mixed
 	 */

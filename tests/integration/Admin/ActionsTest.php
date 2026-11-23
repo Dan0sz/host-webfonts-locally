@@ -190,6 +190,7 @@ class ActionsTest extends TestCase {
 			}
 		}
 	}
+  
 	/**
 	 * @dataProvider staleCacheTransitions
 	 * @see Actions::clean_stale_cache()
@@ -244,4 +245,52 @@ class ActionsTest extends TestCase {
 		];
 	}
 
+	/**
+	 * Rotating and resetting a key remove only the previous key's directory, including handles containing -mod-.
+	 *
+	 * @see Actions::clean_stale_cache()
+	 */
+	public function testCleanStaleCacheRotatesAndResetsModifiedKeys() {
+		$actions = new Actions();
+		$cases = [
+			[ 'theme-mod-old12', 'theme-mod-new34' ],
+			[ 'theme-mod-old12', 'theme' ],
+			[ 'theme-mod-dark-mod-old12', 'theme-mod-dark-mod-new34' ],
+			[ 'theme-mod-dark-mod-old12', 'theme-mod-dark' ],
+			[ 'theme-mod-old12', 'theme-mod-old12' ],
+		];
+		$fonts = function () {
+			return [ 'theme' => [], 'theme-mod-dark' => [] ];
+		};
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+
+		try {
+			foreach ( $cases as [ $old, $new ] ) {
+				$keys = function () use ( $old ) {
+					return "theme-12,$old";
+				};
+				foreach ( [ $old, 'theme-12' ] as $dir ) {
+					wp_mkdir_p( OMGF_UPLOAD_DIR . "/$dir" );
+					file_put_contents( OMGF_UPLOAD_DIR . "/$dir/test.css", 'cached' );
+				}
+				add_filter( 'omgf_setting_cache_keys', $keys );
+				OMGF::reset_cache();
+
+				try {
+					$actions->clean_stale_cache( '', "theme-12,$new" );
+
+					$this->assertSame( $old === $new, is_dir( OMGF_UPLOAD_DIR . "/$old" ), "$old -> $new" );
+					$this->assertSame( 'cached', file_get_contents( OMGF_UPLOAD_DIR . '/theme-12/test.css' ) );
+				} finally {
+					remove_filter( 'omgf_setting_cache_keys', $keys );
+					OMGF::reset_cache();
+					OMGF::delete( OMGF_UPLOAD_DIR . "/$old" );
+					OMGF::delete( OMGF_UPLOAD_DIR . '/theme-12' );
+				}
+			}
+		} finally {
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+			OMGF::reset_cache();
+		}
+	}
 }

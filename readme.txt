@@ -93,6 +93,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 * Fixed: stylesheets without an id could load a cached stylesheet with other fonts.
 * Improved: the Google Fonts Checker now also detects Bunny Fonts and WordPress.com Fonts.
 * Fixed: fonts of some stylesheets (e.g. Brizy's) were downloaded again on every uncached page request.
+* Fixed: fonts of some stylesheets (e.g. Divi's) were downloaded again after saving a page or updating a plugin.
 
 = 6.4.1 =
 * Fixed: some font weights could be missing after optimization, e.g. italics showing as Light.

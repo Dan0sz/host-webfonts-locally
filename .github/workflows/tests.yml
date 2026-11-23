@@ -60,9 +60,7 @@ jobs:
           coverage: xdebug
 
       - name: Install composer dependencies
-        uses: php-actions/composer@v2
-        with:
-          dev: yes
+        run: composer install --no-interaction --no-progress
 
       - name: Lint PHP files against parse errors
         run: composer lint

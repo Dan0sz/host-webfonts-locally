@@ -10,6 +10,76 @@ use OMGF\Helper as OMGF;
 use OMGF\Tests\TestCase;
 
 class HelperTest extends TestCase {
+
+	/**
+	 * Exact keys win regardless of order; only valid modified keys may be a fallback.
+	 *
+	 * @see OMGF::get_cache_key()
+	 */
+	public function testGetCacheKeyPrecedenceAndInvalidSuffixes() {
+		$cases = [
+			[ 'theme-mod-first,theme-mod-second,theme', 'THEME', 'theme' ],
+			[ 'theme,theme-mod-first', 'theme', 'theme' ],
+			[ 'theme-mod-first,theme-mod-second', 'theme', 'theme-mod-first' ],
+			[ 'other-theme-mod-abc,theme-extra,theme-mod-,theme-mod-ABC,theme-mod-a_b,theme-mod-a-b,theme-mod-a.b', 'theme', '' ],
+			[ 'theme-mod-0', 'theme', 'theme-mod-0' ],
+			[ 'theme-mod-dark-mod-abc12', 'theme-mod-dark', 'theme-mod-dark-mod-abc12' ],
+			[ '', 'missing', '' ],
+		];
+
+		foreach ( $cases as [ $keys, $handle, $expected ] ) {
+			$cache_keys = function () use ( $keys ) {
+				return $keys;
+			};
+			add_filter( 'omgf_setting_cache_keys', $cache_keys );
+			OMGF::reset_cache();
+
+			try {
+				$this->assertSame( $expected, OMGF::get_cache_key( $handle ), $keys );
+			} finally {
+				remove_filter( 'omgf_setting_cache_keys', $cache_keys );
+				OMGF::reset_cache();
+			}
+		}
+	}
+
+	/**
+	 * Admin-only and superseded handles also own their names, even when they resemble modified keys.
+	 *
+	 * @see OMGF::known_handles()
+	 * @see OMGF::get_cache_key()
+	 */
+	public function testKnownHandlesIncludesAllSourcesWithoutDuplicates() {
+		$frontend = function () {
+			return [ 'theme' => [], 'shared' => [], 123 => [] ];
+		};
+		$admin = function () {
+			return [ 'theme-mod-admin' => [], 'shared' => [] ];
+		};
+		$keys = function () {
+			return 'theme-mod-admin,theme-mod-retired,theme-mod-own';
+		};
+		$previous = get_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [] );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $frontend );
+		add_filter( 'omgf_setting_optimized_fonts', $admin );
+		add_filter( 'omgf_setting_cache_keys', $keys );
+		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'theme-mod-retired', 'shared', '123' ] );
+		OMGF::reset_cache();
+
+		try {
+			$this->assertSame( [ 'theme', 'shared', '123', 'theme-mod-admin', 'theme-mod-retired' ], OMGF::known_handles() );
+			$this->assertSame( 'theme-mod-own', OMGF::get_cache_key( 'theme' ) );
+			$this->assertSame( 'theme-mod-admin', OMGF::get_cache_key( 'theme-mod-admin' ) );
+			$this->assertSame( 'theme-mod-retired', OMGF::get_cache_key( 'theme-mod-retired' ) );
+		} finally {
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $frontend );
+			remove_filter( 'omgf_setting_optimized_fonts', $admin );
+			remove_filter( 'omgf_setting_cache_keys', $keys );
+			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, $previous );
+			OMGF::reset_cache();
+		}
+	}
+
 	/**
 	 * @see Helper::update_option()
 	 * @return void
