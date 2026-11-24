@@ -136,7 +136,7 @@ class Actions {
 		$js_path  = plugin_dir_path( OMGF_PLUGIN_FILE ) . "assets/js/" . self::FRONTEND_ASSET_HANDLE . "$file_ext.js";
 		$subsets  = OMGF::get_option( Settings::OMGF_ADV_SETTING_SUBSETS );
 
-		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_path ), [ 'strategy' => 'defer' ] );
+		wp_register_script( self::FRONTEND_ASSET_HANDLE, $js_file, [], filemtime( $js_path ), [ 'strategy' => 'defer', 'in_footer' => true ] );
 		wp_localize_script(
 			self::FRONTEND_ASSET_HANDLE,
 			'omgf_frontend_i18n',
