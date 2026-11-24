@@ -119,6 +119,8 @@ class ActionsTest extends TestCase {
 
 			$this->assertTrue( wp_script_is( 'omgf-frontend', 'enqueued' ) );
 			$this->assertTrue( wp_style_is( 'omgf-frontend', 'enqueued' ) );
+			// Loaded in the footer.
+			$this->assertSame( 1, wp_scripts()->get_data( 'omgf-frontend', 'group' ) );
 		} finally {
 			wp_dequeue_script( 'omgf-frontend' );
 			wp_dequeue_style( 'omgf-frontend' );
