@@ -342,7 +342,7 @@ class Optimize extends Builder {
 								<td><?php echo esc_html( implode( ', ', $row['styles'] ) ); ?></td>
 								<td><?php echo esc_html( implode( ', ', $row['weights'] ) ); ?>
 									<?php if ( $row['variable'] ) : ?>
-										<span class="variable-font tooltip"><?php echo esc_html__( 'Variable', 'host-webfonts-local' ); ?><span class="tooltip-text"><span class="inline-text"><?php echo esc_html__( 'One file contains all of these weights and styles.', 'host-webfonts-local' ); ?></span></span></span>
+										<span class="variable-font tooltip"><?php echo esc_html_x( 'v', 'Short for variable font', 'host-webfonts-local' ); ?><span class="tooltip-text"><span class="inline-text"><?php echo esc_html__( 'One file contains all of these weights and styles.', 'host-webfonts-local' ); ?></span></span></span>
 									<?php endif; ?>
 								</td>
 								<td class="preload-<?php echo esc_attr( $class ); ?>">
