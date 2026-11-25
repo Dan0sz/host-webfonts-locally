@@ -329,65 +329,23 @@ class Optimize extends Builder {
 									   name="omgf_pro_replace_font[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]"/>
 							</td>
 						</tr>
-						<?php $ids = []; ?>
-						<?php foreach ( $font->variants as $variant ) : ?>
+						<?php foreach ( $this->get_rows( $font, $handle ) as $row ) : ?>
 							<?php
-							/**
-							 * @since v5.3.0: Variable Fonts are pulled directly from the Google Fonts API,
-							 *                which creates @font-face statements for each subset.
-							 *                This deals with the duplicate display of font styles. Which also
-							 *                means unloading and/or preloading will unload/preload all available
-							 *                subsets. It's a bit bloaty, but there's no alternative.
-							 *                To better deal with this, I've introduced the Used Subset(s) feature
-							 *                in this version.
-							 */
-							// phpcs:ignore
-							if ( in_array( $variant->fontWeight . $variant->fontStyle, $ids, true ) ) {
-								continue;
-							}
-
-							// phpcs:ignore
-							$ids[] = $variant->fontWeight . $variant->fontStyle;
+							$variant = $row['variants'][0];
+							$others  = array_slice( $row['variants'], 1 );
+							$preload = $row['preload'];
+							$unload  = $row['unload'];
+							$class   = $handle . '-' . $font->id . '-' . $variant->id;
 							?>
 							<tr>
 								<td></td>
-								<?php
-								$preload = OMGF::preloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] ?? '';
-
-								if ( $preload ) {
-									$unload = false;
-								} else {
-									$unload = OMGF::unloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] ?? '';
-								}
-
-								$class = $handle . '-' . $font->id . '-' . $variant->id;
-								?>
-								<td><?php echo esc_attr( $variant->fontStyle ); ?></td>
-								<td><?php echo esc_attr( $variant->fontWeight ); ?></td>
+								<td><?php echo esc_html( implode( ', ', $row['styles'] ) ); ?></td>
+								<td><?php echo esc_html( implode( ', ', $row['weights'] ) ); ?><?php if ( $row['variable'] ) : ?> <span class="tooltip variable-font">*<span class="tooltip-text"><span class="inline-text"><?php echo esc_html__( 'This is a variable font. One file contains all of these weights and styles.', 'host-webfonts-local' ); ?></span></span></span><?php endif; ?></td>
 								<td class="preload-<?php echo esc_attr( $class ); ?>">
-									<input type="hidden"
-										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
-										   value="0"
-									/>
-									<input data-handle="<?php echo esc_attr( $handle ); ?>"
-										   data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>"
-										   autocomplete="off" type="checkbox"
-										   class="preload"
-										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload || $disable_preload ? 'disabled' : ''; ?>
-									/>
+									<?php $this->do_toggle( 'preload', Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, $handle, $font->id, $variant, $others, $preload, $unload || $disable_preload ); ?>
 								</td>
 								<td class="unload-<?php echo esc_attr( $class ); ?>">
-									<input type="hidden"
-										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
-										   value="0"/>
-									<input data-handle="<?php echo esc_attr( $handle ); ?>"
-										   data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>"
-										   autocomplete="off" type="checkbox"
-										   class="unload"
-										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload || $disable_unload ? 'disabled' : ''; ?>
-									/>
+									<?php $this->do_toggle( 'unload', Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, $handle, $font->id, $variant, $others, $unload, $preload || $disable_unload ); ?>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -402,6 +360,93 @@ class Optimize extends Builder {
 				   name="omgf_settings[<?php echo Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>]"
 				   value="<?php echo esc_attr( implode( ',', $cache_handles ) ); ?>"/>
 		</div>
+		<?php
+	}
+
+	/**
+	 * Groups the variants of $font into rows: one for each weight and style, or one for all weights and styles which share
+	 * a file, i.e. variable fonts. Subsets and widths aren't listed separately.
+	 *
+	 * @since v6.5.1
+	 *
+	 * @param object $font
+	 * @param string $handle
+	 *
+	 * @return array
+	 */
+	private function get_rows( $font, $handle ) {
+		$rows  = [];
+		$files = [];
+		$ids   = [];
+
+		foreach ( $font->variants as $variant ) {
+			$preload = ! empty( OMGF::preloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] );
+			$unload  = ! $preload && ! empty( OMGF::unloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] );
+			// Weights which aren't loaded are listed separately from the other weights in the same file.
+			$file = ! empty( $variant->woff2 ) ? ( $unload ? 'unload:' : '' ) . $variant->woff2 : '';
+			$key  = $ids[ $variant->id ] ?? $files[ $file ] ?? count( $rows );
+
+			if ( $file ) {
+				$files[ $file ] = $files[ $file ] ?? $key;
+			}
+
+			if ( isset( $ids[ $variant->id ] ) ) {
+				continue;
+			}
+
+			$ids[ $variant->id ] = $key;
+
+			if ( ! isset( $rows[ $key ] ) ) {
+				$rows[ $key ] = [ 'variants' => [], 'styles' => [], 'weights' => [], 'preload' => false, 'unload' => $unload ];
+			}
+
+			$rows[ $key ]['variants'][]                      = $variant;
+			$rows[ $key ]['styles'][ $variant->fontStyle ]   = $variant->fontStyle;
+			$rows[ $key ]['weights'][ $variant->fontWeight ] = str_replace( ' ', ' - ', $variant->fontWeight );
+			$rows[ $key ]['preload']                         = $rows[ $key ]['preload'] || $preload;
+		}
+
+		foreach ( $rows as &$row ) {
+			ksort( $row['weights'], SORT_NATURAL );
+
+			$row['variable'] = count( $row['variants'] ) > 1 || str_contains( (string) $row['variants'][0]->fontWeight, ' ' );
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * Renders the checkbox of a row. The (hidden) fields of the other variants in the same file get the same value when
+	 * the form is submitted.
+	 *
+	 * @since v6.5.1
+	 *
+	 * @param string   $type     preload | unload
+	 * @param string   $option
+	 * @param string   $handle
+	 * @param string   $font_id
+	 * @param object   $variant
+	 * @param object[] $others   The other variants in the same file.
+	 * @param bool     $checked
+	 * @param bool     $disabled
+	 *
+	 * @return void
+	 */
+	private function do_toggle( $type, $option, $handle, $font_id, $variant, $others, $checked, $disabled ) {
+		$name = $option . "[$handle][$font_id]";
+		?>
+		<input type="hidden" name="<?php echo esc_attr( $name . "[$variant->id]" ); ?>" value="0"/>
+		<?php foreach ( $others as $other ) : ?>
+			<input type="hidden" class="variable-font-variant" data-value="<?php echo esc_attr( $other->id ); ?>"
+				   name="<?php echo esc_attr( $name . "[$other->id]" ); ?>" value="<?php echo esc_attr( $checked && ! $disabled ? $other->id : '0' ); ?>"/>
+		<?php endforeach; ?>
+		<input data-handle="<?php echo esc_attr( $handle ); ?>"
+			   data-font-id="<?php echo esc_attr( $handle . '-' . $font_id ); ?>"
+			   autocomplete="off" type="checkbox"
+			   class="<?php echo esc_attr( $type ); ?>"
+			   name="<?php echo esc_attr( $name . "[$variant->id]" ); ?>"
+			   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $checked ? 'checked="checked"' : ''; ?> <?php echo $disabled ? 'disabled' : ''; ?>
+		/>
 		<?php
 	}
 

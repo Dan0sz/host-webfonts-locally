@@ -256,4 +256,38 @@ class OptimizeTest extends TestCase {
 		$this->assertSame( 11, substr_count( $stylesheet, 'font-stretch:' ) );
 		$this->assertSame( 22, substr_count( $stylesheet, '@font-face' ) );
 	}
+
+	/**
+	 * Variable fonts with a weight range shouldn't be loaded if Don't Load is checked.
+	 *
+	 * @see \OMGF\Optimize::process()
+	 * @return void
+	 */
+	public function testProcessUnloadsWeightRanges() {
+		$url    = 'https://daan.dev/tests/unload-range.css';
+		$css    = '';
+		$unload = function () {
+			return [ 'test-unload-range' => [ 'open-sans' => [ '300-800italic' => '300-800italic' ] ] ];
+		};
+		$mock   = function ( $pre, $args, $request_url ) use ( $url, &$css ) {
+			return $request_url === $url ? [ 'body' => $css, 'response' => [ 'code' => 200 ] ] : $pre;
+		};
+
+		foreach ( [ 'normal', 'italic' ] as $style ) {
+			$css .= "/* latin */\n@font-face {\n  font-family: 'Open Sans';\n  font-style: $style;\n  font-weight: 300 800;\n  src: url(https://fonts.gstatic.com/s/range-$style.woff2) format('woff2');\n}\n";
+		}
+
+		add_filter( 'omgf_setting_unload_fonts', $unload );
+		add_filter( 'pre_http_request', $mock, 11, 3 );
+
+		try {
+			$class = new Optimize( $url, 'test-unload-range', 'test-unload-range', 'object' );
+			$fonts = $class->process()['test-unload-range'];
+		} finally {
+			remove_filter( 'omgf_setting_unload_fonts', $unload );
+			remove_filter( 'pre_http_request', $mock, 11 );
+		}
+
+		$this->assertSame( [ '300-800' ], array_column( $fonts['open-sans']->variants, 'id' ) );
+	}
 }

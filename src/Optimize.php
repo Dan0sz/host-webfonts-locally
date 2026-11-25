@@ -684,7 +684,7 @@ class Optimize {
 					continue;
 				}
 
-				$font_weight = trim( $font_weight[1] );
+				$font_weight = preg_replace( '/\s+/', '-', trim( $font_weight[1] ) );
 				$font_style  = isset( $font_style[1] ) ? trim( $font_style[1] ) : '';
 
 				if ( $font_style === 'normal' ) {
