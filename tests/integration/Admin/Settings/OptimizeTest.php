@@ -98,10 +98,10 @@ class OptimizeTest extends TestCase {
 		// 300 + 700, 800 (not loaded), 300 italic, 900, 100 - 200 and 500 + 600.
 		$this->assertSame( 6, substr_count( $output, 'class="unload"' ) );
 		$this->assertSame( 3, substr_count( $output, 'class="variable-font tooltip"' ) );
-		$this->assertStringContainsString( '<td>500, 600</td>', $output );
-		$this->assertStringContainsString( '<td>300, 700</td>', $output );
-		$this->assertStringContainsString( '<td>100 - 200</td>', $output );
-		$this->assertStringContainsString( '<td>900</td>', $output );
+		$this->assertMatchesRegularExpression( '/<td>500, 600\s+<span class="variable-font tooltip">/', $output );
+		$this->assertMatchesRegularExpression( '/<td>300, 700\s+<span class="variable-font tooltip">/', $output );
+		$this->assertMatchesRegularExpression( '/<td>100 - 200\s+<span class="variable-font tooltip">/', $output );
+		$this->assertMatchesRegularExpression( '/<td>900\s+<\/td>/', $output );
 		// Preloading one of its weights preloads the file.
 		$this->assertMatchesRegularExpression( '/data-value="700"\s+name="omgf_preload_fonts\[variable\]\[lato\]\[700\]" value="700"/', $output );
 		$this->assertMatchesRegularExpression( '/name="omgf_preload_fonts\[variable\]\[lato\]\[300\]"\s+value="300" checked/', $output );

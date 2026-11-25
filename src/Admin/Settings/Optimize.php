@@ -338,13 +338,13 @@ class Optimize extends Builder {
 							$class   = $handle . '-' . $font->id . '-' . $variant->id;
 							?>
 							<tr>
-								<td>
+								<td></td>
+								<td><?php echo esc_html( implode( ', ', $row['styles'] ) ); ?></td>
+								<td><?php echo esc_html( implode( ', ', $row['weights'] ) ); ?>
 									<?php if ( $row['variable'] ) : ?>
-										<span class="variable-font tooltip"><?php echo esc_html__( 'Variable font', 'host-webfonts-local' ); ?><span class="tooltip-text"><span class="inline-text"><?php echo esc_html__( 'One file contains all of these weights and styles.', 'host-webfonts-local' ); ?></span></span></span>
+										<span class="variable-font tooltip"><?php echo esc_html__( 'Variable', 'host-webfonts-local' ); ?><span class="tooltip-text"><span class="inline-text"><?php echo esc_html__( 'One file contains all of these weights and styles.', 'host-webfonts-local' ); ?></span></span></span>
 									<?php endif; ?>
 								</td>
-								<td><?php echo esc_html( implode( ', ', $row['styles'] ) ); ?></td>
-								<td><?php echo esc_html( implode( ', ', $row['weights'] ) ); ?></td>
 								<td class="preload-<?php echo esc_attr( $class ); ?>">
 									<?php $this->do_toggle( 'preload', Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, $handle, $font->id, $variant, $others, $preload, $unload || $disable_preload ); ?>
 								</td>
