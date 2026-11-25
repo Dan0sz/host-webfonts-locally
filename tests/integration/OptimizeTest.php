@@ -274,7 +274,7 @@ class OptimizeTest extends TestCase {
 		};
 
 		foreach ( [ 'normal', 'italic' ] as $style ) {
-			$css .= "/* latin */\n@font-face {\n  font-family: 'Open Sans';\n  font-style: $style;\n  font-weight: 300 800;\n  src: url(https://fonts.gstatic.com/s/range-$style.woff2) format('woff2');\n}\n";
+			$css .= "/* latin */\n@font-face {\n  font-family: 'Open Sans';\n  font-style: $style;\n  font-weight: 300  800;\n  src: url(https://fonts.gstatic.com/s/range-$style.woff2) format('woff2');\n}\n";
 		}
 
 		add_filter( 'omgf_setting_unload_fonts', $unload );

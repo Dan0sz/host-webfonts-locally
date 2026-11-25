@@ -375,40 +375,54 @@ class Optimize extends Builder {
 	 * @return array
 	 */
 	private function get_rows( $font, $handle ) {
-		$rows  = [];
-		$files = [];
-		$ids   = [];
+		$rows = [];
+		$keys = [];
 
 		foreach ( $font->variants as $variant ) {
 			$preload = ! empty( OMGF::preloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] );
 			$unload  = ! $preload && ! empty( OMGF::unloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] );
+			$links   = [ "id:$variant->id" ];
+
 			// Weights which aren't loaded are listed separately from the other weights in the same file.
-			$file = ! empty( $variant->woff2 ) ? ( $unload ? 'unload:' : '' ) . $variant->woff2 : '';
-			$key  = $ids[ $variant->id ] ?? $files[ $file ] ?? count( $rows );
-
-			if ( $file ) {
-				$files[ $file ] = $files[ $file ] ?? $key;
+			if ( ! empty( $variant->woff2 ) ) {
+				$links[] = ( $unload ? 'unload:' : 'load:' ) . $variant->woff2;
 			}
 
-			if ( isset( $ids[ $variant->id ] ) ) {
-				continue;
+			$found = array_values( array_unique( array_intersect_key( $keys, array_flip( $links ) ) ) );
+			$key   = $found[0] ?? count( $keys );
+			$row   = [ 'variants' => [], 'styles' => [], 'weights' => [], 'preload' => false, 'unload' => $unload ];
+
+			// Merge the rows which are linked by this variant.
+			foreach ( $found as $merge ) {
+				$row['variants'] += $rows[ $merge ]['variants'];
+				$row['styles']   += $rows[ $merge ]['styles'];
+				$row['weights']  += $rows[ $merge ]['weights'];
+				$row['preload']  = $row['preload'] || $rows[ $merge ]['preload'];
+
+				if ( $merge !== $key ) {
+					unset( $rows[ $merge ] );
+				}
 			}
 
-			$ids[ $variant->id ] = $key;
+			$row['variants']                       += [ $variant->id => $variant ];
+			$row['styles'][ $variant->fontStyle ]   = $variant->fontStyle;
+			$row['weights'][ $variant->fontWeight ] = str_replace( ' ', ' - ', $variant->fontWeight );
+			$row['preload']                         = $row['preload'] || $preload;
+			$rows[ $key ]                           = $row;
 
-			if ( ! isset( $rows[ $key ] ) ) {
-				$rows[ $key ] = [ 'variants' => [], 'styles' => [], 'weights' => [], 'preload' => false, 'unload' => $unload ];
+			foreach ( $keys as $link => $linked ) {
+				$keys[ $link ] = in_array( $linked, $found, true ) ? $key : $linked;
 			}
 
-			$rows[ $key ]['variants'][]                      = $variant;
-			$rows[ $key ]['styles'][ $variant->fontStyle ]   = $variant->fontStyle;
-			$rows[ $key ]['weights'][ $variant->fontWeight ] = str_replace( ' ', ' - ', $variant->fontWeight );
-			$rows[ $key ]['preload']                         = $rows[ $key ]['preload'] || $preload;
+			foreach ( $links as $link ) {
+				$keys[ $link ] = $key;
+			}
 		}
 
 		foreach ( $rows as &$row ) {
 			ksort( $row['weights'], SORT_NATURAL );
 
+			$row['variants'] = array_values( $row['variants'] );
 			$row['variable'] = count( $row['variants'] ) > 1 || str_contains( (string) $row['variants'][0]->fontWeight, ' ' );
 		}
 

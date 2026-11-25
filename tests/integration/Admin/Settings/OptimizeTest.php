@@ -56,6 +56,10 @@ class OptimizeTest extends TestCase {
 			[ 'latin', '300', 'italic', 'c' ],
 			[ 'latin', '900', 'normal', 'd' ],
 			[ 'latin', '100 200', 'normal', 'e' ],
+			// 500 links 2 files, e.g. of different widths.
+			[ 'latin', '500', 'normal', 'f' ],
+			[ 'latin', '600', 'normal', 'g' ],
+			[ 'latin', '500', 'normal', 'g' ],
 		];
 
 		foreach ( $files as $file ) {
@@ -91,9 +95,10 @@ class OptimizeTest extends TestCase {
 			remove_filter( 'omgf_setting_unload_fonts', $unloads );
 		}
 
-		// 300 + 700, 800 (not loaded), 300 italic, 900 and 100 - 200.
-		$this->assertSame( 5, substr_count( $output, 'class="unload"' ) );
-		$this->assertSame( 2, substr_count( $output, 'variable-font"' ) );
+		// 300 + 700, 800 (not loaded), 300 italic, 900, 100 - 200 and 500 + 600.
+		$this->assertSame( 6, substr_count( $output, 'class="unload"' ) );
+		$this->assertSame( 3, substr_count( $output, 'variable-font"' ) );
+		$this->assertStringContainsString( '<td>500, 600 <span', $output );
 		$this->assertStringContainsString( '<td>300, 700 <span', $output );
 		$this->assertStringContainsString( '<td>100 - 200 <span', $output );
 		$this->assertStringContainsString( '<td>900</td>', $output );

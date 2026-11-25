@@ -533,7 +533,7 @@ class Optimize {
 			preg_match( '/font-stretch:\s*([a-z0-9.%\s-]+?)\s*[;}]/i', $font_face, $font_stretch );
 
 			$font_style  = ! empty( $font_style[1] ) ? $font_style[1] : 'normal';
-			$font_weight = ! empty( $font_weight[1] ) ? $font_weight[1] : '400';
+			$font_weight = ! empty( $font_weight[1] ) ? preg_replace( '/\s+/', ' ', trim( $font_weight[1] ) ) : '400';
 			$font_src    = ! empty( $font_src[1] ) ? $font_src[1] : '';
 			$subset      = ! empty( $subset[1] ) ? trim( $subset[1], '[]' ) : '';
 			/**
