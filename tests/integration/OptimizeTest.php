@@ -209,6 +209,10 @@ class OptimizeTest extends TestCase {
 			[ 'Mulish', '400', '75%', 'mulish-b' ],
 			[ 'Mulish', '100', '75%', 'mulish-c' ],
 			[ 'Mulish', '500', '75%', 'mulish-b' ],
+			[ 'Oswald', '400', '112.125%', 'oswald-a' ],
+			[ 'Oswald', '400', '112% 125%', 'oswald-b' ],
+			[ 'Oswald', '100 150', '100%', 'oswald-c' ],
+			[ 'Oswald', '100', '150%', 'oswald-d' ],
 		];
 
 		foreach ( $faces as $face ) {
@@ -228,13 +232,13 @@ class OptimizeTest extends TestCase {
 			remove_filter( 'pre_http_request', $mock, 11 );
 		}
 
-		$this->assertSame( [ 'latin-300-800-75-100' ], array_keys( $fonts['open-sans']->variants ) );
-		$this->assertSame( [ 'latin-400-75', 'latin-400' ], array_keys( $fonts['roboto']->variants ) );
+		$this->assertSame( [ 'latin-300-800-stretch-75-100' ], array_keys( $fonts['open-sans']->variants ) );
+		$this->assertSame( [ 'latin-400-stretch-75', 'latin-400' ], array_keys( $fonts['roboto']->variants ) );
 		$this->assertSame( [ '400', '400' ], array_column( $fonts['roboto']->variants, 'id' ) );
 		$this->assertSame( [ 'latin-400' ], array_keys( $fonts['lato']->variants ) );
 
 		// Each width has its own file.
-		$this->assertStringEndsWith( '/anybody-normal-latin-400-87-5.woff2', $fonts['anybody']->variants['latin-400-87-5']->woff2 );
+		$this->assertStringEndsWith( '/anybody-normal-latin-400-stretch-87_5.woff2', $fonts['anybody']->variants['latin-400-stretch-87_5']->woff2 );
 		$this->assertStringEndsWith( '/anybody-normal-latin-400.woff2', $fonts['anybody']->variants['latin-400']->woff2 );
 
 		// Different files never share a filename, also if other variants of the family share a file.
@@ -242,12 +246,14 @@ class OptimizeTest extends TestCase {
 			$this->assertCount( 3, array_unique( array_column( $fonts[ $id ]->variants, 'woff2' ) ) );
 		}
 
+		$this->assertCount( 4, array_unique( array_column( $fonts['oswald']->variants, 'woff2' ) ) );
+
 		$stylesheet = file_get_contents( OMGF_UPLOAD_DIR . '/test-font-stretch/test-font-stretch.css' );
 
 		$this->assertStringContainsString( 'font-stretch: 75% 100%;', $stylesheet );
 		$this->assertStringContainsString( 'font-stretch: 87.5%;', $stylesheet );
 		// The default width isn't declared.
-		$this->assertSame( 8, substr_count( $stylesheet, 'font-stretch:' ) );
-		$this->assertSame( 18, substr_count( $stylesheet, '@font-face' ) );
+		$this->assertSame( 11, substr_count( $stylesheet, 'font-stretch:' ) );
+		$this->assertSame( 22, substr_count( $stylesheet, '@font-face' ) );
 	}
 }

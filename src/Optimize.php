@@ -602,7 +602,8 @@ class Optimize {
 	}
 
 	/**
-	 * Suffix used to tell apart variants which only differ in width, e.g. '-75-100' for '75% 100%'.
+	 * Suffix used to tell apart variants which only differ in width, e.g. '-stretch-75-100' for '75% 100%'
+	 * and '-stretch-87_5' for '87.5%'.
 	 *
 	 * @since v6.5.1
 	 *
@@ -611,9 +612,9 @@ class Optimize {
 	 * @return string
 	 */
 	private function get_stretch_suffix( $font_stretch ) {
-		$suffix = trim( preg_replace( '/[^a-z0-9]+/', '-', $font_stretch ), '-' );
+		$suffix = trim( preg_replace( '/[^a-z0-9_]+/', '-', str_replace( '.', '_', $font_stretch ) ), '-' );
 
-		return $suffix !== '' ? '-' . $suffix : '';
+		return $suffix !== '' ? '-stretch-' . $suffix : '';
 	}
 
 	/**
