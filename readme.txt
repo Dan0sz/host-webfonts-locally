@@ -22,7 +22,7 @@ Install it and it works immediately. No setup required, though there's plenty to
 
 ## Detection, Out of the Box
 
-OMGF scans your site for Google Fonts, Bunny Fonts (`fonts.bunny.net`), and Jetpack CDN (`fonts-api.wp.com`) and downloads them to your own server automatically. It even automatically detects and optimizes Google Fonts loaded by Elementor.
+OMGF scans your site for Google Fonts, Bunny Fonts (`fonts.bunny.net`), and Jetpack CDN (`fonts-api.wp.com`) and downloads them to your own server automatically. It even automatically detects and optimizes Google Fonts loaded by Elementor. Variable Fonts (`fonts.googleapis.com/css2`) are supported, too.
 
 ## Free Features
 
@@ -52,7 +52,6 @@ Where the free version covers the fundamentals, Pro removes the manual work enti
 - Web Font Loader (`webfont.js`)
 - Async, JS-injected Google Fonts loaded at runtime
 - WordPress's Font Manager (or Font Library, since WP 7.0)
-- Variable Fonts (`fonts.googleapis.com/css2`)
 - Material Icons
 
 **Global font-display** — Extends `font-display` control to every font on your site, not just Google Fonts.
