@@ -168,6 +168,7 @@ class Optimize {
 		}
 
 		$downloads = [];
+		$files     = [];
 
 		foreach ( $fonts as $id => &$font ) {
 			/**
@@ -205,6 +206,17 @@ class Optimize {
 					$filename = strtolower(
 						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset . '-' : '' ) . str_replace( ' ', '-', $variant->fontWeight ) . $stretch
 					);
+				}
+
+				/**
+				 * @since v6.5.1 A family can contain different files for some of its weights, which shouldn't overwrite each other.
+				 */
+				if ( isset( $variant->woff2 ) ) {
+					if ( ( $files[ $filename ] ?? $variant->woff2 ) !== $variant->woff2 ) {
+						$filename .= '-' . str_replace( ' ', '-', $variant->fontWeight );
+					}
+
+					$files[ $filename ] = $files[ $filename ] ?? $variant->woff2;
 				}
 
 				/**
