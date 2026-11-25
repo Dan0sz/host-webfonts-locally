@@ -249,6 +249,36 @@ class ImportExportTest extends TestCase {
 	}
 
 	/**
+	 * Font widths survive a JSON export and import alongside an older variant without a width.
+	 */
+	public function testFontStretchSurvivesRoundTrip() {
+		$fonts                = $this->getFonts();
+		$font                 = $fonts['roboto']['roboto'];
+		$stretch              = clone $font->variants['latin-400'];
+		$stretch->fontStretch = '75% 100%';
+		$stretch->woff2       = '/wp-content/uploads/omgf/roboto-normal-latin-stretch-75-100.woff2';
+
+		$font->variants['latin-400-stretch-75-100'] = $stretch;
+
+		$option_names = [ 'omgf_optimized_fonts', 'omgf_optimized_fonts_frontend' ];
+		foreach ( $option_names as $option_name ) {
+			update_option( $option_name, $fonts );
+		}
+		OMGF::reset_cache();
+
+		$json = ImportExport::export_json( true );
+		$this->clean_up();
+
+		$options = ImportExport::parse( $json );
+		$this->assertIsArray( $options );
+		ImportExport::import( $options );
+
+		foreach ( $option_names as $option_name ) {
+			$this->assertEquals( $fonts, get_option( $option_name ), $option_name );
+		}
+	}
+
+	/**
 	 * Settings missing from the import, are left alone.
 	 *
 	 * @see ImportExport::import()

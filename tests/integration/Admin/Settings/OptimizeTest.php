@@ -53,6 +53,7 @@ class OptimizeTest extends TestCase {
 			[ 'latin', '700', 'normal', 'a' ],
 			[ 'latin-ext', '700', 'normal', 'b' ],
 			[ 'latin', '800', 'normal', 'a' ],
+			[ 'latin', '800', 'italic', 'a' ],
 			[ 'latin', '300', 'italic', 'c' ],
 			[ 'latin', '900', 'normal', 'd' ],
 			[ 'latin', '100 200', 'normal', 'e' ],
@@ -78,7 +79,7 @@ class OptimizeTest extends TestCase {
 			return [ 'variable' => [ 'lato' => [ '700' => '700' ] ] ];
 		};
 		$unloads  = function () {
-			return [ 'variable' => [ 'lato' => [ '800' => '800' ] ] ];
+			return [ 'variable' => [ 'lato' => [ '800' => '800', '800italic' => '800italic' ] ] ];
 		};
 
 		add_filter( 'omgf_filter_admin_optimized_fonts', $fonts );
@@ -95,17 +96,23 @@ class OptimizeTest extends TestCase {
 			remove_filter( 'omgf_setting_unload_fonts', $unloads );
 		}
 
-		// 300 + 700, 800 (not loaded), 300 italic, 900, 100 - 200 and 500 + 600.
+		// 300 + 700, 800 normal + italic (not loaded), 300 italic, 900, 100 - 200 and 500 + 600.
 		$this->assertSame( 6, substr_count( $output, 'class="unload"' ) );
-		$this->assertSame( 3, substr_count( $output, 'class="variable-font tooltip"' ) );
+		$this->assertSame( 4, substr_count( $output, 'class="variable-font tooltip"' ) );
 		$this->assertMatchesRegularExpression( '/<td>500, 600\s+<span class="variable-font tooltip">/', $output );
 		$this->assertMatchesRegularExpression( '/<td>300, 700\s+<span class="variable-font tooltip">/', $output );
 		$this->assertMatchesRegularExpression( '/<td>100 - 200\s+<span class="variable-font tooltip">/', $output );
 		$this->assertMatchesRegularExpression( '/<td>900\s+<\/td>/', $output );
+		$this->assertMatchesRegularExpression( '/<td>normal, italic<\/td>\s+<td>800\s+<span class="variable-font tooltip">/', $output );
+
 		// Preloading one of its weights preloads the file.
 		$this->assertMatchesRegularExpression( '/data-value="700"\s+name="omgf_preload_fonts\[variable\]\[lato\]\[700\]" value="700"/', $output );
 		$this->assertMatchesRegularExpression( '/name="omgf_preload_fonts\[variable\]\[lato\]\[300\]"\s+value="300" checked/', $output );
 		$this->assertMatchesRegularExpression( '/data-value="700"\s+name="omgf_unload_fonts\[variable\]\[lato\]\[700\]" value="0"/', $output );
 		$this->assertMatchesRegularExpression( '/name="omgf_unload_fonts\[variable\]\[lato\]\[800\]"\s+value="800" checked/', $output );
+		// Unloading the row selects both styles, but must not submit a preload for either.
+		$this->assertMatchesRegularExpression( '/data-value="800italic"\s+name="omgf_unload_fonts\[variable\]\[lato\]\[800italic\]" value="800italic"/', $output );
+		$this->assertMatchesRegularExpression( '/data-value="800italic"\s+name="omgf_preload_fonts\[variable\]\[lato\]\[800italic\]" value="0"/', $output );
+		$this->assertMatchesRegularExpression( '/name="omgf_preload_fonts\[variable\]\[lato\]\[800\]"\s+value="800"\s+disabled/', $output );
 	}
 }

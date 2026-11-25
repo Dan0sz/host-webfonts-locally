@@ -196,7 +196,7 @@ class OptimizeTest extends TestCase {
 			[ 'Roboto', '400', '100%', 'shared' ],
 			[ 'Anybody', '400', '87.5%', 'condensed' ],
 			[ 'Anybody', '400', '100%', 'regular' ],
-			[ 'Lato', '400', '100%', 'lato' ],
+			[ 'Lato', '400', 'NoRmAl', 'lato' ],
 			[ 'Inter', '400', '75%', 'inter' ],
 			[ 'Inter', '400', '100%', 'inter' ],
 			[ 'Inter', '700', '100%', 'inter-bold' ],
@@ -236,6 +236,10 @@ class OptimizeTest extends TestCase {
 		$this->assertSame( [ 'latin-400-stretch-75', 'latin-400' ], array_keys( $fonts['roboto']->variants ) );
 		$this->assertSame( [ '400', '400' ], array_column( $fonts['roboto']->variants, 'id' ) );
 		$this->assertSame( [ 'latin-400' ], array_keys( $fonts['lato']->variants ) );
+		$this->assertFalse( property_exists( $fonts['lato']->variants['latin-400'], 'fontStretch' ) );
+		$this->assertFalse( property_exists( $fonts['roboto']->variants['latin-400'], 'fontStretch' ) );
+		$this->assertSame( '75%', $fonts['roboto']->variants['latin-400-stretch-75']->fontStretch );
+		$this->assertSame( '75% 100%', $fonts['open-sans']->variants['latin-300-800-stretch-75-100']->fontStretch );
 
 		// Each width has its own file.
 		$this->assertStringEndsWith( '/anybody-normal-latin-400-stretch-87_5.woff2', $fonts['anybody']->variants['latin-400-stretch-87_5']->woff2 );
@@ -273,8 +277,14 @@ class OptimizeTest extends TestCase {
 			return $request_url === $url ? [ 'body' => $css, 'response' => [ 'code' => 200 ] ] : $pre;
 		};
 
-		foreach ( [ 'normal', 'italic' ] as $style ) {
-			$css .= "/* latin */\n@font-face {\n  font-family: 'Open Sans';\n  font-style: $style;\n  font-weight: 300  800;\n  src: url(https://fonts.gstatic.com/s/range-$style.woff2) format('woff2');\n}\n";
+		$faces = [
+			[ 'normal', '100%', 'normal' ],
+			[ 'italic', '100%', 'italic' ],
+			[ 'italic', '75%', 'italic-condensed' ],
+		];
+
+		foreach ( $faces as [ $style, $width, $source ] ) {
+			$css .= "/* latin */\n@font-face {\n  font-family: 'Open Sans';\n  font-style: $style;\n  font-weight: 300\t800;\n  font-stretch: $width;\n  src: url(https://fonts.gstatic.com/s/range-$source.woff2) format('woff2');\n}\n";
 		}
 
 		add_filter( 'omgf_setting_unload_fonts', $unload );
@@ -289,5 +299,11 @@ class OptimizeTest extends TestCase {
 		}
 
 		$this->assertSame( [ '300-800' ], array_column( $fonts['open-sans']->variants, 'id' ) );
+		$this->assertSame( [ '300 800' ], array_column( $fonts['open-sans']->variants, 'fontWeight' ) );
+
+		$stylesheet = file_get_contents( OMGF_UPLOAD_DIR . '/test-unload-range/test-unload-range.css' );
+		$this->assertSame( 1, substr_count( $stylesheet, '@font-face' ) );
+		$this->assertStringContainsString( 'font-weight: 300 800;', $stylesheet );
+		$this->assertStringNotContainsString( 'font-style: italic;', $stylesheet );
 	}
 }
