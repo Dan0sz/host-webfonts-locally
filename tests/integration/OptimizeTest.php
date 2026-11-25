@@ -197,6 +197,8 @@ class OptimizeTest extends TestCase {
 			[ 'Anybody', '400', '87.5%', 'condensed' ],
 			[ 'Anybody', '400', '100%', 'regular' ],
 			[ 'Lato', '400', '100%', 'lato' ],
+			[ 'Lato', '500', 'NORMAL', 'lato-medium' ],
+			[ 'Lato', '600', '', 'lato-semibold' ],
 			[ 'Inter', '400', '75%', 'inter' ],
 			[ 'Inter', '400', '100%', 'inter' ],
 			[ 'Inter', '700', '100%', 'inter-bold' ],
@@ -216,7 +218,8 @@ class OptimizeTest extends TestCase {
 		];
 
 		foreach ( $faces as $face ) {
-			$css .= "/* latin */\n@font-face {\n  font-family: '$face[0]';\n  font-style: normal;\n  font-weight: $face[1];\n  font-stretch: $face[2];\n  src: url(https://fonts.gstatic.com/s/$face[3].woff2) format('woff2');\n}\n";
+			$stretch = $face[2] !== '' ? "  font-stretch: $face[2];\n" : '';
+			$css     .= "/* latin */\n@font-face {\n  font-family: '$face[0]';\n  font-style: normal;\n  font-weight: $face[1];\n$stretch  src: url(https://fonts.gstatic.com/s/$face[3].woff2) format('woff2');\n}\n";
 		}
 
 		$mock = function ( $pre, $args, $request_url ) use ( $url, $css ) {
@@ -235,7 +238,11 @@ class OptimizeTest extends TestCase {
 		$this->assertSame( [ 'latin-300-800-stretch-75-100' ], array_keys( $fonts['open-sans']->variants ) );
 		$this->assertSame( [ 'latin-400-stretch-75', 'latin-400' ], array_keys( $fonts['roboto']->variants ) );
 		$this->assertSame( [ '400', '400' ], array_column( $fonts['roboto']->variants, 'id' ) );
-		$this->assertSame( [ 'latin-400' ], array_keys( $fonts['lato']->variants ) );
+		$this->assertSame( [ 'latin-400', 'latin-500', 'latin-600' ], array_keys( $fonts['lato']->variants ) );
+		foreach ( $fonts['lato']->variants as $variant ) {
+			$this->assertFalse( property_exists( $variant, 'fontStretch' ) );
+			$this->assertStringNotContainsString( '-stretch-', $variant->woff2 );
+		}
 
 		// Each width has its own file.
 		$this->assertStringEndsWith( '/anybody-normal-latin-400-stretch-87_5.woff2', $fonts['anybody']->variants['latin-400-stretch-87_5']->woff2 );
@@ -254,7 +261,7 @@ class OptimizeTest extends TestCase {
 		$this->assertStringContainsString( 'font-stretch: 87.5%;', $stylesheet );
 		// The default width isn't declared.
 		$this->assertSame( 11, substr_count( $stylesheet, 'font-stretch:' ) );
-		$this->assertSame( 22, substr_count( $stylesheet, '@font-face' ) );
+		$this->assertSame( count( $faces ), substr_count( $stylesheet, '@font-face' ) );
 	}
 
 	/**

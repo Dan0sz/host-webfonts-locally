@@ -62,3 +62,54 @@ for (const asset of ['omgf-admin.js', 'omgf-admin.min.js']) {
 		});
 	}
 }
+
+// Submit through the handlers registered by the asset, using one checkbox per table cell.
+function submitVariableFontSettings(asset, entries) {
+	const handlers = [];
+	const controls = new Map();
+	const fields = entries.flatMap(({ checkbox, variants }) => variants.map(([id, value]) => {
+		const field = { dataset: { value: id }, value };
+		controls.set(field, checkbox);
+		return field;
+	}));
+	const jquery = (selector) => ({
+		ready(callback) { callback(jquery); },
+		data() {},
+		on(event, callback) {
+			if (selector === '#omgf-optimize-settings-form' && event === 'submit') {
+				handlers.push(callback);
+			}
+		},
+		each(callback) {
+			assert.equal(selector, '.omgf-optimize-fonts-manage input.variable-font-variant');
+			fields.forEach((field, index) => callback(index, field));
+		},
+		siblings(selectorForSibling) {
+			assert.equal(selectorForSibling, 'input[type="checkbox"]');
+			return [controls.get(selector)];
+		},
+		append() {}, // The form also shows the loading spinner.
+	});
+
+	runInNewContext(readFileSync(new URL(`../../../assets/js/${asset}`, import.meta.url), 'utf8'), {
+		jQuery: jquery,
+		document: { querySelectorAll: () => [] },
+		setInterval() {},
+	});
+	handlers.forEach((handler) => handler());
+	return fields.map(({ value }) => value);
+}
+
+for (const asset of ['omgf-admin.js', 'omgf-admin.min.js']) {
+	test(`${asset}: submitting grouped controls uses each variant's ID and clears stale selections`, () => {
+		assert.deepEqual(submitVariableFontSettings(asset, [
+			{ checkbox: { checked: true, disabled: false }, variants: [['700', '0'], ['900italic', '0']] },
+			{ checkbox: { checked: false, disabled: false }, variants: [['600', '600']] },
+			{ checkbox: { checked: true, disabled: true }, variants: [['800', '800']] },
+		]), ['700', '900italic', '0', '0']);
+	});
+
+	test(`${asset}: submitting with no grouped variants is safe`, () => {
+		assert.deepEqual(submitVariableFontSettings(asset, []), []);
+	});
+}

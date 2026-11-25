@@ -163,6 +163,49 @@ class ImportExportTest extends TestCase {
 	}
 
 	/**
+	 * Width-specific variants survive JSON export and import without changing legacy variants.
+	 */
+	public function testFontStretchSurvivesExportAndImport() {
+		$fonts = $this->getFonts();
+		$font  = $fonts['roboto']['roboto'];
+
+		foreach ( [ '87.5%' => '87_5', '75% 100%' => '75-100' ] as $stretch => $suffix ) {
+			$variant              = clone $font->variants['latin-400'];
+			$variant->fontStretch = $stretch;
+			$variant->woff2       = "/wp-content/uploads/omgf/roboto/roboto-stretch-$suffix.woff2";
+
+			$font->variants[ "latin-400-stretch-$suffix" ] = $variant;
+		}
+
+		update_option( 'omgf_optimized_fonts', $fonts );
+		$json = ImportExport::export_json( true );
+
+		delete_option( 'omgf_optimized_fonts' );
+		$options = ImportExport::parse( $json );
+		$this->assertIsArray( $options );
+		ImportExport::import( $options );
+
+		$stored = get_option( 'omgf_optimized_fonts' )['roboto']['roboto']->variants;
+		$this->assertEquals( $font->variants, $stored );
+		$this->assertFalse( property_exists( $stored['latin-400'], 'fontStretch' ) );
+	}
+
+	/**
+	 * The newly accepted property must still pass the font declaration safety checks.
+	 */
+	public function testValidateRejectsInvalidFontStretchValues() {
+		foreach ( [ [ '75%' ], '75%; color: red' ] as $stretch ) {
+			$fonts = $this->getFonts();
+			$fonts['roboto']['roboto']->variants['latin-400']->fontStretch = $stretch;
+
+			$this->assertWPError(
+				ImportExport::validate( $this->getImport( [ 'omgf_optimized_fonts' => $fonts ] ) ),
+				'omgf_import_invalid_value'
+			);
+		}
+	}
+
+	/**
 	 * License keys, unknown settings, transients and caches are never exported.
 	 *
 	 * @see ImportExport::export_json()
