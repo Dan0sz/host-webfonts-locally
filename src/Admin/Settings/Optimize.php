@@ -329,7 +329,7 @@ class Optimize extends Builder {
 									   name="omgf_pro_replace_font[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]"/>
 							</td>
 						</tr>
-						<?php $id = ''; ?>
+						<?php $ids = []; ?>
 						<?php foreach ( $font->variants as $variant ) : ?>
 							<?php
 							/**
@@ -342,12 +342,12 @@ class Optimize extends Builder {
 							 *                in this version.
 							 */
 							// phpcs:ignore
-							if ( $id === $variant->fontWeight . $variant->fontStyle ) {
+							if ( in_array( $variant->fontWeight . $variant->fontStyle, $ids, true ) ) {
 								continue;
 							}
 
 							// phpcs:ignore
-							$id = $variant->fontWeight . $variant->fontStyle;
+							$ids[] = $variant->fontWeight . $variant->fontStyle;
 							?>
 							<tr>
 								<td></td>

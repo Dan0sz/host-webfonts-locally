@@ -87,6 +87,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.5.1 =
+* Fixed: condensed and expanded widths of variable fonts (e.g. used by Divi 5) were lost after optimization.
+
 = 6.5.0 =
 * Fixed: the Google Fonts Checker ignored Google Fonts URLs with multiple families or spaces, e.g. loaded by the WebFont Loader.
 * Improved: Divi and Elementor compatibility is now always enabled, so the Divi Compatibility option was removed.

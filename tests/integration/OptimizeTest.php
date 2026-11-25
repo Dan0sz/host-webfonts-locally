@@ -180,4 +180,57 @@ class OptimizeTest extends TestCase {
 			$this->assertStringEndsWith( '/nunito-sans-italic-latin.woff2', $variant->woff2 );
 		}
 	}
+
+	/**
+	 * The widths of fonts should be kept, and variants which only differ in width shouldn't overwrite each other.
+	 *
+	 * @see \OMGF\Optimize::process()
+	 * @return void
+	 */
+	public function testProcessKeepsFontStretch() {
+		$url   = 'https://daan.dev/tests/font-stretch.css';
+		$css   = '';
+		$faces = [
+			[ 'Open Sans', '300 800', '75% 100%', 'range' ],
+			[ 'Roboto', '400', '75%', 'shared' ],
+			[ 'Roboto', '400', '100%', 'shared' ],
+			[ 'Anybody', '400', '87.5%', 'condensed' ],
+			[ 'Anybody', '400', '100%', 'regular' ],
+			[ 'Lato', '400', '100%', 'lato' ],
+		];
+
+		foreach ( $faces as $face ) {
+			$css .= "/* latin */\n@font-face {\n  font-family: '$face[0]';\n  font-style: normal;\n  font-weight: $face[1];\n  font-stretch: $face[2];\n  src: url(https://fonts.gstatic.com/s/$face[3].woff2) format('woff2');\n}\n";
+		}
+
+		$mock = function ( $pre, $args, $request_url ) use ( $url, $css ) {
+			return $request_url === $url ? [ 'body' => $css, 'response' => [ 'code' => 200 ] ] : $pre;
+		};
+
+		add_filter( 'pre_http_request', $mock, 11, 3 );
+
+		try {
+			$class = new Optimize( $url, 'test-font-stretch', 'test-font-stretch', 'object' );
+			$fonts = $class->process()['test-font-stretch'];
+		} finally {
+			remove_filter( 'pre_http_request', $mock, 11 );
+		}
+
+		$this->assertSame( [ 'latin-300-800-75-100' ], array_keys( $fonts['open-sans']->variants ) );
+		$this->assertSame( [ 'latin-400-75', 'latin-400' ], array_keys( $fonts['roboto']->variants ) );
+		$this->assertSame( [ '400', '400' ], array_column( $fonts['roboto']->variants, 'id' ) );
+		$this->assertSame( [ 'latin-400' ], array_keys( $fonts['lato']->variants ) );
+
+		// Each width has its own file.
+		$this->assertStringEndsWith( '/anybody-normal-latin-400-87-5.woff2', $fonts['anybody']->variants['latin-400-87-5']->woff2 );
+		$this->assertStringEndsWith( '/anybody-normal-latin-400.woff2', $fonts['anybody']->variants['latin-400']->woff2 );
+
+		$stylesheet = file_get_contents( OMGF_UPLOAD_DIR . '/test-font-stretch/test-font-stretch.css' );
+
+		$this->assertStringContainsString( 'font-stretch: 75% 100%;', $stylesheet );
+		$this->assertStringContainsString( 'font-stretch: 87.5%;', $stylesheet );
+		// The default width isn't declared.
+		$this->assertSame( 3, substr_count( $stylesheet, 'font-stretch:' ) );
+		$this->assertSame( 6, substr_count( $stylesheet, '@font-face' ) );
+	}
 }

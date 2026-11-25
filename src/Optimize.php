@@ -191,16 +191,19 @@ class Optimize {
 			}
 
 			foreach ( $font->variants as $variant_id => &$variant ) {
+				// Each width can have its own file.
+				$stretch = $this->get_stretch_suffix( $variant->fontStretch ?? '' );
+
 				/**
 				 * @since v5.3.0 Variable fonts use one filename for all font weights/styles. That's why we drop the weight from the filename.
 				 */
 				if ( $is_variable_font ) {
 					$filename = strtolower(
-						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset : '' )
+						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset : '' ) . $stretch
 					);
 				} else {
 					$filename = strtolower(
-						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset . '-' : '' ) . str_replace( ' ', '-', $variant->fontWeight )
+						$id . '-' . $variant->fontStyle . '-' . ( isset( $variant->subset ) ? $variant->subset . '-' : '' ) . str_replace( ' ', '-', $variant->fontWeight ) . $stretch
 					);
 				}
 
@@ -515,11 +518,17 @@ class Optimize {
 			preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+)[\'"]?\s*\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
 			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
+			preg_match( '/font-stretch:\s*([a-z0-9.%\s-]+?)\s*[;}]/i', $font_face, $font_stretch );
 
 			$font_style  = ! empty( $font_style[1] ) ? $font_style[1] : 'normal';
 			$font_weight = ! empty( $font_weight[1] ) ? $font_weight[1] : '400';
 			$font_src    = ! empty( $font_src[1] ) ? $font_src[1] : '';
 			$subset      = ! empty( $subset[1] ) ? trim( $subset[1], '[]' ) : '';
+			/**
+			 * @since v6.5.1 The default width doesn't need to be declared.
+			 */
+			$font_stretch = ! empty( $font_stretch[1] ) ? strtolower( $font_stretch[1] ) : '';
+			$font_stretch = in_array( $font_stretch, [ 'normal', '100%' ], true ) ? '' : $font_stretch;
 
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
@@ -536,13 +545,17 @@ class Optimize {
 			}
 
 			$font_weight_id                  = str_replace( ' ', '-', $font_weight );
-			$key                             = ( $subset ? $subset . '-' : '' ) . $font_weight_id . ( $font_style === 'normal' ? '' : '-' . $font_style );
+			$key                             = ( $subset ? $subset . '-' : '' ) . $font_weight_id . ( $font_style === 'normal' ? '' : '-' . $font_style ) . $this->get_stretch_suffix( $font_stretch );
 			$font_object[ $key ]             = new \stdClass();
 			$font_object[ $key ]->id         = $font_weight_id . ( $font_style === 'normal' ? '' : $font_style );
 			$font_object[ $key ]->fontFamily = $font_family;
 			$font_object[ $key ]->fontStyle  = $font_style;
 			$font_object[ $key ]->fontWeight = $font_weight;
 			$font_object[ $key ]->woff2      = $font_src;
+
+			if ( $font_stretch ) {
+				$font_object[ $key ]->fontStretch = $font_stretch;
+			}
 
 			if ( ! empty( $subset ) ) {
 				$font_object[ $key ]->subset = $subset;
@@ -574,6 +587,21 @@ class Optimize {
 		OMGF::debug( __( 'All @font-face statements processed.', 'host-webfonts-local' ) );
 
 		return $font_object;
+	}
+
+	/**
+	 * Suffix used to tell apart variants which only differ in width, e.g. '-75-100' for '75% 100%'.
+	 *
+	 * @since v6.5.1
+	 *
+	 * @param string $font_stretch
+	 *
+	 * @return string
+	 */
+	private function get_stretch_suffix( $font_stretch ) {
+		$suffix = trim( preg_replace( '/[^a-z0-9]+/', '-', $font_stretch ), '-' );
+
+		return $suffix !== '' ? '-' . $suffix : '';
 	}
 
 	/**

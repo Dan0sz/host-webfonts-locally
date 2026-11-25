@@ -570,7 +570,7 @@ class ImportExport {
 		$font_props    = [ 'id', 'family', 'variants', 'subsets' ];
 		$variant_props = apply_filters(
 			'omgf_import_export_font_variant_properties',
-			[ 'id', 'fontFamily', 'fontStyle', 'fontWeight', 'woff2', 'woff', 'subset', 'range' ]
+			[ 'id', 'fontFamily', 'fontStyle', 'fontWeight', 'fontStretch', 'woff2', 'woff', 'subset', 'range' ]
 		);
 		$sanitized     = [];
 
