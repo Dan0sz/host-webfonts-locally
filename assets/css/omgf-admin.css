@@ -369,6 +369,28 @@
 	font-weight: 600;
 }
 
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .variable-font {
+	display: inline-block;
+	height: auto;
+	margin-left: 14px;
+	padding: 1px 10px;
+	border-radius: 10px;
+	background-color: #e0f4fa;
+	color: #007a99;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 18px;
+	white-space: nowrap;
+	cursor: help;
+}
+
+.omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .variable-font .tooltip-text {
+	margin-left: 10px;
+	font-size: 13px;
+	font-weight: 400;
+	white-space: normal;
+}
+
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody tr:last-child td {
 	padding-bottom: 10px;
 }
