@@ -205,6 +205,10 @@ class OptimizeTest extends TestCase {
 			[ 'Nunito', '400', '100%', 'nunito-shared' ],
 			[ 'Nunito', '700', '100%', 'nunito-bold' ],
 			[ 'Nunito', '900', '100%', 'nunito-black' ],
+			[ 'Mulish', '400', '75% 100%', 'mulish-a' ],
+			[ 'Mulish', '400', '75%', 'mulish-b' ],
+			[ 'Mulish', '100', '75%', 'mulish-c' ],
+			[ 'Mulish', '500', '75%', 'mulish-b' ],
 		];
 
 		foreach ( $faces as $face ) {
@@ -234,7 +238,7 @@ class OptimizeTest extends TestCase {
 		$this->assertStringEndsWith( '/anybody-normal-latin-400.woff2', $fonts['anybody']->variants['latin-400']->woff2 );
 
 		// Different files never share a filename, also if other variants of the family share a file.
-		foreach ( [ 'inter', 'nunito' ] as $id ) {
+		foreach ( [ 'inter', 'nunito', 'mulish' ] as $id ) {
 			$this->assertCount( 3, array_unique( array_column( $fonts[ $id ]->variants, 'woff2' ) ) );
 		}
 
@@ -243,7 +247,7 @@ class OptimizeTest extends TestCase {
 		$this->assertStringContainsString( 'font-stretch: 75% 100%;', $stylesheet );
 		$this->assertStringContainsString( 'font-stretch: 87.5%;', $stylesheet );
 		// The default width isn't declared.
-		$this->assertSame( 4, substr_count( $stylesheet, 'font-stretch:' ) );
-		$this->assertSame( 14, substr_count( $stylesheet, '@font-face' ) );
+		$this->assertSame( 8, substr_count( $stylesheet, 'font-stretch:' ) );
+		$this->assertSame( 18, substr_count( $stylesheet, '@font-face' ) );
 	}
 }
