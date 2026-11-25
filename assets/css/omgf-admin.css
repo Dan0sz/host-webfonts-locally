@@ -370,18 +370,21 @@
 }
 
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody td .variable-font {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
 	width: 18px;
 	height: 18px;
 	margin-left: 4px;
+	padding-bottom: 2px;
 	border-radius: 50%;
 	background-color: #e0f4fa;
 	color: #007a99;
 	font-size: 11px;
 	font-weight: 600;
-	line-height: 18px;
-	text-align: center;
-	vertical-align: middle;
+	line-height: 1;
+	vertical-align: 3px;
 	cursor: help;
 }
 
@@ -390,7 +393,6 @@
 	font-size: 13px;
 	font-weight: 400;
 	white-space: normal;
-	text-align: left;
 }
 
 .omgf-optimize-fonts-container .omgf-optimize-fonts-manage table tbody tr:last-child td {
