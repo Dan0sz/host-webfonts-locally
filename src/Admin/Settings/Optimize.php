@@ -329,65 +329,27 @@ class Optimize extends Builder {
 									   name="omgf_pro_replace_font[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>]"/>
 							</td>
 						</tr>
-						<?php $id = ''; ?>
-						<?php foreach ( $font->variants as $variant ) : ?>
+						<?php foreach ( $this->get_rows( $font, $handle ) as $row ) : ?>
 							<?php
-							/**
-							 * @since v5.3.0: Variable Fonts are pulled directly from the Google Fonts API,
-							 *                which creates @font-face statements for each subset.
-							 *                This deals with the duplicate display of font styles. Which also
-							 *                means unloading and/or preloading will unload/preload all available
-							 *                subsets. It's a bit bloaty, but there's no alternative.
-							 *                To better deal with this, I've introduced the Used Subset(s) feature
-							 *                in this version.
-							 */
-							// phpcs:ignore
-							if ( $id === $variant->fontWeight . $variant->fontStyle ) {
-								continue;
-							}
-
-							// phpcs:ignore
-							$id = $variant->fontWeight . $variant->fontStyle;
+							$variant = $row['variants'][0];
+							$others  = array_slice( $row['variants'], 1 );
+							$preload = $row['preload'];
+							$unload  = $row['unload'];
+							$class   = $handle . '-' . $font->id . '-' . $variant->id;
 							?>
 							<tr>
 								<td></td>
-								<?php
-								$preload = OMGF::preloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] ?? '';
-
-								if ( $preload ) {
-									$unload = false;
-								} else {
-									$unload = OMGF::unloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] ?? '';
-								}
-
-								$class = $handle . '-' . $font->id . '-' . $variant->id;
-								?>
-								<td><?php echo esc_attr( $variant->fontStyle ); ?></td>
-								<td><?php echo esc_attr( $variant->fontWeight ); ?></td>
+								<td><?php echo esc_html( implode( ', ', $row['styles'] ) ); ?></td>
+								<td><?php echo esc_html( implode( ', ', $row['weights'] ) ); ?>
+									<?php if ( $row['variable'] ) : ?>
+										<span class="variable-font tooltip"><?php echo esc_html_x( 'v', 'Short for variable font', 'host-webfonts-local' ); ?><span class="tooltip-text"><span class="inline-text"><?php echo esc_html__( 'These weights and styles share their font files.', 'host-webfonts-local' ); ?></span></span></span>
+									<?php endif; ?>
+								</td>
 								<td class="preload-<?php echo esc_attr( $class ); ?>">
-									<input type="hidden"
-										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
-										   value="0"
-									/>
-									<input data-handle="<?php echo esc_attr( $handle ); ?>"
-										   data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>"
-										   autocomplete="off" type="checkbox"
-										   class="preload"
-										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $preload ? 'checked="checked"' : ''; ?> <?php echo $unload || $disable_preload ? 'disabled' : ''; ?>
-									/>
+									<?php $this->do_toggle( 'preload', Settings::OMGF_OPTIMIZE_SETTING_PRELOAD_FONTS, $handle, $font->id, $variant, $others, $preload, $unload || $disable_preload ); ?>
 								</td>
 								<td class="unload-<?php echo esc_attr( $class ); ?>">
-									<input type="hidden"
-										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
-										   value="0"/>
-									<input data-handle="<?php echo esc_attr( $handle ); ?>"
-										   data-font-id="<?php echo esc_attr( $handle . '-' . $font->id ); ?>"
-										   autocomplete="off" type="checkbox"
-										   class="unload"
-										   name="<?php echo esc_attr( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS ); ?>[<?php echo esc_attr( $handle ); ?>][<?php echo esc_attr( $font->id ); ?>][<?php echo esc_attr( $variant->id ); ?>]"
-										   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $unload ? 'checked="checked"' : ''; ?> <?php echo $preload || $disable_unload ? 'disabled' : ''; ?>
-									/>
+									<?php $this->do_toggle( 'unload', Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_FONTS, $handle, $font->id, $variant, $others, $unload, $preload || $disable_unload ); ?>
 								</td>
 							</tr>
 						<?php endforeach; ?>
@@ -402,6 +364,107 @@ class Optimize extends Builder {
 				   name="omgf_settings[<?php echo Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS; ?>]"
 				   value="<?php echo esc_attr( implode( ',', $cache_handles ) ); ?>"/>
 		</div>
+		<?php
+	}
+
+	/**
+	 * Groups the variants of $font into rows: one for each weight and style, or one for all weights and styles which share
+	 * a file, i.e. variable fonts. Subsets and widths aren't listed separately.
+	 *
+	 * @since v6.5.1
+	 *
+	 * @param object $font
+	 * @param string $handle
+	 *
+	 * @return array
+	 */
+	private function get_rows( $font, $handle ) {
+		$rows = [];
+		$keys = [];
+
+		foreach ( $font->variants as $variant ) {
+			$preload = ! empty( OMGF::preloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] );
+			$unload  = ! $preload && ! empty( OMGF::unloaded_fonts()[ $handle ][ $font->id ][ $variant->id ] );
+			$links   = [ "id:$variant->id" ];
+
+			// Weights which aren't loaded are listed separately from the other weights in the same file.
+			if ( ! empty( $variant->woff2 ) ) {
+				$links[] = ( $unload ? 'unload:' : 'load:' ) . $variant->woff2;
+			}
+
+			$found = array_values( array_unique( array_intersect_key( $keys, array_flip( $links ) ) ) );
+			$key   = $found[0] ?? count( $keys );
+			$row   = [ 'variants' => [], 'styles' => [], 'weights' => [], 'preload' => false, 'unload' => $unload ];
+
+			// Merge the rows which are linked by this variant.
+			foreach ( $found as $merge ) {
+				$row['variants'] += $rows[ $merge ]['variants'];
+				$row['styles']   += $rows[ $merge ]['styles'];
+				$row['weights']  += $rows[ $merge ]['weights'];
+				$row['preload']  = $row['preload'] || $rows[ $merge ]['preload'];
+
+				if ( $merge !== $key ) {
+					unset( $rows[ $merge ] );
+				}
+			}
+
+			$row['variants']                       += [ $variant->id => $variant ];
+			$row['styles'][ $variant->fontStyle ]   = $variant->fontStyle;
+			$row['weights'][ $variant->fontWeight ] = str_replace( ' ', ' - ', $variant->fontWeight );
+			$row['preload']                         = $row['preload'] || $preload;
+			$rows[ $key ]                           = $row;
+
+			foreach ( $keys as $link => $linked ) {
+				$keys[ $link ] = in_array( $linked, $found, true ) ? $key : $linked;
+			}
+
+			foreach ( $links as $link ) {
+				$keys[ $link ] = $key;
+			}
+		}
+
+		foreach ( $rows as &$row ) {
+			ksort( $row['weights'], SORT_NATURAL );
+
+			$row['variants'] = array_values( $row['variants'] );
+			$row['variable'] = count( $row['variants'] ) > 1 || str_contains( (string) $row['variants'][0]->fontWeight, ' ' );
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * Renders the checkbox of a row. The (hidden) fields of the other variants in the same file get the same value when
+	 * the form is submitted.
+	 *
+	 * @since v6.5.1
+	 *
+	 * @param string   $type     preload | unload
+	 * @param string   $option
+	 * @param string   $handle
+	 * @param string   $font_id
+	 * @param object   $variant
+	 * @param object[] $others   The other variants in the same file.
+	 * @param bool     $checked
+	 * @param bool     $disabled
+	 *
+	 * @return void
+	 */
+	private function do_toggle( $type, $option, $handle, $font_id, $variant, $others, $checked, $disabled ) {
+		$name = $option . "[$handle][$font_id]";
+		?>
+		<input type="hidden" name="<?php echo esc_attr( $name . "[$variant->id]" ); ?>" value="0"/>
+		<?php foreach ( $others as $other ) : ?>
+			<input type="hidden" class="variable-font-variant" data-value="<?php echo esc_attr( $other->id ); ?>"
+				   name="<?php echo esc_attr( $name . "[$other->id]" ); ?>" value="<?php echo esc_attr( $checked && ! $disabled ? $other->id : '0' ); ?>"/>
+		<?php endforeach; ?>
+		<input data-handle="<?php echo esc_attr( $handle ); ?>"
+			   data-font-id="<?php echo esc_attr( $handle . '-' . $font_id ); ?>"
+			   autocomplete="off" type="checkbox"
+			   class="<?php echo esc_attr( $type ); ?>"
+			   name="<?php echo esc_attr( $name . "[$variant->id]" ); ?>"
+			   value="<?php echo esc_attr( $variant->id ); ?>" <?php echo $checked ? 'checked="checked"' : ''; ?> <?php echo $disabled ? 'disabled' : ''; ?>
+		/>
 		<?php
 	}
 

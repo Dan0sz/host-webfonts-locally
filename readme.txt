@@ -22,7 +22,7 @@ Install it and it works immediately. No setup required, though there's plenty to
 
 ## Detection, Out of the Box
 
-OMGF scans your site for Google Fonts, Bunny Fonts (`fonts.bunny.net`), and Jetpack CDN (`fonts-api.wp.com`) and downloads them to your own server automatically. It even automatically detects and optimizes Google Fonts loaded by Elementor.
+OMGF scans your site for Google Fonts, Bunny Fonts (`fonts.bunny.net`), and Jetpack CDN (`fonts-api.wp.com`) and downloads them to your own server automatically. It even automatically detects and optimizes Google Fonts loaded by Elementor. Variable Fonts (`fonts.googleapis.com/css2`) are supported, too.
 
 ## Free Features
 
@@ -52,7 +52,6 @@ Where the free version covers the fundamentals, Pro removes the manual work enti
 - Web Font Loader (`webfont.js`)
 - Async, JS-injected Google Fonts loaded at runtime
 - WordPress's Font Manager (or Font Library, since WP 7.0)
-- Variable Fonts (`fonts.googleapis.com/css2`)
 - Material Icons
 
 **Global font-display** — Extends `font-display` control to every font on your site, not just Google Fonts.
@@ -86,6 +85,11 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 4. Advanced Settings. Change these to make OMGF work with your configuration (if needed). The default settings will suffice for most configurations.
 
 == Changelog ==
+
+= 6.5.1 =
+* Fixed: condensed and expanded widths of variable fonts (e.g. used by Divi 5) were lost after optimization.
+* Fixed: Don't Load had no effect on variable fonts with a weight range.
+* Improved: variable fonts are listed in one row per file in Optimize Local Fonts.
 
 = 6.5.0 =
 * Fixed: the Google Fonts Checker ignored Google Fonts URLs with multiple families or spaces, e.g. loaded by the WebFont Loader.

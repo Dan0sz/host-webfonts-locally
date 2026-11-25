@@ -40,6 +40,39 @@ function generateKey(asset, { keys, handle = 'theme', handles, checked = 1, tota
 	return value;
 }
 
+// Each group represents one table cell: its hidden variants share a single visible checkbox.
+function bindFontForm(asset, groups) {
+	const variants = new Map(groups.flatMap(({ checkbox, fields }) => fields.map(field => [field, checkbox])));
+	const handlers = [];
+	const jquery = (selector) => ({
+		ready(callback) { callback(jquery); },
+		data() {},
+		on(event, callback) {
+			if (selector === '#omgf-optimize-settings-form' && event === 'submit') {
+				handlers.push(callback);
+			}
+		},
+		each(callback) {
+			assert.equal(selector, '.omgf-optimize-fonts-manage input.variable-font-variant');
+			[...variants.keys()].forEach((field, index) => callback(index, field));
+		},
+		siblings(query) {
+			assert.equal(query, 'input[type="checkbox"]');
+			assert.ok(variants.has(selector));
+			return [variants.get(selector)];
+		},
+		append() {
+			assert.equal(selector, '#wpwrap');
+		},
+	});
+	runInNewContext(readFileSync(new URL(`../../../assets/js/${asset}`, import.meta.url), 'utf8'), {
+		jQuery: jquery,
+		document: { querySelectorAll: () => [] },
+		setInterval() {},
+	});
+	return () => handlers.forEach(handler => handler());
+}
+
 const cases = [
 	['exact key beats an earlier modified key', { keys: 'theme-mod-old,theme,other' }, 'theme-mod-i,other'],
 	['first modified key wins and other owned keys are removed', { keys: 'theme-mod-old,other,theme-mod-next' }, 'theme-mod-i,other'],
@@ -61,4 +94,38 @@ for (const asset of ['omgf-admin.js', 'omgf-admin.min.js']) {
 			assert.equal(generateKey(asset, input), expected);
 		});
 	}
+
+	test(`${asset}: submitting the form synchronizes each variable font control independently`, () => {
+		const preload = { checked: true, disabled: false };
+		const unload = { checked: true, disabled: true };
+		const otherRow = { checked: false, disabled: false };
+		const weight = (value) => ({ value: 'stale', dataset: { value } });
+		const preloadFields = [weight('600'), weight('700italic')];
+		const unloadFields = [weight('600'), weight('700italic')];
+		const otherFields = [weight('900')];
+		const submit = bindFontForm(asset, [
+			{ checkbox: preload, fields: preloadFields },
+			{ checkbox: unload, fields: unloadFields },
+			{ checkbox: otherRow, fields: otherFields },
+		]);
+		const values = fields => fields.map(field => field.value);
+
+		submit();
+		assert.deepEqual(values(preloadFields), ['600', '700italic']);
+		assert.deepEqual(values(unloadFields), ['0', '0'], 'A disabled but checked control is not submitted');
+		assert.deepEqual(values(otherFields), ['0']);
+
+		preload.checked = false;
+		unload.disabled = false;
+		otherRow.checked = true;
+		submit();
+		assert.deepEqual(values(preloadFields), ['0', '0'], 'Unchecking the row clears previously selected variants');
+		assert.deepEqual(values(unloadFields), ['600', '700italic']);
+		assert.deepEqual(values(otherFields), ['900']);
+	});
+
+	test(`${asset}: submitting a form without grouped variants succeeds`, () => {
+		const submit = bindFontForm(asset, []);
+		assert.doesNotThrow(submit);
+	});
 }

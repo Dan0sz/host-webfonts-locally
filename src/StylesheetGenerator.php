@@ -90,6 +90,7 @@ class StylesheetGenerator {
 					'font-family'   => "'$font_family'",
 					'font-style'    => $variant->fontStyle,
 					'font-weight'   => $variant->fontWeight,
+					'font-stretch'  => $variant->fontStretch ?? '',
 					'unicode-range' => $variant->range ?? '',
 				];
 

@@ -180,4 +180,130 @@ class OptimizeTest extends TestCase {
 			$this->assertStringEndsWith( '/nunito-sans-italic-latin.woff2', $variant->woff2 );
 		}
 	}
+
+	/**
+	 * The widths of fonts should be kept, and variants which only differ in width shouldn't overwrite each other.
+	 *
+	 * @see \OMGF\Optimize::process()
+	 * @return void
+	 */
+	public function testProcessKeepsFontStretch() {
+		$url   = 'https://daan.dev/tests/font-stretch.css';
+		$css   = '';
+		$faces = [
+			[ 'Open Sans', '300 800', '75% 100%', 'range' ],
+			[ 'Roboto', '400', '75%', 'shared' ],
+			[ 'Roboto', '400', '100%', 'shared' ],
+			[ 'Anybody', '400', '87.5%', 'condensed' ],
+			[ 'Anybody', '400', '100%', 'regular' ],
+			[ 'Lato', '400', 'NoRmAl', 'lato' ],
+			[ 'Inter', '400', '75%', 'inter' ],
+			[ 'Inter', '400', '100%', 'inter' ],
+			[ 'Inter', '700', '100%', 'inter-bold' ],
+			[ 'Inter', '900', '100%', 'inter-black' ],
+			[ 'Nunito', '300', '100%', 'nunito-shared' ],
+			[ 'Nunito', '400', '100%', 'nunito-shared' ],
+			[ 'Nunito', '700', '100%', 'nunito-bold' ],
+			[ 'Nunito', '900', '100%', 'nunito-black' ],
+			[ 'Mulish', '400', '75% 100%', 'mulish-a' ],
+			[ 'Mulish', '400', '75%', 'mulish-b' ],
+			[ 'Mulish', '100', '75%', 'mulish-c' ],
+			[ 'Mulish', '500', '75%', 'mulish-b' ],
+			[ 'Oswald', '400', '112.125%', 'oswald-a' ],
+			[ 'Oswald', '400', '112% 125%', 'oswald-b' ],
+			[ 'Oswald', '100 150', '100%', 'oswald-c' ],
+			[ 'Oswald', '100', '150%', 'oswald-d' ],
+		];
+
+		foreach ( $faces as $face ) {
+			$css .= "/* latin */\n@font-face {\n  font-family: '$face[0]';\n  font-style: normal;\n  font-weight: $face[1];\n  font-stretch: $face[2];\n  src: url(https://fonts.gstatic.com/s/$face[3].woff2) format('woff2');\n}\n";
+		}
+
+		$mock = function ( $pre, $args, $request_url ) use ( $url, $css ) {
+			return $request_url === $url ? [ 'body' => $css, 'response' => [ 'code' => 200 ] ] : $pre;
+		};
+
+		add_filter( 'pre_http_request', $mock, 11, 3 );
+
+		try {
+			$class = new Optimize( $url, 'test-font-stretch', 'test-font-stretch', 'object' );
+			$fonts = $class->process()['test-font-stretch'];
+		} finally {
+			remove_filter( 'pre_http_request', $mock, 11 );
+		}
+
+		$this->assertSame( [ 'latin-300-800-stretch-75-100' ], array_keys( $fonts['open-sans']->variants ) );
+		$this->assertSame( [ 'latin-400-stretch-75', 'latin-400' ], array_keys( $fonts['roboto']->variants ) );
+		$this->assertSame( [ '400', '400' ], array_column( $fonts['roboto']->variants, 'id' ) );
+		$this->assertSame( [ 'latin-400' ], array_keys( $fonts['lato']->variants ) );
+		$this->assertFalse( property_exists( $fonts['lato']->variants['latin-400'], 'fontStretch' ) );
+		$this->assertFalse( property_exists( $fonts['roboto']->variants['latin-400'], 'fontStretch' ) );
+		$this->assertSame( '75%', $fonts['roboto']->variants['latin-400-stretch-75']->fontStretch );
+		$this->assertSame( '75% 100%', $fonts['open-sans']->variants['latin-300-800-stretch-75-100']->fontStretch );
+
+		// Each width has its own file.
+		$this->assertStringEndsWith( '/anybody-normal-latin-400-stretch-87_5.woff2', $fonts['anybody']->variants['latin-400-stretch-87_5']->woff2 );
+		$this->assertStringEndsWith( '/anybody-normal-latin-400.woff2', $fonts['anybody']->variants['latin-400']->woff2 );
+
+		// Different files never share a filename, also if other variants of the family share a file.
+		foreach ( [ 'inter', 'nunito', 'mulish' ] as $id ) {
+			$this->assertCount( 3, array_unique( array_column( $fonts[ $id ]->variants, 'woff2' ) ) );
+		}
+
+		$this->assertCount( 4, array_unique( array_column( $fonts['oswald']->variants, 'woff2' ) ) );
+
+		$stylesheet = file_get_contents( OMGF_UPLOAD_DIR . '/test-font-stretch/test-font-stretch.css' );
+
+		$this->assertStringContainsString( 'font-stretch: 75% 100%;', $stylesheet );
+		$this->assertStringContainsString( 'font-stretch: 87.5%;', $stylesheet );
+		// The default width isn't declared.
+		$this->assertSame( 11, substr_count( $stylesheet, 'font-stretch:' ) );
+		$this->assertSame( 22, substr_count( $stylesheet, '@font-face' ) );
+	}
+
+	/**
+	 * Variable fonts with a weight range shouldn't be loaded if Don't Load is checked.
+	 *
+	 * @see \OMGF\Optimize::process()
+	 * @return void
+	 */
+	public function testProcessUnloadsWeightRanges() {
+		$url    = 'https://daan.dev/tests/unload-range.css';
+		$css    = '';
+		$unload = function () {
+			return [ 'test-unload-range' => [ 'open-sans' => [ '300-800italic' => '300-800italic' ] ] ];
+		};
+		$mock   = function ( $pre, $args, $request_url ) use ( $url, &$css ) {
+			return $request_url === $url ? [ 'body' => $css, 'response' => [ 'code' => 200 ] ] : $pre;
+		};
+
+		$faces = [
+			[ 'normal', '100%', 'normal' ],
+			[ 'italic', '100%', 'italic' ],
+			[ 'italic', '75%', 'italic-condensed' ],
+		];
+
+		foreach ( $faces as [ $style, $width, $source ] ) {
+			$css .= "/* latin */\n@font-face {\n  font-family: 'Open Sans';\n  font-style: $style;\n  font-weight: 300\t800;\n  font-stretch: $width;\n  src: url(https://fonts.gstatic.com/s/range-$source.woff2) format('woff2');\n}\n";
+		}
+
+		add_filter( 'omgf_setting_unload_fonts', $unload );
+		add_filter( 'pre_http_request', $mock, 11, 3 );
+
+		try {
+			$class = new Optimize( $url, 'test-unload-range', 'test-unload-range', 'object' );
+			$fonts = $class->process()['test-unload-range'];
+		} finally {
+			remove_filter( 'omgf_setting_unload_fonts', $unload );
+			remove_filter( 'pre_http_request', $mock, 11 );
+		}
+
+		$this->assertSame( [ '300-800' ], array_column( $fonts['open-sans']->variants, 'id' ) );
+		$this->assertSame( [ '300 800' ], array_column( $fonts['open-sans']->variants, 'fontWeight' ) );
+
+		$stylesheet = file_get_contents( OMGF_UPLOAD_DIR . '/test-unload-range/test-unload-range.css' );
+		$this->assertSame( 1, substr_count( $stylesheet, '@font-face' ) );
+		$this->assertStringContainsString( 'font-weight: 300 800;', $stylesheet );
+		$this->assertStringNotContainsString( 'font-style: italic;', $stylesheet );
+	}
 }

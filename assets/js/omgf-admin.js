@@ -48,6 +48,7 @@ jQuery(document).ready(function ($) {
 			$('.omgf-remove-stylesheet').on('click', this.remove_stylesheet_from_db);
 			$('.omgf-refresh, #omgf-cache-refresh').on('click', this.refresh_cache);
 			$('.omgf-empty, #omgf-cache-flush').on('click', this.empty_cache_directory);
+			$('#omgf-optimize-settings-form').on('submit', this.sync_variable_fonts);
 			$('#omgf-optimize-settings-form').on('submit', this.show_loader_before_submit);
 			$('#omgf-delete-log').on('click', this.delete_log);
 			$('.omgf-optimize-preload-warning-close').on('click', this.hide_preload_warning);
@@ -315,6 +316,17 @@ jQuery(document).ready(function ($) {
 			}, 500);
 
 			window.open(this.href, '_blank');
+		},
+
+		/**
+		 * All variants in a variable font's file are stored with the value of their row's checkbox.
+		 */
+		sync_variable_fonts: function () {
+			$('.omgf-optimize-fonts-manage input.variable-font-variant').each(function (index, item) {
+				var checkbox = $(item).siblings('input[type="checkbox"]')[0];
+
+				item.value = checkbox.checked && !checkbox.disabled ? item.dataset.value : '0';
+			});
 		},
 
 		/**
