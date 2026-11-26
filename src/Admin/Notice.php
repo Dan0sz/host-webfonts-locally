@@ -19,7 +19,11 @@ namespace OMGF\Admin;
 class Notice {
 	const OMGF_ADMIN_NOTICE_TRANSIENT = 'omgf_admin_notice';
 
-	const OMGF_ADMIN_NOTICE_EXPIRATION = 60;
+	/**
+	 * Notices set during a visitor's request (e.g. failed downloads) are kept until an admin loads a page. Notices are
+	 * removed once they're shown.
+	 */
+	const OMGF_ADMIN_NOTICE_EXPIRATION = DAY_IN_SECONDS;
 
 	/** @var array $notices */
 	public static $notices = [];
