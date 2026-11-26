@@ -77,6 +77,7 @@ class FontFaceTest extends TestCase {
 		$this->assertSame( '400', FontFace::weight( '@font-face { font-weight: 100 200 300; }' ) );
 		$this->assertSame( '1000', FontFace::weight( '@font-face { font-weight: 1000; font-weight: 1001; font-weight: 0; }' ) );
 		$this->assertSame( '700 450.5', FontFace::weight( '@font-face { font-weight: +7e2 450.50; }' ) );
+		$this->assertSame( '500', FontFace::weight( '@font-face { font-weight: 500; font-weight: 700.; }' ) );
 		$this->assertSame( '400', FontFace::weight( '@font-face { font-family: A; }' ) );
 	}
 
@@ -89,7 +90,8 @@ class FontFaceTest extends TestCase {
 		$this->assertSame( 'italic', FontFace::style( '@font-face { font-style: italic; font-style: slanted; }' ) );
 		$this->assertSame( 'oblique 0.1turn', FontFace::style( '@font-face { font-style: oblique 0.1turn; }' ) );
 		// An angle beyond 90deg is invalid.
-		$this->assertSame( 'italic', FontFace::style( '@font-face { font-style: italic; font-style: oblique 100deg; font-style: oblique -10deg 1.6rad; }' ) );
+		$this->assertSame( 'italic', FontFace::style( '@font-face { font-style: italic; font-style: oblique 100deg; font-style: oblique -10deg 1.6rad; font-style: oblique 1e2deg; }' ) );
+		$this->assertSame( 'oblique 1e1deg', FontFace::style( '@font-face { font-style: italic; font-style: oblique 1e1deg; }' ) );
 		$this->assertSame( 'normal', FontFace::style( '@font-face { font-family: A; }' ) );
 	}
 

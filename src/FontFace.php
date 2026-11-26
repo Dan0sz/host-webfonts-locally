@@ -41,6 +41,11 @@ class FontFace {
 	const PARENTHESES_PATTERN = '\((?:' . self::STRING_PATTERN . '|[^()"\'])*\)';
 
 	/**
+	 * A CSS number, e.g. 400, +7e2 or .5.
+	 */
+	const NUMBER_PATTERN = '[+-]?(?:\d+(?:\.\d+)?|\.\d+)(?:e[+-]?\d+)?';
+
+	/**
 	 * Angle units and the number of degrees in one.
 	 */
 	const ANGLE_UNITS = [
@@ -188,7 +193,7 @@ class FontFace {
 				foreach ( $weights as &$weight ) {
 					$weight = self::WEIGHT_KEYWORDS[ $weight ] ?? $weight;
 
-					if ( ! preg_match( '/^\+?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/', $weight ) || $weight < 1 || $weight > 1000 ) {
+					if ( ! preg_match( '/^' . self::NUMBER_PATTERN . '$/i', $weight ) || $weight < 1 || $weight > 1000 ) {
 						return null;
 					}
 
@@ -217,12 +222,12 @@ class FontFace {
 			function ( $value ) {
 				$value = preg_replace( '/\s+/', ' ', strtolower( $value ) );
 
-				if ( ! preg_match( '/^(?:normal|italic|oblique(?: [+-]?\d*\.?\d+(?:deg|grad|rad|turn)){0,2})$/', $value ) ) {
+				if ( ! preg_match( '/^(?:normal|italic|oblique(?: ' . self::NUMBER_PATTERN . '(?:deg|grad|rad|turn)){0,2})$/', $value ) ) {
 					return null;
 				}
 
 				// An oblique angle is between -90deg and 90deg.
-				preg_match_all( '/([+-]?\d*\.?\d+)(deg|grad|rad|turn)/', $value, $angles, PREG_SET_ORDER );
+				preg_match_all( '/(' . self::NUMBER_PATTERN . ')(deg|grad|rad|turn)/', $value, $angles, PREG_SET_ORDER );
 
 				foreach ( $angles as list( , $angle, $unit ) ) {
 					$degrees = (float) $angle * self::ANGLE_UNITS[ $unit ];
