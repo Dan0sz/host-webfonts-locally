@@ -38,7 +38,7 @@ class FontFace {
 	/**
 	 * Parentheses and their contents, e.g. those of url().
 	 */
-	const PARENTHESES_PATTERN = '\((?:' . self::STRING_PATTERN . '|[^()"\'])*\)';
+	const PARENTHESES_PATTERN = '\((?:' . self::STRING_PATTERN . '|' . self::ESCAPE_PATTERN . '|[^()"\'\\\\])*\)';
 
 	/**
 	 * A CSS number, e.g. 400, +7e2 or .5.
@@ -255,7 +255,7 @@ class FontFace {
 			'src',
 			function ( $value ) {
 				// Strings are skipped, so e.g. a local() font name isn't read as a URL.
-				$pattern = '/(?:' . self::STRING_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])url\(\s*(?:(' . self::STRING_PATTERN . ')|([^\'")\s]+))\s*\)/i';
+				$pattern = '/(?:' . self::STRING_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])url\(\s*(?:(' . self::STRING_PATTERN . ')|((?:\\\\(?:[0-9a-f]{1,6}(?:\r\n|[ \t\r\n\f])?|[^\r\n\f])|[^\'"()\s\\\\])+))\s*\)/i';
 
 				// A later src without a url(), e.g. local() only, replaces an earlier one, too.
 				if ( ! preg_match( $pattern, $value, $url ) ) {
