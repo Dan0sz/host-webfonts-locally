@@ -83,7 +83,8 @@ jobs:
         run: |
           curl -sf -o /dev/null "$SITE_URL/"
           curl -sf -o /dev/null -c ../cookies.txt -d "log=admin&pwd=admin&testcookie=1" -b "wordpress_test_cookie=WP+Cookie+check" "$SITE_URL/wp-login.php"
-          curl -sf -o /dev/null -b ../cookies.txt "$SITE_URL/wp-admin/options-general.php?page=optimize-webfonts"
+          # Without a valid login WordPress redirects to the login page, so only a 200 means the page was loaded.
+          test "$(curl -s -o /dev/null -w '%{http_code}' -b ../cookies.txt "$SITE_URL/wp-admin/options-general.php?page=optimize-webfonts")" = 200
 
       - name: Update to this branch
         run: |
@@ -112,7 +113,8 @@ jobs:
       - name: Visit the site with this branch
         run: |
           curl -sf -o /dev/null "$SITE_URL/"
-          curl -sf -o /dev/null -b ../cookies.txt "$SITE_URL/wp-admin/options-general.php?page=optimize-webfonts"
+          # Without a valid login WordPress redirects to the login page, so only a 200 means the page was loaded.
+          test "$(curl -s -o /dev/null -w '%{http_code}' -b ../cookies.txt "$SITE_URL/wp-admin/options-general.php?page=optimize-webfonts")" = 200
           curl -sf -o /dev/null "$SITE_URL/"
 
       - name: Check for errors
