@@ -77,7 +77,7 @@ class Cache {
 		 * this file is loaded from the new version. Its new methods don't exist then, so the flush is skipped.
 		 */
 		if ( ! method_exists( OMGF::class, 'known_handles' ) ) {
-			return;
+			return; // @codeCoverageIgnore
 		}
 
 		$cache_keys = array_merge( array_values( OMGF::cache_keys( true ) ), OMGF::known_handles() );
