@@ -1007,17 +1007,27 @@ class Helper {
 		);
 
 		$deleted = false;
+		$failed  = [];
 
-		foreach ( array_merge( [ $handle ], $own_cache_keys ) as $dir ) {
-			$dir = sanitize_title_with_dashes( $dir );
+		foreach ( array_merge( [ $handle ], $own_cache_keys ) as $cache_key ) {
+			$dir = sanitize_title_with_dashes( $cache_key );
 
-			if ( $dir && file_exists( OMGF_UPLOAD_DIR . '/' . $dir ) ) {
-				$deleted = self::delete( OMGF_UPLOAD_DIR . '/' . $dir ) || $deleted;
+			if ( ! $dir || ! file_exists( OMGF_UPLOAD_DIR . '/' . $dir ) ) {
+				continue;
+			}
+
+			if ( self::delete( OMGF_UPLOAD_DIR . '/' . $dir ) ) {
+				$deleted = true;
+			} else {
+				// Keep its cache key, so it can be removed later.
+				$failed[] = $cache_key; // @codeCoverageIgnore
 			}
 		}
 
-		if ( ! empty( $own_cache_keys ) ) {
-			self::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, implode( ',', array_diff( $cache_keys, $own_cache_keys ) ) );
+		$removed_keys = array_diff( $own_cache_keys, $failed );
+
+		if ( ! empty( $removed_keys ) ) {
+			self::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, implode( ',', array_diff( $cache_keys, $removed_keys ) ) );
 		}
 
 		$superseded = self::superseded_stylesheets();
