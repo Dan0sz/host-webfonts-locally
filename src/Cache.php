@@ -72,6 +72,14 @@ class Cache {
 	 * @return void
 	 */
 	public function flush_third_party() {
+		/**
+		 * When OMGF itself is updated, the previous version's Helper class is still loaded in that request, while
+		 * this file is loaded from the new version. Its new methods don't exist then, so the flush is skipped.
+		 */
+		if ( ! method_exists( OMGF::class, 'known_handles' ) ) {
+			return;
+		}
+
 		$cache_keys = array_merge( array_values( OMGF::cache_keys( true ) ), OMGF::known_handles() );
 		$entries    = array_filter( (array) glob( OMGF_UPLOAD_DIR . '/*', GLOB_ONLYDIR ) );
 		$deleted    = false;
