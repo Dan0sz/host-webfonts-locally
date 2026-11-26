@@ -113,7 +113,12 @@ class FontFace {
 			$font_face,
 			'font-family',
 			function ( $value ) {
-				$family = trim( $value, " \t\n\r\f\"'" );
+				$family = $value;
+
+				// Removes the quotes around it, if any.
+				if ( strlen( $family ) > 1 && in_array( $family[0], [ '"', "'" ], true ) && substr( $family, - 1 ) === $family[0] ) {
+					$family = trim( substr( $family, 1, - 1 ) );
+				}
 
 				return $family !== '' ? $family : null;
 			},
