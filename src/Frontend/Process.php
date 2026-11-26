@@ -241,12 +241,12 @@ class Process {
 					$file_path = str_replace( OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, apply_filters( 'omgf_frontend_process_url', $url ) );
 
 					// An extra check, because people tend to forget to flush their caches when changing fonts, etc.
-					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) || in_array( $url, $urls ) ) {
+					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) ) {
 						continue; // @codeCoverageIgnore
 					}
 
-					// Stylesheets with different handles can contain the same font file, e.g. when they inherited their
-					// settings from the same handle.
+					// The same file can be used by multiple variants (of a variable font), or by stylesheets with different
+					// handles, e.g. when they inherited their settings from the same handle.
 					$file_key = basename( $file_path ) . ':' . ( file_exists( $file_path ) ? filesize( $file_path ) : '' );
 
 					if ( in_array( $file_key, $files, true ) ) {
