@@ -65,6 +65,7 @@ class FontFaceTest extends TestCase {
 		$this->assertSame( '400', FontFace::weight( '@font-face { font-weight: "700"; }' ) );
 		$this->assertSame( '400', FontFace::weight( '@font-face { font-weight: 100 200 300; }' ) );
 		$this->assertSame( '1000', FontFace::weight( '@font-face { font-weight: 1000; font-weight: 1001; font-weight: 0; }' ) );
+		$this->assertSame( '700 450.5', FontFace::weight( '@font-face { font-weight: +7e2 450.50; }' ) );
 		$this->assertSame( '400', FontFace::weight( '@font-face { font-family: A; }' ) );
 	}
 
@@ -89,5 +90,8 @@ class FontFaceTest extends TestCase {
 		$this->assertSame( 'a.ttf', FontFace::src( '@font-face { src: local("A"), URL( a.ttf ); }' ) );
 		$this->assertSame( 'b.woff2', FontFace::src( '@font-face { src: url(a.woff2); src: url("b.woff2"); }' ) );
 		$this->assertSame( '', FontFace::src( '@font-face { src: local(A); }' ) );
+		// Semicolons in parentheses don't end the value, and strings aren't URLs.
+		$this->assertSame( 'data:font/woff2;base64,AAAA', FontFace::src( '@font-face { src: url(data:font/woff2;base64,AAAA) format("woff2"); }' ) );
+		$this->assertSame( 'real.woff2', FontFace::src( '@font-face { src: local("url(fake.woff2)"), url(real.woff2); }' ) );
 	}
 }

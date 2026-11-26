@@ -78,9 +78,10 @@ class FontFace {
 	 * @return string|null Null if $font_face has no valid value.
 	 */
 	public static function descriptor( $font_face, $descriptor, $validator = null, $strings = true ) {
-		// Strings are skipped, so a descriptor's name inside a string isn't matched.
+		// Strings are skipped, so a descriptor's name inside a string isn't matched. A value can contain a semicolon inside
+		// a string or parentheses, e.g. in a data URL.
 		preg_match_all(
-			'/(?:' . self::STRING_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])' . preg_quote( $descriptor, '/' ) . '\s*:\s*((?:' . self::STRING_PATTERN . '|[^;}"\'])+)/i',
+			'/(?:' . self::STRING_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])' . preg_quote( $descriptor, '/' ) . '\s*:\s*((?:' . self::STRING_PATTERN . '|\((?:' . self::STRING_PATTERN . '|[^()"\'])*\)|[^;}"\'(])+)/i',
 			self::mask_comments_and_strings( $font_face, $strings ),
 			$matches
 		);
@@ -134,9 +135,12 @@ class FontFace {
 				foreach ( $weights as &$weight ) {
 					$weight = self::WEIGHT_KEYWORDS[ $weight ] ?? $weight;
 
-					if ( ! preg_match( '/^\d+(?:\.\d+)?$/', $weight ) || $weight < 1 || $weight > 1000 ) {
+					if ( ! preg_match( '/^\+?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/', $weight ) || $weight < 1 || $weight > 1000 ) {
 						return null;
 					}
+
+					// E.g. +7e2 and 700.0 are the same weight.
+					$weight = (string) ( (float) $weight );
 				}
 
 				unset( $weight );
@@ -177,7 +181,14 @@ class FontFace {
 			$font_face,
 			'src',
 			function ( $value ) {
-				return preg_match( '/(?<![\w-])url\(\s*([\'"]?)([^\'")\s]+)\1\s*\)/i', $value, $url ) ? $url[2] : null;
+				// Strings are skipped, so e.g. a local() font name isn't read as a URL.
+				$pattern = '/(?:' . self::STRING_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])url\(\s*(?:(' . self::STRING_PATTERN . ')|([^\'")\s]+))\s*\)/i';
+
+				if ( ! preg_match( $pattern, $value, $url ) ) {
+					return null;
+				}
+
+				return ( $url[2] ?? '' ) !== '' ? $url[2] : substr( $url[1], 1, - 1 );
 			},
 			false
 		);
