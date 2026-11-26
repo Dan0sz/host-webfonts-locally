@@ -256,7 +256,7 @@ class Optimize {
 		$written = @file_put_contents( $local_file, $stylesheet );
 		$length  = strlen( $stylesheet );
 
-		/** @codeCoverageIgnoreStart */
+		// @codeCoverageIgnoreStart
 		if ( $written === false || $written !== $length ) {
 			OMGF::debug( __( 'Failed to write stylesheet:', 'host-webfonts-local' ) . ' ' . $local_file );
 			OMGF::delete( $local_file );
@@ -273,7 +273,7 @@ class Optimize {
 
 			return '';
 		}
-		/** @codeCoverageIgnoreEnd */
+		// @codeCoverageIgnoreEnd
 
 		/**
 		 * @var object $fonts_bak is used to list the fonts in wp-admin (and for loading preloads in the frontend.)
@@ -318,9 +318,8 @@ class Optimize {
 
 		/**
 		 * @since v6.0.6 Fallback for already locally hosted stylesheets e.g., used by Elementor, etc.
-		 *
-		 * @codeCoverageIgnoreStart
 		 */
+		// @codeCoverageIgnoreStart
 		if ( str_contains( $url, get_home_url() ) ) {
 			$path = str_replace( get_home_url(), ABSPATH, $url );
 
@@ -328,7 +327,7 @@ class Optimize {
 				return file_get_contents( $path );
 			}
 		}
-		/** @codeCoverageIgnoreEnd */
+		// @codeCoverageIgnoreEnd
 
 		/**
 		 * @since v6.3.12 Use wp_safe_remote_get() so internal/private hosts are rejected even if the host
