@@ -262,6 +262,43 @@ class HelperTest extends TestCase {
 	}
 
 	/**
+	 * @see Helper::clean()
+	 * @return void
+	 */
+	public function testClean() {
+		$input = [
+			'url'    => 'https://fonts.googleapis.com/css2?family=Roboto%7CNoto+Serif&x=<b>',
+			'text'   => '<b>Roboto</b>%20Slab',
+			'slash'  => "O\\'Reilly",
+			'nested' => [ 'deeper' => ' <i>value</i> ' ],
+			'int'    => 3,
+		];
+
+		$this->assertSame(
+			[
+				'url'    => 'https://fonts.googleapis.com/css2?family=Roboto%7CNoto+Serif&x=b',
+				'text'   => 'Roboto Slab',
+				'slash'  => "O'Reilly",
+				'nested' => [ 'deeper' => 'value' ],
+				'int'    => '3',
+			],
+			OMGF::clean( $input )
+		);
+
+		$this->assertSame(
+			[
+				// sanitize_text_field() removes percent-encoded characters.
+				'url'    => 'https://fonts.googleapis.com/css2?family=RobotoNoto+Serif&x=',
+				'text'   => 'RobotoSlab',
+				'slash'  => "O'Reilly",
+				'nested' => [ 'deeper' => 'value' ],
+				'int'    => '3',
+			],
+			OMGF::clean( $input, false )
+		);
+	}
+
+	/**
 	 * @see Helper::delete()
 	 * @return void
 	 */

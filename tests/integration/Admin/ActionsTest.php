@@ -136,6 +136,10 @@ class ActionsTest extends TestCase {
 
 		wp_mkdir_p( OMGF_UPLOAD_DIR . '/test_cache_key' );
 		file_put_contents( OMGF_UPLOAD_DIR . '/test_cache_key/dummy.file', 'test' );
+		// A file without an extension and a subdirectory are removed too.
+		file_put_contents( OMGF_UPLOAD_DIR . '/test_cache_key/LICENSE', 'test' );
+		wp_mkdir_p( OMGF_UPLOAD_DIR . '/test_cache_key/sub' );
+		file_put_contents( OMGF_UPLOAD_DIR . '/test_cache_key/sub/font.woff2', 'test' );
 
 		add_filter( 'omgf_setting_cache_keys', [ $this, 'addTestCacheKey' ] );
 

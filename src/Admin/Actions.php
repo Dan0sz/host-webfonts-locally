@@ -59,42 +59,8 @@ class Actions {
 				continue; // @codeCoverageIgnore
 			}
 
-			$this->delete_files( $dir );
-
-			if ( $this->dir_is_empty( $dir ) ) {
-				rmdir( OMGF_UPLOAD_DIR . '/' . $dir_to_remove );
-			}
+			OMGF::delete( $dir );
 		}
-	}
-
-	/**
-	 * Delete files from $dir.
-	 *
-	 * @param mixed $dir
-	 *
-	 * @return void
-	 */
-	private function delete_files( $dir ) {
-		array_map( 'unlink', glob( $dir . '/*.*' ) );
-	}
-
-	/**
-	 * Check if directory is empty.
-	 * This works because a new FilesystemIterator will initially point to the first file in the folder -
-	 * if there are no files in the folder, valid() will return false
-	 *
-	 * @param mixed $dir
-	 *
-	 * @return bool
-	 */
-	private function dir_is_empty( $dir ) {
-		if ( ! file_exists( $dir ) ) {
-			return false; // @codeCoverageIgnore
-		}
-
-		$iterator = new \FilesystemIterator( $dir );
-
-		return ! $iterator->valid();
 	}
 
 	/**
@@ -178,7 +144,7 @@ class Actions {
 			return; // @codeCoverageIgnore
 		}
 
-		$updated_settings = $this->clean( $_POST );
+		$updated_settings = OMGF::clean( $_POST, false );
 
 		/**
 		 * These options are always stored as (nested) arrays, keyed by the font handle. A scalar value for
@@ -269,23 +235,5 @@ class Actions {
 			wp_safe_redirect( $goback ); // @codeCoverageIgnore
 			exit; // @codeCoverageIgnore
 		}
-	}
-
-	/**
-	 * Clean variables using `sanitize_text_field`.
-	 * Arrays are cleaned recursively. Non-scalar values are ignored.
-	 *
-	 * @since 5.5.7
-	 *
-	 * @param string|array $var Sanitize the variable.
-	 *
-	 * @return string|array
-	 */
-	private function clean( $var ) {
-		if ( is_array( $var ) ) {
-			return array_map( [ $this, 'clean' ], $var );
-		}
-
-		return is_scalar( $var ) ? sanitize_text_field( wp_unslash( $var ) ) : $var;
 	}
 }

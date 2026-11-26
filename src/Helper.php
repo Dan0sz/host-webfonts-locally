@@ -344,6 +344,40 @@ class Helper {
 	}
 
 	/**
+	 * Sanitizes $var. Arrays are sanitized recursively and other non-scalar values are returned unchanged.
+	 *
+	 * @param mixed $var
+	 * @param bool  $urls Whether to sanitize values with a scheme as a URL. Other values are urldecoded first, because
+	 *                    sanitize_text_field() removes percent-encoded characters.
+	 *
+	 * @return mixed
+	 */
+	public static function clean( $var, $urls = true ) {
+		if ( is_array( $var ) ) {
+			return array_map(
+				function ( $value ) use ( $urls ) {
+					return self::clean( $value, $urls );
+				},
+				$var
+			);
+		}
+
+		if ( ! is_scalar( $var ) ) {
+			return $var; // @codeCoverageIgnore
+		}
+
+		if ( ! $urls ) {
+			return sanitize_text_field( wp_unslash( $var ) );
+		}
+
+		if ( isset( wp_parse_url( $var )['scheme'] ) ) {
+			return esc_url_raw( wp_unslash( $var ) );
+		}
+
+		return sanitize_text_field( wp_unslash( urldecode( $var ) ) );
+	}
+
+	/**
 	 * Delete a file or directory from the filesystem.
 	 *
 	 * @param $entry
@@ -362,7 +396,14 @@ class Helper {
 		}
 
 		if ( is_dir( $entry ) ) {
-			$file    = new \FilesystemIterator( $entry );
+			try {
+				$file = new \FilesystemIterator( $entry );
+			} catch ( \UnexpectedValueException $e ) {
+				self::debug( 'Couldn\'t open directory: ' . $entry ); // @codeCoverageIgnore
+
+				return false; // @codeCoverageIgnore
+			}
+
 			$success = true;
 
 			// If dir is empty, valid() returns false.
@@ -570,8 +611,7 @@ class Helper {
 	 */
 	public static function cache_keys( $force_refresh = false ) {
 		if ( empty( self::$cache_keys ) || $force_refresh ) {
-			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
-			self::$cache_keys = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) ) );
+			self::$cache_keys = self::split_list( self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) );
 		}
 
 		/**
@@ -603,38 +643,54 @@ class Helper {
 	 * @codeCoverageIgnore
 	 */
 	public static function admin_optimized_fonts( $maybe_add = [], $force_add = false ) {
-		/**
-		 * Get a fresh copy from the database if self::$optimized_fonts is empty|null|false (on 1st run)
-		 */
-		if ( empty( self::$admin_optimized_fonts ) ) {
-			self::$admin_optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS, [] );
+		self::$admin_optimized_fonts = self::load_fonts( self::$admin_optimized_fonts, Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS );
+		self::$admin_optimized_fonts = self::maybe_add_fonts( self::$admin_optimized_fonts, $maybe_add, $force_add );
+
+		return apply_filters( 'omgf_filter_admin_optimized_fonts', self::$admin_optimized_fonts ?: [] );
+	}
+
+	/**
+	 * Returns $fonts, or a fresh copy of $option from the database if $fonts is empty (on 1st run).
+	 *
+	 * @param mixed  $fonts
+	 * @param string $option
+	 *
+	 * @return array
+	 */
+	private static function load_fonts( $fonts, $option ) {
+		if ( empty( $fonts ) ) {
+			$fonts = self::get_option( $option, [] );
 		}
 
 		/**
 		 * get_option() should take care of this, but sometimes it doesn't.
-		 * @since v4.5.6
 		 */
-		if ( is_string( self::$admin_optimized_fonts ) && self::$admin_optimized_fonts !== '' ) {
-			self::$admin_optimized_fonts = self::maybe_unserialize( self::$admin_optimized_fonts ); // @codeCoverageIgnore
+		if ( is_string( $fonts ) && $fonts !== '' ) {
+			$fonts = self::maybe_unserialize( $fonts ); // @codeCoverageIgnore
 		}
 
 		/**
 		 * A corrupted value in the database (e.g. a string that can't be unserialized) makes get_option() return
-		 * false or a string, which would cause a fatal error in array_merge() below. Treat it as empty instead.
+		 * false or a string, which would cause a fatal error in array_merge(). Treat it as empty instead.
 		 */
-		if ( ! is_array( self::$admin_optimized_fonts ) ) {
-			self::$admin_optimized_fonts = [];
+		return is_array( $fonts ) ? $fonts : [];
+	}
+
+	/**
+	 * Adds $maybe_add to $fonts if its stylesheet isn't in $fonts yet, or if $force_add is true.
+	 *
+	 * @param array $fonts
+	 * @param array $maybe_add
+	 * @param bool  $force_add
+	 *
+	 * @return array
+	 */
+	private static function maybe_add_fonts( $fonts, $maybe_add, $force_add ) {
+		if ( ! empty( $maybe_add ) && ( ! isset( $fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
+			$fonts = array_merge( $fonts, $maybe_add );
 		}
 
-		/**
-		 * If $maybe_add doesn't exist in the cache layer yet, add it.
-		 * @since v4.5.7
-		 */
-		if ( ! empty( $maybe_add ) && ( ! isset( self::$admin_optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
-			self::$admin_optimized_fonts = array_merge( self::$admin_optimized_fonts, $maybe_add );
-		}
-
-		return apply_filters( 'omgf_filter_admin_optimized_fonts', self::$admin_optimized_fonts ?: [] );
+		return $fonts;
 	}
 
 	/**
@@ -806,6 +862,45 @@ class Helper {
 	}
 
 	/**
+	 * Passes the value of each setting in $settings to $callback and saves what it returns, if that's different.
+	 *
+	 * @param array    $settings [ option name => (bool) whether it's stored as a comma-separated string ]
+	 * @param callable $callback Receives the value (comma-separated strings as a list) and whether it's comma-separated.
+	 *
+	 * @return void
+	 */
+	private static function map_stylesheet_settings( $settings, $callback ) {
+		foreach ( $settings as $option => $comma_separated ) {
+			$value = self::get_option( $option, $comma_separated ? '' : [] );
+
+			if ( $comma_separated ) {
+				$value = self::split_list( $value );
+			}
+
+			if ( ! is_array( $value ) ) {
+				continue;
+			}
+
+			$new_value = $callback( $value, $comma_separated );
+
+			if ( $new_value !== $value ) {
+				self::update_option( $option, $comma_separated ? implode( ',', $new_value ) : $new_value );
+			}
+		}
+	}
+
+	/**
+	 * Splits a comma-separated string into a list without empty elements.
+	 *
+	 * @param mixed $value
+	 *
+	 * @return array
+	 */
+	private static function split_list( $value ) {
+		return array_filter( explode( ',', (string) $value ) );
+	}
+
+	/**
 	 * Copies the settings of the first legacy handle which has them to $handle, if $handle wasn't optimized and doesn't
 	 * have settings yet, e.g. when an update changed the way handles are generated.
 	 *
@@ -826,42 +921,37 @@ class Helper {
 
 		$legacy = array_intersect( $legacy_handles, array_keys( self::optimized_fonts() ) );
 
-		foreach ( self::stylesheet_settings() as $option => $comma_separated ) {
-			$value = self::get_option( $option, $comma_separated ? '' : [] );
+		self::map_stylesheet_settings(
+			self::stylesheet_settings(),
+			function ( $value, $comma_separated ) use ( $handle, $legacy_handles, &$legacy ) {
+				if ( $comma_separated ) {
+					$found  = array_intersect( $legacy_handles, $value );
+					$legacy = array_merge( $legacy, $found );
 
-			if ( $comma_separated ) {
-				$handles = array_filter( explode( ',', (string) $value ) );
-				$legacy  = array_merge( $legacy, array_intersect( $legacy_handles, $handles ) );
+					if ( $found && ! in_array( $handle, $value, true ) ) {
+						$value[] = $handle;
+					}
 
-				if ( ! in_array( $handle, $handles, true ) && array_intersect( $legacy_handles, $handles ) ) {
-					$handles[] = $handle;
-
-					self::update_option( $option, implode( ',', $handles ) );
+					return $value;
 				}
 
-				continue;
-			}
+				$legacy = array_merge( $legacy, array_keys( array_intersect_key( $value, array_flip( $legacy_handles ) ) ) );
 
-			if ( ! is_array( $value ) ) {
-				continue;
-			}
-
-			$legacy = array_merge( $legacy, array_keys( array_intersect_key( $value, array_flip( $legacy_handles ) ) ) );
-
-			if ( isset( $value[ $handle ] ) ) {
-				continue;
-			}
-
-			foreach ( $legacy_handles as $legacy_handle ) {
-				if ( ! empty( $value[ $legacy_handle ] ) ) {
-					$value[ $handle ] = $value[ $legacy_handle ];
-
-					self::update_option( $option, $value );
-
-					break;
+				if ( isset( $value[ $handle ] ) ) {
+					return $value;
 				}
+
+				foreach ( $legacy_handles as $legacy_handle ) {
+					if ( ! empty( $value[ $legacy_handle ] ) ) {
+						$value[ $handle ] = $value[ $legacy_handle ];
+
+						break;
+					}
+				}
+
+				return $value;
 			}
-		}
+		);
 
 		/**
 		 * Legacy handles aren't generated anymore. Their files and settings are kept, because pages in a page cache might
@@ -895,7 +985,7 @@ class Helper {
 		 * Don't use cache_keys(), because it falls back to all handles if no cache keys are saved. Don't use
 		 * get_cache_key() either, because it would also match e.g. the cache key of handle-12 for handle-1.
 		 */
-		$cache_keys     = array_filter( explode( ',', (string) self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) ) );
+		$cache_keys     = self::split_list( self::get_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS ) );
 		$handles        = array_unique( array_merge( [ $handle ], array_map( 'strval', array_keys( self::admin_optimized_fonts() ) ) ) );
 		$own_cache_keys = array_filter(
 			$cache_keys,
@@ -917,17 +1007,27 @@ class Helper {
 		);
 
 		$deleted = false;
+		$failed  = [];
 
-		foreach ( array_merge( [ $handle ], $own_cache_keys ) as $dir ) {
-			$dir = sanitize_title_with_dashes( $dir );
+		foreach ( array_merge( [ $handle ], $own_cache_keys ) as $cache_key ) {
+			$dir = sanitize_title_with_dashes( $cache_key );
 
-			if ( $dir && file_exists( OMGF_UPLOAD_DIR . '/' . $dir ) ) {
-				$deleted = self::delete( OMGF_UPLOAD_DIR . '/' . $dir ) || $deleted;
+			if ( ! $dir || ! file_exists( OMGF_UPLOAD_DIR . '/' . $dir ) ) {
+				continue;
+			}
+
+			if ( self::delete( OMGF_UPLOAD_DIR . '/' . $dir ) ) {
+				$deleted = true;
+			} else {
+				// Keep its cache key, so it can be removed later.
+				$failed[] = $cache_key; // @codeCoverageIgnore
 			}
 		}
 
-		if ( ! empty( $own_cache_keys ) ) {
-			self::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, implode( ',', array_diff( $cache_keys, $own_cache_keys ) ) );
+		$removed_keys = array_diff( $own_cache_keys, $failed );
+
+		if ( ! empty( $removed_keys ) ) {
+			self::update_option( Settings::OMGF_OPTIMIZE_SETTING_CACHE_KEYS, implode( ',', array_diff( $cache_keys, $removed_keys ) ) );
 		}
 
 		$superseded = self::superseded_stylesheets();
@@ -944,25 +1044,18 @@ class Helper {
 			self::stylesheet_settings()
 		);
 
-		foreach ( $settings as $option => $comma_separated ) {
-			$value = self::get_option( $option, $comma_separated ? '' : [] );
-
-			if ( $comma_separated ) {
-				$handles = array_filter( explode( ',', (string) $value ) );
-
-				if ( in_array( $handle, $handles, true ) ) {
-					self::update_option( $option, implode( ',', array_diff( $handles, [ $handle ] ) ) );
+		self::map_stylesheet_settings(
+			$settings,
+			function ( $value, $comma_separated ) use ( $handle ) {
+				if ( $comma_separated ) {
+					return array_diff( $value, [ $handle ] );
 				}
 
-				continue;
-			}
-
-			if ( is_array( $value ) && isset( $value[ $handle ] ) ) {
 				unset( $value[ $handle ] );
 
-				self::update_option( $option, $value );
+				return $value;
 			}
-		}
+		);
 
 		/**
 		 * Allows add-ons to clean up their own files and data for this stylesheet.
@@ -993,28 +1086,7 @@ class Helper {
 	 * @codeCoverageIgnore
 	 */
 	public static function optimized_fonts( $maybe_add = [], $force_add = false ) {
-		/**
-		 * Get a fresh copy from the database if self::$optimized_fonts is empty|null|false (on 1st run)
-		 */
-		if ( empty( self::$optimized_fonts ) ) {
-			self::$optimized_fonts = self::get_option( Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND, [] );
-		}
-
-		/**
-		 * get_option() should take care of this, but sometimes it doesn't.
-		 * @since v4.5.6
-		 */
-		if ( is_string( self::$optimized_fonts ) && self::$optimized_fonts !== '' ) {
-			self::$optimized_fonts = self::maybe_unserialize( self::$optimized_fonts ); // @codeCoverageIgnore
-		}
-
-		/**
-		 * A corrupted value in the database (e.g. a string that can't be unserialized) makes get_option() return
-		 * false or a string, which would cause a fatal error in array_merge() below. Treat it as empty instead.
-		 */
-		if ( ! is_array( self::$optimized_fonts ) ) {
-			self::$optimized_fonts = [];
-		}
+		self::$optimized_fonts = self::load_fonts( self::$optimized_fonts, Settings::OMGF_OPTIMIZE_SETTING_OPTIMIZED_FONTS_FRONTEND );
 
 		/**
 		 * Fallback to the original Optimized Fonts table.
@@ -1023,13 +1095,7 @@ class Helper {
 			self::$optimized_fonts = self::admin_optimized_fonts();
 		}
 
-		/**
-		 * If $maybe_add doesn't exist in the cache layer yet, add it.
-		 * @since v4.5.7
-		 */
-		if ( ! empty( $maybe_add ) && ( ! isset( self::$optimized_fonts[ key( $maybe_add ) ] ) || $force_add ) ) {
-			self::$optimized_fonts = array_merge( self::$optimized_fonts, $maybe_add );
-		}
+		self::$optimized_fonts = self::maybe_add_fonts( self::$optimized_fonts, $maybe_add, $force_add );
 
 		self::$optimized_fonts = apply_filters( 'omgf_filter_optimized_fonts', self::$optimized_fonts ?: [] );
 
@@ -1070,16 +1136,6 @@ class Helper {
 	}
 
 	/**
-	 * @return void
-	 * @codeCoverageIgnore
-	 */
-	public static function reset_static_properties() {
-		self::$cache_keys            = [];
-		self::$admin_optimized_fonts = [];
-		self::$optimized_fonts       = [];
-	}
-
-	/**
 	 * @return array
 	 *
 	 * @codeCoverageIgnore
@@ -1099,8 +1155,7 @@ class Helper {
 	 */
 	public static function unloaded_stylesheets() {
 		if ( empty( self::$unloaded_stylesheets ) ) {
-			// Returns a string with one empty element if the option is empty, that's why we array_filter it.
-			self::$unloaded_stylesheets = array_filter( explode( ',', self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) ) );
+			self::$unloaded_stylesheets = self::split_list( self::get_option( Settings::OMGF_OPTIMIZE_SETTING_UNLOAD_STYLESHEETS ) );
 		}
 
 		return apply_filters( 'omgf_filter_unloaded_stylesheets', self::$unloaded_stylesheets );
