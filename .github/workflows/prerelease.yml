@@ -5,8 +5,13 @@ on:
     types: [ prereleased ]
 
 jobs:
+  update:
+    name: Test update
+    uses: ./.github/workflows/update.yml
+
   build:
     name: Build plugin asset
+    needs: update
     runs-on: ubuntu-latest
 
     steps:

@@ -5,8 +5,13 @@ on:
     types: [ released ]
 
 jobs:
+  update:
+    name: Test update
+    uses: ./.github/workflows/update.yml
+
   tag:
     name: Release plugin
+    needs: update
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
