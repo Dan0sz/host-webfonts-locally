@@ -187,7 +187,7 @@ class HelperTest extends TestCase {
 
 			add_filter( 'omgf_cache_keys', $set_cache_keys );
 			// Reset static properties to ensure Helper::cache_keys() reads from the "database".
-			Helper::reset_static_properties();
+			Helper::reset_cache();
 			Helper::cache_keys( true ); // Force reload from mocked get_option()
 
 			$this->assertDirectoryExists( $third_party_dir );
