@@ -190,6 +190,60 @@ class ActionsTest extends TestCase {
 			}
 		}
 	}
+  
+	/**
+	 * @dataProvider staleCacheTransitions
+	 * @see Actions::clean_stale_cache()
+	 */
+	public function testCleanStaleCacheTransitions( $old_key, $new_key, $removed ) {
+		$other = 'cache-boundary-font-12';
+		$dirs = [ $old_key, $other ];
+		$cache_keys = function () use ( $old_key, $other ) {
+			return [ $other, $old_key ];
+		};
+		$fonts = function () {
+			return array_fill_keys( [ 'cache-boundary-font', 'cache-boundary-font-12' ], [] );
+		};
+
+		foreach ( $dirs as $dir ) {
+			wp_mkdir_p( OMGF_UPLOAD_DIR . "/$dir" );
+			file_put_contents( OMGF_UPLOAD_DIR . "/$dir/dummy.file", 'keep or remove' );
+		}
+		add_filter( 'omgf_cache_keys', $cache_keys );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+		OMGF::reset_cache();
+		$actions = new Actions();
+
+		try {
+			$actions->clean_stale_cache( '', "$other,$new_key" );
+
+			$this->assertFileExists( OMGF_UPLOAD_DIR . "/$other/dummy.file" );
+			if ( $removed ) {
+				$this->assertDirectoryDoesNotExist( OMGF_UPLOAD_DIR . "/$old_key" );
+			} else {
+				$this->assertFileExists( OMGF_UPLOAD_DIR . "/$old_key/dummy.file" );
+			}
+		} finally {
+			remove_action( 'omgf_pre_update_setting_cache_keys', [ $actions, 'clean_stale_cache' ], 10 );
+			remove_filter( 'omgf_cache_keys', $cache_keys );
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $fonts );
+			OMGF::reset_cache();
+			foreach ( $dirs as $dir ) {
+				OMGF::delete( OMGF_UPLOAD_DIR . "/$dir" );
+			}
+		}
+	}
+
+	public static function staleCacheTransitions() {
+		return [
+			'new modification'   => [ 'cache-boundary-font', 'cache-boundary-font-mod-new12', true ],
+			'replace modified'   => [ 'cache-boundary-font-mod-old12', 'cache-boundary-font-mod-new12', true ],
+			'reset to default'   => [ 'cache-boundary-font-mod-old12', 'cache-boundary-font', true ],
+			'unchanged settings' => [ 'cache-boundary-font-mod-old12', 'cache-boundary-font-mod-old12', false ],
+			'unrelated new key'  => [ 'cache-boundary-font', 'unrelated-cache-font-mod-new12', false ],
+			'invalid suffix'     => [ 'cache-boundary-font', 'cache-boundary-font-mod-NEW12', false ],
+		];
+	}
 
 	/**
 	 * Rotating and resetting a key remove only the previous key's directory, including handles containing -mod-.
@@ -239,5 +293,4 @@ class ActionsTest extends TestCase {
 			OMGF::reset_cache();
 		}
 	}
-
 }

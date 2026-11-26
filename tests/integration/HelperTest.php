@@ -262,6 +262,98 @@ class HelperTest extends TestCase {
 	}
 
 	/**
+	 * @dataProvider cacheKeyBoundaries
+	 * @see OMGF::get_cache_key()
+	 */
+	public function testGetCacheKeyBoundaries( $keys, $handle, $expected ) {
+		$cache_keys = function () use ( $keys ) {
+			return $keys;
+		};
+
+		add_filter( 'omgf_cache_keys', $cache_keys );
+
+		try {
+			$this->assertSame( $expected, OMGF::get_cache_key( $handle ) );
+		} finally {
+			remove_filter( 'omgf_cache_keys', $cache_keys );
+			OMGF::reset_cache();
+		}
+	}
+
+	public static function cacheKeyBoundaries() {
+		return [
+			'exact key wins even when last' => [ [ 'boundary-font-mod-abc12', 'boundary-font' ], 'BOUNDARY-FONT', 'boundary-font' ],
+			'first modified key wins'       => [ [ 'boundary-font-mod-abc12', 'boundary-font-mod-def34' ], 'boundary-font', 'boundary-font-mod-abc12' ],
+			'empty keys'                    => [ [], 'boundary-font', '' ],
+			'empty suffix'                  => [ [ 'boundary-font-mod-' ], 'boundary-font', '' ],
+			'uppercase suffix'              => [ [ 'boundary-font-mod-ABC12' ], 'boundary-font', '' ],
+			'punctuation in suffix'         => [ [ 'boundary-font-mod-abc_12' ], 'boundary-font', '' ],
+			'nested modification'           => [ [ 'boundary-font-mod-abc12-mod-def34' ], 'boundary-font', '' ],
+			'embedded handle'               => [ [ 'other-boundary-font-mod-abc12' ], 'boundary-font', '' ],
+			'longer handle'                 => [ [ 'boundary-fonts-mod-abc12' ], 'boundary-font', '' ],
+			'numeric suffix'                => [ [ 'boundary-font-mod-0' ], 'boundary-font', 'boundary-font-mod-0' ],
+			'invalid candidate then valid'  => [ [ 'boundary-font-mod-', 'boundary-font-mod-abc12' ], 'boundary-font', 'boundary-font-mod-abc12' ],
+		];
+	}
+
+	/**
+	 * Admin-only and superseded handles must also reserve keys which look like random modifications.
+	 * @see OMGF::known_handles()
+	 */
+	public function testKnownHandlesCombinesSourcesAndNormalizesNumericHandles() {
+		$frontend = function () {
+			return [ 'shared-font' => [], 'frontend-font' => [], 123 => [] ];
+		};
+		$admin = function () {
+			return [ 'shared-font' => [], 'admin-font' => [] ];
+		};
+		$original = get_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [] );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $frontend );
+		add_filter( 'omgf_setting_optimized_fonts', $admin );
+		update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, [ 'admin-font', 'legacy-font', 123 ] );
+		OMGF::reset_cache();
+
+		try {
+			$this->assertSame( [ 'shared-font', 'frontend-font', '123', 'admin-font', 'legacy-font' ], OMGF::known_handles() );
+		} finally {
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $frontend );
+			remove_filter( 'omgf_setting_optimized_fonts', $admin );
+			update_option( Settings::OMGF_DB_SUPERSEDED_STYLESHEETS, $original );
+			OMGF::reset_cache();
+		}
+	}
+
+	/**
+	 * A handle present only in the admin table must not be used as another stylesheet's modified key.
+	 * @see OMGF::get_cache_key()
+	 */
+	public function testGetCacheKeyReservesAdminOnlyHandles() {
+		$keys = function () {
+			return [ 'reserved-font-mod-admin1', 'reserved-font-mod-own12' ];
+		};
+		$frontend = function () {
+			return [ 'reserved-font' => [] ];
+		};
+		$admin = function () {
+			return [ 'reserved-font-mod-admin1' => [] ];
+		};
+		add_filter( 'omgf_cache_keys', $keys );
+		add_filter( 'omgf_setting_optimized_fonts_frontend', $frontend );
+		add_filter( 'omgf_setting_optimized_fonts', $admin );
+		OMGF::reset_cache();
+
+		try {
+			$this->assertSame( 'reserved-font-mod-own12', OMGF::get_cache_key( 'reserved-font' ) );
+			$this->assertSame( 'reserved-font-mod-admin1', OMGF::get_cache_key( 'reserved-font-mod-admin1' ) );
+		} finally {
+			remove_filter( 'omgf_cache_keys', $keys );
+			remove_filter( 'omgf_setting_optimized_fonts_frontend', $frontend );
+			remove_filter( 'omgf_setting_optimized_fonts', $admin );
+			OMGF::reset_cache();
+		}
+	}
+
+	/**
 	 * @see Helper::delete()
 	 * @return void
 	 */
