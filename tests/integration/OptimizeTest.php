@@ -103,9 +103,8 @@ class OptimizeTest extends TestCase {
 
 	/**
 	 * Test @see \OMGF\Optimize::process() with a font family whose name has a special meaning in
-	 * a regular expression. It's interpolated into the pattern which matches a font family to its
-	 * @font-face statements, so it must be escaped: '.*' used to match every @font-face statement
-	 * in the stylesheet, and claimed the variants (and downloads) of every other font in it.
+	 * a regular expression. Font families are matched to their @font-face statements literally, and
+	 * only font families defined in a @font-face statement are processed.
 	 *
 	 * @return void
 	 */
@@ -128,9 +127,8 @@ class OptimizeTest extends TestCase {
 		$this->assertCount( 1, $processed[ $handle ][ 'roboto' ]->variants );
 		$this->assertCount( 1, $processed[ $handle ][ 'lato' ]->variants );
 
-		// The wildcard matches neither of them, so there's nothing to download for it.
-		$this->assertArrayHasKey( '.*', $processed[ $handle ] );
-		$this->assertCount( 0, $processed[ $handle ][ '.*' ]->variants );
+		// The wildcard isn't defined in a @font-face statement.
+		$this->assertArrayNotHasKey( '.*', $processed[ $handle ] );
 	}
 
 	/**
@@ -305,5 +303,38 @@ class OptimizeTest extends TestCase {
 		$this->assertSame( 1, substr_count( $stylesheet, '@font-face' ) );
 		$this->assertStringContainsString( 'font-weight: 300 800;', $stylesheet );
 		$this->assertStringNotContainsString( 'font-style: italic;', $stylesheet );
+	}
+
+	/**
+	 * Don't Load also works for @font-face statements without a comment, and keeps the other statements.
+	 *
+	 * @see \OMGF\Optimize::process()
+	 * @return void
+	 */
+	public function testProcessUnloadsFontFacesWithoutComment() {
+		$url    = 'https://daan.dev/tests/unload-no-comment.css';
+		$css    = "@font-face { font-family: Lato; font-weight: 700; src: url(https://fonts.gstatic.com/s/lato-700.woff2); }\n" .
+		          "@font-face { font-family: Lato; src: url(https://fonts.gstatic.com/s/lato-400.woff2); }\n" .
+		          "@font-face { font-family: Lato; font-style: oblique 10deg; src: url(https://fonts.gstatic.com/s/lato-oblique.woff2); }\n";
+		$unload = function () {
+			return [ 'test-unload-no-comment' => [ 'lato' => [ '700' => '700', '400oblique-10deg' => '400oblique-10deg' ] ] ];
+		};
+		$mock   = function ( $pre, $args, $request_url ) use ( $url, $css ) {
+			return $request_url === $url ? [ 'body' => $css, 'response' => [ 'code' => 200 ] ] : $pre;
+		};
+
+		add_filter( 'omgf_setting_unload_fonts', $unload );
+		add_filter( 'pre_http_request', $mock, 11, 3 );
+
+		try {
+			$class = new Optimize( $url, 'test-unload-no-comment', 'test-unload-no-comment', 'object' );
+			$fonts = $class->process()['test-unload-no-comment'];
+		} finally {
+			remove_filter( 'omgf_setting_unload_fonts', $unload );
+			remove_filter( 'pre_http_request', $mock, 11 );
+		}
+
+		$this->assertSame( [ '400' ], array_column( $fonts['lato']->variants, 'id' ) );
+		$this->assertSame( [ 'normal' ], array_column( $fonts['lato']->variants, 'fontStyle' ) );
 	}
 }
