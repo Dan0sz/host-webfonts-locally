@@ -113,16 +113,49 @@ class FontFace {
 			$font_face,
 			'font-family',
 			function ( $value ) {
-				$family = $value;
+				// One string, e.g. "Open Sans".
+				if ( preg_match( '/^(?:' . self::STRING_PATTERN . ')$/', $value ) ) {
+					$family = trim( self::unescape( substr( $value, 1, - 1 ) ) );
 
-				// Removes the quotes around it, if any.
-				if ( strlen( $family ) > 1 && in_array( $family[0], [ '"', "'" ], true ) && substr( $family, - 1 ) === $family[0] ) {
-					$family = trim( substr( $family, 1, - 1 ) );
+					return $family !== '' ? $family : null;
 				}
 
-				return $family !== '' ? $family : null;
+				// Or identifiers separated by whitespace, e.g. Open Sans. A list of families isn't valid here.
+				if ( ! preg_match( '/^-?(?:[_a-z]|[^\x00-\x7F]|\\\\.)(?:[\w-]|[^\x00-\x7F]|\\\\.)*(?:\s+-?(?:[_a-z]|[^\x00-\x7F]|\\\\.)(?:[\w-]|[^\x00-\x7F]|\\\\.)*)*$/i', $value ) ) {
+					return null;
+				}
+
+				return preg_replace( '/\s+/', ' ', self::unescape( $value ) );
 			},
 			false
+		);
+	}
+
+	/**
+	 * Decodes the escapes in a CSS string or identifier, e.g. \\' and \\27 become '.
+	 *
+	 * @param string $value
+	 *
+	 * @return string
+	 */
+	private static function unescape( $value ) {
+		return (string) preg_replace_callback(
+			'/\\\\(?:([0-9a-f]{1,6})(?:\r\n|[ \t\r\n\f])?|(\r\n|[\r\n\f])|(.))/is',
+			function ( $match ) {
+				if ( isset( $match[3] ) && $match[3] !== '' ) {
+					return $match[3];
+				}
+
+				// A line continuation.
+				if ( isset( $match[2] ) && $match[2] !== '' ) {
+					return '';
+				}
+
+				$code_point = hexdec( $match[1] );
+
+				return $code_point > 0 && $code_point <= 0x10FFFF ? html_entity_decode( '&#' . $code_point . ';', ENT_QUOTES | ENT_HTML5, 'UTF-8' ) : "\u{FFFD}";
+			},
+			$value
 		);
 	}
 
