@@ -5,13 +5,10 @@ name: Update
 # calls a method the previous version doesn't have, the update ends with a fatal error.
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '**.md'
   pull_request:
   workflow_dispatch:
+  # Called by the (pre)release workflows, so nothing is released if the update fails.
+  workflow_call:
 
 jobs:
   update:
