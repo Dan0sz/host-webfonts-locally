@@ -1,0 +1,144 @@
+name: Update
+
+# Updates the latest release on wordpress.org to this branch, like WordPress does. During an update, the request still
+# runs the previous version's code, while classes it hasn't loaded yet are loaded from the new version. If new code
+# calls a method the previous version doesn't have, the update ends with a fatal error.
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.5', '7.4' ]
+
+    name: "Update from latest release (PHP ${{ matrix.php }})"
+
+    services:
+      mysql:
+        image: mysql:8.0.29
+        env:
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: wp_update
+        ports:
+          - "3306:3306"
+        options: >-
+          --health-cmd "mysqladmin ping -psecret"
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      WP_DIR: ${{ github.workspace }}/../wordpress
+      SITE_URL: http://127.0.0.1:8080
+      PACKAGE: ${{ github.workspace }}/../host-webfonts-local.zip
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli, zip
+          tools: wp-cli
+          coverage: none
+
+      - name: Build plugin package
+        run: |
+          composer install --no-dev --no-interaction --no-progress
+          mkdir -p ../release/host-webfonts-local
+          rsync -rc --exclude-from=.distignore ./ ../release/host-webfonts-local/ --delete --delete-excluded
+          cd ../release && zip -qr "$PACKAGE" .
+
+      - name: Install WordPress with the latest release of OMGF
+        run: |
+          mkdir -p "$WP_DIR" && cd "$WP_DIR"
+          wp core download --quiet
+          wp config create --dbname=wp_update --dbuser=root --dbpass=secret --dbhost=127.0.0.1 --quiet
+          wp config set WP_DEBUG true --raw
+          wp config set WP_DEBUG_LOG true --raw
+          wp config set WP_DEBUG_DISPLAY false --raw
+          wp core install --url="$SITE_URL" --title=OMGF --admin_user=admin --admin_password=admin --admin_email=admin@example.org --skip-email --quiet
+          wp rewrite structure '/%postname%/' --quiet
+          wp plugin install host-webfonts-local --activate
+          echo "FROM_VERSION=$(wp plugin get host-webfonts-local --field=version)" >> "$GITHUB_ENV"
+
+      - name: Start web server
+        run: |
+          cd "$WP_DIR"
+          php -S 127.0.0.1:8080 > ../php-server.log 2>&1 &
+          for i in $(seq 1 20); do curl -s -o /dev/null "$SITE_URL" && break; sleep 1; done
+
+      - name: Visit the site with the latest release
+        run: |
+          curl -sf -o /dev/null "$SITE_URL/"
+          curl -sf -o /dev/null -c ../cookies.txt -d "log=admin&pwd=admin&testcookie=1" -b "wordpress_test_cookie=WP+Cookie+check" "$SITE_URL/wp-login.php"
+          curl -sf -o /dev/null -b ../cookies.txt "$SITE_URL/wp-admin/options-general.php?page=optimize-webfonts"
+
+      - name: Update to this branch
+        run: |
+          cd "$WP_DIR"
+          # Offer the package as an update of the installed release, so WordPress' own update routine is used.
+          mkdir -p wp-content/mu-plugins
+          cat > wp-content/mu-plugins/omgf-update.php <<'PHP'
+          <?php
+          add_filter( 'site_transient_update_plugins', function ( $transient ) {
+          	$transient = is_object( $transient ) ? $transient : new stdClass();
+          	$transient->response['host-webfonts-local/host-webfonts-local.php'] = (object) [
+          		'slug'        => 'host-webfonts-local',
+          		'plugin'      => 'host-webfonts-local/host-webfonts-local.php',
+          		'new_version' => '99.0.0',
+          		'package'     => getenv( 'PACKAGE' ),
+          	];
+
+          	return $transient;
+          }, PHP_INT_MAX );
+          PHP
+          echo "Updating from $FROM_VERSION"
+          wp plugin update host-webfonts-local 2>&1 | tee ../update.log
+          rm wp-content/mu-plugins/omgf-update.php
+
+      - name: Visit the site with this branch
+        run: |
+          curl -sf -o /dev/null "$SITE_URL/"
+          curl -sf -o /dev/null -b ../cookies.txt "$SITE_URL/wp-admin/options-general.php?page=optimize-webfonts"
+          curl -sf -o /dev/null "$SITE_URL/"
+
+      - name: Check for errors
+        run: |
+          cd "$WP_DIR"
+          failed=0
+
+          if [ -f .maintenance ]; then
+            echo "::error::The update left maintenance mode enabled."
+            failed=1
+          fi
+
+          if grep -qiE 'fatal error|critical error' ../update.log; then
+            echo "::error::The update from $FROM_VERSION ended with a fatal error."
+            failed=1
+          fi
+
+          if [ -f wp-content/debug.log ] && grep -q 'PHP Fatal error' wp-content/debug.log; then
+            echo "::error::Fatal errors were logged."
+            failed=1
+          fi
+
+          [ -f wp-content/debug.log ] && cat wp-content/debug.log
+
+          wp plugin get host-webfonts-local --fields=version,status
+
+          exit $failed
