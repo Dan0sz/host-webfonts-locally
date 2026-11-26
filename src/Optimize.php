@@ -267,7 +267,7 @@ class Optimize {
 					__( 'OMGF couldn\'t write the stylesheet %s. Make sure the uploads directory is writable.', 'host-webfonts-local' ),
 					esc_html( $local_file )
 				),
-				'omgf-write-stylesheet-failed',
+				'omgf-write-stylesheet-failed-' . md5( $local_file ),
 				'error'
 			);
 
