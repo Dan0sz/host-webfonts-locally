@@ -261,6 +261,16 @@ class Optimize {
 			OMGF::debug( __( 'Failed to write stylesheet:', 'host-webfonts-local' ) . ' ' . $local_file );
 			OMGF::delete( $local_file );
 
+			Notice::set_notice(
+				sprintf(
+				/* translators: %s: path to the stylesheet */
+					__( 'OMGF couldn\'t write the stylesheet %s. Make sure the uploads directory is writable.', 'host-webfonts-local' ),
+					esc_html( $local_file )
+				),
+				'omgf-write-stylesheet-failed',
+				'error'
+			);
+
 			return '';
 		}
 		/** @codeCoverageIgnoreEnd */
@@ -340,10 +350,18 @@ class Optimize {
 			]
 		);
 
+		if ( is_wp_error( $response ) ) {
+			$this->set_fetch_failed_notice( $url, $response->get_error_message() );
+
+			return '';
+		}
+
 		$code = wp_remote_retrieve_response_code( $response );
 
 		if ( $code !== 200 ) {
-			return ''; // @codeCoverageIgnore
+			$this->set_fetch_failed_notice( $url, 'HTTP ' . $code );
+
+			return '';
 		}
 
 		/**
@@ -352,10 +370,36 @@ class Optimize {
 		 *                shouldn't be parsed.
 		 */
 		if ( ! $this->is_stylesheet_response( $response ) ) {
-			return ''; // @codeCoverageIgnore
+			$this->set_fetch_failed_notice( $url, __( 'the response isn\'t a stylesheet', 'host-webfonts-local' ) );
+
+			return '';
 		}
 
 		return wp_remote_retrieve_body( $response );
+	}
+
+	/**
+	 * Tells the admin why a stylesheet couldn't be fetched, e.g. because the server can't reach the Google Fonts API.
+	 * Stylesheets are often fetched during a visitor's request, so it's shown on the next admin page load.
+	 *
+	 * @param string $url
+	 * @param string $error
+	 *
+	 * @return void
+	 */
+	private function set_fetch_failed_notice( $url, $error ) {
+		OMGF::debug( 'Fetching stylesheet failed: ' . $error );
+
+		Notice::set_notice(
+			sprintf(
+			/* translators: %1$s: stylesheet URL, %2$s: error message, e.g. cURL error 28: Connection timed out */
+				__( 'OMGF couldn\'t fetch the stylesheet %1$s: %2$s', 'host-webfonts-local' ),
+				esc_html( $url ),
+				esc_html( $error )
+			),
+			'omgf-fetch-stylesheet-failed',
+			'error'
+		);
 	}
 
 	/**

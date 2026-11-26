@@ -7,6 +7,7 @@
 
 namespace OMGF\Tests\Integration;
 
+use OMGF\Admin\Notice;
 use OMGF\Optimize;
 use OMGF\Tests\TestCase;
 use OMGF\Tests\Mocks\HttpClientMock;
@@ -305,5 +306,43 @@ class OptimizeTest extends TestCase {
 		$this->assertSame( 1, substr_count( $stylesheet, '@font-face' ) );
 		$this->assertStringContainsString( 'font-weight: 300 800;', $stylesheet );
 		$this->assertStringNotContainsString( 'font-style: italic;', $stylesheet );
+	}
+
+	/**
+	 * Test @see \OMGF\Optimize::process() when the stylesheet can't be fetched, e.g. because the server can't reach the
+	 * Google Fonts API. The admin is told why.
+	 *
+	 * @return void
+	 */
+	public function testProcessNotifiesWhenStylesheetCantBeFetched() {
+		$url       = 'https://fonts.googleapis.com/css?family=Fetch+Failed';
+		$responses = [
+			'cURL error 28: Connection timed out'  => new \WP_Error( 'http_request_failed', 'cURL error 28: Connection timed out' ),
+			'HTTP 403'                             => [ 'body' => 'Forbidden', 'response' => [ 'code' => 403 ] ],
+			'the response isn&#039;t a stylesheet' => [ 'body' => '<html></html>', 'headers' => [ 'content-type' => 'text/html' ], 'response' => [ 'code' => 200 ] ],
+		];
+		$response  = null;
+		$mock      = function ( $pre, $args, $request_url ) use ( $url, &$response ) {
+			return $request_url === $url ? $response : $pre;
+		};
+
+		add_filter( 'pre_http_request', $mock, 11, 3 );
+
+		try {
+			foreach ( $responses as $error => $response ) {
+				delete_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
+
+				$class = new Optimize( $url, 'test-fetch-failed', 'test-fetch-failed', 'object' );
+
+				$this->assertSame( '', $class->process(), $error );
+
+				$notices = get_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
+
+				$this->assertSame( "OMGF couldn't fetch the stylesheet $url: $error", $notices['all']['error']['omgf-fetch-stylesheet-failed'] ?? '' );
+			}
+		} finally {
+			remove_filter( 'pre_http_request', $mock, 11 );
+			delete_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
+		}
 	}
 }
