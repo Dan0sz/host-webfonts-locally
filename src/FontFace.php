@@ -78,8 +78,9 @@ class FontFace {
 	 * @return string|null Null if $font_face has no valid value.
 	 */
 	public static function descriptor( $font_face, $descriptor, $validator = null, $strings = true ) {
+		// Strings are skipped, so a descriptor's name inside a string isn't matched.
 		preg_match_all(
-			'/(?<![\w-])' . preg_quote( $descriptor, '/' ) . '\s*:\s*((?:' . self::STRING_PATTERN . '|[^;}"\'])+)/i',
+			'/(?:' . self::STRING_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])' . preg_quote( $descriptor, '/' ) . '\s*:\s*((?:' . self::STRING_PATTERN . '|[^;}"\'])+)/i',
 			self::mask_comments_and_strings( $font_face, $strings ),
 			$matches
 		);
@@ -117,7 +118,7 @@ class FontFace {
 	/**
 	 * @param string $font_face A @font-face statement.
 	 *
-	 * @return string One weight, or a range of two weights separated by a space, e.g. '300 800'. '400' if it has none.
+	 * @return string One weight from 1 to 1000, or a range of two separated by a space, e.g. '300 800'. '400' if it has none.
 	 */
 	public static function weight( $font_face ) {
 		$weight = self::descriptor(
@@ -133,7 +134,7 @@ class FontFace {
 				foreach ( $weights as &$weight ) {
 					$weight = self::WEIGHT_KEYWORDS[ $weight ] ?? $weight;
 
-					if ( ! preg_match( '/^\d+(?:\.\d+)?$/', $weight ) ) {
+					if ( ! preg_match( '/^\d+(?:\.\d+)?$/', $weight ) || $weight < 1 || $weight > 1000 ) {
 						return null;
 					}
 				}
