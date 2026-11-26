@@ -36,6 +36,11 @@ class FontFace {
 	const STRING_PATTERN = '"(?:[^"\\\\\r\n\f]++|' . self::ESCAPE_PATTERN . ')*+"|\'(?:[^\'\\\\\r\n\f]++|' . self::ESCAPE_PATTERN . ')*+\'';
 
 	/**
+	 * Parentheses and their contents, e.g. those of url().
+	 */
+	const PARENTHESES_PATTERN = '\((?:' . self::STRING_PATTERN . '|[^()"\'])*\)';
+
+	/**
 	 * Keywords of font-weight and the weights they stand for.
 	 */
 	const WEIGHT_KEYWORDS = [
@@ -78,10 +83,10 @@ class FontFace {
 	 * @return string|null Null if $font_face has no valid value.
 	 */
 	public static function descriptor( $font_face, $descriptor, $validator = null, $strings = true ) {
-		// Strings are skipped, so a descriptor's name inside a string isn't matched. A value can contain a semicolon inside
-		// a string or parentheses, e.g. in a data URL.
+		// Strings and parentheses are skipped, so a descriptor's name inside them, e.g. in a URL, isn't matched. A value can
+		// contain a semicolon inside them, e.g. in a data URL.
 		preg_match_all(
-			'/(?:' . self::STRING_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])' . preg_quote( $descriptor, '/' ) . '\s*:\s*((?:' . self::STRING_PATTERN . '|\((?:' . self::STRING_PATTERN . '|[^()"\'])*\)|[^;}"\'(])+)/i',
+			'/(?:' . self::STRING_PATTERN . '|' . self::PARENTHESES_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])' . preg_quote( $descriptor, '/' ) . '\s*:\s*((?:' . self::STRING_PATTERN . '|' . self::PARENTHESES_PATTERN . '|[^;}"\'(])+)/i',
 			self::mask_comments_and_strings( $font_face, $strings ),
 			$matches
 		);
@@ -184,8 +189,9 @@ class FontFace {
 				// Strings are skipped, so e.g. a local() font name isn't read as a URL.
 				$pattern = '/(?:' . self::STRING_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])url\(\s*(?:(' . self::STRING_PATTERN . ')|([^\'")\s]+))\s*\)/i';
 
+				// A later src without a url(), e.g. local() only, replaces an earlier one, too.
 				if ( ! preg_match( $pattern, $value, $url ) ) {
-					return null;
+					return '';
 				}
 
 				return ( $url[2] ?? '' ) !== '' ? $url[2] : substr( $url[1], 1, - 1 );

@@ -51,6 +51,7 @@ class FontFaceTest extends TestCase {
 		$this->assertSame( 'Lato', FontFace::family( "@font-face { font-family: /* 'Inter' */ 'Lato'; }" ) );
 		// A descriptor's name inside a string isn't a descriptor.
 		$this->assertSame( 'Lato', FontFace::family( '@font-face { font-family: Lato; src: local("font-family: Fake;"), url(a.woff2); }' ) );
+		$this->assertSame( 'Lato', FontFace::family( '@font-face { font-family: Lato; src: url(https://example.com/font-family:Fake;v=1.woff2); }' ) );
 		$this->assertSame( '', FontFace::family( '@font-face { font-weight: 400; }' ) );
 	}
 
@@ -92,6 +93,7 @@ class FontFaceTest extends TestCase {
 		$this->assertSame( '', FontFace::src( '@font-face { src: local(A); }' ) );
 		// Semicolons in parentheses don't end the value, and strings aren't URLs.
 		$this->assertSame( 'data:font/woff2;base64,AAAA', FontFace::src( '@font-face { src: url(data:font/woff2;base64,AAAA) format("woff2"); }' ) );
+		$this->assertSame( '', FontFace::src( '@font-face { src: url(old.woff2); src: local(A); }' ) );
 		$this->assertSame( 'real.woff2', FontFace::src( '@font-face { src: local("url(fake.woff2)"), url(real.woff2); }' ) );
 	}
 }
