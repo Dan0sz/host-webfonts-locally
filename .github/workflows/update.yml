@@ -108,6 +108,7 @@ jobs:
           }, PHP_INT_MAX );
           PHP
           echo "Updating from $FROM_VERSION"
+          set -o pipefail
           wp plugin update host-webfonts-local 2>&1 | tee ../update.log
           rm wp-content/mu-plugins/omgf-update.php
 
