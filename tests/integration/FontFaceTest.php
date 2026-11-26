@@ -109,6 +109,8 @@ class FontFaceTest extends TestCase {
 		// Semicolons in parentheses don't end the value, and strings aren't URLs.
 		$this->assertSame( 'data:font/woff2;base64,AAAA', FontFace::src( '@font-face { src: url(data:font/woff2;base64,AAAA) format("woff2"); }' ) );
 		$this->assertSame( '', FontFace::src( '@font-face { src: url(old.woff2); src: local(A); }' ) );
+		// Escapes are decoded.
+		$this->assertSame( 'https://fonts.gstatic.com/a.woff2', FontFace::src( '@font-face { src: url("https://fonts.gstatic.com/a\\2e woff2"); }' ) );
 		$this->assertSame( 'real.woff2', FontFace::src( '@font-face { src: local("url(fake.woff2)"), url(real.woff2); }' ) );
 	}
 }

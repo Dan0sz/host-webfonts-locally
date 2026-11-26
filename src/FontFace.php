@@ -262,7 +262,7 @@ class FontFace {
 					return '';
 				}
 
-				return ( $url[2] ?? '' ) !== '' ? $url[2] : substr( $url[1], 1, - 1 );
+				return self::unescape( ( $url[2] ?? '' ) !== '' ? $url[2] : substr( $url[1], 1, - 1 ) );
 			},
 			false
 		);

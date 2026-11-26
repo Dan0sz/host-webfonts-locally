@@ -337,4 +337,21 @@ class OptimizeTest extends TestCase {
 		$this->assertSame( [ '400' ], array_column( $fonts['lato']->variants, 'id' ) );
 		$this->assertSame( [ 'normal' ], array_column( $fonts['lato']->variants, 'fontStyle' ) );
 	}
+
+	/**
+	 * A brace inside a string or comment doesn't end a @font-face statement.
+	 *
+	 * @see \OMGF\Optimize::find_font_faces()
+	 * @return void
+	 */
+	public function testFindFontFacesIgnoresBracesInStringsAndComments() {
+		$optimize   = new Optimize( 'https://daan.dev/tests/braces.css', 'test-braces', 'test-braces', 'object' );
+		$method     = new \ReflectionMethod( $optimize, 'find_font_faces' );
+		$font_face  = "/* latin */\n@font-face { font-family: 'A}'; /* } */ src: url(\"https://fonts.gstatic.com/a}b.woff2\"); }";
+		$stylesheet = "$font_face\n@font-face { font-family: B; }";
+
+		$method->setAccessible( true );
+
+		$this->assertSame( [ $font_face, '@font-face { font-family: B; }' ], $method->invoke( $optimize, $stylesheet ) );
+	}
 }
