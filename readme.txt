@@ -86,6 +86,9 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 
 == Changelog ==
 
+= 6.5.2 =
+* Fixed: uninstalling OMGF left the downloaded fonts behind.
+
 = 6.5.1 =
 * Fixed: updating from an older version caused a critical error.
 * Fixed: condensed and expanded widths of variable fonts (e.g. used by Divi 5) were lost after optimization.
