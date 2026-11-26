@@ -52,6 +52,8 @@ class FontFaceTest extends TestCase {
 		// A descriptor's name inside a string isn't a descriptor.
 		$this->assertSame( 'Lato', FontFace::family( '@font-face { font-family: Lato; src: local("font-family: Fake;"), url(a.woff2); }' ) );
 		$this->assertSame( 'Lato', FontFace::family( '@font-face { font-family: Lato; src: url(https://example.com/font-family:Fake;v=1.woff2); }' ) );
+		$this->assertSame( 'Lato', FontFace::family( '@font-face { font-family: Lato; --note: font-family: Fake; }' ) );
+		$this->assertSame( 'Lato', FontFace::family( 'font-family:Lato' ) );
 		$this->assertSame( '', FontFace::family( '@font-face { font-weight: 400; }' ) );
 	}
 
@@ -77,6 +79,7 @@ class FontFaceTest extends TestCase {
 		$this->assertSame( 'italic', FontFace::style( '@font-face { font-style: Italic; }' ) );
 		$this->assertSame( 'oblique -10deg 20.5deg', FontFace::style( '@font-face { font-style: oblique  -10deg 20.5deg; }' ) );
 		$this->assertSame( 'italic', FontFace::style( '@font-face { font-style: italic; font-style: slanted; }' ) );
+		$this->assertSame( 'oblique 0.1turn', FontFace::style( '@font-face { font-style: oblique 0.1turn; }' ) );
 		$this->assertSame( 'normal', FontFace::style( '@font-face { font-family: A; }' ) );
 	}
 

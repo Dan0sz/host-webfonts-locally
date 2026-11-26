@@ -83,10 +83,10 @@ class FontFace {
 	 * @return string|null Null if $font_face has no valid value.
 	 */
 	public static function descriptor( $font_face, $descriptor, $validator = null, $strings = true ) {
-		// Strings and parentheses are skipped, so a descriptor's name inside them, e.g. in a URL, isn't matched. A value can
-		// contain a semicolon inside them, e.g. in a data URL.
+		// Only the start of a declaration is a descriptor's name, and strings and parentheses are skipped, so a name inside
+		// them, e.g. in a URL, isn't matched. A value can contain a semicolon inside them, e.g. in a data URL.
 		preg_match_all(
-			'/(?:' . self::STRING_PATTERN . '|' . self::PARENTHESES_PATTERN . ')(*SKIP)(*FAIL)|(?<![\w-])' . preg_quote( $descriptor, '/' ) . '\s*:\s*((?:' . self::STRING_PATTERN . '|' . self::PARENTHESES_PATTERN . '|[^;}"\'(])+)/i',
+			'/(?:' . self::STRING_PATTERN . '|' . self::PARENTHESES_PATTERN . ')(*SKIP)(*FAIL)|(?:^|[{;])\s*\K' . preg_quote( $descriptor, '/' ) . '\s*:\s*((?:' . self::STRING_PATTERN . '|' . self::PARENTHESES_PATTERN . '|[^;}"\'(])+)/i',
 			self::mask_comments_and_strings( $font_face, $strings ),
 			$matches
 		);
@@ -169,7 +169,7 @@ class FontFace {
 			function ( $value ) {
 				$value = preg_replace( '/\s+/', ' ', strtolower( $value ) );
 
-				return preg_match( '/^(?:normal|italic|oblique(?: -?\d*\.?\d+deg){0,2})$/', $value ) ? $value : null;
+				return preg_match( '/^(?:normal|italic|oblique(?: [+-]?\d*\.?\d+(?:deg|grad|rad|turn)){0,2})$/', $value ) ? $value : null;
 			}
 		);
 
