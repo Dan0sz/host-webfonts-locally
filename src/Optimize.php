@@ -324,7 +324,15 @@ class Optimize {
 			$path = str_replace( get_home_url(), ABSPATH, $url );
 
 			if ( file_exists( $path ) ) {
-				return file_get_contents( $path );
+				$stylesheet = file_get_contents( $path );
+
+				if ( $stylesheet === false ) {
+					$this->set_fetch_failed_notice( $url, __( 'the file isn\'t readable', 'host-webfonts-local' ) );
+
+					return '';
+				}
+
+				return $stylesheet;
 			}
 		}
 		// @codeCoverageIgnoreEnd
@@ -396,7 +404,7 @@ class Optimize {
 				esc_html( $url ),
 				esc_html( $error )
 			),
-			'omgf-fetch-stylesheet-failed',
+			'omgf-fetch-stylesheet-failed-' . md5( $url ),
 			'error'
 		);
 	}

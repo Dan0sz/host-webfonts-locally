@@ -338,7 +338,7 @@ class OptimizeTest extends TestCase {
 
 				$notices = get_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
 
-				$this->assertSame( "OMGF couldn't fetch the stylesheet $url: $error", $notices['all']['error']['omgf-fetch-stylesheet-failed'] ?? '' );
+				$this->assertSame( "OMGF couldn't fetch the stylesheet $url: $error", $notices['all']['error'][ 'omgf-fetch-stylesheet-failed-' . md5( $url ) ] ?? '' );
 			}
 		} finally {
 			remove_filter( 'pre_http_request', $mock, 11 );
