@@ -41,6 +41,16 @@ class FontFace {
 	const PARENTHESES_PATTERN = '\((?:' . self::STRING_PATTERN . '|[^()"\'])*\)';
 
 	/**
+	 * Angle units and the number of degrees in one.
+	 */
+	const ANGLE_UNITS = [
+		'deg'  => 1,
+		'grad' => 0.9,
+		'rad'  => 180 / M_PI,
+		'turn' => 360,
+	];
+
+	/**
 	 * Keywords of font-weight and the weights they stand for.
 	 */
 	const WEIGHT_KEYWORDS = [
@@ -207,7 +217,22 @@ class FontFace {
 			function ( $value ) {
 				$value = preg_replace( '/\s+/', ' ', strtolower( $value ) );
 
-				return preg_match( '/^(?:normal|italic|oblique(?: [+-]?\d*\.?\d+(?:deg|grad|rad|turn)){0,2})$/', $value ) ? $value : null;
+				if ( ! preg_match( '/^(?:normal|italic|oblique(?: [+-]?\d*\.?\d+(?:deg|grad|rad|turn)){0,2})$/', $value ) ) {
+					return null;
+				}
+
+				// An oblique angle is between -90deg and 90deg.
+				preg_match_all( '/([+-]?\d*\.?\d+)(deg|grad|rad|turn)/', $value, $angles, PREG_SET_ORDER );
+
+				foreach ( $angles as list( , $angle, $unit ) ) {
+					$degrees = (float) $angle * self::ANGLE_UNITS[ $unit ];
+
+					if ( $degrees < - 90 || $degrees > 90 ) {
+						return null;
+					}
+				}
+
+				return $value;
 			}
 		);
 

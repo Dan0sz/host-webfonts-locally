@@ -88,6 +88,8 @@ class FontFaceTest extends TestCase {
 		$this->assertSame( 'oblique -10deg 20.5deg', FontFace::style( '@font-face { font-style: oblique  -10deg 20.5deg; }' ) );
 		$this->assertSame( 'italic', FontFace::style( '@font-face { font-style: italic; font-style: slanted; }' ) );
 		$this->assertSame( 'oblique 0.1turn', FontFace::style( '@font-face { font-style: oblique 0.1turn; }' ) );
+		// An angle beyond 90deg is invalid.
+		$this->assertSame( 'italic', FontFace::style( '@font-face { font-style: italic; font-style: oblique 100deg; font-style: oblique -10deg 1.6rad; }' ) );
 		$this->assertSame( 'normal', FontFace::style( '@font-face { font-family: A; }' ) );
 	}
 
