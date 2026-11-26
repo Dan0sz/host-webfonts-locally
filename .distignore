@@ -5,10 +5,12 @@
 .gitmodules
 
 /.idea
+/.claude
 /.github
 /.storybook
 
 /bin
+/scripts
 /tests
 /node_modules
 /assets/src
@@ -33,6 +35,8 @@ readme.md
 phpcs.xml
 phpcs.ruleset.xml
 phpcs.xml.dist
+.phpcs.xml.dist
+.travis.yml
 CONTRIBUTING.md
 CODE_OF_CONDUCT.md
 contributing.md
