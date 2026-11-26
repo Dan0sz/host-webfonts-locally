@@ -120,6 +120,11 @@ jobs:
           cd "$WP_DIR"
           failed=0
 
+          if ! grep -q 'Updated 1 of 1 plugins' ../update.log; then
+            echo "::error::OMGF wasn't updated."
+            failed=1
+          fi
+
           if [ -f .maintenance ]; then
             echo "::error::The update left maintenance mode enabled."
             failed=1
