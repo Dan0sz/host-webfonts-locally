@@ -642,10 +642,10 @@ class Optimize {
 	 */
 	private function find_font_faces( $stylesheet ) {
 		/**
-		 * Only one comment is captured, to be more restrictive. A brace inside a string or comment doesn't end the
-		 * statement.
+		 * Only one comment is captured, to be more restrictive. A brace inside a string or comment, or an escaped one,
+		 * doesn't end the statement.
 		 */
-		$body = '(?:' . FontFace::STRING_PATTERN . '|' . FontFace::COMMENT_PATTERN . '|[^}"\'\/]|["\'\/])*+';
+		$body = '(?:' . FontFace::STRING_PATTERN . '|' . FontFace::COMMENT_PATTERN . '|' . FontFace::ESCAPE_PATTERN . '|[^}"\'\/\\\\]|["\'\/\\\\])*+';
 
 		preg_match_all(
 			apply_filters( 'omgf_optimize_parse_variants_regex', '/(?:\/\*[^*]*\*+(?:[^\/*][^*]*\*+)*\/\s*)?@font-face\s*\{' . $body . '\}/s', $this->url ),
