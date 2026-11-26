@@ -396,7 +396,14 @@ class Helper {
 		}
 
 		if ( is_dir( $entry ) ) {
-			$file    = new \FilesystemIterator( $entry );
+			try {
+				$file = new \FilesystemIterator( $entry );
+			} catch ( \UnexpectedValueException $e ) {
+				self::debug( 'Couldn\'t open directory: ' . $entry ); // @codeCoverageIgnore
+
+				return false; // @codeCoverageIgnore
+			}
+
 			$success = true;
 
 			// If dir is empty, valid() returns false.
