@@ -309,40 +309,53 @@ class OptimizeTest extends TestCase {
 	}
 
 	/**
-	 * Test @see \OMGF\Optimize::process() when the stylesheet can't be fetched, e.g. because the server can't reach the
-	 * Google Fonts API. The admin is told why.
+	 * Test @see \OMGF\Optimize::process() when stylesheets can't be fetched, e.g. because the server can't reach the
+	 * Google Fonts API. The admin is told why, in one notice listing all of them.
 	 *
 	 * @return void
 	 */
-	public function testProcessNotifiesWhenStylesheetCantBeFetched() {
-		$url       = 'https://fonts.googleapis.com/css?family=Fetch+Failed';
+	public function testProcessNotifiesWhenStylesheetsCantBeFetched() {
+		$base      = 'https://fonts.googleapis.com/css?family=Fetch+Failed';
 		$responses = [
 			'cURL error 28: Connection timed out'  => new \WP_Error( 'http_request_failed', 'cURL error 28: Connection timed out' ),
 			'HTTP 403'                             => [ 'body' => 'Forbidden', 'response' => [ 'code' => 403 ] ],
 			'the response isn&#039;t a stylesheet' => [ 'body' => '<html></html>', 'headers' => [ 'content-type' => 'text/html' ], 'response' => [ 'code' => 200 ] ],
 		];
-		$response  = null;
-		$mock      = function ( $pre, $args, $request_url ) use ( $url, &$response ) {
-			return $request_url === $url ? $response : $pre;
+		$mock      = function ( $pre, $args, $request_url ) use ( $base, $responses ) {
+			if ( ! str_starts_with( $request_url, $base ) ) {
+				return $pre;
+			}
+
+			return array_values( $responses )[ (int) substr( $request_url, strlen( $base ) ) ];
 		};
 
 		add_filter( 'pre_http_request', $mock, 11, 3 );
+		delete_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
 
 		try {
-			foreach ( $responses as $error => $response ) {
-				delete_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
-
-				$class = new Optimize( $url, 'test-fetch-failed', 'test-fetch-failed', 'object' );
+			foreach ( array_keys( $responses ) as $i => $error ) {
+				$class = new Optimize( $base . $i, 'test-fetch-failed', 'test-fetch-failed', 'object' );
 
 				$this->assertSame( '', $class->process(), $error );
-
-				$notices = get_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
-
-				$this->assertSame( "OMGF couldn't fetch the stylesheet $url: $error", $notices['all']['error'][ 'omgf-fetch-stylesheet-failed-' . md5( $url ) ] ?? '' );
 			}
+
+			$notice = Notice::get_notice( Optimize::FETCH_FAILED_NOTICE, 'error' );
+
+			$this->assertSame(
+				"OMGF couldn't fetch 3 stylesheets:<br/>{$base}0: cURL error 28: Connection timed out<br/>{$base}1: HTTP 403<br/>{$base}2: the response isn&#039;t a stylesheet",
+				$notice
+			);
+
+			// Once the notice is shown, the next notice starts a new list.
+			delete_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
+
+			( new Optimize( $base . '1', 'test-fetch-failed', 'test-fetch-failed', 'object' ) )->process();
+
+			$this->assertSame( "OMGF couldn't fetch 1 stylesheet:<br/>{$base}1: HTTP 403", Notice::get_notice( Optimize::FETCH_FAILED_NOTICE, 'error' ) );
 		} finally {
 			remove_filter( 'pre_http_request', $mock, 11 );
 			delete_transient( Notice::OMGF_ADMIN_NOTICE_TRANSIENT );
+			delete_transient( Optimize::FETCH_FAILURES_TRANSIENT );
 		}
 	}
 }

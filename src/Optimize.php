@@ -41,6 +41,13 @@ class Optimize {
 		'woff2' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
 	];
 
+	/**
+	 * The notice listing the stylesheets which couldn't be fetched, and the transient holding that list.
+	 */
+	const FETCH_FAILED_NOTICE = 'omgf-fetch-stylesheet-failed';
+
+	const FETCH_FAILURES_TRANSIENT = 'omgf_stylesheet_fetch_failures';
+
 	/** @var string $url */
 	private $url = '';
 
@@ -262,12 +269,8 @@ class Optimize {
 			OMGF::delete( $local_file );
 
 			Notice::set_notice(
-				sprintf(
-				/* translators: %s: path to the stylesheet */
-					__( 'OMGF couldn\'t write the stylesheet %s. Make sure the uploads directory is writable.', 'host-webfonts-local' ),
-					esc_html( $local_file )
-				),
-				'omgf-write-stylesheet-failed-' . md5( $local_file ),
+				__( 'OMGF couldn\'t save one or more stylesheets. Make sure the uploads directory is writable.', 'host-webfonts-local' ),
+				'omgf-write-stylesheet-failed',
 				'error'
 			);
 
@@ -387,7 +390,8 @@ class Optimize {
 
 	/**
 	 * Tells the admin why a stylesheet couldn't be fetched, e.g. because the server can't reach the Google Fonts API.
-	 * Stylesheets are often fetched during a visitor's request, so it's shown on the next admin page load.
+	 * Stylesheets are often fetched during a visitor's request, so it's shown on the next admin page load. All failed
+	 * stylesheets are listed in one notice, until it's shown.
 	 *
 	 * @param string $url
 	 * @param string $error
@@ -397,14 +401,29 @@ class Optimize {
 	private function set_fetch_failed_notice( $url, $error ) {
 		OMGF::debug( 'Fetching stylesheet failed: ' . $error );
 
+		$failures = Notice::get_notice( self::FETCH_FAILED_NOTICE, 'error' ) ? get_transient( self::FETCH_FAILURES_TRANSIENT ) : [];
+
+		if ( ! is_array( $failures ) ) {
+			$failures = []; // @codeCoverageIgnore
+		}
+
+		$failures[ $url ] = $error;
+
+		set_transient( self::FETCH_FAILURES_TRANSIENT, $failures, Notice::OMGF_ADMIN_NOTICE_EXPIRATION );
+
+		$lines = [];
+
+		foreach ( $failures as $failed_url => $failed_error ) {
+			$lines[] = esc_html( $failed_url ) . ': ' . esc_html( $failed_error );
+		}
+
 		Notice::set_notice(
 			sprintf(
-			/* translators: %1$s: stylesheet URL, %2$s: error message, e.g. cURL error 28: Connection timed out */
-				__( 'OMGF couldn\'t fetch the stylesheet %1$s: %2$s', 'host-webfonts-local' ),
-				esc_html( $url ),
-				esc_html( $error )
-			),
-			'omgf-fetch-stylesheet-failed-' . md5( $url ),
+			/* translators: %d: number of stylesheets */
+				_n( 'OMGF couldn\'t fetch %d stylesheet:', 'OMGF couldn\'t fetch %d stylesheets:', count( $failures ), 'host-webfonts-local' ),
+				count( $failures )
+			) . '<br/>' . implode( '<br/>', $lines ),
+			self::FETCH_FAILED_NOTICE,
 			'error'
 		);
 	}

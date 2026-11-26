@@ -83,6 +83,21 @@ class Notice {
 	}
 
 	/**
+	 * A notice which hasn't been shown yet.
+	 *
+	 * @param string $message_id
+	 * @param string $type
+	 * @param string $screen_id
+	 *
+	 * @return string An empty string if there's no such notice.
+	 */
+	public static function get_notice( $message_id, $type = 'success', $screen_id = 'all' ) {
+		$notices = get_transient( self::OMGF_ADMIN_NOTICE_TRANSIENT );
+
+		return $notices[ $screen_id ][ $type ][ $message_id ] ?? '';
+	}
+
+	/**
 	 * @param string $message_id
 	 * @param string $type
 	 * @param string $screen_id
