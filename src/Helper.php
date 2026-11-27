@@ -172,7 +172,8 @@ class Helper {
 	 * @since  v5.6.0
 	 *
 	 * @param string $name
-	 * @param mixed  $default (optional) Only to be used for options stored in their own row (prepended with omgf_)
+	 * @param mixed  $default (optional) Only to be used for options stored in their own row (prepended with omgf_). If
+	 *                        it's an array, a stored value which isn't an array is replaced by it.
 	 */
 	public static function get_option( $name, $default = null ) {
 		// If $name starts with 'omgf_' it means it is saved in a separate row.
@@ -183,6 +184,10 @@ class Helper {
 			// get_option() should take care of this, but sometimes it doesn't.
 			if ( is_string( $value ) ) {
 				$value = self::maybe_unserialize( $value );
+			}
+
+			if ( is_array( $default ) && ! is_array( $value ) ) {
+				$value = $default;
 			}
 
 			return apply_filters( "omgf_setting_$name", $value );
