@@ -5,6 +5,7 @@
 
 namespace OMGF\Tests\Integration;
 
+use OMGF\Admin\Dashboard;
 use OMGF\Admin\Settings;
 use OMGF\Helper as OMGF;
 use OMGF\Tests\TestCase;
@@ -92,6 +93,24 @@ class HelperTest extends TestCase {
 		OMGF::update_option( 'test', true );
 
 		$this->assertTrue( OMGF::get_option( 'test' ) );
+	}
+
+	/**
+	 * An option stored in its own row which should be an array, but isn't, returns the array default.
+	 *
+	 * @see Helper::get_option()
+	 * @return void
+	 */
+	public function testGetOptionReturnsArrayDefaultForNonArrayValue() {
+		update_option( Settings::OMGF_HIDDEN_NOTICES, '' );
+
+		try {
+			$this->assertSame( [], OMGF::get_option( Settings::OMGF_HIDDEN_NOTICES, [] ) );
+			$this->assertSame( '', OMGF::get_option( Settings::OMGF_HIDDEN_NOTICES ) );
+			$this->assertIsArray( Dashboard::get_warnings() );
+		} finally {
+			delete_option( Settings::OMGF_HIDDEN_NOTICES );
+		}
 	}
 
 	/**
