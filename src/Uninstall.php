@@ -24,19 +24,13 @@ use OMGF\Helper as OMGF;
  * @codeCoverageIgnore
  */
 class Uninstall {
-	/** @var string $cache_dir */
-	private $cache_dir;
-
 	/**
 	 *
 	 * @throws \ReflectionException
 	 */
 	public function __construct() {
-		$this->cache_dir = OMGF_UPLOAD_DIR;
-
 		$this->remove_db_entries();
-		$this->delete_files();
-		$this->delete_dir();
+		OMGF::delete( OMGF_UPLOAD_DIR );
 		$this->uninstall_mu_plugin();
 	}
 
@@ -50,26 +44,6 @@ class Uninstall {
 
 		foreach ( $db_entries as $entry ) {
 			delete_option( $entry );
-		}
-	}
-
-	/**
-	 * Delete all files stored in the cache directory.
-	 *
-	 * @return void
-	 */
-	private function delete_files() {
-		array_map( 'unlink', glob( $this->cache_dir . '/*.*' ) );
-	}
-
-	/**
-	 * Delete the cache directory.
-	 *
-	 * @return void
-	 */
-	private function delete_dir() {
-		if ( is_dir( $this->cache_dir ) ) {
-			rmdir( $this->cache_dir );
 		}
 	}
 

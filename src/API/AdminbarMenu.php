@@ -54,13 +54,13 @@ class AdminbarMenu {
 	 * @return array
 	 */
 	public function get_admin_bar_status( $request ) {
-		$params                = $this->clean( $request->get_params() );
+		$params                = OMGF::clean( $request->get_params() );
 		/**
 		 * @since v6.5.0 Decode the URLs before cleaning them, because clean() urldecodes strings without a scheme (like
 		 *               this JSON string), which turned e.g. family=Roboto%7CNoto+Serif into the invalid URL
 		 *               family=Roboto|Noto Serif. Those URLs were then dropped.
 		 */
-		$params['urls']        = $this->clean( $this->decode_json_array( $request->get_param( 'urls' ) ?? [] ) );
+		$params['urls']        = OMGF::clean( $this->decode_json_array( $request->get_param( 'urls' ) ?? [] ) );
 		$unused_fonts_analysis = $this->decode_json_array( $params['unused_fonts_analysis'] ?? [] );
 		$preload_analysis      = $this->decode_json_array( $params['preload_analysis'] ?? [] );
 		$cls_analysis          = $this->decode_json_array( $params['cls_analysis'] ?? [] );
@@ -109,40 +109,6 @@ class AdminbarMenu {
 		}
 
 		return $response;
-	}
-
-	/**
-	 * Cleans a given variable by sanitizing its value.
-	 *
-	 * @param mixed $var The variable to be cleaned. Can be a scalar value or an array of values.
-	 *
-	 * @return mixed Returns the cleaned variable. If the input is scalar, it will be sanitized accordingly.
-	 *               If an array is passed, the method is applied recursively to each element.
-	 */
-	private function clean( $var ) {
-		// If the variable is an array, recursively apply the function to each element of the array.
-		if ( is_array( $var ) ) {
-			return array_map( [ $this, 'clean' ], $var );
-		}
-
-		// If the variable is a scalar value (string, integer, float, boolean).
-		if ( is_scalar( $var ) ) {
-			// Parse the variable using the wp_parse_url function.
-			$parsed = wp_parse_url( $var );
-			// If the variable has a scheme (e.g. http:// or https://), sanitize the variable using the esc_url_raw function.
-			if ( isset( $parsed['scheme'] ) ) {
-				return esc_url_raw( wp_unslash( $var ) );
-			}
-
-			// Decode percent encoded characters before sanitization.
-			$var = urldecode( $var );
-
-			// If the variable does not have a scheme, sanitize the variable using the sanitize_text_field function.
-			return sanitize_text_field( wp_unslash( $var ) );
-		}
-
-		// If the variable is not an array or a scalar value, return the variable unchanged.
-		return $var; // @codeCoverageIgnore
 	}
 
 	/**

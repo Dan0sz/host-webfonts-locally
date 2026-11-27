@@ -187,100 +187,96 @@ class Process {
 	public function add_preloads() {
 		do_action( 'omgf_frontend_process_preloads' );
 
+		$timestamp = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
+
+		foreach ( $this->get_preload_urls() as $i => $url ) {
+			$url .= str_contains( $url, '?' ) ? "&ver=$timestamp" : "?ver=$timestamp";
+
+			/**
+			 * We can't use @see wp_kses_post() here, because it removes link elements.
+			 */
+			echo wp_kses(
+				"<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n",
+				self::PRELOAD_ALLOWED_HTML
+			);
+		}
+	}
+
+	/**
+	 * Relative URLs of the font files to preload. Each file is preloaded once, also if multiple variants (of a variable
+	 * font) or stylesheets use it.
+	 *
+	 * @return string[]
+	 */
+	private function get_preload_urls() {
 		$preloaded_fonts = OMGF::preloaded_fonts();
 
 		if ( ! $preloaded_fonts ) {
-			return; // @codeCoverageIgnore
+			return []; // @codeCoverageIgnore
 		}
 
-		$optimized_fonts = OMGF::optimized_fonts();
-		$superseded      = OMGF::superseded_stylesheets();
-		$preloaded_files = [];
-		$i               = 0;
+		$superseded = OMGF::superseded_stylesheets();
+		$urls       = [];
+		$files      = [];
 
-		foreach ( $optimized_fonts as $stylesheet_handle => $font_faces ) {
-			/**
-			 * @since v6.5.0 Stylesheets which got a new handle aren't used anymore, so their fonts aren't preloaded.
-			 */
+		foreach ( OMGF::optimized_fonts() as $stylesheet_handle => $font_faces ) {
+			// Stylesheets which got a new handle aren't used anymore, so their fonts aren't preloaded.
 			if ( in_array( $stylesheet_handle, $superseded, true ) ) {
 				continue;
 			}
 
-			foreach ( $font_faces as $font_face ) {
-				$preloads_stylesheet = $preloaded_fonts[ $stylesheet_handle ] ?? [];
+			$preloads_stylesheet = $preloaded_fonts[ $stylesheet_handle ] ?? [];
 
-				if ( ! in_array( $font_face->id, array_keys( $preloads_stylesheet ) ) ) {
+			foreach ( $font_faces as $font_face ) {
+				if ( ! array_key_exists( $font_face->id, $preloads_stylesheet ) ) {
 					continue; // @codeCoverageIgnore
 				}
 
-				$font_id          = $font_face->id;
-				$preload_variants = array_filter(
-					(array) $font_face->variants,
-					function ( $variant ) use ( $preloads_stylesheet, $font_id ) {
-						return in_array( $variant->id, $preloads_stylesheet[ $font_id ] );
-					}
-				);
-
-				/**
-				 * @since v5.3.0 Store all preloaded URLs temporarily to make sure no duplicate files (Variable Fonts) are preloaded.
-				 */
-				$preloaded = [];
-
-				foreach ( $preload_variants as $variant ) {
-					$url = rawurldecode( $variant->woff2 );
-
-					/**
-					 * @since v5.5.4 Since we're forcing relative URLs since v5.5.0, let's make sure $url is a relative URL to ensure
-					 *               backwards compatibility.
-					 */
-					$url_parts = parse_url( $url );
-
-					if ( ! empty( $url_parts['host'] ) && ! empty( $url_parts['path'] ) ) {
-						$url = '//' . $url_parts['host'] . $url_parts['path']; // @codeCoverageIgnore
-					} else {
-						$url = str_replace( [ 'http:', 'https:' ], '', $url );
-					}
-
-					/**
-					 * @since v5.0.1 An extra check, because people tend to forget to flush their caches when changing fonts, etc.
-					 */
-					$file_path = str_replace(
-						OMGF_UPLOAD_URL,
-						OMGF_UPLOAD_DIR,
-						apply_filters( 'omgf_frontend_process_url', $url )
-					);
-
-					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) || in_array( $url, $preloaded ) ) {
-						continue; // @codeCoverageIgnore
-					}
-
-					/**
-					 * @since v6.5.0 Stylesheets with different handles can contain the same font file, e.g. when they
-					 *               inherited their settings from the same handle. Preload each file only once.
-					 */
-					$file_key = basename( $file_path ) . ':' . ( file_exists( $file_path ) ? filesize( $file_path ) : '' );
-
-					if ( in_array( $file_key, $preloaded_files, true ) ) {
+				foreach ( (array) $font_face->variants as $variant ) {
+					if ( ! in_array( $variant->id, $preloads_stylesheet[ $font_face->id ] ) ) {
 						continue;
 					}
 
-					$preloaded[]       = $url;
-					$preloaded_files[] = $file_key;
-					$timestamp   = OMGF::get_option( Settings::OMGF_DB_CACHE_TIMESTAMP );
-					$url         .= str_contains( $url, '?' ) ? "&ver=$timestamp" : "?ver=$timestamp";
+					$url       = $this->get_relative_url( rawurldecode( $variant->woff2 ) );
+					$file_path = str_replace( OMGF_UPLOAD_URL, OMGF_UPLOAD_DIR, apply_filters( 'omgf_frontend_process_url', $url ) );
 
-					/**
-					 * We can't use @see wp_kses_post() here, because it removes link elements.
-					 */
-					echo wp_kses(
-						"<link id='omgf-preload-$i' rel='preload' href='$url' as='font' type='font/woff2' crossorigin />\n",
-						self::PRELOAD_ALLOWED_HTML
-					);
+					// An extra check, because people tend to forget to flush their caches when changing fonts, etc.
+					if ( ! defined( 'DAAN_DOING_TESTS' ) && ! file_exists( $file_path ) ) {
+						continue; // @codeCoverageIgnore
+					}
 
-					$i ++;
+					// The same file can be used by multiple variants (of a variable font), or by stylesheets with different
+					// handles, e.g. when they inherited their settings from the same handle.
+					$file_key = basename( $file_path ) . ':' . ( file_exists( $file_path ) ? filesize( $file_path ) : '' );
+
+					if ( in_array( $file_key, $files, true ) ) {
+						continue;
+					}
+
+					$urls[]  = $url;
+					$files[] = $file_key;
 				}
 			}
 		}
+
+		return $urls;
+	}
+
+	/**
+	 * Removes the scheme from $url, and its query string if it has a host, so it's relative to the protocol.
+	 *
+	 * @param string $url
+	 *
+	 * @return string
+	 */
+	private function get_relative_url( $url ) {
+		$url_parts = parse_url( $url );
+
+		if ( ! empty( $url_parts['host'] ) && ! empty( $url_parts['path'] ) ) {
+			return '//' . $url_parts['host'] . $url_parts['path']; // @codeCoverageIgnore
+		}
+
+		return str_replace( [ 'http:', 'https:' ], '', $url );
 	}
 
 	/**
