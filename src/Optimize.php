@@ -419,23 +419,15 @@ class Optimize {
 	private function convert_to_fonts_object( $stylesheet ) {
 		OMGF::debug( __( 'Stylesheet fetched. Parsing for font-families...', 'host-webfonts-local' ) );
 
-		preg_match_all( '/font-family:[\s\n]*[\'\"]?(.*?)[\'\"]?;/', $stylesheet, $font_families );
+		$font_families = array_unique( array_filter( array_map( [ FontFace::class, 'family' ], $this->find_font_faces( $stylesheet ) ) ) );
 
-		if ( empty( $font_families[1] ) ) {
+		if ( empty( $font_families ) ) {
 			return []; // @codeCoverageIgnore
 		}
 
-		$font_families = array_unique( $font_families[1] );
-
 		/**
-		 * @since v6.3.11 Only keep values which are (or could be) the name of an actual font.
-		 *                A stylesheet which isn't a Google Fonts API response contains font-family
-		 *                declarations outside @font-face statements, e.g. 'Arial,Helvetica,sans-serif
-		 *                !important' or 'inherit'. Those can't be downloaded, and there's no font to
-		 *                match them to, but they were stored as font families all the same. They were
-		 *                also interpolated (unescaped) into a pattern in self::parse_variants(), where
-		 *                any character with a special meaning in a regular expression is interpreted
-		 *                as such.
+		 * Only keep values which are (or could be) the name of an actual font, e.g. not 'inherit'. Those can't be
+		 * downloaded.
 		 */
 		$valid_families   = array_filter( $font_families, [ OMGF::class, 'is_valid_font_family' ] );
 		$invalid_families = array_diff( $font_families, $valid_families );
@@ -492,55 +484,34 @@ class Optimize {
 	private function parse_variants( $stylesheet, $font_family ) {
 		OMGF::debug( __( 'Parsing variants.', 'host-webfonts-local' ) );
 
-		/**
-		 * This also captures the commented Subset name, but allows only one comment to be captured to be more restrictive.
-		 */
-		preg_match_all(
-			apply_filters( 'omgf_optimize_parse_variants_regex', '/(?:\/\*[^*]*\*+(?:[^\/*][^*]*\*+)*\/\s*)?@font-face\s*\{[\s\S]*?\}/s', $this->url ),
-			$stylesheet,
-			$font_faces
-		);
+		$font_faces = $this->find_font_faces( $stylesheet );
 
-		if ( empty( $font_faces[0] ) ) {
+		if ( empty( $font_faces ) ) {
 			return []; // @codeCoverageIgnore
 		}
 
 		OMGF::debug(
-			sprintf( __( 'Found %s @font-face statements.', 'host-webfonts-local' ), count( $font_faces[0] ) )
+			sprintf( __( 'Found %s @font-face statements.', 'host-webfonts-local' ), count( $font_faces ) )
 		);
 
 		$font_object = [];
 
-		foreach ( $font_faces[0] as $font_face ) {
-			/**
-			 * @since v5.3.3  Exact match for font-family attribute, to prevent similar font names from falling through, e.g., Roboto and Roboto Slab.
-			 * @since v6.3.11 Escape the font family, so a name containing a character with a special meaning in a
-			 *                regular expression (e.g., '.*') is matched literally, instead of matching (and claiming
-			 *                the variants of) every other @font-face statement in the stylesheet.
-			 */
-			if ( ! preg_match( '/font-family:[\s\'"]*?' . preg_quote( $font_family, '/' ) . '[\'"]?;/', $font_face ) ) {
+		foreach ( $font_faces as $font_face ) {
+			$variant = $this->parse_font_face( $font_face );
+
+			// An exact match, so e.g. the variants of Roboto Slab aren't claimed by Roboto.
+			if ( $variant['family'] !== $font_family ) {
 				continue; // @codeCoverageIgnore
 			}
 
-			preg_match( '/font-style:\s(normal|italic);/', $font_face, $font_style );
-			preg_match( '/font-weight:\s([0-9\s]+);/', $font_face, $font_weight );
-			/**
-			 * @since v6.0.9 Removed .woff fallback, accepting any src url.
-			 */
-			preg_match( '/src\s*:\s*[^;]*?url\(\s*[\'"]?([^\'")]+)[\'"]?\s*\)/', $font_face, $font_src );
 			preg_match( '/\/\*\s([a-z\-0-9\[\]]+?)\s\*\//', $font_face, $subset );
-			preg_match( '/unicode-range:\s(.*?);/', $font_face, $range );
-			preg_match( '/font-stretch:\s*([a-z0-9.%\s-]+?)\s*[;}]/i', $font_face, $font_stretch );
 
-			$font_style  = ! empty( $font_style[1] ) ? $font_style[1] : 'normal';
-			$font_weight = ! empty( $font_weight[1] ) ? preg_replace( '/\s+/', ' ', trim( $font_weight[1] ) ) : '400';
-			$font_src    = ! empty( $font_src[1] ) ? $font_src[1] : '';
-			$subset      = ! empty( $subset[1] ) ? trim( $subset[1], '[]' ) : '';
-			/**
-			 * @since v6.5.1 The default width doesn't need to be declared.
-			 */
-			$font_stretch = ! empty( $font_stretch[1] ) ? strtolower( $font_stretch[1] ) : '';
-			$font_stretch = in_array( $font_stretch, [ 'normal', '100%' ], true ) ? '' : $font_stretch;
+			$font_style   = $variant['style'];
+			$font_weight  = $variant['weight'];
+			$font_src     = FontFace::src( $font_face );
+			$subset       = ! empty( $subset[1] ) ? trim( $subset[1], '[]' ) : '';
+			$range        = UnicodeRanges::find( $font_face );
+			$font_stretch = FontStretch::find( $font_face );
 
 			/**
 			 * @since v5.3.0 No need to keep this if this variant belongs to a subset we don't need.
@@ -556,10 +527,9 @@ class Optimize {
 				$subset = 'logogram-' . $subset;
 			}
 
-			$font_weight_id                  = str_replace( ' ', '-', $font_weight );
-			$key                             = ( $subset ? $subset . '-' : '' ) . $font_weight_id . ( $font_style === 'normal' ? '' : '-' . $font_style ) . $this->get_stretch_suffix( $font_stretch );
+			$key                             = ( $subset ? $subset . '-' : '' ) . $variant['weight_id'] . ( $variant['style_id'] ? '-' . $variant['style_id'] : '' ) . $this->get_stretch_suffix( $font_stretch );
 			$font_object[ $key ]             = new \stdClass();
-			$font_object[ $key ]->id         = $font_weight_id . ( $font_style === 'normal' ? '' : $font_style );
+			$font_object[ $key ]->id         = $variant['id'];
 			$font_object[ $key ]->fontFamily = $font_family;
 			$font_object[ $key ]->fontStyle  = $font_style;
 			$font_object[ $key ]->fontWeight = $font_weight;
@@ -573,8 +543,8 @@ class Optimize {
 				$font_object[ $key ]->subset = $subset;
 			}
 
-			if ( ! empty( $range ) && isset( $range[1] ) ) {
-				$font_object[ $key ]->range = $range[1];
+			if ( $range ) {
+				$font_object[ $key ]->range = $range;
 			}
 
 			$id = strtolower( str_replace( ' ', '-', $font_family ) );
@@ -649,65 +619,63 @@ class Optimize {
 			return $stylesheet;
 		}
 
-		// Extract all @font-face blocks with their comments
-		preg_match_all( '#/\*[^*]*\*+(?:[^/*][^*]*\*+)*/\s*@font-face\s*\{[^}]*}#', $stylesheet, $font_face_matches );
+		$unloaded_fonts = OMGF::unloaded_fonts()[ $this->original_handle ];
+		$font_faces     = array_filter(
+			$this->find_font_faces( $stylesheet ),
+			function ( $font_face ) use ( $unloaded_fonts ) {
+				$variant = $this->parse_font_face( $font_face );
+				$font_id = strtolower( str_replace( ' ', '-', $variant['family'] ) );
 
-		if ( empty( $font_face_matches[0] ) ) {
-			return $stylesheet;
-		}
-
-		$font_faces_to_keep = [];
-		$unloaded_fonts     = OMGF::unloaded_fonts()[ $this->original_handle ];
-
-		foreach ( $font_face_matches[0] as $font_face_block ) {
-			// Extract font-family from the @font-face block
-			if ( preg_match( '/font-family:\s*[\'"]?([^\'";]+)[\'"]?\s*;/', $font_face_block, $font_family ) ) {
-				if ( empty( $font_family[1] ) ) {
-					continue;
-				}
-
-				$font_family = trim( $font_family[1] );
-				$font_id     = strtolower( str_replace( ' ', '-', $font_family ) );
-
-				// Are any unloaded variants set for this $font_id?
-				if ( ! isset( $unloaded_fonts[ $font_id ] ) || empty( array_filter( $unloaded_fonts[ $font_id ] ) ) ) {
-					$font_faces_to_keep[] = $font_face_block;
-
-					continue;
-				}
-
-				// Extract font-weight and font-style from the @font-face block
-				preg_match( '/font-weight:\s*([^;]+);/', $font_face_block, $font_weight );
-				preg_match( '/font-style:\s*([^;]+);/', $font_face_block, $font_style );
-
-				if ( empty( $font_weight[1] ) ) {
-					continue;
-				}
-
-				$font_weight = preg_replace( '/\s+/', '-', trim( $font_weight[1] ) );
-				$font_style  = isset( $font_style[1] ) ? trim( $font_style[1] ) : '';
-
-				if ( $font_style === 'normal' ) {
-					$font_style = '';
-				}
-
-				$variant_key   = $font_weight . $font_style;
-				$should_remove = in_array( $variant_key, $unloaded_fonts[ $font_id ] );
-
-				if ( ! $should_remove ) {
-					$font_faces_to_keep[] = $font_face_block;
-				}
+				return ! in_array( $variant['id'], (array) ( $unloaded_fonts[ $font_id ] ?? [] ) );
 			}
-		}
+		);
 
-		// Reconstruct the stylesheet
-		$result = '';
+		return trim( implode( "\n", $font_faces ) );
+	}
 
-		if ( ! empty( $font_faces_to_keep ) ) {
-			$result .= implode( "\n", $font_faces_to_keep );
-		}
+	/**
+	 * The @font-face statements in $stylesheet, each with the comment above it, which contains the name of its subset.
+	 *
+	 * @param string $stylesheet
+	 *
+	 * @return string[]
+	 */
+	private function find_font_faces( $stylesheet ) {
+		/**
+		 * Only one comment is captured, to be more restrictive. A brace inside a string or comment, or an escaped one,
+		 * doesn't end the statement.
+		 */
+		$body = '(?:' . FontFace::STRING_PATTERN . '|' . FontFace::COMMENT_PATTERN . '|' . FontFace::ESCAPE_PATTERN . '|[^}"\'\/\\\\]|["\'\/\\\\])*+';
 
-		return trim( $result );
+		preg_match_all(
+			apply_filters( 'omgf_optimize_parse_variants_regex', '/(?:\/\*[^*]*\*+(?:[^\/*][^*]*\*+)*\/\s*)?@font-face\s*\{' . $body . '\}/s', $this->url ),
+			$stylesheet,
+			$font_faces
+		);
+
+		return $font_faces[0] ?? [];
+	}
+
+	/**
+	 * The family, weight and style of a @font-face statement, and the ID of the variant they make up, e.g. '300-800italic'.
+	 *
+	 * @param string $font_face
+	 *
+	 * @return array
+	 */
+	private function parse_font_face( $font_face ) {
+		$weight   = FontFace::weight( $font_face );
+		$style    = FontFace::style( $font_face );
+		$style_id = $style === 'normal' ? '' : str_replace( ' ', '-', $style );
+
+		return [
+			'family'    => FontFace::family( $font_face ),
+			'weight'    => $weight,
+			'weight_id' => str_replace( ' ', '-', $weight ),
+			'style'     => $style,
+			'style_id'  => $style_id,
+			'id'        => str_replace( ' ', '-', $weight ) . $style_id,
+		];
 	}
 
 	/**

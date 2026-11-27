@@ -87,6 +87,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 == Changelog ==
 
 = 6.5.2 =
+* Fixed: Don't Load didn't work for some stylesheets.
 * Fixed: uninstalling OMGF left the downloaded fonts behind.
 
 = 6.5.1 =
