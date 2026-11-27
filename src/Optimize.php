@@ -41,6 +41,13 @@ class Optimize {
 		'woff2' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0',
 	];
 
+	/**
+	 * The notice listing the stylesheets which couldn't be fetched, and the transient holding that list.
+	 */
+	const FETCH_FAILED_NOTICE = 'omgf-fetch-stylesheet-failed';
+
+	const FETCH_FAILURES_TRANSIENT = 'omgf_stylesheet_fetch_failures';
+
 	/** @var string $url */
 	private $url = '';
 
@@ -256,14 +263,20 @@ class Optimize {
 		$written = @file_put_contents( $local_file, $stylesheet );
 		$length  = strlen( $stylesheet );
 
-		/** @codeCoverageIgnoreStart */
+		// @codeCoverageIgnoreStart
 		if ( $written === false || $written !== $length ) {
 			OMGF::debug( __( 'Failed to write stylesheet:', 'host-webfonts-local' ) . ' ' . $local_file );
 			OMGF::delete( $local_file );
 
+			Notice::set_notice(
+				__( 'OMGF couldn\'t save one or more stylesheets. Make sure the uploads directory is writable.', 'host-webfonts-local' ),
+				'omgf-write-stylesheet-failed',
+				'error'
+			);
+
 			return '';
 		}
-		/** @codeCoverageIgnoreEnd */
+		// @codeCoverageIgnoreEnd
 
 		/**
 		 * @var object $fonts_bak is used to list the fonts in wp-admin (and for loading preloads in the frontend.)
@@ -308,17 +321,24 @@ class Optimize {
 
 		/**
 		 * @since v6.0.6 Fallback for already locally hosted stylesheets e.g., used by Elementor, etc.
-		 *
-		 * @codeCoverageIgnoreStart
 		 */
+		// @codeCoverageIgnoreStart
 		if ( str_contains( $url, get_home_url() ) ) {
 			$path = str_replace( get_home_url(), ABSPATH, $url );
 
 			if ( file_exists( $path ) ) {
-				return file_get_contents( $path );
+				$stylesheet = file_get_contents( $path );
+
+				if ( $stylesheet === false ) {
+					$this->set_fetch_failed_notice( $url, __( 'the file isn\'t readable', 'host-webfonts-local' ) );
+
+					return '';
+				}
+
+				return $stylesheet;
 			}
 		}
-		/** @codeCoverageIgnoreEnd */
+		// @codeCoverageIgnoreEnd
 
 		/**
 		 * @since v6.3.12 Use wp_safe_remote_get() so internal/private hosts are rejected even if the host
@@ -340,10 +360,18 @@ class Optimize {
 			]
 		);
 
+		if ( is_wp_error( $response ) ) {
+			$this->set_fetch_failed_notice( $url, $response->get_error_message() );
+
+			return '';
+		}
+
 		$code = wp_remote_retrieve_response_code( $response );
 
 		if ( $code !== 200 ) {
-			return ''; // @codeCoverageIgnore
+			$this->set_fetch_failed_notice( $url, 'HTTP ' . $code );
+
+			return '';
 		}
 
 		/**
@@ -352,10 +380,52 @@ class Optimize {
 		 *                shouldn't be parsed.
 		 */
 		if ( ! $this->is_stylesheet_response( $response ) ) {
-			return ''; // @codeCoverageIgnore
+			$this->set_fetch_failed_notice( $url, __( 'the response isn\'t a stylesheet', 'host-webfonts-local' ) );
+
+			return '';
 		}
 
 		return wp_remote_retrieve_body( $response );
+	}
+
+	/**
+	 * Tells the admin why a stylesheet couldn't be fetched, e.g. because the server can't reach the Google Fonts API.
+	 * Stylesheets are often fetched during a visitor's request, so it's shown on the next admin page load. All failed
+	 * stylesheets are listed in one notice, until it's shown.
+	 *
+	 * @param string $url
+	 * @param string $error
+	 *
+	 * @return void
+	 */
+	private function set_fetch_failed_notice( $url, $error ) {
+		OMGF::debug( 'Fetching stylesheet failed: ' . $error );
+
+		$failures = Notice::get_notice( self::FETCH_FAILED_NOTICE, 'error' ) ? get_transient( self::FETCH_FAILURES_TRANSIENT ) : [];
+
+		if ( ! is_array( $failures ) ) {
+			$failures = []; // @codeCoverageIgnore
+		}
+
+		$failures[ $url ] = $error;
+
+		set_transient( self::FETCH_FAILURES_TRANSIENT, $failures, Notice::OMGF_ADMIN_NOTICE_EXPIRATION );
+
+		$lines = [];
+
+		foreach ( $failures as $failed_url => $failed_error ) {
+			$lines[] = esc_html( $failed_url ) . ': ' . esc_html( $failed_error );
+		}
+
+		Notice::set_notice(
+			sprintf(
+			/* translators: %d: number of stylesheets */
+				_n( 'OMGF couldn\'t fetch %d stylesheet:', 'OMGF couldn\'t fetch %d stylesheets:', count( $failures ), 'host-webfonts-local' ),
+				count( $failures )
+			) . '<br/>' . implode( '<br/>', $lines ),
+			self::FETCH_FAILED_NOTICE,
+			'error'
+		);
 	}
 
 	/**
