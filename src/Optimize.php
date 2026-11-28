@@ -330,6 +330,7 @@ class Optimize {
 				$stylesheet = file_get_contents( $path );
 
 				if ( $stylesheet === false ) {
+					/* translators: the reason a stylesheet couldn't be fetched, shown after "<url>: " */
 					$this->set_fetch_failed_notice( $url, __( 'the file isn\'t readable', 'host-webfonts-local' ) );
 
 					return '';
@@ -380,6 +381,7 @@ class Optimize {
 		 *                shouldn't be parsed.
 		 */
 		if ( ! $this->is_stylesheet_response( $response ) ) {
+			/* translators: the reason a stylesheet couldn't be fetched, shown after "<url>: " */
 			$this->set_fetch_failed_notice( $url, __( 'the response isn\'t a stylesheet', 'host-webfonts-local' ) );
 
 			return '';
