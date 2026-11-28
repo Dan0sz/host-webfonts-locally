@@ -90,6 +90,7 @@ For the FAQ, [click here](https://daan.dev/docs/omgf-pro-faq/).
 * Fixed: Don't Load didn't work for some stylesheets.
 * Fixed: uninstalling OMGF left the downloaded fonts behind.
 * Fixed: the admin bar status could cause a critical error.
+* Fixed: Site Health listed premium add-ons as plugins waiting to be updated.
 * Improved: an error is shown when a stylesheet can't be fetched or saved.
 
 = 6.5.1 =
