@@ -293,9 +293,10 @@ class Updates {
 		global $pagenow;
 
 		/**
-		 * Don't do anything if we're on the Dashboard > Updates page.
+		 * Don't do anything on the Dashboard > Updates page, or in Site Health (incl. its scheduled check), which would
+		 * report these entries without a new version as critical updates.
 		 */
-		if ( $pagenow === 'update-core.php' ) {
+		if ( $pagenow === 'update-core.php' || $pagenow === 'site-health.php' || doing_action( 'wp_site_health_scheduled_check' ) ) {
 			return $transient;
 		}
 
